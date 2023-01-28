@@ -38,7 +38,7 @@ namespace NovelRT::Maths
          * instance will be at the root of the hierarchy.
          * @return Newly constructed QuadTree object.
          */
-        explicit QuadTree(GeoBounds bounds,
+        [[nodiscard]] explicit QuadTree(GeoBounds bounds,
                           std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept
             : _parent(parent), _bounds(bounds), _points(), _children(), _pointCount(0)
         {
@@ -50,7 +50,7 @@ namespace NovelRT::Maths
          * @return A std::weak_ptr<QuadTree>& to the parent QuadTree. if this instance is the root of the tree, nullptr
          * is returned instead.
          */
-        const std::weak_ptr<QuadTree>& getParent() const noexcept
+        [[nodiscard]] const std::weak_ptr<QuadTree>& getParent() const noexcept
         {
             return _parent;
         }
@@ -60,7 +60,7 @@ namespace NovelRT::Maths
          *
          * @return The area in which this QuadTree maps points.
          */
-        GeoBounds getBounds() const noexcept
+        [[nodiscard]] GeoBounds getBounds() const noexcept
         {
             return _bounds;
         }
@@ -72,7 +72,7 @@ namespace NovelRT::Maths
          * @return A std::shared_ptr<TQuadTreePoint>&, pointing to the instance. If no instance was stored under the
          * given index, nullptr is returned instead.
          */
-        const std::shared_ptr<QuadTreePoint>& getPoint(size_t index) const noexcept
+        [[nodiscard]] const std::shared_ptr<QuadTreePoint>& getPoint(size_t index) const noexcept
         {
             return _points[index];
         }
@@ -85,7 +85,7 @@ namespace NovelRT::Maths
          * @return A std::shared_ptr<QuadTreePoint>& to the QuadTreePoint instance. If no instance was stored under the
          * given index, nullptr is returned instead.
          */
-        template<typename TQuadTreePoint> const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const
+        template<typename TQuadTreePoint> [[nodiscard]] const std::shared_ptr<TQuadTreePoint>& getPoint(size_t index) const
         {
             return static_cast<std::shared_ptr<TQuadTreePoint>>(getPoint(index));
         }
@@ -95,7 +95,7 @@ namespace NovelRT::Maths
          *
          * @return The number of points stored in this instance.
          */
-        size_t getPointCount() const noexcept
+        [[nodiscard]] size_t getPointCount() const noexcept
         {
             return _pointCount;
         }
@@ -106,7 +106,7 @@ namespace NovelRT::Maths
          * @return The child QuadTree covering the top left area of this QuadTree. If this QuadTree instance does not
          * have any children, nullptr is returned instead.
          */
-        const std::shared_ptr<QuadTree>& getTopLeft() const noexcept
+        [[nodiscard]] const std::shared_ptr<QuadTree>& getTopLeft() const noexcept
         {
             return _children[TOP_LEFT];
         }
@@ -117,7 +117,7 @@ namespace NovelRT::Maths
          * @return The child QuadTree covering the top right area of this QuadTree. If this QuadTree instance does not
          * have any children, nullptr is returned instead.
          */
-        const std::shared_ptr<QuadTree>& getTopRight() const noexcept
+        [[nodiscard]] const std::shared_ptr<QuadTree>& getTopRight() const noexcept
         {
             return _children[TOP_RIGHT];
         }
@@ -128,7 +128,7 @@ namespace NovelRT::Maths
          * @return The child QuadTree covering the botom left area of this QuadTree. If this QuadTree instance does not
          * have any children, nullptr is returned instead.
          */
-        const std::shared_ptr<QuadTree>& getBottomLeft() const noexcept
+        [[nodiscard]] const std::shared_ptr<QuadTree>& getBottomLeft() const noexcept
         {
             return _children[BOTTOM_LEFT];
         }
@@ -139,7 +139,7 @@ namespace NovelRT::Maths
          * @return The child QuadTree covering the bottom right area of this QuadTree. If this QuadTree instance does
          * not have any children, nullptr is returned instead.
          */
-        const std::shared_ptr<QuadTree>& getBottomRight() const noexcept
+        [[nodiscard]] const std::shared_ptr<QuadTree>& getBottomRight() const noexcept
         {
             return _children[BOTTOM_RIGHT];
         }
@@ -150,7 +150,7 @@ namespace NovelRT::Maths
          * @param point A pointer to a two-dimensional position instance.
          * @return true if a point has succesfully been inserted, otherwise false.
          */
-        bool tryInsert(std::shared_ptr<QuadTreePoint> point) noexcept
+        [[nodiscard]] bool tryInsert(std::shared_ptr<QuadTreePoint> point) noexcept
         {
             if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition()))
             {
@@ -186,7 +186,7 @@ namespace NovelRT::Maths
          * @param ...args Additional arguments needed to create the point instance.
          * @return true if a TQuadTreePoint has succesfully been inserted, otherwise false.
          */
-        template<typename TQuadTreePoint, typename... TArgs> bool tryInsert(GeoBounds bounds, TArgs... args)
+        template<typename TQuadTreePoint, typename... TArgs> [[nodiscard]] bool tryInsert(GeoBounds bounds, TArgs... args)
         {
             return tryInsert(std::make_shared<TQuadTreePoint>(bounds.getCornerInWorldSpace(0),
                                                               std::forward<TArgs>(args)...)) ||
@@ -204,7 +204,7 @@ namespace NovelRT::Maths
          * @param point The point to remove from the QuadTree,
          * @return true if the point has been succesfully removed, otherwise false.
          */
-        bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept
+        [[nodiscard]] bool tryRemove(std::shared_ptr<QuadTreePoint> point) noexcept
         {
             if (point == nullptr || !getBounds().pointIsWithinBounds(point->getPosition()))
             {
@@ -270,7 +270,7 @@ namespace NovelRT::Maths
          * @param bounds The area in which to look for points in the QuadTree.
          * @return A collection of points filled with the intersecting points.
          */
-        std::vector<std::shared_ptr<QuadTreePoint>> getIntersectingPoints(GeoBounds bounds)
+        [[nodiscard]] std::vector<std::shared_ptr<QuadTreePoint>> getIntersectingPoints(GeoBounds bounds)
         {
             auto intersectingPoints = std::vector<std::shared_ptr<QuadTreePoint>>();
             getIntersectingPoints(bounds, intersectingPoints);
