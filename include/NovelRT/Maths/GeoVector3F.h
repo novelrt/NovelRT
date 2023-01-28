@@ -41,7 +41,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector3F with all components set to zero.
          */
-        GeoVector3F() noexcept : x(0.0f), y(0.0f), z(0.0f)
+        [[nodiscard]] GeoVector3F() noexcept : x(0.0f), y(0.0f), z(0.0f)
         {
         }
 
@@ -53,7 +53,7 @@ namespace NovelRT::Maths
          * @param z The Z component of the vector.
          * @return A GeoVector3F with the given components.
          */
-        GeoVector3F(float x, float y, float z) noexcept : x(x), y(y), z(z)
+        [[nodiscard]] GeoVector3F(float x, float y, float z) noexcept : x(x), y(y), z(z)
         {
         }
 
@@ -63,7 +63,7 @@ namespace NovelRT::Maths
          * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector3F's X and Y components.
          * @return A new GeoVector3F with the given GeoVector2F X and Y components, with the Z component set to zero.
          */
-        GeoVector3F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f)
+        [[nodiscard]] GeoVector3F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f)
         {
         }
 
@@ -96,7 +96,7 @@ namespace NovelRT::Maths
          *
          * @return A unit GeoVector3F created from normalising this GeoVector3F.
          */
-        inline GeoVector3F GetNormalised() const noexcept
+        [[nodiscard]] inline GeoVector3F GetNormalised() const noexcept
         {
             return GeoVector3F(glm::normalize(*reinterpret_cast<const glm::vec3*>(this)));
         }
@@ -119,7 +119,7 @@ namespace NovelRT::Maths
          * \f}
          * @return The magnitude of this GeoVector3F.
          */
-        inline float GetMagnitude() const noexcept
+        [[nodiscard]] inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec3*>(this));
         }
@@ -143,7 +143,7 @@ namespace NovelRT::Maths
          *
          * @return The length of this GeoVector3F.
          */
-        inline float GetLength() const noexcept
+        [[nodiscard]] inline float GetLength() const noexcept
         {
             return GetMagnitude();
         }
@@ -166,7 +166,7 @@ namespace NovelRT::Maths
          *
          * @return The squared magnitude of this GeoVector3F.
          */
-        inline float GetSquaredMagnitude() const noexcept
+        [[nodiscard]] inline float GetSquaredMagnitude() const noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(this));
         }
@@ -189,7 +189,7 @@ namespace NovelRT::Maths
          *
          * @return The squared length of this GeoVector3F.
          */
-        inline float GetSquaredLength() const noexcept
+        [[nodiscard]] inline float GetSquaredLength() const noexcept
         {
             return GetSquaredMagnitude();
         }
@@ -200,7 +200,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @returns true if all components matched, otherwise false.
          */
-        inline bool operator==(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline bool operator==(const GeoVector3F& other) const noexcept
         {
             return *reinterpret_cast<const glm::vec3*>(this) == *reinterpret_cast<const glm::vec3*>(&other);
         }
@@ -211,7 +211,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @returns true if any of the components do not match, otherwise false.
          */
-        inline bool operator!=(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline bool operator!=(const GeoVector3F& other) const noexcept
         {
             return *reinterpret_cast<const glm::vec3*>(this) != *reinterpret_cast<const glm::vec3*>(&other);
         }
@@ -223,7 +223,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is less than the other GeoVector3F's components, otherwise false.
          */
-        inline bool operator<(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline bool operator<(const GeoVector3F& other) const noexcept
         {
             return glm::any(
                 glm::lessThan(*reinterpret_cast<const glm::vec3*>(this), *reinterpret_cast<const glm::vec3*>(&other)));
@@ -237,7 +237,7 @@ namespace NovelRT::Maths
          * @return true if any of the components is less than or equal to the other GeoVector3F's components,
          * otherwise false.
          */
-        inline bool operator<=(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline bool operator<=(const GeoVector3F& other) const noexcept
         {
             return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec3*>(this),
                                                *reinterpret_cast<const glm::vec3*>(&other)));
@@ -250,7 +250,7 @@ namespace NovelRT::Maths
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is greater than the other GeoVector3F's components, otherwise false.
          */
-        inline bool operator>(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline bool operator>(const GeoVector3F& other) const noexcept
         {
             return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec3*>(this),
                                              *reinterpret_cast<const glm::vec3*>(&other)));
@@ -264,7 +264,7 @@ namespace NovelRT::Maths
          * @return true if any of the components is greater than or equal to the other GeoVector3F's components,
          * otherwise false.
          */
-        inline bool operator>=(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline bool operator>=(const GeoVector3F& other) const noexcept
         {
             return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec3*>(this),
                                                   *reinterpret_cast<const glm::vec3*>(&other)));
@@ -304,7 +304,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the entrywise sum of this GeoVector3F and another
          * GeoVector3F.
          */
-        inline GeoVector3F operator+(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline GeoVector3F operator+(const GeoVector3F& other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) + *reinterpret_cast<const glm::vec3*>(&other));
         }
@@ -343,7 +343,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the entrywise difference of this GeoVector3F and
          * another GeoVector3F.
          */
-        inline GeoVector3F operator-(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline GeoVector3F operator-(const GeoVector3F& other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) - *reinterpret_cast<const glm::vec3*>(&other));
         }
@@ -382,7 +382,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the Hadamard product of this GeoVector3F and another
          * GeoVector3F.
          */
-        inline GeoVector3F operator*(const GeoVector3F& other) const noexcept
+        [[nodiscard]] inline GeoVector3F operator*(const GeoVector3F& other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) * *reinterpret_cast<const glm::vec3*>(&other));
         }
@@ -421,7 +421,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the entrywise quotient of this GeoVector3F and another
          * GeoVector3F.
          */
-        GeoVector3F operator/(const GeoVector3F& other) const noexcept
+        [[nodiscard]] GeoVector3F operator/(const GeoVector3F& other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) / *reinterpret_cast<const glm::vec3*>(&other));
         }
@@ -468,7 +468,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the entrywise sum of this GeoVector3F and the provided
          * scalar.
          */
-        inline GeoVector3F operator+(float other) const noexcept
+        [[nodiscard]] inline GeoVector3F operator+(float other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) + other);
         }
@@ -515,7 +515,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the entrywise difference of this GeoVector3F and the
          * provided scalar.
          */
-        inline GeoVector3F operator-(float other) const noexcept
+        [[nodiscard]] inline GeoVector3F operator-(float other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) - other);
         }
@@ -562,7 +562,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the Hadamard product of this GeoVector3F and the
          * provided scalar.
          */
-        inline GeoVector3F operator*(float other) const noexcept
+        [[nodiscard]] inline GeoVector3F operator*(float other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) * other);
         }
@@ -609,7 +609,7 @@ namespace NovelRT::Maths
          * @return A GeoVector3F where the components consist of the entrywise quotient of this GeoVector3F and the
          * provided scalar.
          */
-        GeoVector3F operator/(float other) const noexcept
+        [[nodiscard]] GeoVector3F operator/(float other) const noexcept
         {
             return GeoVector3F(*reinterpret_cast<const glm::vec3*>(this) / other);
         }
@@ -1018,7 +1018,7 @@ namespace NovelRT::Maths
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool EpsilonEquals(const GeoVector3F& other, const GeoVector3F& epsilonValue) const noexcept
+        [[nodiscard]] bool EpsilonEquals(const GeoVector3F& other, const GeoVector3F& epsilonValue) const noexcept
         {
             return glm::all(glm::equal(*reinterpret_cast<const glm::vec3*>(this),
                                        *reinterpret_cast<const glm::vec3*>(&other),
@@ -1052,7 +1052,7 @@ namespace NovelRT::Maths
          * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
          * GeoVector3Fs components.
          */
-        inline float Dot(GeoVector3F other) noexcept
+        [[nodiscard]] inline float Dot(GeoVector3F other) noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec3*>(this),
                             NovelRT::Utilities::Misc::BitCast<glm::vec3>(other));
@@ -1103,7 +1103,7 @@ namespace NovelRT::Maths
          * this GeoVector3F.
          * @return The cross product of this GeoVector3F with another GeoVector3F.
          */
-        inline GeoVector3F Cross(GeoVector3F other) noexcept
+        [[nodiscard]] inline GeoVector3F Cross(GeoVector3F other) noexcept
         {
             return GeoVector3F(
                 glm::cross(*reinterpret_cast<glm::vec3*>(this), NovelRT::Utilities::Misc::BitCast<glm::vec3>(other)));
@@ -1144,7 +1144,7 @@ namespace NovelRT::Maths
          * @param other The other point to meassure the distance to.
          * @return The distance between this GeoVector3F and another GeoVector3F.
          */
-        inline float Distance(GeoVector3F other) noexcept
+        [[nodiscard]] inline float Distance(GeoVector3F other) noexcept
         {
             return glm::distance(*reinterpret_cast<const glm::vec3*>(this),
                                  NovelRT::Utilities::Misc::BitCast<glm::vec3>(other));
@@ -1184,7 +1184,7 @@ namespace NovelRT::Maths
          * @param other The other point to meassure the squared distance to.
          * @return The squared distance between this GeoVector3F and another GeoVector3F.
          */
-        inline float SquaredDistance(GeoVector3F other) noexcept
+        [[nodiscard]] inline float SquaredDistance(GeoVector3F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();
         }
@@ -1194,7 +1194,7 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector3F instance with all components set to zero.
          */
-        static GeoVector3F Zero() noexcept
+        [[nodiscard]] static GeoVector3F Zero() noexcept
         {
             return GeoVector3F::Uniform(0);
         }
@@ -1204,7 +1204,7 @@ namespace NovelRT::Maths
          *
          * @return A new GeoVector3F instance with all components set to one.
          */
-        static GeoVector3F One() noexcept
+        [[nodiscard]] static GeoVector3F One() noexcept
         {
             return GeoVector3F::Uniform(1);
         }
@@ -1215,7 +1215,7 @@ namespace NovelRT::Maths
          * @param value The value to use as the uniform value across the GeoVector3F.
          * @return a new GeoVector3F instance with all components set to the specified value.
          */
-        static GeoVector3F Uniform(float value) noexcept
+        [[nodiscard]] static GeoVector3F Uniform(float value) noexcept
         {
             return GeoVector3F(value, value, value);
         }
@@ -1263,7 +1263,7 @@ namespace NovelRT::Maths
      * @param rhs The GeoVector3F whos components get multiplied by the scalar.
      * @return A GeoVector3F where the components consist of the product of this and the provided scalar.
      */
-    inline GeoVector3F operator*(float lhs, const GeoVector3F& rhs) noexcept
+    [[nodiscard]] inline GeoVector3F operator*(float lhs, const GeoVector3F& rhs) noexcept
     {
         return rhs * lhs;
     }
