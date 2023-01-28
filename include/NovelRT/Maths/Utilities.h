@@ -40,7 +40,7 @@ namespace NovelRT::Maths::Utilities
      * @param value The given integer to be tested.
      * @return true if the given integer is a power of 2, otherwise false.
      */
-    [[nodiscard]] inline bool IsPow2(size_t value) noexcept
+    [[nodiscard]] inline constexpr bool IsPow2(size_t value) noexcept
     {
         return ((value & (value - 1ULL)) == 0ULL) && (value != 0ULL);
     }
@@ -52,12 +52,9 @@ namespace NovelRT::Maths::Utilities
      * @param alignment The target alignment, which should be a power of two.
      * @return The address rounded up to the nearest alignment.
      */
-    [[nodiscard]] inline size_t AlignUp(size_t address, size_t alignment)
+    [[nodiscard]] inline constexpr size_t AlignUp(size_t address, size_t alignment)
     {
-        if (!IsPow2(alignment))
-        {
-            throw Exceptions::InvalidOperationException("Alignment must be to a power of two.");
-        }
+        assert(IsPow2(alignment) && "Alignment must be to a power of two.");
 
         return (address + (alignment - 1ULL)) & ~(alignment - 1ULL);
     }
@@ -73,7 +70,7 @@ namespace NovelRT::Maths::Utilities
      * @return The number of set bits.
      */
     [[nodiscard]] [[deprecated("This implementation of PopCount is superseeded by std::popcount in C++20. This "
-                               "will be removed when the language version is updated.")]] inline int32_t
+                               "will be removed when the language version is updated.")]] inline constexpr int32_t
     PopCount(uint32_t value) noexcept
     {
         const uint32_t c1 = 0x55555555u;
@@ -97,7 +94,7 @@ namespace NovelRT::Maths::Utilities
      * @param value The value to reach with 2 to the power of the resulting exponent.
      * @return The exponent to get to the given number, rounded down
      */
-    [[nodiscard]] inline uint32_t Log2(uint32_t value) noexcept
+    [[nodiscard]] inline constexpr uint32_t Log2(uint32_t value) noexcept
     {
         value |= value >> 1;
         value |= value >> 2;
@@ -114,7 +111,7 @@ namespace NovelRT::Maths::Utilities
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
      */
-    [[nodiscard]] inline uint32_t LeadingZeroCount32(uint32_t value) noexcept
+    [[nodiscard]] inline constexpr uint32_t LeadingZeroCount32(uint32_t value) noexcept
     {
         if (value == 0)
         {
@@ -132,7 +129,7 @@ namespace NovelRT::Maths::Utilities
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
      */
-    [[nodiscard]] inline uint64_t LeadingZeroCount64(uint64_t value) noexcept
+    [[nodiscard]] inline constexpr uint64_t LeadingZeroCount64(uint64_t value) noexcept
     {
         uint32_t hi = static_cast<uint32_t>(value >> 32);
 
