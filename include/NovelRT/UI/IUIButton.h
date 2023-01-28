@@ -17,16 +17,7 @@ namespace NovelRT::UI
         NovelRT::Graphics::RGBAColour _backgroundColour;
 
     public:
-        [[nodiscard]] inline std::string& Identifier()
-        {
-            return _identifier;
-        }
 
-        [[nodiscard]] inline const std::string& Identifier() const
-        {
-            return _identifier;
-        }
-        
         [[nodiscard]] inline NovelRT::Graphics::RGBAColour& BackgroundColour()
         {
             return _backgroundColour;

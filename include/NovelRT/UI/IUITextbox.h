@@ -22,16 +22,6 @@ namespace NovelRT::UI
         IUITextbox(const std::string& identifier, UIElementState state, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, bool wordWrap, const std::string& text, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour) noexcept : IUIElement(identifier, state, position, scale), _wordWrap(wordWrap), _text(text), _fontSize(fontSize), _backgroundColour(backgroundColour)
         {}
 
-        [[nodiscard]] inline std::string& Identifier()
-        {
-            return _identifier;
-        }
-
-        [[nodiscard]] inline const std::string& Identifier() const
-        {
-            return _identifier;
-        }
-
         [[nodiscard]] inline bool& WordWrap()
         {
             return _wordWrap;
