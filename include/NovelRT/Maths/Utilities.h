@@ -70,13 +70,14 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Returns the number of set bits in the given value.
      *
-     * @details This implementation was previously marked as deprecated, but to prevent unnecessary complications it uses <a href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> when available instead of being removed.
-     * 
+     * @details This implementation was previously marked as deprecated, but to prevent unnecessary complications it
+     * uses <a href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> when available instead of
+     * being removed.
+     *
      * @param value The number to extract the amount of set bits from
      * @return The number of set bits.
      */
-    [[nodiscard]] inline constexpr int32_t
-    PopCount(uint32_t value) noexcept
+    [[nodiscard]] inline constexpr int32_t PopCount(uint32_t value) noexcept
     {
 #if __cpp_lib_bitops
         return std::popcount(value);

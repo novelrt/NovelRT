@@ -90,7 +90,8 @@ namespace NovelRT::Maths
          * components.
          * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero.
          */
-        [[nodiscard]] GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
+        [[nodiscard]] GeoVector4F(const GeoVector3F& vec3Value) noexcept
+            : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
         {
         }
 

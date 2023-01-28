@@ -61,7 +61,8 @@ namespace NovelRT::Maths
          * @param w The fourth row in the matrix.
          * @return The newly instantiated GeoMatrix4x4F object.
          */
-        [[nodiscard]] GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept : x(x), y(y), z(z), w(w)
+        [[nodiscard]] GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept
+            : x(x), y(y), z(z), w(w)
         {
         }
 
@@ -781,11 +782,11 @@ namespace NovelRT::Maths
          * @return A projection GeoMatrix4x4F for projecting a three-dimensional space onto a plane.
          */
         [[nodiscard]] static GeoMatrix4x4F CreateOrthographic(float left,
-                                                float right,
-                                                float bottom,
-                                                float top,
-                                                float zNear,
-                                                float zFar) noexcept
+                                                              float right,
+                                                              float bottom,
+                                                              float top,
+                                                              float zNear,
+                                                              float zFar) noexcept
         {
             return GeoMatrix4x4F(glm::ortho(left, right, bottom, top, zNear, zFar));
         }

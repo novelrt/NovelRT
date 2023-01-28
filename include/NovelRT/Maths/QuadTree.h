@@ -39,7 +39,7 @@ namespace NovelRT::Maths
          * @return Newly constructed QuadTree object.
          */
         [[nodiscard]] explicit QuadTree(GeoBounds bounds,
-                          std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept
+                                        std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept
             : _parent(parent), _bounds(bounds), _points(), _children(), _pointCount(0)
         {
         }
@@ -85,7 +85,8 @@ namespace NovelRT::Maths
          * @return A std::shared_ptr<QuadTreePoint>& to the QuadTreePoint instance. If no instance was stored under the
          * given index, nullptr is returned instead.
          */
-        template<typename TQuadTreePoint> [[nodiscard]] const std::shared_ptr<TQuadTreePoint>& GetPoint(size_t index) const
+        template<typename TQuadTreePoint>
+        [[nodiscard]] const std::shared_ptr<TQuadTreePoint>& GetPoint(size_t index) const
         {
             return static_cast<std::shared_ptr<TQuadTreePoint>>(GetPoint(index));
         }
@@ -186,7 +187,8 @@ namespace NovelRT::Maths
          * @param ...args Additional arguments needed to create the point instance.
          * @return true if a TQuadTreePoint has successfully been inserted, otherwise false.
          */
-        template<typename TQuadTreePoint, typename... TArgs> [[nodiscard]] bool TryInsert(GeoBounds bounds, TArgs... args)
+        template<typename TQuadTreePoint, typename... TArgs>
+        [[nodiscard]] bool TryInsert(GeoBounds bounds, TArgs... args)
         {
             return TryInsert(std::make_shared<TQuadTreePoint>(bounds.GetCornerInWorldSpace(0),
                                                               std::forward<TArgs>(args)...)) ||
