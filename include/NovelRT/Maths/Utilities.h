@@ -18,6 +18,14 @@
 #error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
 #endif
 
+#if __has_include(<version>)
+#include <version>
+#endif
+
+#if __cpp_lib_bitops
+#include <bit>
+#endif
+
 /**
  * @brief Contains utility functions to assist in mathematical operations.
  */
@@ -62,17 +70,17 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Returns the number of set bits in the given value.
      *
-     * @deprecated This implementation of PopCount is superseded by <a
-     * href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> in C++20. This will be removed when
-     * the language version is updated.
-     *
+     * @details This implementation was previously marked as deprecated, but to prevent unnecessary complications it uses <a href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> when available instead of being removed.
+     * 
      * @param value The number to extract the amount of set bits from
      * @return The number of set bits.
      */
-    [[nodiscard]] [[deprecated("This implementation of PopCount is superseeded by std::popcount in C++20. This "
-                               "will be removed when the language version is updated.")]] inline constexpr int32_t
+    [[nodiscard]] inline constexpr int32_t
     PopCount(uint32_t value) noexcept
     {
+#if __cpp_lib_bitops
+        return std::popcount(value);
+#else
         const uint32_t c1 = 0x55555555u;
         const uint32_t c2 = 0x33333333u;
         const uint32_t c3 = 0x0F0F0F0Fu;
@@ -83,6 +91,7 @@ namespace NovelRT::Maths::Utilities
         value = (((value + (value >> 4)) & c3) * c4) >> 24;
 
         return static_cast<int32_t>(value);
+#endif
     }
 
     /**
@@ -113,6 +122,9 @@ namespace NovelRT::Maths::Utilities
      */
     [[nodiscard]] inline constexpr uint32_t LeadingZeroCount32(uint32_t value) noexcept
     {
+#if __cpp_lib_bitops
+        return std::countl_zero(value);
+#else
         if (value == 0)
         {
             return 32;
@@ -121,6 +133,7 @@ namespace NovelRT::Maths::Utilities
         {
             return 31 ^ Log2(value);
         }
+#endif
     }
 
     /**
@@ -131,6 +144,9 @@ namespace NovelRT::Maths::Utilities
      */
     [[nodiscard]] inline constexpr uint64_t LeadingZeroCount64(uint64_t value) noexcept
     {
+#if __cpp_lib_bitops
+        return std::countl_zero(value);
+#else
         uint32_t hi = static_cast<uint32_t>(value >> 32);
 
         if (hi == 0)
@@ -141,6 +157,7 @@ namespace NovelRT::Maths::Utilities
         {
             return LeadingZeroCount32(hi);
         }
+#endif
     }
 
     /**
