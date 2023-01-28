@@ -19,6 +19,8 @@ namespace NovelRT::UI
         NovelRT::Maths::GeoVector2F _scale;
 
     public:
+        IUIElement(const std::string& identifier, UIElementState state, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale) noexcept : _identifier(identifier), _state(state), _position(position), _scale(scale){} 
+
         virtual void Render(std::shared_ptr<IUIProvider> provider, NovelRT::Maths::GeoVector2F windowSize) = 0;
 
         [[nodiscard]] inline std::string& Identifier()

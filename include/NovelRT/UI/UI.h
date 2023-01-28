@@ -22,14 +22,20 @@ namespace NovelRT::UI
     class IUIElement;
     class IUITextbox;
     class IUIProvider;
+    class IUIButton;
 }
 
 
 
 // UI types
+// clang-format off
+
 #include "UIElementState.h"
 #include "IUIElement.h"
+#include "IUIButton.h"
 #include "IUITextbox.h"
 #include "IUIProvider.h"
+
+// clang-format on
 
 #endif // !NOVELRT_UI_H
