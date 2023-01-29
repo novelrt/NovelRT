@@ -41,7 +41,8 @@ namespace NovelRT::Maths
          * @brief Gets the position of this point in two-dimensional space.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return The position in two-dimensional space of this point.
          */

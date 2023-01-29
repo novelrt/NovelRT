@@ -90,8 +90,7 @@ namespace NovelRT::Maths
          * components.
          * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero.
          */
-        GeoVector4F(const GeoVector3F& vec3Value) noexcept
-            : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
+        GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
         {
         }
 
@@ -126,8 +125,9 @@ namespace NovelRT::Maths
          *      \tfrac{4}{13}^{2}} = \sqrt{\tfrac{49}{169} + \tfrac{4}{169} + \tfrac{100}{169} + \tfrac{16}{169}}
          *      \rightarrow \sqrt{\tfrac{169}{169}} \rightarrow \sqrt{1} = 1
          * \f}
-         * 
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return A unit GeoVector4F created from normalising this GeoVector4F.
          */
@@ -154,7 +154,8 @@ namespace NovelRT::Maths
          *      &= 13
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return The magnitude of this GeoVector4F.
          */
@@ -181,7 +182,8 @@ namespace NovelRT::Maths
          *      &= 13
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return The length of this GeoVector4F.
          */
@@ -207,7 +209,8 @@ namespace NovelRT::Maths
          *      &= 169
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return The squared magnitude of this GeoVector4F.
          */
@@ -233,7 +236,8 @@ namespace NovelRT::Maths
          *      &= 169
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return The squared length of this GeoVector4F.
          */
@@ -246,7 +250,8 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector4F with another GeoVector4F to determine if all components match.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @returns true if all components matched, otherwise false.
@@ -260,7 +265,8 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector4F with another GeoVector4F to determine if all components do not match.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @returns true if any of the components do not match, otherwise false.
@@ -275,7 +281,8 @@ namespace NovelRT::Maths
          * than the other GeoVector4F's components.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is less than the other GeoVector4F's components, otherwise false.
@@ -291,7 +298,8 @@ namespace NovelRT::Maths
          * than or equal to the other GeoVector4F's components.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is less than or equal to the other GeoVector4F's components,
@@ -308,7 +316,8 @@ namespace NovelRT::Maths
          * than the other GeoVector4F's components.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is greater than the other GeoVector4F's components, otherwise false.
@@ -324,7 +333,8 @@ namespace NovelRT::Maths
          * than or equal to the other GeoVector4F's components.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @return true if any of the components is greater than or equal to the other GeoVector4F's components,
@@ -370,7 +380,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other vector whose components get added together with this vector.
          * @return A GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and another
@@ -415,7 +426,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other vector whose components get subtracted from this vector.
          * @return A GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and
@@ -460,7 +472,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other vector whose components get multiplied by this vector's components.
          * @return A GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and another
@@ -505,7 +518,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other vector whose components act as a divisor for this vector's components.
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and another
@@ -559,7 +573,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other scalar that gets added up with each component of this vector.
          * @return A GeoVector4F where the components consist of the entrywise sum of this GeoVector4F and the provided
@@ -613,7 +628,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other scalar that gets subtracted from each component of this vector.
          * @return A GeoVector4F where the components consist of the entrywise difference of this GeoVector4F and the
@@ -667,7 +683,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other scalar who get multiplied by this vector's components.
          * @return A GeoVector4F where the components consist of the Hadamard product of this GeoVector4F and the
@@ -721,7 +738,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other scalar that acts as the divisor for each component of this vector.
          * @return A GeoVector4F where the components consist of the entrywise quotient of this GeoVector4F and the
@@ -1164,7 +1182,8 @@ namespace NovelRT::Maths
          * range of tolerance.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other GeoVector4F whose components are evaluated against this GeoVector4F's components.
          * @param epsilonValue The vector determining the tolerance per component.
@@ -1201,7 +1220,8 @@ namespace NovelRT::Maths
          *      &= 82
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other GeoVector4F, the components of which get multiplied and summed up with this
          * GeoVector4F.
@@ -1251,7 +1271,8 @@ namespace NovelRT::Maths
          *      &= 13
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other point to measure the distance to.
          * @return The distance between this GeoVector4F and another GeoVector4F.
@@ -1297,7 +1318,8 @@ namespace NovelRT::Maths
          *      &= 169
          * \f}
          *
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param other The other point to measure the square distance to.
          * @return The squared distance between this GeoVector4F and another GeoVector4F.
@@ -1311,7 +1333,8 @@ namespace NovelRT::Maths
          * @brief Creates a new GeoVector4F instance with a uniform value of zero.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return A new GeoVector4F instance with all components set to zero.
          */
@@ -1324,7 +1347,8 @@ namespace NovelRT::Maths
          * @brief Creates a new GeoVector4F instance with a uniform value of one.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return A new GeoVector4F instance with all components set to one.
          */
@@ -1337,7 +1361,8 @@ namespace NovelRT::Maths
          * @brief Creates a new uniform GeoVector4F based on the specified value.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param value The value to use as the uniform value across the GeoVector4F.
          * @return a new GeoVector4F instance with all components set to the specified value.
@@ -1391,7 +1416,8 @@ namespace NovelRT::Maths
      *      \end{pmatrix}
      * \f}
      *
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param lhs The scalar that gets multiplied by the GeoVector4F's components.
      * @param rhs The GeoVector4F whose components get multiplied by the scalar.

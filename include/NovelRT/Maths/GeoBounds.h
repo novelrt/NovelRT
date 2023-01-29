@@ -43,10 +43,11 @@ namespace NovelRT::Maths
 
         /**
          * @brief Determines if a given GeoVector2F is within the confines of this bounding box.
-         * 
+         *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param point The GeoVector2F to be evaluated.
          * @return true if the given GeoVector2F is within the confines of this GeoBounds instance, otherwise false.
          */
@@ -57,8 +58,9 @@ namespace NovelRT::Maths
          *
          * @details
          * This implementation does not support rotation, so only AABB intersection computation is allowed.
-         * 
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @return true if the otherBounds intersects with this bounding box, otherwise false.
          * @exception Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than
@@ -70,8 +72,9 @@ namespace NovelRT::Maths
          * @brief Gets the specified corner, relative to the rotation and size of this GeoBounds instance.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param index 0 for top-left corner, 1 for top-right corner, 2 for bottom-left corner, and 3 for bottom-right
          * corner.
          * @return A GeoVector2F representing the local space position of the corner relative to the rotation and size
@@ -82,9 +85,10 @@ namespace NovelRT::Maths
         /**
          * @brief Gets the specified corner in world space, relative to the position, rotation and size of this
          * GeoBounds instance.
-         * 
+         *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
          *
          * @param index 0 for top-left corner, 1 for top-right corner, 2 for bottom-left corner, and 3 for bottom-right
          * corner.
@@ -98,8 +102,9 @@ namespace NovelRT::Maths
          * GeoVector2F. The extents are always half the size of the GeoBounds instance.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return Returns a GeoVector2F that contains the width and height of the extents.
          */
         [[nodiscard]] GeoVector2F GetExtents() const noexcept;
@@ -108,8 +113,9 @@ namespace NovelRT::Maths
          * @brief Evaluates if all the components match between two instances of GeoBounds.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return true if all components of the GeoBounds instances match, otherwise false.
          */
         [[nodiscard]] inline bool operator==(GeoBounds other) const noexcept
@@ -121,8 +127,9 @@ namespace NovelRT::Maths
          * @brief Evaluates if any of the components do not match between two instances of GeoBounds.
          *
          * @details
-         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return true if any or all components of the GeoBounds instances do not match, otherwise true.
          */
         [[nodiscard]] inline bool operator!=(GeoBounds other) const noexcept

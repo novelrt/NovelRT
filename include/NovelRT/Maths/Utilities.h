@@ -35,7 +35,8 @@ namespace NovelRT::Maths::Utilities
      * @brief Creates a lookup table for calculating the log base 2 for a 32 bit integer.
      *
      * @details
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @return A lookup table for calculating the log base 2 for a 32 bit integer.
      */
@@ -49,7 +50,8 @@ namespace NovelRT::Maths::Utilities
      * @brief Evaluates if the provided integer is a power of 2.
      *
      * @details
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param value The given integer to be tested.
      * @return true if the given integer is a power of 2, otherwise false.
@@ -63,7 +65,8 @@ namespace NovelRT::Maths::Utilities
      * @brief Rounds a given address up to the nearest alignment.
      *
      * @details
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param address The address to be aligned.
      * @param alignment The target alignment, which should be a power of two.
@@ -79,9 +82,10 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Returns the number of set bits in the given value.
      *
-     * @details 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-     * 
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * This implementation was previously marked as deprecated, but to prevent unnecessary complications it
      * uses <a href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> when available instead of
      * being removed.
@@ -112,8 +116,9 @@ namespace NovelRT::Maths::Utilities
      *
      * @details
      * When the input value is 0, 0 will be returned.
-     * 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param value The value to reach with 2 to the power of the resulting exponent.
      * @return The exponent to get to the given number, rounded down
@@ -132,9 +137,10 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Computes the amount of leading zeros for the given 32-bit integer.
      *
-     * @details 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-     * 
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
      */
@@ -157,9 +163,10 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Computes the amount of leading zeros for the given 64-bit integer.
      *
-     * @details 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
-     * 
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
      */
@@ -188,8 +195,9 @@ namespace NovelRT::Maths::Utilities
      * To get the angle in radians you can use this formula: \f[
      *      radians = \frac{\pi \times degrees}{180}
      * \f]
-     * 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param degrees The angle in degrees to convert.
      * @return The angle in radians.
@@ -206,8 +214,9 @@ namespace NovelRT::Maths::Utilities
      * To get the angle in degrees you can use this formula: \f[
      *      degrees = \frac{180 \times radians}{\pi }
      * \f]
-     * 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param radians The angle in radians to convert.
      * @return The angle in degrees.
@@ -225,7 +234,8 @@ namespace NovelRT::Maths::Utilities
      *      2\pi = 6.283185307179586476925...
      * \f]
      *
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @tparam TFloatingPointType A floating point type that is expressed as either float or double.
      * @return A full rotation expressed in radians.
@@ -244,8 +254,9 @@ namespace NovelRT::Maths::Utilities
      *      2\pi = 6.283185307179586476925...
      * \f]
      * In this implementation it is expressed as \f(6.283185307\f).
-     * 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @return A full rotation expressed in radians.
      */
@@ -262,8 +273,9 @@ namespace NovelRT::Maths::Utilities
      *      2\pi = 6.283185307179586476925...
      * \f]
      * In this implementation it is expressed as \f(6.283185307179586476925\f).
-     * 
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @return A full rotation expressed in radians.
      */
