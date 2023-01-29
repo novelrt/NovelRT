@@ -55,7 +55,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector4F with all components set to zero.
          */
-        [[nodiscard]] GeoVector4F() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+        GeoVector4F() noexcept : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
         {
         }
 
@@ -68,7 +68,7 @@ namespace NovelRT::Maths
          * @param w The W component of the vector.
          * @return A GeoVector4F with the given components.
          */
-        [[nodiscard]] GeoVector4F(float x, float y, float z, float w) noexcept : x(x), y(y), z(z), w(w)
+        GeoVector4F(float x, float y, float z, float w) noexcept : x(x), y(y), z(z), w(w)
         {
         }
 
@@ -79,7 +79,7 @@ namespace NovelRT::Maths
          * @return A new GeoVector4F with the given GeoVector2F X and Y components, with the Z and W components set to
          * zero.
          */
-        [[nodiscard]] GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
+        GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
         {
         }
 
@@ -90,7 +90,7 @@ namespace NovelRT::Maths
          * components.
          * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero.
          */
-        [[nodiscard]] GeoVector4F(const GeoVector3F& vec3Value) noexcept
+        GeoVector4F(const GeoVector3F& vec3Value) noexcept
             : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
         {
         }

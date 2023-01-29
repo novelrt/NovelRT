@@ -38,8 +38,8 @@ namespace NovelRT::Maths
          * instance will be at the root of the hierarchy.
          * @return Newly constructed QuadTree object.
          */
-        [[nodiscard]] explicit QuadTree(GeoBounds bounds,
-                                        std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept
+        explicit QuadTree(GeoBounds bounds,
+                          std::weak_ptr<QuadTree> parent = std::shared_ptr<QuadTree>(nullptr)) noexcept
             : _parent(parent), _bounds(bounds), _points(), _children(), _pointCount(0)
         {
         }

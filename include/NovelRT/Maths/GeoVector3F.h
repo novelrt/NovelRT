@@ -41,7 +41,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector3F with all components set to zero.
          */
-        [[nodiscard]] GeoVector3F() noexcept : x(0.0f), y(0.0f), z(0.0f)
+        GeoVector3F() noexcept : x(0.0f), y(0.0f), z(0.0f)
         {
         }
 
@@ -53,7 +53,7 @@ namespace NovelRT::Maths
          * @param z The Z component of the vector.
          * @return A GeoVector3F with the given components.
          */
-        [[nodiscard]] GeoVector3F(float x, float y, float z) noexcept : x(x), y(y), z(z)
+        GeoVector3F(float x, float y, float z) noexcept : x(x), y(y), z(z)
         {
         }
 
@@ -63,7 +63,7 @@ namespace NovelRT::Maths
          * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector3F's X and Y components.
          * @return A new GeoVector3F with the given GeoVector2F X and Y components, with the Z component set to zero.
          */
-        [[nodiscard]] GeoVector3F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f)
+        GeoVector3F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f)
         {
         }
 

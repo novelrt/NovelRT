@@ -38,7 +38,7 @@ namespace NovelRT::Maths
          *
          * @return A GeoVector2F with all components set to zero.
          */
-        [[nodiscard]] GeoVector2F() noexcept : x(0.0f), y(0.0f)
+        GeoVector2F() noexcept : x(0.0f), y(0.0f)
         {
         }
 
@@ -49,7 +49,7 @@ namespace NovelRT::Maths
          * @param y The Y component of the vector.
          * @return A GeoVector2F with the given components.
          */
-        [[nodiscard]] GeoVector2F(float x, float y) noexcept : x(x), y(y)
+        GeoVector2F(float x, float y) noexcept : x(x), y(y)
         {
         }
 

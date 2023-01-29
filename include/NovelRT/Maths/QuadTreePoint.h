@@ -22,7 +22,7 @@ namespace NovelRT::Maths
          * @param position The position in two-dimensional space for where the point is located.
          * @return A QuadTreePoint with the given position.
          */
-        [[nodiscard]] QuadTreePoint(GeoVector2F position) noexcept : _position(position)
+        QuadTreePoint(GeoVector2F position) noexcept : _position(position)
         {
         }
 
@@ -33,7 +33,7 @@ namespace NovelRT::Maths
          * @param y The Y coordinate of the point's position.
          * @return A QuadTreePoint with the given position.
          */
-        [[nodiscard]] QuadTreePoint(float x, float y) noexcept : QuadTreePoint(GeoVector2F(x, y))
+        QuadTreePoint(float x, float y) noexcept : QuadTreePoint(GeoVector2F(x, y))
         {
         }
 

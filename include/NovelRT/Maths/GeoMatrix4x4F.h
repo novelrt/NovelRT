@@ -47,7 +47,7 @@ namespace NovelRT::Maths
          *
          * @return The newly instantiated GeoMatrix4x4F object.
          */
-        [[nodiscard]] GeoMatrix4x4F() noexcept
+        GeoMatrix4x4F() noexcept
             : x(GeoVector4F::Zero()), y(GeoVector4F::Zero()), z(GeoVector4F::Zero()), w(GeoVector4F::Zero())
         {
         }
@@ -61,7 +61,7 @@ namespace NovelRT::Maths
          * @param w The fourth row in the matrix.
          * @return The newly instantiated GeoMatrix4x4F object.
          */
-        [[nodiscard]] GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept
+        GeoMatrix4x4F(GeoVector4F x, GeoVector4F y, GeoVector4F z, GeoVector4F w) noexcept
             : x(x), y(y), z(z), w(w)
         {
         }

@@ -39,7 +39,7 @@ namespace NovelRT::Maths
          * @param rotation A starting rotation for the GeoBounds instance that is represented in degrees.
          * @return Newly constructed GeoBounds object containing the position, size, and rotation components.
          */
-        [[nodiscard]] GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
+        GeoBounds(GeoVector2F position, GeoVector2F size, float rotation) noexcept;
 
         /**
          * @brief Determines if a given GeoVector2F is within the confines of this bounding box.
