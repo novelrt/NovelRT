@@ -27,7 +27,10 @@ namespace NovelRT::UI::DearImGui
         ImGui::SetWindowPos(_translatedPosition);
         ImGui::SetWindowSize(_scale);
 
-        ImGui::Button(_identifier.c_str());
+        if (ImGui::Button(_identifier.c_str()))
+        {
+            Clicked(*this);
+        }
 
         ImGui::End();
         ImGui::PopStyleVar();
