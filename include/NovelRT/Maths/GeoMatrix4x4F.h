@@ -152,6 +152,9 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if all components match.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other GeoMatrix4x4F to evaluate against.
          * @return true if all components matched, otherwise false.
          */
@@ -164,6 +167,9 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoMatrix4x4F with another GeoMatrix4x4F to determine if any or all components do not
          * match.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other GeoMatrix4x4F to evaluate against.
          * @return true if any of the components do not match, otherwise false.
          */
@@ -205,6 +211,8 @@ namespace NovelRT::Maths
          *      10 & 13 & 13 & 9
          *      \end{bmatrix}
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param other The other matrix whose components get added together with this matrix.
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and another
@@ -249,6 +257,8 @@ namespace NovelRT::Maths
          *      -2 & -1 & 1 & -7
          *      \end{bmatrix}
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param other The other matrix whose components get subtracted from this matrix.
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and another
@@ -293,6 +303,8 @@ namespace NovelRT::Maths
          *      108 & 62 & 76 & 66
          *      \end{bmatrix}
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param other The other matrix whose columns are multiplied and summed up by this matrix's rows.
          * @return A matrix product where the components consist of the sum of the products of this GeoMatrix4x4F's rows
@@ -480,6 +492,8 @@ namespace NovelRT::Maths
          *      10& 12 & 13 & 7
          *      \end{bmatrix}
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param other The other scalar that gets added together with this matrix.
          * @return A matrix where the components consist of the entrywise sum of this GeoMatrix4x4F and the provided
@@ -531,6 +545,8 @@ namespace NovelRT::Maths
          *      -2 & 0 & 1 & -5\\
          *      \end{bmatrix}
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param other The other scalar that gets subtracted from this matrix.
          * @return A matrix where the components consist of the entrywise difference of this GeoMatrix4x4F and the
@@ -582,6 +598,8 @@ namespace NovelRT::Maths
          *      24 & 36 & 42 & 6
          *      \end{bmatrix}
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param other The other scalar that gets multiplied by this matrix.
          * @return a matrix where the components consist of the product of this GeoMatrix4x4F and the provided scalar.
@@ -762,6 +780,8 @@ namespace NovelRT::Maths
          *      0 & 0 & 0 & 1
          *      \end{bmatrix}
          * \f]
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @return An Identity GeoMatrix4x4F.
          */
@@ -772,6 +792,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Creates a matrix for projecting a three-dimensional space onto a plane.
+         * 
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param left Farthest left on the x-axis.
          * @param right Farthest right on the x-axis.
@@ -795,7 +818,7 @@ namespace NovelRT::Maths
          * @brief Creates a matrix with the given scale components.
          *
          * @details
-         * The scale components are placed in the decending diagonal of the matrix: \f[
+         * The scale components are placed in the descending diagonal of the matrix: \f[
          *      \begin{bmatrix}
          *      x & 0 & 0 & 0\\
          *      0 & y & 0 & 0\\
@@ -803,6 +826,8 @@ namespace NovelRT::Maths
          *      0 & 0 & 0 & 1
          *      \end{bmatrix}
          * \f]
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param x The scale component over the X axis.
          * @param y The scale component over the Y axis.
@@ -816,6 +841,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Creates a matrix for observing a point in space from a given location.
+         * 
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
          *
          * @param eye The position of the observer.
          * @param centre The position of the reference point the observer should look towards.

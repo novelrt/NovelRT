@@ -47,6 +47,9 @@ namespace NovelRT::Maths
         /**
          * @brief Returns a pointer to the parent instance in this QuadTree's hierarchy.
          *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
          * @return A std::weak_ptr<QuadTree>& to the parent QuadTree. if this instance is the root of the tree, nullptr
          * is returned instead.
          */
@@ -58,6 +61,9 @@ namespace NovelRT::Maths
         /**
          * @brief Returns the bounds this QuadTree covers.
          *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
          * @return The area in which this QuadTree maps points.
          */
         [[nodiscard]] GeoBounds GetBounds() const noexcept
@@ -67,6 +73,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Returns the point instance under the specified index.
+         *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
          *
          * @param index The index of the point to retrieve. A valid index ranges from 0 to 3 inclusive.
          * @return A std::shared_ptr<TQuadTreePoint>&, pointing to the instance. If no instance was stored under the
@@ -79,6 +88,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Returns the point instance under the specified index.
+         *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
          *
          * @tparam TQuadTreePoint A point type that can be casted as a QuadTreePoint instance.
          * @param index The index of the point to retrieve. A valid index ranges from 0 to 3 inclusive.
@@ -94,6 +106,9 @@ namespace NovelRT::Maths
         /**
          * @brief Returns the amount of points stored in this QuadTree instance.
          *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
          * @return The number of points stored in this instance.
          */
         [[nodiscard]] size_t GetPointCount() const noexcept
@@ -103,6 +118,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Returns the child QuadTree node for the top left area.
+         *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
          *
          * @return The child QuadTree covering the top left area of this QuadTree. If this QuadTree instance does not
          * have any children, nullptr is returned instead.
@@ -115,6 +133,9 @@ namespace NovelRT::Maths
         /**
          * @brief Returns the child QuadTree node for the top right area.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
          * @return The child QuadTree covering the top right area of this QuadTree. If this QuadTree instance does not
          * have any children, nullptr is returned instead.
          */
@@ -125,6 +146,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Returns the child QuadTree node for the bottom left area.
+         *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
          *
          * @return The child QuadTree covering the bottom left area of this QuadTree. If this QuadTree instance does not
          * have any children, nullptr is returned instead.
@@ -137,6 +161,9 @@ namespace NovelRT::Maths
         /**
          * @brief Returns the child QuadTree node for the bottom right area.
          *
+         * @details
+         * This method does not directly modify the QuadTree instance. Calling this without using the result has no effect and introduces overhead for calling a method.
+         *
          * @return The child QuadTree covering the bottom right area of this QuadTree. If this QuadTree instance does
          * not have any children, nullptr is returned instead.
          */
@@ -147,6 +174,14 @@ namespace NovelRT::Maths
 
         /**
          * @brief Attempts to store the given point within this QuadTree's hierarchy.
+         *
+         * @details
+         * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle invalid behavior, for example:
+         * \code{.cpp}
+         * [[maybe_unused]] bool result = TryInsert(point);
+         * assert(result);
+         * \endcode 
+         * In this example it is expected that TryInsert should always return true.
          *
          * @param point A pointer to a two-dimensional position instance.
          * @return true if a point has successfully been inserted, otherwise false.
@@ -176,10 +211,17 @@ namespace NovelRT::Maths
         }
 
         /**
-         * @brief Attempts to insert a bounding box into the quadtree.
+         * @brief Attempts to insert a bounding box into the QuadTree.
          *
          * @details
          * A TQuadTreePoint most have a constructor that matches TQuadTreePoint(GeoVector, TArgs).
+         * 
+         * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle invalid behavior, for example:
+         * \code{.cpp}
+         * [[maybe_unused]] bool result = TryInsert<MyQuadTreePoint>(bounds);
+         * assert(result);
+         * \endcode 
+         * In this example it is expected that TryInsert should always return true.
          *
          * @tparam TQuadTreePoint A point type that can be casted as a QuadTreePoint instance.
          * @tparam ...TArgs The variable length argument types for constructing a TQuadTreePoint.
@@ -203,6 +245,14 @@ namespace NovelRT::Maths
         /**
          * @brief Attempts to remove a point from the QuadTree.
          *
+         * @details
+         * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle invalid behavior, for example:
+         * \code{.cpp}
+         * [[maybe_unused]] bool result = TryRemove(point);
+         * assert(result);
+         * \endcode 
+         * In this example it is expected that TryRemove should always return true.
+         * 
          * @param point The point to remove from the QuadTree,
          * @return true if the point has been successfully removed, otherwise false.
          */
@@ -268,6 +318,9 @@ namespace NovelRT::Maths
 
         /**
          * @brief Gets a set of points that intersect with the given bounds.
+         *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a method.
          *
          * @param bounds The area in which to look for points in the QuadTree.
          * @return A collection of points filled with the intersecting points.

@@ -94,6 +94,8 @@ namespace NovelRT::Maths
          *      \sqrt{1} = 1
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return A unit GeoVector3F created from normalising this GeoVector3F.
          */
         [[nodiscard]] inline GeoVector3F GetNormalised() const noexcept
@@ -117,6 +119,9 @@ namespace NovelRT::Maths
          *      &= \sqrt{49}
          *      &= 7
          * \f}
+         * 
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return The magnitude of this GeoVector3F.
          */
         [[nodiscard]] inline float GetMagnitude() const noexcept
@@ -141,6 +146,8 @@ namespace NovelRT::Maths
          *      &= 7
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return The length of this GeoVector3F.
          */
         [[nodiscard]] inline float GetLength() const noexcept
@@ -164,6 +171,8 @@ namespace NovelRT::Maths
          *      &= 49
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return The squared magnitude of this GeoVector3F.
          */
         [[nodiscard]] inline float GetSquaredMagnitude() const noexcept
@@ -187,6 +196,8 @@ namespace NovelRT::Maths
          *      &= 49
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return The squared length of this GeoVector3F.
          */
         [[nodiscard]] inline float GetSquaredLength() const noexcept
@@ -197,6 +208,9 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if all components match.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @returns true if all components matched, otherwise false.
          */
@@ -208,6 +222,9 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if all components do not match.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @returns true if any of the components do not match, otherwise false.
          */
@@ -220,6 +237,9 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is less
          * than the other GeoVector3F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is less than the other GeoVector3F's components, otherwise false.
          */
@@ -233,6 +253,9 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is less
          * than or equal to the other GeoVector3F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is less than or equal to the other GeoVector3F's components,
          * otherwise false.
@@ -247,6 +270,9 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is greater
          * than the other GeoVector3F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is greater than the other GeoVector3F's components, otherwise false.
          */
@@ -260,6 +286,9 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if any of its components is greater
          * than or equal to the other GeoVector3F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @return true if any of the components is greater than or equal to the other GeoVector3F's components,
          * otherwise false.
@@ -300,6 +329,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other vector whose components get added together with this vector.
          * @return A GeoVector3F where the components consist of the entrywise sum of this GeoVector3F and another
          * GeoVector3F.
@@ -339,6 +370,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other vector whose components get subtracted from this vector.
          * @return A GeoVector3F where the components consist of the entrywise difference of this GeoVector3F and
          * another GeoVector3F.
@@ -378,6 +411,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other vector whose components get multiplied by this vector's components.
          * @return A GeoVector3F where the components consist of the Hadamard product of this GeoVector3F and another
          * GeoVector3F.
@@ -417,6 +452,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other vector whose components act as a divisor for this vector's components.
          * @return A GeoVector3F where the components consist of the entrywise quotient of this GeoVector3F and another
          * GeoVector3F.
@@ -464,6 +501,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other scalar that gets added up with each component of this vector.
          * @return A GeoVector3F where the components consist of the entrywise sum of this GeoVector3F and the provided
          * scalar.
@@ -511,6 +550,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other scalar that gets subtracted from each component of this vector.
          * @return A GeoVector3F where the components consist of the entrywise difference of this GeoVector3F and the
          * provided scalar.
@@ -558,6 +599,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other scalar who get multiplied by this vector's components.
          * @return A GeoVector3F where the components consist of the Hadamard product of this GeoVector3F and the
          * provided scalar.
@@ -605,6 +648,8 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other scalar that acts as the divisor for each component of this vector.
          * @return A GeoVector3F where the components consist of the entrywise quotient of this GeoVector3F and the
          * provided scalar.
@@ -1013,6 +1058,9 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector3F with another GeoVector3F to determine if all components are within a given
          * range of tolerance.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other GeoVector3F whose components are evaluated against this GeoVector3F's components.
          * @param epsilonValue The vector determining the tolerance per component.
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
@@ -1047,6 +1095,8 @@ namespace NovelRT::Maths
          *      &= 47
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other GeoVector3F, the components of which get multiplied and summed up with this
          * GeoVector3F.
          * @return The sum of products of the left-hand side GeoVector3Fs components and the right-hand side
@@ -1099,6 +1149,8 @@ namespace NovelRT::Maths
          * It should be noted that by flipping the left hand side vector with the right hand side vector will result in
          * a cross product of equal length with opposite polarity.
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param other The other GeoVector3F, the components of which will be used to calculate the cross product with
          * this GeoVector3F.
          * @return The cross product of this GeoVector3F with another GeoVector3F.
@@ -1141,7 +1193,9 @@ namespace NovelRT::Maths
          *      &= 6
          * \f}
          *
-         * @param other The other point to meassure the distance to.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
+         * @param other The other point to measure the distance to.
          * @return The distance between this GeoVector3F and another GeoVector3F.
          */
         [[nodiscard]] inline float Distance(GeoVector3F other) noexcept
@@ -1181,7 +1235,9 @@ namespace NovelRT::Maths
          *      &= 36
          * \f}
          *
-         * @param other The other point to meassure the squared distance to.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
+         * @param other The other point to measure the squared distance to.
          * @return The squared distance between this GeoVector3F and another GeoVector3F.
          */
         [[nodiscard]] inline float SquaredDistance(GeoVector3F other) noexcept
@@ -1192,6 +1248,9 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new GeoVector3F instance with a uniform value of zero.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return A new GeoVector3F instance with all components set to zero.
          */
         [[nodiscard]] static GeoVector3F Zero() noexcept
@@ -1202,6 +1261,9 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new GeoVector3F instance with a uniform value of one.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @return A new GeoVector3F instance with all components set to one.
          */
         [[nodiscard]] static GeoVector3F One() noexcept
@@ -1212,6 +1274,9 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new uniform GeoVector3F based on the specified value.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+         * 
          * @param value The value to use as the uniform value across the GeoVector3F.
          * @return a new GeoVector3F instance with all components set to the specified value.
          */
@@ -1259,8 +1324,10 @@ namespace NovelRT::Maths
      *      \end{pmatrix}
      * \f}
      *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling the method.
+     * 
      * @param lhs The scalar that gets multiplied by the GeoVector3F's components.
-     * @param rhs The GeoVector3F whos components get multiplied by the scalar.
+     * @param rhs The GeoVector3F whose components get multiplied by the scalar.
      * @return A GeoVector3F where the components consist of the product of this and the provided scalar.
      */
     [[nodiscard]] inline GeoVector3F operator*(float lhs, const GeoVector3F& rhs) noexcept
