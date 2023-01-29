@@ -5,8 +5,8 @@
 #define NOVELRT_MATHS_H
 
 // Maths dependencies
-#include "../Exceptions/Exceptions.h"
-#include "../Utilities/Misc.h"
+#include "NovelRT/Exceptions/Exceptions.h"
+#include "NovelRT/Utilities/Misc.h"
 #include <array>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
