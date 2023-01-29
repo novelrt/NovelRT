@@ -14,15 +14,15 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 }
 
 // UI.GlfwVulkan dependencies
-#include "NovelRT/Graphics/Graphics.h"
-#include "NovelRT/Graphics/Vulkan/Graphics.Vulkan.h"
-#include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
-#include "NovelRT/PluginManagement/PluginManagement.h"
-#include "NovelRT/UI/DearImGui/UI.DearImGui.h"
+#include "../../../Graphics/Graphics.h"
+#include "../../../Graphics/Vulkan/Graphics.Vulkan.h"
+#include "../../../Windowing/Glfw/Windowing.Glfw.h"
+#include "../../../PluginManagement/PluginManagement.h"
+#include "../UI.DearImGui.h"
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_vulkan.h>
 
-// UI.DearImGui.GlfwVulkan types
+// UI::DearImGui.GlfwVulkan types
 #include "GlfwVulkanUIProvider.h"
 #include "GlfwVulkanUIPluginProvider.h"
 

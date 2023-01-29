@@ -5,16 +5,15 @@
 
 namespace NovelRT::UI::DearImGui
 {
-    ImGuiTextbox::ImGuiTextbox() noexcept : ImGuiTextbox("", "", false, NovelRT::Maths::GeoVector2F::Zero(), NovelRT::Maths::GeoVector2F::One(), 18.0f, NovelRT::Maths::GeoVector2F::Zero())
+    ImGuiTextbox::ImGuiTextbox() noexcept : ImGuiTextbox("", "", false, NovelRT::Maths::GeoVector2F::Zero(), NovelRT::Maths::GeoVector2F::One(), 18.0f, NovelRT::Graphics::RGBAColour(0,0,0,255), NovelRT::Maths::GeoVector2F::Zero())
     {
     }
 
     ImGuiTextbox::ImGuiTextbox(const std::string& identifier, const std::string& text,
-        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize,
+        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour,
         NovelRT::Maths::GeoVector2F screenSize) noexcept :
-        IUITextbox(identifier, UIElementState::Hidden, position, scale, wordWrap, text, fontSize, NovelRT::Graphics::RGBAColour(0,0,0,255)),
-        _screenSize(screenSize),
-        _translatedPosition(position + (screenSize / 2))
+        IUITextbox(identifier, UIElementState::Hidden, position, scale, wordWrap, text, fontSize, backgroundColour),
+        ImGuiCommon(screenSize, position + (screenSize / 2))
     {}
     
 

@@ -161,10 +161,11 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         ImGui::DestroyContext();
     }
 
-    std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string id, std::string text,
-        bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize)
+    std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string identifier, std::string text,
+            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour)
     {
-        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(id, text, wordWrap, position, scale, fontSize, _windowSize));
+        
+        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(identifier, text, wordWrap, position, scale, fontSize, backgroundColour, _windowSize)); // TODO: This looks VEEEERY WRONG???
 
         return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
     }

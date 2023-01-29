@@ -17,6 +17,7 @@ namespace NovelRT::UI
         NovelRT::Graphics::RGBAColour _backgroundColour;
 
     public:
+        IUIButton(const std::string& identifier, UIElementState state, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, NovelRT::Graphics::RGBAColour backgroundColour) noexcept : IUIElement(identifier, state, position, scale), _backgroundColour(backgroundColour){}
 
         [[nodiscard]] inline NovelRT::Graphics::RGBAColour& BackgroundColour()
         {

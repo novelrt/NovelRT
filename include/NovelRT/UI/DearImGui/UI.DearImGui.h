@@ -10,11 +10,13 @@
 namespace NovelRT::UI::DearImGui
 {
     class ImGuiTextbox;
+    class ImGuiButton;
+    class ImGuiCommon;
 }
 
 
-// UI.DearImGui dependencies
-#include "NovelRT/UI/UI.h"
+// UI::DearImGui dependencies
+#include "../UI.h"
 #define IMGUI_USER_CONFIG "UI.DearImGui.h"
 #define IM_VEC2_CLASS_EXTRA                                                     \
         constexpr ImVec2(const NovelRT::Maths::GeoVector2F& f) : x(f.x), y(f.y) {}                   \
@@ -22,7 +24,14 @@ namespace NovelRT::UI::DearImGui
 #define IM_VEC4_CLASS_EXTRA                                                     \
         constexpr ImVec4(const NovelRT::Graphics::RGBAColour& f) : x(f.r), y(f.g), z(f.b), w(f.a) {}
 #include <imgui.h>
-// UI.DearImGui includes
+
+// UI::DearImGui includes
+// clang-format off
+
+#include "ImGuiCommon.h"
+#include "ImGuiButton.h"
 #include "ImGuiTextbox.h"
+
+// clang-format on
 
 #endif // NOVELRT_UI_DEARIMGUI_GLFWVULKAN_H

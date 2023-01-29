@@ -31,8 +31,9 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
         void Begin();
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
-        std::shared_ptr<IUITextbox> CreateTextbox(std::string id, std::string text,
-            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize);
+
+        std::shared_ptr<IUITextbox> CreateTextbox(std::string identifier, std::string text,
+            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour) final;
     };
 }
 

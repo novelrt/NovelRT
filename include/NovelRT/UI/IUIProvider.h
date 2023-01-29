@@ -27,8 +27,8 @@ namespace NovelRT::UI
         virtual ~IUIProvider() = default;
         virtual void Begin() = 0;
         virtual void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context) = 0;
-        virtual std::shared_ptr<IUITextbox> CreateTextbox(std::string id, std::string text,
-            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize) = 0;
+        virtual std::shared_ptr<IUITextbox> CreateTextbox(std::string identifier, std::string text,
+            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour) = 0;
 
         [[nodiscard]] inline bool& EditorMode() noexcept
         {

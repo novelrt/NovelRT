@@ -7,11 +7,11 @@
 // UI dependencies
 #include <memory>
 #include <cstdint>
-#include "NovelRT/LoggingService.h"
-#include "NovelRT/Maths/Maths.h"
-#include "NovelRT/Graphics/Graphics.h"
-#include "NovelRT/Windowing/Windowing.h"
-#include "NovelRT/Utilities/Event.h"
+#include "../LoggingService.h"
+#include "../Maths/Maths.h"
+#include "../Graphics/Graphics.h"
+#include "../Windowing/Windowing.h"
+#include "../Utilities/Event.h"
 //#include "NovelRT/PluginManagement/PluginManagement.h"
 /**
  * @brief The experimental UI plugin API.
