@@ -14,9 +14,11 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     {
     private:
         std::list<std::shared_ptr<ImGuiTextbox>> _textboxes;
+        std::list<std::shared_ptr<ImGuiButton>> _buttons;
         NovelRT::Maths::GeoVector2F _windowSize;
 
         void Render();
+
     protected:
         bool _isInitialised;
         ImGui_ImplVulkan_InitInfo _initInfo;
@@ -25,17 +27,26 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         GlfwVulkanUIProvider() noexcept;
         ~GlfwVulkanUIProvider() final;
         void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
-            std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
-            std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
-            std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline);
+                        std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
+                        std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
+                        std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline);
 
         void Begin();
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
 
-        std::shared_ptr<IUITextbox> CreateTextbox(std::string identifier, std::string text,
-            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour) final;
+        std::shared_ptr<IUITextbox> CreateTextbox(const std::string& identifier,
+                                                  const std::string& text,
+                                                  bool wordWrap,
+                                                  NovelRT::Maths::GeoVector2F position,
+                                                  NovelRT::Maths::GeoVector2F scale,
+                                                  float fontSize,
+                                                  NovelRT::Graphics::RGBAColour backgroundColour) final;
+
+        std::shared_ptr<IUIButton> CreateButton(const std::string& identifier,
+                                                NovelRT::Maths::GeoVector2F position,
+                                                NovelRT::Maths::GeoVector2F scale,
+                                                NovelRT::Graphics::RGBAColour backgroundColour) final;
     };
 }
-
 
 #endif // NOVELRT_UI_GLFWVULKAN_GLFWVULKANUIPROVIDER_H

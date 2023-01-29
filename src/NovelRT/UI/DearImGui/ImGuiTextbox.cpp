@@ -30,7 +30,7 @@ namespace NovelRT::UI::DearImGui
 
             ImGui::PushStyleColor(ImGuiCol_WindowBg, _backgroundColour);
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(100, 100));
-            ImGui::Begin(_identifier.c_str(), NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+            ImGui::Begin(_identifier.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
             ImGui::SetWindowPos(_translatedPosition);
             ImGui::SetWindowSize(_scale);
             if(_fontSize != 36.0f)

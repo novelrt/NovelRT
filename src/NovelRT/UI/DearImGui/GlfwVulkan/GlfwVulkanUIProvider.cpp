@@ -6,50 +6,56 @@
 namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
-        : _isInitialised(false),
-        _initInfo(),
-        _textboxes(std::list<std::shared_ptr<ImGuiTextbox>>()),
-        _windowSize()
+        : _isInitialised(false), _initInfo(), _textboxes(std::list<std::shared_ptr<ImGuiTextbox>>()), _windowSize()
     {
         _editorMode = EngineConfig::EnableEditorMode();
     }
 
     void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
-        std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
-        std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
-        std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline)
+                                          std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
+                                          std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
+                                          std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline)
     {
         _logger.logDebugLine("Initialising Dear ImGui UI service with GLFW and Vulkan...");
-        if(gfxDevice == nullptr)
+        if (gfxDevice == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsDevice!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsDevice!");
+            _logger.logErrorLine(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsDevice!");
+            throw NovelRT::Exceptions::NullPointerException(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsDevice!");
         }
-        if(windowingDevice == nullptr)
+        if (windowingDevice == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IWindowingDevice!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IWindowingDevice!");
+            _logger.logErrorLine(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IWindowingDevice!");
+            throw NovelRT::Exceptions::NullPointerException(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IWindowingDevice!");
         }
-        if(gfxDevice == nullptr)
+        if (gfxDevice == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IGraphicsPluginProvider!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as IGraphicsPluginProvider!");
+            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as "
+                                 "IGraphicsPluginProvider!");
+            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - "
+                                                            "null pointer provided as IGraphicsPluginProvider!");
         }
-        if(pipeline == nullptr)
+        if (pipeline == nullptr)
         {
-            _logger.logErrorLine("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
-            throw NovelRT::Exceptions::NullPointerException("Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
+            _logger.logErrorLine(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
+            throw NovelRT::Exceptions::NullPointerException(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
         }
 
         auto vulkanProvider = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider>(gfxProvider);
         auto vulkanDevice = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice>(gfxDevice);
         auto vulkanPipeline = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline>(pipeline);
         _windowSize = windowingDevice->GetSize();
-        windowingDevice->SizeChanged += [&](NovelRT::Maths::GeoVector2F args){ _windowSize = args; };
-        //Init Dear ImGui Context
+        windowingDevice->SizeChanged += [&](NovelRT::Maths::GeoVector2F args) { _windowSize = args; };
+        // Init Dear ImGui Context
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
-        auto defaultFont = (NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Fonts" / "Raleway-Regular.ttf").string();
+        auto defaultFont =
+            (NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Fonts" / "Raleway-Regular.ttf").string();
         io.Fonts->AddFontFromFileTTF(defaultFont.c_str(), 36.0f);
         io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
 
@@ -59,10 +65,10 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         //     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
         // }
 
-        //GLFW Specific Init
+        // GLFW Specific Init
         ImGui_ImplGlfw_InitForVulkan(reinterpret_cast<GLFWwindow*>(windowingDevice->GetHandle()), true);
 
-        //Vulkan Specific Init
+        // Vulkan Specific Init
         _initInfo.Instance = vulkanProvider->GetVulkanInstance();
         _initInfo.PhysicalDevice = vulkanDevice->GetAdapter()->GetVulkanPhysicalDevice();
         _initInfo.Device = vulkanDevice->GetVulkanDevice();
@@ -75,8 +81,10 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         _initInfo.ImageCount = static_cast<uint32_t>(vulkanDevice->GetVulkanSwapChainImages().size());
         _initInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
         _initInfo.Allocator = nullptr;
-        _initInfo.CheckVkResultFn = [](VkResult err){
-            if (err == 0) return;
+        _initInfo.CheckVkResultFn = [](VkResult err)
+        {
+            if (err == 0)
+                return;
             spdlog::error("Vulkan Error: VkResult = {}", err);
             if (err < 0)
             {
@@ -85,7 +93,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         };
         ImGui_ImplVulkan_Init(&_initInfo, vulkanDevice->GetVulkanRenderPass());
 
-        //Fonts init
+        // Fonts init
         _logger.logDebugLine("Dear ImGui - uploading default fonts...");
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
         commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -118,8 +126,8 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         {
             unused(sys);
             Render();
-            //ImGui::ShowMetricsWindow();
-        //     //ImGui::ShowDemoWindow();
+            // ImGui::ShowMetricsWindow();
+            //     //ImGui::ShowDemoWindow();
         };
     }
 
@@ -132,7 +140,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
     void GlfwVulkanUIProvider::Render()
     {
-        for(auto&& x : _textboxes)
+        for (auto&& x : _textboxes)
         {
             x->Render(this->shared_from_this(), _windowSize);
         }
@@ -151,7 +159,6 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         //     ImGui::UpdatePlatformWindows();
         //     ImGui::RenderPlatformWindowsDefault();
         // }
-
     }
 
     GlfwVulkanUIProvider::~GlfwVulkanUIProvider()
@@ -161,12 +168,29 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         ImGui::DestroyContext();
     }
 
-    std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(std::string identifier, std::string text,
-            bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour)
+        std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(const std::string& identifier,
+                                                  const std::string& text,
+                                                  bool wordWrap,
+                                                  NovelRT::Maths::GeoVector2F position,
+                                                  NovelRT::Maths::GeoVector2F scale,
+                                                  float fontSize,
+                                                  NovelRT::Graphics::RGBAColour backgroundColour)
     {
-        
-        auto boxPtr = _textboxes.emplace_back(std::make_shared<ImGuiTextbox>(identifier, text, wordWrap, position, scale, fontSize, backgroundColour, _windowSize)); // TODO: This looks VEEEERY WRONG???
+
+        auto boxPtr = _textboxes.emplace_back(
+            std::make_shared<ImGuiTextbox>(identifier, text, wordWrap, position, scale, fontSize, backgroundColour,
+                                           _windowSize)); // TODO: This looks VEEEERY WRONG???
 
         return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
+    }
+
+    std::shared_ptr<IUIButton> GlfwVulkanUIProvider::CreateButton(const std::string& identifier,
+                                             NovelRT::Maths::GeoVector2F position,
+                                             NovelRT::Maths::GeoVector2F scale,
+                                             NovelRT::Graphics::RGBAColour backgroundColour)
+    {
+        auto buttonPtr = _buttons.emplace_back(std::make_shared<ImGuiButton>(identifier, position, scale, backgroundColour, _windowSize));
+
+        return std::dynamic_pointer_cast<IUIButton>(buttonPtr);
     }
 }

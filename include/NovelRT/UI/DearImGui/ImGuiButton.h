@@ -15,7 +15,11 @@ namespace NovelRT::UI::DearImGui
     public:
         ImGuiButton() noexcept;
 
-        ImGuiButton(const std::string& identifier, UIElementState state, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, NovelRT::Graphics::RGBAColour backgroundColour, NovelRT::Maths::GeoVector2F screenSize) noexcept;
+        ImGuiButton(const std::string& identifier,
+                    NovelRT::Maths::GeoVector2F position,
+                    NovelRT::Maths::GeoVector2F scale,
+                    NovelRT::Graphics::RGBAColour backgroundColour,
+                    NovelRT::Maths::GeoVector2F screenSize) noexcept;
 
         virtual void Render(std::shared_ptr<IUIProvider> provider, NovelRT::Maths::GeoVector2F windowSize) final;
     };
