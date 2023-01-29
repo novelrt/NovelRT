@@ -214,7 +214,7 @@ namespace NovelRT::Maths
          * @brief Attempts to insert a bounding box into the QuadTree.
          *
          * @details
-         * A TQuadTreePoint most have a constructor that matches TQuadTreePoint(GeoVector, TArgs).
+         * A TQuadTreePoint must have a constructor that matches TQuadTreePoint(GeoVector, TArgs).
          * 
          * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle invalid behavior, for example:
          * \code{.cpp}
