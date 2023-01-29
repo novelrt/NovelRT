@@ -144,6 +144,11 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         {
             x->Render(this->shared_from_this(), _windowSize);
         }
+        
+        for (auto&& button : _buttons)
+        {
+            button->Render(shared_from_this(), _windowSize);
+        }
     }
 
     void GlfwVulkanUIProvider::End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context)

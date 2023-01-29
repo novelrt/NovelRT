@@ -27,6 +27,11 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>())
             .InitialiseAndRegisterComponents();
+    
+    std::shared_ptr<NovelRT::Ecs::UI::UISystem> ui = scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::UI::UISystem>();
+    auto uiProvider = ui->GetProvider();
+    auto testButton = uiProvider->CreateButton("Hello Button", NovelRT::Maths::GeoVector2F::Zero(), NovelRT::Maths::GeoVector2F::Uniform(500.0f), NovelRT::Graphics::RGBAColour(255, 0, 0, 255));
+    testButton->State() = NovelRT::UI::UIElementState::Shown;
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
