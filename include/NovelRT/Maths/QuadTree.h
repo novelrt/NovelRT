@@ -185,7 +185,7 @@ namespace NovelRT::Maths
          * @brief Attempts to store the given point within this QuadTree's hierarchy.
          *
          * @details
-         * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle
+         * This method modifies the structure of the QuadTree, it is therefore recommended to use the result to handle
          * invalid behavior, for example: \code{.cpp}
          * [[maybe_unused]] bool result = TryInsert(point);
          * assert(result);
@@ -225,7 +225,7 @@ namespace NovelRT::Maths
          * @details
          * A TQuadTreePoint must have a constructor that matches TQuadTreePoint(GeoVector, TArgs).
          *
-         * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle
+         * This method modifies the structure of the QuadTree, it is therefore recommended to use the result to handle
          * invalid behavior, for example: \code{.cpp}
          * [[maybe_unused]] bool result = TryInsert<MyQuadTreePoint>(bounds);
          * assert(result);
@@ -255,7 +255,7 @@ namespace NovelRT::Maths
          * @brief Attempts to remove a point from the QuadTree.
          *
          * @details
-         * This method modifies the structure of the QuadTree, it is therefor recommended to use the result to handle
+         * This method modifies the structure of the QuadTree, it is therefore recommended to use the result to handle
          * invalid behavior, for example: \code{.cpp}
          * [[maybe_unused]] bool result = TryRemove(point);
          * assert(result);
