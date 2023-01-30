@@ -17,26 +17,26 @@ extern "C"
         return NrtGeoBounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
     }
 
-    NrtGeoVector2F Nrt_GeoBounds_getCornerInLocalSpace(NrtGeoBounds bounds, int32_t index)
+    NrtGeoVector2F Nrt_GeoBounds_GetCornerInLocalSpace(NrtGeoBounds bounds, int32_t index)
     {
         Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
-        Maths::GeoVector2F corner = cBounds.getCornerInLocalSpace(index);
+        Maths::GeoVector2F corner = cBounds.GetCornerInLocalSpace(index);
         return reinterpret_cast<NrtGeoVector2F&>(corner);
     }
 
-    NrtGeoVector2F Nrt_GeoBounds_getCornerInWorldSpace(NrtGeoBounds bounds, int32_t index)
+    NrtGeoVector2F Nrt_GeoBounds_GetCornerInWorldSpace(NrtGeoBounds bounds, int32_t index)
     {
         Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
-        Maths::GeoVector2F corner = cBounds.getCornerInWorldSpace(index);
+        Maths::GeoVector2F corner = cBounds.GetCornerInWorldSpace(index);
         return reinterpret_cast<NrtGeoVector2F&>(corner);
     }
 
-    NrtBool Nrt_GeoBounds_pointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point)
+    NrtBool Nrt_GeoBounds_PointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point)
     {
         Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
         Maths::GeoVector2F cPoint = *reinterpret_cast<Maths::GeoVector2F*>(&point);
 
-        if (cBounds.pointIsWithinBounds(cPoint))
+        if (cBounds.PointIsWithinBounds(cPoint))
         {
             return NRT_TRUE;
         }
@@ -44,14 +44,14 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector2F Nrt_GeoBounds_getExtents(NrtGeoBounds bounds)
+    NrtGeoVector2F Nrt_GeoBounds_GetExtents(NrtGeoBounds bounds)
     {
         const Maths::GeoBounds cBounds = *reinterpret_cast<const Maths::GeoBounds*>(&bounds);
-        Maths::GeoVector2F extents = cBounds.getExtents();
+        Maths::GeoVector2F extents = cBounds.GetExtents();
         return reinterpret_cast<NrtGeoVector2F&>(extents);
     }
 
-    NrtResult Nrt_GeoBounds_intersectsWith(NrtGeoBounds first, NrtGeoBounds other, NrtBool* outputResult)
+    NrtResult Nrt_GeoBounds_IntersectsWith(NrtGeoBounds first, NrtGeoBounds other, NrtBool* outputResult)
     {
         if (outputResult == nullptr)
         {
@@ -64,7 +64,7 @@ extern "C"
 
         try
         {
-            if (cFirst.intersectsWith(cOther))
+            if (cFirst.IntersectsWith(cOther))
             {
                 *outputResult = NRT_TRUE;
             }
@@ -82,7 +82,7 @@ extern "C"
         }
     }
 
-    NrtBool Nrt_GeoBounds_equal(NrtGeoBounds lhs, NrtGeoBounds rhs)
+    NrtBool Nrt_GeoBounds_Equal(NrtGeoBounds lhs, NrtGeoBounds rhs)
     {
         Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
         Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);
@@ -95,7 +95,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtBool Nrt_GeoBounds_notEqual(NrtGeoBounds lhs, NrtGeoBounds rhs)
+    NrtBool Nrt_GeoBounds_NotEqual(NrtGeoBounds lhs, NrtGeoBounds rhs)
     {
         Maths::GeoBounds cFirst = *reinterpret_cast<const Maths::GeoBounds*>(&lhs);
         Maths::GeoBounds cOther = *reinterpret_cast<const Maths::GeoBounds*>(&rhs);

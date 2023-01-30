@@ -78,7 +78,7 @@ extern "C"
         return NRT_FALSE;
     }
 
-    NrtGeoVector2F Nrt_GeoVector2F_getNormalised(NrtGeoVector2F vector)
+    NrtGeoVector2F Nrt_GeoVector2F_GetNormalised(NrtGeoVector2F vector)
     {
         Maths::GeoVector2F cVector = *reinterpret_cast<const Maths::GeoVector2F*>(&vector);
         Maths::GeoVector2F normal = cVector.GetNormalised();

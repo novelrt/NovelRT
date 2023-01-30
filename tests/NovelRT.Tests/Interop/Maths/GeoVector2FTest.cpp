@@ -178,7 +178,7 @@ TEST(InteropGeoVector2Test, DivideAssignOperatorDividesAndAssignsCorrectlyForFlo
 TEST(InteropGeoVector2Test, GetNormalisedReturnsNormalisedGeoVector)
 {
     NrtGeoVector2F cVector = Nrt_GeoVector2F_One();
-    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    NrtGeoVector2F normal = Nrt_GeoVector2F_GetNormalised(cVector);
     GeoVector2F& vec = *reinterpret_cast<GeoVector2F*>(&normal);
     float normalisedTotal = sqrtf(powf(vec.x, 2) + powf(vec.y, 2));
     EXPECT_FLOAT_EQ(normalisedTotal, 1.0f);
@@ -187,7 +187,7 @@ TEST(InteropGeoVector2Test, GetNormalisedReturnsNormalisedGeoVector)
 TEST(InteropGeoVector2Test, GetMagnitudeReturnsCorrectLength)
 {
     NrtGeoVector2F cVector = Nrt_GeoVector2F_One();
-    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    NrtGeoVector2F normal = Nrt_GeoVector2F_GetNormalised(cVector);
     GeoVector2F& vec = *reinterpret_cast<GeoVector2F*>(&normal);
     EXPECT_FLOAT_EQ(Nrt_GeoVector2F_GetMagnitude(normal), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
@@ -195,7 +195,7 @@ TEST(InteropGeoVector2Test, GetMagnitudeReturnsCorrectLength)
 TEST(InteropGeoVector2Test, GetLengthReturnsCorrectLength)
 {
     NrtGeoVector2F cVector = Nrt_GeoVector2F_One();
-    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    NrtGeoVector2F normal = Nrt_GeoVector2F_GetNormalised(cVector);
     GeoVector2F& vec = *reinterpret_cast<GeoVector2F*>(&normal);
     EXPECT_FLOAT_EQ(Nrt_GeoVector2F_GetLength(normal), sqrtf(powf(vec.x, 2) + powf(vec.y, 2)));
 }
@@ -203,14 +203,14 @@ TEST(InteropGeoVector2Test, GetLengthReturnsCorrectLength)
 TEST(InteropGeoVector2Test, GetSquaredMagnitudeReturnsCorrectLength)
 {
     NrtGeoVector2F cVector = Nrt_GeoVector2F_One();
-    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    NrtGeoVector2F normal = Nrt_GeoVector2F_GetNormalised(cVector);
     EXPECT_FLOAT_EQ(Nrt_GeoVector2F_GetSquaredMagnitude(normal), powf(normal.x, 2) + powf(normal.y, 2));
 }
 
 TEST(InteropGeoVector2Test, GetSquaredLengthReturnsCorrectLength)
 {
     NrtGeoVector2F cVector = Nrt_GeoVector2F_One();
-    NrtGeoVector2F normal = Nrt_GeoVector2F_getNormalised(cVector);
+    NrtGeoVector2F normal = Nrt_GeoVector2F_GetNormalised(cVector);
     EXPECT_FLOAT_EQ(Nrt_GeoVector2F_GetSquaredLength(normal), powf(normal.x, 2) + powf(normal.y, 2));
 }
 

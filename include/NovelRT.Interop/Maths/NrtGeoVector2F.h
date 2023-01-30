@@ -22,7 +22,7 @@ extern "C"
                                                      float angleRotationValue,
                                                      NrtGeoVector2F point);
     NrtBool Nrt_GeoVector2F_EpsilonEquals(NrtGeoVector2F vector, NrtGeoVector2F other, NrtGeoVector2F epsilonValue);
-    NrtGeoVector2F Nrt_GeoVector2F_getNormalised(NrtGeoVector2F vector);
+    NrtGeoVector2F Nrt_GeoVector2F_GetNormalised(NrtGeoVector2F vector);
     float Nrt_GeoVector2F_GetLength(NrtGeoVector2F vector);
     float Nrt_GeoVector2F_GetMagnitude(NrtGeoVector2F vector);
     float Nrt_GeoVector2F_GetSquaredLength(NrtGeoVector2F vector);

@@ -18,6 +18,14 @@
 #error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
 #endif
 
+#if __has_include(<version>)
+#include <version>
+#endif
+
+#if __cpp_lib_bitops
+#include <bit>
+#endif
+
 /**
  * @brief Contains utility functions to assist in mathematical operations.
  */
@@ -25,6 +33,10 @@ namespace NovelRT::Maths::Utilities
 {
     /**
      * @brief Creates a lookup table for calculating the log base 2 for a 32 bit integer.
+     *
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @return A lookup table for calculating the log base 2 for a 32 bit integer.
      */
@@ -37,10 +49,14 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Evaluates if the provided integer is a power of 2.
      *
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param value The given integer to be tested.
      * @return true if the given integer is a power of 2, otherwise false.
      */
-    [[nodiscard]] inline bool IsPow2(size_t value) noexcept
+    [[nodiscard]] inline constexpr bool IsPow2(size_t value) noexcept
     {
         return ((value & (value - 1ULL)) == 0ULL) && (value != 0ULL);
     }
@@ -48,16 +64,17 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Rounds a given address up to the nearest alignment.
      *
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param address The address to be aligned.
      * @param alignment The target alignment, which should be a power of two.
      * @return The address rounded up to the nearest alignment.
      */
-    [[nodiscard]] inline size_t AlignUp(size_t address, size_t alignment)
+    [[nodiscard]] inline constexpr size_t AlignUp(size_t address, size_t alignment)
     {
-        if (!IsPow2(alignment))
-        {
-            throw Exceptions::InvalidOperationException("Alignment must be to a power of two.");
-        }
+        assert(IsPow2(alignment) && "Alignment must be to a power of two.");
 
         return (address + (alignment - 1ULL)) & ~(alignment - 1ULL);
     }
@@ -65,17 +82,22 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Returns the number of set bits in the given value.
      *
-     * @deprecated This implementation of PopCount is superseded by <a
-     * href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> in C++20. This will be removed when
-     * the language version is updated.
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
+     * This implementation was previously marked as deprecated, but to prevent unnecessary complications it
+     * uses <a href="https://en.cppreference.com/w/cpp/numeric/popcount">std::popcount</a> when available instead of
+     * being removed.
      *
      * @param value The number to extract the amount of set bits from
      * @return The number of set bits.
      */
-    [[nodiscard]] [[deprecated("This implementation of PopCount is superseeded by std::popcount in C++20. This "
-                               "will be removed when the language version is updated.")]] inline int32_t
-    PopCount(uint32_t value) noexcept
+    [[nodiscard]] inline constexpr int32_t PopCount(uint32_t value) noexcept
     {
+#if __cpp_lib_bitops
+        return std::popcount(value);
+#else
         const uint32_t c1 = 0x55555555u;
         const uint32_t c2 = 0x33333333u;
         const uint32_t c3 = 0x0F0F0F0Fu;
@@ -86,6 +108,7 @@ namespace NovelRT::Maths::Utilities
         value = (((value + (value >> 4)) & c3) * c4) >> 24;
 
         return static_cast<int32_t>(value);
+#endif
     }
 
     /**
@@ -94,10 +117,13 @@ namespace NovelRT::Maths::Utilities
      * @details
      * When the input value is 0, 0 will be returned.
      *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param value The value to reach with 2 to the power of the resulting exponent.
      * @return The exponent to get to the given number, rounded down
      */
-    [[nodiscard]] inline uint32_t Log2(uint32_t value) noexcept
+    [[nodiscard]] inline constexpr uint32_t Log2(uint32_t value) noexcept
     {
         value |= value >> 1;
         value |= value >> 2;
@@ -111,11 +137,18 @@ namespace NovelRT::Maths::Utilities
     /**
      * @brief Computes the amount of leading zeros for the given 32-bit integer.
      *
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
      */
-    [[nodiscard]] inline uint32_t LeadingZeroCount32(uint32_t value) noexcept
+    [[nodiscard]] inline constexpr uint32_t LeadingZeroCount32(uint32_t value) noexcept
     {
+#if __cpp_lib_bitops
+        return std::countl_zero(value);
+#else
         if (value == 0)
         {
             return 32;
@@ -124,16 +157,24 @@ namespace NovelRT::Maths::Utilities
         {
             return 31 ^ Log2(value);
         }
+#endif
     }
 
     /**
      * @brief Computes the amount of leading zeros for the given 64-bit integer.
      *
+     * @details
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param value The number to get the amount of leading zeros from.
      * @return The amount of leading zeros.
      */
-    [[nodiscard]] inline uint64_t LeadingZeroCount64(uint64_t value) noexcept
+    [[nodiscard]] inline constexpr uint64_t LeadingZeroCount64(uint64_t value) noexcept
     {
+#if __cpp_lib_bitops
+        return std::countl_zero(value);
+#else
         uint32_t hi = static_cast<uint32_t>(value >> 32);
 
         if (hi == 0)
@@ -144,6 +185,7 @@ namespace NovelRT::Maths::Utilities
         {
             return LeadingZeroCount32(hi);
         }
+#endif
     }
 
     /**
@@ -153,6 +195,9 @@ namespace NovelRT::Maths::Utilities
      * To get the angle in radians you can use this formula: \f[
      *      radians = \frac{\pi \times degrees}{180}
      * \f]
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @param degrees The angle in degrees to convert.
      * @return The angle in radians.
@@ -170,6 +215,9 @@ namespace NovelRT::Maths::Utilities
      *      degrees = \frac{180 \times radians}{\pi }
      * \f]
      *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @param radians The angle in radians to convert.
      * @return The angle in degrees.
      */
@@ -186,6 +234,8 @@ namespace NovelRT::Maths::Utilities
      *      2\pi = 6.283185307179586476925...
      * \f]
      *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @tparam TFloatingPointType A floating point type that is expressed as either float or double.
      * @return A full rotation expressed in radians.
@@ -205,6 +255,9 @@ namespace NovelRT::Maths::Utilities
      * \f]
      * In this implementation it is expressed as \f(6.283185307\f).
      *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
+     *
      * @return A full rotation expressed in radians.
      */
     template<>[[nodiscard]] inline constexpr float Tau<float>() noexcept
@@ -220,6 +273,9 @@ namespace NovelRT::Maths::Utilities
      *      2\pi = 6.283185307179586476925...
      * \f]
      * In this implementation it is expressed as \f(6.283185307179586476925\f).
+     *
+     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
+     * the method.
      *
      * @return A full rotation expressed in radians.
      */
