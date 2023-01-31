@@ -221,6 +221,11 @@ namespace NovelRT::ResourceManagement::Desktop
                                RegisterAsset(relativePathForAssetDatabase)};
     }
 
+    TextureMetadata DesktopResourceLoader::LoadTexture(uuids::uuid assetId)
+    {
+        return LoadTexture(GetGuidsToFilePathsMap().at(assetId));
+    }
+
     ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
@@ -245,6 +250,11 @@ namespace NovelRT::ResourceManagement::Desktop
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
         return ShaderMetadata{buffer, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    ShaderMetadata DesktopResourceLoader::LoadShaderSource(uuids::uuid assetId)
+    {
+        return LoadShaderSource(GetGuidsToFilePathsMap().at(assetId));
     }
 
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
@@ -291,6 +301,11 @@ namespace NovelRT::ResourceManagement::Desktop
         package.databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
         return package;
+    }
+
+    BinaryPackage DesktopResourceLoader::LoadPackage(uuids::uuid assetId)
+    {
+        return LoadPackage(GetGuidsToFilePathsMap().at(assetId));
     }
 
     void DesktopResourceLoader::SavePackage(std::filesystem::path filePath, const BinaryPackage& package)
@@ -373,6 +388,11 @@ namespace NovelRT::ResourceManagement::Desktop
         return AudioMetadata{data, info.channels, info.samplerate, databaseHandle};
     }
 
+    AudioMetadata DesktopResourceLoader::LoadAudioFrameData(uuids::uuid assetId)
+    {
+        return LoadAudioFrameData(GetGuidsToFilePathsMap().at(assetId));
+    }
+
     StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
@@ -388,5 +408,10 @@ namespace NovelRT::ResourceManagement::Desktop
         }
 
         return StreamableAssetMetadata{std::move(file), RegisterAsset(filePath)};
+    }
+
+    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(uuids::uuid assetId)
+    {
+        return GetStreamToAsset(GetGuidsToFilePathsMap().at(assetId));
     }
 }
