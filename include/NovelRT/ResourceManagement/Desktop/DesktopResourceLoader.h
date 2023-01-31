@@ -17,14 +17,15 @@ namespace NovelRT::ResourceManagement::Desktop
 
     protected:
         void WriteAssetDatabaseFile() final;
-        void LoadAssetDatabaseFile() override;
+        void LoadAssetDatabaseFile() final;
 
     public:
         [[nodiscard]] TextureMetadata LoadTexture(std::filesystem::path filePath) final;
         [[nodiscard]] ShaderMetadata LoadShaderSource(std::filesystem::path filePath) final;
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
-        [[nodiscard]] AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) override;
+        [[nodiscard]] AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) final;
+        [[nodiscard]] StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) final;
         ~DesktopResourceLoader() final = default;
     };
 }
