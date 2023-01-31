@@ -74,6 +74,8 @@ namespace NovelRT::ResourceManagement
          */
         [[nodiscard]] virtual TextureMetadata LoadTexture(std::filesystem::path filePath) = 0;
 
+        [[nodiscard]] virtual TextureMetadata LoadTexture(uuids::uuid assetId) = 0;
+
         /**
          * @brief Loads shader from a file on a given path.
          *
@@ -86,13 +88,21 @@ namespace NovelRT::ResourceManagement
          */
         [[nodiscard]] virtual ShaderMetadata LoadShaderSource(std::filesystem::path filePath) = 0;
 
+        [[nodiscard]] virtual ShaderMetadata LoadShaderSource(uuids::uuid assetId) = 0;
+
         [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
+
+        [[nodiscard]] virtual BinaryPackage LoadPackage(uuids::uuid assetId) = 0;
 
         virtual void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) = 0;
 
         [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) = 0;
 
+        [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(uuids::uuid assetId) = 0;
+
         [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(uuids::uuid) = 0;
 
         virtual ~ResourceLoader() = default;
     };
