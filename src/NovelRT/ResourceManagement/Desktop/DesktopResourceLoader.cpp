@@ -387,6 +387,6 @@ namespace NovelRT::ResourceManagement::Desktop
             throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
         }
 
-        return StreamableAssetMetadata {std::move(file), RegisterAsset(filePath)};
+        return StreamableAssetMetadata{std::move(file), RegisterAsset(filePath)};
     }
 }
