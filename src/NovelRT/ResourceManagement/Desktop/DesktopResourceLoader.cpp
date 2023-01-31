@@ -205,13 +205,14 @@ namespace NovelRT::ResourceManagement::Desktop
             returnImage.emplace_back(rawImage[i]);
         }
 
-        if (data.colourType != PNG_COLOR_TYPE_RGBA)
-        {
-            throw std::runtime_error("reeeeeeee");
-        }
-
         delete[] rawImage;
         delete[] data.rowPointers;
+
+        if (data.colourType != PNG_COLOR_TYPE_RGBA)
+        {
+            throw Exceptions::NotSupportedException("Colour type is in an unsupported format.");
+        }
+
         png_destroy_read_struct(&png, &info, nullptr);
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
@@ -370,5 +371,22 @@ namespace NovelRT::ResourceManagement::Desktop
         uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
         return AudioMetadata{data, info.channels, info.samplerate, databaseHandle};
+    }
+
+    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / filePath;
+        }
+
+        auto file = std::make_unique<std::ifstream>(filePath.string());
+
+        if (!file->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        return StreamableAssetMetadata{std::move(file), RegisterAsset(filePath)};
     }
 }
