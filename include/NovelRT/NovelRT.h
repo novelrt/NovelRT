@@ -94,6 +94,9 @@
   // Persistence types
 #include <NovelRT/Persistence/Persistence.h>
 
+  // Physics types
+  #include <NovelRT/Physics/Physics.h>
+
   //Misc types
   #include <NovelRT/LoggingService.h>
   #include <NovelRT/Timing/StepTimer.h>
