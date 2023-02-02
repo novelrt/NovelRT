@@ -8,15 +8,21 @@
 #include <memory>
 #include "NovelRT/Maths/Maths.h"
 
+/**
+ * @brief
+ * The plugin API for simulated physics.
+ */
 namespace NovelRT::Physics
 {
+    enum BodyType;
     class PhysicsProvider;
     class PhysicsProvider2D;
     class PhysicsWorld2D;
     class RigidBody2D;
-    class BodyDefinition2D;
+    struct BodyDefinition2D;
 }
 
+#include "BodyType.h"
 #include "PhysicsProvider.h"
 #include "PhysicsProvider2D.h"
 #include "PhysicsWorld2D.h"
