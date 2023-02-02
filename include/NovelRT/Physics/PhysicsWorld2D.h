@@ -42,7 +42,7 @@ namespace NovelRT::Physics
          *
          * @param rigidBody The RigidBody2D to be removed from this world instance.
          */
-        virtual void RemoveRigidBody(std::weak_ptr<RigidBody2D> rigidBody) = 0;
+        virtual void RemoveRigidBody(RigidBody2D* rigidBody) = 0;
 
         /**
          * @brief
