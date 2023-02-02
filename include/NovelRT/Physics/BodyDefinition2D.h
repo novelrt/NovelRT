@@ -12,7 +12,18 @@ namespace NovelRT::Physics
 {
     struct BodyDefinition2D
     {
-
+        NovelRT::Maths::GeoVector2F Position;
+        float Angle;
+        NovelRT::Maths::GeoVector2F LinearVelocity;
+        NovelRT::Maths::GeoVector2F AngularVelocity;
+        float LinearDamping;
+        float AngularDamping;
+        bool AllowSleep;
+        bool Awake;
+        bool FixedRotation;
+        bool UseConstantCollisionDetection;
+        bool Enabled;
+        float GravityScale
     };
 }
 

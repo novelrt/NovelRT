@@ -20,6 +20,10 @@ namespace NovelRT::Physics
     class PhysicsWorld2D;
     class RigidBody2D;
     struct BodyDefinition2D;
+    class Joint2D;
+    class FixedJoint2D;
+    class HingeJoint2D;
+    class JointDefinition2D;
 }
 
 #include "BodyType.h"
@@ -28,5 +32,9 @@ namespace NovelRT::Physics
 #include "PhysicsWorld2D.h"
 #include "RigidBody2D.h"
 #include "BodyDefinition2D.h"
+#include "Joint2D.h"
+#include "FixedJoint2D.h"
+#include "HingeJoint2D.h"
+#include "JointDefinition2D.h"
 
 #endif // !NOVELRT_PHYSICS_H
