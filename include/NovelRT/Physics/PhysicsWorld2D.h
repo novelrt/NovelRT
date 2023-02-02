@@ -33,9 +33,9 @@ namespace NovelRT::Physics
          *
          *
          * @param bodyDefinition
-         * @return std::weak_ptr<RigidBody2D> A pointer to the RigidBody2D that has been added to this world instance.
+         * @return RigidBody2D* A pointer to the RigidBody2D that has been added to this world instance.
          */
-        [[nodiscard]] virtual std::weak_ptr<RigidBody2D> AddRigidBody(BodyDefinition2D& bodyDefinition) = 0;
+        [[nodiscard]] virtual RigidBody2D* AddRigidBody(BodyDefinition2D& bodyDefinition) = 0;
 
         /**
          * @brief Removes a RigidBody2D from the world to stop simulating it.
