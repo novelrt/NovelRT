@@ -29,7 +29,12 @@ if(APPLE)
 endif()
 
 # Appears to be a bug, doing this until established and/or resolved
+install(DIRECTORY
+      ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/
+   DESTINATION include/fabulist/runtime
+)
+
 install(FILES
-  ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/runtime.hpp
-  ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/decoder.hpp
-  DESTINATION include/fabulist/runtime)
+      ${fabulist_BINARY_DIR}/runtime/fabulist_runtime_export.hpp
+   DESTINATION include/fabulist/runtime/actions
+)

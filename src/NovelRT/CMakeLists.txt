@@ -19,6 +19,7 @@ set(CORE_SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
+  Ecs/Narrative/NarrativePlayerSystem.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
   Graphics/GraphicsMemoryBlockCollection.cpp
