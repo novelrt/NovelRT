@@ -22,6 +22,7 @@ namespace NovelRT::UI
 
         virtual void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
             std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
+            std::shared_ptr<NovelRT::Input::IInputDevice> inputDevice,
             std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
             std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline) = 0;
         virtual ~IUIProvider() = default;
@@ -30,7 +31,7 @@ namespace NovelRT::UI
 
         virtual std::shared_ptr<IUITextbox> CreateTextbox(const std::string& identifier, const std::string& text,
             bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour) = 0;
-        
+
         virtual std::shared_ptr<IUIButton> CreateButton(const std::string& identifier,
             NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, NovelRT::Graphics::RGBAColour backgroundColour) = 0;
 

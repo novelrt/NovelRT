@@ -31,6 +31,10 @@ namespace NovelRT::Input::Glfw
         _availableKeys = std::map<std::string, NovelKey>();
         _mappedActions = std::vector<InputAction>();
         _window = reinterpret_cast<GLFWwindow*>(window);
+        MouseButtonHandler = Utilities::Event<std::shared_ptr<IInputDevice>, NovelKey, KeyState>();
+        MousePositionHandler = Utilities::Event<std::shared_ptr<IInputDevice>, float, float>();
+        KeyPressHandler = Utilities::Event<std::shared_ptr<IInputDevice>, NovelKey, KeyState>();
+        UpdateHandler = Utilities::Event<std::shared_ptr<IInputDevice>>();
 
         // Map GLFW keys to NovelKeys
         _availableKeys.emplace("LeftMouseButton", NovelKey("LeftMouseButton", GLFW_MOUSE_BUTTON_LEFT));
@@ -181,6 +185,11 @@ namespace NovelRT::Input::Glfw
         _mousePos.x = static_cast<float>(x - (width / 2));
         _mousePos.y = static_cast<float>(-y + (height / 2));
 
+        if (MousePositionHandler.getHandlerCount() > 0)
+        {
+            MousePositionHandler(this->shared_from_this(), (float)x, (float)y);
+        }
+
         _previousStates = _mappedActions;
 
         size_t count = _mappedActions.size();
@@ -196,6 +205,8 @@ namespace NovelRT::Input::Glfw
             {
                 bool press = false;
                 bool release = false;
+                bool changed = false;
+                bool mouseButton = false;
 
                 if ((mapIterator->pairedKey.GetKeyName() == "LeftMouseButton") ||
                     (mapIterator->pairedKey.GetKeyName() == "RightMouseButton") ||
@@ -203,6 +214,7 @@ namespace NovelRT::Input::Glfw
                 {
                     press = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
                     release = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+                    mouseButton = true;
                 }
                 else
                 {
@@ -227,8 +239,24 @@ namespace NovelRT::Input::Glfw
                 {
                     mapIterator->state = KeyState::Idle;
                 }
+
+                if(mapIterator->state != stateIterator->state)
+                {
+                    changed = true;
+                }
+
+                if(mouseButton && changed && MouseButtonHandler.getHandlerCount() > 0)
+                {
+                    MouseButtonHandler(this->shared_from_this(), mapIterator->pairedKey, mapIterator->state);
+                }
+                else if(!mouseButton && changed && KeyPressHandler.getHandlerCount() > 0)
+                {
+                    KeyPressHandler(this->shared_from_this(), mapIterator->pairedKey, mapIterator->state);
+                }
             }
         }
+
+        UpdateHandler(this->shared_from_this());
     }
 
     KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
@@ -281,6 +309,22 @@ namespace NovelRT::Input::Glfw
             if (action.actionName == input)
             {
                 return action.state == KeyState::KeyUp;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", input);
+        return false;
+    }
+
+    bool GlfwInputDevice::IsMouseKey(const std::string& input) noexcept
+    {
+        for (auto action : _mappedActions)
+        {
+            if (action.actionName == input)
+            {
+                return action.pairedKey.GetExternalKeyCode() == GLFW_MOUSE_BUTTON_LEFT ||
+                    action.pairedKey.GetExternalKeyCode() == GLFW_MOUSE_BUTTON_MIDDLE ||
+                    action.pairedKey.GetExternalKeyCode() == GLFW_MOUSE_BUTTON_RIGHT;
             }
         }
 

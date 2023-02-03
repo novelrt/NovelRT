@@ -18,6 +18,7 @@ namespace NovelRT::Ecs::UI
 
     public:
         UISystem(std::shared_ptr<NovelRT::PluginManagement::IUIPluginProvider> uiPluginProvider,
+            std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem,
             std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem);
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;

@@ -12,7 +12,8 @@
 #include "../Graphics/Graphics.h"
 #include "../Windowing/Windowing.h"
 #include "../Utilities/Event.h"
-//#include "NovelRT/PluginManagement/PluginManagement.h"
+#include "../Input/Input.h"
+
 /**
  * @brief The experimental UI plugin API.
  */

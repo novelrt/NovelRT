@@ -24,6 +24,7 @@ namespace NovelRT::Ecs::Input
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
         void AddMapping(std::string name, std::string id);
         void AddDefaultKBMMapping();
+        [[nodiscard]] std::shared_ptr<NovelRT::Input::IInputDevice> GetInputDevice();
         [[nodiscard]] NovelRT::Atom GetMappingId(const std::string& mappingName) const;
     };
 }

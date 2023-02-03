@@ -26,12 +26,43 @@ namespace NovelRT::Input::Glfw
         [[nodiscard]] bool IsKeyPressed(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyReleased(const std::string& input) noexcept final;
+        [[nodiscard]] bool IsMouseKey(const std::string& key) noexcept final;
         [[nodiscard]] KeyState GetKeyState(const std::string& key) noexcept final;
         [[nodiscard]] InputAction& AddInputAction(const std::string& actionName,
                                                   const std::string& keyIdentifier) final;
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept final;
         [[nodiscard]] gsl::span<InputAction> GetAllMappings() noexcept final;
+
+        [[nodiscard]] inline bool& MouseButtonInterrupt() final
+        {
+            return _mouseButtonInterrupt;
+        }
+
+        [[nodiscard]] inline const bool& MouseButtonInterrupt() const final
+        {
+            return _mouseButtonInterrupt;
+        }
+
+        [[nodiscard]] inline bool& MousePositionInterrupt() final
+        {
+            return _mousePositionInterrupt;
+        }
+
+        [[nodiscard]] inline const bool& MousePositionInterrupt() const final
+        {
+            return _mousePositionInterrupt;
+        }
+
+        [[nodiscard]] inline bool& KeyPressInterrupt() final
+        {
+            return _keyPressInterrupt;
+        }
+
+        [[nodiscard]] inline const bool& KeyPressInterrupt() const final
+        {
+            return _keyPressInterrupt;
+        }
 
         ~GlfwInputDevice() final;
     };

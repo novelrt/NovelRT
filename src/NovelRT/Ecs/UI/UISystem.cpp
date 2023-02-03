@@ -6,11 +6,13 @@
 namespace NovelRT::Ecs::UI
 {
     UISystem::UISystem(std::shared_ptr<NovelRT::PluginManagement::IUIPluginProvider> uiPluginProvider,
+        std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem,
         std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem):
         _uiProvider(std::move(uiPluginProvider->GetUIProvider()))
     {
         _uiProvider->Initialise(renderingSystem->GetCurrentGraphicsDevice(),
             renderingSystem->GetCurrentWindowingPluginProvider()->GetWindowingDevice(),
+            inputSystem->GetInputDevice(),
             renderingSystem->GetCurrentGraphicsProvider(),
             renderingSystem->GetExistingDefaultPipelineInfo()->gpuPipeline.GetUnderlyingSharedPtr());
 

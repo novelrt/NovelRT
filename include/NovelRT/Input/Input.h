@@ -8,6 +8,7 @@
 #include "NovelRT/LoggingService.h"
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Timing/Timestamp.h"
+#include "NovelRT/Utilities/Event.h"
 #include <gsl/span>
 #include <map>
 #include <string>

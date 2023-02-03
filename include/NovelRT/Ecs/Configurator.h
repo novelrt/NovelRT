@@ -63,6 +63,7 @@ namespace NovelRT::Ecs
             target.RegisterSystem(std::make_shared<Ecs::Audio::AudioSystem>(_resourceManagementPluginProvider));
 
             target.RegisterSystem(std::make_shared<NovelRT::Ecs::UI::UISystem>(_uiPluginProvider,
+                target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>(),
                 target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>()));
         }
 

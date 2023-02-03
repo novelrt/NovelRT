@@ -17,6 +17,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 #include "../../../Graphics/Graphics.h"
 #include "../../../Graphics/Vulkan/Graphics.Vulkan.h"
 #include "../../../Windowing/Glfw/Windowing.Glfw.h"
+#include "../../../Input/Glfw/Input.Glfw.h"
 #include "../../../PluginManagement/PluginManagement.h"
 #include "../UI.DearImGui.h"
 #include <imgui_impl_glfw.h>

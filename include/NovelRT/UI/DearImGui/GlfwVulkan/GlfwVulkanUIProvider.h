@@ -18,6 +18,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         NovelRT::Maths::GeoVector2F _windowSize;
 
         void Render();
+        ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key);
 
     protected:
         bool _isInitialised;
@@ -28,6 +29,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         ~GlfwVulkanUIProvider() final;
         void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
                         std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
+                        std::shared_ptr<NovelRT::Input::IInputDevice> inputDevice,
                         std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
                         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline);
 

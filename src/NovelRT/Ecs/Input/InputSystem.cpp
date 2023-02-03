@@ -32,6 +32,15 @@ namespace NovelRT::Ecs::Input
                     case NovelRT::Input::KeyState::KeyDown:
                     case NovelRT::Input::KeyState::KeyDownHeld:
                     {
+                        if(_device->IsMouseKey(input.first))
+                        {
+                            if(_device->MouseButtonInterrupt()) break;
+                        }
+                        else
+                        {
+                            if(_device->KeyPressInterrupt()) break;
+                        }
+
                         auto event = InputEventComponent{in.actionId, state, in.mousePositionX, in.mousePositionY};
                         inputs.PushComponentUpdateInstruction(in.actionId, event);
                         break;
@@ -48,9 +57,12 @@ namespace NovelRT::Ecs::Input
             {
                 if (state != NovelRT::Input::KeyState::Idle)
                 {
-                    auto mouse = _device->GetMousePosition();
-                    in = InputEventComponent{input.second, state, mouse.x, mouse.y};
-                    inputs.AddComponent(input.second, in);
+                    if(!_device->MousePositionInterrupt())
+                    {
+                        auto mouse = _device->GetMousePosition();
+                        in = InputEventComponent{input.second, state, mouse.x, mouse.y};
+                        inputs.AddComponent(input.second, in);
+                    }
                 }
             }
         }
@@ -75,6 +87,11 @@ namespace NovelRT::Ecs::Input
         AddMapping("LeftClick", "LeftMouseButton");
         AddMapping("A", "K");
         AddMapping("B", "L");
+    }
+
+    std::shared_ptr<NovelRT::Input::IInputDevice> InputSystem::GetInputDevice()
+    {
+        return _device;
     }
 
     NovelRT::Atom InputSystem::GetMappingId(const std::string& mappingName) const
