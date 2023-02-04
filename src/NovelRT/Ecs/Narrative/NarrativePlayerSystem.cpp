@@ -8,8 +8,59 @@ namespace NovelRT::Ecs::Narrative
 
     void NarrativePlayerSystem::BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView)
     {
-        unused(requestView);
-        // this will process the GUID in the request component to get the correct script asset, and kick off the story.
+        auto [entity, assetData] = *requestView.begin();
+
+        auto storyStream = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
+        _storyInstance = _runtime.load_story(*storyStream.FileStream, "Whats this for lol"); // TODO: no idea if this is correct
+        
+        fabulist::runtime::state::parameters params
+        {
+            sizeof(fabulist::runtime::state::parameters),
+            [&](std::vector<std::string> choicesVector) 
+            {
+                auto [availableChoices, selectedChoice] = _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
+
+                if (availableChoices.GetImmutableDataLength() == 0)
+                {
+                    _choiceMetadataLinkedListEntityId = _catalogueForFrame->CreateEntity();
+                    LinkedEntityListView list(_choiceMetadataLinkedListEntityId, _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
+
+                    for(size_t index = 0; index < choicesVector.size(); index++)
+                    {
+                        EntityId newNode = _catalogueForFrame->CreateEntity();
+                        availableChoices.AddComponent(newNode, ChoiceMetadataComponent{index});
+                        list.AddInsertAtBackInstruction(newNode);
+                    }
+
+                    list.Commit();
+
+                    return choicesVector.cend(); // there's no way the engine will see this modifcation until the next iteration, so we can just get out here.
+                }
+
+                if (selectedChoice.GetImmutableDataLength() == 0)
+                {
+                    return choicesVector.cend(); // user has not made a choice yet.
+                }
+
+                if (selectedChoice.GetImmutableDataLength() > 1)
+                {
+                    throw Exceptions::NotSupportedException("There can only be one selected choice in a given frame.");
+                }
+
+                auto [entity, choice] = *selectedChoice.begin();
+
+                selectedChoice.RemoveComponent(entity);
+
+                LinkedEntityListView list(_choiceMetadataLinkedListEntityId, _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
+                list.ClearAddRemoveNodeInstructionForAll();
+                list.Commit();
+
+                return std::next(choicesVector.cbegin(), choice.choiceIndex);
+            }
+        };
+        
+        _storyInstanceState = _storyInstance->create_state(params, "root");
+
     }
 
     NarrativePlayerSystem::NarrativePlayerSystem(
@@ -38,7 +89,6 @@ namespace NovelRT::Ecs::Narrative
         {
             _narrativeStoryStateTrackerEntityId = catalogue.CreateEntity();
             narrativeStoryStateComponents.AddComponent(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
-            BeginPlay(scriptExecutionRequestComponents);
 
             return;
         }
@@ -72,19 +122,24 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::Playing:
             {
-                if (!_storyInstance.has_value() || !_lastUpdatedState.value())
+                if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                if (_lastUpdatedState.value()->type() == "line")
+                if (_currentStateUpdateObject.value()->type() == "line")
                 {
                     // render here, right now we can't render so this is blank
                 }
+                else if (_currentStateUpdateObject.value()->type() == "options")
+                {
+                    _currentStateUpdateObject.value()->execute(_storyInstanceState.value());
+                    break;
+                }
                 else
                 {
-                    _lastUpdatedState.value()->execute(_storyInstanceState.value());
+                    _currentStateUpdateObject.value()->execute(_storyInstanceState.value());
                 }
 
                 narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::AwaitExecute});
@@ -92,7 +147,7 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::AwaitExecute:
             {
-                if (!_storyInstance.has_value() || !_lastUpdatedState.value())
+                if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
@@ -101,7 +156,7 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::ExecuteNext:
             {
-                if (!_storyInstance.has_value() || !_lastUpdatedState.value())
+                if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
@@ -114,7 +169,7 @@ namespace NovelRT::Ecs::Narrative
             {
                 _storyInstance.reset();
                 _storyInstanceState.reset();
-                _lastUpdatedState.reset();
+                _currentStateUpdateObject.reset();
                 
                 narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::Idle});
                 break;

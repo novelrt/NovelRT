@@ -27,6 +27,8 @@ namespace NovelRT::Ecs::Narrative
     struct NarrativeStoryStateComponent;
     class NarrativePlayerSystem;
     struct RequestNarrativeScriptExecutionComponent;
+    struct ChoiceMetadataComponent;
+    struct SelectedChoiceComponent;
 }
 
 // clang-format off

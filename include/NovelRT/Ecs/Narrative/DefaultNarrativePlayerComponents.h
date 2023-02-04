@@ -35,6 +35,18 @@ namespace NovelRT::Ecs::Narrative
     {
         uuids::uuid narrativeScriptAssetId = uuids::uuid();
     };
+
+    //ChoiceMetadataComponent, SelectedChoiceComponent
+
+    struct ChoiceMetadataComponent
+    {
+        size_t choiceIndex;
+    };
+
+    struct SelectedChoiceComponent
+    {
+        size_t choiceIndex;
+    };
 }
 
 #endif // NOVELRT_ECS_NARRATIVE_DEFAULTNARRATIVECOMPONENTTYPES_H
