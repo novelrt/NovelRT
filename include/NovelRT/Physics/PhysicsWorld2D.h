@@ -44,6 +44,16 @@ namespace NovelRT::Physics
          */
         virtual void RemoveRigidBody(RigidBody2D* rigidBody) = 0;
 
+        virtual DistanceJoint2D* AddDistanceJoint(DistanceJointDefinition2D& jointDefinition) = 0;
+
+        virtual FixedJoint2D* AddFixedJoint(FixedJointDefinition2D& jointDefiniton) = 0;
+
+        virtual GearJoint2D* AddGearJoint2D(GearJointDefinition2D& jointDefinition) = 0;
+
+        virtual HingeJoint2D* AddHingeJoint(HingeJointDefinition2D& jointDefinition) = 0;
+
+        virtual void RemoveJoint(Joint2D* joint) = 0;
+
         /**
          * @brief
          * Gets the current gravity that gets applied to this world.
