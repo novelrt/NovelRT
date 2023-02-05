@@ -52,7 +52,7 @@ namespace NovelRT::Ecs::Narrative
                 selectedChoice.RemoveComponent(entity);
 
                 LinkedEntityListView list(_choiceMetadataLinkedListEntityId, _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
-                list.ClearAddRemoveNodeInstructionForAll();
+                list.ClearAndAddRemoveNodeInstructionForAll();
                 list.Commit();
 
                 return std::next(choicesVector.cbegin(), choice.choiceIndex);

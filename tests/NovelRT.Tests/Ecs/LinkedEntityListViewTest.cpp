@@ -491,3 +491,42 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtBackAndRemoveEntities)
         previous = component.next;
     }
 }
+
+TEST_F(LinkedEntityListViewTest, CanClearAllNodesInListUsingClearAndAddRemoveNodeInstructionForAll)
+{
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+        view.ClearAndAddRemoveNodeInstructionForAll();
+    }
+
+    componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PrepComponentBufferForFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    EXPECT_EQ(view.GetImmutableDataLength(), 0);
+}
+
+TEST_F(LinkedEntityListViewTest, CanClearAllNodesInListUsingClearAndAddRemoveNodeInstructionForAllWithPendingChanges)
+{
+    {
+        LinkedEntityListView view(rootListId, *catalogue);
+        
+        for (size_t i = 0; i < 10; i++)
+        {
+            EntityId id = catalogue->CreateEntity();
+            ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
+        }
+        
+        view.ClearAndAddRemoveNodeInstructionForAll();
+    }
+
+    componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PrepComponentBufferForFrame(std::vector<EntityId>{});
+
+    delete catalogue;
+    catalogue = new Catalogue(0, componentCache, entityCache);
+    auto view = catalogue->GetComponentView<LinkedEntityListNodeComponent>();
+
+    EXPECT_EQ(view.GetImmutableDataLength(), 0);
+}

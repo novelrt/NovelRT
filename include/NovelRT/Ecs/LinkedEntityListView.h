@@ -266,7 +266,7 @@ namespace NovelRT::Ecs
         void AddInsertAtBackInstruction(EntityId newNode);
         void AddInsertAtFrontInstruction(EntityId newNode);
         void AddRemoveNodeInstruction(EntityId nodeToRemove);
-        void ClearAddRemoveNodeInstructionForAll();
+        void ClearAndAddRemoveNodeInstructionForAll();
         void Commit();
     };
 }

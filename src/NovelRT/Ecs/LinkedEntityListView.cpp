@@ -647,7 +647,7 @@ namespace NovelRT::Ecs
         }
     }
 
-    void LinkedEntityListView::ClearAddRemoveNodeInstructionForAll()
+    void LinkedEntityListView::ClearAndAddRemoveNodeInstructionForAll()
     {
         _newBeginPostDiff.reset();
         _newTailPostDiff.reset();
