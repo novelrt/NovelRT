@@ -13,6 +13,8 @@ namespace NovelRT::Ecs::Narrative
         auto storyStream = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
         _storyInstance = _runtime.load_story(*storyStream.FileStream, "Whats this for lol"); // TODO: no idea if this is correct
         
+        requestView.RemoveComponent(entity);
+
         fabulist::runtime::state::parameters params
         {
             sizeof(fabulist::runtime::state::parameters),
@@ -74,8 +76,6 @@ namespace NovelRT::Ecs::Narrative
 
     void NarrativePlayerSystem::Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
     {
-
-
         auto [narrativeStoryStateComponents, scriptExecutionRequestComponents] =
             catalogue.GetComponentViews<NarrativeStoryStateComponent, RequestNarrativeScriptExecutionComponent>();
 
