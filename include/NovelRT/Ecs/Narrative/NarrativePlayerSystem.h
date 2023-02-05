@@ -19,8 +19,8 @@ namespace NovelRT::Ecs::Narrative
         std::optional<fabulist::runtime::state::state_update> _currentStateUpdateObject;
         std::optional<NovelRT::Ecs::Catalogue> _catalogueForFrame;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceLoaderPluginProvider;
-        EntityId _narrativeStoryStateTrackerEntityId;
-        EntityId _choiceMetadataLinkedListEntityId;
+        std::optional<EntityId> _narrativeStoryStateTrackerEntityId;
+        std::optional<EntityId> _choiceMetadataLinkedListEntityId;
 
         void BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView);
     

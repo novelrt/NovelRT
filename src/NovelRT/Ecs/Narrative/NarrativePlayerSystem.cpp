@@ -23,7 +23,7 @@ namespace NovelRT::Ecs::Narrative
                 if (availableChoices.GetImmutableDataLength() == 0)
                 {
                     _choiceMetadataLinkedListEntityId = _catalogueForFrame->CreateEntity();
-                    LinkedEntityListView list(_choiceMetadataLinkedListEntityId, _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
+                    LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
 
                     for(size_t index = 0; index < choicesVector.size(); index++)
                     {
@@ -51,9 +51,11 @@ namespace NovelRT::Ecs::Narrative
 
                 selectedChoice.RemoveComponent(entity);
 
-                LinkedEntityListView list(_choiceMetadataLinkedListEntityId, _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
+                LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
                 list.ClearAndAddRemoveNodeInstructionForAll();
                 list.Commit();
+
+                _choiceMetadataLinkedListEntityId.reset();
 
                 return std::next(choicesVector.cbegin(), choice.choiceIndex);
             }
@@ -66,14 +68,14 @@ namespace NovelRT::Ecs::Narrative
     NarrativePlayerSystem::NarrativePlayerSystem(
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept
         : _runtime(),
-          _resourceLoaderPluginProvider(resourceLoaderPluginProvider),
-          _narrativeStoryStateTrackerEntityId(0)
+          _resourceLoaderPluginProvider(resourceLoaderPluginProvider)
     {
     }
 
-    void NarrativePlayerSystem::Update(Timing::Timestamp delta, Catalogue catalogue)
+    void NarrativePlayerSystem::Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
     {
-        unused(delta);
+
+
         auto [narrativeStoryStateComponents, scriptExecutionRequestComponents] =
             catalogue.GetComponentViews<NarrativeStoryStateComponent, RequestNarrativeScriptExecutionComponent>();
 
@@ -85,15 +87,18 @@ namespace NovelRT::Ecs::Narrative
             throw Exceptions::NotSupportedException();
         }
 
-        if (narrativeStoryStateCount == 0 && scriptExecutionRequestCount == 1)
+        if (narrativeStoryStateCount == 0)
         {
-            _narrativeStoryStateTrackerEntityId = catalogue.CreateEntity();
-            narrativeStoryStateComponents.AddComponent(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+            if (scriptExecutionRequestCount == 1)
+            {
+                _narrativeStoryStateTrackerEntityId = catalogue.CreateEntity();
+                narrativeStoryStateComponents.AddComponent(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+            }
 
             return;
         }
 
-        auto narrativeStoryStateComponent = narrativeStoryStateComponents.GetComponentUnsafe(_narrativeStoryStateTrackerEntityId);
+        auto narrativeStoryStateComponent = narrativeStoryStateComponents.GetComponentUnsafe(_narrativeStoryStateTrackerEntityId.value());
 
         switch (narrativeStoryStateComponent.currentState)
         {
@@ -105,7 +110,7 @@ namespace NovelRT::Ecs::Narrative
                     break;
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
                 BeginPlay(scriptExecutionRequestComponents);
                 break;
             }
@@ -113,18 +118,18 @@ namespace NovelRT::Ecs::Narrative
             {
                 if (!_storyInstance.has_value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::Playing});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
                 break;
             }
             case NarrativeStoryState::Playing:
             {
                 if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
@@ -142,14 +147,14 @@ namespace NovelRT::Ecs::Narrative
                     _currentStateUpdateObject.value()->execute(_storyInstanceState.value());
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::AwaitExecute});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::AwaitExecute});
                 break;
             }
             case NarrativeStoryState::AwaitExecute:
             {
                 if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
 
                 break;
@@ -158,11 +163,11 @@ namespace NovelRT::Ecs::Narrative
             {
                 if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::Playing});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
                 break;
             }
             case NarrativeStoryState::BeginStop:
@@ -171,7 +176,30 @@ namespace NovelRT::Ecs::Narrative
                 _storyInstanceState.reset();
                 _currentStateUpdateObject.reset();
                 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId, NarrativeStoryStateComponent{NarrativeStoryState::Idle});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Idle});
+                
+                if (_choiceMetadataLinkedListEntityId.has_value())
+                {
+                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), catalogue).ClearAndAddRemoveNodeInstructionForAll();
+                    _choiceMetadataLinkedListEntityId.reset();
+                }
+
+                break;
+            }
+            case NarrativeStoryState::RequestDestroy:
+            {
+                _storyInstance.reset();
+                _storyInstanceState.reset();
+                _currentStateUpdateObject.reset();
+                narrativeStoryStateComponents.RemoveComponent(_narrativeStoryStateTrackerEntityId.value());
+                _narrativeStoryStateTrackerEntityId.reset();
+
+                if (_choiceMetadataLinkedListEntityId.has_value())
+                {
+                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), catalogue).ClearAndAddRemoveNodeInstructionForAll();
+                    _choiceMetadataLinkedListEntityId.reset();
+                }
+
                 break;
             }
         }
