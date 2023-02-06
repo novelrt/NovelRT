@@ -7,6 +7,13 @@ namespace NovelRT::ResourceManagement
 {
     uuids::uuid ResourceLoader::RegisterAsset(const std::filesystem::path& filePath)
     {
+        auto returnValue = RegisterAssetNoFileWrite(filePath);
+        WriteAssetDatabaseFile();
+        return returnValue;
+    }
+
+    uuids::uuid ResourceLoader::RegisterAssetNoFileWrite(const std::filesystem::path& filePath)
+    {
         static std::random_device rd;
         static auto seed_data = std::array<int, std::mt19937::state_size>{};
         std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
@@ -39,8 +46,14 @@ namespace NovelRT::ResourceManagement
             pathGuidMap.emplace(filePath, guid);
         }
 
-        WriteAssetDatabaseFile();
-
         return it->second;
+    }
+
+    void NovelRT::ResourceManagement::ResourceLoader::UnregisterAssetNoFileWrite(uuids::uuid assetId)
+    {
+        auto path = _guidsToFilePathsMap.at(assetId);
+
+        _filePathsToGuidsMap.erase(path);
+        _guidsToFilePathsMap.erase(assetId);
     }
 }
