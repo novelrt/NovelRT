@@ -81,7 +81,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         std::vector<uuids::uuid> filesToUnregister{};
 
-        for(auto [path, guid] : GetFilePathsToGuidsMap())
+        for (auto [path, guid] : GetFilePathsToGuidsMap())
         {
             if (std::filesystem::exists(path))
             {
@@ -89,14 +89,15 @@ namespace NovelRT::ResourceManagement::Desktop
             }
         }
 
-        for(const auto& guid : filesToUnregister)
+        for (const auto& guid : filesToUnregister)
         {
             UnregisterAssetNoFileWrite(guid);
         }
 
-        for(const auto& directoryEntry : std::filesystem::recursive_directory_iterator(filePath))
+        for (const auto& directoryEntry : std::filesystem::recursive_directory_iterator(filePath))
         {
-            if (!directoryEntry.is_regular_file() || directoryEntry.path().filename().string().find("AssetDB") != std::string::npos)
+            if (!directoryEntry.is_regular_file() ||
+                directoryEntry.path().filename().string().find("AssetDB") != std::string::npos)
             {
                 continue;
             }
