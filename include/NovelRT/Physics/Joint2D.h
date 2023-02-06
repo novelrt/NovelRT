@@ -15,8 +15,8 @@ namespace NovelRT::Physics
     protected:
         RigidBody2D* _primaryBody;
         RigidBody2D* _secondaryBody;
-        NovelRT::Maths::GeoVector2F _primaryOffset;
-        NovelRT::Maths::GeoVector2F _secondaryOffset;
+        NovelRT::Maths::GeoVector2F _primaryAnchorOffset;
+        NovelRT::Maths::GeoVector2F _secondaryAnchorOffset;
         float _breakForce;
         float _breakTorque;
         bool _collideConnectedBodies;
@@ -32,14 +32,14 @@ namespace NovelRT::Physics
             return _secondaryBody;
         }
         
-        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPrimaryOffset() const noexcept
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPrimaryAnchorOffset() const noexcept
         {
-            return _primaryOffset;
+            return _primaryAnchorOffset;
         }
 
-        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetSecondaryOffset() const noexcept
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetSecondaryAnchorOffset() const noexcept
         {
-            return _secondaryOffset;
+            return _secondaryAnchorOffset;
         }
 
         [[nodiscard]] inline float GetBreakForce() const noexcept
@@ -57,13 +57,15 @@ namespace NovelRT::Physics
             return _collideConnectedBodies;
         }
 
+        [[nodiscard]] virtual JointType GetJointType() = 0;
+
         virtual void SetPrimaryBody(RigidBody2D* body) = 0;
 
         virtual void SetSecondaryBody(RigidBody2D* body) = 0;
 
-        virtual void SetPrimaryOffset(NovelRT::Maths::GeoVector2F offset) = 0;
+        virtual void SetPrimaryAnchorOffset(NovelRT::Maths::GeoVector2F offset) = 0;
 
-        virtual void SetSecondaryOffset(NovelRT::Maths::GeoVector2F offset) = 0;
+        virtual void SetSecondaryAnchorOffset(NovelRT::Maths::GeoVector2F offset) = 0;
 
         virtual void SetBreakForce(float required) = 0;
 
