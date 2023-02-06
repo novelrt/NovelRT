@@ -35,7 +35,7 @@ namespace NovelRT::Physics
          * @param bodyDefinition
          * @return RigidBody2D* A pointer to the RigidBody2D that has been added to this world instance.
          */
-        [[nodiscard]] virtual RigidBody2D* AddRigidBody(BodyDefinition2D& bodyDefinition) = 0;
+        [[nodiscard]] virtual RigidBody2D* AddRigidBody(const BodyDefinition2D& bodyDefinition) = 0;
 
         /**
          * @brief Removes a RigidBody2D from the world to stop simulating it.
@@ -44,13 +44,15 @@ namespace NovelRT::Physics
          */
         virtual void RemoveRigidBody(RigidBody2D* rigidBody) = 0;
 
-        virtual DistanceJoint2D* AddDistanceJoint(DistanceJointDefinition2D& jointDefinition) = 0;
+        [[nodiscard]] virtual DistanceJoint2D* AddDistanceJoint(const DistanceJointDefinition2D& jointDefinition) = 0;
 
-        virtual FixedJoint2D* AddFixedJoint(FixedJointDefinition2D& jointDefiniton) = 0;
+        [[nodiscard]] virtual FixedJoint2D* AddFixedJoint(const FixedJointDefinition2D& jointDefiniton) = 0;
 
-        virtual GearJoint2D* AddGearJoint2D(GearJointDefinition2D& jointDefinition) = 0;
+        [[nodiscard]] virtual GearJoint2D* AddGearJoint2D(const GearJointDefinition2D& jointDefinition) = 0;
 
-        virtual HingeJoint2D* AddHingeJoint(HingeJointDefinition2D& jointDefinition) = 0;
+        [[nodiscard]] virtual HingeJoint2D* AddHingeJoint(const HingeJointDefinition2D& jointDefinition) = 0;
+
+        [[nodiscard]] virtual SpringJoint2D* AddSpringJoint(const SpringJointDefinition2D& jointDefinition) = 0;
 
         virtual void RemoveJoint(Joint2D* joint) = 0;
 
