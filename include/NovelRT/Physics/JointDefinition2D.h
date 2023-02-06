@@ -10,11 +10,16 @@
 
 namespace NovelRT::Physics
 {
-    class JointDefinition2D
+    struct JointDefinition2D
     {
         RigidBody2D* PrimaryBody;
         RigidBody2D* SecondaryBody;
+        NovelRT::Maths::GeoVector2F PrimaryBodyOffset;
+        NovelRT::Maths::GeoVector2F SecondaryBodyOffset;
+        float BreakForce;
         bool CollideConnectedBodies;
+
+        [[nodiscard]] virtual JointType GetJointType() = 0;
     };
 }
 
