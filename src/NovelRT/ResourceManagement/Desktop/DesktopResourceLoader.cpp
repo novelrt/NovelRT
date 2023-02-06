@@ -73,6 +73,42 @@ namespace NovelRT::ResourceManagement::Desktop
         inputStream.close();
     }
 
+    void DesktopResourceLoader::InitAssetDatabase()
+    {
+        auto filePath = _resourcesRootDirectory;
+
+        LoadAssetDatabaseFile();
+
+        std::vector<uuids::uuid> filesToUnregister{};
+
+        for(auto [path, guid] : GetFilePathsToGuidsMap())
+        {
+            if (std::filesystem::exists(path))
+            {
+                filesToUnregister.emplace_back(guid);
+            }
+        }
+
+        for(const auto& guid : filesToUnregister)
+        {
+            UnregisterAssetNoFileWrite(guid);
+        }
+
+        for(const auto& directoryEntry : std::filesystem::recursive_directory_iterator(filePath))
+        {
+            if (!directoryEntry.is_regular_file() || directoryEntry.path().filename().string().find("AssetDB") != std::string::npos)
+            {
+                continue;
+            }
+
+            RegisterAsset(std::filesystem::relative(directoryEntry.path(), filePath));
+        }
+
+        WriteAssetDatabaseFile();
+
+        _isAssetDBInitialised = true;
+    }
+
     TextureMetadata DesktopResourceLoader::LoadTexture(std::filesystem::path filePath)
     {
         if (filePath.is_relative())

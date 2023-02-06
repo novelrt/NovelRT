@@ -14,12 +14,19 @@ namespace NovelRT::ResourceManagement::Desktop
     {
     private:
         LoggingService _logger;
+        bool _isAssetDBInitialised;
 
     protected:
         void WriteAssetDatabaseFile() final;
         void LoadAssetDatabaseFile() final;
 
     public:
+        [[nodiscard]] inline bool GetIsAssetDBInitialised() const noexcept final
+        {
+            return _isAssetDBInitialised;
+        }
+
+        void InitAssetDatabase() final;
         [[nodiscard]] TextureMetadata LoadTexture(std::filesystem::path filePath) final;
         [[nodiscard]] TextureMetadata LoadTexture(uuids::uuid assetId) final;
         [[nodiscard]] ShaderMetadata LoadShaderSource(std::filesystem::path filePath) final;

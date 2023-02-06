@@ -15,6 +15,7 @@ namespace NovelRT::ResourceManagement
         std::unique_ptr<std::ifstream> FileStream;
         uuids::uuid DatabaseHandle;
     };
+
     class ResourceLoader : public std::enable_shared_from_this<ResourceLoader>
     {
     private:
@@ -40,6 +41,8 @@ namespace NovelRT::ResourceManagement
         virtual void LoadAssetDatabaseFile() = 0;
 
         uuids::uuid RegisterAsset(const std::filesystem::path& filePath);
+        uuids::uuid RegisterAssetNoFileWrite(const std::filesystem::path& filePath);
+        void UnregisterAssetNoFileWrite(uuids::uuid assetId);
 
     public:
         [[nodiscard]] inline std::filesystem::path& ResourcesRootDirectory() noexcept
@@ -61,6 +64,10 @@ namespace NovelRT::ResourceManagement
         {
             return _filePathsToGuidsMap;
         }
+
+        [[nodiscard]] virtual bool GetIsAssetDBInitialised() const noexcept = 0;
+
+        virtual void InitAssetDatabase() = 0;
 
         /**
          * @brief Loads a texture from a file on a given path.
