@@ -111,9 +111,11 @@ namespace NovelRT::ResourceManagement
 
         [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(uuids::uuid) = 0;
 
-        [[nodiscard]] std::optional<uuids::uuid> TryGetAssetIdBasedOnFilePath(const std::filesystem::path& pathToAsset) const noexcept;
-        
-        [[nodiscard]] std::optional<std::filesystem::path> TryGetFilePathBasedOnAssetId(uuids::uuid assetId) const noexcept;
+        [[nodiscard]] std::optional<uuids::uuid> TryGetAssetIdBasedOnFilePath(
+            const std::filesystem::path& pathToAsset) const noexcept;
+
+        [[nodiscard]] std::optional<std::filesystem::path> TryGetFilePathBasedOnAssetId(
+            uuids::uuid assetId) const noexcept;
 
         virtual ~ResourceLoader() = default;
     };
