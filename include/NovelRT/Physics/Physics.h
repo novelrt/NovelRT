@@ -14,7 +14,8 @@
  */
 namespace NovelRT::Physics
 {
-    enum BodyType;
+    enum class BodyType;
+    enum class JointType;
     class PhysicsProvider;
     class PhysicsProvider2D;
     class PhysicsWorld2D;
@@ -23,10 +24,12 @@ namespace NovelRT::Physics
     class Joint2D;
     class FixedJoint2D;
     class HingeJoint2D;
-    class JointDefinition2D;
+    struct JointDefinition2D;
+    struct DistanceJointDefinition2D;
 }
 
 #include "BodyType.h"
+#include "JointType.h"
 #include "PhysicsProvider.h"
 #include "PhysicsProvider2D.h"
 #include "PhysicsWorld2D.h"
@@ -36,5 +39,8 @@ namespace NovelRT::Physics
 #include "FixedJoint2D.h"
 #include "HingeJoint2D.h"
 #include "JointDefinition2D.h"
+#include "DistanceJointDefinition2D.h"
+#include "FixedJointDefinition2D.h"
+
 
 #endif // !NOVELRT_PHYSICS_H
