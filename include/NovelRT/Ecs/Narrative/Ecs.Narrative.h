@@ -19,6 +19,7 @@
 #include <fabulist/runtime/story.hpp>
 #include <fabulist/runtime/version.hpp>
 #include <fabulist/runtime/actions/action.hpp>
+#include <fabulist/runtime/actions/line.hpp>
 
 
 namespace NovelRT::Ecs::Narrative

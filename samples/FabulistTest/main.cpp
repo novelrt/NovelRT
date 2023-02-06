@@ -13,7 +13,7 @@ int main()
     std::cerr << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-
+    auto resourceManagementProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
@@ -22,7 +22,7 @@ int main()
             .WithDefaultSystemsAndComponents()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
             .WithPluginProvider(windowingProvider)
-            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
+            .WithPluginProvider(resourceManagementProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
             .InitialiseAndRegisterComponents();
 
@@ -54,6 +54,8 @@ int main()
         TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
+
+    auto scriptAssetId = resourceManagementProvider->GetResourceLoader()->GetFilePathsToGuidsMap().at("Scripts/question.json");
 
     scheduler.RegisterSystem([](auto delta, auto catalogue) {
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();

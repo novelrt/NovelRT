@@ -64,13 +64,14 @@ namespace NovelRT::Ecs::Narrative
         };
         
         _storyInstanceState = _storyInstance->create_state(params, "root");
-
+        _currentStateUpdateObject.emplace(_storyInstanceState->update());
     }
 
     NarrativePlayerSystem::NarrativePlayerSystem(
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept
         : _runtime(),
-          _resourceLoaderPluginProvider(resourceLoaderPluginProvider)
+          _resourceLoaderPluginProvider(resourceLoaderPluginProvider),
+          _narrativeLoggingService()
     {
     }
 
@@ -135,7 +136,8 @@ namespace NovelRT::Ecs::Narrative
 
                 if (_currentStateUpdateObject.value()->type() == "line")
                 {
-                    // render here, right now we can't render so this is blank
+                    auto bla = static_cast<const fabulist::runtime::actions::line*>(**_currentStateUpdateObject.value());
+                    _narrativeLoggingService.logInfo(bla->text());
                 }
                 else if (_currentStateUpdateObject.value()->type() == "options")
                 {
@@ -166,6 +168,8 @@ namespace NovelRT::Ecs::Narrative
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
+
+                _currentStateUpdateObject.emplace(_storyInstanceState->update());
 
                 narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
                 break;
