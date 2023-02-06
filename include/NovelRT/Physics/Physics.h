@@ -24,12 +24,12 @@ namespace NovelRT::Physics
     class Joint2D;
     class DistanceJoint2D;
     class GearJoint2D;
-    class FixedJoint2D;
+    class FixedDistanceJoint2D;
     class HingeJoint2D;
     class SpringJoint2D;
     struct JointDefinition2D;
     struct DistanceJointDefinition2D;
-    struct FixedJointDefinition2D;
+    struct FixedDistanceJointDefinition2D;
     struct HingeJointDefinition2D;
     struct SpringJointDefinition2D;
 }
@@ -43,13 +43,13 @@ namespace NovelRT::Physics
 #include "BodyDefinition2D.h"
 #include "Joint2D.h"
 #include "DistanceJoint2D.h"
-#include "FixedJoint2D.h"
+#include "FixedDistanceJoint2D.h"
 #include "GearJoint2D.h"
 #include "HingeJoint2D.h"
 #include "SpringJoint2D.h"
 #include "JointDefinition2D.h"
 #include "DistanceJointDefinition2D.h"
-#include "FixedJointDefinition2D.h"
+#include "FixedDistanceJointDefinition2D.h"
 #include "HingeJointDefinition2D.h"
 #include "SpringJointDefinition2D.h"
 
