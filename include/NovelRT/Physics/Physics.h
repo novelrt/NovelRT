@@ -29,6 +29,7 @@ namespace NovelRT::Physics
     class SpringJoint2D;
     struct JointDefinition2D;
     struct DistanceJointDefinition2D;
+    struct GearJointDefinition2D;
     struct FixedDistanceJointDefinition2D;
     struct HingeJointDefinition2D;
     struct SpringJointDefinition2D;
@@ -51,6 +52,7 @@ namespace NovelRT::Physics
 #include "DistanceJointDefinition2D.h"
 #include "FixedDistanceJointDefinition2D.h"
 #include "HingeJointDefinition2D.h"
+#include "GearJointDefinition2D.h"
 #include "SpringJointDefinition2D.h"
 
 
