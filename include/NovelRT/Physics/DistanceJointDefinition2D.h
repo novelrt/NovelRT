@@ -12,7 +12,9 @@ namespace NovelRT::Physics
 {
     struct DistanceJointDefinition2D final : public JointDefinition2D
     {
-
+        float MinLength;
+        float MaxLength;
+        float RestLength;
     };
 }
 
