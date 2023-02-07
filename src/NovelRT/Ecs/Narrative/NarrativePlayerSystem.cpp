@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
+#include <iostream>
 
 namespace NovelRT::Ecs::Narrative
 {
@@ -10,8 +11,10 @@ namespace NovelRT::Ecs::Narrative
     {
         auto [entity, assetData] = *requestView.begin();
 
-        auto storyStream = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
-        _storyInstance = _runtime.load_story(*storyStream.FileStream, "Whats this for lol"); // TODO: no idea if this is correct
+        auto&& storyStream = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
+
+        std::cout << static_cast<void*>(storyStream.FileStream.get()) << std::endl;
+        _storyInstance = _runtime.load_story(*storyStream.FileStream, "Placeholder String"); //throws here
         
         requestView.RemoveComponent(entity);
 

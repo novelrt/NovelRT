@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
+#include <iostream>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -430,25 +431,48 @@ namespace NovelRT::ResourceManagement::Desktop
         return LoadAudioFrameData(GetGuidsToFilePathsMap().at(assetId));
     }
 
-    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
+    StreamableAssetMetadata&& DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
         {
             filePath = _resourcesRootDirectory / filePath;
         }
 
-        auto file = std::make_unique<std::ifstream>(filePath.string());
+        auto file = std::make_unique<std::ifstream>(filePath);
+        std::cout << static_cast<void*>(file.get()) << std::endl;
 
         if (!file->is_open())
         {
             throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
         }
+        
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
-        return StreamableAssetMetadata{std::move(file), RegisterAsset(filePath)};
+        auto test = std::move(file);
+        if (!test->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+        
+        StreamableAssetMetadata returnData{std::move(test), RegisterAsset(relativePathForAssetDatabase)};
+
+        if (!returnData.FileStream->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        return std::move(returnData);
     }
 
-    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(uuids::uuid assetId)
+    StreamableAssetMetadata&& DesktopResourceLoader::GetStreamToAsset(uuids::uuid assetId)
     {
-        return GetStreamToAsset(GetGuidsToFilePathsMap().at(assetId));
+        auto&& returnObj = std::move(GetStreamToAsset(GetGuidsToFilePathsMap().at(assetId)));
+        
+        if (!returnObj.FileStream->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException("aaa");
+        }
+
+        return std::move(returnObj);
     }
 }
