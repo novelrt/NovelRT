@@ -16,19 +16,19 @@ namespace NovelRT::Ecs::Narrative
         fabulist::runtime::runtime _runtime;
         std::optional<fabulist::runtime::story> _storyInstance;
         std::optional<fabulist::runtime::state> _storyInstanceState;
-        std::optional<fabulist::runtime::state::state_update> _currentStateUpdateObject;
         std::optional<NovelRT::Ecs::Catalogue> _catalogueForFrame;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceLoaderPluginProvider;
         std::optional<EntityId> _narrativeStoryStateTrackerEntityId;
         std::optional<EntityId> _choiceMetadataLinkedListEntityId;
         LoggingService _narrativeLoggingService;
 
-        void BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView);
+        [[nodiscard]] bool BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView);
+        void DoNarrativeStoryCleanup(Catalogue& catalogue);
     
     public:
         explicit NarrativePlayerSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept;
-
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;
+        void RegisterCustomFunction(const std::string& name, fabulist::runtime::runtime::method_type function);
     };
 }
 

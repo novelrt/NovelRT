@@ -6,7 +6,7 @@
 namespace NovelRT::Ecs::Narrative
 {
 
-    void NarrativePlayerSystem::BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView)
+    bool NarrativePlayerSystem::BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView)
     {
         auto [entity, assetData] = *requestView.begin();
 
@@ -64,15 +64,34 @@ namespace NovelRT::Ecs::Narrative
         };
         
         _storyInstanceState = _storyInstance->create_state(params, "root");
-        _currentStateUpdateObject.emplace(_storyInstanceState->update());
+        return _storyInstanceState->update();
+    }
+
+    void NarrativePlayerSystem::DoNarrativeStoryCleanup(Catalogue& catalogue)
+    {
+        auto narrativeStoryStateComponents = catalogue.GetComponentView<NarrativeStoryStateComponent>();
+
+        if (_narrativeStoryStateTrackerEntityId.has_value())
+        {
+            narrativeStoryStateComponents.RemoveComponent(_narrativeStoryStateTrackerEntityId.value());
+            _narrativeStoryStateTrackerEntityId.reset();
+        }
+
+        _storyInstance.reset();
+        _storyInstanceState.reset();
+
+        if (_choiceMetadataLinkedListEntityId.has_value())
+        {
+            LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), catalogue).ClearAndAddRemoveNodeInstructionForAll();
+            _choiceMetadataLinkedListEntityId.reset();
+        }
     }
 
     NarrativePlayerSystem::NarrativePlayerSystem(
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept
-        : _runtime(),
-          _resourceLoaderPluginProvider(resourceLoaderPluginProvider),
-          _narrativeLoggingService()
+        : _runtime(), _resourceLoaderPluginProvider(resourceLoaderPluginProvider), _narrativeLoggingService()
     {
+
     }
 
     void NarrativePlayerSystem::Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
@@ -95,6 +114,10 @@ namespace NovelRT::Ecs::Narrative
                 _narrativeStoryStateTrackerEntityId = catalogue.CreateEntity();
                 narrativeStoryStateComponents.AddComponent(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
             }
+            else
+            {
+                DoNarrativeStoryCleanup(catalogue);
+            }
 
             return;
         }
@@ -111,8 +134,11 @@ namespace NovelRT::Ecs::Narrative
                     break;
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
-                BeginPlay(scriptExecutionRequestComponents);
+                if (BeginPlay(scriptExecutionRequestComponents))
+                {
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+                }
+
                 break;
             }
             case NarrativeStoryState::BeginPlay:
@@ -128,25 +154,27 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::Playing:
             {
-                if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
+                if (!_storyInstance.has_value())
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                if (_currentStateUpdateObject.value()->type() == "line")
+                auto state = _storyInstanceState->update();
+
+                if (state->type() == "line")
                 {
-                    auto bla = static_cast<const fabulist::runtime::actions::line*>(**_currentStateUpdateObject.value());
+                    auto bla = static_cast<const fabulist::runtime::actions::line*>(**state);
                     _narrativeLoggingService.logInfo(bla->text());
                 }
-                else if (_currentStateUpdateObject.value()->type() == "options")
+                else if (state->type() == "options")
                 {
-                    _currentStateUpdateObject.value()->execute(_storyInstanceState.value());
+                    state->execute(_storyInstanceState.value());
                     break;
                 }
                 else
                 {
-                    _currentStateUpdateObject.value()->execute(_storyInstanceState.value());
+                    state->execute(_storyInstanceState.value());
                 }
 
                 narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::AwaitExecute});
@@ -154,7 +182,7 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::AwaitExecute:
             {
-                if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
+                if (!_storyInstance.has_value())
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
@@ -163,22 +191,27 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::ExecuteNext:
             {
-                if (!_storyInstance.has_value() || !_currentStateUpdateObject.value())
+                if (!_storyInstance.has_value())
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                _currentStateUpdateObject.emplace(_storyInstanceState->update());
+                if(_storyInstanceState->update())
+                {
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
+                }
+                else
+                {
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
                 break;
             }
             case NarrativeStoryState::BeginStop:
             {
                 _storyInstance.reset();
                 _storyInstanceState.reset();
-                _currentStateUpdateObject.reset();
                 
                 narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Idle});
                 
@@ -192,20 +225,16 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::RequestDestroy:
             {
-                _storyInstance.reset();
-                _storyInstanceState.reset();
-                _currentStateUpdateObject.reset();
-                narrativeStoryStateComponents.RemoveComponent(_narrativeStoryStateTrackerEntityId.value());
-                _narrativeStoryStateTrackerEntityId.reset();
-
-                if (_choiceMetadataLinkedListEntityId.has_value())
-                {
-                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), catalogue).ClearAndAddRemoveNodeInstructionForAll();
-                    _choiceMetadataLinkedListEntityId.reset();
-                }
-
+                DoNarrativeStoryCleanup(catalogue);
                 break;
             }
         }
+    }
+
+    void NovelRT::Ecs::Narrative::NarrativePlayerSystem::RegisterCustomFunction(
+        const std::string& name,
+        fabulist::runtime::runtime::method_type function)
+    {
+        _runtime.register_method(name, function);
     }
 }

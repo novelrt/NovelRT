@@ -44,7 +44,7 @@ int main()
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
     EntityId childOfChildEntity =
-        renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
+        renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler); 
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
@@ -55,7 +55,19 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    auto scriptAssetId = resourceManagementProvider->GetResourceLoader()->GetFilePathsToGuidsMap().at("Scripts/question.json");
+    static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+    auto scriptAssetId = resourceManagementProvider->GetResourceLoader()->TryGetAssetIdBasedOnFilePath("Scripts/question.json");
+
+    if (!scriptAssetId.has_value())
+    {
+        throw NovelRT::Exceptions::FileNotFoundException("You can't run the Fabulist sample without the requested narrative script.");
+    }
+    
+    auto narrativeRequestBuffer = scheduler.GetComponentCache().GetComponentBuffer<Narrative::RequestNarrativeScriptExecutionComponent>();
+    narrativeRequestBuffer.PushComponentUpdateInstruction(0, entityIdFactory.GetNext(), Narrative::RequestNarrativeScriptExecutionComponent{scriptAssetId.value(), false});
+
+    auto narrativeSystem = scheduler.GetRegisteredIEcsSystemAs<Narrative::NarrativePlayerSystem>();
+    narrativeSystem->RegisterCustomFunction("HelloWorld", [&](std::vector<std::string> args) {logger.logInfo(args[0]);});
 
     scheduler.RegisterSystem([](auto delta, auto catalogue) {
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
@@ -66,6 +78,25 @@ int main()
             newComponent.rotationInRadians = NovelRT::Maths::Utilities::DegreesToRadians(20 * delta.getSecondsFloat());
             newComponent.scale = NovelRT::Maths::GeoVector2F::Zero();
             transforms.PushComponentUpdateInstruction(entity, newComponent);
+        }
+    });
+
+    scheduler.RegisterSystem([](auto, auto catalogue) {
+        auto [availableChoicesBuffer, selectedChoiceBuffer, playerBuffer] = catalogue.GetComponentViews<Narrative::ChoiceMetadataComponent, Narrative::SelectedChoiceComponent, Narrative::NarrativeStoryStateComponent>();
+
+        for(auto&& [entity, choice] : availableChoicesBuffer)
+        {
+            selectedChoiceBuffer.PushComponentUpdateInstruction(entity, Narrative::SelectedChoiceComponent{choice.choiceIndex, false});
+            return;
+        }
+
+        for(auto&& [entity, storyState] : playerBuffer)
+        {
+            if (storyState.currentState == Narrative::NarrativeStoryState::AwaitExecute)
+            {
+                playerBuffer.PushComponentUpdateInstruction(entity, Narrative::NarrativeStoryStateComponent{Narrative::NarrativeStoryState::ExecuteNext});
+                return;
+            }    
         }
     });
 
