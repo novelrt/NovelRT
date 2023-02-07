@@ -10,6 +10,10 @@
 
 namespace NovelRT::Physics
 {
+    /**
+     * @brief 
+     * A joint that keeps the anchors of the attached bodies within a certain range of distance.
+     */
     class DistanceJoint2D : public Joint2D 
     {
 
