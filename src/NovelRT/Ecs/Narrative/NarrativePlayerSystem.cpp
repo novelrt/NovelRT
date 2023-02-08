@@ -122,7 +122,11 @@ namespace NovelRT::Ecs::Narrative
             if (scriptExecutionRequestCount == 1)
             {
                 _narrativeStoryStateTrackerEntityId = _catalogueForFrame->CreateEntity();
-                narrativeStoryStateComponents.AddComponent(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+                
+                if (BeginPlay(scriptExecutionRequestComponents))
+                {
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+                }
             }
             else
             {
