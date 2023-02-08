@@ -23,7 +23,7 @@ namespace NovelRT::Ecs::Narrative
         LoggingService _narrativeLoggingService;
 
         [[nodiscard]] bool BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView);
-        void DoNarrativeStoryCleanup(Catalogue& catalogue);
+        void DoNarrativeStoryCleanup();
     
     public:
         explicit NarrativePlayerSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept;

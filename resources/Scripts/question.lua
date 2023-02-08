@@ -4,6 +4,7 @@ do
     speaker "Abby"
     section "root"
         call "HelloWorld" { "Novel-chan presents a story!" }
+		jump "story"
     section "story"
         Narrator
             "It's only when I hear the sounds of shuffling feet and supplies being put away that I realize that the lecture's over."

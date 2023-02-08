@@ -18,24 +18,16 @@ namespace NovelRT::Ecs::Narrative
             throw Exceptions::FileNotFoundException("Lmao figure this out later");
         }
 
-        {
-            std::filesystem::path resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
-            std::ifstream scriptStream(resourcesRootDirectory / scriptAsset.value());
-
-            if (!scriptStream.is_open())
-            {
-                throw std::runtime_error("WTF?");
-            }
-
-            _storyInstance = _runtime.load_story(scriptStream, "Placeholder String"); //throws here
-        }
+        
+        std::filesystem::path resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
+        _storyInstance = _runtime.load_story(resourcesRootDirectory / scriptAsset.value()); //throws here
         
         requestView.RemoveComponent(entity);
 
         fabulist::runtime::state::parameters params
         {
             sizeof(fabulist::runtime::state::parameters),
-            [&](std::vector<std::string> choicesVector) 
+            [&](const std::vector<std::string>& choicesVector) 
             {
                 auto [availableChoices, selectedChoice] = _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
 
@@ -84,9 +76,9 @@ namespace NovelRT::Ecs::Narrative
         return _storyInstanceState->update();
     }
 
-    void NarrativePlayerSystem::DoNarrativeStoryCleanup(Catalogue& catalogue)
+    void NarrativePlayerSystem::DoNarrativeStoryCleanup()
     {
-        auto narrativeStoryStateComponents = catalogue.GetComponentView<NarrativeStoryStateComponent>();
+        auto narrativeStoryStateComponents = _catalogueForFrame->GetComponentView<NarrativeStoryStateComponent>();
 
         if (_narrativeStoryStateTrackerEntityId.has_value())
         {
@@ -99,7 +91,7 @@ namespace NovelRT::Ecs::Narrative
 
         if (_choiceMetadataLinkedListEntityId.has_value())
         {
-            LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), catalogue).ClearAndAddRemoveNodeInstructionForAll();
+            LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()).ClearAndAddRemoveNodeInstructionForAll();
             _choiceMetadataLinkedListEntityId.reset();
         }
     }
@@ -108,13 +100,14 @@ namespace NovelRT::Ecs::Narrative
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept
         : _runtime(), _resourceLoaderPluginProvider(resourceLoaderPluginProvider), _narrativeLoggingService()
     {
-
+        fabulist::runtime::register_default_actions(_runtime);
     }
 
     void NarrativePlayerSystem::Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
     {
+        _catalogueForFrame.emplace(catalogue);
         auto [narrativeStoryStateComponents, scriptExecutionRequestComponents] =
-            catalogue.GetComponentViews<NarrativeStoryStateComponent, RequestNarrativeScriptExecutionComponent>();
+            _catalogueForFrame->GetComponentViews<NarrativeStoryStateComponent, RequestNarrativeScriptExecutionComponent>();
 
         size_t narrativeStoryStateCount = narrativeStoryStateComponents.GetImmutableDataLength();
         size_t scriptExecutionRequestCount = scriptExecutionRequestComponents.GetImmutableDataLength();
@@ -128,12 +121,12 @@ namespace NovelRT::Ecs::Narrative
         {
             if (scriptExecutionRequestCount == 1)
             {
-                _narrativeStoryStateTrackerEntityId = catalogue.CreateEntity();
+                _narrativeStoryStateTrackerEntityId = _catalogueForFrame->CreateEntity();
                 narrativeStoryStateComponents.AddComponent(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
             }
             else
             {
-                DoNarrativeStoryCleanup(catalogue);
+                DoNarrativeStoryCleanup();
             }
 
             return;
@@ -178,7 +171,7 @@ namespace NovelRT::Ecs::Narrative
                 }
 
                 auto state = _storyInstanceState->update();
-
+                
                 if (state->type() == "line")
                 {
                     auto bla = static_cast<const fabulist::runtime::actions::line*>(**state);
@@ -220,6 +213,7 @@ namespace NovelRT::Ecs::Narrative
                 }
                 else
                 {
+                    _narrativeLoggingService.logError("How'd I get here?");
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
 
@@ -234,7 +228,7 @@ namespace NovelRT::Ecs::Narrative
                 
                 if (_choiceMetadataLinkedListEntityId.has_value())
                 {
-                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), catalogue).ClearAndAddRemoveNodeInstructionForAll();
+                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()).ClearAndAddRemoveNodeInstructionForAll();
                     _choiceMetadataLinkedListEntityId.reset();
                 }
 
@@ -242,7 +236,7 @@ namespace NovelRT::Ecs::Narrative
             }
             case NarrativeStoryState::RequestDestroy:
             {
-                DoNarrativeStoryCleanup(catalogue);
+                DoNarrativeStoryCleanup();
                 break;
             }
         }
