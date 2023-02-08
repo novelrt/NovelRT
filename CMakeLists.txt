@@ -126,11 +126,11 @@ if(NOVELRT_FETCH_DEPENDENCIES)
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j${CORES_AMT}
+      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Debug --parallel
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release
+      COMMAND ${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Debug
       COMMAND_ERROR_IS_FATAL LAST
     )
 
@@ -143,7 +143,7 @@ if(NOVELRT_FETCH_DEPENDENCIES)
 endif()
 
 # Packages w/o version specified typically break as they don't support
-# versioning like the others do. 
+# versioning like the others do.
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -165,11 +165,11 @@ if(NOVELRT_DEPS_INSTALLED)
   #So we just use our version that doesn't :)
   find_package(ZLIB CONFIG REQUIRED)
   include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-  include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
+  #include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
 else()
   find_package(ZLIB REQUIRED)
   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
-  find_package(fabulist REQUIRED)
+  #find_package(fabulist REQUIRED)
 endif()
 
 #
@@ -200,6 +200,7 @@ endif()
 #
 # Add subdirectories
 #
+add_subdirectory(internal/Fabulist)
 add_subdirectory(resources)
 add_subdirectory(src)
 
