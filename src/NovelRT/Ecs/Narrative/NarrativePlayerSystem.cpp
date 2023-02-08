@@ -11,10 +11,24 @@ namespace NovelRT::Ecs::Narrative
     {
         auto [entity, assetData] = *requestView.begin();
 
-        auto&& storyStream = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
+        auto scriptAsset = _resourceLoaderPluginProvider->GetResourceLoader()->TryGetFilePathBasedOnAssetId(assetData.narrativeScriptAssetId);
 
-        std::cout << static_cast<void*>(storyStream.FileStream.get()) << std::endl;
-        _storyInstance = _runtime.load_story(*storyStream.FileStream, "Placeholder String"); //throws here
+        if (!scriptAsset.has_value())
+        {
+            throw Exceptions::FileNotFoundException("Lmao figure this out later");
+        }
+
+        {
+            std::filesystem::path resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
+            std::ifstream scriptStream(resourcesRootDirectory / scriptAsset.value());
+
+            if (!scriptStream.is_open())
+            {
+                throw std::runtime_error("WTF?");
+            }
+
+            _storyInstance = _runtime.load_story(scriptStream, "Placeholder String"); //throws here
+        }
         
         requestView.RemoveComponent(entity);
 

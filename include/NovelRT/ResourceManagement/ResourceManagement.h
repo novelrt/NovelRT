@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <uuid.h>
 #include <vector>
+#include <fstream>
 
 /**
  * @brief The APIs for managing assets and other resources that reside in persisted storage.
