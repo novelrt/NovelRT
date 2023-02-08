@@ -64,7 +64,8 @@ namespace NovelRT::Ecs
 
             target.RegisterSystem(std::make_shared<NovelRT::Ecs::UI::UISystem>(_uiPluginProvider,
                 target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>(),
-                target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>()));
+                target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>(),
+                _resourceManagementPluginProvider->GetResourceLoader()));
         }
 
     public:

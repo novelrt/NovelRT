@@ -13,10 +13,10 @@ namespace NovelRT::PluginManagement
     class IUIPluginProvider : public std::enable_shared_from_this<IUIPluginProvider>
     {
     protected:
-        [[nodiscard]] virtual NovelRT::UI::IUIProvider* GetUIProviderInternal() = 0;
+        [[nodiscard]] virtual NovelRT::UI::UIProvider* GetUIProviderInternal() = 0;
 
     public:
-        [[nodiscard]] inline std::shared_ptr<NovelRT::UI::IUIProvider> GetUIProvider()
+        [[nodiscard]] inline std::shared_ptr<NovelRT::UI::UIProvider> GetUIProvider()
         {
             return GetUIProviderInternal()->shared_from_this();
         }

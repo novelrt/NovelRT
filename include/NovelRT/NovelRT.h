@@ -49,7 +49,7 @@
 #include <fabulist/runtime/version.hpp>
 
 //Dear ImGui
-#include <imgui.h>
+//#include <imgui.h>
 
 // libpng
 #include <png.h>

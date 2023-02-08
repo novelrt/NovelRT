@@ -9,7 +9,7 @@ namespace NovelRT::UI::DearImGui
 
     ImGuiButton::ImGuiButton(const std::string& identifier, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, NovelRT::Graphics::RGBAColour backgroundColour, NovelRT::Maths::GeoVector2F screenSize) noexcept : IUIButton(identifier, UIElementState::Hidden, position, scale, backgroundColour), ImGuiCommon(screenSize, position + (screenSize / 2)){}
 
-    void ImGuiButton::Render(std::shared_ptr<IUIProvider> provider, NovelRT::Maths::GeoVector2F windowSize)
+    void ImGuiButton::Render(std::shared_ptr<UIProvider> provider, NovelRT::Maths::GeoVector2F windowSize)
     {
         if (_state != UIElementState::Shown)
         {

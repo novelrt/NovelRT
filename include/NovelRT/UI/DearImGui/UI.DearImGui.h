@@ -9,9 +9,9 @@
  */
 namespace NovelRT::UI::DearImGui
 {
-    class ImGuiTextbox;
-    class ImGuiButton;
-    class ImGuiCommon;
+    // class ImGuiTextbox;
+    // class ImGuiButton;
+    // class ImGuiCommon;
 }
 
 
@@ -28,9 +28,9 @@ namespace NovelRT::UI::DearImGui
 // UI::DearImGui includes
 // clang-format off
 
-#include "ImGuiCommon.h"
-#include "ImGuiButton.h"
-#include "ImGuiTextbox.h"
+// #include "ImGuiCommon.h"
+// #include "ImGuiButton.h"
+// #include "ImGuiTextbox.h"
 
 // clang-format on
 

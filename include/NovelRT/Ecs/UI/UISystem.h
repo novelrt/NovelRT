@@ -14,16 +14,17 @@ namespace NovelRT::Ecs::UI
     {
     private:
         LoggingService _logger;
-        std::shared_ptr<NovelRT::UI::IUIProvider> _uiProvider;
+        std::shared_ptr<NovelRT::UI::UIProvider> _uiProvider;
 
     public:
         UISystem(std::shared_ptr<NovelRT::PluginManagement::IUIPluginProvider> uiPluginProvider,
             std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem,
-            std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem);
+            std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem,
+            std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader);
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
 
-        inline std::shared_ptr<NovelRT::UI::IUIProvider> GetProvider() const
+        inline std::shared_ptr<NovelRT::UI::UIProvider> GetProvider() const
         {
             return _uiProvider;
         }

@@ -20,10 +20,12 @@
 namespace NovelRT::UI
 {
     enum class UIElementState : uint32_t;
-    class IUIElement;
-    class IUITextbox;
-    class IUIProvider;
-    class IUIButton;
+    enum class UIElementType : uint32_t;
+    struct UIElement;
+    struct UIPanel;
+    struct UIButton;
+    struct UIFontMetadata;
+    class UIProvider;
 }
 
 
@@ -32,10 +34,12 @@ namespace NovelRT::UI
 // clang-format off
 
 #include "UIElementState.h"
-#include "IUIElement.h"
-#include "IUIButton.h"
-#include "IUITextbox.h"
-#include "IUIProvider.h"
+#include "UIElementType.h"
+#include "UIElement.h"
+#include "UIPanel.h"
+#include "UIButton.h"
+#include "UIFontMetadata.h"
+#include "UIProvider.h"
 
 // clang-format on
 

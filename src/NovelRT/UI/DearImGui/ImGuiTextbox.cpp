@@ -15,9 +15,9 @@ namespace NovelRT::UI::DearImGui
         IUITextbox(identifier, UIElementState::Hidden, position, scale, wordWrap, text, fontSize, backgroundColour),
         ImGuiCommon(screenSize, position + (screenSize / 2))
     {}
-    
 
-    void ImGuiTextbox::Render(std::shared_ptr<IUIProvider> provider, NovelRT::Maths::GeoVector2F screenSize)
+
+    void ImGuiTextbox::Render(std::shared_ptr<UIProvider> provider, NovelRT::Maths::GeoVector2F screenSize)
     {
         if(_state == UIElementState::Shown)
         {
@@ -46,7 +46,7 @@ namespace NovelRT::UI::DearImGui
             {
                 ImGui::Text(_text.c_str());
             }
-            
+
 
             ImGui::End();
             ImGui::PopStyleVar();

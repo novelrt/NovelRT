@@ -6,18 +6,27 @@
 namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
-        : _isInitialised(false), _initInfo(), _textboxes(std::list<std::shared_ptr<ImGuiTextbox>>()), _windowSize()
+        : UIProvider(std::list<UIElement>(), std::queue<std::function<void()>>()), _isInitialised(false),
+        _initInfo(), _windowSize(), _fontNameMapping(std::map<std::string,ImFont*>())
     {
-        _editorMode = EngineConfig::EnableEditorMode();
+        _elements = std::list<UIElement>();
     }
 
-    void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
+    void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader,
+                                          std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
                                           std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
                                           std::shared_ptr<NovelRT::Input::IInputDevice> inputDevice,
                                           std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
                                           std::shared_ptr<NovelRT::Graphics::GraphicsPipeline> pipeline)
     {
         _logger.logDebugLine("Initialising Dear ImGui UI service with GLFW and Vulkan...");
+        if (resourceLoader == nullptr)
+        {
+            _logger.logErrorLine(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as ResourceLoader!");
+            throw NovelRT::Exceptions::NullPointerException(
+                "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as ResourceLoader!");
+        }
         if (gfxDevice == nullptr)
         {
             _logger.logErrorLine(
@@ -53,7 +62,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
             throw NovelRT::Exceptions::NullPointerException(
                 "Could not initialise Dear ImGui with GLFW and Vulkan - null pointer provided as GraphicsPipeline!");
         }
-
+        _resourceLoader = resourceLoader;
         auto vulkanProvider = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsProvider>(gfxProvider);
         auto vulkanDevice = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsDevice>(gfxDevice);
         auto vulkanPipeline = std::dynamic_pointer_cast<NovelRT::Graphics::Vulkan::VulkanGraphicsPipeline>(pipeline);
@@ -61,17 +70,20 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         windowingDevice->SizeChanged += [&](NovelRT::Maths::GeoVector2F args) { _windowSize = args; };
         // Init Dear ImGui Context
         ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        auto defaultFont =
-            (NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Fonts" / "Raleway-Regular.ttf").string();
-        io.Fonts->AddFontFromFileTTF(defaultFont.c_str(), 36.0f);
-        //io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
 
-        // if(_editorMode)
-        // {
-        //     _logger.logDebugLine("Enabling viewport / editor mode for UI support.");
-        //     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-        // }
+        auto fontsPath = _resourceLoader->ResourcesRootDirectory() / "Fonts";
+        for (auto const& entry : std::filesystem::directory_iterator{fontsPath})
+        {
+            if(entry.is_regular_file())
+            {
+                if(entry.path().extension() == ".ttf")
+                {
+                    auto metadata = _resourceLoader->LoadFont(entry.path());
+                    _fontNameMapping.emplace(metadata.name, reinterpret_cast<ImFont*>(metadata.fontData));
+                    _logger.logDebug("Dear ImGui - Loaded font: {}", metadata.name);
+                }
+            }
+        }
 
         // GLFW Specific Init
         ImGui_ImplGlfw_InitForVulkan(reinterpret_cast<GLFWwindow*>(windowingDevice->GetHandle()), true);
@@ -158,13 +170,13 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
         _isInitialised = true;
         _logger.logDebugLine("Initialised Dear ImGui UI service with GLFW and Vulkan successfully.");
-        RenderEvent += [&](auto sys)
-        {
-            unused(sys);
-            Render();
-            // ImGui::ShowMetricsWindow();
-            //     //ImGui::ShowDemoWindow();
-        };
+        // RenderEvent += [&](auto sys)
+        // {
+        //     unused(sys);
+        //     Render();
+        //     // ImGui::ShowMetricsWindow();
+        //     //     //ImGui::ShowDemoWindow();
+        // };
     }
 
     void GlfwVulkanUIProvider::Begin()
@@ -176,15 +188,15 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
     void GlfwVulkanUIProvider::Render()
     {
-        for (auto&& x : _textboxes)
-        {
-            x->Render(this->shared_from_this(), _windowSize);
-        }
+        // for (auto&& x : _textboxes)
+        // {
+        //     x->Render(this->shared_from_this(), _windowSize);
+        // }
 
-        for (auto&& button : _buttons)
-        {
-            button->Render(shared_from_this(), _windowSize);
-        }
+        // for (auto&& button : _buttons)
+        // {
+        //     button->Render(shared_from_this(), _windowSize);
+        // }
     }
 
     void GlfwVulkanUIProvider::End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context)
@@ -194,12 +206,6 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         unused(io);
         ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), ctx->GetVulkanCommandBuffer());
-
-        // if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        // {
-        //     ImGui::UpdatePlatformWindows();
-        //     ImGui::RenderPlatformWindowsDefault();
-        // }
     }
 
     GlfwVulkanUIProvider::~GlfwVulkanUIProvider()
@@ -209,31 +215,58 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         ImGui::DestroyContext();
     }
 
-        std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(const std::string& identifier,
-                                                  const std::string& text,
-                                                  bool wordWrap,
-                                                  NovelRT::Maths::GeoVector2F position,
-                                                  NovelRT::Maths::GeoVector2F scale,
-                                                  float fontSize,
-                                                  NovelRT::Graphics::RGBAColour backgroundColour)
+    void GlfwVulkanUIProvider::GenerateCommand(UIElement& element)
     {
 
-        auto boxPtr = _textboxes.emplace_back(
-            std::make_shared<ImGuiTextbox>(identifier, text, wordWrap, position, scale, fontSize, backgroundColour,
-                                           _windowSize)); // TODO: This looks VEEEERY WRONG???
+        std::queue<std::function<void()>> que = std::queue<std::function<void()>>();
 
-        return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
+        switch(element.Type)
+        {
+            case UIElementType::Panel:
+            {
+                if(element.State == UIElementState::Shown)
+                {
+                    UIPanel& panel = reinterpret_cast<UIPanel&>(element);
+                    //Define the push / begin functions
+                    auto colourPush = std::function<void()>([panel](){ ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(panel.Colour));});
+                    que.push(colourPush);
+
+                    //For every push there's a pop.
+                    auto colourPop = std::function<void()>([panel](){ ImGui::PopStyleColor();});
+                    que.push(colourPush);
+                }
+
+                break;
+            }
+            default:
+                return;
+        }
     }
+    //     std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(const std::string& identifier,
+    //                                               const std::string& text,
+    //                                               bool wordWrap,
+    //                                               NovelRT::Maths::GeoVector2F position,
+    //                                               NovelRT::Maths::GeoVector2F scale,
+    //                                               float fontSize,
+    //                                               NovelRT::Graphics::RGBAColour backgroundColour)
+    // {
 
-    std::shared_ptr<IUIButton> GlfwVulkanUIProvider::CreateButton(const std::string& identifier,
-                                             NovelRT::Maths::GeoVector2F position,
-                                             NovelRT::Maths::GeoVector2F scale,
-                                             NovelRT::Graphics::RGBAColour backgroundColour)
-    {
-        auto buttonPtr = _buttons.emplace_back(std::make_shared<ImGuiButton>(identifier, position, scale, backgroundColour, _windowSize));
+    //     auto boxPtr = _textboxes.emplace_back(
+    //         std::make_shared<ImGuiTextbox>(identifier, text, wordWrap, position, scale, fontSize, backgroundColour,
+    //                                        _windowSize)); // TODO: This looks VEEEERY WRONG???
 
-        return std::dynamic_pointer_cast<IUIButton>(buttonPtr);
-    }
+    //     return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
+    // }
+
+    // std::shared_ptr<IUIButton> GlfwVulkanUIProvider::CreateButton(const std::string& identifier,
+    //                                          NovelRT::Maths::GeoVector2F position,
+    //                                          NovelRT::Maths::GeoVector2F scale,
+    //                                          NovelRT::Graphics::RGBAColour backgroundColour)
+    // {
+    //     auto buttonPtr = _buttons.emplace_back(std::make_shared<ImGuiButton>(identifier, position, scale, backgroundColour, _windowSize));
+
+    //     return std::dynamic_pointer_cast<IUIButton>(buttonPtr);
+    // }
 
     ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key)
     {

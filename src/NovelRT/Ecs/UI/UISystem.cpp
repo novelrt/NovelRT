@@ -7,10 +7,11 @@ namespace NovelRT::Ecs::UI
 {
     UISystem::UISystem(std::shared_ptr<NovelRT::PluginManagement::IUIPluginProvider> uiPluginProvider,
         std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem,
-        std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem):
+        std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem,
+        std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader):
         _uiProvider(std::move(uiPluginProvider->GetUIProvider()))
     {
-        _uiProvider->Initialise(renderingSystem->GetCurrentGraphicsDevice(),
+        _uiProvider->Initialise(resourceLoader, renderingSystem->GetCurrentGraphicsDevice(),
             renderingSystem->GetCurrentWindowingPluginProvider()->GetWindowingDevice(),
             inputSystem->GetInputDevice(),
             renderingSystem->GetCurrentGraphicsProvider(),
@@ -21,7 +22,7 @@ namespace NovelRT::Ecs::UI
             unused(system);
             _uiProvider->Begin();
 
-            _uiProvider->RenderEvent(*_uiProvider);
+            //_uiProvider->RenderEvent(*_uiProvider);
 
             _uiProvider->End(args.graphicsDevice->GetCurrentContext());
         };

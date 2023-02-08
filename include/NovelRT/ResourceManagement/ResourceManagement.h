@@ -25,6 +25,7 @@ namespace NovelRT::ResourceManagement
     struct BinaryPackage;
     struct ShaderMetadata;
     struct AudioMetadata;
+    struct FontMetadata;
 }
 
 // clang-format off
@@ -35,6 +36,7 @@ namespace NovelRT::ResourceManagement
 #include "BinaryPackage.h"
 #include "ShaderMetadata.h"
 #include "AudioMetadata.h"
+#include "FontMetadata.h"
 // clang-format on
 
 #endif // NOVELRT_RESOURCEMANAGEMENT_H

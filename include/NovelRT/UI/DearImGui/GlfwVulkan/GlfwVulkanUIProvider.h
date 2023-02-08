@@ -10,15 +10,19 @@
 
 namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
-    class GlfwVulkanUIProvider final : public UI::IUIProvider
+    class GlfwVulkanUIProvider final : public UI::UIProvider
     {
     private:
-        std::list<std::shared_ptr<ImGuiTextbox>> _textboxes;
-        std::list<std::shared_ptr<ImGuiButton>> _buttons;
+        // std::list<std::shared_ptr<ImGuiTextbox>> _textboxes;
+        // std::list<std::shared_ptr<ImGuiButton>> _buttons;
         NovelRT::Maths::GeoVector2F _windowSize;
+        std::map<std::string, ImFont*> _fontNameMapping;
 
         void Render();
         ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key);
+        void GenerateCommand(UIElement& element);
+
+        void GeneratePanelCommand(UIPanel& panel);
 
     protected:
         bool _isInitialised;
@@ -27,7 +31,8 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     public:
         GlfwVulkanUIProvider() noexcept;
         ~GlfwVulkanUIProvider() final;
-        void Initialise(std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
+        void Initialise(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader,
+                        std::shared_ptr<NovelRT::Graphics::GraphicsDevice> gfxDevice,
                         std::shared_ptr<NovelRT::Windowing::IWindowingDevice> windowingDevice,
                         std::shared_ptr<NovelRT::Input::IInputDevice> inputDevice,
                         std::shared_ptr<NovelRT::Graphics::GraphicsProvider> gfxProvider,
@@ -36,18 +41,6 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         void Begin();
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
 
-        std::shared_ptr<IUITextbox> CreateTextbox(const std::string& identifier,
-                                                  const std::string& text,
-                                                  bool wordWrap,
-                                                  NovelRT::Maths::GeoVector2F position,
-                                                  NovelRT::Maths::GeoVector2F scale,
-                                                  float fontSize,
-                                                  NovelRT::Graphics::RGBAColour backgroundColour) final;
-
-        std::shared_ptr<IUIButton> CreateButton(const std::string& identifier,
-                                                NovelRT::Maths::GeoVector2F position,
-                                                NovelRT::Maths::GeoVector2F scale,
-                                                NovelRT::Graphics::RGBAColour backgroundColour) final;
     };
 }
 

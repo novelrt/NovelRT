@@ -87,6 +87,8 @@ namespace NovelRT::ResourceManagement
 
         [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) = 0;
 
+        [[nodiscard]] virtual FontMetadata LoadFont(std::filesystem::path filePath) = 0;
+
         virtual ~ResourceLoader() = default;
     };
 }
