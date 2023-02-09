@@ -12,7 +12,7 @@ do
             "I've had a lot of other thoughts on my mind...thoughts that culminate in a question."
             "It's a question that I've been meaning to ask a certain someone."
             "When we come out of the university, I spot her right away."
-            "I've known Sylvie since we were kids. She's got a big heart and she's always been a good friend to me."
+            "I've known Abby since we were kids. She's got a big heart and she's always been a good friend to me."
             "But recently... I've felt that I want something more."
             "More than just talking, more than just walking home together when our classes end."
             "As soon as she catches my eye, I decide..."

@@ -126,11 +126,11 @@ if(NOVELRT_FETCH_DEPENDENCIES)
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Debug --parallel
+      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j${CORES}
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Debug
+      COMMAND ${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release
       COMMAND_ERROR_IS_FATAL LAST
     )
 

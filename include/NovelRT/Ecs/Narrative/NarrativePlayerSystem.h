@@ -21,10 +21,11 @@ namespace NovelRT::Ecs::Narrative
         std::optional<EntityId> _narrativeStoryStateTrackerEntityId;
         std::optional<EntityId> _choiceMetadataLinkedListEntityId;
         LoggingService _narrativeLoggingService;
+        bool _optionSelected;
 
         [[nodiscard]] bool BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView);
         void DoNarrativeStoryCleanup();
-    
+
     public:
         explicit NarrativePlayerSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept;
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;

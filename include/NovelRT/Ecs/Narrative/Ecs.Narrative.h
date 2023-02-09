@@ -10,7 +10,6 @@
 #endif
 
 // Ecs::Narrative Dependencies
-#include <fabulist/runtime/fabulist_runtime_export.hpp>
 #include <fabulist/runtime/action.hpp>
 #include <fabulist/runtime/decoder.hpp>
 #include <fabulist/runtime/runtime.hpp>

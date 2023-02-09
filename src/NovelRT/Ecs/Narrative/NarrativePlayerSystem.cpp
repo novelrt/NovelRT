@@ -18,16 +18,15 @@ namespace NovelRT::Ecs::Narrative
             throw Exceptions::FileNotFoundException("Lmao figure this out later");
         }
 
-        
         std::filesystem::path resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
         _storyInstance = _runtime.load_story(resourcesRootDirectory / scriptAsset.value()); //throws here
-        
+
         requestView.RemoveComponent(entity);
 
         fabulist::runtime::state::parameters params
         {
             sizeof(fabulist::runtime::state::parameters),
-            [&](const std::vector<std::string>& choicesVector) 
+            [&](const std::vector<std::string>& choicesVector)
             {
                 auto [availableChoices, selectedChoice] = _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
 
@@ -67,11 +66,11 @@ namespace NovelRT::Ecs::Narrative
                 list.Commit();
 
                 _choiceMetadataLinkedListEntityId.reset();
-
+                _optionSelected = true;
                 return std::next(choicesVector.cbegin(), choice.choiceIndex);
             }
         };
-        
+
         _storyInstanceState = _storyInstance->create_state(params, "root");
         return _storyInstanceState->update();
     }
@@ -98,7 +97,7 @@ namespace NovelRT::Ecs::Narrative
 
     NarrativePlayerSystem::NarrativePlayerSystem(
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept
-        : _runtime(), _resourceLoaderPluginProvider(resourceLoaderPluginProvider), _narrativeLoggingService()
+        : _runtime(), _resourceLoaderPluginProvider(resourceLoaderPluginProvider), _narrativeLoggingService(), _optionSelected(false)
     {
         fabulist::runtime::register_default_actions(_runtime);
     }
@@ -122,7 +121,7 @@ namespace NovelRT::Ecs::Narrative
             if (scriptExecutionRequestCount == 1)
             {
                 _narrativeStoryStateTrackerEntityId = _catalogueForFrame->CreateEntity();
-                
+
                 if (BeginPlay(scriptExecutionRequestComponents))
                 {
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
@@ -175,15 +174,28 @@ namespace NovelRT::Ecs::Narrative
                 }
 
                 auto state = _storyInstanceState->update();
-                
+
                 if (state->type() == "line")
                 {
                     auto bla = static_cast<const fabulist::runtime::actions::line*>(**state);
-                    _narrativeLoggingService.logInfo(bla->text());
+
+                    _narrativeLoggingService.logInfo("[Char: {}] {}", bla->speaker(), bla->text());
                 }
                 else if (state->type() == "options")
                 {
                     state->execute(_storyInstanceState.value());
+                    if(_optionSelected)
+                    {
+                        if(_storyInstanceState->update())
+                        {
+                            _optionSelected = false;
+                            auto availableChoices = _catalogueForFrame->GetComponentView<ChoiceMetadataComponent>();
+                            for(auto&& [entity, choice] : availableChoices)
+                            {
+                                availableChoices.RemoveComponent(entity);
+                            }
+                        }
+                    }
                     break;
                 }
                 else
@@ -217,7 +229,7 @@ namespace NovelRT::Ecs::Narrative
                 }
                 else
                 {
-                    _narrativeLoggingService.logError("How'd I get here?");
+                    //Assume we hit end of story and begin to stop.
                     narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
 
@@ -227,9 +239,9 @@ namespace NovelRT::Ecs::Narrative
             {
                 _storyInstance.reset();
                 _storyInstanceState.reset();
-                
+
                 narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Idle});
-                
+
                 if (_choiceMetadataLinkedListEntityId.has_value())
                 {
                     LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()).ClearAndAddRemoveNodeInstructionForAll();
