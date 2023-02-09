@@ -11,14 +11,14 @@ namespace NovelRT::Ecs
         const void* deleteInstructionState,
         size_t sizeOfDataTypeInBytes,
         std::function<void(void*, const void*, size_t)> componentUpdateLogic,
-        std::function<bool(void*, void*)> compareComponents,
+        std::function<bool(const void*, const void*)> componentComparatorLogic,
         const std::string& serialisedTypeName) noexcept
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets(std::vector<SparseSetMemoryContainer>{}),
           _deleteInstructionState(std::vector<uint8_t>(sizeOfDataTypeInBytes)),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
           _componentUpdateLogic(std::move(componentUpdateLogic)),
-          _compareComponents(std::move(compareComponents)),
+          _componentComparatorLogic(std::move(componentComparatorLogic)),
           _serialisedTypeName(serialisedTypeName)
     {
         std::memcpy(_deleteInstructionState.data(), deleteInstructionState, _sizeOfDataTypeInBytes);
@@ -34,7 +34,7 @@ namespace NovelRT::Ecs
         {
             for (auto [entity, component] : updateSet)
             {
-                if (_compareComponents(component.GetDataHandle(), _deleteInstructionState.data()))
+                if (_componentComparatorLogic(component.GetDataHandle(), _deleteInstructionState.data()))
                 {
                     _rootSet.TryRemove(entity);
                 }

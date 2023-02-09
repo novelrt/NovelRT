@@ -2,7 +2,6 @@
 // for more information.
 
 #include <NovelRT/Ecs/Ecs.h>
-#include <iostream>
 
 namespace NovelRT::Ecs::Narrative
 {
@@ -56,12 +55,12 @@ namespace NovelRT::Ecs::Narrative
                 selectedChoice.RemoveComponent(entity);
 
                 LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
-
+                
                 for (EntityId node : list)
                 {
                     availableChoices.RemoveComponent(node);
                 }
-
+                
                 list.ClearAndAddRemoveNodeInstructionForAll();
                 list.Commit();
 

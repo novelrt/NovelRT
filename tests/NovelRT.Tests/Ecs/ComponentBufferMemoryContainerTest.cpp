@@ -12,7 +12,7 @@ TEST(ComponentBufferMemoryContainerTest, PrepComponentBuffersForFrameDoesNotThro
 {
     int32_t deleteState = -1;
     EXPECT_NO_THROW(ComponentBufferMemoryContainer(
-                        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](void*,void*) { return false; }, "THROW_AWAY")
+                        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](const void*, const void*) { return false; }, "THROW_AWAY")
                         .PrepContainerForFrame(std::vector<EntityId>{}));
 }
 
@@ -27,7 +27,7 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionAddsNewEn
 {
     int32_t deleteState = -1;
     auto container = ComponentBufferMemoryContainer(
-        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](void*,void*) { return false; }, "THROW_AWAY");
+        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](const void*, const void*) { return false; }, "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PrepContainerForFrame(std::vector<EntityId>{});
@@ -44,8 +44,8 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionUpdatesEx
         [](auto intRoot, auto intUpdate, auto) {
             *reinterpret_cast<int32_t*>(intRoot) += *reinterpret_cast<const int32_t*>(intUpdate);
         },
-        [](void* lhs, void* rhs) {
-            return *reinterpret_cast<int32_t*>(lhs) == *reinterpret_cast<const int32_t*>(rhs);
+        [](const void* lhs, const void* rhs) {
+            return *reinterpret_cast<const int32_t*>(lhs) == *reinterpret_cast<const int32_t*>(rhs);
         },
         "THROW_AWAY");
     int32_t updateState = 10;
@@ -62,7 +62,9 @@ TEST(ComponentBufferMemoryContainerTest, PushComponentUpdateInstructionRemovesEn
 {
     int32_t deleteState = -1;
     auto container = ComponentBufferMemoryContainer(
-        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](void*,void*) { return false; }, "THROW_AWAY");
+        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](const void* lhs, const void* rhs) { 
+            return *reinterpret_cast<const int32_t*>(lhs) == *reinterpret_cast<const int32_t*>(rhs);
+ }, "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PrepContainerForFrame(std::vector<EntityId>{});
@@ -76,7 +78,7 @@ TEST(ComponentBufferMemoryContainerTest, ForRangeSupportWorksCorrectly)
 {
     int32_t deleteState = -1;
     auto container = ComponentBufferMemoryContainer(
-        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](void*,void*) { return false; }, "THROW_AWAY");
+        1, &deleteState, sizeof(int32_t), [](auto, auto, auto) {}, [](const void*, const void*) { return false; }, "THROW_AWAY");
     int32_t updateState = 10;
     container.PushComponentUpdateInstruction(0, 0, &updateState);
     container.PushComponentUpdateInstruction(0, 1, &updateState);
@@ -97,8 +99,8 @@ TEST(ComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
         [](auto intRoot, auto intUpdate, auto) {
             *reinterpret_cast<int32_t*>(intRoot) += *reinterpret_cast<const int32_t*>(intUpdate);
         },
-        [](void* lhs, void* rhs) {
-            return *reinterpret_cast<int32_t*>(lhs) == *reinterpret_cast<const int32_t*>(rhs);
+        [](const void* lhs, const void* rhs) {
+            return *reinterpret_cast<const int32_t*>(lhs) == *reinterpret_cast<const int32_t*>(rhs);
         },
         "THROW_AWAY");
     int32_t updateState = 10;

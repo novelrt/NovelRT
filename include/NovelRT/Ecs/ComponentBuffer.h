@@ -49,8 +49,8 @@ namespace NovelRT::Ecs
                   [](auto rootComponent, auto updateComponent, auto) {
                       *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
                   },
-                  [](void* left, void* right) {
-                      return *reinterpret_cast<T*>(left) == *reinterpret_cast<T*>(right);
+                  [](const void* left, const void* right) {
+                      return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right);
                   },
                   serialisedTypeName))
         {

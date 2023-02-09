@@ -41,6 +41,12 @@ protected:
                 auto intRhs = reinterpret_cast<const int32_t*>(rhs);
                 *intLhs += *intRhs;
             },
+            [](auto lhs, auto rhs, auto) {
+                auto intLhs = reinterpret_cast<const int32_t*>(lhs);
+                auto intRhs = reinterpret_cast<const int32_t*>(rhs);
+
+                return static_cast<NrtBool>(*intLhs == *intRhs);
+            },
             "THROW_AWAY", nullptr, &intComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
@@ -50,10 +56,16 @@ protected:
                 auto sizeTRhs = reinterpret_cast<const size_t*>(rhs);
                 *sizeTLhs += *sizeTRhs;
             },
+            [](auto lhs, auto rhs, auto) {
+                auto sizeTLhs = reinterpret_cast<const size_t*>(lhs);
+                auto sizeTRhs = reinterpret_cast<const size_t*>(rhs);
+
+                return static_cast<NrtBool>(*sizeTLhs == *sizeTRhs);
+            },
             "THROW_AWAY_AGAIN", nullptr, &sizeTComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY_AGAIN_AGAIN",
+            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, [](auto, auto, auto) -> NrtBool {return NRT_FALSE;}, "THROW_AWAY_AGAIN_AGAIN",
             nullptr, &charComponentTypeId);
 
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);

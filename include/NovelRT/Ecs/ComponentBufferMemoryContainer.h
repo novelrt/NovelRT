@@ -18,7 +18,7 @@ namespace NovelRT::Ecs
         std::vector<uint8_t> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
         std::function<void(void*, const void*, size_t)> _componentUpdateLogic;
-        std::function<bool(void*, void*)> _compareComponents;
+        std::function<bool(const void*, const void*)> _componentComparatorLogic;
         std::string _serialisedTypeName;
 
     public:
@@ -49,7 +49,7 @@ namespace NovelRT::Ecs
                                        const void* deleteInstructionState,
                                        size_t sizeOfDataTypeInBytes,
                                        std::function<void(void*, const void*, size_t)> componentUpdateLogic,
-                                       std::function<bool(void*, void*)> compareComponents,
+                                       std::function<bool(const void*, const void*)> componentComparatorLogic,
                                        const std::string& serialisedTypeName) noexcept;
 
         void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept;

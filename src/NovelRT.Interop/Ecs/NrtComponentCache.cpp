@@ -18,6 +18,7 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             NrtComponentComparatorFnPtr comparatorFnPtr,
                                                              const char* serialisedTypeName,
                                                              void* context,
                                                              NrtComponentTypeId* outputResult)
@@ -28,7 +29,7 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        if (deleteInstructionState == nullptr || outputResult == nullptr)
+        if (deleteInstructionState == nullptr || outputResult == nullptr || updateFnPtr == nullptr || comparatorFnPtr == nullptr || serialisedTypeName == nullptr)
         {
             Nrt_setErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
@@ -44,6 +45,9 @@ extern "C"
                             updateFnPtr(reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&lhs),
                                         reinterpret_cast<NrtSparseSetMemoryContainer_ByteIteratorViewHandle>(&rhs),
                                         size, context);
+                        },
+                        [=](auto lhs, auto rhs) {
+                            return static_cast<bool>(comparatorFnPtr(lhs, rhs, context));
                         },
                         std::string(serialisedTypeName));
 
