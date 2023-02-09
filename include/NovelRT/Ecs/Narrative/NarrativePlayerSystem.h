@@ -27,7 +27,8 @@ namespace NovelRT::Ecs::Narrative
         void DoNarrativeStoryCleanup();
 
     public:
-        explicit NarrativePlayerSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept;
+        explicit NarrativePlayerSystem(
+            std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept;
         void Update(Timing::Timestamp delta, Catalogue catalogue) final;
         void RegisterCustomFunction(const std::string& name, fabulist::runtime::runtime::method_type function);
     };

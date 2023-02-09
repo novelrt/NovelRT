@@ -11,13 +11,14 @@ extern "C"
 {
 #endif
 
-    NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(size_t poolSize,
-                                                                                      void* deleteInstructionState,
-                                                                                      size_t sizeOfDataTypeInBytes,
-                                                                                      NrtComponentUpdateFnPtr fnPtr,
-                                                                                      NrtComponentComparatorFnPtr comparatorPtr,
-                                                                                      const char* serialisedTypeName,
-                                                                                      void* context);
+    NrtComponentBufferMemoryContainerHandle Nrt_ComponentBufferMemoryContainer_Create(
+        size_t poolSize,
+        void* deleteInstructionState,
+        size_t sizeOfDataTypeInBytes,
+        NrtComponentUpdateFnPtr fnPtr,
+        NrtComponentComparatorFnPtr comparatorPtr,
+        const char* serialisedTypeName,
+        void* context);
 
     void Nrt_ComponentBufferMemoryContainer_PrepContainerForFrame(NrtComponentBufferMemoryContainerHandle container,
                                                                   NrtEntityIdVectorHandle entitiesToDelete);

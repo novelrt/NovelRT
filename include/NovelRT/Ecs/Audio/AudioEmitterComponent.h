@@ -29,10 +29,8 @@ namespace NovelRT::Ecs::Audio
 
         friend inline bool operator==(const AudioEmitterComponent& lhs, const AudioEmitterComponent& rhs) noexcept
         {
-            return lhs.handle == rhs.handle
-            && lhs.isMusic == rhs.isMusic
-            && lhs.numberOfLoops == rhs.numberOfLoops
-            && lhs.volume == rhs.volume;
+            return lhs.handle == rhs.handle && lhs.isMusic == rhs.isMusic && lhs.numberOfLoops == rhs.numberOfLoops &&
+                   lhs.volume == rhs.volume;
         }
 
         friend inline bool operator!=(const AudioEmitterComponent& lhs, const AudioEmitterComponent& rhs) noexcept

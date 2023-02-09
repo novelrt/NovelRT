@@ -65,8 +65,9 @@ protected:
             "THROW_AWAY_AGAIN", nullptr, &sizeTComponentTypeId);
 
         Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {}, [](auto, auto, auto) -> NrtBool {return NRT_FALSE;}, "THROW_AWAY_AGAIN_AGAIN",
-            nullptr, &charComponentTypeId);
+            componentCache, sizeof(char), &charDeleteState, [](auto, auto, auto, auto) {},
+            [](auto, auto, auto) -> NrtBool { return NRT_FALSE; }, "THROW_AWAY_AGAIN_AGAIN", nullptr,
+            &charComponentTypeId);
 
         auto compViewInt = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
         auto compViewSizeT = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, sizeTComponentTypeId);

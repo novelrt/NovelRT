@@ -38,7 +38,8 @@ namespace NovelRT::Ecs::Narrative
         uuids::uuid narrativeScriptAssetId = uuids::uuid();
         bool shouldDestroy = false;
 
-        inline RequestNarrativeScriptExecutionComponent& operator+=(const RequestNarrativeScriptExecutionComponent& other) noexcept
+        inline RequestNarrativeScriptExecutionComponent& operator+=(
+            const RequestNarrativeScriptExecutionComponent& other) noexcept
         {
             narrativeScriptAssetId = other.narrativeScriptAssetId;
             shouldDestroy = other.shouldDestroy;

@@ -24,14 +24,15 @@ namespace NovelRT::Ecs::Audio
             return *this;
         };
 
-        friend inline bool operator==(const AudioEmitterStateComponent& lhs, const AudioEmitterStateComponent& rhs) noexcept
+        friend inline bool operator==(const AudioEmitterStateComponent& lhs,
+                                      const AudioEmitterStateComponent& rhs) noexcept
         {
-            return lhs.state == rhs.state
-                && lhs.fadeDuration == rhs.fadeDuration
-                && lhs.fadeExpectedVolume == rhs.fadeExpectedVolume;
+            return lhs.state == rhs.state && lhs.fadeDuration == rhs.fadeDuration &&
+                   lhs.fadeExpectedVolume == rhs.fadeExpectedVolume;
         }
 
-        friend inline bool operator!=(const AudioEmitterStateComponent& lhs, const AudioEmitterStateComponent& rhs) noexcept
+        friend inline bool operator!=(const AudioEmitterStateComponent& lhs,
+                                      const AudioEmitterStateComponent& rhs) noexcept
         {
             return !(lhs == rhs);
         }

@@ -22,7 +22,8 @@ namespace NovelRT::Ecs
         const std::string& serialisedTypeName) const
     {
         return std::make_shared<ComponentBufferMemoryContainer>(_poolSize, deleteInstructionState, sizeOfDataType,
-                                                                componentUpdateLogic, componentComparisonLogic, serialisedTypeName);
+                                                                componentUpdateLogic, componentComparisonLogic,
+                                                                serialisedTypeName);
     }
 
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
@@ -35,8 +36,8 @@ namespace NovelRT::Ecs
         static AtomFactory& _componentTypeIdFactory = AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
         ComponentTypeId returnId = _componentTypeIdFactory.GetNext();
-        std::shared_ptr<ComponentBufferMemoryContainer> ptr =
-            CreateContainer(sizeOfDataType, deleteInstructionState, componentUpdateLogic, componentComparisonLogic, serialisedTypeName);
+        std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(
+            sizeOfDataType, deleteInstructionState, componentUpdateLogic, componentComparisonLogic, serialisedTypeName);
         _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
         _componentMap.emplace(returnId, ptr);
         return returnId;

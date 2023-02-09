@@ -10,25 +10,28 @@ namespace NovelRT::Ecs::Narrative
     {
         auto [entity, assetData] = *requestView.begin();
 
-        auto scriptAsset = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
+        auto scriptAsset =
+            _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
 
-        _storyInstance = _runtime.load_story(*scriptAsset.FileStream.get(), uuids::to_string(scriptAsset.DatabaseHandle)); //throws here
+        _storyInstance = _runtime.load_story(*scriptAsset.FileStream.get(),
+                                             uuids::to_string(scriptAsset.DatabaseHandle)); // throws here
 
         requestView.RemoveComponent(entity);
 
-        fabulist::runtime::state::parameters params
-        {
-            sizeof(fabulist::runtime::state::parameters),
-            [&](const std::vector<std::string>& choicesVector)
-            {
-                auto [availableChoices, selectedChoice] = _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
+        fabulist::runtime::state::parameters params{
+            sizeof(fabulist::runtime::state::parameters), [&](const std::vector<std::string>& choicesVector) {
+                auto [availableChoices, selectedChoice] =
+                    _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
 
                 if (availableChoices.GetImmutableDataLength() == 0)
                 {
                     _choiceMetadataLinkedListEntityId = _catalogueForFrame->CreateEntity();
-                    LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
+                    LinkedEntityListView list(
+                        _choiceMetadataLinkedListEntityId.value(),
+                        _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm
+                                                     // futureproofing it for updates that are not in this version.
 
-                    for(size_t index = 0; index < choicesVector.size(); index++)
+                    for (size_t index = 0; index < choicesVector.size(); index++)
                     {
                         EntityId newNode = _catalogueForFrame->CreateEntity();
                         availableChoices.AddComponent(newNode, ChoiceMetadataComponent{index});
@@ -37,7 +40,8 @@ namespace NovelRT::Ecs::Narrative
 
                     list.Commit();
 
-                    return choicesVector.cend(); // there's no way the engine will see this modifcation until the next iteration, so we can just get out here.
+                    return choicesVector.cend(); // there's no way the engine will see this modifcation until the next
+                                                 // iteration, so we can just get out here.
                 }
 
                 if (selectedChoice.GetImmutableDataLength() == 0)
@@ -54,21 +58,23 @@ namespace NovelRT::Ecs::Narrative
 
                 selectedChoice.RemoveComponent(entity);
 
-                LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
-                
+                LinkedEntityListView list(
+                    _choiceMetadataLinkedListEntityId.value(),
+                    _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it
+                                                 // for updates that are not in this version.
+
                 for (EntityId node : list)
                 {
                     availableChoices.RemoveComponent(node);
                 }
-                
+
                 list.ClearAndAddRemoveNodeInstructionForAll();
                 list.Commit();
 
                 _choiceMetadataLinkedListEntityId.reset();
                 _optionSelected = true;
                 return std::next(choicesVector.cbegin(), choice.choiceIndex);
-            }
-        };
+            }};
 
         _storyInstanceState = _storyInstance->create_state(params, "root");
         return _storyInstanceState->update();
@@ -89,7 +95,8 @@ namespace NovelRT::Ecs::Narrative
 
         if (_choiceMetadataLinkedListEntityId.has_value())
         {
-            auto [availableChoicesComponents, selectedChoiceComponents] = _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
+            auto [availableChoicesComponents, selectedChoiceComponents] =
+                _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
             LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value());
 
             for (EntityId node : list)
@@ -108,7 +115,10 @@ namespace NovelRT::Ecs::Narrative
 
     NarrativePlayerSystem::NarrativePlayerSystem(
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceLoaderPluginProvider) noexcept
-        : _runtime(), _resourceLoaderPluginProvider(resourceLoaderPluginProvider), _narrativeLoggingService(), _optionSelected(false)
+        : _runtime(),
+          _resourceLoaderPluginProvider(resourceLoaderPluginProvider),
+          _narrativeLoggingService(),
+          _optionSelected(false)
     {
         fabulist::runtime::register_default_actions(_runtime);
     }
@@ -117,7 +127,8 @@ namespace NovelRT::Ecs::Narrative
     {
         _catalogueForFrame.emplace(catalogue);
         auto [narrativeStoryStateComponents, scriptExecutionRequestComponents] =
-            _catalogueForFrame->GetComponentViews<NarrativeStoryStateComponent, RequestNarrativeScriptExecutionComponent>();
+            _catalogueForFrame
+                ->GetComponentViews<NarrativeStoryStateComponent, RequestNarrativeScriptExecutionComponent>();
 
         size_t narrativeStoryStateCount = narrativeStoryStateComponents.GetImmutableDataLength();
         size_t scriptExecutionRequestCount = scriptExecutionRequestComponents.GetImmutableDataLength();
@@ -135,7 +146,9 @@ namespace NovelRT::Ecs::Narrative
 
                 if (BeginPlay(scriptExecutionRequestComponents))
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
                 }
             }
             else
@@ -146,7 +159,8 @@ namespace NovelRT::Ecs::Narrative
             return;
         }
 
-        auto narrativeStoryStateComponent = narrativeStoryStateComponents.GetComponentUnsafe(_narrativeStoryStateTrackerEntityId.value());
+        auto narrativeStoryStateComponent =
+            narrativeStoryStateComponents.GetComponentUnsafe(_narrativeStoryStateTrackerEntityId.value());
 
         switch (narrativeStoryStateComponent.currentState)
         {
@@ -160,7 +174,9 @@ namespace NovelRT::Ecs::Narrative
 
                 if (BeginPlay(scriptExecutionRequestComponents))
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginPlay});
                 }
 
                 break;
@@ -169,18 +185,24 @@ namespace NovelRT::Ecs::Narrative
             {
                 if (!_storyInstance.has_value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                    _narrativeStoryStateTrackerEntityId.value(),
+                    NarrativeStoryStateComponent{NarrativeStoryState::Playing});
                 break;
             }
             case NarrativeStoryState::Playing:
             {
                 if (!_storyInstance.has_value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
@@ -195,13 +217,13 @@ namespace NovelRT::Ecs::Narrative
                 else if (state->type() == "options")
                 {
                     state->execute(_storyInstanceState.value());
-                    if(_optionSelected)
+                    if (_optionSelected)
                     {
-                        if(_storyInstanceState->update())
+                        if (_storyInstanceState->update())
                         {
                             _optionSelected = false;
                             auto availableChoices = _catalogueForFrame->GetComponentView<ChoiceMetadataComponent>();
-                            for(auto&& [entity, choice] : availableChoices)
+                            for (auto&& [entity, choice] : availableChoices)
                             {
                                 availableChoices.RemoveComponent(entity);
                             }
@@ -214,14 +236,18 @@ namespace NovelRT::Ecs::Narrative
                     state->execute(_storyInstanceState.value());
                 }
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::AwaitExecute});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                    _narrativeStoryStateTrackerEntityId.value(),
+                    NarrativeStoryStateComponent{NarrativeStoryState::AwaitExecute});
                 break;
             }
             case NarrativeStoryState::AwaitExecute:
             {
                 if (!_storyInstance.has_value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
 
                 break;
@@ -230,18 +256,24 @@ namespace NovelRT::Ecs::Narrative
             {
                 if (!_storyInstance.has_value())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                     break;
                 }
 
-                if(_storyInstanceState->update())
+                if (_storyInstanceState->update())
                 {
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Playing});
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::Playing});
                 }
                 else
                 {
-                    //Assume we hit end of story and begin to stop.
-                    narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
+                    // Assume we hit end of story and begin to stop.
+                    narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                        _narrativeStoryStateTrackerEntityId.value(),
+                        NarrativeStoryStateComponent{NarrativeStoryState::BeginStop});
                 }
 
                 break;
@@ -251,11 +283,14 @@ namespace NovelRT::Ecs::Narrative
                 _storyInstance.reset();
                 _storyInstanceState.reset();
 
-                narrativeStoryStateComponents.PushComponentUpdateInstruction(_narrativeStoryStateTrackerEntityId.value(), NarrativeStoryStateComponent{NarrativeStoryState::Idle});
+                narrativeStoryStateComponents.PushComponentUpdateInstruction(
+                    _narrativeStoryStateTrackerEntityId.value(),
+                    NarrativeStoryStateComponent{NarrativeStoryState::Idle});
 
                 if (_choiceMetadataLinkedListEntityId.has_value())
                 {
-                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()).ClearAndAddRemoveNodeInstructionForAll();
+                    LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value())
+                        .ClearAndAddRemoveNodeInstructionForAll();
                     _choiceMetadataLinkedListEntityId.reset();
                 }
 

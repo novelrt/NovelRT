@@ -13,7 +13,8 @@ int main()
     std::cerr << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-    auto resourceManagementProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
+    auto resourceManagementProvider =
+        selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
@@ -55,19 +56,26 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
-    auto scriptAssetId = resourceManagementProvider->GetResourceLoader()->TryGetAssetIdBasedOnFilePath("Scripts/question.json");
+    static NovelRT::AtomFactory& entityIdFactory =
+        NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+    auto scriptAssetId =
+        resourceManagementProvider->GetResourceLoader()->TryGetAssetIdBasedOnFilePath("Scripts/question.json");
 
     if (!scriptAssetId.has_value())
     {
-        throw NovelRT::Exceptions::FileNotFoundException("You can't run the Fabulist sample without the requested narrative script.");
+        throw NovelRT::Exceptions::FileNotFoundException(
+            "You can't run the Fabulist sample without the requested narrative script.");
     }
 
-    auto narrativeRequestBuffer = scheduler.GetComponentCache().GetComponentBuffer<Narrative::RequestNarrativeScriptExecutionComponent>();
-    narrativeRequestBuffer.PushComponentUpdateInstruction(0, entityIdFactory.GetNext(), Narrative::RequestNarrativeScriptExecutionComponent{scriptAssetId.value(), false});
+    auto narrativeRequestBuffer =
+        scheduler.GetComponentCache().GetComponentBuffer<Narrative::RequestNarrativeScriptExecutionComponent>();
+    narrativeRequestBuffer.PushComponentUpdateInstruction(
+        0, entityIdFactory.GetNext(),
+        Narrative::RequestNarrativeScriptExecutionComponent{scriptAssetId.value(), false});
 
     auto narrativeSystem = scheduler.GetRegisteredIEcsSystemAs<Narrative::NarrativePlayerSystem>();
-    narrativeSystem->RegisterCustomFunction("HelloWorld", [&](std::vector<std::string> args) {logger.logInfo(args[0]);});
+    narrativeSystem->RegisterCustomFunction("HelloWorld",
+                                            [&](std::vector<std::string> args) { logger.logInfo(args[0]); });
 
     scheduler.RegisterSystem([](auto delta, auto catalogue) {
         ComponentView<TransformComponent> transforms = catalogue.template GetComponentView<TransformComponent>();
@@ -82,19 +90,23 @@ int main()
     });
 
     scheduler.RegisterSystem([](auto, auto catalogue) {
-        auto [availableChoicesBuffer, selectedChoiceBuffer, playerBuffer] = catalogue.template GetComponentViews<Narrative::ChoiceMetadataComponent, Narrative::SelectedChoiceComponent, Narrative::NarrativeStoryStateComponent>();
+        auto [availableChoicesBuffer, selectedChoiceBuffer, playerBuffer] =
+            catalogue.template GetComponentViews<Narrative::ChoiceMetadataComponent, Narrative::SelectedChoiceComponent,
+                                                 Narrative::NarrativeStoryStateComponent>();
 
-        for(auto&& [entity, choice] : availableChoicesBuffer)
+        for (auto&& [entity, choice] : availableChoicesBuffer)
         {
-            selectedChoiceBuffer.PushComponentUpdateInstruction(entity, Narrative::SelectedChoiceComponent{choice.choiceIndex, false});
+            selectedChoiceBuffer.PushComponentUpdateInstruction(
+                entity, Narrative::SelectedChoiceComponent{choice.choiceIndex, false});
             return;
         }
 
-        for(auto&& [entity, storyState] : playerBuffer)
+        for (auto&& [entity, storyState] : playerBuffer)
         {
             if (storyState.currentState == Narrative::NarrativeStoryState::AwaitExecute)
             {
-                playerBuffer.PushComponentUpdateInstruction(entity, Narrative::NarrativeStoryStateComponent{Narrative::NarrativeStoryState::ExecuteNext});
+                playerBuffer.PushComponentUpdateInstruction(
+                    entity, Narrative::NarrativeStoryStateComponent{Narrative::NarrativeStoryState::ExecuteNext});
                 return;
             }
         }

@@ -499,7 +499,8 @@ TEST_F(LinkedEntityListViewTest, CanClearAllNodesInListUsingClearAndAddRemoveNod
         view.ClearAndAddRemoveNodeInstructionForAll();
     }
 
-    componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PrepComponentBufferForFrame(std::vector<EntityId>{});
+    componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PrepComponentBufferForFrame(
+        std::vector<EntityId>{});
 
     delete catalogue;
     catalogue = new Catalogue(0, componentCache, entityCache);
@@ -512,17 +513,18 @@ TEST_F(LinkedEntityListViewTest, CanClearAllNodesInListUsingClearAndAddRemoveNod
 {
     {
         LinkedEntityListView view(rootListId, *catalogue);
-        
+
         for (size_t i = 0; i < 10; i++)
         {
             EntityId id = catalogue->CreateEntity();
             ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
         }
-        
+
         view.ClearAndAddRemoveNodeInstructionForAll();
     }
 
-    componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PrepComponentBufferForFrame(std::vector<EntityId>{});
+    componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PrepComponentBufferForFrame(
+        std::vector<EntityId>{});
 
     delete catalogue;
     catalogue = new Catalogue(0, componentCache, entityCache);
