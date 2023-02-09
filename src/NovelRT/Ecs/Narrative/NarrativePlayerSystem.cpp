@@ -62,6 +62,12 @@ namespace NovelRT::Ecs::Narrative
                 selectedChoice.RemoveComponent(entity);
 
                 LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
+                
+                for (EntityId node : list)
+                {
+                    availableChoices.RemoveComponent(node);
+                }
+                
                 list.ClearAndAddRemoveNodeInstructionForAll();
                 list.Commit();
 
@@ -90,7 +96,19 @@ namespace NovelRT::Ecs::Narrative
 
         if (_choiceMetadataLinkedListEntityId.has_value())
         {
-            LinkedEntityListView(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()).ClearAndAddRemoveNodeInstructionForAll();
+            auto [availableChoicesComponents, selectedChoiceComponents] = _catalogueForFrame->GetComponentViews<ChoiceMetadataComponent, SelectedChoiceComponent>();
+            LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value());
+
+            for (EntityId node : list)
+            {
+                availableChoicesComponents.RemoveComponent(node);
+            }
+
+            for (auto&& [entity, choice] : selectedChoiceComponents)
+            {
+                selectedChoiceComponents.RemoveComponent(entity);
+            }
+
             _choiceMetadataLinkedListEntityId.reset();
         }
     }
