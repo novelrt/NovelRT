@@ -76,7 +76,7 @@ namespace NovelRT::Ecs::Narrative
 
         inline bool operator!=(const ChoiceMetadataComponent& other) const noexcept
         {
-            return !(*this == other) && shouldDestroy == other.shouldDestroy;
+            return !(*this == other);
         }
     };
 
