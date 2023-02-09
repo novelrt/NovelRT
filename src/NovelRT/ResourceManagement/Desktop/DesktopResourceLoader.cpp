@@ -430,4 +430,29 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         return LoadAudioFrameData(GetGuidsToFilePathsMap().at(assetId));
     }
+
+    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / filePath;
+        }
+
+        auto file = std::make_unique<std::ifstream>(filePath.string());
+
+        if (!file->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
+        return StreamableAssetMetadata{std::move(file), databaseHandle};
+    }
+
+    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(uuids::uuid assetId)
+    {
+        return GetStreamToAsset(GetGuidsToFilePathsMap().at(assetId));
+    }
 }

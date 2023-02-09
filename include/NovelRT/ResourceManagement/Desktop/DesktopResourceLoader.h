@@ -36,6 +36,8 @@ namespace NovelRT::ResourceManagement::Desktop
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
         [[nodiscard]] AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) final;
         [[nodiscard]] AudioMetadata LoadAudioFrameData(uuids::uuid assetId) final;
+        [[nodiscard]] StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) final;
+        [[nodiscard]] StreamableAssetMetadata GetStreamToAsset(uuids::uuid assetId) final;
         ~DesktopResourceLoader() final = default;
     };
 }

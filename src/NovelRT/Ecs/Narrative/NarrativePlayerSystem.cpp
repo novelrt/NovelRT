@@ -11,15 +11,9 @@ namespace NovelRT::Ecs::Narrative
     {
         auto [entity, assetData] = *requestView.begin();
 
-        auto scriptAsset = _resourceLoaderPluginProvider->GetResourceLoader()->TryGetFilePathBasedOnAssetId(assetData.narrativeScriptAssetId);
+        auto scriptAsset = _resourceLoaderPluginProvider->GetResourceLoader()->GetStreamToAsset(assetData.narrativeScriptAssetId);
 
-        if (!scriptAsset.has_value())
-        {
-            throw Exceptions::FileNotFoundException("Lmao figure this out later");
-        }
-
-        std::filesystem::path resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
-        _storyInstance = _runtime.load_story(resourcesRootDirectory / scriptAsset.value()); //throws here
+        _storyInstance = _runtime.load_story(*scriptAsset.FileStream.get(), uuids::to_string(scriptAsset.DatabaseHandle)); //throws here
 
         requestView.RemoveComponent(entity);
 
@@ -62,12 +56,12 @@ namespace NovelRT::Ecs::Narrative
                 selectedChoice.RemoveComponent(entity);
 
                 LinkedEntityListView list(_choiceMetadataLinkedListEntityId.value(), _catalogueForFrame.value()); // we don't strictly need to make a list here but I'm futureproofing it for updates that are not in this version.
-                
+
                 for (EntityId node : list)
                 {
                     availableChoices.RemoveComponent(node);
                 }
-                
+
                 list.ClearAndAddRemoveNodeInstructionForAll();
                 list.Commit();
 

@@ -44,7 +44,7 @@ int main()
         renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
     EntityId childOfChildEntity =
-        renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler); 
+        renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
     transformBuffer.PushComponentUpdateInstruction(
         0, childEntity,
@@ -62,7 +62,7 @@ int main()
     {
         throw NovelRT::Exceptions::FileNotFoundException("You can't run the Fabulist sample without the requested narrative script.");
     }
-    
+
     auto narrativeRequestBuffer = scheduler.GetComponentCache().GetComponentBuffer<Narrative::RequestNarrativeScriptExecutionComponent>();
     narrativeRequestBuffer.PushComponentUpdateInstruction(0, entityIdFactory.GetNext(), Narrative::RequestNarrativeScriptExecutionComponent{scriptAssetId.value(), false});
 
@@ -82,7 +82,7 @@ int main()
     });
 
     scheduler.RegisterSystem([](auto, auto catalogue) {
-        auto [availableChoicesBuffer, selectedChoiceBuffer, playerBuffer] = catalogue.GetComponentViews<Narrative::ChoiceMetadataComponent, Narrative::SelectedChoiceComponent, Narrative::NarrativeStoryStateComponent>();
+        auto [availableChoicesBuffer, selectedChoiceBuffer, playerBuffer] = catalogue.template GetComponentViews<Narrative::ChoiceMetadataComponent, Narrative::SelectedChoiceComponent, Narrative::NarrativeStoryStateComponent>();
 
         for(auto&& [entity, choice] : availableChoicesBuffer)
         {
@@ -96,7 +96,7 @@ int main()
             {
                 playerBuffer.PushComponentUpdateInstruction(entity, Narrative::NarrativeStoryStateComponent{Narrative::NarrativeStoryState::ExecuteNext});
                 return;
-            }    
+            }
         }
     });
 

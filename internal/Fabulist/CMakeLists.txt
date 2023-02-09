@@ -20,6 +20,7 @@ FetchContent_Declare(Fabulist
 
 # Until this is changed, always build Fabulist as Static
 set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(FABULIST_THIRDPARTY_JSON OFF)
 FetchContent_MakeAvailable(Fabulist)
 add_dependencies(compiler runtime)

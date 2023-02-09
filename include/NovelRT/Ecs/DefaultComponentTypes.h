@@ -33,6 +33,18 @@ namespace NovelRT::Ecs
 
             return *this;
         }
+
+        friend inline bool operator==(const TransformComponent& lhs, const TransformComponent& rhs) noexcept
+        {
+            return lhs.positionAndLayer == rhs.positionAndLayer
+                && lhs.scale == rhs.scale
+                && lhs.rotationInRadians == rhs.rotationInRadians;
+        }
+
+        friend inline bool operator!=(const TransformComponent& lhs, const TransformComponent& rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
     };
 
     struct EntityGraphComponent

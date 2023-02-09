@@ -26,6 +26,19 @@ namespace NovelRT::Ecs::Audio
             volume = handleChanged ? other.volume : volume + other.volume;
             return *this;
         };
+
+        friend inline bool operator==(const AudioEmitterComponent& lhs, const AudioEmitterComponent& rhs) noexcept
+        {
+            return lhs.handle == rhs.handle
+            && lhs.isMusic == rhs.isMusic
+            && lhs.numberOfLoops == rhs.numberOfLoops
+            && lhs.volume == rhs.volume;
+        }
+
+        friend inline bool operator!=(const AudioEmitterComponent& lhs, const AudioEmitterComponent& rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
     };
 }
 

@@ -10,6 +10,12 @@
 
 namespace NovelRT::ResourceManagement
 {
+    struct StreamableAssetMetadata
+    {
+        std::unique_ptr<std::ifstream> FileStream;
+        uuids::uuid DatabaseHandle;
+    };
+
     class ResourceLoader : public std::enable_shared_from_this<ResourceLoader>
     {
     private:
@@ -100,6 +106,10 @@ namespace NovelRT::ResourceManagement
         [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) = 0;
 
         [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(uuids::uuid assetId) = 0;
+
+        [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(uuids::uuid) = 0;
 
         [[nodiscard]] std::optional<uuids::uuid> TryGetAssetIdBasedOnFilePath(
             const std::filesystem::path& pathToAsset) const noexcept;
