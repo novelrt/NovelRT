@@ -9,7 +9,8 @@ namespace NovelRT::Persistence
     {
     }
 
-    Chapter::Chapter(gsl::span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>> componentCacheData) noexcept
+    Chapter::Chapter(NovelRT::Utilities::Misc::Span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>>
+                         componentCacheData) noexcept
         : _componentCacheData{}
     {
         for (auto&& buffer : componentCacheData)
@@ -140,11 +141,12 @@ namespace NovelRT::Persistence
                 else
                 {
                     componentJumpValue = componentMetadata.sizeOfSerialisedDataInBytes;
-                    ApplySerialisationRule(
-                        dataPair.first,
-                        gsl::span<const uint8_t>(reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()),
-                                                 dataPair.second.GetSizeOfDataTypeInBytes()),
-                        gsl::span<uint8_t>(componentPtr, componentMetadata.sizeOfSerialisedDataInBytes));
+                    ApplySerialisationRule(dataPair.first,
+                                           NovelRT::Utilities::Misc::Span<const uint8_t>(
+                                               reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()),
+                                               dataPair.second.GetSizeOfDataTypeInBytes()),
+                                           NovelRT::Utilities::Misc::Span<uint8_t>(
+                                               componentPtr, componentMetadata.sizeOfSerialisedDataInBytes));
                 }
 
                 entityPtr++;
@@ -230,9 +232,10 @@ namespace NovelRT::Persistence
                 {
                     ApplyDeserialisationRule(
                         pair.first,
-                        gsl::span<const uint8_t>(serialisedDataPtr, pair.second.sizeOfSerialisedDataInBytes),
-                        gsl::span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
-                                           pair.second.sizeOfComponentInBytes));
+                        NovelRT::Utilities::Misc::Span<const uint8_t>(serialisedDataPtr,
+                                                                      pair.second.sizeOfSerialisedDataInBytes),
+                        NovelRT::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
+                                                                pair.second.sizeOfComponentInBytes));
                     bufferDataPtr += pair.second.sizeOfComponentInBytes;
                     serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;
                 }

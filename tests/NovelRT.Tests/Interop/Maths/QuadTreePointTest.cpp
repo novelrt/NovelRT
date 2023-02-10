@@ -11,23 +11,23 @@
 using namespace NovelRT;
 using namespace NovelRT::Maths;
 
-TEST(InteropQuadTreePointTest, createReturnsValidHandle)
+TEST(InteropQuadTreePointTest, CreateReturnsValidHandle)
 {
     NrtGeoVector2F vec = Nrt_GeoVector2F_One();
-    EXPECT_NE(Nrt_QuadTreePoint_create(vec), nullptr);
+    EXPECT_NE(Nrt_QuadTreePoint_Create(vec), nullptr);
 }
 
-TEST(InteropQuadTreePointTest, createFromFloatReturnsValidHandle)
+TEST(InteropQuadTreePointTest, CreateFromFloatReturnsValidHandle)
 {
-    EXPECT_NE(reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f)), nullptr);
+    EXPECT_NE(reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f)), nullptr);
 }
 
-TEST(InteropQuadTreePointTest, deleteReturnsSuccess)
+TEST(InteropQuadTreePointTest, DeleteReturnsSuccess)
 {
-    EXPECT_EQ(Nrt_QuadTreePoint_Destroy(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f)), NRT_SUCCESS);
+    EXPECT_EQ(Nrt_QuadTreePoint_Destroy(Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f)), NRT_SUCCESS);
 }
 
-TEST(InteropQuadTreePointTest, deleteReturnsNullInstanceFailureWhenGivenNullptr)
+TEST(InteropQuadTreePointTest, DeleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
     const char* outputError = "Unable to continue. A null instance was provided when an instance was expected.";
     ASSERT_EQ(Nrt_QuadTreePoint_Destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
@@ -35,11 +35,11 @@ TEST(InteropQuadTreePointTest, deleteReturnsNullInstanceFailureWhenGivenNullptr)
 }
 
 TEST(InteropQuadTreePointTest,
-     deleteReturnsAlreadyDeletedOrRemovedWhenPointIsBeingHeldOntoElsewhereAndHasAlreadyBeenDeletedFromCache)
+     DeleteReturnsAlreadyDeletedOrRemovedWhenPointIsBeingHeldOntoElsewhereAndHasAlreadyBeenDeletedFromCache)
 {
     const char* outputError = "Unable to continue. The specific item has already been deleted or removed.";
     auto ptr =
-        reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_createFromFloat(1.0f, 1.0f))->shared_from_this();
+        reinterpret_cast<Maths::QuadTreePoint*>(Nrt_QuadTreePoint_CreateFromFloat(1.0f, 1.0f))->shared_from_this();
     ASSERT_EQ(Nrt_QuadTreePoint_Destroy(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())), NRT_SUCCESS);
     ASSERT_EQ(Nrt_QuadTreePoint_Destroy(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())),
               NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);

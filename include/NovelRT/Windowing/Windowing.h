@@ -5,7 +5,7 @@
 #define NOVELRT_WINDOWING_H
 
 /**
- * @Brief The experimental windowing plugin API.
+ * @brief The experimental windowing plugin API.
  */
 namespace NovelRT::Windowing
 {

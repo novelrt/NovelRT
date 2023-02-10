@@ -42,6 +42,7 @@ option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
 option(NOVELRT_VERBOSE_BUILD "Build NovelRT using verbose output" OFF)
 option(NOVELRT_INSTALL "Generate installation targets" ON)
+option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
 
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
 set(NOVELRT_FLAC_VERSION "1.3.4" CACHE STRING "FLAC version")
@@ -64,6 +65,14 @@ if(NOVELRT_BUILD_DOCUMENTATION)
   find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
     COMPONENTS dot
   )
+endif()
+
+#
+# Alias "NovelRT::Utilities::Misc:Span" to "std::span" instead of "gsl::span".
+# If enabled, you need to make sure you current configuration supports "std::span".
+#
+if(NOVELRT_USE_STD_SPAN)
+  add_compile_definitions(NOVELRT_USE_STD_SPAN=true)
 endif()
 
 #

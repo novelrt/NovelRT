@@ -58,7 +58,7 @@ namespace NovelRT::Audio
         return isInitialised;
     }
 
-    ALuint AudioService::BufferAudioFrameData(gsl::span<const int16_t> audioFrameData,
+    ALuint AudioService::BufferAudioFrameData(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
                                               int32_t channelCount,
                                               int32_t sampleRate)
     {
@@ -79,7 +79,7 @@ namespace NovelRT::Audio
       If it is called on the main thread, please do all loading of audio files at the start of
       the engine (after NovelRunner has been created).
     */
-    std::vector<ALuint>::iterator AudioService::LoadMusic(gsl::span<const int16_t> audioFrameData,
+    std::vector<ALuint>::iterator AudioService::LoadMusic(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
                                                           int32_t channelCount,
                                                           int32_t sampleRate)
     {
@@ -328,7 +328,9 @@ namespace NovelRT::Audio
         }
     }
 
-    ALuint AudioService::LoadSound(gsl::span<const int16_t> audioFrameData, int32_t channelCount, int32_t sampleRate)
+    ALuint AudioService::LoadSound(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
+                                   int32_t channelCount,
+                                   int32_t sampleRate)
     {
         if (!isInitialised)
         {

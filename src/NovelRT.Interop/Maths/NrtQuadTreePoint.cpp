@@ -16,22 +16,22 @@ extern "C"
 {
 #endif
 
-    NrtQuadTreePointHandle Nrt_QuadTreePoint_create(NrtGeoVector2F position)
+    NrtQuadTreePointHandle Nrt_QuadTreePoint_Create(NrtGeoVector2F position)
     {
         _pointCollection.push_back(
             std::make_shared<Maths::QuadTreePoint>(reinterpret_cast<Maths::GeoVector2F&>(position)));
         return reinterpret_cast<NrtQuadTreePointHandle>(_pointCollection.back().get());
     }
 
-    NrtQuadTreePointHandle Nrt_QuadTreePoint_createFromFloat(float x, float y)
+    NrtQuadTreePointHandle Nrt_QuadTreePoint_CreateFromFloat(float x, float y)
     {
         _pointCollection.push_back(std::make_shared<Maths::QuadTreePoint>(Maths::GeoVector2F(x, y)));
         return reinterpret_cast<NrtQuadTreePointHandle>(_pointCollection.back().get());
     }
 
-    NrtGeoVector2F Nrt_QuadTreePoint_getPosition(const NrtQuadTreePointHandle point)
+    NrtGeoVector2F Nrt_QuadTreePoint_GetPosition(const NrtQuadTreePointHandle point)
     {
-        Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->getPosition();
+        Maths::GeoVector2F pos = reinterpret_cast<const std::shared_ptr<Maths::QuadTreePoint>&>(point)->GetPosition();
         NrtGeoVector2F returnValue = reinterpret_cast<const NrtGeoVector2F&>(pos);
         return returnValue;
     }

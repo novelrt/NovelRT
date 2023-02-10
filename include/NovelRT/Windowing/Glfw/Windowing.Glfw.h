@@ -5,7 +5,7 @@
 #define NOVELRT_WINDOWING_GLFW_H
 
 /**
- * @Brief The default GLFW3 implementation of the Windowing plugin API.
+ * @brief The default GLFW3 implementation of the Windowing plugin API.
  */
 namespace NovelRT::Windowing::Glfw
 {

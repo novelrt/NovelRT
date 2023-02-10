@@ -6,17 +6,17 @@
 
 namespace NovelRT::Maths
 {
-    void QuadTree::subdivideTree() noexcept
+    void QuadTree::SubdivideTree() noexcept
     {
-        assert(getPointCount() == POINT_CAPACITY);
+        assert(GetPointCount() == POINT_CAPACITY);
 
         const GeoVector2F TOP_LEFT_SCALE = GeoVector2F(-0.5f, +0.5f);
         const GeoVector2F TOP_RIGHT_SCALE = GeoVector2F(+0.5f, +0.5f);
         const GeoVector2F BOTTOM_LEFT_SCALE = GeoVector2F(-0.5f, -0.5f);
         const GeoVector2F BOTTOM_RIGHT_SCALE = GeoVector2F(+0.5f, -0.5f);
 
-        GeoVector2F size = getBounds().size / 2;
-        GeoVector2F position = getBounds().position;
+        GeoVector2F size = GetBounds().size / 2;
+        GeoVector2F position = GetBounds().position;
 
         _children[TOP_LEFT] =
             std::make_unique<QuadTree>(GeoBounds(position + (size * TOP_LEFT_SCALE), size, 0), weak_from_this());
@@ -27,11 +27,11 @@ namespace NovelRT::Maths
         _children[BOTTOM_RIGHT] =
             std::make_unique<QuadTree>(GeoBounds(position + (size * BOTTOM_RIGHT_SCALE), size, 0), weak_from_this());
 
-        for (size_t i = 0; i < getPointCount(); i++)
+        for (size_t i = 0; i < GetPointCount(); i++)
         {
-            auto point = getPoint(i);
+            auto point = GetPoint(i);
 
-            auto result = tryInsert(point);
+            auto result = TryInsert(point);
             assert(result);
             unused(result);
 
@@ -41,10 +41,9 @@ namespace NovelRT::Maths
         _pointCount = 0;
     }
 
-    // TODO: Why is this not returning a bool as a try method?
-    void QuadTree::tryMergeTree() noexcept
+    void QuadTree::MergeTree() noexcept
     {
-        auto parent = getParent().lock();
+        auto parent = GetParent().lock();
 
         if (parent == nullptr)
         {
@@ -55,11 +54,11 @@ namespace NovelRT::Maths
 
         for (auto child : parent->_children)
         {
-            if (child->getTopLeft() != nullptr)
+            if (child->GetTopLeft() != nullptr)
             {
                 return;
             }
-            totalPointCount += child->getPointCount();
+            totalPointCount += child->GetPointCount();
         }
 
         if (totalPointCount <= POINT_CAPACITY)
@@ -70,9 +69,9 @@ namespace NovelRT::Maths
             {
                 auto child = parent->_children[c];
 
-                for (size_t s = 0; s < child->getPointCount(); s++)
+                for (size_t s = 0; s < child->GetPointCount(); s++)
                 {
-                    parent->_points[d++] = child->getPoint(s);
+                    parent->_points[d++] = child->GetPoint(s);
                 }
 
                 parent->_children[c] = nullptr;
