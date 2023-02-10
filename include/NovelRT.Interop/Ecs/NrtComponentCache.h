@@ -17,6 +17,7 @@ extern "C"
                                                              size_t sizeOfDataType,
                                                              const void* deleteInstructionState,
                                                              NrtComponentUpdateFnPtr updateFnPtr,
+                                                             NrtComponentComparatorFnPtr comparatorFnPtr,
                                                              const char* serialisedTypeName,
                                                              void* context,
                                                              NrtComponentTypeId* outputResult);

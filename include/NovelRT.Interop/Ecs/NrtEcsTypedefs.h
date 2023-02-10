@@ -27,6 +27,7 @@ extern "C"
     typedef struct NrtUnsafeComponentView* NrtUnsafeComponentViewHandle;
 
     typedef void (*NrtComponentUpdateFnPtr)(void*, const void*, size_t, void*);
+    typedef NrtBool (*NrtComponentComparatorFnPtr)(const void*, const void*, void*);
 
     typedef void (*NrtSystemUpdateFnPtr)(NrtTimestamp, NrtCatalogueHandle, void*);
 

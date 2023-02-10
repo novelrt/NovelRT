@@ -27,6 +27,7 @@ namespace NovelRT::Ecs
             size_t sizeOfDataType,
             const void* deleteInstructionState,
             const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+            const std::function<bool(const void*, const void*)>& componentComparatorLogic,
             const std::string& serialisedTypeName) const;
 
     public:
@@ -61,6 +62,7 @@ namespace NovelRT::Ecs
             size_t sizeOfDataType,
             const void* deleteInstructionState,
             const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
+            const std::function<bool(const void*, const void*)>& componentComparatorLogic,
             const std::string& serialisedTypeName);
 
         /**
@@ -83,6 +85,9 @@ namespace NovelRT::Ecs
                 sizeof(T), &deleteInstructionState,
                 [](auto rootComponent, auto updateComponent, auto) {
                     *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
+                },
+                [](const void* lhs, const void* rhs) {
+                    return *reinterpret_cast<const T*>(lhs) == *reinterpret_cast<const T*>(rhs);
                 },
                 serialisedTypeName);
             _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };

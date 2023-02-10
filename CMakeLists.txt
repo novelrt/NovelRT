@@ -43,6 +43,7 @@ option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
 option(NOVELRT_VERBOSE_BUILD "Build NovelRT using verbose output" OFF)
 option(NOVELRT_INSTALL "Generate installation targets" ON)
 option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
+option(NOVELRT_BUILD_DEPS_WITH_MAX_CPU "Use all available CPU processing power when scaffolding/building the NovelRT internal dependences" OFF)
 
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
 set(NOVELRT_FLAC_VERSION "1.3.4" CACHE STRING "FLAC version")
@@ -125,8 +126,15 @@ if(NOVELRT_FETCH_DEPENDENCIES)
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND_ERROR_IS_FATAL LAST
     )
+
+    if(NOVELRT_BUILD_DEPS_WITH_MAX_CPU)
+      set(NOVELRT_DEPENDENCY_CORE_COUNT ${CORES})
+    else()
+      set(NOVELRT_DEPENDENCY_CORE_COUNT ${CORES_AMT})
+    endif()
+
     execute_process(
-      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j${CORES_AMT}
+      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j${NOVELRT_DEPENDENCY_CORE_COUNT}
       COMMAND_ERROR_IS_FATAL LAST
     )
     execute_process(
@@ -143,7 +151,7 @@ if(NOVELRT_FETCH_DEPENDENCIES)
 endif()
 
 # Packages w/o version specified typically break as they don't support
-# versioning like the others do. 
+# versioning like the others do.
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -165,11 +173,9 @@ if(NOVELRT_DEPS_INSTALLED)
   #So we just use our version that doesn't :)
   find_package(ZLIB CONFIG REQUIRED)
   include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-  include(${NOVELRT_DEPS_PATH}/lib/fabulist.cmake)
 else()
   find_package(ZLIB REQUIRED)
   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
-  find_package(fabulist REQUIRED)
 endif()
 
 #
@@ -200,6 +206,7 @@ endif()
 #
 # Add subdirectories
 #
+add_subdirectory(internal/Fabulist)
 add_subdirectory(resources)
 add_subdirectory(src)
 
