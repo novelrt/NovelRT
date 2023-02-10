@@ -222,11 +222,6 @@ namespace NovelRT::Ecs::Narrative
                         if (_storyInstanceState->update())
                         {
                             _optionSelected = false;
-                            auto availableChoices = _catalogueForFrame->GetComponentView<ChoiceMetadataComponent>();
-                            for (auto&& [entity, choice] : availableChoices)
-                            {
-                                availableChoices.RemoveComponent(entity);
-                            }
                         }
                     }
                     break;
