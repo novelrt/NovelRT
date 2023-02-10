@@ -51,6 +51,23 @@ namespace NovelRT::Ecs
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},
                 "NovelRT::Ecs::Input::InputEventComponent");
 
+            target.GetComponentCache().RegisterComponentType(
+                Narrative::NarrativeStoryStateComponent{Narrative::NarrativeStoryState::Idle, true},
+                "NovelRT::Ecs::Narrative::NarrativeStoryStateComponent");
+
+            target.GetComponentCache().RegisterComponentType(
+                Narrative::RequestNarrativeScriptExecutionComponent{uuids::uuid(), true},
+                "NovelRT::Ecs::Narrative::RequestNarrativeScriptExecutionComponent");
+
+            target.GetComponentCache().RegisterComponentType(Narrative::ChoiceMetadataComponent{0, true},
+                                                             "NovelRT::Ecs::Narrative::ChoiceMetadataComponent");
+
+            target.GetComponentCache().RegisterComponentType(Narrative::SelectedChoiceComponent{0, true},
+                                                             "NovelRT::Ecs::Narrative::SelectedChoiceComponent");
+
+            target.RegisterSystem(
+                std::make_shared<Narrative::NarrativePlayerSystem>(_resourceManagementPluginProvider));
+
             auto deleteState = Audio::AudioEmitterComponent();
             target.GetComponentCache().RegisterComponentType(deleteState, "NovelRT::Ecs::Audio::AudioEmitterComponent");
             target.GetComponentCache().RegisterComponentType(

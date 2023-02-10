@@ -10,10 +10,10 @@ namespace NovelRT::Maths
     {
     }
 
-    bool GeoBounds::pointIsWithinBounds(GeoVector2F point) const noexcept
+    bool GeoBounds::PointIsWithinBounds(GeoVector2F point) const noexcept
     {
-        auto corner0 = getCornerInWorldSpace(0);
-        auto corner2 = getCornerInWorldSpace(2);
+        auto corner0 = GetCornerInWorldSpace(0);
+        auto corner2 = GetCornerInWorldSpace(2);
 
         if (point.x >= corner0.x && point.x <= corner2.x && point.y <= corner2.y && point.y >= corner0.y)
             return true;
@@ -21,22 +21,22 @@ namespace NovelRT::Maths
         return false;
     }
 
-    bool GeoBounds::intersectsWith(GeoBounds otherBounds) const
+    bool GeoBounds::IntersectsWith(GeoBounds otherBounds) const
     {
         if (rotation != 0.0f || otherBounds.rotation != 0.0f)
             throw NovelRT::Exceptions::NotSupportedException(
                 "Box intersection does not currently support rotated bounds. AABB support only.");
 
-        auto minA = position - getExtents();
-        auto maxA = position + getExtents();
+        auto minA = position - GetExtents();
+        auto maxA = position + GetExtents();
 
-        auto minB = otherBounds.position - otherBounds.getExtents();
-        auto maxB = otherBounds.position + otherBounds.getExtents();
+        auto minB = otherBounds.position - otherBounds.GetExtents();
+        auto maxB = otherBounds.position + otherBounds.GetExtents();
 
         return !((minA > maxB) || (maxA < minB));
     }
 
-    GeoVector2F GeoBounds::getCornerInLocalSpace(int32_t index) const noexcept
+    GeoVector2F GeoBounds::GetCornerInLocalSpace(int32_t index) const noexcept
     {
         GeoVector2F returnValue;
         auto boundsSize = size;
@@ -60,12 +60,12 @@ namespace NovelRT::Maths
         return returnValue;
     }
 
-    GeoVector2F GeoBounds::getCornerInWorldSpace(int32_t index) const noexcept
+    GeoVector2F GeoBounds::GetCornerInWorldSpace(int32_t index) const noexcept
     {
-        return position + getCornerInLocalSpace(index);
+        return position + GetCornerInLocalSpace(index);
     }
 
-    GeoVector2F GeoBounds::getExtents() const noexcept
+    GeoVector2F GeoBounds::GetExtents() const noexcept
     {
         return size / 2.0f;
     }

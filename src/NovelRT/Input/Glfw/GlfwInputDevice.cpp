@@ -384,7 +384,7 @@ namespace NovelRT::Input::Glfw
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
-    gsl::span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
+    NovelRT::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
     {
         return _mappedActions;
     }

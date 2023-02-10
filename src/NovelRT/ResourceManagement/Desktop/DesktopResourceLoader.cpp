@@ -3,6 +3,7 @@
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <imgui.h>
+#include <iostream>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -72,6 +73,43 @@ namespace NovelRT::ResourceManagement::Desktop
 
         inputStream.flush();
         inputStream.close();
+    }
+
+    void DesktopResourceLoader::InitAssetDatabase()
+    {
+        auto filePath = _resourcesRootDirectory;
+
+        LoadAssetDatabaseFile();
+
+        std::vector<uuids::uuid> filesToUnregister{};
+
+        for (auto [path, guid] : GetFilePathsToGuidsMap())
+        {
+            if (std::filesystem::exists(path))
+            {
+                filesToUnregister.emplace_back(guid);
+            }
+        }
+
+        for (const auto& guid : filesToUnregister)
+        {
+            UnregisterAssetNoFileWrite(guid);
+        }
+
+        for (const auto& directoryEntry : std::filesystem::recursive_directory_iterator(filePath))
+        {
+            if (!directoryEntry.is_regular_file() ||
+                directoryEntry.path().filename().string().find("AssetDB") != std::string::npos)
+            {
+                continue;
+            }
+
+            RegisterAsset(std::filesystem::relative(directoryEntry.path(), filePath));
+        }
+
+        WriteAssetDatabaseFile();
+
+        _isAssetDBInitialised = true;
     }
 
     TextureMetadata DesktopResourceLoader::LoadTexture(std::filesystem::path filePath)
@@ -206,19 +244,25 @@ namespace NovelRT::ResourceManagement::Desktop
             returnImage.emplace_back(rawImage[i]);
         }
 
-        if (data.colourType != PNG_COLOR_TYPE_RGBA)
-        {
-            throw std::runtime_error("reeeeeeee");
-        }
-
         delete[] rawImage;
         delete[] data.rowPointers;
+
+        if (data.colourType != PNG_COLOR_TYPE_RGBA)
+        {
+            throw Exceptions::NotSupportedException("Colour type is in an unsupported format.");
+        }
+
         png_destroy_read_struct(&png, &info, nullptr);
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
         return TextureMetadata{returnImage, data.width, data.height, finalLength,
                                RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    TextureMetadata DesktopResourceLoader::LoadTexture(uuids::uuid assetId)
+    {
+        return LoadTexture(GetGuidsToFilePathsMap().at(assetId));
     }
 
     ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
@@ -245,6 +289,11 @@ namespace NovelRT::ResourceManagement::Desktop
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
         return ShaderMetadata{buffer, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    ShaderMetadata DesktopResourceLoader::LoadShaderSource(uuids::uuid assetId)
+    {
+        return LoadShaderSource(GetGuidsToFilePathsMap().at(assetId));
     }
 
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
@@ -291,6 +340,11 @@ namespace NovelRT::ResourceManagement::Desktop
         package.databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
         return package;
+    }
+
+    BinaryPackage DesktopResourceLoader::LoadPackage(uuids::uuid assetId)
+    {
+        return LoadPackage(GetGuidsToFilePathsMap().at(assetId));
     }
 
     void DesktopResourceLoader::SavePackage(std::filesystem::path filePath, const BinaryPackage& package)
@@ -387,5 +441,35 @@ namespace NovelRT::ResourceManagement::Desktop
         uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
         return FontMetadata{filePath.stem().string(), font, databaseHandle};
+    }
+
+    AudioMetadata DesktopResourceLoader::LoadAudioFrameData(uuids::uuid assetId)
+    {
+        return LoadAudioFrameData(GetGuidsToFilePathsMap().at(assetId));
+    }
+
+    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / filePath;
+        }
+
+        auto file = std::make_unique<std::ifstream>(filePath.string());
+
+        if (!file->is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
+        return StreamableAssetMetadata{std::move(file), databaseHandle};
+    }
+
+    StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(uuids::uuid assetId)
+    {
+        return GetStreamToAsset(GetGuidsToFilePathsMap().at(assetId));
     }
 }

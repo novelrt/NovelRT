@@ -76,9 +76,12 @@ namespace NovelRT::Maths
          *      \tfrac{9}{25}} \rightarrow \sqrt{\tfrac{25}{25}} \rightarrow \sqrt{1} = 1
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return A unit GeoVector2F created from normalising this GeoVector2F.
          */
-        inline GeoVector2F GetNormalised() const noexcept
+        [[nodiscard]] inline GeoVector2F GetNormalised() const noexcept
         {
             return GeoVector2F(glm::normalize(*reinterpret_cast<const glm::vec2*>(this)));
         }
@@ -99,9 +102,12 @@ namespace NovelRT::Maths
          *      &= 5
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return The magnitude of this GeoVector2F.
          */
-        inline float GetMagnitude() const noexcept
+        [[nodiscard]] inline float GetMagnitude() const noexcept
         {
             return glm::length(*reinterpret_cast<const glm::vec2*>(this));
         }
@@ -122,9 +128,12 @@ namespace NovelRT::Maths
          *      &= 5
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return The length of this GeoVector2F.
          */
-        inline float GetLength() const noexcept
+        [[nodiscard]] inline float GetLength() const noexcept
         {
             return GetMagnitude();
         }
@@ -144,9 +153,12 @@ namespace NovelRT::Maths
          *      &= 25
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return The squared magnitude of this GeoVector2F.
          */
-        inline float GetSquaredMagnitude() const noexcept
+        [[nodiscard]] inline float GetSquaredMagnitude() const noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec2*>(this), *reinterpret_cast<const glm::vec2*>(this));
         }
@@ -166,9 +178,12 @@ namespace NovelRT::Maths
          *      &= 25
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return The squared length of this GeoVector2F.
          */
-        inline float GetSquaredLength() const noexcept
+        [[nodiscard]] inline float GetSquaredLength() const noexcept
         {
             return GetSquaredMagnitude();
         }
@@ -176,10 +191,14 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components match.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @returns true if all components matched, otherwise false.
          */
-        inline bool operator==(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator==(GeoVector2F other) const noexcept
         {
             return *reinterpret_cast<const glm::vec2*>(this) == NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
         }
@@ -187,10 +206,14 @@ namespace NovelRT::Maths
         /**
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components do not match.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @returns true if any of the components do not match, otherwise false.
          */
-        inline bool operator!=(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator!=(GeoVector2F other) const noexcept
         {
             return *reinterpret_cast<const glm::vec2*>(this) != NovelRT::Utilities::Misc::BitCast<glm::vec2>(other);
         }
@@ -199,10 +222,14 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is less
          * than the other GeoVector2F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @return true if any of the components is less than the other GeoVector2F's components, otherwise false.
          */
-        inline bool operator<(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator<(GeoVector2F other) const noexcept
         {
             return glm::any(glm::lessThan(*reinterpret_cast<const glm::vec2*>(this),
                                           NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -212,11 +239,15 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is less
          * than or equal to the other GeoVector2F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @return true if any of the components is less than or equal to the other GeoVector2F's components,
          * otherwise false.
          */
-        inline bool operator<=(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator<=(GeoVector2F other) const noexcept
         {
             return glm::any(glm::lessThanEqual(*reinterpret_cast<const glm::vec2*>(this),
                                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -226,10 +257,14 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is greater
          * than the other GeoVector2F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @return true if any of the components is greater than the other GeoVector2F's components, otherwise false.
          */
-        inline bool operator>(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator>(GeoVector2F other) const noexcept
         {
             return glm::any(glm::greaterThan(*reinterpret_cast<const glm::vec2*>(this),
                                              NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -239,11 +274,15 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if any of its components is greater
          * than or equal to the other GeoVector2F's components.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @return true if any of the components is greater than or equal to the other GeoVector2F's components,
          * otherwise false.
          */
-        inline bool operator>=(GeoVector2F other) const noexcept
+        [[nodiscard]] inline bool operator>=(GeoVector2F other) const noexcept
         {
             return glm::any(glm::greaterThanEqual(*reinterpret_cast<const glm::vec2*>(this),
                                                   NovelRT::Utilities::Misc::BitCast<glm::vec2>(other)));
@@ -275,11 +314,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other vector whose components get added together with this vector.
          * @return A GeoVector2F where the components consist of the entrywise sum of this GeoVector2F and another
          * GeoVector2F.
          */
-        inline GeoVector2F operator+(GeoVector2F other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator+(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) +
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -311,11 +353,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other vector whose components get subtracted from this vector.
          * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and
          * another GeoVector2F.
          */
-        inline GeoVector2F operator-(GeoVector2F other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator-(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) -
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -347,11 +392,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other vector whose components get multiplied by this vector's components.
          * @return A GeoVector2F where the components consist of the Hadamard product of this GeoVector2F and another
          * GeoVector2F.
          */
-        inline GeoVector2F operator*(GeoVector2F other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator*(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) *
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -383,11 +431,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other vector whose components act as a divisor for this vector's components.
          * @return A GeoVector2F where the components consist of the entrywise quotient of this GeoVector2F and another
          * GeoVector2F.
          */
-        GeoVector2F operator/(GeoVector2F other) const noexcept
+        [[nodiscard]] GeoVector2F operator/(GeoVector2F other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) /
                                NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -426,11 +477,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other scalar that gets added up with each component of this vector.
          * @return A GeoVector2F where the components consist of the entrywise sum of this GeoVector2F and the provided
          * scalar.
          */
-        inline GeoVector2F operator+(float other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator+(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) + other);
         }
@@ -468,11 +522,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other scalar that gets subtracted from each component of this vector.
          * @return A GeoVector2F where the components consist of the entrywise difference of this GeoVector2F and the
          * provided scalar.
          */
-        inline GeoVector2F operator-(float other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator-(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) - other);
         }
@@ -510,11 +567,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other scalar who get multiplied by this vector's components.
          * @return A GeoVector2F where the components consist of the Hadamard product of this GeoVector2F and the
          * provided scalar.
          */
-        inline GeoVector2F operator*(float other) const noexcept
+        [[nodiscard]] inline GeoVector2F operator*(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) * other);
         }
@@ -552,11 +612,14 @@ namespace NovelRT::Maths
          *      \end{pmatrix}
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other scalar that acts as the divisor for each component of this vector.
          * @return A GeoVector2F where the components consist of the entrywise quotient of this GeoVector2F and the
          * provided scalar.
          */
-        GeoVector2F operator/(float other) const noexcept
+        [[nodiscard]] GeoVector2F operator/(float other) const noexcept
         {
             return GeoVector2F(*reinterpret_cast<const glm::vec2*>(this) / other);
         }
@@ -918,12 +981,16 @@ namespace NovelRT::Maths
          * @brief Evaluates this GeoVector2F with another GeoVector2F to determine if all components are within a given
          * range of tolerance.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other GeoVector2F whose components are evaluated against this GeoVector2F's components.
          * @param epsilonValue The vector determining the tolerance per component.
          * @return true if the difference between this vector and other vector falls within the tolerance set by the
          * epsilonValue vector, otherwise false.
          */
-        bool EpsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
+        [[nodiscard]] bool EpsilonEquals(GeoVector2F other, GeoVector2F epsilonValue) const noexcept
         {
             return glm::all(glm::equal(*reinterpret_cast<const glm::vec2*>(this),
                                        NovelRT::Utilities::Misc::BitCast<glm::vec2>(other),
@@ -949,11 +1016,14 @@ namespace NovelRT::Maths
          *      &= 23
          * \f}
          *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @param other The other GeoVector2F, the components of which get multiplied and summed up with this
          * GeoVector2F.
          * @return The sum of products of this GeoVector2Fs components and the other GeoVector2Fs components.
          */
-        inline float Dot(GeoVector2F other) noexcept
+        [[nodiscard]] inline float Dot(GeoVector2F other) noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec2*>(this),
                             NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -987,10 +1057,13 @@ namespace NovelRT::Maths
          *      &= 6
          * \f}
          *
-         * @param other The other point to meassure the distance to.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
+         * @param other The other point to measure the distance to.
          * @return The distance between this GeoVector2F and another GeoVector2F.
          */
-        inline float Distance(GeoVector2F other) noexcept
+        [[nodiscard]] inline float Distance(GeoVector2F other) noexcept
         {
             return glm::distance(*reinterpret_cast<const glm::vec2*>(this),
                                  NovelRT::Utilities::Misc::BitCast<glm::vec2>(other));
@@ -1023,10 +1096,13 @@ namespace NovelRT::Maths
          *      &= 36
          * \f}
          *
-         * @param other The other point to meassure the squared distance to.
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
+         * @param other The other point to measure the squared distance to.
          * @return The squared distance between this GeoVector2F and another GeoVector2F.
          */
-        inline float SquaredDistance(GeoVector2F other) noexcept
+        [[nodiscard]] inline float SquaredDistance(GeoVector2F other) noexcept
         {
             return (*this - other).GetSquaredMagnitude();
         }
@@ -1034,9 +1110,13 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new GeoVector2F instance with a uniform value of zero.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
          * @return A new GeoVector2F instance with all components set to zero.
          */
-        static GeoVector2F Zero() noexcept
+        [[nodiscard]] static GeoVector2F Zero() noexcept
         {
             return GeoVector2F::Uniform(0);
         }
@@ -1044,9 +1124,13 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new GeoVector2F instance with a uniform value of one.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @return A new GeoVector2F instance with all components set to one.
          */
-        static GeoVector2F One() noexcept
+        [[nodiscard]] static GeoVector2F One() noexcept
         {
             return GeoVector2F::Uniform(1);
         }
@@ -1054,10 +1138,14 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a new uniform GeoVector2F based on the specified value.
          *
+         * @details
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
          * @param value The value to use as the uniform value across the GeoVector2F.
          * @return a new GeoVector2F instance with all components set to the specified value.
          */
-        static GeoVector2F Uniform(float value) noexcept
+        [[nodiscard]] static GeoVector2F Uniform(float value) noexcept
         {
             return GeoVector2F(value, value);
         }
@@ -1096,11 +1184,14 @@ namespace NovelRT::Maths
      *      \end{pmatrix}
      * \f}
      *
+     * This is a pure method. Calling this without using the result has no effect and introduces overhead for calling a
+     * method.
+     *
      * @param lhs The scalar that gets multiplied by the GeoVector2F's components.
-     * @param rhs The GeoVector2F whos components get multiplied by the scalar.
+     * @param rhs The GeoVector2F whose components get multiplied by the scalar.
      * @return A GeoVector2F where the components consist of the product of this and the provided scalar.
      */
-    inline GeoVector2F operator*(float lhs, GeoVector2F rhs) noexcept
+    [[nodiscard]] inline GeoVector2F operator*(float lhs, GeoVector2F rhs) noexcept
     {
         return rhs * lhs;
     }

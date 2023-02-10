@@ -16,13 +16,14 @@ namespace NovelRT::Graphics::Vulkan
         Threading::VolatileState _state;
 
     public:
-        VulkanGraphicsPrimitive(std::shared_ptr<VulkanGraphicsDevice> device,
-                                std::shared_ptr<VulkanGraphicsPipeline> pipeline,
-                                GraphicsMemoryRegion<GraphicsResource> vertexBufferView,
-                                uint32_t vertexBufferStride,
-                                GraphicsMemoryRegion<GraphicsResource> indexBufferView,
-                                uint32_t indexBufferStride,
-                                gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions = {})
+        VulkanGraphicsPrimitive(
+            std::shared_ptr<VulkanGraphicsDevice> device,
+            std::shared_ptr<VulkanGraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource> vertexBufferView,
+            uint32_t vertexBufferStride,
+            GraphicsMemoryRegion<GraphicsResource> indexBufferView,
+            uint32_t indexBufferStride,
+            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions = {})
             : GraphicsPrimitive(std::move(device),
                                 std::move(pipeline),
                                 std::move(vertexBufferView),

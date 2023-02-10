@@ -21,13 +21,14 @@ namespace NovelRT::Graphics
         uint32_t _indexBufferStride;
 
     public:
-        GraphicsPrimitive(const std::shared_ptr<GraphicsDevice>& device,
-                          std::shared_ptr<GraphicsPipeline> pipeline,
-                          GraphicsMemoryRegion<GraphicsResource> vertexBufferRegion,
-                          uint32_t vertexBufferStride,
-                          GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
-                          uint32_t indexBufferStride,
-                          gsl::span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+        GraphicsPrimitive(
+            const std::shared_ptr<GraphicsDevice>& device,
+            std::shared_ptr<GraphicsPipeline> pipeline,
+            GraphicsMemoryRegion<GraphicsResource> vertexBufferRegion,
+            uint32_t vertexBufferStride,
+            GraphicsMemoryRegion<GraphicsResource> indexBufferRegion,
+            uint32_t indexBufferStride,
+            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
             : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)),
               _pipeline(std::move(pipeline)),
               _vertexBufferRegion(std::move(vertexBufferRegion)),
@@ -79,11 +80,11 @@ namespace NovelRT::Graphics
             return _indexBufferStride;
         }
 
-        [[nodiscard]] inline gsl::span<const GraphicsMemoryRegion<GraphicsResource>> GetInputResourceRegions()
-            const noexcept
+        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>>
+        GetInputResourceRegions() const noexcept
         {
-            return gsl::span<const GraphicsMemoryRegion<GraphicsResource>>(&(*_inputResourceRegions.begin()),
-                                                                           _inputResourceRegions.size());
+            return NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>>(
+                &(*_inputResourceRegions.begin()), _inputResourceRegions.size());
         }
 
         [[nodiscard]] inline std::shared_ptr<GraphicsPipeline> GetPipeline() const noexcept

@@ -151,7 +151,7 @@ int main()
         if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
         {
             triggered =
-                uwuBounds.pointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
+                uwuBounds.PointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
         }
 
         if (triggered)

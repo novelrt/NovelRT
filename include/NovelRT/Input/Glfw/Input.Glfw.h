@@ -5,7 +5,7 @@
 #define NOVELRT_INPUT_GLFW_H
 
 /**
- * @Brief The default GLFW3 implementation of the Input plugin API.
+ * @brief The default GLFW3 implementation of the Input plugin API.
  */
 namespace NovelRT::Input::Glfw
 {

@@ -12,6 +12,11 @@ namespace NovelRT::ResourceManagement::Desktop
 
     DesktopResourceLoader* DesktopResourceManagementPluginProvider::GetResourceLoaderInternal()
     {
+        if (!_resourceLoader->GetIsAssetDBInitialised())
+        {
+            _resourceLoader->InitAssetDatabase();
+        }
+
         return _resourceLoader.get();
     }
 }

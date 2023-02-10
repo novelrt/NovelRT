@@ -29,7 +29,7 @@ int main()
             return *this;
         }
 
-        bool operator==(const TestStruct& rhs)
+        bool operator==(const TestStruct& rhs) const noexcept
         {
             return value == rhs.value && multiplier == rhs.multiplier && testEntityValue == rhs.testEntityValue &&
                    shouldDelete == rhs.shouldDelete;
@@ -52,7 +52,8 @@ int main()
             return sizeof(CopyStruct);
         }
 
-        std::vector<uint8_t> ExecuteSerialiseModification(gsl::span<const uint8_t> component) const noexcept final
+        std::vector<uint8_t> ExecuteSerialiseModification(
+            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept final
         {
             TestStruct componentStruct = *reinterpret_cast<const TestStruct*>(component.data());
 
@@ -66,7 +67,8 @@ int main()
             return data;
         }
 
-        std::vector<uint8_t> ExecuteDeserialiseModification(gsl::span<const uint8_t> component) const noexcept final
+        std::vector<uint8_t> ExecuteDeserialiseModification(
+            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept final
         {
             auto dataPtr = reinterpret_cast<const CopyStruct*>(component.data());
 

@@ -8,7 +8,7 @@ namespace NovelRT::Graphics::Vulkan
     VulkanShaderProgram::VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
                                              std::string entryPointName,
                                              ShaderProgramKind kind,
-                                             gsl::span<uint8_t> bytecode) noexcept
+                                             NovelRT::Utilities::Misc::Span<uint8_t> bytecode) noexcept
         : ShaderProgram(device, std::move(entryPointName), kind),
           _shaderModule(NovelRT::Utilities::Lazy<VkShaderModule>(
               std::function<VkShaderModule()>([this]() { return CreateShaderModule(); }))),
@@ -44,9 +44,9 @@ namespace NovelRT::Graphics::Vulkan
                               _shaderModule.getActual(), nullptr);
     }
 
-    gsl::span<const uint8_t> VulkanShaderProgram::GetBytecode() const noexcept
+    NovelRT::Utilities::Misc::Span<const uint8_t> VulkanShaderProgram::GetBytecode() const noexcept
     {
-        return gsl::span<const uint8_t>(&(*_bytecode.begin()), _bytecode.size());
+        return NovelRT::Utilities::Misc::Span<const uint8_t>(&(*_bytecode.begin()), _bytecode.size());
     }
 
     VkShaderModule VulkanShaderProgram::GetShaderModule()

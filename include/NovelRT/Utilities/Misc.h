@@ -11,18 +11,22 @@
 #endif
 
 #include <filesystem>
-#include <gsl/span>
 #include <type_traits>
 #include <vector>
 
 #if __has_include(<version>)
 #include <version>
+#endif
 
 #if __cpp_lib_bit_cast
 #include <bit>
 #endif
 
-#endif
+#if NOVELRT_USE_STD_SPAN
+#include <span>
+#else
+#include <gsl/span>
+#endif // NOVELRT_USE_STD_SPAN
 
 #define unused(x) (void)(x)
 
@@ -39,6 +43,13 @@ namespace NovelRT::Utilities
         static inline const char* CONSOLE_LOG_AUDIO = "Audio";
         static inline const char* CONSOLE_LOG_INPUT = "Input";
         static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
+
+        template<class T>
+#ifdef NOVELRT_USE_STD_SPAN
+        using Span = std::span<T>;
+#else
+        using Span = gsl::span<T>;
+#endif
 
         /**
          * @brief Gets the path to the executable.
@@ -59,7 +70,7 @@ namespace NovelRT::Utilities
         }
 
         [[nodiscard]] static std::vector<const char*> GetStringSpanAsCharPtrVector(
-            const gsl::span<const std::string>& target) noexcept
+            const NovelRT::Utilities::Misc::Span<const std::string>& target) noexcept
         {
             size_t extensionLength = target.size();
             std::vector<const char*> targetPtrs{};
