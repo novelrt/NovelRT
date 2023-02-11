@@ -21,16 +21,13 @@ namespace NovelRT::Ecs::UI
         {
             unused(system);
             _uiProvider->Begin();
-
-            //_uiProvider->RenderEvent(*_uiProvider);
-
+            _uiProvider->Render();
             _uiProvider->End(args.graphicsDevice->GetCurrentContext());
         };
     }
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
-        unused(delta);
-        unused(catalogue);
+        _uiProvider->Update(delta, catalogue);
     }
 }

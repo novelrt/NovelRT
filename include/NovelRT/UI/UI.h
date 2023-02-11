@@ -7,6 +7,7 @@
 // UI dependencies
 #include <memory>
 #include <cstdint>
+#include <uuid.h>
 #include "../LoggingService.h"
 #include "../Maths/Maths.h"
 #include "../Graphics/Graphics.h"

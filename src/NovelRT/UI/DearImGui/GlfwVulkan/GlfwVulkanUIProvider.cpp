@@ -6,10 +6,9 @@
 namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
     GlfwVulkanUIProvider::GlfwVulkanUIProvider() noexcept
-        : UIProvider(std::list<UIElement>(), std::queue<std::function<void()>>()), _isInitialised(false),
-        _initInfo(), _windowSize(), _fontNameMapping(std::map<std::string,ImFont*>())
+        : UIProvider(), _isInitialised(false),
+        _initInfo(), _windowSize(), _fontNameMapping(std::map<std::string,ImFont*>()), _buttonCache(std::map<const char*, bool>())
     {
-        _elements = std::list<UIElement>();
     }
 
     void GlfwVulkanUIProvider::Initialise(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader,
@@ -170,13 +169,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
         _isInitialised = true;
         _logger.logDebugLine("Initialised Dear ImGui UI service with GLFW and Vulkan successfully.");
-        // RenderEvent += [&](auto sys)
-        // {
-        //     unused(sys);
-        //     Render();
-        //     // ImGui::ShowMetricsWindow();
-        //     //     //ImGui::ShowDemoWindow();
-        // };
+
     }
 
     void GlfwVulkanUIProvider::Begin()
@@ -188,15 +181,37 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
     void GlfwVulkanUIProvider::Render()
     {
-        // for (auto&& x : _textboxes)
-        // {
-        //     x->Render(this->shared_from_this(), _windowSize);
-        // }
+        if(_currentCommandListFinished && _currentCommandList.size() > 0)
+        {
+            for(auto& cmd : _currentCommandList)
+            {
+                cmd();
+            }
+            _previousCommandList.clear();
+            _previousCommandList.swap(_currentCommandList);
+        }
+        else if (_previousCommandList.size() > 0)
+        {
+            for(auto& cmd : _previousCommandList)
+            {
+                cmd();
+            }
+        }
+    }
 
-        // for (auto&& button : _buttons)
-        // {
-        //     button->Render(shared_from_this(), _windowSize);
-        // }
+    void GlfwVulkanUIProvider::Update()
+    {
+        if(_currentCommandListFinished)
+        {
+            _currentCommandListFinished = false;
+            _currentCommandList.clear();
+        }
+
+        for(auto& [u, e] : _elements)
+        {
+            GenerateCommand(e);
+        }
+        _currentCommandListFinished = true;
     }
 
     void GlfwVulkanUIProvider::End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context)
@@ -217,8 +232,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
     void GlfwVulkanUIProvider::GenerateCommand(UIElement& element)
     {
-
-        std::queue<std::function<void()>> que = std::queue<std::function<void()>>();
+        std::vector<std::function<void()>> que = std::vector<std::function<void()>>();
 
         switch(element.Type)
         {
@@ -229,11 +243,11 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
                     UIPanel& panel = reinterpret_cast<UIPanel&>(element);
                     //Define the push / begin functions
                     auto colourPush = std::function<void()>([panel](){ ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(panel.Colour));});
-                    que.push(colourPush);
+                    que.emplace_back(colourPush);
 
                     //For every push there's a pop.
                     auto colourPop = std::function<void()>([panel](){ ImGui::PopStyleColor();});
-                    que.push(colourPush);
+                    que.emplace_back(colourPush);
                 }
 
                 break;
@@ -242,31 +256,6 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
                 return;
         }
     }
-    //     std::shared_ptr<IUITextbox> GlfwVulkanUIProvider::CreateTextbox(const std::string& identifier,
-    //                                               const std::string& text,
-    //                                               bool wordWrap,
-    //                                               NovelRT::Maths::GeoVector2F position,
-    //                                               NovelRT::Maths::GeoVector2F scale,
-    //                                               float fontSize,
-    //                                               NovelRT::Graphics::RGBAColour backgroundColour)
-    // {
-
-    //     auto boxPtr = _textboxes.emplace_back(
-    //         std::make_shared<ImGuiTextbox>(identifier, text, wordWrap, position, scale, fontSize, backgroundColour,
-    //                                        _windowSize)); // TODO: This looks VEEEERY WRONG???
-
-    //     return std::dynamic_pointer_cast<IUITextbox>(boxPtr);
-    // }
-
-    // std::shared_ptr<IUIButton> GlfwVulkanUIProvider::CreateButton(const std::string& identifier,
-    //                                          NovelRT::Maths::GeoVector2F position,
-    //                                          NovelRT::Maths::GeoVector2F scale,
-    //                                          NovelRT::Graphics::RGBAColour backgroundColour)
-    // {
-    //     auto buttonPtr = _buttons.emplace_back(std::make_shared<ImGuiButton>(identifier, position, scale, backgroundColour, _windowSize));
-
-    //     return std::dynamic_pointer_cast<IUIButton>(buttonPtr);
-    // }
 
     ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key)
     {
@@ -381,6 +370,12 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         }
     }
 
+    UIPanel GlfwVulkanUIProvider::CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
+        NovelRT::Maths::GeoVector2F scale,
+        NovelRT::Graphics::RGBAColour colour)
+    {
+
+    }
 }
 
 

@@ -13,16 +13,17 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     class GlfwVulkanUIProvider final : public UI::UIProvider
     {
     private:
-        // std::list<std::shared_ptr<ImGuiTextbox>> _textboxes;
-        // std::list<std::shared_ptr<ImGuiButton>> _buttons;
         NovelRT::Maths::GeoVector2F _windowSize;
         std::map<std::string, ImFont*> _fontNameMapping;
+        bool _currentCommandListFinished;
+        std::map<const char*, bool> _buttonCache;
 
-        void Render();
         ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key);
         void GenerateCommand(UIElement& element);
 
         void GeneratePanelCommand(UIPanel& panel);
+        void GenerateButtonCommand(UIButton& button);
+        // void GenerateTextboxCommand(UITextbox& textbox);
 
     protected:
         bool _isInitialised;
@@ -40,6 +41,11 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
 
         void Begin();
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
+        void Update();
+        void Render();
+        [[nodiscard]] UIPanel CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
+        NovelRT::Maths::GeoVector2F scale,
+        NovelRT::Graphics::RGBAColour colour) final;
 
     };
 }

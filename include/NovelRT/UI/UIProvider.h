@@ -14,18 +14,15 @@ namespace NovelRT::UI
     {
     protected:
         LoggingService _logger;
-        std::list<UIElement> _elements;
-        std::queue<std::function<void()>> _currentCommandList;
-        std::queue<std::function<void()>> _previousCommandList;
+        std::map<uuids::uuid, UIElement> _elements;
+        std::vector<std::function<void()>> _currentCommandList;
+        std::vector<std::function<void()>> _previousCommandList;
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
-        // bool _editorMode;
-        //std::list<IUIElement> _elements;
 
     public:
-        //Utilities::Event<std::reference_wrapper<IUIProvider>> RenderEvent;
-        explicit UIProvider(std::list<UIElement> elements, std::queue<std::function<void()>> commandList) :
-            _elements(elements), _currentCommandList(commandList),
-            _previousCommandList(std::queue<std::function<void()>>()),
+        explicit UIProvider() :
+            _elements(std::map<uuids::uuid, UIElement>()), _currentCommandList(std::vector<std::function<void()>>()),
+            _previousCommandList(std::vector<std::function<void()>>()),
             _resourceLoader()
         {}
 
@@ -38,25 +35,11 @@ namespace NovelRT::UI
         virtual ~UIProvider() = default;
         virtual void Begin() = 0;
         virtual void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context) = 0;
-
-
-
-        // virtual std::shared_ptr<IUITextbox> CreateTextbox(const std::string& identifier, const std::string& text,
-        //     bool wordWrap, NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, float fontSize, NovelRT::Graphics::RGBAColour backgroundColour) = 0;
-
-        // virtual std::shared_ptr<IUIButton> CreateButton(const std::string& identifier,
-        //     NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F scale, NovelRT::Graphics::RGBAColour backgroundColour) = 0;
-
-        // [[nodiscard]] inline bool& EditorMode() noexcept
-        // {
-        //     return _editorMode;
-        // }
-
-        // [[nodiscard]] inline const bool& EditorMode() const noexcept
-        // {
-        //     return _editorMode;
-        // }
-
+        virtual void Update() = 0;
+        virtual void Render() = 0;
+        [[nodiscard]] virtual UIPanel CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
+        NovelRT::Maths::GeoVector2F scale,
+        NovelRT::Graphics::RGBAColour colour) = 0;
 
     };
 }
