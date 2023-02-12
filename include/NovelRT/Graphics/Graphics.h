@@ -49,7 +49,6 @@ namespace NovelRT::Graphics
     class IGraphicsSurface;
     class GraphicsAdapter;
     class GraphicsDevice;
-    class GraphicsResource;
     class GraphicsBuffer;
     class GraphicsTexture;
     class ShaderProgram;
@@ -64,9 +63,6 @@ namespace NovelRT::Graphics
     class GraphicsProvider;
     class GraphicsMemoryAllocator;
     class IGraphicsAdapterSelector;
-    class GraphicsMemoryBlockCollection;
-    class GraphicsMemoryBlock;
-    class GraphicsMemoryBudget;
     class GraphicsSurfaceContext;
     class GraphicsResourceManager;
 }
@@ -79,7 +75,6 @@ namespace NovelRT::Graphics
 #include "GraphicsDeviceObject.h"
 #include "GraphicsContext.h"
 #include "GraphicsFence.h"
-#include "IGraphicsMemoryRegionCollection.h"
 #include "GraphicsMemoryRegionAllocationFlags.h"
 #include "TexelFormat.h"
 #include "GraphicsResourceAccess.h"
@@ -88,17 +83,13 @@ namespace NovelRT::Graphics
 #include "IGraphicsSurface.h"
 #include "GraphicsSurfaceContext.h"
 #include "GraphicsDevice.h"
-#include "GraphicsResource.h"
 #include "GraphicsBufferKind.h"
-#include "GraphicsBuffer.h"
 #include "GraphicsTextureAddressMode.h"
-#include "GraphicsTexture.h"
 #include "IGraphicsAdapterSelector.h"
 #include "ShaderProgram.h"
 #include "GraphicsPipelineBlendFactor.h"
 #include "GraphicsPipeline.h"
 #include "GraphicsPipelineSignature.h"
-#include "GraphicsPrimitive.h"
 #include "GraphicsProvider.h"
 #include "GraphicsPipelineInput.h"
 #include "GraphicsPipelineInputElement.h"

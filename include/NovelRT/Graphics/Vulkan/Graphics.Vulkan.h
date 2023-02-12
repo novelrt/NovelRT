@@ -33,13 +33,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipelineSignature;
     class VulkanGraphicsContext;
     class VulkanGraphicsFence;
-    class VulkanGraphicsBuffer;
-    class VulkanGraphicsTexture;
-    class VulkanGraphicsPrimitive;
     class VulkanGraphicsProvider;
-    class VulkanGraphicsMemoryAllocator;
-    class VulkanGraphicsMemoryBlockCollection;
-    class VulkanGraphicsMemoryBlock;
     class VulkanGraphicsAdapter;
     class VulkanGraphicsAdapterSelector;
     class VulkanGraphicsSurfaceContext;
@@ -59,14 +53,11 @@ namespace NovelRT::Graphics::Vulkan
 #include "VulkanGraphicsFence.h"
 #include "VulkanGraphicsDevice.h"
 #include "VulkanGraphicsContext.h"
-#include "VulkanGraphicsBuffer.h"
 #include "VulkanShaderProgram.h"
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanGraphicsPipelineSignature.h"
-#include "VulkanGraphicsPrimitive.h"
 #include "VulkanGraphicsProvider.h"
 #include "VulkanShaderProgram.h"
-#include "VulkanGraphicsTexture.h"
 #include "VulkanGraphicsPluginProvider.h"
 
 // clang-format on
