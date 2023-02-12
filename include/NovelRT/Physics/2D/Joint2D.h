@@ -57,8 +57,6 @@ namespace NovelRT::Physics::Physics2D
             return _collideConnectedBodies;
         }
 
-        [[nodiscard]] virtual JointType GetJointType() = 0;
-
         virtual void SetPrimaryBody(RigidBody2D* body) = 0;
 
         virtual void SetSecondaryBody(RigidBody2D* body) = 0;
