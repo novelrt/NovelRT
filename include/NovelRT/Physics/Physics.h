@@ -15,12 +15,10 @@
 namespace NovelRT::Physics
 {
     enum class BodyType;
-    enum class JointType;
     class PhysicsProvider;
 }
 
 #include "BodyType.h"
-#include "JointType.h"
 #include "PhysicsProvider.h"
 #include "2D/Physics.2D.h"
 

@@ -12,7 +12,7 @@ namespace NovelRT::Physics::Physics2D
 {
     struct SlidingJointDefinition2D final : public JointDefinition2D
     {
-        
+        bool UseMotor;
     };
 }
 
