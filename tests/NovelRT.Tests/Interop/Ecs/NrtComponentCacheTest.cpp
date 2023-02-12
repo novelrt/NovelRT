@@ -32,7 +32,8 @@ TEST_F(InteropComponentCacheTest, RegisterComponentTypeSucceeds)
     int32_t deleteState = -1;
     NrtComponentTypeId id = 0;
     EXPECT_EQ(Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-                  cache, sizeof(int32_t), &deleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY", nullptr, &id),
+                  cache, sizeof(int32_t), &deleteState, [](auto, auto, auto, auto) {},
+                  [](auto, auto, auto) -> NrtBool { return NRT_FALSE; }, "THROW_AWAY", nullptr, &id),
               NRT_SUCCESS);
 }
 
@@ -41,7 +42,8 @@ TEST_F(InteropComponentCacheTest, GetComponentBufferByIdReturnsValidBuffer)
     int32_t deleteState = -1;
     NrtComponentTypeId id = 0;
     ASSERT_EQ(Nrt_ComponentCache_RegisterComponentTypeUnsafe(
-                  cache, sizeof(int32_t), &deleteState, [](auto, auto, auto, auto) {}, "THROW_AWAY", nullptr, &id),
+                  cache, sizeof(int32_t), &deleteState, [](auto, auto, auto, auto) {},
+                  [](auto, auto, auto) -> NrtBool { return NRT_FALSE; }, "THROW_AWAY", nullptr, &id),
               NRT_SUCCESS);
 
     NrtComponentBufferMemoryContainerHandle buffer = nullptr;

@@ -20,6 +20,7 @@ FetchContent_Declare(Fabulist
 
 # Until this is changed, always build Fabulist as Static
 set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(FABULIST_THIRDPARTY_JSON OFF)
 FetchContent_MakeAvailable(Fabulist)
 add_dependencies(compiler runtime)
@@ -29,7 +30,12 @@ if(APPLE)
 endif()
 
 # Appears to be a bug, doing this until established and/or resolved
+install(DIRECTORY
+      ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/
+   DESTINATION include/fabulist/runtime
+)
+
 install(FILES
-  ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/runtime.hpp
-  ${fabulist_SOURCE_DIR}/runtime/include/fabulist/runtime/decoder.hpp
-  DESTINATION include/fabulist/runtime)
+      ${fabulist_BINARY_DIR}/runtime/fabulist_runtime_export.hpp
+   DESTINATION include/fabulist/runtime/actions
+)
