@@ -15,6 +15,8 @@ namespace NovelRT::Physics::Physics2D
         Joint2D* PrimaryJoint;
         Joint2D* SecondaryJoint;
         float Ratio;
+
+        ~GearJointDefinition2D() = default;
     };
 }
 

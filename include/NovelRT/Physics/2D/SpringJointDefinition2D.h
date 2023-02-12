@@ -17,6 +17,8 @@ namespace NovelRT::Physics::Physics2D
         float RestLength;
         float Stiffness;
         float Damping;
+
+        ~SpringJointDefinition2D() = default;
     };
 }
 

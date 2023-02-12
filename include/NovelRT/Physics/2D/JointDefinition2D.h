@@ -18,6 +18,8 @@ namespace NovelRT::Physics::Physics2D
         NovelRT::Maths::GeoVector2F SecondaryBodyOffset;
         float BreakForce;
         bool CollideConnectedBodies;
+
+        virtual ~JointDefinition2D() = 0;
     };
 }
 

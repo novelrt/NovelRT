@@ -15,6 +15,8 @@ namespace NovelRT::Physics::Physics2D
         float MinLength;
         float MaxLength;
         float RestLength;
+
+        ~DistanceJointDefinition2D() = default;
     };
 }
 

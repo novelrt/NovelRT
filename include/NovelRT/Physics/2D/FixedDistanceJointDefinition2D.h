@@ -14,6 +14,8 @@ namespace NovelRT::Physics::Physics2D
     {
         float RestLength;
         bool EnforceOnlyMaxLength;
+
+        ~FixedJointDefinition2D() = default;
     };
 }
 

@@ -27,6 +27,8 @@ namespace NovelRT::Physics::Physics2D
         float MotorSpeed;
         float MaxMotorTorque;
         bool UseMotor;
+
+        ~HingeJointDefinition2D() = default;
     };
 }
 
