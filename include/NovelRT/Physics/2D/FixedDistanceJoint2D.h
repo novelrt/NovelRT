@@ -14,7 +14,7 @@ namespace NovelRT::Physics::Physics2D
      * @brief 
      * A joint that keeps the anchors of the attached bodies at a set distance.
      */
-    class FixedJoint2D : public Joint2D
+    class FixedDistanceJoint2D : public Joint2D
     {
 
     };

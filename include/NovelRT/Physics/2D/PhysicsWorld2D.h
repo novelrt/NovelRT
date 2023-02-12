@@ -46,7 +46,7 @@ namespace NovelRT::Physics::Physics2D
 
         [[nodiscard]] virtual DistanceJoint2D* AddDistanceJoint(const DistanceJointDefinition2D& jointDefinition) = 0;
 
-        [[nodiscard]] virtual FixedJoint2D* AddFixedJoint(const FixedJointDefinition2D& jointDefiniton) = 0;
+        [[nodiscard]] virtual FixedDistanceJoint2D* AddFixedJoint(const FixedDistanceJointDefinition2D& jointDefiniton) = 0;
 
         [[nodiscard]] virtual GearJoint2D* AddGearJoint2D(const GearJointDefinition2D& jointDefinition) = 0;
 
