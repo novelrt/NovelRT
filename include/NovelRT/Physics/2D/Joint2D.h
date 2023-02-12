@@ -22,12 +22,12 @@ namespace NovelRT::Physics::Physics2D
         bool _collideConnectedBodies;
 
     public:
-        [[nodiscard]] inline RigidBody2D* const GetPrimaryBody() const noexcept
+        [[nodiscard]] inline RigidBody2D* GetPrimaryBody() const noexcept
         {
             return _primaryBody;
         }
 
-        [[nodiscard]] inline RigidBody2D* const GetSecondaryBody() const noexcept
+        [[nodiscard]] inline RigidBody2D* GetSecondaryBody() const noexcept
         {
             return _secondaryBody;
         }
