@@ -12,7 +12,7 @@ namespace NovelRT::Physics
 {
     enum class JointType
     {
-        SprintJoint,
+        SpringJoint,
         MotorJoint
     };
 }
