@@ -21,8 +21,6 @@ set(CORE_SOURCES
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
-  Graphics/GraphicsMemoryBlock.cpp
-  Graphics/GraphicsMemoryBlockCollection.cpp
   Graphics/GraphicsPipeline.cpp
   Graphics/GraphicsPipelineInput.cpp
   Graphics/GraphicsPipelineInputElement.cpp
@@ -36,9 +34,6 @@ set(CORE_SOURCES
   Graphics/Vulkan/VulkanGraphicsContext.cpp
   Graphics/Vulkan/VulkanGraphicsDevice.cpp
   Graphics/Vulkan/VulkanGraphicsFence.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
   Graphics/Vulkan/VulkanGraphicsPipeline.cpp
   Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
   Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
