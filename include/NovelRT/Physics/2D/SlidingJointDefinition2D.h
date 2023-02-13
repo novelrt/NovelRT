@@ -12,6 +12,12 @@ namespace NovelRT::Physics::Physics2D
 {
     struct SlidingJointDefinition2D final : public JointDefinition2D
     {
+        float MotorSpeed;
+        float MaximumMotorForce;
+        float LowerTranslationLimit;
+        float UpperTranslationLimit;
+        float BreakTorque;
+        bool UseTranslationLimits;
         bool UseMotor;
 
         ~SlidingJointDefinition2D() = default;
