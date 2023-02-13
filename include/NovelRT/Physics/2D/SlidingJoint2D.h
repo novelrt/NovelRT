@@ -11,10 +11,13 @@
 namespace NovelRT::Physics::Physics2D
 {
     /**
-     * @brief 
+     * @brief
      * A joint whose movement is restricted to a single axis, often called a prismatic joint.
+     *
+     * @details
+     * A sliding joint can move along a single axis, rather than rotating around it. It can be useful for situations, like sliding doors.
      */
-    class SlidingJoint2D : public Joint2D 
+    class SlidingJoint2D : public Joint2D
     {
 
     };
