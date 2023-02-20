@@ -155,6 +155,7 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
+    SDL2
     Vulkan::Vulkan
     TBB::tbb
     OpenAL::OpenAL

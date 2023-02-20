@@ -10,7 +10,7 @@ namespace NovelRT::Windowing::SDL2
 #include "NovelRT/PluginManagement/PluginManagement.h"
 #include "NovelRT/Windowing/Windowing.h"
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "SDLWindowingDevice.h"
 #include "SDLWindowingPluginProvider.h"
