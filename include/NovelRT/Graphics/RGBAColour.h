@@ -45,6 +45,11 @@ namespace NovelRT::Graphics
         {
             return a / 255.0f;
         }
+
+        [[nodiscard]] inline uint32_t Get32BitColour() const noexcept
+        {
+            return (r | g << 8 | b << 16 | a << 24);
+        }
     };
 }
 

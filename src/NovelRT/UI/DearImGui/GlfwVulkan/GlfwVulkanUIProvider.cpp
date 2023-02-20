@@ -254,13 +254,14 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
                     auto panel = std::static_pointer_cast<UIPanel>(element);
                     // Define the push / begin functions
                     auto colourPush = std::function<void()>(
-                        [panel]() { ImGui::PushStyleColor(ImGuiCol_WindowBg, panel->Colour); });
+                        [panel]() {
+                            ImGui::PushStyleColor(ImGuiCol_WindowBg, panel->Colour.Get32BitColour()); });
                     auto panelBegin = std::function<void()>(
                         [panel]()
                         {
-                            ImGui::Begin(panel->Identifer, nullptr,
-                                         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
-                                             ImGuiWindowFlags_NoResize);
+                            auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
+                                             ImGuiWindowFlags_NoResize;
+                            ImGui::Begin(panel->Identifer, nullptr, flags);
                         });
                     auto panelScale = std::function<void()>([panel]() { ImGui::SetWindowSize(panel->Scale); });
                     auto panelSize = std::function<void()>([panel, windowSize]() {

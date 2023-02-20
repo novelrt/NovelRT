@@ -21,8 +21,6 @@ namespace NovelRT::UI::DearImGui
 #define IM_VEC2_CLASS_EXTRA                                                     \
         constexpr ImVec2(const NovelRT::Maths::GeoVector2F& f) : x(f.x), y(f.y) {}                   \
         operator NovelRT::Maths::GeoVector2F() const { return NovelRT::Maths::GeoVector2F(x,y); }
-#define IM_VEC4_CLASS_EXTRA                                                     \
-        constexpr ImVec4(const NovelRT::Graphics::RGBAColour& f) : x(f.r), y(f.g), z(f.b), w(f.a) {}
 #include <imgui.h>
 
 // UI::DearImGui includes
