@@ -33,6 +33,10 @@ int main()
     auto uiProvider = ui->GetProvider();
     std::stringstream ss;
     ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
+    auto panel = uiProvider->CreatePanel("root", NovelRT::Maths::GeoVector2F(0, 0),
+    NovelRT::Maths::GeoVector2F(540, 216), NovelRT::Graphics::RGBAColour(255,0,0,50));
+    panel->State = NovelRT::UI::UIElementState::Shown;
+
     //ss << windowingProvider->GetWindowingDevice()->GetWidth() << ", " << windowingProvider->GetWindowingDevice()->GetHeight() << "\n";
     // auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
     //     NovelRT::Maths::GeoVector2F(0, 300), NovelRT::Maths::GeoVector2F(540, 216), 16.0f);

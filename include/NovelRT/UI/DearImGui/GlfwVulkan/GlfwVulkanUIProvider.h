@@ -15,14 +15,15 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     private:
         NovelRT::Maths::GeoVector2F _windowSize;
         std::map<std::string, ImFont*> _fontNameMapping;
-        bool _currentCommandListFinished;
+        std::atomic_bool _currentCommandListFinished;
         std::map<const char*, bool> _buttonCache;
+        NovelRT::AtomFactory _factory;
 
         ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key);
-        void GenerateCommand(UIElement& element);
+        void GenerateCommand(std::shared_ptr<UIElement> element);
 
-        void GeneratePanelCommand(UIPanel& panel);
-        void GenerateButtonCommand(UIButton& button);
+        //void GeneratePanelCommand(UIPanel& panel);
+        //void GenerateButtonCommand(UIButton& button);
         // void GenerateTextboxCommand(UITextbox& textbox);
 
     protected:
@@ -43,7 +44,7 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
         void Update();
         void Render();
-        [[nodiscard]] UIPanel CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
+        [[nodiscard]] std::shared_ptr<UIPanel> CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
         NovelRT::Maths::GeoVector2F scale,
         NovelRT::Graphics::RGBAColour colour) final;
 

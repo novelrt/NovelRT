@@ -19,6 +19,7 @@ namespace NovelRT::UI
         NovelRT::Maths::GeoVector2F Position;
         NovelRT::Maths::GeoVector2F Scale;
         NovelRT::Graphics::RGBAColour Colour;
+        NovelRT::Atom InternalIdentifier;
     };
 }
 

@@ -14,14 +14,14 @@ namespace NovelRT::UI
     {
     protected:
         LoggingService _logger;
-        std::map<uuids::uuid, UIElement> _elements;
+        std::map<NovelRT::Atom, std::shared_ptr<UIElement>> _elements;
         std::vector<std::function<void()>> _currentCommandList;
         std::vector<std::function<void()>> _previousCommandList;
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
 
     public:
         explicit UIProvider() :
-            _elements(std::map<uuids::uuid, UIElement>()), _currentCommandList(std::vector<std::function<void()>>()),
+            _elements(std::map<NovelRT::Atom, std::shared_ptr<UIElement>>()), _currentCommandList(std::vector<std::function<void()>>()),
             _previousCommandList(std::vector<std::function<void()>>()),
             _resourceLoader()
         {}
@@ -37,7 +37,7 @@ namespace NovelRT::UI
         virtual void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context) = 0;
         virtual void Update() = 0;
         virtual void Render() = 0;
-        [[nodiscard]] virtual UIPanel CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
+        [[nodiscard]] virtual std::shared_ptr<UIPanel> CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
         NovelRT::Maths::GeoVector2F scale,
         NovelRT::Graphics::RGBAColour colour) = 0;
 

@@ -28,6 +28,8 @@ namespace NovelRT::Ecs::UI
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
-        _uiProvider->Update(delta, catalogue);
+        unused(delta);
+        unused(catalogue);
+        _uiProvider->Update();
     }
 }

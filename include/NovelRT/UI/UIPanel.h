@@ -13,11 +13,11 @@ namespace NovelRT::UI
     struct UIPanel : public UIElement
     {
     public:
-        std::queue<UIElement> ChildElements = std::queue<UIElement>();
+        std::vector<UIElement>* ChildElements = new std::vector<UIElement>();
 
         UIPanel& operator+=(const UIElement& element)
         {
-            ChildElements.push(element);
+            ChildElements->emplace_back(element);
             return *this;
         }
     };
