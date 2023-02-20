@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
+#include <iostream>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -444,7 +445,10 @@ namespace NovelRT::ResourceManagement::Desktop
             throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
         }
 
-        return StreamableAssetMetadata{std::move(file), RegisterAsset(filePath)};
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
+        return StreamableAssetMetadata{std::move(file), databaseHandle};
     }
 
     StreamableAssetMetadata DesktopResourceLoader::GetStreamToAsset(uuids::uuid assetId)

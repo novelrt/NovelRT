@@ -647,6 +647,18 @@ namespace NovelRT::Ecs
         }
     }
 
+    void LinkedEntityListView::ClearAndAddRemoveNodeInstructionForAll()
+    {
+        _newBeginPostDiff.reset();
+        _newTailPostDiff.reset();
+        _changes.Clear();
+
+        for (auto&& entity : *this)
+        {
+            AddRemoveNodeInstruction(entity);
+        }
+    }
+
     void LinkedEntityListView::Commit()
     {
         _hasBeenCommitted = true;

@@ -29,7 +29,7 @@ int main()
             return *this;
         }
 
-        bool operator==(const TestStruct& rhs)
+        bool operator==(const TestStruct& rhs) const noexcept
         {
             return value == rhs.value && multiplier == rhs.multiplier && testEntityValue == rhs.testEntityValue &&
                    shouldDelete == rhs.shouldDelete;

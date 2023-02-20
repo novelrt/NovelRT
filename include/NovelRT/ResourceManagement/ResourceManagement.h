@@ -8,6 +8,7 @@
 #include "../Utilities/Misc.h"
 #include <cstdint>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <uuid.h>

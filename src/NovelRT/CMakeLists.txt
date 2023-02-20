@@ -19,6 +19,7 @@ set(CORE_SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
+  Ecs/Narrative/NarrativePlayerSystem.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
   Graphics/GraphicsMemoryBlockCollection.cpp
@@ -72,9 +73,9 @@ set(CORE_SOURCES
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 )
-
 add_library(Engine SHARED ${CORE_SOURCES})
 set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})
+add_dependencies(Engine runtime compiler)
 
 
 if(GENERATOR_IS_MULTI_CONFIG)
@@ -165,7 +166,7 @@ target_link_libraries(Engine
     spdlog::spdlog
     nlohmann_json::nlohmann_json
     stduuid
-    fabulist::runtime
+    runtime
     Vorbis::vorbis
     Vorbis::vorbisenc
     FLAC::FLAC

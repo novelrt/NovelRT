@@ -9,9 +9,7 @@ set(RESOURCES_FILES
   Images/test.png
   Images/uwu.png
 
-  Scripts/avg.lua
-  Scripts/story.ink
-  Scripts/story.json
+  Scripts/question.json
 
   Shaders/BasicFragmentShader.glsl
   Shaders/BasicVertexShader.glsl
