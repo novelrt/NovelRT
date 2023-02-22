@@ -13,7 +13,7 @@ namespace NovelRT::Physics::Physics2D
     struct FixedJointDefinition2D final : public JointDefinition2D
     {
         float RestLength;
-        bool EnforceOnlyMaxLength;
+        bool IsOnlyMaxLengthEnforced;
 
         ~FixedJointDefinition2D() = default;
     };

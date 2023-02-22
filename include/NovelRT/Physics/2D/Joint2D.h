@@ -10,6 +10,9 @@
 
 namespace NovelRT::Physics::Physics2D
 {
+    // TODO: validate if the current approach for the getters in joints is viable.
+    // Will most likely have to do that with an actual implementation.
+
     class Joint2D
     {
     protected:
@@ -31,7 +34,7 @@ namespace NovelRT::Physics::Physics2D
         {
             return _secondaryBody;
         }
-        
+
         [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPrimaryAnchorOffset() const noexcept
         {
             return _primaryAnchorOffset;

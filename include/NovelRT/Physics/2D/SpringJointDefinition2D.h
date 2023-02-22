@@ -12,8 +12,8 @@ namespace NovelRT::Physics::Physics2D
 {
     struct SpringJointDefinition2D final : public JointDefinition2D
     {
-        float MinLength;
-        float MaxLength;
+        float MinimumLength;
+        float MaximumLength;
         float RestLength;
         float Stiffness;
         float Damping;

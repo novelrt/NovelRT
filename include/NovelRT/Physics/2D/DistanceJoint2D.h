@@ -11,12 +11,37 @@
 namespace NovelRT::Physics::Physics2D
 {
     /**
-     * @brief 
+     * @brief
      * A joint that keeps the anchors of the attached bodies within a certain range of distance.
      */
-    class DistanceJoint2D : public Joint2D 
+    class DistanceJoint2D : public Joint2D
     {
+    protected:
+        float _minLength;
+        float _maxLength;
+        float _restLength;
 
+    public:
+        [[nodiscard]] inline float GetMinLength() const noexcept
+        {
+            return _minLength;
+        }
+
+        [[nodiscard]] inline float GetMaxLength() const noexcept
+        {
+            return _minLength;
+        }
+
+        [[nodiscard]] inline float GetRestLength() const noexcept
+        {
+            return _minLength;
+        }
+
+        virtual void SetMinLength(float minLength) = 0;
+
+        virtual void SetMaxLength(float maxLength) = 0;
+
+        virtual void SetRestLength(float restLength) = 0;
     };
 }
 

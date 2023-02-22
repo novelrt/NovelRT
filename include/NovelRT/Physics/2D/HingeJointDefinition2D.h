@@ -10,23 +10,23 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct HingeJointDefinition2D final : public JointDefinition2D 
+    struct HingeJointDefinition2D final : public JointDefinition2D
     {
         /**
-         * @brief 
+         * @brief
          * The lower angle limit in radians.
          */
         float LowerAngleLimit;
 
         /**
-         * @brief 
+         * @brief
          * The upper angle limit in radians.
          */
         float UpperAngleLimit;
 
         float MotorSpeed;
         float MaxMotorTorque;
-        bool UseMotor;
+        bool IsMotorUsed;
 
         ~HingeJointDefinition2D() = default;
     };
