@@ -1,7 +1,7 @@
-#ifndef NOVELRT_WINDOWING_SDL2_H
-#define NOVELRT_WINDOWING_SDL2_H
+#ifndef NOVELRT_WINDOWING_SDL_H
+#define NOVELRT_WINDOWING_SDL_H
 
-namespace NovelRT::Windowing::SDL2
+namespace NovelRT::Windowing::SDL
 {
     class SDLWindowingDevice;
     class SDLWindowingPluginProvider;

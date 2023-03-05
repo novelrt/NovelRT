@@ -113,7 +113,7 @@
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
-  #include <NovelRT/Windowing/SDl2/Windowing.SDL.h>
+  #include <NovelRT/Windowing/SDL/Windowing.SDL.h>
   #include <NovelRT/Input/Input.h>
   #include <NovelRT/Input/Glfw/Input.Glfw.h>
 
