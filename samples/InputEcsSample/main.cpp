@@ -25,7 +25,14 @@ int main()
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>())
             .InitialiseAndRegisterComponents();
+
+    std::shared_ptr<NovelRT::Ecs::UI::UISystem> ui = scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::UI::UISystem>();
+    auto uiProvider = ui->GetProvider();
+    auto testButton = uiProvider->CreateButton("Hello Button", NovelRT::Maths::GeoVector2F::Zero(), NovelRT::Maths::GeoVector2F::Uniform(500.0f), NovelRT::Graphics::RGBAColour(255, 0, 0, 255));
+    testButton->Clicked += [loggerPtr = &logger](auto){ loggerPtr->logInfo("Hello from imgui!!!"); };
+    testButton->State() = NovelRT::UI::UIElementState::Shown;
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
@@ -132,7 +139,7 @@ int main()
         }
 
         if (events.TryGetComponent(mouseClick, input) &&
-            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+            input.state == KeyState::KeyDown)
         {
             logger.logInfo("Clicked at {}, {}", input.mousePositionX, input.mousePositionY);
         }

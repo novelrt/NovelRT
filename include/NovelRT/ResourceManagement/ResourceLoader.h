@@ -105,6 +105,8 @@ namespace NovelRT::ResourceManagement
 
         [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) = 0;
 
+        [[nodiscard]] virtual FontMetadata LoadFont(std::filesystem::path filePath) = 0;
+
         [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(uuids::uuid assetId) = 0;
 
         [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) = 0;

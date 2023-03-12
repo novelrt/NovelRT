@@ -7,15 +7,14 @@
 // dependencies for ECS
 // clang-format off
 
-#include "../Atom.h"
-#include "../Exceptions/Exceptions.h"
-#include "../Maths/Maths.h"
-#include "../Timing/Timestamp.h"
-#include "../Utilities/Event.h"
-#include "../Utilities/KeyValuePair.h"
-#include "../Utilities/Misc.h"
-#include "../PluginManagement/PluginManagement.h"
-#include "../Threading/Threading.h"
+#include "NovelRT/Atom.h"
+#include "NovelRT/Exceptions/Exceptions.h"
+#include "NovelRT/Maths/Maths.h"
+#include "NovelRT/Timing/Timestamp.h"
+#include "NovelRT/Utilities/Event.h"
+#include "NovelRT/Utilities/KeyValuePair.h"
+#include "NovelRT/PluginManagement/PluginManagement.h"
+#include "NovelRT/Threading/Threading.h"
 #include <algorithm>
 #include <atomic>
 #include <cstddef>
@@ -83,6 +82,7 @@ namespace NovelRT::Ecs
 #include "Graphics/Ecs.Graphics.h"
 #include "Audio/Ecs.Audio.h"
 #include "Input/Ecs.Input.h"
+#include "UI/Ecs.UI.h"
 #include "Narrative/Ecs.Narrative.h"
 #include "Configurator.h"
 #include "LinkedEntityListView.h"

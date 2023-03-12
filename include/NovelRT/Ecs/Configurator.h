@@ -22,6 +22,7 @@ namespace NovelRT::Ecs
         std::vector<std::shared_ptr<IEcsSystem>> _iecsSystems;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
+        std::shared_ptr<PluginManagement::IUIPluginProvider> _uiPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<PluginManagement::IInputPluginProvider> _inputPluginProvider;
 
@@ -73,10 +74,22 @@ namespace NovelRT::Ecs
                 Audio::AudioEmitterStateComponent{Audio::AudioEmitterState::Done},
                 "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
 
+            auto uiPanelDeleteState = NovelRT::UI::UIPanel{};
+            uiPanelDeleteState.State = NovelRT::UI::UIElementState::Disposed;
+            auto uiTextDeleteState = NovelRT::UI::UIText{};
+            uiTextDeleteState.State = NovelRT::UI::UIElementState::Disposed;
+            target.GetComponentCache().RegisterComponentType(uiPanelDeleteState, "NovelRT::UI::UIPanel");
+            target.GetComponentCache().RegisterComponentType(uiTextDeleteState, "NovelRT::UI::UIText");
+
             target.RegisterSystem(
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
 
             target.RegisterSystem(std::make_shared<Ecs::Audio::AudioSystem>(_resourceManagementPluginProvider));
+
+            target.RegisterSystem(std::make_shared<NovelRT::Ecs::UI::UISystem>(_uiPluginProvider,
+                target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>(),
+                target.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>(),
+                _resourceManagementPluginProvider->GetResourceLoader()));
         }
 
     public:
@@ -218,6 +231,23 @@ namespace NovelRT::Ecs
             std::shared_ptr<PluginManagement::IInputPluginProvider> pluginInstance)
         {
             _inputPluginProvider = std::move(pluginInstance);
+            return *this;
+        }
+
+        /**
+         * @brief Specifies a plugin provider object to use for creating the default systems.
+         *
+         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
+         * @return A reference to this to allow method chaining.
+         *
+         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * by default systems.
+         */
+        template<>
+        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IUIPluginProvider>(
+            std::shared_ptr<PluginManagement::IUIPluginProvider> pluginInstance)
+        {
+            _uiPluginProvider = std::move(pluginInstance);
             return *this;
         }
 

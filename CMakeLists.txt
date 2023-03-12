@@ -206,6 +206,7 @@ endif()
 #
 # Add subdirectories
 #
+add_subdirectory(internal/imgui)
 add_subdirectory(internal/Fabulist)
 add_subdirectory(resources)
 add_subdirectory(src)

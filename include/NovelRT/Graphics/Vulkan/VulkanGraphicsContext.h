@@ -25,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
 
         Threading::VolatileState _state;
 
-        VkCommandBuffer CreateVulkanCommandBuffer();
+
         VkCommandPool CreateVulkanCommandPool();
         VkFramebuffer CreateVulkanFramebuffer();
         VkImageView CreateVulkanSwapChainImageView();
@@ -110,6 +110,7 @@ namespace NovelRT::Graphics::Vulkan
         void EndFrame() final;
 
         void ResetContext();
+        VkCommandBuffer CreateVulkanCommandBuffer();
 
         ~VulkanGraphicsContext() final;
     };

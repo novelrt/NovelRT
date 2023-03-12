@@ -10,7 +10,6 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-    std::cerr << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto resourceManagementProvider =
@@ -18,14 +17,49 @@ int main()
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
+    NovelRT::EngineConfig::EnableEditorMode() = true;
+
     auto scheduler =
         Configurator()
             .WithDefaultSystemsAndComponents()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
             .WithPluginProvider(windowingProvider)
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>())
             .WithPluginProvider(resourceManagementProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())
             .InitialiseAndRegisterComponents();
+
+    std::shared_ptr<NovelRT::Ecs::UI::UISystem> ui = scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::UI::UISystem>();
+    auto uiProvider = ui->GetProvider();
+    std::stringstream ss;
+    ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
+
+    static NovelRT::AtomFactory& entityIdFactory =
+        NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+
+    auto panelBuffer = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::UI::UIPanel>();
+    auto panel = NovelRT::UI::UIPanel{"root", NovelRT::UI::UIElementState::Shown, NovelRT::UI::UIElementType::Panel,
+        NovelRT::Maths::GeoVector2F::Zero(), NovelRT::Maths::GeoVector2F(540, 316), NovelRT::Graphics::RGBAColour(255,0,0,50), 1, entityIdFactory.GetNext()};
+    panelBuffer.PushComponentUpdateInstruction(0, entityIdFactory.GetNext(), 
+        panel);
+    auto textElement = ui->CreateTextElement(scheduler, panel);
+    textElement.Text = ss.str().c_str();
+    textElement.State = NovelRT::UI::UIElementState::Shown;
+    auto textBuffer = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::UI::UIText>();
+    textBuffer.PushComponentUpdateInstruction(0, textElement.Entity, textElement);
+    
+
+    
+        
+
+    //ss << windowingProvider->GetWindowingDevice()->GetWidth() << ", " << windowingProvider->GetWindowingDevice()->GetHeight() << "\n";
+    // auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
+    //     NovelRT::Maths::GeoVector2F(0, 300), NovelRT::Maths::GeoVector2F(540, 216), 16.0f);
+    // auto namebox = uiProvider->CreateTextbox("fabulist-name", "Fabulist", false,
+    //     NovelRT::Maths::GeoVector2F(0, 0), NovelRT::Maths::GeoVector2F(186, 32), 18.0f);
+    // textbox->State() = NovelRT::UI::UIElementState::Shown;
+    // namebox->State() = NovelRT::UI::UIElementState::Shown;
+    // namebox->BackgroundColour() = NovelRT::Graphics::RGBAColour(255, 0, 0, 255);
 
     std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
         scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
@@ -56,8 +90,7 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    static NovelRT::AtomFactory& entityIdFactory =
-        NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+    
     auto scriptAssetId =
         resourceManagementProvider->GetResourceLoader()->TryGetAssetIdBasedOnFilePath("Scripts/question.json");
 
@@ -119,12 +152,16 @@ int main()
     NovelRT::Timing::StepTimer timer;
 
     auto windowPtr = windowingProvider->GetWindowingDevice();
-    windowPtr->SetWindowTitle("ECS Test");
+    windowPtr->SetWindowTitle("Fabulist Test");
 
     while (!windowPtr->GetShouldClose())
     {
         windowPtr->ProcessAllMessages();
         timer.tick(DummyUpdateStuff);
+        // ss.str(std::string());
+        // ss << "Application average " << 1000.0f / ImGui::GetIO().Framerate << "ms/frame (" << ImGui::GetIO().Framerate
+        //    << " FPS)" << std::endl;
+        // textbox->Text() = ss.str();
     }
 
     return 0;

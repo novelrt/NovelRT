@@ -26,6 +26,7 @@ namespace NovelRT::Ecs::Graphics
         Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
+        std::shared_ptr<PluginManagement::IUIPluginProvider> _uiPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext> _surfaceContext;
         std::shared_ptr<NovelRT::Graphics::GraphicsAdapter> _graphicsAdapter;
@@ -156,6 +157,11 @@ namespace NovelRT::Ecs::Graphics
 
         void DeleteVertexData(const std::string& name);
 
+        [[nodiscard]] inline Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingDefaultPipelineInfo() const noexcept
+        {
+            return _defaultGraphicsPipelinePtr;
+        }
+
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(
             const std::string& name);
 
@@ -217,6 +223,21 @@ namespace NovelRT::Ecs::Graphics
 
         [[nodiscard]] Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
                                                      uuids::uuid pixelShaderAssetGuid) const;
+
+        [[nodiscard]] inline std::shared_ptr<NovelRT::Graphics::GraphicsDevice> GetCurrentGraphicsDevice() const noexcept
+        {
+            return _graphicsDevice;
+        }
+
+        [[nodiscard]] inline std::shared_ptr<NovelRT::Graphics::GraphicsProvider> GetCurrentGraphicsProvider() const noexcept
+        {
+            return _graphicsPluginProvider->GetGraphicsProvider();
+        }
+
+        [[nodiscard]] inline std::shared_ptr<NovelRT::PluginManagement::IWindowingPluginProvider> GetCurrentWindowingPluginProvider() const noexcept
+        {
+            return _windowingPluginProvider;
+        }
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H

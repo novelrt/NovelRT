@@ -64,4 +64,10 @@ namespace NovelRT
         static bool enableDebugOutputFromEngineInternals = false;
         return enableDebugOutputFromEngineInternals;
     }
+
+    bool& EngineConfig::EnableEditorMode() noexcept
+    {
+        static bool enableEditorMode = false;
+        return enableEditorMode;
+    }
 } // namespace NovelRT

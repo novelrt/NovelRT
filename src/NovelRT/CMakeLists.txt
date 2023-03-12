@@ -19,6 +19,7 @@ set(CORE_SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
+  Ecs/UI/UISystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
   Graphics/GraphicsMemoryBlock.cpp
@@ -47,6 +48,14 @@ set(CORE_SOURCES
   Graphics/Vulkan/VulkanGraphicsTexture.cpp
   Graphics/Vulkan/VulkanShaderProgram.cpp
 
+  ${imgui_SOURCE_DIR}/imgui.cpp
+  ${imgui_SOURCE_DIR}/imgui_demo.cpp
+  ${imgui_SOURCE_DIR}/imgui_draw.cpp
+  ${imgui_SOURCE_DIR}/imgui_tables.cpp
+  ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
+
   Input/Glfw/GlfwInputDevice.cpp
   Input/Glfw/GlfwInputPluginProvider.cpp
   Input/NovelKey.cpp
@@ -67,6 +76,11 @@ set(CORE_SOURCES
   Threading/VolatileState.cpp
 
   Timing/StepTimer.cpp
+
+  #UI/DearImGui/ImGuiTextbox.cpp
+  #UI/DearImGui/ImGuiButton.cpp
+  UI/DearImGui/GlfwVulkan/GlfwVulkanUIProvider.cpp
+  UI/DearImGui/GlfwVulkan/GlfwVulkanUIPluginProvider.cpp
 
   Utilities/Misc.cpp
 
@@ -108,6 +122,8 @@ target_include_directories(Engine
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:glm::glm,INTERFACE_INCLUDE_DIRECTORIES>>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:Microsoft.GSL::GSL,INTERFACE_INCLUDE_DIRECTORIES>>
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
     $<INSTALL_INTERFACE:include>
 )
 

@@ -25,6 +25,7 @@ int main()
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IUIPluginProvider>())
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
             .InitialiseAndRegisterComponents();
 

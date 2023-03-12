@@ -56,7 +56,7 @@ namespace NovelRT::Maths::Utilities
      * @param value The given integer to be tested.
      * @return true if the given integer is a power of 2, otherwise false.
      */
-    [[nodiscard]] inline constexpr bool IsPow2(size_t value) noexcept
+    [[nodiscard]] constexpr inline bool IsPow2(size_t value) noexcept
     {
         return ((value & (value - 1ULL)) == 0ULL) && (value != 0ULL);
     }
@@ -72,12 +72,24 @@ namespace NovelRT::Maths::Utilities
      * @param alignment The target alignment, which should be a power of two.
      * @return The address rounded up to the nearest alignment.
      */
-    [[nodiscard]] inline constexpr size_t AlignUp(size_t address, size_t alignment)
+    [[nodiscard]] constexpr inline size_t AlignUp(size_t address, size_t alignment) noexcept
     {
         assert(IsPow2(alignment) && "Alignment must be to a power of two.");
-
         return (address + (alignment - 1ULL)) & ~(alignment - 1ULL);
     }
+
+    /**
+     * @brief Rounds a given address down to the nearest alignment.
+     *
+     * @param address The address to be aligned.
+     * @param alignment The target alignment, which should be a power of two.
+     * @return The address rounded down to the nearest alignment.
+     */
+     [[nodiscard]] constexpr inline size_t AlignDown(size_t address, size_t alignment) noexcept
+     {
+         assert(IsPow2(alignment) && "Alignment must be to a power of two.");
+         return address & ~(alignment - 1);
+     }
 
     /**
      * @brief Returns the number of set bits in the given value.

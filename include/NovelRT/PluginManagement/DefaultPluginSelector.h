@@ -47,6 +47,13 @@ namespace NovelRT::PluginManagement
         {
             return std::static_pointer_cast<IInputPluginProvider>(GetGlfwInputPluginProvider());
         }
+
+        template<>
+        [[nodiscard]] std::shared_ptr<IUIPluginProvider> GetDefaultPluginTypeOnCurrentPlatformFor<
+            IUIPluginProvider>()
+        {
+            return std::static_pointer_cast<IUIPluginProvider>(GetGlfwVulkanUIPluginProvider());
+        }
     };
 }
 

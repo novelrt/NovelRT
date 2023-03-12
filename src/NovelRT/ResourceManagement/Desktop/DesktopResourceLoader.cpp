@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
+#include <imgui.h>
 #include <iostream>
 
 namespace NovelRT::ResourceManagement::Desktop
@@ -424,6 +425,22 @@ namespace NovelRT::ResourceManagement::Desktop
         uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
         return AudioMetadata{data, info.channels, info.samplerate, databaseHandle};
+    }
+
+    FontMetadata DesktopResourceLoader::LoadFont(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Audio" / filePath;
+        }
+
+        ImGuiIO& io = ImGui::GetIO();
+        ImFont* font = io.Fonts->AddFontFromFileTTF(filePath.string().c_str(), 36.0f);
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+        uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
+        return FontMetadata{filePath.stem().string(), font, databaseHandle};
     }
 
     AudioMetadata DesktopResourceLoader::LoadAudioFrameData(uuids::uuid assetId)
