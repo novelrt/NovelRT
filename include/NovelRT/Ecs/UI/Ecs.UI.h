@@ -8,7 +8,7 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
-#include "NovelRT/UI/UI.h"
+#include <NovelRT/UI/UI.h>
 #include <map>
 
 namespace NovelRT::Ecs::UI

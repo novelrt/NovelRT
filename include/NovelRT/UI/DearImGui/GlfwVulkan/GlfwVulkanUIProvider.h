@@ -15,12 +15,11 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
     private:
         NovelRT::Maths::GeoVector2F _windowSize;
         std::map<std::string, ImFont*> _fontNameMapping;
-        std::atomic_bool _currentCommandListFinished;
         std::map<const char*, bool> _buttonCache;
         NovelRT::AtomFactory _factory;
 
         ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key);
-        void GenerateCommand(std::shared_ptr<UIElement> element);
+        // void GenerateCommand(std::shared_ptr<UIElement> element);
 
         //void GeneratePanelCommand(UIPanel& panel);
         //void GenerateButtonCommand(UIButton& button);
@@ -44,9 +43,22 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context);
         void Update();
         void Render();
-        [[nodiscard]] std::shared_ptr<UIPanel> CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
-        NovelRT::Maths::GeoVector2F scale,
-        NovelRT::Graphics::RGBAColour colour) final;
+        void GeneratePanelCommand(UIPanel panel, NovelRT::Ecs::Catalogue catalogue) final;
+        void GenerateTextCommand(UIText& text) final;
+        inline std::vector<std::function<void()>>& GetCurrentCommandList()
+        {
+            return _currentCommandList;
+        }
+
+        [[nodiscard]] inline std::atomic_bool& CommandListFinished() final
+        {
+            return _currentCommandListFinished;
+        }
+
+        [[nodiscard]] inline const std::atomic_bool& CommandListFinished() const final
+        {
+            return _currentCommandListFinished;
+        }
 
     };
 }

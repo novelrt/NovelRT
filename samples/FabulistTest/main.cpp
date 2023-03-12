@@ -33,9 +33,24 @@ int main()
     auto uiProvider = ui->GetProvider();
     std::stringstream ss;
     ss << "Fabulist runtime " << fabulist::runtime::get_version_string() << "\n";
-    auto panel = uiProvider->CreatePanel("root", NovelRT::Maths::GeoVector2F(0, 0),
-    NovelRT::Maths::GeoVector2F(540, 216), NovelRT::Graphics::RGBAColour(255,0,0,50));
-    panel->State = NovelRT::UI::UIElementState::Shown;
+
+    static NovelRT::AtomFactory& entityIdFactory =
+        NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+
+    auto panelBuffer = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::UI::UIPanel>();
+    auto panel = NovelRT::UI::UIPanel{"root", NovelRT::UI::UIElementState::Shown, NovelRT::UI::UIElementType::Panel,
+        NovelRT::Maths::GeoVector2F::Zero(), NovelRT::Maths::GeoVector2F(540, 316), NovelRT::Graphics::RGBAColour(255,0,0,50), 1, entityIdFactory.GetNext()};
+    panelBuffer.PushComponentUpdateInstruction(0, entityIdFactory.GetNext(), 
+        panel);
+    auto textElement = ui->CreateTextElement(scheduler, panel);
+    textElement.Text = ss.str().c_str();
+    textElement.State = NovelRT::UI::UIElementState::Shown;
+    auto textBuffer = scheduler.GetComponentCache().GetComponentBuffer<NovelRT::UI::UIText>();
+    textBuffer.PushComponentUpdateInstruction(0, textElement.Entity, textElement);
+    
+
+    
+        
 
     //ss << windowingProvider->GetWindowingDevice()->GetWidth() << ", " << windowingProvider->GetWindowingDevice()->GetHeight() << "\n";
     // auto textbox = uiProvider->CreateTextbox("fabulist-text", ss.str(), false,
@@ -75,8 +90,7 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    static NovelRT::AtomFactory& entityIdFactory =
-        NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+    
     auto scriptAssetId =
         resourceManagementProvider->GetResourceLoader()->TryGetAssetIdBasedOnFilePath("Scripts/question.json");
 

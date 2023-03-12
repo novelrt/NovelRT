@@ -14,15 +14,18 @@ namespace NovelRT::UI
     {
     protected:
         LoggingService _logger;
-        std::map<NovelRT::Atom, std::shared_ptr<UIElement>> _elements;
+        // std::map<NovelRT::Atom, std::shared_ptr<UIElement>> _elements;
         std::vector<std::function<void()>> _currentCommandList;
         std::vector<std::function<void()>> _previousCommandList;
+        std::atomic_bool _currentCommandListFinished;
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
 
     public:
         explicit UIProvider() :
-            _elements(std::map<NovelRT::Atom, std::shared_ptr<UIElement>>()), _currentCommandList(std::vector<std::function<void()>>()),
+            // _elements(std::map<NovelRT::Atom, std::shared_ptr<UIElement>>()), 
+            _currentCommandList(std::vector<std::function<void()>>()),
             _previousCommandList(std::vector<std::function<void()>>()),
+            _currentCommandListFinished(false),
             _resourceLoader()
         {}
 
@@ -37,9 +40,13 @@ namespace NovelRT::UI
         virtual void End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context) = 0;
         virtual void Update() = 0;
         virtual void Render() = 0;
-        [[nodiscard]] virtual std::shared_ptr<UIPanel> CreatePanel(const char* identifier, NovelRT::Maths::GeoVector2F position,
-        NovelRT::Maths::GeoVector2F scale,
-        NovelRT::Graphics::RGBAColour colour) = 0;
+        virtual std::vector<std::function<void()>>& GetCurrentCommandList() = 0;
+        virtual void GeneratePanelCommand(UIPanel panel, NovelRT::Ecs::Catalogue catalogue) = 0;
+        virtual void GenerateTextCommand(UIText& text) = 0;
+        
+        virtual std::atomic_bool& CommandListFinished() = 0;
+        virtual const std::atomic_bool& CommandListFinished() const = 0;
+
 
     };
 }

@@ -12,12 +12,13 @@ namespace NovelRT::UI
 {
     enum class UIElementState : uint32_t
     {
-        Hidden = 0,
-        Shown = 1,
-        ToFadeIn = 2,
-        FadingIn = 3,
-        ToFadeOut = 4,
-        FadingOut = 5
+        Disposed = 0,
+        Hidden = 1, 
+        Shown = 2,
+        ToFadeIn = 3,
+        FadingIn = 4,
+        ToFadeOut = 5,
+        FadingOut = 6,
     };
 }
 

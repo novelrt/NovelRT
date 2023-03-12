@@ -16,6 +16,8 @@ namespace NovelRT::Ecs::UI
         LoggingService _logger;
         std::shared_ptr<NovelRT::UI::UIProvider> _uiProvider;
 
+        //void GeneratePanelCommand(NovelRT::UI::UIPanel panel, std::vector<std::function<void()>>& commandList);
+
     public:
         UISystem(std::shared_ptr<NovelRT::PluginManagement::IUIPluginProvider> uiPluginProvider,
             std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem,
@@ -23,11 +25,13 @@ namespace NovelRT::Ecs::UI
             std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader);
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
+        NovelRT::UI::UIText CreateTextElement(Ecs::SystemScheduler& scheduler, NovelRT::UI::UIPanel& panel);
 
         inline std::shared_ptr<NovelRT::UI::UIProvider> GetProvider() const
         {
             return _uiProvider;
         }
+
     };
 }
 

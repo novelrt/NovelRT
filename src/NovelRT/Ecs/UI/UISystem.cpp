@@ -9,7 +9,7 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem,
         std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem,
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader):
-        _uiProvider(std::move(uiPluginProvider->GetUIProvider()))
+        _uiProvider(std::move(uiPluginProvider->GetUIProvider())))
     {
         _uiProvider->Initialise(resourceLoader, renderingSystem->GetCurrentGraphicsDevice(),
             renderingSystem->GetCurrentWindowingPluginProvider()->GetWindowingDevice(),
@@ -23,13 +23,34 @@ namespace NovelRT::Ecs::UI
             _uiProvider->Begin();
             _uiProvider->Render();
             _uiProvider->End(args.graphicsDevice->GetCurrentContext());
-        };
+        };   
     }
 
     void UISystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
     {
-        unused(delta);
-        unused(catalogue);
+        auto uiPanels = catalogue.GetComponentView<NovelRT::UI::UIPanel>();
         _uiProvider->Update();
+        unused(delta);
+
+        for(auto [entity, panel] : uiPanels)
+        {
+            LinkedEntityListView view(panel.RootElementId, catalogue);
+            _uiProvider->GeneratePanelCommand(panel, view);
+        }
+
+        _uiProvider->CommandListFinished() = true;
+    }
+
+
+    NovelRT::UI::UIText UISystem::CreateTextElement(Ecs::SystemScheduler& scheduler, NovelRT::UI::UIPanel& panel)
+    {
+        NovelRT::UI::UIText text = NovelRT::UI::UIText{};
+        Ecs::Catalogue catalogue(0, scheduler.GetComponentCache(), scheduler.GetEntityCache());
+        EntityId id = catalogue.CreateEntity();
+        text.Entity = id;
+        LinkedEntityListView view(panel.RootElementId, catalogue);
+        catalogue.GetComponentView<NovelRT::UI::UIText>().PushComponentUpdateInstruction(id, text);
+        view.AddInsertAtBackInstruction(id);
+        return text;
     }
 }

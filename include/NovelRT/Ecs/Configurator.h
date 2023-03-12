@@ -74,6 +74,13 @@ namespace NovelRT::Ecs
                 Audio::AudioEmitterStateComponent{Audio::AudioEmitterState::Done},
                 "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
 
+            auto uiPanelDeleteState = NovelRT::UI::UIPanel{};
+            uiPanelDeleteState.State = NovelRT::UI::UIElementState::Disposed;
+            auto uiTextDeleteState = NovelRT::UI::UIText{};
+            uiTextDeleteState.State = NovelRT::UI::UIElementState::Disposed;
+            target.GetComponentCache().RegisterComponentType(uiPanelDeleteState, "NovelRT::UI::UIPanel");
+            target.GetComponentCache().RegisterComponentType(uiTextDeleteState, "NovelRT::UI::UIText");
+
             target.RegisterSystem(
                 std::make_shared<Ecs::Input::InputSystem>(_windowingPluginProvider, _inputPluginProvider));
 

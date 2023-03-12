@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_UI_UIELEMENT_H
-#define NOVELRT_UI_UIELEMENT_H
+#ifndef NOVELRT_UI_UITEXT_H
+#define NOVELRT_UI_UITEXT_H
 
 #ifndef NOVELRT_UI_H
 #error NovelRT does not support including types explicitly by default. Please include UI.h instead for the Windowing namespace subset.
@@ -10,39 +10,37 @@
 
 namespace NovelRT::UI
 {
-    struct UIElement
+    struct UIText
     {
     public:
-        const char* Identifier;
+        const char* Text;
         UIElementState State = NovelRT::UI::UIElementState::Hidden;
         UIElementType Type = NovelRT::UI::UIElementType::Generic;
         NovelRT::Maths::GeoVector2F Position;
-        NovelRT::Maths::GeoVector2F Scale;
         NovelRT::Graphics::RGBAColour Colour;
-        NovelRT::Atom InternalIdentifier;
+        NovelRT::Atom Entity;
 
-        inline UIElement& operator+=(const UIElement& other) noexcept
+        inline UIText& operator+=(const UIText& other) noexcept
         {
-            Identifier = other.Identifier;
+            Text = other.Text;
             State = other.State;
             Type = other.Type;
             Position = other.Position;
-            Scale = other.Scale;
             Colour = other.Colour;
-            InternalIdentifier = other.InternalIdentifier;
+            Entity = other.Entity;
             return *this;
         };
 
-        friend inline bool operator==(const UIElement& lhs, const UIElement& rhs) noexcept
+        friend inline bool operator==(const UIText& lhs, const UIText& rhs) noexcept
         {
-            return lhs.InternalIdentifier == rhs.InternalIdentifier;
+            return lhs.Text == rhs.Text && lhs.State == rhs.State && lhs.Type == rhs.Type && lhs.Position == rhs.Position && lhs.Entity == rhs.Entity;
         }
 
-        friend inline bool operator!=(const UIElement& lhs, const UIElement& rhs) noexcept
+        friend inline bool operator!=(const UIText& lhs, const UIText& rhs) noexcept
         {
             return !(lhs == rhs);
         }
     };
 }
 
-#endif // NOVELRT_UI_UIELEMENT_H
+#endif // NOVELRT_UI_UITEXT_H

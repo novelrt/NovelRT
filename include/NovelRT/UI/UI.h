@@ -14,6 +14,7 @@
 #include "../Windowing/Windowing.h"
 #include "../Utilities/Event.h"
 #include "../Input/Input.h"
+#include "../Ecs/Ecs.h"
 
 /**
  * @brief The experimental UI plugin API.
@@ -23,8 +24,9 @@ namespace NovelRT::UI
     enum class UIElementState : uint32_t;
     enum class UIElementType : uint32_t;
     struct UIElement;
+    struct UIText;
     struct UIPanel;
-    struct UIButton;
+    //struct UIButton;
     struct UIFontMetadata;
     class UIProvider;
 }
@@ -37,8 +39,9 @@ namespace NovelRT::UI
 #include "UIElementState.h"
 #include "UIElementType.h"
 #include "UIElement.h"
+#include "UIText.h"
 #include "UIPanel.h"
-#include "UIButton.h"
+//#include "UIButton.h"
 #include "UIFontMetadata.h"
 #include "UIProvider.h"
 

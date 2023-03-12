@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/UI/DearImGui/GlfwVulkan/UI.DearImGui.GlfwVulkan.h>
+#include <
 
 namespace NovelRT::UI::DearImGui::GlfwVulkan
 {
@@ -11,7 +12,6 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
           _initInfo(),
           _windowSize(),
           _fontNameMapping(std::map<std::string, ImFont*>()),
-          _currentCommandListFinished(false),
           _buttonCache(std::map<const char*, bool>()),
           _factory()
     {
@@ -217,12 +217,6 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
             _currentCommandListFinished = false;
             _currentCommandList.clear();
         }
-
-        for (auto& [u, e] : _elements)
-        {
-            GenerateCommand(e);
-        }
-        _currentCommandListFinished = true;
     }
 
     void GlfwVulkanUIProvider::End(std::shared_ptr<NovelRT::Graphics::GraphicsContext> context)
@@ -241,51 +235,99 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         ImGui::DestroyContext();
     }
 
-    void GlfwVulkanUIProvider::GenerateCommand(std::shared_ptr<UIElement> element)
+    void GlfwVulkanUIProvider::GeneratePanelCommand(NovelRT::UI::UIPanel panel, NovelRT::Ecs::LinkedEntityListView view)
     {
-        //std::vector<std::function<void()>> que = std::vector<std::function<void()>>();
         auto windowSize = _windowSize;
-        switch (element->Type)
+        if (panel.State == UIElementState::Shown)
         {
-            case UIElementType::Panel:
-            {
-                if (element->State == UIElementState::Shown)
+            // Define the push / begin functions
+            auto colourPush = std::function<void()>(
+                [panel]() {
+                    ImGui::PushStyleColor(ImGuiCol_WindowBg, panel.Colour.Get32BitColour()); });
+            auto panelBegin = std::function<void()>(
+                [panel]()
                 {
-                    auto panel = std::static_pointer_cast<UIPanel>(element);
-                    // Define the push / begin functions
-                    auto colourPush = std::function<void()>(
-                        [panel]() {
-                            ImGui::PushStyleColor(ImGuiCol_WindowBg, panel->Colour.Get32BitColour()); });
-                    auto panelBegin = std::function<void()>(
-                        [panel]()
-                        {
-                            auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
-                                             ImGuiWindowFlags_NoResize;
-                            ImGui::Begin(panel->Identifer, nullptr, flags);
-                        });
-                    auto panelScale = std::function<void()>([panel]() { ImGui::SetWindowSize(panel->Scale); });
-                    auto panelSize = std::function<void()>([panel, windowSize]() {
-                        auto translatedPosition = panel->Position + (windowSize / 2);
-                        ImGui::SetWindowPos(translatedPosition);
-                    });
-                    auto panelEnd = std::function<void()>([]() { ImGui::End(); });
-                    // For every push there's a pop.
-                    auto colourPop = std::function<void()>([panel]() { ImGui::PopStyleColor(); });
+                    auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
+                                        ImGuiWindowFlags_NoResize;
+                    ImGui::Begin(panel.Identifier, nullptr, flags);
+                });
+            auto panelScale = std::function<void()>([panel]() { ImGui::SetWindowSize(panel.Scale); });
+            auto panelSize = std::function<void()>([panel, windowSize]() {
+                auto translatedPosition = panel.Position + (windowSize / 2);
+                ImGui::SetWindowPos(translatedPosition);
+            });
 
-                    _currentCommandList.emplace_back(colourPush);
-                    _currentCommandList.emplace_back(panelBegin);
-                    _currentCommandList.emplace_back(panelSize);
-                    _currentCommandList.emplace_back(panelScale);
-                    _currentCommandList.emplace_back(panelEnd);
-                    _currentCommandList.emplace_back(colourPop);
-                }
+            //Run through LL of other elements;
+            
 
-                break;
-            }
-            default:
-                return;
+
+            auto panelEnd = std::function<void()>([]() { ImGui::End(); });
+            // For every push there's a pop.
+            auto colourPop = std::function<void()>([panel]() { ImGui::PopStyleColor(); });
+
+            _currentCommandList.emplace_back(colourPush);
+            _currentCommandList.emplace_back(panelBegin);
+            _currentCommandList.emplace_back(panelSize);
+            _currentCommandList.emplace_back(panelScale);
+            _currentCommandList.emplace_back(panelEnd);
+            _currentCommandList.emplace_back(colourPop);
         }
     }
+
+    void GlfwVulkanUIProvider::GenerateTextCommand(UIText& text)
+    {
+        if (text.State == UIElementState::Shown)
+        {
+            auto textFunction = std::function<void()>([text]() { ImGui::Text(text.Text); });
+            _currentCommandList.emplace_back(textFunction);
+        }
+    }
+
+    // void GlfwVulkanUIProvider::GenerateCommand(std::shared_ptr<UIElement> element)
+    // {
+    //     //std::vector<std::function<void()>> que = std::vector<std::function<void()>>();
+    //     auto windowSize = _windowSize;
+    //     switch (element->Type)
+    //     {
+    //         case UIElementType::Panel:
+    //         {
+    //             if (element->State == UIElementState::Shown)
+    //             {
+    //                 auto panel = std::static_pointer_cast<UIPanel>(element);
+    //                 // Define the push / begin functions
+    //                 auto colourPush = std::function<void()>(
+    //                     [panel]() {
+    //                         ImGui::PushStyleColor(ImGuiCol_WindowBg, panel->Colour.Get32BitColour()); });
+    //                 auto panelBegin = std::function<void()>(
+    //                     [panel]()
+    //                     {
+    //                         auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
+    //                                          ImGuiWindowFlags_NoResize;
+    //                         ImGui::Begin(panel->Identifer, nullptr, flags);
+    //                     });
+    //                 auto panelScale = std::function<void()>([panel]() { ImGui::SetWindowSize(panel->Scale); });
+    //                 auto panelSize = std::function<void()>([panel, windowSize]() {
+    //                     auto translatedPosition = panel->Position + (windowSize / 2);
+    //                     ImGui::SetWindowPos(translatedPosition);
+    //                 });
+    //                 auto panelEnd = std::function<void()>([]() { ImGui::End(); });
+    //                 // For every push there's a pop.
+    //                 auto colourPop = std::function<void()>([panel]() { ImGui::PopStyleColor(); });
+
+    //                 _currentCommandList.emplace_back(colourPush);
+    //                 _currentCommandList.emplace_back(panelBegin);
+    //                 _currentCommandList.emplace_back(panelSize);
+    //                 _currentCommandList.emplace_back(panelScale);
+    //                 _currentCommandList.emplace_back(panelEnd);
+    //                 _currentCommandList.emplace_back(colourPop);
+    //             }
+
+    //             break;
+    //         }
+    //         default:
+    //             return;
+    //     }
+    // }
 
     ImGuiKey GlfwVulkanUIProvider::GlfwToImGuiKey(int32_t key)
     {
@@ -506,21 +548,21 @@ namespace NovelRT::UI::DearImGui::GlfwVulkan
         }
     }
 
-    std::shared_ptr<UIPanel> GlfwVulkanUIProvider::CreatePanel(const char* identifier,
-                                                               NovelRT::Maths::GeoVector2F position,
-                                                               NovelRT::Maths::GeoVector2F scale,
-                                                               NovelRT::Graphics::RGBAColour colour)
-    {
-        auto atom = _factory.GetNext();
-        _elements.emplace(atom, std::make_shared<UIPanel>());
-        auto newPanel = std::static_pointer_cast<UIPanel>(_elements.at(atom));
-        newPanel->Type = UIElementType::Panel;
-        newPanel->Colour = colour;
-        newPanel->Scale = scale;
-        newPanel->Position = position;
-        newPanel->Identifer = identifier;
-        newPanel->InternalIdentifier = atom;
+    // std::shared_ptr<UIPanel> GlfwVulkanUIProvider::CreatePanel(const char* identifier,
+    //                                                            NovelRT::Maths::GeoVector2F position,
+    //                                                            NovelRT::Maths::GeoVector2F scale,
+    //                                                            NovelRT::Graphics::RGBAColour colour)
+    // {
+    //     auto atom = _factory.GetNext();
+    //     _elements.emplace(atom, std::make_shared<UIPanel>());
+    //     auto newPanel = std::static_pointer_cast<UIPanel>(_elements.at(atom));
+    //     newPanel->Type = UIElementType::Panel;
+    //     newPanel->Colour = colour;
+    //     newPanel->Scale = scale;
+    //     newPanel->Position = position;
+    //     newPanel->Identifer = identifier;
+    //     newPanel->InternalIdentifier = atom;
 
-        return newPanel;
-    }
+    //     return newPanel;
+    // }
 }

@@ -10,16 +10,42 @@
 
 namespace NovelRT::UI
 {
-    struct UIPanel : public UIElement
+    struct UIPanel
     {
     public:
-        std::vector<UIElement>* ChildElements = new std::vector<UIElement>();
+        const char* Identifier;
+        UIElementState State = NovelRT::UI::UIElementState::Hidden;
+        UIElementType Type = NovelRT::UI::UIElementType::Panel;
+        NovelRT::Maths::GeoVector2F Position;
+        NovelRT::Maths::GeoVector2F Scale;
+        NovelRT::Graphics::RGBAColour Colour;
+        NovelRT::Atom InternalIdentifier;
+        NovelRT::Atom RootElementId;
 
-        UIPanel& operator+=(const UIElement& element)
+        inline UIPanel& operator+=(const UIPanel& other) noexcept
         {
-            ChildElements->emplace_back(element);
+            Identifier = other.Identifier;
+            State = other.State;
+            Type = other.Type;
+            Position = other.Position;
+            Scale = other.Scale;
+            Colour = other.Colour;
+            InternalIdentifier = other.InternalIdentifier;
+            RootElementId = other.RootElementId;
             return *this;
+        };
+
+        friend inline bool operator==(const UIPanel& lhs, const UIPanel& rhs) noexcept
+        {
+            return lhs.Identifier == rhs.Identifier && lhs.State == rhs.State && lhs.Type == rhs.Type && lhs.Position == rhs.Position &&
+                lhs.Scale == rhs.Scale && lhs.InternalIdentifier == rhs.InternalIdentifier && lhs.RootElementId == rhs.RootElementId;
         }
+
+        friend inline bool operator!=(const UIPanel& lhs, const UIPanel& rhs) noexcept
+        {
+            return !(lhs == rhs);
+        }
+
     };
 }
 
