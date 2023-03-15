@@ -5,6 +5,7 @@
 #define NOVELRT_PHYSICS_H
 
 // physics dependencies
+$include <array>
 #include <memory>
 #include "NovelRT/Maths/Maths.h"
 

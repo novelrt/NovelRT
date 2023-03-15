@@ -18,6 +18,12 @@ namespace NovelRT::Physics::Physics2D
     class PhysicsWorld2D;
     class RigidBody2D;
     struct BodyDefinition2D;
+    struct CollisionFixtureDefinition2D;
+    struct BoxCollisionFixtureDefinition2D;
+    struct CircleCollisionFixtureDefinition2D;
+    struct CapsuleCollisionFixtureDefinition2D;
+    struct EdgeCollisionFixtureDefinition2D;
+    struct PolygonCollisionFixtureDefinition2D;
     class Joint2D;
     class DistanceJoint2D;
     class GearJoint2D;
@@ -34,10 +40,18 @@ namespace NovelRT::Physics::Physics2D
     struct SpringJointDefinition2D;
 }
 
+// clang-format off
+
 #include "PhysicsProvider2D.h"
 #include "PhysicsWorld2D.h"
 #include "RigidBody2D.h"
 #include "BodyDefinition2D.h"
+#include "CollisionFixtureDefinition2D.h"
+#include "BoxCollisionFixtureDefinition2D.h"
+#include "CircleCollisionFixtureDefinition2D.h"
+#include "CapsuleCollisionFixtureDefinition2D.h"
+#include "EdgeCollisionFixtureDefinition2D.h"
+#include "PolygonCollisionFixtureDefinition2D.h"
 #include "Joint2D.h"
 #include "DistanceJoint2D.h"
 #include "FixedDistanceJoint2D.h"
@@ -52,5 +66,7 @@ namespace NovelRT::Physics::Physics2D
 #include "GearJointDefinition2D.h"
 #include "SlidingJointDefinition2D.h"
 #include "SpringJointDefinition2D.h"
+
+// clang-format on
 
 #endif // !NOVELRT_PHYSICS_PHYSICS2D_H
