@@ -9,7 +9,7 @@ namespace NovelRT::Physics::Physics2D
 {
     struct EdgeCollisionFixtureDefinition2D final : CollisionFixtureDefinition2D
     {
-        std::array<NovelRT::Maths::GeoVector2F> Vertices;
+        std::vector<NovelRT::Maths::GeoVector2F> Vertices;
 
         ~EdgeCollisionFixtureDefinition2D() = default;
     };

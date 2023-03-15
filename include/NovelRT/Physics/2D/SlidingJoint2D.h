@@ -56,7 +56,7 @@ namespace NovelRT::Physics::Physics2D
 
         [[nodiscard]] inline bool GetAreTranslationLimitsUsed() const noexcept
         {
-            return _useTranslationLimits
+            return _useTranslationLimits;
         }
 
         [[nodiscard]] inline bool GetIsMotorUsed() const noexcept
