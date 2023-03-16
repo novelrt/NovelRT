@@ -19,6 +19,12 @@ namespace NovelRT::Physics::Physics2D
     class RigidBody2D;
     struct BodyDefinition2D;
     enum struct RigidBodyFlags2D;
+    class CollisionFixture2D;
+    class BoxCollisionFixture2D;
+    class CircleCollisionFixture2D;
+    class CapsuleCollisionFixture2D;
+    class EdgeCollisionFixture2D;
+    class PolygonCollisionFixture2D;
     struct CollisionFixtureDefinition2D;
     struct BoxCollisionFixtureDefinition2D;
     struct CircleCollisionFixtureDefinition2D;
@@ -48,6 +54,12 @@ namespace NovelRT::Physics::Physics2D
 #include "PhysicsWorld2D.h"
 #include "RigidBody2D.h"
 #include "BodyDefinition2D.h"
+#include "CollisionFixture2D.h"
+#include "BoxCollisionFixture2D.h"
+#include "CircleCollisionFixture2D.h"
+#include "CapsuleCollisionFixture2D.h"
+#include "EdgeCollisionFixture2D.h"
+#include "PolygonCollisionFixture2D.h"
 #include "CollisionFixtureDefinition2D.h"
 #include "BoxCollisionFixtureDefinition2D.h"
 #include "CircleCollisionFixtureDefinition2D.h"

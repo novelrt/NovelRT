@@ -7,6 +7,7 @@
 // physics dependencies
 #include <memory>
 #include "NovelRT/Maths/Maths.h"
+#include "NovelRT/Utilities/Misc.h"
 #include <vector>
 
 /**
