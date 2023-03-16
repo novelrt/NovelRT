@@ -26,7 +26,7 @@ namespace NovelRT::Physics::Physics2D
         NovelRT::Maths::GeoVector2F LinearVelocity;
         NovelRT::Maths::GeoVector2F AngularVelocity;
         NovelRT::Maths::GeoVector2F Gravity;
-        float Angle;
+        float RotationAngle;
         float LinearDamping;
         float AngularDamping;
         BodyFlags Flags;
