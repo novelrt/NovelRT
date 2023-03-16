@@ -7,7 +7,7 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct BoxCollisionFixtureDefinition2D final : CollisionFixtureDefinition2D
+    struct BoxCollisionFixtureDefinition2D final : public CollisionFixtureDefinition2D
     {
         NovelRT::Maths::GeoVector2F HalfSize;
 

@@ -7,7 +7,7 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct CircleCollisionFixtureDefinition2D final : CollisionFixtureDefinition2D
+    struct CircleCollisionFixtureDefinition2D final : public CollisionFixtureDefinition2D
     {
         float Radius;
 

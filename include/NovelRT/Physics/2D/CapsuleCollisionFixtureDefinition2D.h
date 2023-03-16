@@ -7,7 +7,7 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct CapsuleCollisionFixtureDefinition2D final : CollisionFixtureDefinition2D
+    struct CapsuleCollisionFixtureDefinition2D final : public CollisionFixtureDefinition2D
     {
         float Height;
         float Radius;

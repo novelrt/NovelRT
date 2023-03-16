@@ -7,7 +7,7 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct EdgeCollisionFixtureDefinition2D final : CollisionFixtureDefinition2D
+    struct EdgeCollisionFixtureDefinition2D final : public CollisionFixtureDefinition2D
     {
         std::vector<NovelRT::Maths::GeoVector2F> Vertices;
 
