@@ -18,6 +18,7 @@ namespace NovelRT::Physics::Physics2D
     class PhysicsWorld2D;
     class RigidBody2D;
     struct BodyDefinition2D;
+    enum struct RigidBodyFlags2D;
     struct CollisionFixtureDefinition2D;
     struct BoxCollisionFixtureDefinition2D;
     struct CircleCollisionFixtureDefinition2D;
@@ -43,6 +44,7 @@ namespace NovelRT::Physics::Physics2D
 // clang-format off
 
 #include "PhysicsProvider2D.h"
+#include "RigidBodyFlags2D.h"
 #include "PhysicsWorld2D.h"
 #include "RigidBody2D.h"
 #include "BodyDefinition2D.h"

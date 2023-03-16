@@ -20,8 +20,7 @@ namespace NovelRT::Physics::Physics2D
         float _rotationAngle;
         float _linearDamping;
         float _angularDamping;
-        BodyDefinition2D::BodyFlags _flags;
-
+        RigidBodyFlags2D _flags;
 
     public:
         inline NovelRT::Maths::GeoVector2F GetPosition() const noexcept{
@@ -33,7 +32,7 @@ namespace NovelRT::Physics::Physics2D
         }
 
         inline NovelRT::Maths::GeoVector2F GetAngularVelocity() const noexcept{
-            return _angularVelocity
+            return _angularVelocity;
         }
 
         inline NovelRT::Maths::GeoVector2F GetOwnGravity() const noexcept{
@@ -54,34 +53,34 @@ namespace NovelRT::Physics::Physics2D
             return _angularDamping;
         }
 
-        inline BodyDefinition2D::BodyFlags GetBodyFlags() const noexcept
+        inline RigidBodyFlags2D GetBodyFlags() const noexcept
         {
             return _flags;
         }
 
         inline bool IsAllowedToSleep() const noexcept
         {
-            return _flags & BodyDefinition2D::BodyFlags::AllowSleep;
+            return (_flags & RigidBodyFlags2D::AllowSleep) == RigidBodyFlags2D::AllowSleep;
         }
 
         inline bool IsAwakeOnStartUp() const noexcept
         {
-            return _flags & BodyDefinition2D::BodyFlags::FixedRotation;
+            return (_flags & RigidBodyFlags2D::FixedRotation) == RigidBodyFlags2D::FixedRotation;
         }
 
         inline bool IsUsingConstantCollisionDetection() const noexcept
         {
-            return _flags & BodyDefinition2D::BodyFlags::UseConstantCollisionDetection;
+            return (_flags & RigidBodyFlags2D::UseConstantCollisionDetection) == RigidBodyFlags2D::UseConstantCollisionDetection;
         }
 
         inline bool IsEnabled() const noexcept
         {
-            return _flags & BodyDefinition2D::BodyFlags::Enabled;
+            return (_flags & RigidBodyFlags2D::Enabled) == RigidBodyFlags2D::Enabled;
         }
 
         inline bool IsApplyingWorldGravity() const noexcept
         {
-            return _flags & BodyDefinition2D::BodyFlags::UseWorldGravity;
+            return (_flags & RigidBodyFlags2D::UseWorldGravity) == RigidBodyFlags2D::UseWorldGravity;
         }
 
         virtual void SetPosition(NovelRT::Maths::GeoVector2F position) = 0;
@@ -98,22 +97,22 @@ namespace NovelRT::Physics::Physics2D
 
         virtual void SetAngularDamping(float angularDamping) = 0;
 
-        virtual void SetBodyFlags(BodyDefinition2D::BodyFlags flags) = 0;
+        virtual void SetBodyFlags(RigidBodyFlags2D flags) = 0;
 
-        inline void SetAllowedToSleep(bool isAllowedToSleep) const {
-            SetBodyFlags((_flags & ~BodyDefinition2D::BodyFlags::AllowSleep) | (isAllowedToSleep ? BodyDefinition2D::BodyFlags::AllowSleep : 0));
+        inline void SetAllowedToSleep(bool isAllowedToSleep) {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::AllowSleep) | (isAllowedToSleep ? RigidBodyFlags2D::AllowSleep : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        inline void SetUsingConstantCollisionDetection(bool isUsingConstantCollisionDetection) const {
-            SetBodyFlags((_flags & ~BodyDefinition2D::BodyFlags::UseConstantCollisionDetection) | (isUsingConstantCollisionDetection ? BodyDefinition2D::BodyFlags::UseConstantCollisionDetection : 0));
+        inline void SetUsingConstantCollisionDetection(bool isUsingConstantCollisionDetection) {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::UseConstantCollisionDetection) | (isUsingConstantCollisionDetection ? RigidBodyFlags2D::UseConstantCollisionDetection : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        inline void SetEnabled(bool isEnabled) const {
-            SetBodyFlags((_flags & ~BodyDefinition2D::BodyFlags::Enabled) | (isEnabled ? BodyDefinition2D::BodyFlags::Enabled : 0));
+        inline void SetEnabled(bool isEnabled) {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::Enabled) | (isEnabled ? RigidBodyFlags2D::Enabled : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        inline void SetApplyingWorldGravity(bool isApplyingWorldGravity) const {
-            SetBodyFlags((_flags & ~BodyDefinition2D::BodyFlags::UseWorldGravity) | (isApplyingWorldGravity ? BodyDefinition2D::BodyFlags::UseWorldGravity : 0));
+        inline void SetApplyingWorldGravity(bool isApplyingWorldGravity) {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::UseWorldGravity) | (isApplyingWorldGravity ? RigidBodyFlags2D::UseWorldGravity : static_cast<RigidBodyFlags2D>(0)));
         }
     };
 }

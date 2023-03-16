@@ -12,16 +12,6 @@ namespace NovelRT::Physics::Physics2D
 {
     struct BodyDefinition2D
     {
-        enum class BodyFlags
-        {
-            AllowSleep = 1 << 0,
-            Awake = 1 << 1,
-            FixedRotation = 1 << 2,
-            UseConstantCollisionDetection = 1 << 3,
-            Enabled = 1 << 4,
-            UseWorldGravity = 1 << 5
-        };
-
         NovelRT::Maths::GeoVector2F Position;
         NovelRT::Maths::GeoVector2F LinearVelocity;
         NovelRT::Maths::GeoVector2F AngularVelocity;
@@ -29,7 +19,7 @@ namespace NovelRT::Physics::Physics2D
         float RotationAngle;
         float LinearDamping;
         float AngularDamping;
-        BodyFlags Flags;
+        RigidBodyFlags2D Flags;
     };
 }
 
