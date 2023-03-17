@@ -10,8 +10,12 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct BodyDefinition2D
+    struct BodyDefinition2D final
     {
+        std::optional<OnCollisionEnterCallbackDelegate2D> OnCollisionEnter;
+        std::optional<OnCollisionExitCallbackDelegate2D> OnCollisionExit;
+        std::optional<OnTriggerEnterCallbackDelegate2D> OnTriggerEnter;
+        std::optional<OnTriggerExitCallbackDelegate2D> OnTriggerExit;
         NovelRT::Maths::GeoVector2F Position;
         NovelRT::Maths::GeoVector2F LinearVelocity;
         NovelRT::Maths::GeoVector2F AngularVelocity;

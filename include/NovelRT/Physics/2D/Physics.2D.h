@@ -14,8 +14,16 @@
  */
 namespace NovelRT::Physics::Physics2D
 {
+    // TODO: figure out what arguments should be passed
+    typedef void (*OnCollisionEnterCallbackDelegate2D)();
+    typedef void (*OnCollisionExitCallbackDelegate2D)();
+    typedef void (*OnTriggerEnterCallbackDelegate2D)();
+    typedef void (*OnTriggerExitCallbackDelegate2D)();
+
     class PhysicsProvider2D;
     class PhysicsWorld2D;
+    struct RayCastHit2D;
+    struct OverlapHit2D;
     class RigidBody2D;
     struct BodyDefinition2D;
     enum struct RigidBodyFlags2D;
@@ -51,8 +59,10 @@ namespace NovelRT::Physics::Physics2D
 
 #include "PhysicsProvider2D.h"
 #include "RigidBodyFlags2D.h"
-#include "PhysicsWorld2D.h"
 #include "RigidBody2D.h"
+#include "PhysicsWorld2D.h"
+#include "OverlapHit2D.h"
+#include "RayCastHit2D.h"
 #include "BodyDefinition2D.h"
 #include "CollisionFixture2D.h"
 #include "BoxCollisionFixture2D.h"
