@@ -114,6 +114,20 @@ namespace NovelRT::Physics::Physics2D
         inline void SetApplyingWorldGravity(bool isApplyingWorldGravity) {
             SetBodyFlags((_flags & ~RigidBodyFlags2D::UseWorldGravity) | (isApplyingWorldGravity ? RigidBodyFlags2D::UseWorldGravity : static_cast<RigidBodyFlags2D>(0)));
         }
+
+        [[nodiscard]] virtual BoxCollisionFixture2D* AddBoxFixture(BoxCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual CapsuleCollisionFixture2D* AddBoxFixture(CapsuleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual CircleCollisionFixture2D* AddBoxFixture(CircleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual EdgeCollisionFixture2D* AddBoxFixture(EdgeCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual PolygonCollisionFixture2D* AddBoxFixture(PolygonCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        virtual void RemoveFixture(const CollisionFixture2D* fixture) = 0;
+
+        virtual void RemoveSharedFixture(const CollisionFixture2D* fixture) = 0;
     };
 }
 

@@ -9,9 +9,6 @@ namespace NovelRT::Physics::Physics2D
 {
     class CollisionFixture2D
     {
-    private:
-        bool _isShared;
-
     public:
         virtual NovelRT::Maths::GeoVector2F GetOffset() = 0;
 
@@ -24,11 +21,6 @@ namespace NovelRT::Physics::Physics2D
         virtual float GetDensity() = 0;
 
         virtual bool IsSensor() = 0;
-
-        inline bool IsShared() const noexcept
-        {
-            return _isShared;
-        }
 
         virtual void SetOffset(NovelRT::Maths::GeoVector2F offset) = 0;
 

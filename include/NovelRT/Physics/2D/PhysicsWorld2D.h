@@ -74,6 +74,18 @@ namespace NovelRT::Physics::Physics2D
          * @param gravity
          */
         virtual void SetGravity(NovelRT::Maths::GeoVector2F gravity) = 0;
+
+        [[nodiscard]] virtual BoxCollisionFixture2D* CreateSharedBoxFixture(BoxCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual CapsuleCollisionFixture2D* CreateSharedBoxFixture(CapsuleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual CircleCollisionFixture2D* CreateSharedBoxFixture(CircleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual EdgeCollisionFixture2D* CreateSharedBoxFixture(EdgeCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        [[nodiscard]] virtual PolygonCollisionFixture2D* CreateSharedBoxFixture(PolygonCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+
+        virtual void RemoveSharedFixture(CollisionFixture2D* fixture) = 0;
     };
 }
 
