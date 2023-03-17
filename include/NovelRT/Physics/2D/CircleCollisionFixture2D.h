@@ -9,7 +9,7 @@ namespace NovelRT::Physics::Physics2D
 {
     class CircleCollisionFixture2D : public CollisionFixture2D
     {
-        virtual float GetRadius() = 0;
+        [[nodiscard]] virtual float GetRadius() = 0;
 
         virtual void SetRadius() = 0;
     };

@@ -10,17 +10,17 @@ namespace NovelRT::Physics::Physics2D
     class CollisionFixture2D
     {
     public:
-        virtual NovelRT::Maths::GeoVector2F GetOffset() = 0;
+        [[nodiscard]] virtual NovelRT::Maths::GeoVector2F GetOffset() = 0;
 
-        virtual float GetFriction() = 0;
+        [[nodiscard]] virtual float GetFriction() = 0;
 
-        virtual float GetRestitution() = 0;
+        [[nodiscard]] virtual float GetRestitution() = 0;
 
-        virtual float GetRestitutionThreshold() = 0;
+        [[nodiscard]] virtual float GetRestitutionThreshold() = 0;
 
-        virtual float GetDensity() = 0;
+        [[nodiscard]] virtual float GetDensity() = 0;
 
-        virtual bool IsSensor() = 0;
+        [[nodiscard]] virtual bool IsSensor() = 0;
 
         virtual void SetOffset(NovelRT::Maths::GeoVector2F offset) = 0;
 

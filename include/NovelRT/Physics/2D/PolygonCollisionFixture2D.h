@@ -9,7 +9,7 @@ namespace NovelRT::Physics::Physics2D
 {
     class PolygonCollisionFixture2D : public CollisionFixture2D
     {
-        virtual NovelRT::Utilities::Misc::Span<const NovelRT::Maths::GeoVector2F> GetVertices() = 0;
+        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<const NovelRT::Maths::GeoVector2F> GetVertices() = 0;
 
         virtual void SetVertices(NovelRT::Utilities::Misc::Span<const NovelRT::Maths::GeoVector2F> vertices) = 0;
     };

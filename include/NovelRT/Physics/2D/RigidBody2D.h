@@ -23,62 +23,62 @@ namespace NovelRT::Physics::Physics2D
         RigidBodyFlags2D _flags;
 
     public:
-        inline NovelRT::Maths::GeoVector2F GetPosition() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPosition() const noexcept{
             return _position;
         }
 
-        inline NovelRT::Maths::GeoVector2F GetLinearVelocity() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetLinearVelocity() const noexcept{
             return _linearVelocity;
         }
 
-        inline NovelRT::Maths::GeoVector2F GetAngularVelocity() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetAngularVelocity() const noexcept{
             return _angularVelocity;
         }
 
-        inline NovelRT::Maths::GeoVector2F GetOwnGravity() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetOwnGravity() const noexcept{
             return _gravity;
         }
 
-        inline float GetRotationAngle() const noexcept
+        [[nodiscard]] inline float GetRotationAngle() const noexcept
         {
             return _rotationAngle;
         }
 
-        inline float GetLinearDamping() const noexcept{
+        [[nodiscard]] inline float GetLinearDamping() const noexcept{
             return _linearDamping;
         }
 
-        inline float GetAngularDamping() const noexcept
+        [[nodiscard]] inline float GetAngularDamping() const noexcept
         {
             return _angularDamping;
         }
 
-        inline RigidBodyFlags2D GetBodyFlags() const noexcept
+        [[nodiscard]] inline RigidBodyFlags2D GetBodyFlags() const noexcept
         {
             return _flags;
         }
 
-        inline bool IsAllowedToSleep() const noexcept
+        [[nodiscard]] inline bool IsAllowedToSleep() const noexcept
         {
             return (_flags & RigidBodyFlags2D::AllowSleep) == RigidBodyFlags2D::AllowSleep;
         }
 
-        inline bool IsAwakeOnStartUp() const noexcept
+        [[nodiscard]] inline bool IsAwakeOnStartUp() const noexcept
         {
             return (_flags & RigidBodyFlags2D::FixedRotation) == RigidBodyFlags2D::FixedRotation;
         }
 
-        inline bool IsUsingConstantCollisionDetection() const noexcept
+        [[nodiscard]] inline bool IsUsingConstantCollisionDetection() const noexcept
         {
             return (_flags & RigidBodyFlags2D::UseConstantCollisionDetection) == RigidBodyFlags2D::UseConstantCollisionDetection;
         }
 
-        inline bool IsEnabled() const noexcept
+        [[nodiscard]] inline bool IsEnabled() const noexcept
         {
             return (_flags & RigidBodyFlags2D::Enabled) == RigidBodyFlags2D::Enabled;
         }
 
-        inline bool IsApplyingWorldGravity() const noexcept
+        [[nodiscard]] inline bool IsApplyingWorldGravity() const noexcept
         {
             return (_flags & RigidBodyFlags2D::UseWorldGravity) == RigidBodyFlags2D::UseWorldGravity;
         }

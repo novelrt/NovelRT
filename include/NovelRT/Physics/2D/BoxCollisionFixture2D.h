@@ -10,7 +10,7 @@ namespace NovelRT::Physics::Physics2D
     class BoxCollisionFixture2D : public CollisionFixture2D
     {
     public:
-        virtual NovelRT::Maths::GeoVector2F GetHalfSize() = 0;
+        [[nodiscard]] virtual NovelRT::Maths::GeoVector2F GetHalfSize() = 0;
 
         virtual void SetHalfSize(NovelRT::Maths::GeoVector2F halfSize) = 0;
     };

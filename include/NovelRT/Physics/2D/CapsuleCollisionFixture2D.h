@@ -10,9 +10,9 @@ namespace NovelRT::Physics::Physics2D
     class CapsuleCollisionFixture2D : public CollisionFixture2D
     {
     public:
-        virtual float GetHeight() = 0;
+        [[nodiscard]] virtual float GetHeight() = 0;
 
-        virtual float GetRadius() = 0;
+        [[nodiscard]] virtual float GetRadius() = 0;
 
         virtual void SetHeight(float height) = 0;
 
