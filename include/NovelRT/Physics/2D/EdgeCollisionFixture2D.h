@@ -14,7 +14,7 @@ namespace NovelRT::Physics::Physics2D
 
         virtual void SetVertices(NovelRT::Utilities::Misc::Span<const NovelRT::Maths::GeoVector2F> vertices) = 0;
     };
-    
+
 } // namespace NovelRT::Physics::Physics2D
 
 #endif // NOVELRT_PHYSICS_PHYSICS2D_EDGECOLLISIONFIXTURE2D_H

@@ -24,19 +24,23 @@ namespace NovelRT::Physics::Physics2D
         NovelRT::Physics::RigidBodyCallbackFlags _callbackFlags;
 
     public:
-        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPosition() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPosition() const noexcept
+        {
             return _position;
         }
 
-        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetLinearVelocity() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetLinearVelocity() const noexcept
+        {
             return _linearVelocity;
         }
 
-        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetAngularVelocity() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetAngularVelocity() const noexcept
+        {
             return _angularVelocity;
         }
 
-        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetOwnGravity() const noexcept{
+        [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetOwnGravity() const noexcept
+        {
             return _gravity;
         }
 
@@ -45,7 +49,8 @@ namespace NovelRT::Physics::Physics2D
             return _rotationAngle;
         }
 
-        [[nodiscard]] inline float GetLinearDamping() const noexcept{
+        [[nodiscard]] inline float GetLinearDamping() const noexcept
+        {
             return _linearDamping;
         }
 
@@ -71,7 +76,8 @@ namespace NovelRT::Physics::Physics2D
 
         [[nodiscard]] inline bool IsUsingConstantCollisionDetection() const noexcept
         {
-            return (_flags & RigidBodyFlags2D::UseConstantCollisionDetection) == RigidBodyFlags2D::UseConstantCollisionDetection;
+            return (_flags & RigidBodyFlags2D::UseConstantCollisionDetection) ==
+                   RigidBodyFlags2D::UseConstantCollisionDetection;
         }
 
         [[nodiscard]] inline bool IsEnabled() const noexcept
@@ -100,31 +106,46 @@ namespace NovelRT::Physics::Physics2D
 
         virtual void SetBodyFlags(RigidBodyFlags2D flags) = 0;
 
-        inline void SetAllowedToSleep(bool isAllowedToSleep) {
-            SetBodyFlags((_flags & ~RigidBodyFlags2D::AllowSleep) | (isAllowedToSleep ? RigidBodyFlags2D::AllowSleep : static_cast<RigidBodyFlags2D>(0)));
+        inline void SetAllowedToSleep(bool isAllowedToSleep)
+        {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::AllowSleep) |
+                         (isAllowedToSleep ? RigidBodyFlags2D::AllowSleep : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        inline void SetUsingConstantCollisionDetection(bool isUsingConstantCollisionDetection) {
-            SetBodyFlags((_flags & ~RigidBodyFlags2D::UseConstantCollisionDetection) | (isUsingConstantCollisionDetection ? RigidBodyFlags2D::UseConstantCollisionDetection : static_cast<RigidBodyFlags2D>(0)));
+        inline void SetUsingConstantCollisionDetection(bool isUsingConstantCollisionDetection)
+        {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::UseConstantCollisionDetection) |
+                         (isUsingConstantCollisionDetection ? RigidBodyFlags2D::UseConstantCollisionDetection
+                                                            : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        inline void SetEnabled(bool isEnabled) {
-            SetBodyFlags((_flags & ~RigidBodyFlags2D::Enabled) | (isEnabled ? RigidBodyFlags2D::Enabled : static_cast<RigidBodyFlags2D>(0)));
+        inline void SetEnabled(bool isEnabled)
+        {
+            SetBodyFlags((_flags & ~RigidBodyFlags2D::Enabled) |
+                         (isEnabled ? RigidBodyFlags2D::Enabled : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        inline void SetApplyingWorldGravity(bool isApplyingWorldGravity) {
-            SetBodyFlags((_flags & ~RigidBodyFlags2D::UseWorldGravity) | (isApplyingWorldGravity ? RigidBodyFlags2D::UseWorldGravity : static_cast<RigidBodyFlags2D>(0)));
+        inline void SetApplyingWorldGravity(bool isApplyingWorldGravity)
+        {
+            SetBodyFlags(
+                (_flags & ~RigidBodyFlags2D::UseWorldGravity) |
+                (isApplyingWorldGravity ? RigidBodyFlags2D::UseWorldGravity : static_cast<RigidBodyFlags2D>(0)));
         }
 
-        [[nodiscard]] virtual BoxCollisionFixture2D* AddBoxFixture(BoxCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual BoxCollisionFixture2D* AddBoxFixture(
+            BoxCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual CapsuleCollisionFixture2D* AddBoxFixture(CapsuleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual CapsuleCollisionFixture2D* AddBoxFixture(
+            CapsuleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual CircleCollisionFixture2D* AddBoxFixture(CircleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual CircleCollisionFixture2D* AddBoxFixture(
+            CircleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual EdgeCollisionFixture2D* AddBoxFixture(EdgeCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual EdgeCollisionFixture2D* AddBoxFixture(
+            EdgeCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual PolygonCollisionFixture2D* AddBoxFixture(PolygonCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual PolygonCollisionFixture2D* AddBoxFixture(
+            PolygonCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
         virtual void RemoveFixture(const CollisionFixture2D* fixture) = 0;
 

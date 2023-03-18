@@ -18,7 +18,7 @@ namespace NovelRT::Physics::Physics2D
 
         virtual ~CollisionFixtureDefinition2D() = 0;
     };
-    
+
 } // namespace NovelRT::Physics::Physics2D
 
 #endif

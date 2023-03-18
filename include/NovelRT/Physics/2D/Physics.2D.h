@@ -9,7 +9,7 @@
 #endif
 
 /**
- * @brief 
+ * @brief
  * The plugin API for simulated physics in a two dimensional space.
  */
 namespace NovelRT::Physics::Physics2D

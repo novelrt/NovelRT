@@ -13,7 +13,7 @@ namespace NovelRT::Physics::Physics2D
 
         ~EdgeCollisionFixtureDefinition2D() = default;
     };
-    
+
 } // namespace NovelRT::Physics::Physics2D
 
 #endif // NOVELRT_PHYSICS_PHYSICS2D_EDGECOLLISIONFIXTUREDEFINITION2D_H

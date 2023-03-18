@@ -14,6 +14,7 @@ namespace NovelRT::Physics
     {
     private:
         PhysicsProvider() = default;
+
     public:
         /**
          * @brief

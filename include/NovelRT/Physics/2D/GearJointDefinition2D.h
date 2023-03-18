@@ -10,7 +10,7 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    struct GearJointDefinition2D final : public JointDefinition2D 
+    struct GearJointDefinition2D final : public JointDefinition2D
     {
         Joint2D* PrimaryJoint;
         Joint2D* SecondaryJoint;

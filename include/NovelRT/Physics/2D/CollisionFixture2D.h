@@ -34,7 +34,7 @@ namespace NovelRT::Physics::Physics2D
 
         virtual void SetIsSensor(bool isSensor) = 0;
     };
-    
+
 } // namespace NovelRT::Physics::Physics2D
 
 #endif // NOVELRT_PHYSICS_PHYSICS2D_COLLISIONFIXTURE2D_H

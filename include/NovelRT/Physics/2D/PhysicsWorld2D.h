@@ -46,7 +46,8 @@ namespace NovelRT::Physics::Physics2D
 
         [[nodiscard]] virtual DistanceJoint2D* AddDistanceJoint(const DistanceJointDefinition2D& jointDefinition) = 0;
 
-        [[nodiscard]] virtual FixedDistanceJoint2D* AddFixedJoint(const FixedDistanceJointDefinition2D& jointDefiniton) = 0;
+        [[nodiscard]] virtual FixedDistanceJoint2D* AddFixedJoint(
+            const FixedDistanceJointDefinition2D& jointDefiniton) = 0;
 
         [[nodiscard]] virtual GearJoint2D* AddGearJoint2D(const GearJointDefinition2D& jointDefinition) = 0;
 
@@ -75,62 +76,97 @@ namespace NovelRT::Physics::Physics2D
          */
         virtual void SetGravity(NovelRT::Maths::GeoVector2F gravity) = 0;
 
-        [[nodiscard]] virtual BoxCollisionFixture2D* CreateSharedBoxFixture(BoxCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual BoxCollisionFixture2D* CreateSharedBoxFixture(
+            BoxCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual CapsuleCollisionFixture2D* CreateSharedBoxFixture(CapsuleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual CapsuleCollisionFixture2D* CreateSharedBoxFixture(
+            CapsuleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual CircleCollisionFixture2D* CreateSharedBoxFixture(CircleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual CircleCollisionFixture2D* CreateSharedBoxFixture(
+            CircleCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual EdgeCollisionFixture2D* CreateSharedBoxFixture(EdgeCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual EdgeCollisionFixture2D* CreateSharedBoxFixture(
+            EdgeCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
-        [[nodiscard]] virtual PolygonCollisionFixture2D* CreateSharedBoxFixture(PolygonCollisionFixtureDefinition2D& fixtureDefinition) = 0;
+        [[nodiscard]] virtual PolygonCollisionFixture2D* CreateSharedBoxFixture(
+            PolygonCollisionFixtureDefinition2D& fixtureDefinition) = 0;
 
         virtual void RemoveSharedFixture(CollisionFixture2D* fixture) = 0;
 
+        [[nodiscard]] virtual std::optional<RayCastHit2D> RayCast(NovelRT::Maths::GeoVector2F origin,
+                                                                  NovelRT::Maths::GeoVector2F direction,
+                                                                  float length) const = 0;
 
+        [[nodiscard]] virtual std::optional<RayCastHit2D> RayCast(NovelRT::Maths::GeoVector2F pointOne,
+                                                                  NovelRT::Maths::GeoVector2F pointTwo) const = 0;
 
-        [[nodiscard]] virtual std::optional<RayCastHit2D> RayCast(NovelRT::Maths::GeoVector2F origin, NovelRT::Maths::GeoVector2F direction, float length) const = 0;
+        [[nodiscard]] virtual size_t RayCast(NovelRT::Maths::GeoVector2F origin,
+                                             NovelRT::Maths::GeoVector2F direction,
+                                             float length,
+                                             NovelRT::Utilities::Misc::Span<RayCastHit2D> buffer) const = 0;
 
-        [[nodiscard]] virtual std::optional<RayCastHit2D> RayCast(NovelRT::Maths::GeoVector2F pointOne, NovelRT::Maths::GeoVector2F pointTwo) const = 0;
+        [[nodiscard]] virtual size_t RayCast(NovelRT::Maths::GeoVector2F pointOne,
+                                             NovelRT::Maths::GeoVector2F pointTwo,
+                                             NovelRT::Utilities::Misc::Span<RayCastHit2D> buffer) const = 0;
 
-        [[nodiscard]] virtual size_t RayCast(NovelRT::Maths::GeoVector2F origin, NovelRT::Maths::GeoVector2F direction, float length, NovelRT::Utilities::Misc::Span<RayCastHit2D> buffer) const = 0;
+        [[nodiscard]] virtual std::vector<RayCastHit2D> RayCastAll(NovelRT::Maths::GeoVector2F origin,
+                                                                   NovelRT::Maths::GeoVector2F direction,
+                                                                   float length) const = 0;
 
-        [[nodiscard]] virtual size_t RayCast(NovelRT::Maths::GeoVector2F pointOne, NovelRT::Maths::GeoVector2F pointTwo, NovelRT::Utilities::Misc::Span<RayCastHit2D> buffer) const = 0;
+        [[nodiscard]] virtual std::vector<RayCastHit2D> RayCastAll(NovelRT::Maths::GeoVector2F pointOne,
+                                                                   NovelRT::Maths::GeoVector2F pointTwo) const = 0;
 
-        [[nodiscard]] virtual std::vector<RayCastHit2D> RayCastAll(NovelRT::Maths::GeoVector2F origin, NovelRT::Maths::GeoVector2F direction, float length) const = 0;
+        [[nodiscard]] virtual size_t RayCastAll(NovelRT::Maths::GeoVector2F origin,
+                                                NovelRT::Maths::GeoVector2F direction,
+                                                float length,
+                                                std::vector<RayCastHit2D> buffer) const = 0;
 
-        [[nodiscard]] virtual std::vector<RayCastHit2D> RayCastAll(NovelRT::Maths::GeoVector2F pointOne, NovelRT::Maths::GeoVector2F pointTwo) const = 0;
+        [[nodiscard]] virtual size_t RayCastAll(NovelRT::Maths::GeoVector2F pointOne,
+                                                NovelRT::Maths::GeoVector2F pointTwo,
+                                                std::vector<RayCastHit2D> buffer) const = 0;
 
-        [[nodiscard]] virtual size_t RayCastAll(NovelRT::Maths::GeoVector2F origin, NovelRT::Maths::GeoVector2F direction, float length, std::vector<RayCastHit2D> buffer) const = 0;
+        [[nodiscard]] virtual bool RayCastHasHit(NovelRT::Maths::GeoVector2F origin,
+                                                 NovelRT::Maths::GeoVector2F direction,
+                                                 float length) const = 0;
 
-        [[nodiscard]] virtual size_t RayCastAll(NovelRT::Maths::GeoVector2F pointOne, NovelRT::Maths::GeoVector2F pointTwo, std::vector<RayCastHit2D> buffer) const = 0;
+        [[nodiscard]] virtual bool RayCastHasHit(NovelRT::Maths::GeoVector2F pointOne,
+                                                 NovelRT::Maths::GeoVector2F pointTwo) const = 0;
 
-        [[nodiscard]] virtual bool RayCastHasHit(NovelRT::Maths::GeoVector2F origin, NovelRT::Maths::GeoVector2F direction, float length) const = 0;
+        [[nodiscard]] virtual std::optional<OverlapHit2D> BoxOverlap(NovelRT::Maths::GeoVector2F position,
+                                                                     NovelRT::Maths::GeoVector2F halfExtend,
+                                                                     float rotation) const = 0;
 
-        [[nodiscard]] virtual bool RayCastHasHit(NovelRT::Maths::GeoVector2F pointOne, NovelRT::Maths::GeoVector2F pointTwo) const = 0;
+        [[nodiscard]] virtual size_t BoxOverlap(NovelRT::Maths::GeoVector2F position,
+                                                NovelRT::Maths::GeoVector2F halfExtend,
+                                                float rotation,
+                                                NovelRT::Utilities::Misc::Span<OverlapHit2D> buffer) const = 0;
 
-        
-        
-        [[nodiscard]] virtual std::optional<OverlapHit2D> BoxOverlap(NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F halfExtend, float rotation) const = 0;
+        [[nodiscard]] virtual std::vector<OverlapHit2D> BoxOverlapAll(NovelRT::Maths::GeoVector2F position,
+                                                                      NovelRT::Maths::GeoVector2F halfExtend,
+                                                                      float rotation) const = 0;
 
-        [[nodiscard]] virtual size_t BoxOverlap(NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F halfExtend, float rotation, NovelRT::Utilities::Misc::Span<OverlapHit2D> buffer) const = 0;
+        [[nodiscard]] virtual size_t BoxOverlapAll(NovelRT::Maths::GeoVector2F position,
+                                                   NovelRT::Maths::GeoVector2F halfExtend,
+                                                   float rotation,
+                                                   std::vector<OverlapHit2D> buffer) const = 0;
 
-        [[nodiscard]] virtual std::vector<OverlapHit2D> BoxOverlapAll(NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F halfExtend, float rotation) const = 0;
+        [[nodiscard]] virtual bool BoxHasOverlap(NovelRT::Maths::GeoVector2F position,
+                                                 NovelRT::Maths::GeoVector2F halfExtend,
+                                                 float rotation) const = 0;
 
-        [[nodiscard]] virtual size_t BoxOverlapAll(NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F halfExtend, float rotation, std::vector<OverlapHit2D> buffer) const = 0;
+        [[nodiscard]] virtual std::optional<OverlapHit2D> CircleOverlap(NovelRT::Maths::GeoVector2F position,
+                                                                        float radius) const = 0;
 
-        [[nodiscard]] virtual bool BoxHasOverlap(NovelRT::Maths::GeoVector2F position, NovelRT::Maths::GeoVector2F halfExtend, float rotation) const = 0;
+        [[nodiscard]] virtual size_t CircleOverlap(NovelRT::Maths::GeoVector2F position,
+                                                   float radius,
+                                                   NovelRT::Utilities::Misc::Span<OverlapHit2D> buffer) const = 0;
 
-        
-        
-        
-        [[nodiscard]] virtual std::optional<OverlapHit2D> CircleOverlap(NovelRT::Maths::GeoVector2F position, float radius) const = 0;
+        [[nodiscard]] virtual std::vector<OverlapHit2D> CircleOverlapAll(NovelRT::Maths::GeoVector2F position,
+                                                                         float radius) const = 0;
 
-        [[nodiscard]] virtual size_t CircleOverlap(NovelRT::Maths::GeoVector2F position, float radius, NovelRT::Utilities::Misc::Span<OverlapHit2D> buffer) const = 0;
-
-        [[nodiscard]] virtual std::vector<OverlapHit2D> CircleOverlapAll(NovelRT::Maths::GeoVector2F position, float radius) const = 0;
-
-        [[nodiscard]] virtual size_t CircleOverlapAll(NovelRT::Maths::GeoVector2F position, float radius, std::vector<OverlapHit2D> buffer) const = 0;
+        [[nodiscard]] virtual size_t CircleOverlapAll(NovelRT::Maths::GeoVector2F position,
+                                                      float radius,
+                                                      std::vector<OverlapHit2D> buffer) const = 0;
 
         [[nodiscard]] virtual bool CircleHasOverlap(NovelRT::Maths::GeoVector2F position, float radius) const = 0;
     };

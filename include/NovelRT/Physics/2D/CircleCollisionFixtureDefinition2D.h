@@ -13,7 +13,7 @@ namespace NovelRT::Physics::Physics2D
 
         ~CircleCollisionFixtureDefinition2D() = default;
     };
-    
+
 } // namespace NovelRT::Physics::Physics2D
 
 #endif // NOVELRT_PHYSICS_PHYSICS2D_CIRCLECOLLISIONFIXTUREDEFINITION2D_H

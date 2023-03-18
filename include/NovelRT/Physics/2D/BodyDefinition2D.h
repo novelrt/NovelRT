@@ -27,6 +27,7 @@ namespace NovelRT::Physics::Physics2D
     };
 }
 
-// TODO: when implementing box2d, instead of relying on gravity scale, set it to 1 or 0 (depending on BodyFlags::UseWorldGravity) and apply a constant force during the world step.
+// TODO: when implementing box2d, instead of relying on gravity scale, set it to 1 or 0 (depending on
+// BodyFlags::UseWorldGravity) and apply a constant force during the world step.
 
 #endif // !NOVELRT_PHYSICS_PHYSICS2D_BODYDEFINITION2D_H
