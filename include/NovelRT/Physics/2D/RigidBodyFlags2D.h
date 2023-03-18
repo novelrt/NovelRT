@@ -10,7 +10,7 @@
 
 namespace NovelRT::Physics::Physics2D
 {
-    enum class RigidBodyFlags2D
+    enum class RigidBodyFlags2D : std::int8_t
     {
         AllowSleep = 1 << 0,
         Awake = 1 << 1,

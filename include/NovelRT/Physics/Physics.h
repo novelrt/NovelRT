@@ -5,6 +5,7 @@
 #define NOVELRT_PHYSICS_H
 
 // physics dependencies
+#include <cstdint>
 #include <memory>
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Utilities/Misc.h"
@@ -19,9 +20,11 @@ namespace NovelRT::Physics
 {
     enum class BodyType;
     class PhysicsProvider;
+    enum class RigidBodyCallbackFlags : std::int8_t;
 }
 
 #include "BodyType.h"
+#include "RigidBodyCallbackFlags.h"
 #include "PhysicsProvider.h"
 #include "2D/Physics.2D.h"
 

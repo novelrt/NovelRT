@@ -21,6 +21,7 @@ namespace NovelRT::Physics::Physics2D
         float _linearDamping;
         float _angularDamping;
         RigidBodyFlags2D _flags;
+        NovelRT::Physics::RigidBodyCallbackFlags _callbackFlags;
 
     public:
         [[nodiscard]] inline NovelRT::Maths::GeoVector2F GetPosition() const noexcept{

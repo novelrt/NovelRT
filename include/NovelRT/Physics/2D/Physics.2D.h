@@ -14,19 +14,15 @@
  */
 namespace NovelRT::Physics::Physics2D
 {
-    // TODO: figure out what arguments should be passed
-    typedef void (*OnCollisionEnterCallbackDelegate2D)();
-    typedef void (*OnCollisionExitCallbackDelegate2D)();
-    typedef void (*OnTriggerEnterCallbackDelegate2D)();
-    typedef void (*OnTriggerExitCallbackDelegate2D)();
-
     class PhysicsProvider2D;
     class PhysicsWorld2D;
     struct RayCastHit2D;
     struct OverlapHit2D;
+    struct CollisionCallbackArgument2D;
+    struct TriggerCallbackArgument2D;
     class RigidBody2D;
     struct BodyDefinition2D;
-    enum struct RigidBodyFlags2D;
+    enum struct RigidBodyFlags2D : std::int8_t;
     class CollisionFixture2D;
     class BoxCollisionFixture2D;
     class CircleCollisionFixture2D;
@@ -53,6 +49,12 @@ namespace NovelRT::Physics::Physics2D
     struct HingeJointDefinition2D;
     struct SlidingJointDefinition2D;
     struct SpringJointDefinition2D;
+
+    // TODO: figure out what arguments should be passed
+    typedef void (*OnCollisionEnterCallbackDelegate2D)(CollisionCallbackArgument2D collisionEnterArgument);
+    typedef void (*OnCollisionExitCallbackDelegate2D)(CollisionCallbackArgument2D collisionExitArgument);
+    typedef void (*OnTriggerEnterCallbackDelegate2D)(TriggerCallbackArgument2D triggerEnterArgument);
+    typedef void (*OnTriggerExitCallbackDelegate2D)(TriggerCallbackArgument2D triggerExitArgument);
 }
 
 // clang-format off
@@ -63,6 +65,8 @@ namespace NovelRT::Physics::Physics2D
 #include "PhysicsWorld2D.h"
 #include "OverlapHit2D.h"
 #include "RayCastHit2D.h"
+#include "CollisionCallbackArgument2D.h"
+#include "TriggerCallbackArgument2D.h"
 #include "BodyDefinition2D.h"
 #include "CollisionFixture2D.h"
 #include "BoxCollisionFixture2D.h"
