@@ -8,8 +8,8 @@
 #error NovelRT does not support including types explicitly by default. Please include Graphics.D3D12.Utilities.h instead for the Graphics::D3D12::Utilities namespace subset.
 #endif
 
-
-// TODO: Once D3D12 has been added as a dependency and we have access to the blend enum D3D12_BLEND remove magic numbers and uncomment the returns with the enums.
+// TODO: Once D3D12 has been added as a dependency and we have access to the blend enum D3D12_BLEND remove magic numbers
+// and uncomment the returns with the enums.
 namespace NovelRT::Graphics::D3D12::Utilities
 {
     [[nodiscard]] inline VkBlendFactor GetD3D12BlendFactor(GraphicsPipelineBlendFactor blendFactor)
