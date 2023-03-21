@@ -4,99 +4,51 @@
 #ifndef NOVELRT_GRAPHICS_D3D12_UTILITIES_PIPELINEBLENDFACTOR_H
 #define NOVELRT_GRAPHICS_D3D12_UTILITIES_PIPELINEBLENDFACTOR_H
 
+#ifdef WIN32
+
 #ifndef NOVELRT_GRAPHICS_D3D12_UTILITIES_H
 #error NovelRT does not support including types explicitly by default. Please include Graphics.D3D12.Utilities.h instead for the Graphics::D3D12::Utilities namespace subset.
 #endif
 
-// TODO: Once D3D12 has been added as a dependency and we have access to the blend enum D3D12_BLEND remove magic numbers
-// and uncomment the returns with the enums.
+#include <stdint.h>
+
 namespace NovelRT::Graphics::D3D12::Utilities
 {
-    [[nodiscard]] inline VkBlendFactor GetD3D12BlendFactor(GraphicsPipelineBlendFactor blendFactor)
+    static const D3D12_BLEND NovelRTToD3D12Blend[] = {
+        D3D12_BLEND_ZERO,               // Zero = 0,
+        D3D12_BLEND_ONE,                // One = 1,
+        D3D12_BLEND_SRC_COLOR,          // SrcColout = 2,
+        D3D12_BLEND_INV_SRC_COLOR,      // OneMinusSrcColour = 3,
+        D3D12_BLEND_DEST_COLOR,         // DstColour = 4,
+        D3D12_BLEND_INV_DEST_COLOR,     // OneMinusDstColour = 5,
+        D3D12_BLEND_SRC_ALPHA,          // SrcAlpha = 6,
+        D3D12_BLEND_INV_SRC_ALPHA,      // OneMinusSrcAlpha = 7,
+        D3D12_BLEND_DEST_ALPHA,         // DstAlpha = 8,
+        D3D12_BLEND_INV_DEST_ALPHA,     // OneMinusDstAlpha = 9,
+        D3D12_BLEND_BLEND_FACTOR,       // ConstantColour = 10,
+        D3D12_BLEND_INV_BLEND_FACTOR,   // OneMinusConstantColour = 11,
+        D3D12_BLEND_ALPHA_FACTOR,       // ConstantAlpha = 12,
+        D3D12_BLEND_INV_ALPHA_FACTOR,   // OneMinusConstantAlpha = 13,
+        D3D12_BLEND_SRC_ALPHA_SAT,      // SrcAlphaSaturate = 14,
+        D3D12_BLEND_SRC1_COLOR,         // Src1Colour = 15,
+        D3D12_BLEND_INV_SRC1_COLOR,     // OneMinusSrc1Colour = 16,
+        D3D12_BLEND_SRC1_ALPHA,         // Src1Alpha = 17,
+        D3D12_BLEND_INV_SRC1_ALPHA,     // OneMinusSrc1Alpha = 18,
+    };
+
+    inline D3D12_BLEND GetD3D12BlendFactor(GraphicsPipelineBlendFactor blendFactor)
     {
-        switch (blendFactor)
+        if (blendFactor >= GraphicsPipelineBlendFactor::__COUNT)
         {
-            case GraphicsPipelineBlendFactor::Zero:
-                // return D3D12_BLEND_ZERO;
-                return 1;
-                break;
-            case GraphicsPipelineBlendFactor::One:
-                // return D3D12_BLEND_ONE;
-                return 2;
-                break;
-            case GraphicsPipelineBlendFactor::SrcColour:
-                // return D3D12_BLEND_SRC_COLOR;
-                return 3;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrcColour:
-                // return D3D12_BLEND_INV_SRC_COLOR;
-                return 4;
-                break;
-            case GraphicsPipelineBlendFactor::DstColour:
-                // return D3D12_BLEND_DEST_COLOR;
-                return 9;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusDstColour:
-                // return D3D12_BLEND_INV_DEST_COLOR;
-                return 10;
-                break;
-            case GraphicsPipelineBlendFactor::SrcAlpha:
-                // return D3D12_BLEND_SRC_ALPHA;
-                return 5;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrcAlpha:
-                // return D3D12_BLEND_INV_SRC_ALPHA;
-                return 6;
-                break;
-            case GraphicsPipelineBlendFactor::DstAlpha:
-                // return D3D12_BLEND_DEST_ALPHA;
-                return 7;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusDstAlpha:
-                // return D3D12_BLEND_INV_DEST_ALPHA;
-                return 8;
-                break;
-            case GraphicsPipelineBlendFactor::ConstantColour:
-                // return D3D12_BLEND_BLEND_FACTOR;
-                return 14;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusConstantColour:
-                // return D3D12_BLEND_INV_BLEND_FACTOR;
-                return 15;
-                break;
-            case GraphicsPipelineBlendFactor::ConstantAlpha:
-                // return D3D12_BLEND_ALPHA_FACTOR;
-                return 20;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusConstantAlpha:
-                // return D3D12_BLEND_INV_ALPHA_FACTOR;
-                return 21;
-                break;
-            case GraphicsPipelineBlendFactor::SrcAlphaSaturate:
-                // return D3D12_BLEND_SRC_ALPHA_SAT;
-                return 11;
-                break;
-            case GraphicsPipelineBlendFactor::Src1Colour:
-                // return D3D12_BLEND_SRC1_COLOR;
-                return 16;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrc1Colour:
-                //  return D3D12_BLEND_INV_SRC1_COLOR;
-                return 17;
-                break;
-            case GraphicsPipelineBlendFactor::Src1Alpha:
-                // return D3D12_BLEND_SRC1_ALPHA;
-                return 18;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrc1Alpha:
-                // return D3D12_BLEND_INV_SRC1_ALPHA;
-                return 19;
-                break;
-            default:
-                throw Exceptions::NotSupportedException(
-                    "The specified blend factor is not supported on the default D3D12 pipeline.");
+            throw Exceptions::NotSupportedException(
+                "The specified blend factor is not supported on the default D3D12 pipeline.");
         }
+        static_assert((sizeof(NovelRTToD3D12Blend) / sizeof(D3D12_BLEND)) ==
+                      static_cast<uint32_t>(GraphicsPipelineBlendFactor::__COUNT));
+        return NovelRTToD3D12Blend[static_cast<uint32_t>(blendFactor)];
     }
 }
+
+#endif // WIN32
 
 #endif // !NOVELRT_GRAPHICS_D3D12_UTILITIES_PIPELINEBLENDFACTOR_H

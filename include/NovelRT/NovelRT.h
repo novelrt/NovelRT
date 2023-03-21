@@ -110,6 +110,8 @@
   // Experimental types
   #include <NovelRT/Graphics/Graphics.h>
   #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.h>
+  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.h>
+  #include <NovelRT/Graphics/Metal/Graphics.Metal.h>
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
