@@ -13,25 +13,25 @@
 namespace NovelRT::Graphics::Metal::Utilities
 {
     static const MTLBlendFactor NovelRTToMetalBlend[] = {
-        MTLBlendFactor.zero,                        // Zero = 0,
-        MTLBlendFactor.one,                         // One = 1,
-        MTLBlendFactor.sourceColor,                 // SrcColout = 2,
-        MTLBlendFactor.oneMinusSourceColor,         // OneMinusSrcColour = 3,
-        MTLBlendFactor.destinationColor,            // DstColour = 4,
-        MTLBlendFactor.oneMinusDestinationColor,    // OneMinusDstColour = 5,
-        MTLBlendFactor.sourceAlpha,                 // SrcAlpha = 6,
-        MTLBlendFactor.oneMinusSourceAlpha,         // OneMinusSrcAlpha = 7,
-        MTLBlendFactor.destinationAlpha,            // DstAlpha = 8,
-        MTLBlendFactor.oneMinusDestinationAlpha,    // OneMinusDstAlpha = 9,
-        MTLBlendFactor.blendColor,                  // ConstantColour = 10,
-        MTLBlendFactor.oneMinusBlendColor,          // OneMinusConstantColour = 11,
-        MTLBlendFactor.blendAlpha,                  // ConstantAlpha = 12,
-        MTLBlendFactor.oneMinusBlendAlpha,          // OneMinusConstantAlpha = 13,
-        MTLBlendFactor.sourceAlphaSaturated,        // SrcAlphaSaturate = 14,
-        MTLBlendFactor.source1Color,                // Src1Colour = 15,
-        MTLBlendFactor.oneMinusSource1Color,        // OneMinusSrc1Colour = 16,
-        MTLBlendFactor.source1Alpha,                // Src1Alpha = 17,
-        MTLBlendFactor.oneMinusSource1Alpha,        // OneMinusSrc1Alpha = 18,
+        MTLBlendFactor.zero,                     // Zero = 0,
+        MTLBlendFactor.one,                      // One = 1,
+        MTLBlendFactor.sourceColor,              // SrcColout = 2,
+        MTLBlendFactor.oneMinusSourceColor,      // OneMinusSrcColour = 3,
+        MTLBlendFactor.destinationColor,         // DstColour = 4,
+        MTLBlendFactor.oneMinusDestinationColor, // OneMinusDstColour = 5,
+        MTLBlendFactor.sourceAlpha,              // SrcAlpha = 6,
+        MTLBlendFactor.oneMinusSourceAlpha,      // OneMinusSrcAlpha = 7,
+        MTLBlendFactor.destinationAlpha,         // DstAlpha = 8,
+        MTLBlendFactor.oneMinusDestinationAlpha, // OneMinusDstAlpha = 9,
+        MTLBlendFactor.blendColor,               // ConstantColour = 10,
+        MTLBlendFactor.oneMinusBlendColor,       // OneMinusConstantColour = 11,
+        MTLBlendFactor.blendAlpha,               // ConstantAlpha = 12,
+        MTLBlendFactor.oneMinusBlendAlpha,       // OneMinusConstantAlpha = 13,
+        MTLBlendFactor.sourceAlphaSaturated,     // SrcAlphaSaturate = 14,
+        MTLBlendFactor.source1Color,             // Src1Colour = 15,
+        MTLBlendFactor.oneMinusSource1Color,     // OneMinusSrc1Colour = 16,
+        MTLBlendFactor.source1Alpha,             // Src1Alpha = 17,
+        MTLBlendFactor.oneMinusSource1Alpha,     // OneMinusSrc1Alpha = 18,
     };
 
     inline MTLBlendFactor GetMetalBlendFactor(GraphicsPipelineBlendFactor blendFactor)
@@ -47,6 +47,6 @@ namespace NovelRT::Graphics::Metal::Utilities
     }
 }
 
-#endif // TARGET_OS_MAC 
+#endif // TARGET_OS_MAC
 
 #endif // !NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H
