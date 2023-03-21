@@ -10,8 +10,6 @@
 #error NovelRT does not support including types explicitly by default. Please include Graphics.D3D12.Utilities.h instead for the Graphics::D3D12::Utilities namespace subset.
 #endif
 
-#include <stdint.h>
-
 namespace NovelRT::Graphics::D3D12::Utilities
 {
     static const D3D12_BLEND NovelRTToD3D12Blend[] = {

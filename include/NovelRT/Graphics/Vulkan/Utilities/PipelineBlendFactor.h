@@ -8,8 +8,6 @@
 #error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.Utilities.h instead for the Graphics::Vulkan::Utilities namespace subset.
 #endif
 
-#include<stdint.h>
-
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
     static const VkBlendFactor NovelRTToVulkanBlend[] = {

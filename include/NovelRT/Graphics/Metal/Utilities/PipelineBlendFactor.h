@@ -10,8 +10,6 @@
 #error NovelRT does not support including types explicitly by default. Please include Graphics.Metal.Utilities.h instead for the Graphics::Metal::Utilities namespace subset.
 #endif
 
-#include <stdint.h>
-
 namespace NovelRT::Graphics::Metal::Utilities
 {
     static const MTLBlendFactor NovelRTToMetalBlend[] = {
