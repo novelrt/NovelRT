@@ -4,8 +4,6 @@
 #ifndef NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H
 #define NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H
 
-#ifdef TARGET_OS_MAC
-
 #ifndef NOVELRT_GRAPHICS_METAL_UTILITIES_H
 #error NovelRT does not support including types explicitly by default. Please include Graphics.Metal.Utilities.h instead for the Graphics::Metal::Utilities namespace subset.
 #endif
@@ -46,7 +44,5 @@ namespace NovelRT::Graphics::Metal::Utilities
         return NovelRTToMetalBlend[static_cast<uint32_t>(blendFactor)];
     }
 }
-
-#endif // TARGET_OS_MAC
 
 #endif // !NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H

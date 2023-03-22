@@ -4,8 +4,6 @@
 #ifndef NOVELRT_GRAPHICS_METAL_H
 #define NOVELRT_GRAPHICS_METAL_H
 
-#ifdef TARGET_OS_MAC
-
 // Graphics.Metal dependencies
 #include "../../Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
@@ -27,7 +25,5 @@ namespace NovelRT::Graphics::Metal
 #include "NovelRT/Graphics/Metal/Utilities/Graphics.Metal.Utilities.h"
 
 // clang-format on
-
-#endif // TARGET_OS_MAC
 
 #endif // NOVELRT_GRAPHICS_METAL_H

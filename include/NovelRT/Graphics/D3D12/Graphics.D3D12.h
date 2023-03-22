@@ -4,8 +4,6 @@
 #ifndef NOVELRT_GRAPHICS_D3D12_H
 #define NOVELRT_GRAPHICS_D3D12_H
 
-#ifdef WIN32
-
 // Graphics.D3D12 dependencies
 #include "../../Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
@@ -27,7 +25,5 @@ namespace NovelRT::Graphics::D3D12
 #include "NovelRT/Graphics/D3D12/Utilities/Graphics.D3D12.Utilities.h"
 
 // clang-format on
-
-#endif // WIN32
 
 #endif // NOVELRT_GRAPHICS_D3D12_H
