@@ -11,10 +11,11 @@ namespace NovelRT::Windowing::SDL
 {
     class SDLWindowingPluginProvider final : public PluginManagement::IWindowingPluginProvider
     {
+
     private:
         std::shared_ptr<SDLWindowingDevice> _windowingDevice;
 
-        [[nodiscard]] SDLWindowDevice* GetWindowingDeviceInternal() override;
+        [[nodiscard]] SDLWindowingDevice* GetWindowingDeviceInternal() override;
 
     public:
         SDLWindowingPluginProvider() noexcept;

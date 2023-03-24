@@ -72,6 +72,8 @@ set(CORE_SOURCES
 
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+  Windowing/SDL/SDLWindowingDevice.cpp
+  Windowing/SDL/SDLWindowingPluginProvider.cpp
 )
 add_library(Engine SHARED ${CORE_SOURCES})
 set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})

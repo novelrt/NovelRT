@@ -7,12 +7,13 @@
 
 namespace NovelRT::Windowing::SDL
 {
-    class SDLWindowingDevice : public IWindowingDevice
+    class SDLWindowingDevice final : public IWindowingDevice
     {
 
     private:
         std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
         std::string _currentTitle;
+        SDL_WindowEventID WindowEventID;
 
     public:
         SDLWindowingDevice() noexcept;
@@ -28,6 +29,8 @@ namespace NovelRT::Windowing::SDL
             return _window.get();
         }
 
+        void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) final;
+        void TearDown() noexcept final;
 
         [[nodiscard]] inline bool GetIsVisible() const noexcept final
         {
@@ -36,7 +39,7 @@ namespace NovelRT::Windowing::SDL
 
         [[nodiscard]] inline bool GetShouldClose() const noexcept final
         {
-            return SDL_WINDOWEVENT_CLOSE; //most likely wrong atm, need to find an SDL Get current window event method.
+            return WindowEventID == SDL_WINDOWEVENT_CLOSE; // most likely wrong atm, need to find an SDL Get current window event method.
         }
 
 
