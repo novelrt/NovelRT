@@ -553,19 +553,22 @@ namespace NovelRT::Ecs::Graphics
         size_t dataLength)
     {
         std::scoped_lock guard(_vertexQueueMapMutex);
+        assert(data != nullptr && "data is a nullptr, make sure that you are passing in a valid pointer into the method.");
+        assert(dataTypeSize != 0 && "dataTypeSize is zero, make sure the correct size of the type has been passed in.");
+        assert(dataLength != 0 && "dataLength is zero, make sure that the length of the buffer is properly calculated and passed in.");
 
         auto ptr = Threading::MakeConcurrentShared<VertexInfo>();
         size_t size = dataTypeSize * dataLength;
         ptr->vertexInfoName = vertexDataName;
         ptr->stagingPtr = malloc(size);
+        if (ptr->stagingPtr == nullptr)
+        {
+            throw NovelRT::Exceptions::OutOfMemoryException();
+        }
         ptr->sizeOfVert = dataTypeSize;
         ptr->stagingPtrLength = dataLength;
 
-#ifdef WIN32
-        memcpy_s(ptr->stagingPtr, size, data, size);
-#else
         memcpy(ptr->stagingPtr, data, size);
-#endif
         _vertexDataToInitialise.push(ptr);
 
         return Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});
