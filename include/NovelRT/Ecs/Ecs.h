@@ -14,6 +14,7 @@
 #include "../Utilities/Event.h"
 #include "../Utilities/KeyValuePair.h"
 #include "../Utilities/Misc.h"
+#include "../Utilities/Memory.h"
 #include "../PluginManagement/PluginManagement.h"
 #include "../Threading/Threading.h"
 #include <algorithm>

@@ -36,7 +36,7 @@ namespace NovelRT::Ecs
 
             inline void CopyDataFromLocation(void* outputLocation) const noexcept
             {
-                memcpy(outputLocation, _data, _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(outputLocation, _sizeOfObject, _data, _sizeOfObject);
             }
 
             [[nodiscard]] inline const void* GetDataHandle() const noexcept

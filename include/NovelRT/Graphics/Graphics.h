@@ -13,6 +13,7 @@
 #include "NovelRT/Utilities/Event.h"
 #include "NovelRT/Utilities/Lazy.h"
 #include "NovelRT/Utilities/Misc.h"
+#include "NovelRT/Utilities/Memory.h"
 #include "RGBAColour.h"
 #include <chrono>
 #include <cstdint>

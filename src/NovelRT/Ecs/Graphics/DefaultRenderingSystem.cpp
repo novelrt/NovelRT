@@ -450,9 +450,10 @@ namespace NovelRT::Ecs::Graphics
 
         auto ptr = Threading::MakeConcurrentShared<TextureInfo>();
         std::vector<uint8_t> textureData{};
-        textureData.resize(dataTypeSize * dataLength);
+        const size_t size = dataTypeSize * dataLength;
+        textureData.resize(size);
 
-        memcpy(textureData.data(), data, dataTypeSize * dataLength);
+        NovelRT::Utilities::Memory::Copy(textureData.data(), size, data, size);
 
         ptr->textureName = textureDataName;
         ptr->textureData = textureData;
@@ -553,9 +554,6 @@ namespace NovelRT::Ecs::Graphics
         size_t dataLength)
     {
         std::scoped_lock guard(_vertexQueueMapMutex);
-        assert(data != nullptr && "data is a nullptr, make sure that you are passing in a valid pointer into the method.");
-        assert(dataTypeSize != 0 && "dataTypeSize is zero, make sure the correct size of the type has been passed in.");
-        assert(dataLength != 0 && "dataLength is zero, make sure that the length of the buffer is properly calculated and passed in.");
 
         auto ptr = Threading::MakeConcurrentShared<VertexInfo>();
         size_t size = dataTypeSize * dataLength;
@@ -568,7 +566,7 @@ namespace NovelRT::Ecs::Graphics
         ptr->sizeOfVert = dataTypeSize;
         ptr->stagingPtrLength = dataLength;
 
-        memcpy(ptr->stagingPtr, data, size);
+        NovelRT::Utilities::Memory::Copy(ptr->stagingPtr, size, data, size);
         _vertexDataToInitialise.push(ptr);
 
         return Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});

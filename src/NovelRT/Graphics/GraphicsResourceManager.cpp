@@ -138,7 +138,7 @@ namespace NovelRT::Graphics
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
 
-        memcpy(writeArea, data, sizeToStage);
+        NovelRT::Utilities::Memory::Copy(writeArea, sizeToStage, data, sizeToStage);
 
         stagingBuffer->UnmapAndWrite(vertexRegion);
         currentContext->Copy(vertexBuffer, stagingBuffer);
@@ -168,7 +168,7 @@ namespace NovelRT::Graphics
         auto indexRegion = indexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(indexRegion);
 
-        memcpy(writeArea, data, sizeToStage);
+        NovelRT::Utilities::Memory::Copy(writeArea, sizeToStage, data, sizeToStage);
 
         stagingBuffer->UnmapAndWrite(indexRegion);
         currentContext->Copy(indexBuffer, stagingBuffer);
@@ -287,7 +287,8 @@ namespace NovelRT::Graphics
         auto texture2dRegion = texture2d->Allocate(texture2d->GetSize(), 4);
         auto pTextureData = stagingBuffer->Map<uint8_t>(texture2dRegion);
 
-        memcpy(pTextureData, metadata.data.data(), metadata.data.size());
+        NovelRT::Utilities::Memory::Copy(pTextureData, metadata.data.size(), metadata.data.data(),
+                                         metadata.data.size());
 
         stagingBuffer->UnmapAndWrite(texture2dRegion);
         currentContext->Copy(texture2d, stagingBuffer);
@@ -360,7 +361,7 @@ namespace NovelRT::Graphics
         auto allocation = bufferPtr->Allocate(size, alignment);
         uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
 
-        memcpy(destination, data, size);
+        NovelRT::Utilities::Memory::Copy(destination, size, data, size);
 
         bufferPtr->UnmapAndWrite(allocation);
         return allocation;
@@ -395,7 +396,7 @@ namespace NovelRT::Graphics
 
         uint8_t* destination = bufferPtr->Map<uint8_t>(targetMemoryResource);
 
-        memcpy(destination, data, size);
+        NovelRT::Utilities::Memory::Copy(destination, size, data, size);
 
         bufferPtr->UnmapAndWrite(targetMemoryResource);
     }
