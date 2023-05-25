@@ -10,71 +10,38 @@
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
-    [[nodiscard]] inline VkBlendFactor GetVulkanBlendFactor(GraphicsPipelineBlendFactor blendFactor)
+    static const VkBlendFactor NovelRTToVulkanBlend[] = {
+        VK_BLEND_FACTOR_ZERO,                     // Zero = 0,
+        VK_BLEND_FACTOR_ONE,                      // One = 1,
+        VK_BLEND_FACTOR_SRC_COLOR,                // SrcColout = 2,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR,      // OneMinusSrcColour = 3,
+        VK_BLEND_FACTOR_DST_COLOR,                // DstColour = 4,
+        VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR,      // OneMinusDstColour = 5,
+        VK_BLEND_FACTOR_SRC_ALPHA,                // SrcAlpha = 6,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,      // OneMinusSrcAlpha = 7,
+        VK_BLEND_FACTOR_DST_ALPHA,                // DstAlpha = 8,
+        VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA,      // OneMinusDstAlpha = 9,
+        VK_BLEND_FACTOR_CONSTANT_COLOR,           // ConstantColour = 10,
+        VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR, // OneMinusConstantColour = 11,
+        VK_BLEND_FACTOR_CONSTANT_ALPHA,           // ConstantAlpha = 12,
+        VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA, // OneMinusConstantAlpha = 13,
+        VK_BLEND_FACTOR_SRC_ALPHA_SATURATE,       // SrcAlphaSaturate = 14,
+        VK_BLEND_FACTOR_SRC1_COLOR,               // Src1Colour = 15,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR,     // OneMinusSrc1Colour = 16,
+        VK_BLEND_FACTOR_SRC1_ALPHA,               // Src1Alpha = 17,
+        VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA,     // OneMinusSrc1Alpha = 18,
+    };
+
+    inline VkBlendFactor GetVulkanBlendFactor(GraphicsPipelineBlendFactor blendFactor)
     {
-        switch (blendFactor)
+        if (blendFactor >= GraphicsPipelineBlendFactor::__COUNT)
         {
-            case GraphicsPipelineBlendFactor::Zero:
-                return VK_BLEND_FACTOR_ZERO;
-                break;
-            case GraphicsPipelineBlendFactor::One:
-                return VK_BLEND_FACTOR_ONE;
-                break;
-            case GraphicsPipelineBlendFactor::SrcColour:
-                return VK_BLEND_FACTOR_SRC_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrcColour:
-                return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::DstColour:
-                return VK_BLEND_FACTOR_DST_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusDstColour:
-                return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::SrcAlpha:
-                return VK_BLEND_FACTOR_SRC_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrcAlpha:
-                return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::DstAlpha:
-                return VK_BLEND_FACTOR_DST_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusDstAlpha:
-                return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::ConstantColour:
-                return VK_BLEND_FACTOR_CONSTANT_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusConstantColour:
-                return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::ConstantAlpha:
-                return VK_BLEND_FACTOR_CONSTANT_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusConstantAlpha:
-                return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::SrcAlphaSaturate:
-                return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
-                break;
-            case GraphicsPipelineBlendFactor::Src1Colour:
-                return VK_BLEND_FACTOR_SRC1_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrc1Colour:
-                return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
-                break;
-            case GraphicsPipelineBlendFactor::Src1Alpha:
-                return VK_BLEND_FACTOR_SRC1_ALPHA;
-                break;
-            case GraphicsPipelineBlendFactor::OneMinusSrc1Alpha:
-                return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
-                break;
-            default:
-                throw Exceptions::NotSupportedException(
-                    "The specified blend factor is not supported on the default Vulkan pipeline.");
+            throw Exceptions::NotSupportedException(
+                "The specified blend factor is not supported on the default Metal pipeline.");
         }
+        static_assert((sizeof(NovelRTToVulkanBlend) / sizeof(VkBlendFactor)) ==
+                      static_cast<uint32_t>(GraphicsPipelineBlendFactor::__COUNT));
+        return NovelRTToVulkanBlend[static_cast<uint32_t>(blendFactor)];
     }
 }
 

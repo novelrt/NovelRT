@@ -6,6 +6,9 @@ if(POLICY CMP0135)
 endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS / OS X deployment version")
+# We require windows SDK version: v10.0.22621 due to the D3D12 enum values we want only being available from this version onwards.
+# The value sets the minimal version that we need to use during building
+set(CMAKE_SYSTEM_VERSION 10.0.22621.0)
 
 project(NovelRT
   VERSION 1.0.0 #MVP Version

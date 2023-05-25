@@ -30,7 +30,8 @@ namespace NovelRT::Graphics
         Src1Colour = 15,
         OneMinusSrc1Colour = 16,
         Src1Alpha = 17,
-        OneMinusSrc1Alpha = 18
+        OneMinusSrc1Alpha = 18,
+        __COUNT
     };
 }
 
