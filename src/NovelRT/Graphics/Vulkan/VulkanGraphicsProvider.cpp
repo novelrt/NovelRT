@@ -310,7 +310,7 @@ namespace NovelRT::Graphics::Vulkan
           _engineName(EngineConfig::EngineName()),
           _state(Threading::VolatileState()),
           _debugLogger(VK_NULL_HANDLE),
-          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX))
+          _logger(LoggingService(NovelRT::Core::LoggingService::CONSOLE_LOG_GFX))
     {
         if (GetDebugModeEnabled())
         {

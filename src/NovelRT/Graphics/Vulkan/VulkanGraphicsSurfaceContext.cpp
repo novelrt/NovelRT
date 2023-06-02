@@ -9,7 +9,7 @@ namespace NovelRT::Graphics::Vulkan
     VulkanGraphicsSurfaceContext::VulkanGraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
                                                                const std::shared_ptr<VulkanGraphicsProvider>& provider)
         : GraphicsSurfaceContext(std::move(surface), std::static_pointer_cast<GraphicsProvider>(provider)),
-          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
+          _logger(LoggingService(NovelRT::Core::LoggingService::CONSOLE_LOG_GFX)),
           _vulkanSurface(VK_NULL_HANDLE)
     {
         std::shared_ptr<IGraphicsSurface> targetSurface = GetSurface();

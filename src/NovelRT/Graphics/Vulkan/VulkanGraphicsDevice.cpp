@@ -16,7 +16,7 @@ namespace NovelRT::Graphics::Vulkan
           _contextCount(contextCount),
           _contexts([&]() { return CreateGraphicsContexts(_contextCount); }),
           _contextPtrs([&]() { return CreateGraphicsContextPointers(); }),
-          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
+          _logger(LoggingService(NovelRT::Core::LoggingService::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
           _device([&]() { return CreateLogicalDevice(); }),
           _graphicsQueue(VK_NULL_HANDLE),

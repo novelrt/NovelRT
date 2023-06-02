@@ -33,7 +33,7 @@ namespace NovelRT::Audio
                   alcMakeContextCurrent(nullptr);
                   alcDestroyContext(x);
               })),
-          _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+          _logger(NovelRT::Core::LoggingService::CONSOLE_LOG_AUDIO),
           _manualLoad(false),
           _musicSource(),
           _musicSourceState(0),

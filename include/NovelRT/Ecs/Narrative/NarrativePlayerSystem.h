@@ -20,7 +20,7 @@ namespace NovelRT::Ecs::Narrative
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceLoaderPluginProvider;
         std::optional<EntityId> _narrativeStoryStateTrackerEntityId;
         std::optional<EntityId> _choiceMetadataLinkedListEntityId;
-        LoggingService _narrativeLoggingService;
+        NovelRT::Core::LoggingService _narrativeLoggingService;
         bool _optionSelected;
 
         [[nodiscard]] bool BeginPlay(ComponentView<RequestNarrativeScriptExecutionComponent>& requestView);

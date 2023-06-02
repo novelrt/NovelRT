@@ -18,7 +18,7 @@ namespace NovelRT::Graphics::Vulkan
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
 
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
 
         VkSurfaceKHR _surface;
 

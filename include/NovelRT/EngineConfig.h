@@ -4,9 +4,10 @@
 #ifndef NOVELRT_ENGINECONFIG_H
 #define NOVELRT_ENGINECONFIG_H
 
-#include "LoggingService.h"
+#include "Core/LoggingService.h"
 #include <string>
 #include <vector>
+using namespace NovelRT::Core;
 
 namespace NovelRT::EngineConfig
 {

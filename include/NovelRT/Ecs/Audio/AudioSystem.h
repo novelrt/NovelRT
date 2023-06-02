@@ -15,7 +15,7 @@ namespace NovelRT::Ecs::Audio
     private:
         uint32_t _counter;
         std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>> _fadeCache;
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
         std::map<uint32_t, std::vector<ALuint>::iterator> _musicCache;
         std::shared_ptr<NovelRT::Audio::AudioService> _service;
         std::map<uint32_t, ALuint> _soundCache;

@@ -8,6 +8,7 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
+#include "../../Core/Core.h"
 #include "../../Input/Input.h"
 #include <map>
 

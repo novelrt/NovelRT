@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsSurfaceContext final : public GraphicsSurfaceContext
     {
     private:
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
         VkSurfaceKHR _vulkanSurface;
 
     public:

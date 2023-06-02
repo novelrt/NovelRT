@@ -13,7 +13,7 @@ namespace NovelRT::Input
     class IInputDevice : public std::enable_shared_from_this<IInputDevice>
     {
     protected:
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
         std::vector<InputAction> _mappedActions;
         std::map<std::string, NovelKey> _availableKeys;
 

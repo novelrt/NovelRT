@@ -106,8 +106,8 @@ int main()
     NovelRT::Persistence::Persistable::GetComponentLoadRules().emplace(
         "TestStruct", std::unique_ptr<ICustomComponentLoadRule>(new TestStructComponentLoadRule()));
 
-    NovelRT::LoggingService logger = NovelRT::LoggingService();
-    logger.setLogLevel(NovelRT::LogLevel::Info);
+    NovelRT::Core::LoggingService logger = NovelRT::Core::LoggingService();
+    logger.setLogLevel(NovelRT::Core::LogLevel::Info);
 
     DefaultPluginSelector selector;
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();

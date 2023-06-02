@@ -22,7 +22,7 @@ namespace NovelRT::Graphics::Vulkan
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,

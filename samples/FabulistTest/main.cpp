@@ -15,8 +15,8 @@ int main()
     auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
     auto resourceManagementProvider =
         selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
-    NovelRT::LoggingService logger = NovelRT::LoggingService();
-    logger.setLogLevel(NovelRT::LogLevel::Info);
+    NovelRT::Core::LoggingService logger = NovelRT::Core::LoggingService();
+    logger.setLogLevel(NovelRT::Core::LogLevel::Info);
 
     auto scheduler =
         Configurator()

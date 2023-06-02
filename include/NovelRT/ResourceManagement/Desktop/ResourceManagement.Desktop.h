@@ -6,7 +6,7 @@
 
 // ResourceManagement Dependencies
 #include "../../Core/Exceptions/Exceptions.h"
-#include "../../LoggingService.h"
+#include "../../Core/LoggingService.h"
 #include "../../PluginManagement/PluginManagement.h"
 #include "../ResourceManagement.h"
 #include <cstdio>

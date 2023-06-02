@@ -6,7 +6,7 @@
 
 // Graphics.D3D12 dependencies
 #include "../../Core/Exceptions/Exceptions.h"
-#include "../../LoggingService.h"
+#include "../../Core/LoggingService.h"
 #include "../Graphics.h"
 #include <d3d12.h>
 

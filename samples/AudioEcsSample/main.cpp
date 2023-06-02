@@ -13,7 +13,7 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-    NovelRT::LoggingService logger = NovelRT::LoggingService();
+    NovelRT::Core::LoggingService logger = NovelRT::Core::LoggingService();
 
     // Default Provider Initialisation
     DefaultPluginSelector selector;
@@ -29,7 +29,7 @@ int main()
             .InitialiseAndRegisterComponents();
 
     // Set global logging level
-    logger.setLogLevel(NovelRT::LogLevel::Info);
+    logger.setLogLevel(NovelRT::Core::LogLevel::Info);
 
     // Get the Sounds resource directory
     auto rootDir = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>()

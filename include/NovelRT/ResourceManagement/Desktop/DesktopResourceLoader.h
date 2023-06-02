@@ -13,7 +13,7 @@ namespace NovelRT::ResourceManagement::Desktop
     class DesktopResourceLoader final : public ResourceLoader
     {
     private:
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
         bool _isAssetDBInitialised;
 
     protected:

@@ -12,19 +12,19 @@ extern "C"
 
     NrtLoggingServiceHandle Nrt_LoggingService_create()
     {
-        NovelRT::LoggingService* service = new NovelRT::LoggingService();
+        NovelRT::Core::LoggingService* service = new NovelRT::Core::LoggingService();
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
     NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitle(const char* core)
     {
-        NovelRT::LoggingService* service = new NovelRT::LoggingService(core);
+        NovelRT::Core::LoggingService* service = new NovelRT::Core::LoggingService(core);
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
     NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level)
     {
-        NovelRT::LoggingService* service = new NovelRT::LoggingService(core, static_cast<NovelRT::LogLevel>(level));
+        NovelRT::Core::LoggingService* service = new NovelRT::Core::LoggingService(core, static_cast<NovelRT::Core::LogLevel>(level));
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
@@ -36,8 +36,8 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-        cService->log(message, static_cast<NovelRT::LogLevel>(level));
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
+        cService->log(message, static_cast<NovelRT::Core::LogLevel>(level));
 
         return NRT_SUCCESS;
     }
@@ -50,7 +50,7 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
         cService->logInfoLine(message);
 
         return NRT_SUCCESS;
@@ -70,7 +70,7 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
         cService->logErrorLine(message);
 
         return NRT_SUCCESS;
@@ -90,7 +90,7 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
         cService->logWarningLine(message);
 
         return NRT_SUCCESS;
@@ -110,7 +110,7 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
         cService->logDebugLine(message);
 
         return NRT_SUCCESS;
@@ -130,8 +130,8 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-        cService->logInternal(message, static_cast<NovelRT::LogLevel>(level));
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
+        cService->logInternal(message, static_cast<NovelRT::Core::LogLevel>(level));
 
         return NRT_SUCCESS;
     }
@@ -144,8 +144,8 @@ extern "C"
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
-        cService->setLogLevel(static_cast<NovelRT::LogLevel>(level));
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
+        cService->setLogLevel(static_cast<NovelRT::Core::LogLevel>(level));
 
         return NRT_SUCCESS;
     }
@@ -166,7 +166,7 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
         cService->throwIfNullPtr(object, exceptionMessage);
         return NRT_SUCCESS;
     }
@@ -187,7 +187,7 @@ extern "C"
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
-        NovelRT::LoggingService* cService = reinterpret_cast<NovelRT::LoggingService*>(service);
+        NovelRT::Core::LoggingService* cService = reinterpret_cast<NovelRT::Core::LoggingService*>(service);
         cService->throwIfNotZero(error, exceptionMessage);
 
         return NRT_SUCCESS;

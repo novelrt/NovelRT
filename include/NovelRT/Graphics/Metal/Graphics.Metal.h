@@ -6,7 +6,7 @@
 
 // Graphics.Metal dependencies
 #include "../../Core/Exceptions/Exceptions.h"
-#include "../../LoggingService.h"
+#include "../../Core/LoggingService.h"
 #include "../Graphics.h"
 #include <Metal/Metal.hpp>
 

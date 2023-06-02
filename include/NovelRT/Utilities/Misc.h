@@ -35,14 +35,6 @@ namespace NovelRT::Utilities
     class Misc
     {
     public:
-        static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
-        static inline const char* CONSOLE_LOG_APP = "Application";
-        static inline const char* CONSOLE_LOG_DOTNET = ".NET";
-        static inline const char* CONSOLE_LOG_GFX = "GFX";
-        static inline const char* CONSOLE_LOG_STATS = "Statistics";
-        static inline const char* CONSOLE_LOG_AUDIO = "Audio";
-        static inline const char* CONSOLE_LOG_INPUT = "Input";
-        static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
 
         template<class T>
 #ifdef NOVELRT_USE_STD_SPAN

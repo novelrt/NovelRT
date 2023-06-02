@@ -17,7 +17,7 @@
 #pragma warning(pop)
 #endif
 
-namespace NovelRT
+namespace NovelRT::Core
 {
     enum class LogLevel
     {
@@ -45,6 +45,15 @@ namespace NovelRT
         }
 
     public:
+        static inline const char* CONSOLE_LOG_GENERIC = "NovelRT";
+        static inline const char* CONSOLE_LOG_APP = "Application";
+        static inline const char* CONSOLE_LOG_DOTNET = ".NET";
+        static inline const char* CONSOLE_LOG_GFX = "GFX";
+        static inline const char* CONSOLE_LOG_STATS = "Statistics";
+        static inline const char* CONSOLE_LOG_AUDIO = "Audio";
+        static inline const char* CONSOLE_LOG_INPUT = "Input";
+        static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
+
         LoggingService() noexcept;
         LoggingService(const std::string& core) noexcept;
         LoggingService(const std::string& core, LogLevel level) noexcept;

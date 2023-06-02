@@ -20,7 +20,7 @@ namespace NovelRT::Audio
         Utilities::Lazy<std::unique_ptr<ALCdevice, void (*)(ALCdevice*)>> _device;
         Utilities::Lazy<std::unique_ptr<ALCcontext, void (*)(ALCcontext*)>> _context;
         std::string _deviceName;
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
         bool _manualLoad;
         MusicBank _music;
         ALuint _musicSource;

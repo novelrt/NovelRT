@@ -9,7 +9,7 @@ namespace NovelRT::Ecs::Audio
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider)
         : _counter(1),
           _fadeCache(std::map<EntityId, std::tuple<Timing::Timestamp, float>>()),
-          _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
+          _logger(NovelRT::Core::LoggingService::CONSOLE_LOG_AUDIO),
           _musicCache(std::map<uint32_t, std::vector<ALuint>::iterator>()),
           _service(std::make_shared<NovelRT::Audio::AudioService>()),
           _soundCache(std::map<uint32_t, ALuint>()),

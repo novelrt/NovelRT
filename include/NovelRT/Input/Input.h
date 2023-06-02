@@ -5,7 +5,7 @@
 #define NOVELRT_INPUT_H
 
 // Input Dependencies
-#include "NovelRT/LoggingService.h"
+#include "NovelRT/Core/LoggingService.h"
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Misc.h"

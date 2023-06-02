@@ -57,12 +57,9 @@
    * @brief NovelRT is a cross-platform, flexible Visual Novel and 2D game engine.
    * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
    */
-  namespace NovelRT {
-    typedef class LoggingService LoggingService;
-  }
-
   namespace NovelRT::Core {
     typedef class Atom Atom;
+    typedef class LoggingService LoggingService;
   }
 
   /**
@@ -98,7 +95,7 @@
 #include <NovelRT/Persistence/Persistence.h>
 
   //Misc types
-  #include <NovelRT/LoggingService.h>
+  #include <NovelRT/Core/LoggingService.h>
   #include <NovelRT/Timing/StepTimer.h>
 
   // Audio types

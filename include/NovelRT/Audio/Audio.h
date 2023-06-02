@@ -6,7 +6,7 @@
 
 // Dependencies for Audio
 #include "../Core/Exceptions/Exceptions.h"
-#include "../LoggingService.h"
+#include "../Core/LoggingService.h"
 #include "../Utilities/Lazy.h"
 #include "../Utilities/Misc.h"
 #include <AL/al.h>

@@ -13,7 +13,7 @@ namespace NovelRT::Ecs::Input
     class InputSystem : public Ecs::IEcsSystem
     {
     private:
-        LoggingService _logger;
+        NovelRT::Core::LoggingService _logger;
         std::shared_ptr<NovelRT::Input::IInputDevice> _device;
         std::map<std::string, NovelRT::Core::Atom> _inputMap;
 

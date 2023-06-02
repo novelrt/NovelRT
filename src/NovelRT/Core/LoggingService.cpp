@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/NovelRT.h>
+#include <NovelRT/Core/Core.h>
 #include <iostream>
 
-namespace NovelRT
+namespace NovelRT::Core
 {
 
 #ifndef NDEBUG
@@ -17,10 +17,10 @@ namespace NovelRT
     {
         try
         {
-            _logger = spdlog::get(Utilities::Misc::CONSOLE_LOG_GENERIC);
+            _logger = spdlog::get(CONSOLE_LOG_GENERIC);
             if (_logger == nullptr)
             {
-                _logger = spdlog::stdout_color_mt<spdlog_factory>(Utilities::Misc::CONSOLE_LOG_GENERIC);
+                _logger = spdlog::stdout_color_mt<spdlog_factory>(CONSOLE_LOG_GENERIC);
             }
 
 #ifndef NDEBUG
