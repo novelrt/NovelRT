@@ -18,7 +18,7 @@ namespace NovelRT::Ecs::Graphics
             gpuCustomConstantBuffers = nullptr;
         bool useEcsTransforms = false;
         std::string pipelineName = "";
-        Atom ecsId = 0;
+        NovelRT::Core::Atom ecsId = 0;
         uuids::uuid vertexShaderAssetHandle;
         uuids::uuid pixelShaderAssetHandle;
     };

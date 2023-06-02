@@ -16,9 +16,9 @@ extern "C"
     NrtResult Nrt_Event_AddEventHandler(NrtUtilitiesEventHandle event,
                                         void (*handler)(void*),
                                         void* context,
-                                        NrtAtom* outputEventHandlerId);
+                                        NrtCoreAtom* outputEventHandlerId);
 
-    NrtResult Nrt_Event_RemoveEventHandler(NrtUtilitiesEventHandle event, NrtAtom eventHandlerId);
+    NrtResult Nrt_Event_RemoveEventHandler(NrtUtilitiesEventHandle event, NrtCoreAtom eventHandlerId);
 
     NrtResult Nrt_Event_Invoke(NrtUtilitiesEventHandle event);
 
@@ -30,10 +30,10 @@ extern "C"
     NrtResult Nrt_EventWithTimestamp_AddEventHandler(NrtUtilitiesEventWithTimestampHandle event,
                                                      void (*handler)(NrtTimestamp, void*),
                                                      void* context,
-                                                     NrtAtom* outputEventHandlerId);
+                                                     NrtCoreAtom* outputEventHandlerId);
 
     NrtResult Nrt_EventWithTimestamp_RemoveEventHandler(NrtUtilitiesEventWithTimestampHandle event,
-                                                        NrtAtom eventHandlerId);
+                                                        NrtCoreAtom eventHandlerId);
 
     NrtResult Nrt_EventWithTimestamp_Invoke(NrtUtilitiesEventWithTimestampHandle event, NrtTimestamp timestamp);
 

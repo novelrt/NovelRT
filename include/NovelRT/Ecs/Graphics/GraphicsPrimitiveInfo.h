@@ -12,9 +12,9 @@ namespace NovelRT::Ecs::Graphics
 {
     struct GraphicsPrimitiveInfo
     {
-        Atom ecsVertexDataId = 0;
-        Atom ecsTextureId = 0;
-        Atom ecsPipelineId = 0;
+        NovelRT::Core::Atom ecsVertexDataId = 0;
+        NovelRT::Core::Atom ecsTextureId = 0;
+        NovelRT::Core::Atom ecsPipelineId = 0;
         std::map<size_t, NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>>
             gpuTransformConstantBufferRegions = {};
 

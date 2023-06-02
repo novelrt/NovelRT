@@ -18,19 +18,19 @@ namespace NovelRT::Ecs
     class SystemScheduler
     {
     private:
-        std::vector<Atom> _systemIds;
+        std::vector<NovelRT::Core::Atom> _systemIds;
 
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
-        std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>, AtomHashFunction> _systems;
+        std::unordered_map<NovelRT::Core::Atom, std::function<void(Timing::Timestamp, Catalogue)>, NovelRT::Core::AtomHashFunction> _systems;
 
         EntityCache _entityCache;
         ComponentCache _componentCache;
 
         uint32_t _workerThreadCount;
 
-        std::vector<Atom> _threadWorkItem;
+        std::vector<NovelRT::Core::Atom> _threadWorkItem;
         std::vector<std::thread> _threadCache;
         std::vector<std::unique_ptr<tbb::mutex>> _mutexCache;
 

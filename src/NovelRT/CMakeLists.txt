@@ -1,6 +1,6 @@
 set(CORE_SOURCES
 
-  Atom.cpp
+  Core/Atom.cpp
   LoggingService.cpp
   EngineConfig.cpp
 

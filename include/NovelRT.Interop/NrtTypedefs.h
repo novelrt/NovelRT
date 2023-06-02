@@ -57,7 +57,7 @@ extern "C"
         NRT_FAILURE_INVALID_DIRECTORY_PATH = -20
     } NrtResultKind;
 
-    typedef uintptr_t NrtAtom;
+    typedef uintptr_t NrtCoreAtom;
 
     typedef int32_t NrtBool;
     typedef int32_t NrtLogLevel;

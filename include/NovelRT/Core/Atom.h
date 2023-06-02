@@ -9,7 +9,7 @@
 #ifndef NOVELRT_ATOM_H
 #define NOVELRT_ATOM_H
 
-namespace NovelRT
+namespace NovelRT::Core
 {
     class Atom
     {
@@ -113,7 +113,7 @@ namespace NovelRT
 
 namespace std
 {
-    template<> class numeric_limits<NovelRT::Atom> : public numeric_limits<uintptr_t>
+    template<> class numeric_limits<NovelRT::Core::Atom> : public numeric_limits<uintptr_t>
     {
     };
 }

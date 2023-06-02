@@ -19,9 +19,9 @@ namespace NovelRT::Ecs::Graphics
     class DefaultRenderingSystem : public IEcsSystem
     {
     private:
-        inline static AtomFactory& _textureIdFactory = AtomFactoryDatabase::GetFactory("TextureId");
-        inline static AtomFactory& _ecsPrimitiveInfoConfigurationIdFactory =
-            AtomFactoryDatabase::GetFactory("EcsPrimitiveInfoConfigurationId");
+        inline static NovelRT::Core::AtomFactory& _textureIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("TextureId");
+        inline static NovelRT::Core::AtomFactory& _ecsPrimitiveInfoConfigurationIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("EcsPrimitiveInfoConfigurationId");
 
         Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
@@ -35,23 +35,23 @@ namespace NovelRT::Ecs::Graphics
         NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> _frameMatrixConstantBufferRegion;
 
         tbb::mutex _textureQueueMapMutex;
-        std::map<Atom, Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
+        std::map<NovelRT::Core::Atom, Threading::ConcurrentSharedPtr<TextureInfo>> _namedTextureInfoObjects;
         std::queue<Threading::ConcurrentSharedPtr<TextureInfo>> _texturesToInitialise;
-        std::queue<Atom> _texturesToDelete;
+        std::queue<NovelRT::Core::Atom> _texturesToDelete;
 
         tbb::mutex _vertexQueueMapMutex;
-        std::map<Atom, Threading::ConcurrentSharedPtr<VertexInfo>> _namedVertexInfoObjects;
+        std::map<NovelRT::Core::Atom, Threading::ConcurrentSharedPtr<VertexInfo>> _namedVertexInfoObjects;
         std::queue<Threading::ConcurrentSharedPtr<VertexInfo>> _vertexDataToInitialise;
-        std::queue<Atom> _vertexDataToDelete;
+        std::queue<NovelRT::Core::Atom> _vertexDataToDelete;
 
         Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
 
         tbb::mutex _graphicsPipelineMapMutex;
-        std::map<Atom, Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>> _namedGraphicsPipelineInfoObjects;
+        std::map<NovelRT::Core::Atom, Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>> _namedGraphicsPipelineInfoObjects;
 
         Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> _defaultGraphicsPipelinePtr;
 
-        std::map<Atom, GraphicsPrimitiveInfo> _primitiveConfigurations;
+        std::map<NovelRT::Core::Atom, GraphicsPrimitiveInfo> _primitiveConfigurations;
 
         SceneGraph::Scene _renderScene;
 
@@ -114,13 +114,13 @@ namespace NovelRT::Ecs::Graphics
             uint32_t height,
             uuids::uuid textureAssetDataHandle);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(NovelRT::Core::Atom ecsId);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<TextureInfo> GetExistingTexture(const std::string& name);
 
         void DeleteTexture(Threading::ConcurrentSharedPtr<TextureInfo> texture);
 
-        void DeleteTexture(Atom ecsId);
+        void DeleteTexture(NovelRT::Core::Atom ecsId);
 
         void DeleteTexture(const std::string& name);
 
@@ -148,18 +148,18 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexData(
             const std::string& vertexDataName);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexData(Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<VertexInfo> GetExistingVertexData(NovelRT::Core::Atom ecsId);
 
         void DeleteVertexData(Threading::ConcurrentSharedPtr<VertexInfo> vertexData);
 
-        void DeleteVertexData(Atom ecsId);
+        void DeleteVertexData(NovelRT::Core::Atom ecsId);
 
         void DeleteVertexData(const std::string& name);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(
             const std::string& name);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(NovelRT::Core::Atom ecsId);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
@@ -172,7 +172,7 @@ namespace NovelRT::Ecs::Graphics
 
         void UnregisterPipeline(Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> pipelineInfo);
 
-        void UnregisterPipeline(Atom ecsId);
+        void UnregisterPipeline(NovelRT::Core::Atom ecsId);
 
         void UnregisterPipeline(const std::string& name);
 
@@ -198,24 +198,24 @@ namespace NovelRT::Ecs::Graphics
             return _backgroundColour;
         }
 
-        [[nodiscard]] uuids::uuid GetVertexShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const;
+        [[nodiscard]] uuids::uuid GetVertexShaderGuidForPrimitiveInfo(NovelRT::Core::Atom primitiveInfoId) const;
 
-        [[nodiscard]] uuids::uuid GetPixelShaderGuidForPrimitiveInfo(Atom primitiveInfoId) const;
+        [[nodiscard]] uuids::uuid GetPixelShaderGuidForPrimitiveInfo(NovelRT::Core::Atom primitiveInfoId) const;
 
-        [[nodiscard]] uuids::uuid GetGuidForTexture(Atom textureId) const;
+        [[nodiscard]] uuids::uuid GetGuidForTexture(NovelRT::Core::Atom textureId) const;
 
-        [[nodiscard]] inline Atom GetDefaultVertexDataId() const noexcept
+        [[nodiscard]] inline NovelRT::Core::Atom GetDefaultVertexDataId() const noexcept
         {
             return _defaultSpriteMeshPtr->ecsId;
         }
 
-        [[nodiscard]] Atom GetTextureIdFromGuid(uuids::uuid assetGuid) const;
+        [[nodiscard]] NovelRT::Core::Atom GetTextureIdFromGuid(uuids::uuid assetGuid) const;
 
-        [[nodiscard]] Atom GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
+        [[nodiscard]] NovelRT::Core::Atom GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
                                                           uuids::uuid vertexShaderAssetGuid,
                                                           uuids::uuid pixelShaderAssetGuid) const;
 
-        [[nodiscard]] Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
+        [[nodiscard]] NovelRT::Core::Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
                                                      uuids::uuid pixelShaderAssetGuid) const;
     };
 }

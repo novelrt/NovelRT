@@ -56,8 +56,8 @@ int main()
     entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
     entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
 
-    static NovelRT::AtomFactory& entityIdFactory =
-        NovelRT::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
+    static NovelRT::Core::AtomFactory& entityIdFactory =
+        NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId"); // TODO: We need to make this nicer.
     auto scriptAssetId =
         resourceManagementProvider->GetResourceLoader()->TryGetAssetIdBasedOnFilePath("Scripts/question.json");
 

@@ -14,10 +14,10 @@ namespace NovelRT::Ecs::Graphics
 
     struct RenderComponent
     {
-        Atom vertexDataId = 0;
-        Atom textureId = 0;
-        Atom pipelineId = 0;
-        Atom primitiveInfoId = 0;
+        NovelRT::Core::Atom vertexDataId = 0;
+        NovelRT::Core::Atom textureId = 0;
+        NovelRT::Core::Atom pipelineId = 0;
+        NovelRT::Core::Atom primitiveInfoId = 0;
         bool requiresCustomRendering = false;
         bool markedForDeletion = false;
 

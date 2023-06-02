@@ -136,7 +136,7 @@ template<typename Event, typename Details = EventImplementationDetails<Event>>
 NrtResult GenericEvent_AddEventHandler(typename Details::NrtHandle event,
                                        typename Details::Function handler,
                                        void* context,
-                                       NrtAtom* outputEventHandlerId)
+                                       NrtCoreAtom* outputEventHandlerId)
 {
     if (event == nullptr)
     {
@@ -162,7 +162,7 @@ NrtResult GenericEvent_AddEventHandler(typename Details::NrtHandle event,
 }
 
 template<typename Event, typename Details = EventImplementationDetails<Event>>
-NrtResult GenericEvent_RemoveEventHandler(typename Details::NrtHandle event, NrtAtom eventHandlerId)
+NrtResult GenericEvent_RemoveEventHandler(typename Details::NrtHandle event, NrtCoreAtom eventHandlerId)
 {
     if (event == nullptr)
     {
@@ -227,12 +227,12 @@ NrtUtilitiesEventHandle Nrt_Event_Create()
 NrtResult Nrt_Event_AddEventHandler(NrtUtilitiesEventHandle event,
                                     void (*handler)(void*),
                                     void* context,
-                                    NrtAtom* outputEventHandlerId)
+                                    NrtCoreAtom* outputEventHandlerId)
 {
     return GenericEvent_AddEventHandler<Event<>>(event, handler, context, outputEventHandlerId);
 }
 
-NrtResult Nrt_Event_RemoveEventHandler(NrtUtilitiesEventHandle event, NrtAtom eventHandlerId)
+NrtResult Nrt_Event_RemoveEventHandler(NrtUtilitiesEventHandle event, NrtCoreAtom eventHandlerId)
 {
     return GenericEvent_RemoveEventHandler<Event<>>(event, eventHandlerId);
 }
@@ -272,12 +272,12 @@ NrtUtilitiesEventWithTimestampHandle Nrt_EventWithTimestamp_Create()
 NrtResult Nrt_EventWithTimestamp_AddEventHandler(NrtUtilitiesEventWithTimestampHandle event,
                                                  void (*handler)(NrtTimestamp, void*),
                                                  void* context,
-                                                 NrtAtom* outputEventHandlerId)
+                                                 NrtCoreAtom* outputEventHandlerId)
 {
     return GenericEvent_AddEventHandler<Event<NovelRT::Timing::Timestamp>>(event, handler, context,
                                                                            outputEventHandlerId);
 }
-NrtResult Nrt_EventWithTimestamp_RemoveEventHandler(NrtUtilitiesEventWithTimestampHandle event, NrtAtom eventHandlerId)
+NrtResult Nrt_EventWithTimestamp_RemoveEventHandler(NrtUtilitiesEventWithTimestampHandle event, NrtCoreAtom eventHandlerId)
 {
     return GenericEvent_RemoveEventHandler<Event<NovelRT::Timing::Timestamp>>(event, eventHandlerId);
 }

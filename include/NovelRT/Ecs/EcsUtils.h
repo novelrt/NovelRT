@@ -10,8 +10,8 @@
 
 namespace NovelRT::Ecs
 {
-    using EntityId = NovelRT::Atom;
-    using ComponentTypeId = NovelRT::Atom;
+    using EntityId = NovelRT::Core::Atom;
+    using ComponentTypeId = NovelRT::Core::Atom;
 
     std::unordered_map<std::type_index, ComponentTypeId>& GetComponentTypeIds() noexcept;
 
@@ -30,11 +30,11 @@ namespace NovelRT::Ecs
             "Component type must be trivially copyable for use with a ComponentTypeId. See the documentation for "
             "more information.");
 
-        static AtomFactory& _componentTypeIdFactory = AtomFactoryDatabase::GetFactory("ComponentTypeId");
+        static NovelRT::Core::AtomFactory& _componentTypeIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
         auto& componentTypeId = GetComponentTypeIds()[typeid(TComponent)];
 
-        if (componentTypeId == Atom(0))
+        if (componentTypeId == NovelRT::Core::Atom(0))
         {
             componentTypeId = _componentTypeIdFactory.GetNext();
         }

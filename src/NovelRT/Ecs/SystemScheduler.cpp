@@ -75,9 +75,9 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept
     {
-        static AtomFactory& systemIdFactory = AtomFactoryDatabase::GetFactory("SystemId");
+        static NovelRT::Core::AtomFactory& systemIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("SystemId");
 
-        Atom id = systemIdFactory.GetNext();
+        NovelRT::Core::Atom id = systemIdFactory.GetNext();
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
     }
@@ -105,9 +105,9 @@ namespace NovelRT::Ecs
         {
             WaitForJob(poolId);
 
-            Atom workItem = _threadWorkItem[poolId];
+            NovelRT::Core::Atom workItem = _threadWorkItem[poolId];
 
-            if (workItem == std::numeric_limits<Atom>::max())
+            if (workItem == std::numeric_limits<NovelRT::Core::Atom>::max())
             {
                 _mutexCache[poolId]->unlock();
                 return;
@@ -166,7 +166,7 @@ namespace NovelRT::Ecs
             _mutexCache.back()->lock();
         }
 
-        std::vector<Atom> vec2(_workerThreadCount);
+        std::vector<NovelRT::Core::Atom> vec2(_workerThreadCount);
         _threadWorkItem.swap(vec2);
 
         for (size_t i = 0; i < _workerThreadCount; i++)
@@ -194,7 +194,7 @@ namespace NovelRT::Ecs
                "Work was scheduled while the SystemScheduler is shutting down!");
         for (auto&& workItem : _threadWorkItem)
         {
-            workItem = std::numeric_limits<Atom>::max();
+            workItem = std::numeric_limits<NovelRT::Core::Atom>::max();
         }
 
         _threadAvailabilityMap = 0;

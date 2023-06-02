@@ -21,7 +21,7 @@ namespace NovelRT::Persistence
 
     void Chapter::ToEcsInstance(Ecs::ComponentCache& componentCache, Ecs::EntityCache& entityCache) const
     {
-        static AtomFactory& factory = AtomFactoryDatabase::GetFactory("EntityId");
+        static NovelRT::Core::AtomFactory& factory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
         Ecs::SparseSet<Ecs::EntityId, Ecs::EntityId> localToGlobalEntityMap{};
         auto& registeredGlobalEntities = entityCache.GetRegisteredEntities();
         auto& loadRules = Persistable::GetComponentLoadRules();

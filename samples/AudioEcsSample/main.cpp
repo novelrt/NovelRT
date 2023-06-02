@@ -51,7 +51,7 @@ int main()
     AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 0, 0};
 
     // Assign the entities holding the components
-    auto& entityFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
+    auto& entityFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
     auto musicEnt = entityFactory.GetNext();
     auto soundEnt = entityFactory.GetNext();
 

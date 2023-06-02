@@ -31,8 +31,8 @@ extern "C"
 
     typedef void (*NrtSystemUpdateFnPtr)(NrtTimestamp, NrtCatalogueHandle, void*);
 
-    typedef NrtAtom NrtEntityId;
-    typedef NrtAtom NrtComponentTypeId;
+    typedef NrtCoreAtom NrtEntityId;
+    typedef NrtCoreAtom NrtComponentTypeId;
 
 #ifdef __cplusplus
 }

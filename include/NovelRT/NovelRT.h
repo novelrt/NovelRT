@@ -58,8 +58,11 @@
    * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
    */
   namespace NovelRT {
-    typedef class Atom Atom;
     typedef class LoggingService LoggingService;
+  }
+
+  namespace NovelRT::Core {
+    typedef class Atom Atom;
   }
 
   /**
@@ -80,7 +83,7 @@
   #include <NovelRT/EngineConfig.h>
 
   // Value types
-  #include <NovelRT/Atom.h>
+  #include <NovelRT/Core/Atom.h>
   #include <NovelRT/Timing/Timestamp.h>
   #include <NovelRT/Utilities/Event.h> //these have to exist up here due to include order issues
   #include <NovelRT/Utilities/Lazy.h>

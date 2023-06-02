@@ -16,7 +16,7 @@ namespace NovelRT::Ecs::Graphics
         std::string textureName;
         uint32_t width = 0;
         uint32_t height = 0;
-        Atom ecsId = 0;
+        NovelRT::Core::Atom ecsId = 0;
         std::vector<uint8_t> textureData;
         uuids::uuid textureAssetDataHandle;
 

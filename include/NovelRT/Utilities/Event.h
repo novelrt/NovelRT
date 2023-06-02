@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "../Atom.h"
+#include "../Core/Atom.h"
 #include <functional>
 #include <vector>
 
@@ -13,9 +13,9 @@ namespace NovelRT::Utilities
     template<typename... TArgs> class EventHandler
     {
     private:
-        Atom _id;
+        NovelRT::Core::Atom _id;
         std::function<void(TArgs...)> _function;
-        inline static AtomFactory& _eventIdFactory = AtomFactoryDatabase::GetFactory("EventHandler");
+        inline static NovelRT::Core::AtomFactory& _eventIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EventHandler");
 
     public:
         EventHandler() : EventHandler(nullptr)
@@ -23,7 +23,7 @@ namespace NovelRT::Utilities
         }
 
         explicit EventHandler(const std::function<void(TArgs...)>& function)
-            : _id((function != nullptr) ? _eventIdFactory.GetNext() : Atom()), _function(function)
+            : _id((function != nullptr) ? _eventIdFactory.GetNext() : NovelRT::Core::Atom()), _function(function)
         {
         }
 
@@ -32,7 +32,7 @@ namespace NovelRT::Utilities
             _function(std::forward<TArgs>(args)...);
         }
 
-        Atom getId() const noexcept
+        NovelRT::Core::Atom getId() const noexcept
         {
             return _id;
         }
@@ -65,7 +65,7 @@ namespace NovelRT::Utilities
 
         void operator+=(const EventHandler<TArgs...>& handler)
         {
-            if (handler.getId() != Atom())
+            if (handler.getId() != NovelRT::Core::Atom())
             {
                 _handlers.emplace_back(handler);
             }
@@ -79,7 +79,7 @@ namespace NovelRT::Utilities
 
         void operator-=(const EventHandler<TArgs...>& handler)
         {
-            if (handler.getId() == Atom())
+            if (handler.getId() == NovelRT::Core::Atom())
                 return;
 
             auto match = std::find(_handlers.cbegin(), _handlers.cend(), handler);
@@ -88,9 +88,9 @@ namespace NovelRT::Utilities
                 _handlers.erase(match);
         }
 
-        void operator-=(Atom atom)
+        void operator-=(NovelRT::Core::Atom atom)
         {
-            if (atom == Atom())
+            if (NovelRT::Core::Atom == NovelRT::Core::Atom())
                 return;
 
             for (auto it = _handlers.begin(); it != _handlers.end(); ++it)

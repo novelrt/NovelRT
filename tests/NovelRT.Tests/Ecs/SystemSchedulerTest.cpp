@@ -19,7 +19,7 @@ public:
     std::function<void(Timestamp, Catalogue)> sysOne;
     std::function<void(Timestamp, Catalogue)> sysTwo;
     std::function<void(Timestamp, Catalogue)> sysThree;
-    inline static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
+    inline static NovelRT::Core::AtomFactory& entityIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
 
 protected:
     void SetUp() override

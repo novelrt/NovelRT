@@ -19,7 +19,7 @@ public:
 protected:
     void SetUp() override
     {
-        static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
+        static NovelRT::Core::AtomFactory& _entityIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
 
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false}, "THROW_AWAY");

@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Atom.h>
+#include <NovelRT/Core/Atom.h>
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
@@ -10,10 +10,10 @@
 #include <oneapi/tbb/mutex.h>
 #include <unordered_map>
 
-namespace NovelRT
+namespace NovelRT::Core
 {
 
-    Atom Atom::GetNextEcsPrimitiveInfoConfigurationId() noexcept
+    NovelRT::Core::Atom Atom::GetNextEcsPrimitiveInfoConfigurationId() noexcept
     {
         static std::atomic_uintptr_t _nextEcsPrimitiveInfoConfigurationId(0);
         auto value = ++_nextEcsPrimitiveInfoConfigurationId;
@@ -24,7 +24,7 @@ namespace NovelRT
     {
     }
 
-    AtomFactory::AtomFactory(Atom startingValue) noexcept : _currentValue(startingValue), _moved(false)
+    AtomFactory::AtomFactory(NovelRT::Core::Atom startingValue) noexcept : _currentValue(startingValue), _moved(false)
     {
     }
 
@@ -51,7 +51,7 @@ namespace NovelRT
         return *this;
     }
 
-    Atom AtomFactory::GetNext()
+    NovelRT::Core::Atom AtomFactory::GetNext()
     {
         if (_moved)
         {
@@ -63,7 +63,7 @@ namespace NovelRT
         return value;
     }
 
-    void AtomFactory::SetToValue(Atom value)
+    void AtomFactory::SetToValue(NovelRT::Core::Atom value)
     {
         if (_moved)
         {

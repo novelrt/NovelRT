@@ -10,55 +10,55 @@ using namespace NovelRT::Ecs;
 
 TEST(SparseSetTest, InsertDoesNotThrowWhenAddingValidItemToCollection)
 {
-    SparseSet<Atom, int32_t> testSet;
-    EXPECT_NO_THROW(testSet.Insert(Atom(0), 1));
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    EXPECT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
 }
 
 TEST(SparseSetTest, InsertThrowsWhenDuplicateKeyIsAddedToCollection)
 {
-    SparseSet<Atom, int32_t> testSet;
-    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-    EXPECT_THROW(testSet.Insert(Atom(0), 1), std::exception);
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
+    EXPECT_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1), std::exception);
 }
 
 TEST(SparseSetTest, RemoveDoesNotThrowWhenRemovingValidItemFromCollection)
 {
-    SparseSet<Atom, int32_t> testSet;
-    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-    EXPECT_NO_THROW(testSet.Remove(Atom(0)));
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
+    EXPECT_NO_THROW(testSet.Remove(NovelRT::Core::Atom(0)));
 }
 
 TEST(SparseSetTest, RemoveDoesThrowWhenRemovingNonexistentKeyFromCollection)
 {
-    SparseSet<Atom, int32_t> testSet;
-    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-    ASSERT_NO_THROW(testSet.Remove(Atom(0)));
-    EXPECT_THROW(testSet.Remove(Atom(0)), std::exception);
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
+    ASSERT_NO_THROW(testSet.Remove(NovelRT::Core::Atom(0)));
+    EXPECT_THROW(testSet.Remove(NovelRT::Core::Atom(0)), std::exception);
 }
 
 TEST(SparseSetTest, InsertInsertsValidItemCorrectly)
 {
-    SparseSet<Atom, int32_t> testSet;
-    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-    EXPECT_EQ(testSet[Atom(0)], 1);
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
+    EXPECT_EQ(testSet[NovelRT::Core::Atom(0)], 1);
 }
 
 TEST(SparseSetTest, RemoveUpdatesSetCorrectlyAfterRemovingElement)
 {
-    SparseSet<Atom, int32_t> testSet;
-    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-    ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
-    ASSERT_NO_THROW(testSet.Remove(Atom(0)));
-    EXPECT_EQ(testSet[Atom(1)], 1);
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(1), 1));
+    ASSERT_NO_THROW(testSet.Remove(NovelRT::Core::Atom(0)));
+    EXPECT_EQ(testSet[NovelRT::Core::Atom(1)], 1);
 }
 
 TEST(SparseSetTest, CanIterateAndModifyDenseData)
 {
-    SparseSet<Atom, int32_t> testSet;
-    ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
-    ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
-    ASSERT_NO_THROW(testSet.Insert(Atom(2), 1));
-    ASSERT_NO_THROW(testSet.Insert(Atom(3), 1));
+    SparseSet<NovelRT::Core::Atom, int32_t> testSet;
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(0), 1));
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(1), 1));
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(2), 1));
+    ASSERT_NO_THROW(testSet.Insert(NovelRT::Core::Atom(3), 1));
 
     for (auto [i, j] : testSet)
     {

@@ -14,7 +14,7 @@ namespace NovelRT::Ecs::Graphics
     {
         NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource> gpuVertexRegion = {};
         std::string vertexInfoName;
-        Atom ecsId = 0;
+        NovelRT::Core::Atom ecsId = 0;
         void* stagingPtr = nullptr;
         size_t sizeOfVert = 0;
         size_t stagingPtrLength = 0;

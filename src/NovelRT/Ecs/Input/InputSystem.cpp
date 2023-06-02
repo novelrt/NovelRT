@@ -8,7 +8,7 @@ namespace NovelRT::Ecs::Input
     InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
                              std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider)
     {
-        _inputMap = std::map<std::string, NovelRT::Atom>();
+        _inputMap = std::map<std::string, NovelRT::Core::Atom>();
         _device = inputProvider->GetInputService();
         _device->Initialise(windowingProvider->GetWindowingDevice()->GetHandle());
     }
@@ -58,11 +58,11 @@ namespace NovelRT::Ecs::Input
 
     void InputSystem::AddMapping(std::string name, std::string id)
     {
-        static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
+        static NovelRT::Core::AtomFactory& _entityIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
 
         unused(_device->AddInputAction(name, id));
         auto entityMappingId = _entityIdFactory.GetNext();
-        _inputMap.insert(std::pair<std::string, NovelRT::Atom>(name, entityMappingId));
+        _inputMap.insert(std::pair<std::string, NovelRT::Core::Atom>(name, entityMappingId));
         _logger.logDebug("Input Mapped: \"{}\" to {}", name, id);
     }
 
@@ -77,7 +77,7 @@ namespace NovelRT::Ecs::Input
         AddMapping("B", "L");
     }
 
-    NovelRT::Atom InputSystem::GetMappingId(const std::string& mappingName) const
+    NovelRT::Core::Atom InputSystem::GetMappingId(const std::string& mappingName) const
     {
         return _inputMap.at(mappingName);
     }
