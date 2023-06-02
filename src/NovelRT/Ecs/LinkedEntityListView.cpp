@@ -499,7 +499,7 @@ namespace NovelRT::Ecs
                 beginComponentDiff.previous = newNode;
                 _changes.Insert(_begin, beginComponentDiff);
                 finalNext = _begin;
-                // throw Exceptions::InvalidOperationException("I can't do that dave.");
+                // throw NovelRT::Core::Exceptions::InvalidOperationException("I can't do that dave.");
             }
 
             _newBeginPostDiff = newNode;
@@ -643,7 +643,7 @@ namespace NovelRT::Ecs
         }
         else
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
     }
 

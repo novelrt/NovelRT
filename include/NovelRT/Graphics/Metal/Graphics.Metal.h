@@ -5,7 +5,7 @@
 #define NOVELRT_GRAPHICS_METAL_H
 
 // Graphics.Metal dependencies
-#include "../../Exceptions/Exceptions.h"
+#include "../../Core/Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
 #include "../Graphics.h"
 #include <Metal/Metal.hpp>

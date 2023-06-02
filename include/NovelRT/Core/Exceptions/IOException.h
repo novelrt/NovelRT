@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace NovelRT::Exceptions
+namespace NovelRT::Core::Exceptions
 {
     class IOException final : public std::runtime_error
     {

@@ -22,12 +22,12 @@ namespace NovelRT::Graphics
         {
             if (_surface == nullptr)
             {
-                throw Exceptions::NullPointerException("The supplied IGraphicsSurface is nullptr.");
+                throw NovelRT::Core::Exceptions::NullPointerException("The supplied IGraphicsSurface is nullptr.");
             }
 
             if (_provider == nullptr)
             {
-                throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
+                throw NovelRT::Core::Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
             }
         }
 

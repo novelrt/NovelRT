@@ -23,7 +23,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (bindResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to bind the VkBuffer!", bindResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to bind the VkBuffer!", bindResult);
         }
     }
 

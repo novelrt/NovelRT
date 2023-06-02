@@ -17,7 +17,7 @@ std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 
     if (!file.is_open())
     {
-        throw NovelRT::Exceptions::FileNotFoundException(finalPath.string());
+        throw NovelRT::Core::Exceptions::FileNotFoundException(finalPath.string());
     }
 
     size_t fileSize = static_cast<size_t>(file.tellg());

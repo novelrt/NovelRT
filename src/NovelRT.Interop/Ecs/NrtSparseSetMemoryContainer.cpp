@@ -6,7 +6,7 @@
 #include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
-using namespace NovelRT::Exceptions;
+using namespace NovelRT::Core::Exceptions;
 
 std::vector<uint8_t> dummyByteVectorSparseSet{uint8_t(0)};
 std::vector<size_t> dummySizeTVectorSparseSet{0};

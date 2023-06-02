@@ -41,7 +41,7 @@ namespace NovelRT::Ecs
     {
         if (ContainsKey(key))
         {
-            throw Exceptions::DuplicateKeyException();
+            throw NovelRT::Core::Exceptions::DuplicateKeyException();
         }
 
         InsertInternal(key, value);
@@ -69,7 +69,7 @@ namespace NovelRT::Ecs
     {
         if (!ContainsKey(key))
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         size_t indexCutoff = _sparse[key];

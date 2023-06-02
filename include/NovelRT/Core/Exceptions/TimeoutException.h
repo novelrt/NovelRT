@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace NovelRT::Exceptions
+namespace NovelRT::Core::Exceptions
 {
     class TimeoutException : public std::runtime_error
     {

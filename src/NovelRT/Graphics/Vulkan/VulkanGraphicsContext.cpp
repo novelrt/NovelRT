@@ -51,7 +51,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to initialise the VkCommandBuffer instance with the given parameters and VkDevice.", result);
         }
 
@@ -72,7 +72,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to initialise the VkCommandPool instance with the given parameters and VkDevice.", result);
         }
 
@@ -100,7 +100,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to initialise the VkFramebuffer instance with the given parameters and VkDevice.", result);
         }
 
@@ -136,7 +136,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to initialise VkImageView instance with the given parameters and VkDevice.", result);
         }
 
@@ -289,7 +289,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to initialise on the VkCommandBuffer instance correctly.", result);
         }
     }
@@ -299,12 +299,12 @@ namespace NovelRT::Graphics::Vulkan
     {
         if (destination == nullptr)
         {
-            throw Exceptions::NullPointerException("The destination graphics buffer is null.");
+            throw NovelRT::Core::Exceptions::NullPointerException("The destination graphics buffer is null.");
         }
 
         if (source == nullptr)
         {
-            throw Exceptions::NullPointerException("The source graphics buffer is null.");
+            throw NovelRT::Core::Exceptions::NullPointerException("The source graphics buffer is null.");
         }
         VkBufferCopy vulkanBufferCopy{};
         vulkanBufferCopy.srcOffset = 0;
@@ -319,12 +319,12 @@ namespace NovelRT::Graphics::Vulkan
     {
         if (destination == nullptr)
         {
-            throw Exceptions::NullPointerException("The destination graphics texture is null.");
+            throw NovelRT::Core::Exceptions::NullPointerException("The destination graphics texture is null.");
         }
 
         if (source == nullptr)
         {
-            throw Exceptions::NullPointerException("The source graphics buffer is null.");
+            throw NovelRT::Core::Exceptions::NullPointerException("The source graphics buffer is null.");
         }
 
         VkCommandBuffer vulkanCommandBuffer = GetVulkanCommandBuffer();
@@ -355,7 +355,7 @@ namespace NovelRT::Graphics::Vulkan
     {
         if (primitive == nullptr)
         {
-            throw Exceptions::NullPointerException("The provided GraphicsPrimitive is null.");
+            throw NovelRT::Core::Exceptions::NullPointerException("The provided GraphicsPrimitive is null.");
         }
 
         VkCommandBuffer vulkanCommandBuffer = GetVulkanCommandBuffer();
@@ -486,7 +486,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (endCommandBufferResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to finalise initialisation for the VkCommandBuffer Instance. This instance cannot be "
                 "submitted.",
                 endCommandBufferResult);

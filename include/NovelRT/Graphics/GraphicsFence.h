@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
         {
             if (!TryWait(millisecondsTimeout))
             {
-                throw Exceptions::TimeoutException(millisecondsTimeout);
+                throw NovelRT::Core::Exceptions::TimeoutException(millisecondsTimeout);
             }
         }
 
@@ -45,7 +45,7 @@ namespace NovelRT::Graphics
         {
             if (!TryWait(timeout))
             {
-                throw Exceptions::TimeoutException(timeout.count());
+                throw NovelRT::Core::Exceptions::TimeoutException(timeout.count());
             }
         }
     };

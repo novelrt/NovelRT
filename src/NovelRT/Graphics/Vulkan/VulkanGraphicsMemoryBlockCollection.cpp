@@ -11,7 +11,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (!settings.BlockCreationLogicDelegate.has_value())
         {
-            throw Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "No memory block creation method has been specified for the default Vulkan render pipeline.");
         }
 

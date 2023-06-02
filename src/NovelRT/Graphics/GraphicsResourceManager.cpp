@@ -209,7 +209,7 @@ namespace NovelRT::Graphics
                 case GraphicsBufferKind::Constant:
                     return _constantBuffers;
                 default:
-                    throw Exceptions::InvalidOperationException();
+                    throw NovelRT::Core::Exceptions::InvalidOperationException();
             }
         }();
 
@@ -255,7 +255,7 @@ namespace NovelRT::Graphics
                 return _constantBuffers.emplace_back(newBuffer);
         }
 
-        throw Exceptions::InvalidOperationException(); // we should never reach here
+        throw NovelRT::Core::Exceptions::InvalidOperationException(); // we should never reach here
     }
 
     GraphicsMemoryRegion<GraphicsResource> GraphicsResourceManager::LoadTextureData(
@@ -295,7 +295,7 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeVertexData.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeVertexData.");
         }
 
         collection->Free(vertexResource);
@@ -313,7 +313,7 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeIndexData.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeIndexData.");
         }
 
         collection->Free(indexResource);
@@ -331,7 +331,7 @@ namespace NovelRT::Graphics
 
         if (texturePtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException(
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
                 "An invalid graphics resource was passed into FreeTextureData.");
         }
 
@@ -368,12 +368,12 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException("The provided region was not provided by a constant buffer");
+            throw NovelRT::Core::Exceptions::InvalidOperationException("The provided region was not provided by a constant buffer");
         }
 
         if (std::find(_constantBuffers.begin(), _constantBuffers.end(), bufferPtr) == _constantBuffers.end())
         {
-            throw Exceptions::InvalidOperationException(
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
                 "The provided region is not managed by this instance of GraphicsResourceManager.");
         }
 
@@ -400,7 +400,7 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException(
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
                 "An invalid graphics resource was passed into FreeConstantBufferRegion");
         }
 
@@ -408,7 +408,7 @@ namespace NovelRT::Graphics
 
         if (iterator == _constantBuffers.end())
         {
-            throw Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
+            throw NovelRT::Core::Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
                                                         "this instance of GraphicsResourceManager.");
         }
 
@@ -427,7 +427,7 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw Exceptions::InvalidOperationException(
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
                 "An invalid graphics resource was passed into FreeConstantBufferRegion");
         }
 
@@ -445,7 +445,7 @@ namespace NovelRT::Graphics
 
         if (oldLength >= _constantBuffersToUnmapAndWrite.size())
         {
-            throw Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
+            throw NovelRT::Core::Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
                                                         "this instance of GraphicsResourceManager.");
         }
 

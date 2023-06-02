@@ -5,7 +5,7 @@
 #define NOVELRT_GRAPHICS_D3D12_H
 
 // Graphics.D3D12 dependencies
-#include "../../Exceptions/Exceptions.h"
+#include "../../Core/Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
 #include "../Graphics.h"
 #include <d3d12.h>

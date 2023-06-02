@@ -126,7 +126,7 @@ namespace NovelRT::Ecs
          * @param component The instruction as a component state. This should represent the modification you wish to
          * make, as opposed to a final state.
          *
-         * @exception Exceptions::DuplicateKeyException if multiple updates to the same entity are pushed.
+         * @exception NovelRT::Core::Exceptions::DuplicateKeyException if multiple updates to the same entity are pushed.
          * @exception std::out_of_range if an invalid poolId is provided.
          */
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, T component)
@@ -142,7 +142,7 @@ namespace NovelRT::Ecs
          *
          * @param entity The entity to use for fetching the component.
          * @return A copy of the current state of the component of type T attached to the given entity.
-         * @exception Exceptions::KeyNotFoundException if the given EntityId is not present within the set.
+         * @exception NovelRT::Core::Exceptions::KeyNotFoundException if the given EntityId is not present within the set.
          */
         [[nodiscard]] T GetComponent(EntityId entity) const
         {

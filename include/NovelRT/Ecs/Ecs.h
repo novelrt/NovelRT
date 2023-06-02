@@ -8,7 +8,7 @@
 // clang-format off
 
 #include "../Core/Atom.h"
-#include "../Exceptions/Exceptions.h"
+#include "../Core/Exceptions/Exceptions.h"
 #include "../Maths/Maths.h"
 #include "../Timing/Timestamp.h"
 #include "../Utilities/Event.h"

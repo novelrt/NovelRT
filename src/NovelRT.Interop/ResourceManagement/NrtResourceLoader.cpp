@@ -3,11 +3,11 @@
 
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Core/Exceptions/Exceptions.h>
 #include <NovelRT/ResourceManagement/ResourceManagement.h>
 
 using namespace NovelRT::ResourceManagement;
-using namespace NovelRT::Exceptions;
+using namespace NovelRT::Core::Exceptions;
 
 extern "C"
 {

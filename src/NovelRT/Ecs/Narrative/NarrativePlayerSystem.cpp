@@ -51,7 +51,7 @@ namespace NovelRT::Ecs::Narrative
 
                 if (selectedChoice.GetImmutableDataLength() > 1)
                 {
-                    throw Exceptions::NotSupportedException("There can only be one selected choice in a given frame.");
+                    throw NovelRT::Core::Exceptions::NotSupportedException("There can only be one selected choice in a given frame.");
                 }
 
                 auto [entity, choice] = *selectedChoice.begin();
@@ -135,7 +135,7 @@ namespace NovelRT::Ecs::Narrative
 
         if (narrativeStoryStateCount > 1 || scriptExecutionRequestCount > 1)
         {
-            throw Exceptions::NotSupportedException();
+            throw NovelRT::Core::Exceptions::NotSupportedException();
         }
 
         if (narrativeStoryStateCount == 0)

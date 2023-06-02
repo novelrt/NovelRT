@@ -39,30 +39,30 @@ namespace NovelRT::Graphics
         {
             if (_pipeline == nullptr)
             {
-                throw Exceptions::NullPointerException("Parameter name: pipeline.");
+                throw NovelRT::Core::Exceptions::NullPointerException("Parameter name: pipeline.");
             }
 
             if (GetVertexBufferRegion().GetCollection() == nullptr)
             {
-                throw Exceptions::NullPointerException(
+                throw NovelRT::Core::Exceptions::NullPointerException(
                     "The vertex buffer region's memory resource collection is nullptr.");
             }
 
             if (GetPipeline()->GetDevice() != GetDevice())
             {
-                throw Exceptions::InvalidOperationException(
+                throw NovelRT::Core::Exceptions::InvalidOperationException(
                     "The supplied graphics devices for the primitive and the pipeline do not match.");
             }
 
             if (GetVertexBufferRegion().GetDevice() != GetDevice())
             {
-                throw Exceptions::InvalidOperationException(
+                throw NovelRT::Core::Exceptions::InvalidOperationException(
                     "The supplied graphics devices for the primitive and the vertex buffer region do not match.");
             }
 
             if (GetIndexBufferRegion().GetCollection() != nullptr && GetIndexBufferRegion().GetDevice() != GetDevice())
             {
-                throw Exceptions::InvalidOperationException(
+                throw NovelRT::Core::Exceptions::InvalidOperationException(
                     "The supplied graphics devices for the primitive and the index buffer region do not match.");
             }
 

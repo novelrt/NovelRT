@@ -30,7 +30,7 @@ namespace NovelRT::Graphics::Vulkan::Utilities
                 return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
                 break;
             default:
-                throw Exceptions::NotSupportedException(
+                throw NovelRT::Core::Exceptions::NotSupportedException(
                     "The specified texture address mode is not supported on the default Vulkan pipeline.");
                 break;
         }

@@ -108,7 +108,7 @@
   #include <NovelRT/Ecs/Ecs.h>
 
   // Exception types
-  #include <NovelRT/Exceptions/Exceptions.h>
+  #include <NovelRT/Core/Exceptions/Exceptions.h>
 
   // Experimental types
   #include <NovelRT/Graphics/Graphics.h>

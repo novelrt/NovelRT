@@ -211,7 +211,7 @@ namespace NovelRT::Graphics
 
                 if (!result)
                 {
-                    throw Exceptions::OutOfMemoryException("A size of " + std::to_string(result) +
+                    throw NovelRT::Core::Exceptions::OutOfMemoryException("A size of " + std::to_string(result) +
                                                            " bytes was requested, but this size is too large.");
                 }
 
@@ -254,7 +254,7 @@ namespace NovelRT::Graphics
 
                 if (!freedRegion)
                 {
-                    throw Exceptions::KeyNotFoundException();
+                    throw NovelRT::Core::Exceptions::KeyNotFoundException();
                 }
 
                 assert(Validate());
@@ -267,7 +267,7 @@ namespace NovelRT::Graphics
             {
                 if (collection == nullptr)
                 {
-                    throw Exceptions::NullPointerException("Parameter name: collection.");
+                    throw NovelRT::Core::Exceptions::NullPointerException("Parameter name: collection.");
                 }
 
                 if (size == 0)
@@ -503,7 +503,7 @@ namespace NovelRT::Graphics
 
                 if (nextRegionNode->GetIsAllocated())
                 {
-                    throw Exceptions::InvalidOperationException(
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
                         "An allocated memory region was designated to be merged with an unallocated one.");
                 }
 
@@ -523,13 +523,13 @@ namespace NovelRT::Graphics
             {
                 if (regionNode->GetIsAllocated())
                 {
-                    throw Exceptions::InvalidOperationException(
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
                         "An allocated memory region was designated to be registered as free.");
                 }
 
                 if (regionNode->GetSize() == 0)
                 {
-                    throw Exceptions::InvalidOperationException(
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
                         "A memory region of size 0 was provided as a free region to register.");
                 }
 
@@ -557,7 +557,7 @@ namespace NovelRT::Graphics
             {
                 if (size <= 0)
                 {
-                    throw Exceptions::InvalidOperationException(
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
                         "An attempt to allocate a memory region of size 0 (or less) was made.");
                 }
 
@@ -570,7 +570,7 @@ namespace NovelRT::Graphics
 
                 if (region.GetIsAllocated())
                 {
-                    throw Exceptions::InvalidOperationException(
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
                         "An attempt to allocate a memory region that was already allocated was made.");
                 }
 
@@ -637,13 +637,13 @@ namespace NovelRT::Graphics
             {
                 if (regionNode->GetIsAllocated())
                 {
-                    throw Exceptions::InvalidOperationException("An attempt was made to unregister a free region, but "
+                    throw NovelRT::Core::Exceptions::InvalidOperationException("An attempt was made to unregister a free region, but "
                                                                 "the target region is currently allocated.");
                 }
 
                 if (regionNode->GetSize() <= 0)
                 {
-                    throw Exceptions::InvalidOperationException(
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
                         "An attempt was made to unregister an invalid region that has a size of 0 (or less).");
                 }
 

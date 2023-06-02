@@ -14,7 +14,7 @@ namespace NovelRT::Audio
                   {
                       std::string error = GetALError();
                       _logger.logError("OpenAL device creation failed! {}", error);
-                      throw Exceptions::InitialisationFailureException(
+                      throw NovelRT::Core::Exceptions::InitialisationFailureException(
                           "OpenAL failed to create an audio device! Aborting...", error);
                   }
                   return device;
@@ -86,7 +86,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot load new audio into memory while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
 
@@ -121,7 +121,7 @@ namespace NovelRT::Audio
         {
             _logger.logError(
                 "Cannot change the volume of a nonexistent sound! the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::SetSoundVolume",
                 "You cannot modify a sound source when the AudioService is not initialised.");
         }
@@ -148,7 +148,7 @@ namespace NovelRT::Audio
         {
             _logger.logError(
                 "Cannot move audio position on a nonexistent sound! The service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::StopSound", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
@@ -161,7 +161,7 @@ namespace NovelRT::Audio
         {
             _logger.logError(
                 "Cannot change the volume of a nonexistent sound! The service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::SetSoundVolume",
                 "You cannot modify a sound source when the AudioService is not initialised.");
         }
@@ -175,7 +175,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::playMusic", "You cannot play a sound when the AudioService is not initialised.");
         }
 
@@ -210,7 +210,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot pause audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::PauseMusic", "You cannot pause a sound when the AudioService is not initialised.");
         }
 
@@ -223,7 +223,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot stop audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::StopMusic", "You cannot stop a sound when the AudioService is not initialised.");
         }
 
@@ -236,7 +236,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
         }
 
@@ -335,7 +335,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot load new audio into memory while the service is yolo uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::load", "You cannot load new audio when the service is not initialised.");
         }
         auto newBuffer = BufferAudioFrameData(audioFrameData, channelCount, sampleRate);
@@ -369,7 +369,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot play audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::playMusic", "You cannot play a sound when the AudioService is not initialised.");
         }
 
@@ -459,7 +459,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
         }
 
@@ -473,7 +473,7 @@ namespace NovelRT::Audio
         if (!isInitialised)
         {
             _logger.logError("Cannot modify audio while the service is uninitialised! Aborting...");
-            throw NovelRT::Exceptions::NotInitialisedException(
+            throw NovelRT::Core::Exceptions::NotInitialisedException(
                 "AudioService::SetMusicVolume", "You cannot modify a sound when the AudioService is not initialised.");
         }
 

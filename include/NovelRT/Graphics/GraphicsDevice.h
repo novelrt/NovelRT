@@ -25,12 +25,12 @@ namespace NovelRT::Graphics
         {
             if (_adapter.expired())
             {
-                throw Exceptions::NullPointerException("The supplied GraphicsAdapter is nullptr.");
+                throw NovelRT::Core::Exceptions::NullPointerException("The supplied GraphicsAdapter is nullptr.");
             }
 
             if (_surfaceContext == nullptr)
             {
-                throw Exceptions::NullPointerException("The supplied GraphicsSurfaceContext is nullptr.");
+                throw NovelRT::Core::Exceptions::NullPointerException("The supplied GraphicsSurfaceContext is nullptr.");
             }
         }
 

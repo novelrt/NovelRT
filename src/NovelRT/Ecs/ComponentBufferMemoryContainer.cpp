@@ -80,7 +80,7 @@ namespace NovelRT::Ecs
     {
         if (!_rootSet.ContainsKey(entity))
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         return ComponentBufferMemoryContainer::ImmutableDataView(_rootSet[entity].GetDataHandle(), entity);

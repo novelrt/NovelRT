@@ -51,7 +51,7 @@ TEST(SparseSetMemoryContainerTest, InsertThrowsWhenDuplicateKeyEntered)
     int32_t testValue = 10;
 
     container.Insert(0, &testValue);
-    EXPECT_THROW(container.Insert(0, &testValue), Exceptions::DuplicateKeyException);
+    EXPECT_THROW(container.Insert(0, &testValue), NovelRT::Core::Exceptions::DuplicateKeyException);
 }
 
 TEST(SparseSetMemoryContainerTest, TryInsertCopiesBytesProperly)
@@ -138,7 +138,7 @@ TEST(SparseSetMemoryContainerTest, RemoveThrowsKeyNotFoundExceptionWhenDuplicate
 
     container.Insert(0, &testValue);
     container.Remove(0);
-    EXPECT_THROW(container.Remove(0), Exceptions::KeyNotFoundException);
+    EXPECT_THROW(container.Remove(0), NovelRT::Core::Exceptions::KeyNotFoundException);
 }
 
 TEST(SparseSetMemoryContainerTest, TryRemoveRemovesTheKeyCorrectly)

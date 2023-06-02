@@ -109,7 +109,7 @@ namespace NovelRT::Ecs
 
         if (component.parent != _owningEntity)
         {
-            throw Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "The provided entity is not a child of the entity that this entityGraphView manages.");
         }
 

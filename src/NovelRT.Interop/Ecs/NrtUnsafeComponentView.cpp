@@ -7,7 +7,7 @@
 #include <vector>
 
 using namespace NovelRT::Ecs;
-using namespace NovelRT::Exceptions;
+using namespace NovelRT::Core::Exceptions;
 
 std::vector<size_t> dummySizeTVectorComponentView;
 std::vector<uint8_t> dummyByteVectorComponentView;

@@ -25,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
                     func(GetProvider()->GetVulkanInstance(), targetSurface->GetHandle(), nullptr, &_vulkanSurface);
                 if (funcResult != VK_SUCCESS)
                 {
-                    throw Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
+                    throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
                                                                      funcResult);
                 }
 
@@ -39,7 +39,7 @@ namespace NovelRT::Graphics::Vulkan
             case GraphicsSurfaceKind::Xcb:
             case GraphicsSurfaceKind::Xlib:
             default:
-                throw Exceptions::NotSupportedException(
+                throw NovelRT::Core::Exceptions::NotSupportedException(
                     "The specified graphics surface kind is not supported by this graphics implementation.");
         }
     }

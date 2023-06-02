@@ -5,7 +5,7 @@
 #define NOVELRT_AUDIO_H
 
 // Dependencies for Audio
-#include "../Exceptions/Exceptions.h"
+#include "../Core/Exceptions/Exceptions.h"
 #include "../LoggingService.h"
 #include "../Utilities/Lazy.h"
 #include "../Utilities/Misc.h"

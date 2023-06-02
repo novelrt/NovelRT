@@ -11,7 +11,7 @@ namespace NovelRT::Graphics
     {
         if (_collection == nullptr)
         {
-            throw Exceptions::NullPointerException("Parameter: collection.");
+            throw NovelRT::Core::Exceptions::NullPointerException("Parameter: collection.");
         }
 
         // directly calling the base GetDevice here to avoid trouble with the virtual override.

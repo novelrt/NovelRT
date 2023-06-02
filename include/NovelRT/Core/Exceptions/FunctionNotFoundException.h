@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace NovelRT::Exceptions
+namespace NovelRT::Core::Exceptions
 {
     class FunctionNotFoundException final : public std::runtime_error
     {

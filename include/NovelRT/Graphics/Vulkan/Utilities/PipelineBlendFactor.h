@@ -36,7 +36,7 @@ namespace NovelRT::Graphics::Vulkan::Utilities
     {
         if (blendFactor >= GraphicsPipelineBlendFactor::__COUNT)
         {
-            throw Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "The specified blend factor is not supported on the default Metal pipeline.");
         }
         static_assert((sizeof(NovelRTToVulkanBlend) / sizeof(VkBlendFactor)) ==

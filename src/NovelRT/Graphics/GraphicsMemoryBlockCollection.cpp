@@ -171,7 +171,7 @@ namespace NovelRT::Graphics
 
                 if (currentBlock == nullptr)
                 {
-                    throw Exceptions::NullPointerException("The memory block is set to nullptr.");
+                    throw NovelRT::Core::Exceptions::NullPointerException("The memory block is set to nullptr.");
                 }
 
                 if (currentBlock->TryAllocate(size, alignment, region))
@@ -216,7 +216,7 @@ namespace NovelRT::Graphics
     {
         if (_allocator == nullptr)
         {
-            throw Exceptions::NullPointerException("Parameter name: allocator.");
+            throw NovelRT::Core::Exceptions::NullPointerException("Parameter name: allocator.");
         }
 
         if (_allocator->GetDevice() != GraphicsDeviceObject::GetDevice())
@@ -250,7 +250,7 @@ namespace NovelRT::Graphics
 
         if (!succeeded)
         {
-            throw Exceptions::OutOfMemoryException("Attempted to allocate memory region of size: " +
+            throw NovelRT::Core::Exceptions::OutOfMemoryException("Attempted to allocate memory region of size: " +
                                                    std::to_string(size));
         }
 
@@ -263,7 +263,7 @@ namespace NovelRT::Graphics
 
         if (block == nullptr)
         {
-            throw Exceptions::NullPointerException("The supplied memory region's collection is nullptr.");
+            throw NovelRT::Core::Exceptions::NullPointerException("The supplied memory region's collection is nullptr.");
         }
 
         std::lock_guard<std::mutex> guard(_mutex);
@@ -272,7 +272,7 @@ namespace NovelRT::Graphics
 
         if (blockIndex == _blocks.end())
         {
-            throw Exceptions::KeyNotFoundException(
+            throw NovelRT::Core::Exceptions::KeyNotFoundException(
                 "The memory block associated with the supplied region was not found in the block collection.");
         }
 

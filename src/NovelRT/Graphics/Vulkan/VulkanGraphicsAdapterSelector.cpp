@@ -103,7 +103,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (surfaceContextVulkan == nullptr)
         {
-            throw Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "The type of surface context that has been provided is not supported by this graphics implementation.");
         }
 

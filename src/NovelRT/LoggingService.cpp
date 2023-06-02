@@ -165,7 +165,7 @@ namespace NovelRT
         if (object != nullptr)
             return;
         logError(exceptionMessage);
-        throw Exceptions::NullPointerException(exceptionMessage);
+        throw NovelRT::Core::Exceptions::NullPointerException(exceptionMessage);
     }
 
     void LoggingService::throwIfNotZero(int32_t error, const std::string& exceptionMessage)

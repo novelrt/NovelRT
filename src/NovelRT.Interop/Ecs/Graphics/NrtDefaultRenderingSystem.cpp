@@ -32,7 +32,7 @@ NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle sc
 
         return NRT_SUCCESS;
     }
-    catch (const NovelRT::Exceptions::KeyNotFoundException&)
+    catch (const NovelRT::Core::Exceptions::KeyNotFoundException&)
     {
         Nrt_setErrMsgKeyNotFoundInternal();
         return NRT_FAILURE_KEY_NOT_FOUND;

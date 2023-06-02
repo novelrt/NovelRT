@@ -65,7 +65,7 @@ NrtResult Nrt_IInputDevice_AddInputAction(NrtIInputDeviceHandle device,
         *outputAction = reinterpret_cast<NrtInputActionHandle>(&action);
         return NRT_SUCCESS;
     }
-    catch (const NovelRT::Exceptions::InvalidOperationException&)
+    catch (const NovelRT::Core::Exceptions::InvalidOperationException&)
     {
         Nrt_setErrMsgIsInvalidOperationInternal();
         return NRT_FAILURE_INVALID_OPERATION;
@@ -93,7 +93,7 @@ NrtResult Nrt_IInputDevice_GetAvailableKey(NrtIInputDeviceHandle device,
         *outputKey = reinterpret_cast<NrtNovelKeyHandle>(&key);
         return NRT_SUCCESS;
     }
-    catch (const NovelRT::Exceptions::InvalidOperationException&)
+    catch (const NovelRT::Core::Exceptions::InvalidOperationException&)
     {
         Nrt_setErrMsgIsInvalidOperationInternal();
         return NRT_FAILURE_INVALID_OPERATION;

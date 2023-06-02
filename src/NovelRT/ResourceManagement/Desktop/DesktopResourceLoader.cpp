@@ -19,7 +19,7 @@ namespace NovelRT::ResourceManagement::Desktop
             file = std::ifstream(filePath);
             if (!file.is_open())
             {
-                throw NovelRT::Exceptions::IOException(
+                throw NovelRT::Core::Exceptions::IOException(
                     filePath.string(),
                     "Unable to open asset database file even after a creation attempt. Please validate that there is "
                     "room on the local disk, and that folder permissions are correct.");
@@ -36,7 +36,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
             if (subStrings.size() != 2)
             {
-                throw Exceptions::InvalidOperationException(
+                throw NovelRT::Core::Exceptions::InvalidOperationException(
                     "Invalid record detected in asset database. Is the asset database corrupted?");
             }
 
@@ -55,7 +55,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (!inputStream.is_open())
         {
-            throw NovelRT::Exceptions::IOException(
+            throw NovelRT::Core::Exceptions::IOException(
                 filePath.string(), "Unable to open asset database file for append-write. Please validate that there is "
                                    "room on the local disk, and that folder permissions are correct.");
         }
@@ -138,7 +138,7 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             _logger.logError(
                 "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-            throw Exceptions::FileNotFoundException(filePath.string(),
+            throw NovelRT::Core::Exceptions::FileNotFoundException(filePath.string(),
                                                     "Unable to continue! File failed to load for texture. Please "
                                                     "ensure the path is correct and that the file is not locked.");
         }
@@ -148,14 +148,14 @@ namespace NovelRT::ResourceManagement::Desktop
         if (info == nullptr)
         {
             _logger.logError("Image at path {} failed to provide an info struct! Aborting...", filePath.string());
-            throw Exceptions::IOException(filePath.string(),
+            throw NovelRT::Core::Exceptions::IOException(filePath.string(),
                                           "Unable to continue! File failed to provide an info struct.");
         }
 
         if (setjmp(png_jmpbuf(png)))
         { // This is how libpng does error handling.
             _logger.logError("Image at path {} appears to be corrupted! Aborting...", filePath.string());
-            throw Exceptions::IOException(filePath.string(), "Unable to continue! File appears to be corrupted.");
+            throw NovelRT::Core::Exceptions::IOException(filePath.string(), "Unable to continue! File appears to be corrupted.");
         }
 
         png_init_io(png, cFile);
@@ -204,7 +204,7 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             png_destroy_read_struct(&png, &info, nullptr);
             fclose(cFile);
-            throw Exceptions::OutOfMemoryException(
+            throw NovelRT::Core::Exceptions::OutOfMemoryException(
                 std::string("Couldn't allocate space for PNG, file: \"").append(filePath.string()).append("\"."));
         }
 
@@ -215,7 +215,7 @@ namespace NovelRT::ResourceManagement::Desktop
         if (data.rowPointers == nullptr)
         {
             _logger.logError("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
-            throw Exceptions::OutOfMemoryException(std::string("Could not allocate memory for pixel data from \"")
+            throw NovelRT::Core::Exceptions::OutOfMemoryException(std::string("Could not allocate memory for pixel data from \"")
                                                        .append(filePath.string())
                                                        .append("\"."));
         }
@@ -248,7 +248,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (data.colourType != PNG_COLOR_TYPE_RGBA)
         {
-            throw Exceptions::NotSupportedException("Colour type is in an unsupported format.");
+            throw NovelRT::Core::Exceptions::NotSupportedException("Colour type is in an unsupported format.");
         }
 
         png_destroy_read_struct(&png, &info, nullptr);
@@ -275,7 +275,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (!file.is_open())
         {
-            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+            throw NovelRT::Core::Exceptions::FileNotFoundException(filePath.string());
         }
 
         size_t fileSize = static_cast<size_t>(file.tellg());
@@ -306,7 +306,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (!file.is_open())
         {
-            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+            throw NovelRT::Core::Exceptions::FileNotFoundException(filePath.string());
         }
 
         size_t fileSize = static_cast<size_t>(file.tellg());
@@ -376,7 +376,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (!file.is_open())
         {
-            throw NovelRT::Exceptions::InvalidOperationException("Unable to create file at " + filePath.string());
+            throw NovelRT::Core::Exceptions::InvalidOperationException("Unable to create file at " + filePath.string());
         }
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
@@ -402,7 +402,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (file == nullptr)
         {
-            throw NovelRT::Exceptions::IOException(filePath.string(), std::string(sf_strerror(file)));
+            throw NovelRT::Core::Exceptions::IOException(filePath.string(), std::string(sf_strerror(file)));
         }
 
         std::vector<int16_t> data;
@@ -442,7 +442,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (!file->is_open())
         {
-            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+            throw NovelRT::Core::Exceptions::FileNotFoundException(filePath.string());
         }
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);

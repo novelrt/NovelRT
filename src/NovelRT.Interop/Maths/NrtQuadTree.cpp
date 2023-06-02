@@ -195,7 +195,7 @@ extern "C"
             *points = reinterpret_cast<Maths::QuadTree*>(tree)->GetIntersectingPoints(
                 *reinterpret_cast<const Maths::GeoBounds*>(&bounds));
         }
-        catch (const Exceptions::NotSupportedException)
+        catch (const NovelRT::Core::Exceptions::NotSupportedException)
         {
             Nrt_setErrMsgIsNotSupportedInternal();
             return NRT_FAILURE_NOT_SUPPORTED;

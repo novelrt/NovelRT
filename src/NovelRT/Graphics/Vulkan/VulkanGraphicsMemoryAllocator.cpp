@@ -161,7 +161,7 @@ namespace NovelRT::Graphics::Vulkan
         VkResult bufferCreationResult = vkCreateBuffer(vulkanDevice, &bufferCreateInfo, nullptr, &vulkanBuffer);
         if (bufferCreationResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create requested VkBuffer instance.",
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create requested VkBuffer instance.",
                                                              bufferCreationResult);
         }
 
@@ -206,7 +206,7 @@ namespace NovelRT::Graphics::Vulkan
                 break;
             default:
             case GraphicsTextureKind::Unknown:
-                throw Exceptions::NotSupportedException(
+                throw NovelRT::Core::Exceptions::NotSupportedException(
                     "The specified texture kind is not supported in the default Vulkan pipeline.");
         }
 
@@ -230,7 +230,7 @@ namespace NovelRT::Graphics::Vulkan
         VkResult createImageResult = vkCreateImage(vulkanDevice, &imageCreateInfo, nullptr, &vulkanImage);
         if (createImageResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create VkImage with the specified parameters.",
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create VkImage with the specified parameters.",
                                                              createImageResult);
         }
 

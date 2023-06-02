@@ -485,7 +485,7 @@ namespace NovelRT::Ecs::Graphics
             return pair.second;
         }
 
-        throw Exceptions::KeyNotFoundException();
+        throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 
     void DefaultRenderingSystem::DeleteTexture(Threading::ConcurrentSharedPtr<TextureInfo> texture)
@@ -516,7 +516,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (it == _namedTextureInfoObjects.end())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _texturesToDelete.push(ecsId);
@@ -540,7 +540,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!ecsId.has_value())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _texturesToDelete.push(ecsId.value());
@@ -586,7 +586,7 @@ namespace NovelRT::Ecs::Graphics
             return pair.second;
         }
 
-        throw Exceptions::KeyNotFoundException();
+        throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 
     Threading::ConcurrentSharedPtr<VertexInfo> DefaultRenderingSystem::GetExistingVertexData(NovelRT::Core::Atom ecsId)
@@ -612,7 +612,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!ecsId.has_value())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _vertexDataToDelete.push(ecsId.value());
@@ -626,7 +626,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (it == _namedVertexInfoObjects.end())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _vertexDataToDelete.push(ecsId);
@@ -650,7 +650,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!ecsId.has_value())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _vertexDataToDelete.push(ecsId.value());
@@ -671,7 +671,7 @@ namespace NovelRT::Ecs::Graphics
             return pair.second;
         }
 
-        throw Exceptions::KeyNotFoundException();
+        throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 
     Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(NovelRT::Core::Atom ecsId)
@@ -734,7 +734,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!ecsId.has_value())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _namedGraphicsPipelineInfoObjects.erase(ecsId.value());
@@ -747,7 +747,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (it == _namedGraphicsPipelineInfoObjects.end())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _namedGraphicsPipelineInfoObjects.erase(ecsId);
@@ -771,7 +771,7 @@ namespace NovelRT::Ecs::Graphics
 
         if (!ecsId.has_value())
         {
-            throw Exceptions::KeyNotFoundException();
+            throw NovelRT::Core::Exceptions::KeyNotFoundException();
         }
 
         _namedGraphicsPipelineInfoObjects.erase(ecsId.value());
@@ -926,7 +926,7 @@ namespace NovelRT::Ecs::Graphics
             return atomHandle;
         }
 
-        throw Exceptions::KeyNotFoundException();
+        throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 
     NovelRT::Core::Atom DefaultRenderingSystem::GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
@@ -947,7 +947,7 @@ namespace NovelRT::Ecs::Graphics
             return atomHandle;
         }
 
-        throw Exceptions::KeyNotFoundException();
+        throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 
     NovelRT::Core::Atom DefaultRenderingSystem::GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
@@ -964,6 +964,6 @@ namespace NovelRT::Ecs::Graphics
             return atomHandle;
         }
 
-        throw Exceptions::KeyNotFoundException();
+        throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 }

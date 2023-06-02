@@ -18,12 +18,12 @@ namespace NovelRT::Input::Glfw
         {
             const char* output = nullptr;
             glfwGetError(&output);
-            throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
 
         if (window == nullptr)
         {
-            throw Exceptions::NullPointerException(
+            throw NovelRT::Core::Exceptions::NullPointerException(
                 "Could not initialise GLFW input service - null pointer was provided for window.");
         }
 
@@ -308,11 +308,11 @@ namespace NovelRT::Input::Glfw
 
         if (nameExists)
         {
-            throw Exceptions::InvalidOperationException("Cannot add InputAction as the name has already been mapped!");
+            throw NovelRT::Core::Exceptions::InvalidOperationException("Cannot add InputAction as the name has already been mapped!");
         }
         else if (keyBoundAlready)
         {
-            throw Exceptions::InvalidOperationException("Cannot add InputAction as key has already been bound!");
+            throw NovelRT::Core::Exceptions::InvalidOperationException("Cannot add InputAction as key has already been bound!");
         }
         else
         {
@@ -325,7 +325,7 @@ namespace NovelRT::Input::Glfw
     {
         if (keyRequested == "")
         {
-            throw NovelRT::Exceptions::InvalidOperationException("Cannot request a key with no name.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException("Cannot request a key with no name.");
         }
 
         for (auto key : _availableKeys)
@@ -337,7 +337,7 @@ namespace NovelRT::Input::Glfw
         }
 
         _logger.logError("Key {} not available from this input service.", keyRequested);
-        throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
+        throw NovelRT::Core::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
     NovelRT::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept

@@ -6,7 +6,7 @@
 
 // Graphics.Vulkan dependencies
 #include "../../EngineConfig.h"
-#include "../../Exceptions/Exceptions.h"
+#include "../../Core/Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
 #include "../../PluginManagement/PluginManagement.h"
 #include "../../Utilities/Lazy.h"

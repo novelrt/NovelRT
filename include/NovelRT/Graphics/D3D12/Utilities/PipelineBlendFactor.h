@@ -36,7 +36,7 @@ namespace NovelRT::Graphics::D3D12::Utilities
     {
         if (blendFactor >= GraphicsPipelineBlendFactor::__COUNT)
         {
-            throw Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "The specified blend factor is not supported on the default D3D12 pipeline.");
         }
         static_assert((sizeof(NovelRTToD3D12Blend) / sizeof(D3D12_BLEND)) ==

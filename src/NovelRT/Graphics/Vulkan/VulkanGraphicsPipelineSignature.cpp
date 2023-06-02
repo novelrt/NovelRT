@@ -99,7 +99,7 @@ namespace NovelRT::Graphics::Vulkan
 
             if (descriptorPoolResult != VK_SUCCESS)
             {
-                throw Exceptions::InitialisationFailureException("Failed to create VkDescriptorPool.",
+                throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create VkDescriptorPool.",
                                                                  descriptorPoolResult);
             }
         }
@@ -128,7 +128,7 @@ namespace NovelRT::Graphics::Vulkan
 
             if (allocatorDescriptorSetsResult != VK_SUCCESS)
             {
-                throw Exceptions::InitialisationFailureException("Failed to create VkDescriptorSet.",
+                throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create VkDescriptorSet.",
                                                                  allocatorDescriptorSetsResult);
             }
         }
@@ -202,7 +202,7 @@ namespace NovelRT::Graphics::Vulkan
 
             if (descriptorSetLayoutResult != VK_SUCCESS)
             {
-                throw Exceptions::InitialisationFailureException("Failed to create the VkDescriptorSetLayout.",
+                throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create the VkDescriptorSetLayout.",
                                                                  descriptorSetLayoutResult);
             }
         }
@@ -231,7 +231,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (pipelineLayoutResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create the VkPipelineLayout.",
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create the VkPipelineLayout.",
                                                              pipelineLayoutResult);
         }
 

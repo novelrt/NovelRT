@@ -77,7 +77,7 @@ namespace NovelRT::ResourceManagement
          *
          * @param filePath Relative or absolute path to the texture.
          * @returns TextureMetadata The texture data contained in the file.
-         * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
+         * @exception NovelRT::Core::Exceptions::FileNotFoundException if there is no file at the specified location.
          */
         [[nodiscard]] virtual TextureMetadata LoadTexture(std::filesystem::path filePath) = 0;
 
@@ -91,7 +91,7 @@ namespace NovelRT::ResourceManagement
          *
          * @param filePath Relative or absolute path to the shader.
          * @returns ShaderMetadata instance containing the shader bytecode and asset database handle.
-         * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
+         * @exception NovelRT::Core::Exceptions::FileNotFoundException if there is no file at the specified location.
          */
         [[nodiscard]] virtual ShaderMetadata LoadShaderSource(std::filesystem::path filePath) = 0;
 

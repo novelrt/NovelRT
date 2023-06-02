@@ -31,7 +31,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to bind VkImage to VkImageMemory correctly.",
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to bind VkImage to VkImageMemory correctly.",
                                                              result);
         }
     }
@@ -265,7 +265,7 @@ namespace NovelRT::Graphics::Vulkan
                 break;
             default:
             case GraphicsTextureKind::Unknown:
-                throw Exceptions::InvalidOperationException("Invalid or unknown graphics texture kind type specified.");
+                throw NovelRT::Core::Exceptions::InvalidOperationException("Invalid or unknown graphics texture kind type specified.");
                 break;
         }
 
@@ -292,7 +292,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (imageViewResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create VkImageView for texture!",
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create VkImageView for texture!",
                                                              imageViewResult);
         }
 
@@ -324,7 +324,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to create VkSampler!", result);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create VkSampler!", result);
         }
 
         return vulkanSampler;

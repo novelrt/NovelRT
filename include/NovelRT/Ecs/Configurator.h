@@ -143,13 +143,13 @@ namespace NovelRT::Ecs
          * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
          * @return A reference to this to allow method chaining.
          *
-         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * @exception NovelRT::Core::Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
         template<typename TPluginProvider>
         [[nodiscard]] Configurator& WithPluginProvider(std::shared_ptr<TPluginProvider> /*pluginInstance*/)
         {
-            throw Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "This plugin provider type is invalid or not supported at this time.");
         }
 
@@ -159,7 +159,7 @@ namespace NovelRT::Ecs
          * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
          * @return A reference to this to allow method chaining.
          *
-         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * @exception NovelRT::Core::Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
         template<>
@@ -176,7 +176,7 @@ namespace NovelRT::Ecs
          * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
          * @return A reference to this to allow method chaining.
          *
-         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * @exception NovelRT::Core::Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
         template<>
@@ -193,7 +193,7 @@ namespace NovelRT::Ecs
          * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
          * @return A reference to this to allow method chaining.
          *
-         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * @exception NovelRT::Core::Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
         template<>
@@ -210,7 +210,7 @@ namespace NovelRT::Ecs
          * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
          * @return A reference to this to allow method chaining.
          *
-         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
+         * @exception NovelRT::Core::Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
         template<>

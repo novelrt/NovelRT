@@ -2,8 +2,8 @@
 // Created by Matt on 06/01/2021.
 //
 
-#ifndef NOVELRT_EXCEPTIONS_H
-#define NOVELRT_EXCEPTIONS_H
+#ifndef NOVELRT_CORE_EXCEPTIONS_H
+#define NOVELRT_CORE_EXCEPTIONS_H
 
 #include "CharacterNotFoundException.h"
 #include "CompilationErrorException.h"
@@ -22,4 +22,4 @@
 #include "RuntimeNotFoundException.h"
 #include "TimeoutException.h"
 
-#endif // NOVELRT_EXCEPTIONS_H
+#endif // NOVELRT_CORE_EXCEPTIONS_H

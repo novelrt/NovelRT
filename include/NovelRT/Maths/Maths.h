@@ -5,7 +5,7 @@
 #define NOVELRT_MATHS_H
 
 // Maths dependencies
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Core/Exceptions/Exceptions.h>
 #include <NovelRT/Utilities/Misc.h>
 #include <array>
 #include <glm/glm.hpp>

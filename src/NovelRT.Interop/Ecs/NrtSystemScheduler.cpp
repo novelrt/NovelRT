@@ -6,7 +6,7 @@
 #include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
-using namespace NovelRT::Exceptions;
+using namespace NovelRT::Core::Exceptions;
 
 extern "C"
 {

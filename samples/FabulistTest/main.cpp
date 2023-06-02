@@ -63,7 +63,7 @@ int main()
 
     if (!scriptAssetId.has_value())
     {
-        throw NovelRT::Exceptions::FileNotFoundException(
+        throw NovelRT::Core::Exceptions::FileNotFoundException(
             "You can't run the Fabulist sample without the requested narrative script.");
     }
 

@@ -5,7 +5,7 @@
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Core/Exceptions/Exceptions.h>
 #include <mutex>
 #include <oneapi/tbb/mutex.h>
 #include <unordered_map>
@@ -55,7 +55,7 @@ namespace NovelRT::Core
     {
         if (_moved)
         {
-            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the "
+            throw NovelRT::Core::Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the "
                                                         "next atomic value from a factory in this state.");
         }
 
@@ -67,7 +67,7 @@ namespace NovelRT::Core
     {
         if (_moved)
         {
-            throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly "
+            throw NovelRT::Core::Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly "
                                                         "set the current atomic value from a factory in this state.");
         }
 

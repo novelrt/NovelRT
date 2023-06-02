@@ -31,7 +31,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (moduleCreationResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException(
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
                 "Failed to initialise the provided SPIR-V data into a VkShaderModule.", moduleCreationResult);
         }
 

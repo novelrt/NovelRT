@@ -20,7 +20,7 @@ namespace NovelRT::Graphics
         {
             if (_provider.expired())
             {
-                throw Exceptions::NullPointerException(
+                throw NovelRT::Core::Exceptions::NullPointerException(
                     "The provided GraphicsProvider pointer is nullptr or an invalid pointer.");
             }
         }

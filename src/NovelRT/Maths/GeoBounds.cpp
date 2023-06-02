@@ -24,7 +24,7 @@ namespace NovelRT::Maths
     bool GeoBounds::IntersectsWith(GeoBounds otherBounds) const
     {
         if (rotation != 0.0f || otherBounds.rotation != 0.0f)
-            throw NovelRT::Exceptions::NotSupportedException(
+            throw NovelRT::Core::Exceptions::NotSupportedException(
                 "Box intersection does not currently support rotated bounds. AABB support only.");
 
         auto minA = position - GetExtents();

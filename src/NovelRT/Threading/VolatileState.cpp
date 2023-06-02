@@ -19,7 +19,7 @@ namespace NovelRT::Threading
     {
         if (TryTransition(from, to))
         {
-            throw Exceptions::InvalidOperationException(
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
                 "Transitioning between the two sepcified states failed. From: " + std::to_string(from) +
                 " To: " + std::to_string(to));
         }

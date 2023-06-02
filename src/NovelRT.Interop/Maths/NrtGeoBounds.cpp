@@ -75,7 +75,7 @@ extern "C"
 
             return NRT_SUCCESS;
         }
-        catch (const Exceptions::NotSupportedException)
+        catch (const NovelRT::Core::Exceptions::NotSupportedException)
         {
             Nrt_setErrMsgIsNotSupportedInternal();
             return NRT_FAILURE_NOT_SUPPORTED;

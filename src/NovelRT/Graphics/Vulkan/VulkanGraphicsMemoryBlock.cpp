@@ -21,7 +21,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to initialise VkDeviceMemory instance.", result);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise VkDeviceMemory instance.", result);
         }
 
         return vulkanDeviceMemory;

@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
         {
             if (_blockRegion.GetCollection() == nullptr)
             {
-                throw Exceptions::NullPointerException("The collection in the provided block region is null.");
+                throw NovelRT::Core::Exceptions::NullPointerException("The collection in the provided block region is null.");
             }
 
             // Explicit call to base GetDevice() to avoid ambiguity in the ctor.

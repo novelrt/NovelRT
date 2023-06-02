@@ -16,7 +16,7 @@ namespace NovelRT::PluginManagement
         template<typename TPluginType>
         [[nodiscard]] std::shared_ptr<TPluginType> GetDefaultPluginTypeOnCurrentPlatformFor()
         {
-            throw Exceptions::NotSupportedException();
+            throw NovelRT::Core::Exceptions::NotSupportedException();
         }
 
         template<>

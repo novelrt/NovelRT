@@ -28,7 +28,7 @@ namespace NovelRT::Graphics::Vulkan
                 logLevel = LogLevel::Err;
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT:
-                throw Exceptions::NotSupportedException("A Vk debug utils message cannot be all the types at once.");
+                throw NovelRT::Core::Exceptions::NotSupportedException("A Vk debug utils message cannot be all the types at once.");
         }
 
         if (logLevel != LogLevel::Off && logLevel >= EngineConfig::MinimumInternalLoggingLevel())
@@ -91,7 +91,7 @@ namespace NovelRT::Graphics::Vulkan
 
             if (result == extensionProperties.end())
             {
-                throw Exceptions::InitialisationFailureException(
+                throw NovelRT::Core::Exceptions::InitialisationFailureException(
                     "The required Vulkan extension " + requestedRequiredExt + " is not available on this device.");
             }
         }
@@ -148,7 +148,7 @@ namespace NovelRT::Graphics::Vulkan
 
             if (result == layerProperties.end())
             {
-                throw Exceptions::InitialisationFailureException("The required Vulkan layer " + requestedRequiredLayer +
+                throw NovelRT::Core::Exceptions::InitialisationFailureException("The required Vulkan layer " + requestedRequiredLayer +
                                                                  " is not available on this device.");
             }
         }
@@ -200,7 +200,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (debuggerResult == VK_ERROR_OUT_OF_HOST_MEMORY)
         {
-            throw Exceptions::OutOfMemoryException(
+            throw NovelRT::Core::Exceptions::OutOfMemoryException(
                 _defaultFailureMessage +
                 "The host ran out of memory before the VkDebugUtilsMessengerEXT could be created.");
         }
@@ -262,7 +262,7 @@ namespace NovelRT::Graphics::Vulkan
         VkResult instanceResult = vkCreateInstance(&createInfo, nullptr, &returnInstance);
         if (instanceResult != VK_SUCCESS)
         {
-            throw Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.", instanceResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.", instanceResult);
         }
 
         _logger.logInfoLine("VkInstance successfully created.");
@@ -279,7 +279,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (deviceCount == 0)
         {
-            throw Exceptions::NotSupportedException(_defaultFailureMessage +
+            throw NovelRT::Core::Exceptions::NotSupportedException(_defaultFailureMessage +
                                                     "A Vulkan-compatible GPU was not found. Please refer "
                                                     "to your GPU manufacturer's documentation for more information.");
         }

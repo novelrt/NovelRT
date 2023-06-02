@@ -5,7 +5,7 @@
 #define NOVELRT_THREADING_H
 
 // Threading dependencies.
-#include "NovelRT/Exceptions/Exceptions.h"
+#include "NovelRT/Core/Exceptions/Exceptions.h"
 #include <atomic>
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1

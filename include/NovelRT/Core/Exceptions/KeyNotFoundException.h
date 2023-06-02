@@ -6,7 +6,7 @@
 
 #include <stdexcept>
 
-namespace NovelRT::Exceptions
+namespace NovelRT::Core::Exceptions
 {
     class KeyNotFoundException : public std::runtime_error
     {

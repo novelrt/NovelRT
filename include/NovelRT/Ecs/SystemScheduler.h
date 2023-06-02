@@ -172,7 +172,7 @@ namespace NovelRT::Ecs
          * @tparam TSystemType The type of IEcsSystem to search for.
          * @return A shared pointer to a system of the specified type.
          *
-         * @exception Exceptions::KeyNotFoundException if the specified type does not have a registered instance.
+         * @exception NovelRT::Core::Exceptions::KeyNotFoundException if the specified type does not have a registered instance.
          */
         template<typename TSystemType>[[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
         {
@@ -190,7 +190,7 @@ namespace NovelRT::Ecs
 
             if (returnPtr == nullptr)
             {
-                throw Exceptions::KeyNotFoundException();
+                throw NovelRT::Core::Exceptions::KeyNotFoundException();
             }
 
             return returnPtr;

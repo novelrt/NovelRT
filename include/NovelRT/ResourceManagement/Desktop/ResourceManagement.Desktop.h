@@ -5,7 +5,7 @@
 #define NOVELRT_RESOURCEMANAGEMENT_DESKTOP_H
 
 // ResourceManagement Dependencies
-#include "../../Exceptions/Exceptions.h"
+#include "../../Core/Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
 #include "../../PluginManagement/PluginManagement.h"
 #include "../ResourceManagement.h"
