@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_INVALIDOPERATIONEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_INVALIDOPERATIONEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class InvalidOperationException final : public std::runtime_error

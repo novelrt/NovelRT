@@ -16,7 +16,7 @@ namespace NovelRT::Graphics::Vulkan
           _contextCount(contextCount),
           _contexts([&]() { return CreateGraphicsContexts(_contextCount); }),
           _contextPtrs([&]() { return CreateGraphicsContextPointers(); }),
-          _logger(LoggingService(NovelRT::Core::LoggingService::CONSOLE_LOG_GFX)),
+          _logger(Core::LoggingService(NovelRT::Core::LoggingService::CONSOLE_LOG_GFX)),
           _surface(GetSurfaceContext()->GetVulkanSurfaceContextHandle()),
           _device([&]() { return CreateLogicalDevice(); }),
           _graphicsQueue(VK_NULL_HANDLE),
@@ -89,7 +89,7 @@ namespace NovelRT::Graphics::Vulkan
                                 "  Spec Version: " + std::to_string(extensionProperty.specVersion));
         }
 
-        for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
+        for (auto&& requestedRequiredExt : Core::EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
             auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
                 return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
@@ -104,7 +104,7 @@ namespace NovelRT::Graphics::Vulkan
 
         std::vector<std::string> finalOptionalExtensions{};
 
-        for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
+        for (auto&& requestedOptionalExt : Core::EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
             auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
                 return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
@@ -120,7 +120,7 @@ namespace NovelRT::Graphics::Vulkan
             finalOptionalExtensions.emplace_back(requestedOptionalExt);
         }
 
-        std::vector<std::string> allExtensions = EngineConfig::RequiredVulkanPhysicalDeviceExtensions();
+        std::vector<std::string> allExtensions = Core::EngineConfig::RequiredVulkanPhysicalDeviceExtensions();
         allExtensions.insert(allExtensions.end(), finalOptionalExtensions.begin(), finalOptionalExtensions.end());
         return allExtensions;
     }

@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_NOTINITIALISEDEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_NOTINITIALISEDEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class NotInitialisedException final : public std::runtime_error

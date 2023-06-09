@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_COMPILATIONERROREXCEPTION_H
 #define NOVELRT_EXCEPTIONS_COMPILATIONERROREXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class CompilationErrorException final : public std::runtime_error

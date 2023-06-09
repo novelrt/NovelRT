@@ -11,13 +11,37 @@ namespace NovelRT::Core
 {
     enum class LogLevel;
     class LoggingService;
+    class Atom;
+    class AtomFactory;
+    class AtomHashFunction;
 }
 
-// Windowing dependencies
+// Core dependencies
+#include <string>
+#include <vector>
+#include <atomic>
+#include <cstddef>
+#include <limits>
+#include <cstdint>
 
-// Windowing types
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4275)
+#endif
+
+#include <spdlog/async.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+
+
+// Core types
 #include "Atom.h"
 #include "Exceptions/Exceptions.h"
 #include "LoggingService.h"
+#include "EngineConfig.h"
 
 #endif // NOVELRT_WINDOWING_H

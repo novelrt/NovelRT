@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_NOTSUPPORTEDEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_NOTSUPPORTEDEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class NotSupportedException final : public std::runtime_error

@@ -1,15 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_ENGINECONFIG_H
-#define NOVELRT_ENGINECONFIG_H
+#ifndef NOVELRT_CORE_ENGINECONFIG_H
+#define NOVELRT_CORE_ENGINECONFIG_H
 
-#include "Core/LoggingService.h"
-#include <string>
-#include <vector>
-using namespace NovelRT::Core;
-
-namespace NovelRT::EngineConfig
+namespace NovelRT::Core::EngineConfig
 {
     const std::string& EngineName() noexcept;
     std::string& ApplicationName() noexcept;
@@ -23,4 +18,4 @@ namespace NovelRT::EngineConfig
     bool& EnableDebugOutputFromEngineInternals() noexcept;
 }
 
-#endif // NOVELRT_ENGINECONFIG_H
+#endif // NOVELRT_CORE_ENGINECONFIG_H

@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_OPENGLLINKAGEFAILUREEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_OPENGLLINKAGEFAILUREEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class OpenGLLinkageFailureException final : public std::runtime_error

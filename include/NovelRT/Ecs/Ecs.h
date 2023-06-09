@@ -7,8 +7,7 @@
 // dependencies for ECS
 // clang-format off
 
-#include "../Core/Atom.h"
-#include "../Core/Exceptions/Exceptions.h"
+#include "../Core/Core.h"
 #include "../Maths/Maths.h"
 #include "../Timing/Timestamp.h"
 #include "../Utilities/Event.h"

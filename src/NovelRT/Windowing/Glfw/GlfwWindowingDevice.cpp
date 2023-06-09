@@ -40,7 +40,7 @@ namespace NovelRT::Windowing::Glfw
 
         auto window = glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
                                        static_cast<int32_t>(floor(desiredWindowSize.y)),
-                                       EngineConfig::ApplicationName().c_str(), monitor, nullptr);
+                                       Core::EngineConfig::ApplicationName().c_str(), monitor, nullptr);
 
         if (window == nullptr)
         {
@@ -88,7 +88,7 @@ namespace NovelRT::Windowing::Glfw
             }
         }
 
-        auto& requiredExtensions = EngineConfig::RequiredVulkanInstanceExtensions();
+        auto& requiredExtensions = Core::EngineConfig::RequiredVulkanInstanceExtensions();
 
         for (size_t i = 0; i < extensionCount; i++)
         {

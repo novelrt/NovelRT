@@ -2,7 +2,7 @@ set(CORE_SOURCES
 
   Core/Atom.cpp
   Core/LoggingService.cpp
-  EngineConfig.cpp
+  Core/EngineConfig.cpp
 
   Audio/AudioService.cpp
 

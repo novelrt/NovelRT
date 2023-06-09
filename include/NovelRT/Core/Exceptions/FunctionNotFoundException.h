@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_FUNCTIONNOTFOUNDEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_FUNCTIONNOTFOUNDEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class FunctionNotFoundException final : public std::runtime_error

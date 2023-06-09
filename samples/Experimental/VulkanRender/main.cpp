@@ -37,8 +37,8 @@ struct TexturedVertex
 
 int main()
 {
-    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
-    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::Core::LogLevel::Warn;
+    NovelRT::Core::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
+    NovelRT::Core::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::Core::LogLevel::Warn;
 
     NovelRT::Core::LoggingService logger = NovelRT::Core::LoggingService();
     logger.setLogLevel(NovelRT::Core::LogLevel::Info);

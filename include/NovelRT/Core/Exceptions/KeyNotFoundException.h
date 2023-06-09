@@ -4,8 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_KEYNOTFOUNDEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_KEYNOTFOUNDEXCEPTION_H
 
-#include <stdexcept>
-
 namespace NovelRT::Core::Exceptions
 {
     class KeyNotFoundException : public std::runtime_error

@@ -5,6 +5,7 @@
 #define NOVELRT_RESOURCEMANAGEMENT_H
 
 // ResourceManagement Dependencies
+#include "../Core/Core.h"
 #include "../Utilities/Misc.h"
 #include <cstdint>
 #include <filesystem>

@@ -1,11 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Core/Atom.h>
+#include <NovelRT/Core/Core.h>
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1
 #endif
-#include <NovelRT/Core/Exceptions/Exceptions.h>
 #include <mutex>
 #include <oneapi/tbb/mutex.h>
 #include <unordered_map>

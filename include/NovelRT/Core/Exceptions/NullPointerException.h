@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_NULLPOINTEREXCEPTION_H
 #define NOVELRT_EXCEPTIONS_NULLPOINTEREXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class NullPointerException final : public std::runtime_error

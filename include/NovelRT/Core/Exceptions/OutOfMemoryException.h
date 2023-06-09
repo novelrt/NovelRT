@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_OUTOFMEMORYEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_OUTOFMEMORYEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class OutOfMemoryException final : public std::runtime_error

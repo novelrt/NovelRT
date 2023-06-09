@@ -16,8 +16,8 @@ namespace NovelRT::Graphics::Vulkan
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
 
-        std::set<std::string> optionalExtensionSet(EngineConfig::OptionalVulkanPhysicalDeviceExtensions().begin(),
-                                                   EngineConfig::OptionalVulkanPhysicalDeviceExtensions().end());
+        std::set<std::string> optionalExtensionSet(Core::EngineConfig::OptionalVulkanPhysicalDeviceExtensions().begin(),
+                                                   Core::EngineConfig::OptionalVulkanPhysicalDeviceExtensions().end());
 
         float percentageStep = (1.0f / static_cast<float>(optionalExtensionSet.size())) * 100;
 
@@ -74,8 +74,8 @@ namespace NovelRT::Graphics::Vulkan
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
 
-        std::set<std::string> requiredExtensionSet(EngineConfig::RequiredVulkanPhysicalDeviceExtensions().begin(),
-                                                   EngineConfig::RequiredVulkanPhysicalDeviceExtensions().end());
+        std::set<std::string> requiredExtensionSet(Core::EngineConfig::RequiredVulkanPhysicalDeviceExtensions().begin(),
+                                                   Core::EngineConfig::RequiredVulkanPhysicalDeviceExtensions().end());
 
         for (const auto& extension : availableExtensions)
         {

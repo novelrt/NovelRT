@@ -5,7 +5,7 @@
 #define NOVELRT_GRAPHICS_H
 
 // Graphics dependencies
-#include "NovelRT/EngineConfig.h"
+#include "NovelRT/Core/Core.h"
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/ResourceManagement/ResourceManagement.h"
 #include "NovelRT/SceneGraph/SceneGraph.h"

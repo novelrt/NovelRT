@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Core/Core.h>
+#include "NovelRT/Core/Core.h"
 #include <iostream>
 
 namespace NovelRT::Core

@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_CHARACTERNOTFOUNDEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_CHARACTERNOTFOUNDEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class CharacterNotFoundException final : public std::runtime_error

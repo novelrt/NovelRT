@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/EngineConfig.h"
+#include "NovelRT/Core/Core.h"
 
-namespace NovelRT
+namespace NovelRT::Core
 {
     const std::string& EngineConfig::EngineName() noexcept
     {
@@ -64,4 +64,4 @@ namespace NovelRT
         static bool enableDebugOutputFromEngineInternals = false;
         return enableDebugOutputFromEngineInternals;
     }
-} // namespace NovelRT
+} // namespace NovelRT::Core

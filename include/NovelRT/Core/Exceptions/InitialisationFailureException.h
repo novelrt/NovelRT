@@ -4,9 +4,6 @@
 #ifndef NOVELRT_EXCEPTIONS_INITIALISATIONFAILUREEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_INITIALISATIONFAILUREEXCEPTION_H
 
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class InitialisationFailureException final : public std::runtime_error

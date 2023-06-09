@@ -77,7 +77,7 @@
   }
 
   //generic experimental files in root namespace
-  #include <NovelRT/EngineConfig.h>
+  #include <NovelRT/Core/Core.h>
 
   // Value types
   #include <NovelRT/Core/Atom.h>

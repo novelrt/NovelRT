@@ -19,7 +19,7 @@ namespace NovelRT::Graphics
         static inline const std::string EnableDebugModeSwitchName =
             "NovelRT::Graphics::GraphicsProvider::EnableDebugMode";
 
-        GraphicsProvider() noexcept : _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
+        GraphicsProvider() noexcept : _debugModeEnabled(Core::EngineConfig::EnableDebugOutputFromEngineInternals())
         {
         }
 

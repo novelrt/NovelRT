@@ -3,10 +3,6 @@
 
 #ifndef NOVELRT_EXCEPTIONS_FILENOTFOUNDEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_FILENOTFOUNDEXCEPTION_H
-
-#include <stdexcept>
-#include <string>
-
 namespace NovelRT::Core::Exceptions
 {
     class FileNotFoundException final : public std::runtime_error

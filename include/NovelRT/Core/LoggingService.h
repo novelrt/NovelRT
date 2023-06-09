@@ -4,19 +4,6 @@
 #ifndef NOVELRT_LOGGINGSERVICE_H
 #define NOVELRT_LOGGINGSERVICE_H
 
-#if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4275)
-#endif
-
-#include <spdlog/async.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/spdlog.h>
-
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
-
 namespace NovelRT::Core
 {
     enum class LogLevel

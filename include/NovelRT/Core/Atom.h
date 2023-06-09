@@ -1,13 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <atomic>
-#include <cstddef>
-#include <limits>
-#include <string>
-
-#ifndef NOVELRT_ATOM_H
-#define NOVELRT_ATOM_H
+#ifndef NOVELRT_CORE_ATOM_H
+#define NOVELRT_CORE_ATOM_H
 
 namespace NovelRT::Core
 {
@@ -118,4 +113,4 @@ namespace std
     };
 }
 
-#endif // NOVELRT_ATOM_H
+#endif // NOVELRT_CORE_ATOM_H
