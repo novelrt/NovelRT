@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Maths/Maths.h>
 #include <NovelRT/Core/Core.h>
+#include <NovelRT/Maths/Maths.h>
 
 namespace NovelRT::Maths
 {

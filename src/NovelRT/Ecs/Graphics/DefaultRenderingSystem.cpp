@@ -47,7 +47,8 @@ namespace NovelRT::Ecs::Graphics
 
     void DefaultRenderingSystem::ResolveVertexInfoFutureResults()
     {
-        static NovelRT::Core::AtomFactory& vertexDataIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("VertexDataId");
+        static NovelRT::Core::AtomFactory& vertexDataIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("VertexDataId");
 
         std::scoped_lock guard(_vertexQueueMapMutex);
 
@@ -292,7 +293,8 @@ namespace NovelRT::Ecs::Graphics
             size_t currentIndex = 0;
         };
 
-        std::unordered_map<NovelRT::Core::Atom, std::map<int32_t, GpuSpanCounter>, NovelRT::Core::AtomHashFunction> gpuSpanCounterMap{};
+        std::unordered_map<NovelRT::Core::Atom, std::map<int32_t, GpuSpanCounter>, NovelRT::Core::AtomHashFunction>
+            gpuSpanCounterMap{};
 
         for (auto reverseIt = transformLayerMap.rbegin(); reverseIt != transformLayerMap.rend(); reverseIt++)
         {
@@ -674,7 +676,8 @@ namespace NovelRT::Ecs::Graphics
         throw NovelRT::Core::Exceptions::KeyNotFoundException();
     }
 
-    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(NovelRT::Core::Atom ecsId)
+    Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> DefaultRenderingSystem::GetExistingPipelineInfo(
+        NovelRT::Core::Atom ecsId)
     {
         std::scoped_lock guard(_graphicsPipelineMapMutex);
         return _namedGraphicsPipelineInfoObjects.at(ecsId);
@@ -689,7 +692,8 @@ namespace NovelRT::Ecs::Graphics
             customConstantBufferRegions,
         bool useEcsTransforms)
     {
-        static NovelRT::Core::AtomFactory& ecsGraphicsPipelineIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EcsGraphicsPipelineId");
+        static NovelRT::Core::AtomFactory& ecsGraphicsPipelineIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("EcsGraphicsPipelineId");
 
         std::scoped_lock guard(_graphicsPipelineMapMutex);
 
@@ -835,7 +839,8 @@ namespace NovelRT::Ecs::Graphics
         Threading::ConcurrentSharedPtr<TextureInfo> texture,
         SystemScheduler& scheduler)
     {
-        static NovelRT::Core::AtomFactory& _entityIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
+        static NovelRT::Core::AtomFactory& _entityIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
 
         EntityId entity = _entityIdFactory.GetNext();
         auto& registeredEntities = scheduler.GetEntityCache().GetRegisteredEntities();
@@ -930,8 +935,8 @@ namespace NovelRT::Ecs::Graphics
     }
 
     NovelRT::Core::Atom DefaultRenderingSystem::GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
-                                                                uuids::uuid vertexShaderAssetGuid,
-                                                                uuids::uuid pixelShaderAssetGuid) const
+                                                                               uuids::uuid vertexShaderAssetGuid,
+                                                                               uuids::uuid pixelShaderAssetGuid) const
     {
         for (auto&& [atomHandle, primitiveInfo] : _primitiveConfigurations)
         {
@@ -951,7 +956,7 @@ namespace NovelRT::Ecs::Graphics
     }
 
     NovelRT::Core::Atom DefaultRenderingSystem::GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
-                                                           uuids::uuid pixelShaderAssetGuid) const
+                                                                          uuids::uuid pixelShaderAssetGuid) const
     {
         for (auto&& [atomHandle, pipelineInfo] : _namedGraphicsPipelineInfoObjects)
         {

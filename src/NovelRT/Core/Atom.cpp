@@ -54,8 +54,9 @@ namespace NovelRT::Core
     {
         if (_moved)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the "
-                                                        "next atomic value from a factory in this state.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "AtomFactory object has been moved. It is invalid to get the "
+                "next atomic value from a factory in this state.");
         }
 
         auto value = ++_currentValue;
@@ -66,8 +67,9 @@ namespace NovelRT::Core
     {
         if (_moved)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly "
-                                                        "set the current atomic value from a factory in this state.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "AtomFactory object has been moved. It is invalid to directly "
+                "set the current atomic value from a factory in this state.");
         }
 
         _currentValue = value;

@@ -184,8 +184,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (createGraphicsPipelineResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create a VulkanGraphicsPipeline.",
-                                                             createGraphicsPipelineResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                "Failed to create a VulkanGraphicsPipeline.", createGraphicsPipelineResult);
         }
 
         return vulkanPipeline;

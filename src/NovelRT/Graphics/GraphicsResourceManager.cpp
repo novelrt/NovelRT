@@ -295,7 +295,8 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeVertexData.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "An invalid graphics resource was passed into FreeVertexData.");
         }
 
         collection->Free(vertexResource);
@@ -313,7 +314,8 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("An invalid graphics resource was passed into FreeIndexData.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "An invalid graphics resource was passed into FreeIndexData.");
         }
 
         collection->Free(indexResource);
@@ -368,7 +370,8 @@ namespace NovelRT::Graphics
 
         if (bufferPtr == nullptr)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("The provided region was not provided by a constant buffer");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "The provided region was not provided by a constant buffer");
         }
 
         if (std::find(_constantBuffers.begin(), _constantBuffers.end(), bufferPtr) == _constantBuffers.end())
@@ -408,8 +411,9 @@ namespace NovelRT::Graphics
 
         if (iterator == _constantBuffers.end())
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
-                                                        "this instance of GraphicsResourceManager.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "The constant buffer this region belongs to is not managed by "
+                "this instance of GraphicsResourceManager.");
         }
 
         bufferPtr->Free(region);
@@ -445,8 +449,9 @@ namespace NovelRT::Graphics
 
         if (oldLength >= _constantBuffersToUnmapAndWrite.size())
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("The constant buffer this region belongs to is not managed by "
-                                                        "this instance of GraphicsResourceManager.");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "The constant buffer this region belongs to is not managed by "
+                "this instance of GraphicsResourceManager.");
         }
 
         return bufferPtr->Map<uint8_t>(targetMemoryResource);

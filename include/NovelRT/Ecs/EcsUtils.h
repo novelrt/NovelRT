@@ -30,7 +30,8 @@ namespace NovelRT::Ecs
             "Component type must be trivially copyable for use with a ComponentTypeId. See the documentation for "
             "more information.");
 
-        static NovelRT::Core::AtomFactory& _componentTypeIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("ComponentTypeId");
+        static NovelRT::Core::AtomFactory& _componentTypeIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
         auto& componentTypeId = GetComponentTypeIds()[typeid(TComponent)];
 

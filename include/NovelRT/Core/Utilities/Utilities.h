@@ -5,11 +5,11 @@
 #define NOVELRT_CORE_UTILITIES_H
 
 // Core::Utilities dependencies
-#include <functional>
-#include <vector>
 #include <filesystem>
-#include <type_traits>
+#include <functional>
 #include <memory>
+#include <type_traits>
+#include <vector>
 
 /**
  * @brief Misc. Classes belonging to the NovelRT engine core.

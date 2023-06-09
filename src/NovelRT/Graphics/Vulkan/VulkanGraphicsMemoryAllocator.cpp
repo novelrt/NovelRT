@@ -161,8 +161,8 @@ namespace NovelRT::Graphics::Vulkan
         VkResult bufferCreationResult = vkCreateBuffer(vulkanDevice, &bufferCreateInfo, nullptr, &vulkanBuffer);
         if (bufferCreationResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create requested VkBuffer instance.",
-                                                             bufferCreationResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                "Failed to create requested VkBuffer instance.", bufferCreationResult);
         }
 
         VkMemoryRequirements memoryRequirements{};
@@ -230,8 +230,8 @@ namespace NovelRT::Graphics::Vulkan
         VkResult createImageResult = vkCreateImage(vulkanDevice, &imageCreateInfo, nullptr, &vulkanImage);
         if (createImageResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create VkImage with the specified parameters.",
-                                                             createImageResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                "Failed to create VkImage with the specified parameters.", createImageResult);
         }
 
         VkMemoryRequirements memoryRequirements{};

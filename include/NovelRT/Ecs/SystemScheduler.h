@@ -23,7 +23,10 @@ namespace NovelRT::Ecs
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
-        std::unordered_map<NovelRT::Core::Atom, std::function<void(Timing::Timestamp, Catalogue)>, NovelRT::Core::AtomHashFunction> _systems;
+        std::unordered_map<NovelRT::Core::Atom,
+                           std::function<void(Timing::Timestamp, Catalogue)>,
+                           NovelRT::Core::AtomHashFunction>
+            _systems;
 
         EntityCache _entityCache;
         ComponentCache _componentCache;
@@ -172,7 +175,8 @@ namespace NovelRT::Ecs
          * @tparam TSystemType The type of IEcsSystem to search for.
          * @return A shared pointer to a system of the specified type.
          *
-         * @exception NovelRT::Core::Exceptions::KeyNotFoundException if the specified type does not have a registered instance.
+         * @exception NovelRT::Core::Exceptions::KeyNotFoundException if the specified type does not have a registered
+         * instance.
          */
         template<typename TSystemType>[[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
         {

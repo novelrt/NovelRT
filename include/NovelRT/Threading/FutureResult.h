@@ -50,7 +50,8 @@ namespace NovelRT::Threading
         {
             if (!IsValueCreated())
             {
-                throw NovelRT::Core::Exceptions::InvalidOperationException("The value is not set at the time of accessing.");
+                throw NovelRT::Core::Exceptions::InvalidOperationException(
+                    "The value is not set at the time of accessing.");
             }
 
             return *_dataContainer;

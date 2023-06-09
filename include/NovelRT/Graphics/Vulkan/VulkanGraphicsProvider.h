@@ -55,10 +55,11 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanInstance;
         }
 
-        [[nodiscard]] inline NovelRT::Core::Utilities::Misc::Span<const std::string> GetValidationLayers() const noexcept
+        [[nodiscard]] inline NovelRT::Core::Utilities::Misc::Span<const std::string> GetValidationLayers()
+            const noexcept
         {
             return NovelRT::Core::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
-                                                                     _finalValidationLayerSet.size());
+                                                                           _finalValidationLayerSet.size());
         }
 
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept final;

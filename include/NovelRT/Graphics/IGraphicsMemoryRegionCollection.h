@@ -211,8 +211,8 @@ namespace NovelRT::Graphics
 
                 if (!result)
                 {
-                    throw NovelRT::Core::Exceptions::OutOfMemoryException("A size of " + std::to_string(result) +
-                                                           " bytes was requested, but this size is too large.");
+                    throw NovelRT::Core::Exceptions::OutOfMemoryException(
+                        "A size of " + std::to_string(result) + " bytes was requested, but this size is too large.");
                 }
 
                 return region;
@@ -637,8 +637,9 @@ namespace NovelRT::Graphics
             {
                 if (regionNode->GetIsAllocated())
                 {
-                    throw NovelRT::Core::Exceptions::InvalidOperationException("An attempt was made to unregister a free region, but "
-                                                                "the target region is currently allocated.");
+                    throw NovelRT::Core::Exceptions::InvalidOperationException(
+                        "An attempt was made to unregister a free region, but "
+                        "the target region is currently allocated.");
                 }
 
                 if (regionNode->GetSize() <= 0)

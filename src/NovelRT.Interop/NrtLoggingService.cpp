@@ -24,7 +24,8 @@ extern "C"
 
     NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level)
     {
-        NovelRT::Core::LoggingService* service = new NovelRT::Core::LoggingService(core, static_cast<NovelRT::Core::LogLevel>(level));
+        NovelRT::Core::LoggingService* service =
+            new NovelRT::Core::LoggingService(core, static_cast<NovelRT::Core::LogLevel>(level));
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 

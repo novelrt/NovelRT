@@ -11,7 +11,8 @@ namespace NovelRT::Core::Utilities
     private:
         NovelRT::Core::Atom _id;
         std::function<void(TArgs...)> _function;
-        inline static NovelRT::Core::AtomFactory& _eventIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EventHandler");
+        inline static NovelRT::Core::AtomFactory& _eventIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("EventHandler");
 
     public:
         EventHandler() : EventHandler(nullptr)

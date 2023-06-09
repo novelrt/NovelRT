@@ -18,7 +18,9 @@ namespace NovelRT::Ecs
     class ComponentCache
     {
     private:
-        std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, NovelRT::Core::AtomHashFunction>
+        std::unordered_map<ComponentTypeId,
+                           std::shared_ptr<ComponentBufferMemoryContainer>,
+                           NovelRT::Core::AtomHashFunction>
             _componentMap;
         size_t _poolSize;
         NovelRT::Core::Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;

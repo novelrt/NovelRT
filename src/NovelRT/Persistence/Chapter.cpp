@@ -233,9 +233,9 @@ namespace NovelRT::Persistence
                     ApplyDeserialisationRule(
                         pair.first,
                         NovelRT::Core::Utilities::Misc::Span<const uint8_t>(serialisedDataPtr,
-                                                                      pair.second.sizeOfSerialisedDataInBytes),
+                                                                            pair.second.sizeOfSerialisedDataInBytes),
                         NovelRT::Core::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
-                                                                pair.second.sizeOfComponentInBytes));
+                                                                      pair.second.sizeOfComponentInBytes));
                     bufferDataPtr += pair.second.sizeOfComponentInBytes;
                     serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;
                 }

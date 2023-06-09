@@ -138,9 +138,9 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             _logger.logError(
                 "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-            throw NovelRT::Core::Exceptions::FileNotFoundException(filePath.string(),
-                                                    "Unable to continue! File failed to load for texture. Please "
-                                                    "ensure the path is correct and that the file is not locked.");
+            throw NovelRT::Core::Exceptions::FileNotFoundException(
+                filePath.string(), "Unable to continue! File failed to load for texture. Please "
+                                   "ensure the path is correct and that the file is not locked.");
         }
 
         auto info = png_create_info_struct(png);
@@ -149,13 +149,14 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             _logger.logError("Image at path {} failed to provide an info struct! Aborting...", filePath.string());
             throw NovelRT::Core::Exceptions::IOException(filePath.string(),
-                                          "Unable to continue! File failed to provide an info struct.");
+                                                         "Unable to continue! File failed to provide an info struct.");
         }
 
         if (setjmp(png_jmpbuf(png)))
         { // This is how libpng does error handling.
             _logger.logError("Image at path {} appears to be corrupted! Aborting...", filePath.string());
-            throw NovelRT::Core::Exceptions::IOException(filePath.string(), "Unable to continue! File appears to be corrupted.");
+            throw NovelRT::Core::Exceptions::IOException(filePath.string(),
+                                                         "Unable to continue! File appears to be corrupted.");
         }
 
         png_init_io(png, cFile);
@@ -215,9 +216,10 @@ namespace NovelRT::ResourceManagement::Desktop
         if (data.rowPointers == nullptr)
         {
             _logger.logError("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
-            throw NovelRT::Core::Exceptions::OutOfMemoryException(std::string("Could not allocate memory for pixel data from \"")
-                                                       .append(filePath.string())
-                                                       .append("\"."));
+            throw NovelRT::Core::Exceptions::OutOfMemoryException(
+                std::string("Could not allocate memory for pixel data from \"")
+                    .append(filePath.string())
+                    .append("\"."));
         }
 
         for (uint32_t i = 0; i < data.height; i++)

@@ -5,8 +5,8 @@
 #ifndef NOVELRT_CORE_EXCEPTIONS_H
 #define NOVELRT_CORE_EXCEPTIONS_H
 
-#include <stdexcept>
 #include <chrono>
+#include <stdexcept>
 #include <string>
 
 namespace NovelRT::Core::Exceptions
@@ -28,8 +28,6 @@ namespace NovelRT::Core::Exceptions
     class RuntimeNotFoundException;
     class TimeoutException;
 }
-
-
 
 #include "CharacterNotFoundException.h"
 #include "CompilationErrorException.h"

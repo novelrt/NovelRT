@@ -19,7 +19,8 @@ namespace NovelRT::Graphics
         explicit GraphicsPipelineInput(
             NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInputElement> elements) noexcept;
 
-        [[nodiscard]] NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInputElement> GetElements() const noexcept;
+        [[nodiscard]] NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInputElement> GetElements()
+            const noexcept;
     };
 }
 

@@ -7,8 +7,9 @@
 namespace NovelRT::Ecs
 {
     ComponentCache::ComponentCache(size_t poolSize) noexcept
-        : _componentMap(
-              std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, NovelRT::Core::AtomHashFunction>{}),
+        : _componentMap(std::unordered_map<ComponentTypeId,
+                                           std::shared_ptr<ComponentBufferMemoryContainer>,
+                                           NovelRT::Core::AtomHashFunction>{}),
           _poolSize(poolSize),
           _bufferPrepEvent(NovelRT::Core::Utilities::Event<const std::vector<EntityId>&>())
     {
@@ -33,7 +34,8 @@ namespace NovelRT::Ecs
         const std::function<bool(const void*, const void*)>& componentComparisonLogic,
         const std::string& serialisedTypeName)
     {
-        static NovelRT::Core::AtomFactory& _componentTypeIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("ComponentTypeId");
+        static NovelRT::Core::AtomFactory& _componentTypeIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
         ComponentTypeId returnId = _componentTypeIdFactory.GetNext();
         std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(

@@ -30,7 +30,8 @@ namespace NovelRT::Graphics
 
             if (_surfaceContext == nullptr)
             {
-                throw NovelRT::Core::Exceptions::NullPointerException("The supplied GraphicsSurfaceContext is nullptr.");
+                throw NovelRT::Core::Exceptions::NullPointerException(
+                    "The supplied GraphicsSurfaceContext is nullptr.");
             }
         }
 
@@ -87,7 +88,8 @@ namespace NovelRT::Graphics
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>>
+                inputResourceRegions) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,

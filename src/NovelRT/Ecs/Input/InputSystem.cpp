@@ -58,7 +58,8 @@ namespace NovelRT::Ecs::Input
 
     void InputSystem::AddMapping(std::string name, std::string id)
     {
-        static NovelRT::Core::AtomFactory& _entityIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
+        static NovelRT::Core::AtomFactory& _entityIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
 
         unused(_device->AddInputAction(name, id));
         auto entityMappingId = _entityIdFactory.GetNext();

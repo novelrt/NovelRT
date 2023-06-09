@@ -15,6 +15,6 @@ namespace NovelRT::Graphics
         const noexcept
     {
         return NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInputElement>(&(*_elements.begin()),
-                                                                                  _elements.size());
+                                                                                        _elements.size());
     }
 } // namespace NovelRT::Graphics

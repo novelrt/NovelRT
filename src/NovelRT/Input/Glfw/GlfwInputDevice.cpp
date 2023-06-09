@@ -18,7 +18,8 @@ namespace NovelRT::Input::Glfw
         {
             const char* output = nullptr;
             glfwGetError(&output);
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.",
+                                                                            std::string(output));
         }
 
         if (window == nullptr)
@@ -308,11 +309,13 @@ namespace NovelRT::Input::Glfw
 
         if (nameExists)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("Cannot add InputAction as the name has already been mapped!");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "Cannot add InputAction as the name has already been mapped!");
         }
         else if (keyBoundAlready)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("Cannot add InputAction as key has already been bound!");
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "Cannot add InputAction as key has already been bound!");
         }
         else
         {

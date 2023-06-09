@@ -1179,8 +1179,8 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] inline GeoVector3F Cross(GeoVector3F other) noexcept
         {
-            return GeoVector3F(
-                glm::cross(*reinterpret_cast<glm::vec3*>(this), NovelRT::Core::Utilities::Misc::BitCast<glm::vec3>(other)));
+            return GeoVector3F(glm::cross(*reinterpret_cast<glm::vec3*>(this),
+                                          NovelRT::Core::Utilities::Misc::BitCast<glm::vec3>(other)));
         }
 
         /**

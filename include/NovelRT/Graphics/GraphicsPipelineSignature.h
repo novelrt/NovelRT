@@ -19,14 +19,16 @@ namespace NovelRT::Graphics
         std::vector<GraphicsPipelineResource> _resources;
 
     public:
-        GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
-                                  GraphicsPipelineBlendFactor srcBlendFactor,
-                                  GraphicsPipelineBlendFactor dstBlendFactor,
-                                  NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-                                  NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
+        GraphicsPipelineSignature(
+            std::shared_ptr<GraphicsDevice> device,
+            GraphicsPipelineBlendFactor srcBlendFactor,
+            GraphicsPipelineBlendFactor dstBlendFactor,
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
 
         [[nodiscard]] NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs() const noexcept;
-        [[nodiscard]] NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources() const noexcept;
+        [[nodiscard]] NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources()
+            const noexcept;
 
         [[nodiscard]] inline GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
         {

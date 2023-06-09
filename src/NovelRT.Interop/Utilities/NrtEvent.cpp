@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Core/Core.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Utilities/NrtEvent.h>
+#include <NovelRT/Core/Core.h>
 #include <NovelRT/Timing/Timestamp.h>
 
 using namespace NovelRT::Core::Utilities;
@@ -277,7 +277,8 @@ NrtResult Nrt_EventWithTimestamp_AddEventHandler(NrtUtilitiesEventWithTimestampH
     return GenericEvent_AddEventHandler<Event<NovelRT::Timing::Timestamp>>(event, handler, context,
                                                                            outputEventHandlerId);
 }
-NrtResult Nrt_EventWithTimestamp_RemoveEventHandler(NrtUtilitiesEventWithTimestampHandle event, NrtCoreAtom eventHandlerId)
+NrtResult Nrt_EventWithTimestamp_RemoveEventHandler(NrtUtilitiesEventWithTimestampHandle event,
+                                                    NrtCoreAtom eventHandlerId)
 {
     return GenericEvent_RemoveEventHandler<Event<NovelRT::Timing::Timestamp>>(event, eventHandlerId);
 }

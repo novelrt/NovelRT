@@ -40,8 +40,9 @@ extern "C"
 
         auto vecPtr = reinterpret_cast<std::vector<EntityId>*>(vector);
         size_t lengthBefore = vecPtr->size();
-        static_cast<void>(std::remove_if(vecPtr->begin(), vecPtr->end(),
-                                         [=](EntityId val) { return val == static_cast<NovelRT::Core::Atom>(entity); }));
+        static_cast<void>(std::remove_if(vecPtr->begin(), vecPtr->end(), [=](EntityId val) {
+            return val == static_cast<NovelRT::Core::Atom>(entity);
+        }));
 
         if (vecPtr->size() == lengthBefore)
         {

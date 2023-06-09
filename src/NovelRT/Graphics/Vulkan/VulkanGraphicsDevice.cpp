@@ -176,7 +176,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (deviceResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkDevice.", deviceResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkDevice.",
+                                                                            deviceResult);
         }
 
         vkGetDeviceQueue(device, _indicesData.graphicsFamily.value(), 0, &_graphicsQueue);
@@ -299,7 +300,8 @@ namespace NovelRT::Graphics::Vulkan
         VkResult swapChainResult = vkCreateSwapchainKHR(GetVulkanDevice(), &createInfo, nullptr, &vulkanSwapchain);
         if (swapChainResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.",
+                                                                            swapChainResult);
         }
 
         if (oldSwapchain != VK_NULL_HANDLE)
@@ -324,8 +326,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (imagesKHRQuery != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
-                                                             imagesKHRQuery);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                "Failed to retrieve the VkImages from the VkSwapchainKHR.", imagesKHRQuery);
         }
 
         ResizeGraphicsContexts(imageCount);
@@ -335,8 +337,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (imagesKHRQuery != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
-                                                             imagesKHRQuery);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                "Failed to retrieve the VkImages from the VkSwapchainKHR.", imagesKHRQuery);
         }
 
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
@@ -456,7 +458,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (renderPassResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create the VkRenderPass.", renderPassResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to create the VkRenderPass.",
+                                                                            renderPassResult);
         }
 
         _logger.logInfoLine("Successfully created the VkRenderPass.");

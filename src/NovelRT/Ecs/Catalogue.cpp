@@ -15,7 +15,8 @@ namespace NovelRT::Ecs
 
     EntityId Catalogue::CreateEntity() noexcept
     {
-        static NovelRT::Core::AtomFactory& _entityIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
+        static NovelRT::Core::AtomFactory& _entityIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("EntityId");
         auto& knownEntities = _entityCache.GetRegisteredEntities();
 
         EntityId returnId = _entityIdFactory.GetNext();

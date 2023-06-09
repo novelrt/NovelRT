@@ -28,7 +28,8 @@ namespace NovelRT::Graphics::Vulkan
                 logLevel = NovelRT::Core::LogLevel::Err;
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT:
-                throw NovelRT::Core::Exceptions::NotSupportedException("A Vk debug utils message cannot be all the types at once.");
+                throw NovelRT::Core::Exceptions::NotSupportedException(
+                    "A Vk debug utils message cannot be all the types at once.");
         }
 
         if (logLevel != NovelRT::Core::LogLevel::Off && logLevel >= Core::EngineConfig::MinimumInternalLoggingLevel())
@@ -148,8 +149,8 @@ namespace NovelRT::Graphics::Vulkan
 
             if (result == layerProperties.end())
             {
-                throw NovelRT::Core::Exceptions::InitialisationFailureException("The required Vulkan layer " + requestedRequiredLayer +
-                                                                 " is not available on this device.");
+                throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                    "The required Vulkan layer " + requestedRequiredLayer + " is not available on this device.");
             }
         }
 
@@ -262,7 +263,8 @@ namespace NovelRT::Graphics::Vulkan
         VkResult instanceResult = vkCreateInstance(&createInfo, nullptr, &returnInstance);
         if (instanceResult != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.", instanceResult);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkInstance.",
+                                                                            instanceResult);
         }
 
         _logger.logInfoLine("VkInstance successfully created.");
@@ -279,9 +281,9 @@ namespace NovelRT::Graphics::Vulkan
 
         if (deviceCount == 0)
         {
-            throw NovelRT::Core::Exceptions::NotSupportedException(_defaultFailureMessage +
-                                                    "A Vulkan-compatible GPU was not found. Please refer "
-                                                    "to your GPU manufacturer's documentation for more information.");
+            throw NovelRT::Core::Exceptions::NotSupportedException(
+                _defaultFailureMessage + "A Vulkan-compatible GPU was not found. Please refer "
+                                         "to your GPU manufacturer's documentation for more information.");
         }
 
         Core::EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(

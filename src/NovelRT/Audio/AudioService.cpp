@@ -79,9 +79,10 @@ namespace NovelRT::Audio
       If it is called on the main thread, please do all loading of audio files at the start of
       the engine (after NovelRunner has been created).
     */
-    std::vector<ALuint>::iterator AudioService::LoadMusic(NovelRT::Core::Utilities::Misc::Span<const int16_t> audioFrameData,
-                                                          int32_t channelCount,
-                                                          int32_t sampleRate)
+    std::vector<ALuint>::iterator AudioService::LoadMusic(
+        NovelRT::Core::Utilities::Misc::Span<const int16_t> audioFrameData,
+        int32_t channelCount,
+        int32_t sampleRate)
     {
         if (!isInitialised)
         {

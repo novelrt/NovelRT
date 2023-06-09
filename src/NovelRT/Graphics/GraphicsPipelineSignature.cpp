@@ -20,7 +20,8 @@ namespace NovelRT::Graphics
     {
     }
 
-    NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> GraphicsPipelineSignature::GetInputs() const noexcept
+    NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> GraphicsPipelineSignature::GetInputs()
+        const noexcept
     {
         return NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
     }
@@ -28,6 +29,6 @@ namespace NovelRT::Graphics
         const noexcept
     {
         return NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
-                                                                              _resources.size());
+                                                                                    _resources.size());
     }
 } // namespace NovelRT::Graphics

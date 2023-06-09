@@ -72,8 +72,8 @@ namespace NovelRT::Maths
          */
         inline void Translate(Maths::GeoVector3F vector)
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::translate(*reinterpret_cast<glm::mat4*>(this),
-                                                                 NovelRT::Core::Utilities::Misc::BitCast<glm::vec3>(vector));
+            *reinterpret_cast<glm::mat4*>(this) = glm::translate(
+                *reinterpret_cast<glm::mat4*>(this), NovelRT::Core::Utilities::Misc::BitCast<glm::vec3>(vector));
         }
 
         /**
@@ -107,8 +107,8 @@ namespace NovelRT::Maths
          */
         inline void Scale(GeoVector3F scaleValue)
         {
-            *reinterpret_cast<glm::mat4*>(this) = glm::scale(*reinterpret_cast<glm::mat4*>(this),
-                                                             NovelRT::Core::Utilities::Misc::BitCast<glm::vec3>(scaleValue));
+            *reinterpret_cast<glm::mat4*>(this) = glm::scale(
+                *reinterpret_cast<glm::mat4*>(this), NovelRT::Core::Utilities::Misc::BitCast<glm::vec3>(scaleValue));
         }
 
         /**
@@ -160,7 +160,8 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] inline bool operator==(GeoMatrix4x4F other) const noexcept
         {
-            return *reinterpret_cast<const glm::mat4*>(this) == NovelRT::Core::Utilities::Misc::BitCast<glm::mat4>(other);
+            return *reinterpret_cast<const glm::mat4*>(this) ==
+                   NovelRT::Core::Utilities::Misc::BitCast<glm::mat4>(other);
         }
 
         /**
@@ -176,7 +177,8 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] inline bool operator!=(GeoMatrix4x4F other) const noexcept
         {
-            return *reinterpret_cast<const glm::mat4*>(this) != NovelRT::Core::Utilities::Misc::BitCast<glm::mat4>(other);
+            return *reinterpret_cast<const glm::mat4*>(this) !=
+                   NovelRT::Core::Utilities::Misc::BitCast<glm::mat4>(other);
         }
 
         /**

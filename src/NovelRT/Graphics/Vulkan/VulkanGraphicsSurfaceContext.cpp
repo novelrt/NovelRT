@@ -25,8 +25,8 @@ namespace NovelRT::Graphics::Vulkan
                     func(GetProvider()->GetVulkanInstance(), targetSurface->GetHandle(), nullptr, &_vulkanSurface);
                 if (funcResult != VK_SUCCESS)
                 {
-                    throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
-                                                                     funcResult);
+                    throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                        "Failed to initialise the VkSurfaceKHR.", funcResult);
                 }
 
                 _logger.logInfoLine("VkSurfaceKHR successfully created.");

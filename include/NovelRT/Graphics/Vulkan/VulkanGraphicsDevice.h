@@ -79,7 +79,8 @@ namespace NovelRT::Graphics::Vulkan
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+            final;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
             std::shared_ptr<VulkanGraphicsPipeline> pipeline,

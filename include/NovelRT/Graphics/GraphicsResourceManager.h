@@ -47,8 +47,9 @@ namespace NovelRT::Graphics
         void PrepForFrameWithContextIndex(size_t newContextIndex);
 
         template<typename TData>
-        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(NovelRT::Core::Utilities::Misc::Span<TData> data,
-                                                                            size_t alignment = 0)
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadVertexData(
+            NovelRT::Core::Utilities::Misc::Span<TData> data,
+            size_t alignment = 0)
         {
             return LoadVertexDataUntyped(&(*data.begin()), sizeof(TData), data.size(), alignment);
         }
@@ -59,8 +60,9 @@ namespace NovelRT::Graphics
                                                                                    size_t alignment = 16);
 
         template<typename TData>
-        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexData(NovelRT::Core::Utilities::Misc::Span<TData> data,
-                                                                           size_t alignment = 0)
+        [[nodiscard]] GraphicsMemoryRegion<GraphicsResource> LoadIndexData(
+            NovelRT::Core::Utilities::Misc::Span<TData> data,
+            size_t alignment = 0)
         {
             return LoadIndexDataUntyped(&(*data.begin()), sizeof(TData), data.size(), alignment);
         }

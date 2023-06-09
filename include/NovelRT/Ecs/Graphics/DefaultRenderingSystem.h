@@ -19,7 +19,8 @@ namespace NovelRT::Ecs::Graphics
     class DefaultRenderingSystem : public IEcsSystem
     {
     private:
-        inline static NovelRT::Core::AtomFactory& _textureIdFactory = NovelRT::Core::AtomFactoryDatabase::GetFactory("TextureId");
+        inline static NovelRT::Core::AtomFactory& _textureIdFactory =
+            NovelRT::Core::AtomFactoryDatabase::GetFactory("TextureId");
         inline static NovelRT::Core::AtomFactory& _ecsPrimitiveInfoConfigurationIdFactory =
             NovelRT::Core::AtomFactoryDatabase::GetFactory("EcsPrimitiveInfoConfigurationId");
 
@@ -47,7 +48,8 @@ namespace NovelRT::Ecs::Graphics
         Threading::ConcurrentSharedPtr<VertexInfo> _defaultSpriteMeshPtr;
 
         tbb::mutex _graphicsPipelineMapMutex;
-        std::map<NovelRT::Core::Atom, Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>> _namedGraphicsPipelineInfoObjects;
+        std::map<NovelRT::Core::Atom, Threading::ConcurrentSharedPtr<GraphicsPipelineInfo>>
+            _namedGraphicsPipelineInfoObjects;
 
         Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> _defaultGraphicsPipelinePtr;
 
@@ -79,7 +81,8 @@ namespace NovelRT::Ecs::Graphics
                 frameMatrixConstantBufferRegion;
         };
 
-        NovelRT::Core::Utilities::Event<std::reference_wrapper<DefaultRenderingSystem>, UIRenderEventArgs> UIRenderEvent;
+        NovelRT::Core::Utilities::Event<std::reference_wrapper<DefaultRenderingSystem>, UIRenderEventArgs>
+            UIRenderEvent;
 
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
@@ -159,7 +162,8 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(
             const std::string& name);
 
-        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(NovelRT::Core::Atom ecsId);
+        [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> GetExistingPipelineInfo(
+            NovelRT::Core::Atom ecsId);
 
         [[nodiscard]] Threading::ConcurrentSharedPtr<GraphicsPipelineInfo> RegisterPipeline(
             const std::string& pipelineName,
@@ -212,11 +216,11 @@ namespace NovelRT::Ecs::Graphics
         [[nodiscard]] NovelRT::Core::Atom GetTextureIdFromGuid(uuids::uuid assetGuid) const;
 
         [[nodiscard]] NovelRT::Core::Atom GetPrimitiveInfoFromAssetGuids(uuids::uuid textureAssetGuid,
-                                                          uuids::uuid vertexShaderAssetGuid,
-                                                          uuids::uuid pixelShaderAssetGuid) const;
+                                                                         uuids::uuid vertexShaderAssetGuid,
+                                                                         uuids::uuid pixelShaderAssetGuid) const;
 
         [[nodiscard]] NovelRT::Core::Atom GetPipelineFromAssetGuids(uuids::uuid vertexShaderAssetGuid,
-                                                     uuids::uuid pixelShaderAssetGuid) const;
+                                                                    uuids::uuid pixelShaderAssetGuid) const;
     };
 }
 #endif // !NOVELRT_ECS_GRAPHICS_DEFAULTRENDERINGSYSTEM_H

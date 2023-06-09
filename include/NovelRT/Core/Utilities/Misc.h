@@ -11,7 +11,6 @@ namespace NovelRT::Core::Utilities
     class Misc
     {
     public:
-
         template<class T>
 #ifdef NOVELRT_USE_STD_SPAN
         using Span = std::span<T>;

@@ -17,12 +17,12 @@ namespace NovelRT::Core
 }
 
 // Core dependencies
-#include <string>
-#include <vector>
 #include <atomic>
 #include <cstddef>
-#include <limits>
 #include <cstdint>
+#include <limits>
+#include <string>
+#include <vector>
 
 #if defined(_MSC_VER)
 #pragma warning(push)
@@ -37,12 +37,11 @@ namespace NovelRT::Core
 #pragma warning(pop)
 #endif
 
-
 // Core types
 #include "Atom.h"
+#include "EngineConfig.h"
 #include "Exceptions/Exceptions.h"
 #include "LoggingService.h"
-#include "EngineConfig.h"
 #include "Utilities/Utilities.h"
 
 #endif // NOVELRT_WINDOWING_H

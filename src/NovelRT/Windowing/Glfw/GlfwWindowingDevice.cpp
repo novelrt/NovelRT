@@ -16,7 +16,8 @@ namespace NovelRT::Windowing::Glfw
         {
             const char* output = nullptr;
             glfwGetError(&output);
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.",
+                                                                            std::string(output));
         }
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -46,7 +47,8 @@ namespace NovelRT::Windowing::Glfw
         {
             const char* output = nullptr;
             glfwGetError(&output);
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+            throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.",
+                                                                            std::string(output));
         }
 
 #ifndef __APPLE__
@@ -78,7 +80,8 @@ namespace NovelRT::Windowing::Glfw
             glfwGetError(&output);
             if (output != nullptr)
             {
-                throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
+                throw NovelRT::Core::Exceptions::InitialisationFailureException("GLFW3 failed to initialise.",
+                                                                                std::string(output));
             }
             else
             {

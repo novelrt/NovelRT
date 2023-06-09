@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Core/Core.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Timing/NrtStepTimer.h>
+#include <NovelRT/Core/Core.h>
 #include <NovelRT/Timing/StepTimer.h>
 
 NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimerHandle* output)

@@ -63,8 +63,8 @@ namespace NovelRT::Maths
          * calling the method.
          *
          * @return true if the otherBounds intersects with this bounding box, otherwise false.
-         * @exception NovelRT::Core::Exceptions::NotSupportedException If either bounding box has a rotation set to a value other than
-         * 0.
+         * @exception NovelRT::Core::Exceptions::NotSupportedException If either bounding box has a rotation set to a
+         * value other than 0.
          */
         [[nodiscard]] bool IntersectsWith(GeoBounds otherBounds) const;
 

@@ -57,7 +57,7 @@ namespace NovelRT::Graphics
     {
         size_t result = 0;
         NovelRT::Core::Utilities::Misc::Span<const std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()),
-                                                                                          _blocks.size());
+                                                                                                _blocks.size());
         size_t maximumSharedBlockSize = GetMaximumSharedBlockSize();
 
         for (size_t i = blocks.size(); i-- != 0;)
@@ -84,7 +84,7 @@ namespace NovelRT::Graphics
         // freeing a region and will result in eventual consistency.
 
         NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()),
-                                                                                    _blocks.size());
+                                                                                          _blocks.size());
 
         if (blocks.size() >= 2)
         {
@@ -151,7 +151,7 @@ namespace NovelRT::Graphics
         size_t sizeWithMargins = size + (2 * _allocator->GetSettings().MinimumAllocatedRegionMarginSize.value_or(0));
 
         NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(&(*_blocks.begin()),
-                                                                                    _blocks.size());
+                                                                                          _blocks.size());
         size_t blocksLength = blocks.size();
 
         size_t availableMemory = (budget.GetEstimatedUsage() < budget.GetEstimatedBudget())
@@ -251,7 +251,7 @@ namespace NovelRT::Graphics
         if (!succeeded)
         {
             throw NovelRT::Core::Exceptions::OutOfMemoryException("Attempted to allocate memory region of size: " +
-                                                   std::to_string(size));
+                                                                  std::to_string(size));
         }
 
         return outRegion;
@@ -263,7 +263,8 @@ namespace NovelRT::Graphics
 
         if (block == nullptr)
         {
-            throw NovelRT::Core::Exceptions::NullPointerException("The supplied memory region's collection is nullptr.");
+            throw NovelRT::Core::Exceptions::NullPointerException(
+                "The supplied memory region's collection is nullptr.");
         }
 
         std::lock_guard<std::mutex> guard(_mutex);

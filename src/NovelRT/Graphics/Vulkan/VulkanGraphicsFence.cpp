@@ -19,7 +19,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InitialisationFailureException("Failed to initialise the VkFence instance.", result);
+            throw NovelRT::Core::Exceptions::InitialisationFailureException(
+                "Failed to initialise the VkFence instance.", result);
         }
 
         return vulkanFence;
@@ -79,8 +80,8 @@ namespace NovelRT::Graphics::Vulkan
 
         if (result != VK_SUCCESS)
         {
-            throw NovelRT::Core::Exceptions::InvalidOperationException("VkFence instance failed to reset correctly. Reason: " +
-                                                        std::to_string(result));
+            throw NovelRT::Core::Exceptions::InvalidOperationException(
+                "VkFence instance failed to reset correctly. Reason: " + std::to_string(result));
         }
     }
 

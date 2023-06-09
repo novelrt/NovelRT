@@ -40,8 +40,8 @@ namespace NovelRT::Ecs
          * @param entity The EntityId to apply the component update instruction to.
          * @param instructionState The component as an instruction.
          *
-         * @exception NovelRT::Core::Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
+         * @exception NovelRT::Core::Exceptions::DuplicateKeyException when multiple update instructions are pushed to
+         * this buffer on the same thread.
          * @exception std::out_of_range if the setup of the ComponentView is invalid. See
          * ComponentBuffer::PushComponentUpdateInstruction for more information.
          * @exception std::bad_alloc if there is no more memory available to NovelRT. See
@@ -62,8 +62,8 @@ namespace NovelRT::Ecs
          * @param entity The EntityId to add the component to.
          * @param initialValue The optional component state to be applied.
          *
-         * @exception NovelRT::Core::Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
+         * @exception NovelRT::Core::Exceptions::DuplicateKeyException when multiple update instructions are pushed to
+         * this buffer on the same thread.
          */
         void AddComponent(EntityId entity, TComponent initialValue = TComponent{})
         {
@@ -78,8 +78,8 @@ namespace NovelRT::Ecs
          *
          * @param entity The EntityId to remove the component from.
          *
-         * @exception NovelRT::Core::Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
+         * @exception NovelRT::Core::Exceptions::DuplicateKeyException when multiple update instructions are pushed to
+         * this buffer on the same thread.
          */
         void RemoveComponent(EntityId entity)
         {
@@ -153,8 +153,8 @@ namespace NovelRT::Ecs
          *
          * @param entity The EntityId of retrieve the component from.
          * @return A copy of the current state of the component of type TComponent attached to the given entity.
-         * @exception NovelRT::Core::Exceptions::KeyNotFoundException if the given EntityId is not present within the immutable buffer
-         * data for this update cycle.
+         * @exception NovelRT::Core::Exceptions::KeyNotFoundException if the given EntityId is not present within the
+         * immutable buffer data for this update cycle.
          */
         [[nodiscard]] TComponent GetComponent(EntityId entity) const
         {
