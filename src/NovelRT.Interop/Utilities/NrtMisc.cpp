@@ -13,7 +13,7 @@ extern "C"
 
     const char* Nrt_getExecutablePath()
     {
-        std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
+        std::string cppPath = std::string(NovelRT::Core::Utilities::Misc::getExecutablePath().string());
 
         size_t length = cppPath.length() + 1;
         char* returnPtr = static_cast<char*>(malloc(length));
@@ -24,7 +24,7 @@ extern "C"
 
     const char* Nrt_getExecutableDirPath()
     {
-        std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
+        std::string cppPath = std::string(NovelRT::Core::Utilities::Misc::getExecutableDirPath().string());
 
         size_t length = cppPath.length() + 1;
         char* returnPtr = static_cast<char*>(malloc(length));

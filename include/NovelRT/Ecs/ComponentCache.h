@@ -21,7 +21,7 @@ namespace NovelRT::Ecs
         std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, NovelRT::Core::AtomHashFunction>
             _componentMap;
         size_t _poolSize;
-        Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
+        NovelRT::Core::Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
 
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,

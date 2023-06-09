@@ -13,16 +13,16 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice final : public GraphicsDevice
     {
     private:
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
+        NovelRT::Core::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
         uint32_t _contextCount;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
+        NovelRT::Core::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
+        NovelRT::Core::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
 
         NovelRT::Core::LoggingService _logger;
 
         VkSurfaceKHR _surface;
 
-        NovelRT::Utilities::Lazy<VkDevice> _device;
+        NovelRT::Core::Utilities::Lazy<VkDevice> _device;
 
         VkQueue _graphicsQueue;
         VkQueue _presentQueue;
@@ -33,10 +33,10 @@ namespace NovelRT::Graphics::Vulkan
 
         bool _isAttachedToResizeEvent;
 
-        NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
-        NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
-        NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsMemoryAllocator>> _memoryAllocator;
+        NovelRT::Core::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
+        NovelRT::Core::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
+        NovelRT::Core::Utilities::Lazy<VkRenderPass> _renderPass;
+        NovelRT::Core::Utilities::Lazy<std::shared_ptr<VulkanGraphicsMemoryAllocator>> _memoryAllocator;
 
         QueueFamilyIndices _indicesData;
 
@@ -79,7 +79,7 @@ namespace NovelRT::Graphics::Vulkan
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
             std::shared_ptr<VulkanGraphicsPipeline> pipeline,
@@ -87,7 +87,7 @@ namespace NovelRT::Graphics::Vulkan
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
 
         void PresentFrame() final;
 
@@ -96,9 +96,9 @@ namespace NovelRT::Graphics::Vulkan
 
         void WaitForIdle() final;
 
-        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() final
+        [[nodiscard]] inline NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() final
         {
-            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>>(
+            return NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>>(
                 &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
         }
 
@@ -120,7 +120,7 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Misc::Span<uint8_t> byteData) final;
+            NovelRT::Core::Utilities::Misc::Span<uint8_t> byteData) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature> signature,
@@ -130,8 +130,8 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) final;
+            NovelRT::Core::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
+            NovelRT::Core::Utilities::Misc::Span<GraphicsPipelineResource> resources) final;
 
         [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain()
         {

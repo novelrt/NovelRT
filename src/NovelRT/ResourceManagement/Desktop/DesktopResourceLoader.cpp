@@ -32,7 +32,7 @@ namespace NovelRT::ResourceManagement::Desktop
         std::string line;
         while (std::getline(file, line))
         {
-            auto subStrings = Utilities::Misc::SplitString(line, ":");
+            auto subStrings = NovelRT::Core::Utilities::Misc::SplitString(line, ":");
 
             if (subStrings.size() != 2)
             {

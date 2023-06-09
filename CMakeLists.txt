@@ -45,7 +45,7 @@ option(NOVELRT_BUILD_TESTS "Build NovelRT tests" ON)
 option(NOVELRT_BUILD_INTEROP "Build NovelRT's Interop library" ON)
 option(NOVELRT_VERBOSE_BUILD "Build NovelRT using verbose output" OFF)
 option(NOVELRT_INSTALL "Generate installation targets" ON)
-option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
+option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Core::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
 option(NOVELRT_BUILD_DEPS_WITH_MAX_CPU "Use all available CPU processing power when scaffolding/building the NovelRT internal dependences" OFF)
 
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
@@ -72,7 +72,7 @@ if(NOVELRT_BUILD_DOCUMENTATION)
 endif()
 
 #
-# Alias "NovelRT::Utilities::Misc:Span" to "std::span" instead of "gsl::span".
+# Alias "NovelRT::Core::Utilities::Misc:Span" to "std::span" instead of "gsl::span".
 # If enabled, you need to make sure you current configuration supports "std::span".
 #
 if(NOVELRT_USE_STD_SPAN)

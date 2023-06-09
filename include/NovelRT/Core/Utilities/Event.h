@@ -1,14 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "../Core/Atom.h"
-#include <functional>
-#include <vector>
+#ifndef NOVELRT_CORE_UTILITIES_EVENT_H
+#define NOVELRT_CORE_UTILITIES_EVENT_H
 
-#ifndef NOVELRT_UTILITIES_EVENT_H
-#define NOVELRT_UTILITIES_EVENT_H
-
-namespace NovelRT::Utilities
+namespace NovelRT::Core::Utilities
 {
     template<typename... TArgs> class EventHandler
     {
@@ -114,4 +110,4 @@ namespace NovelRT::Utilities
         }
     };
 }
-#endif // NOVELRT_UTILITIES_EVENT_H
+#endif // NOVELRT_CORE_UTILITIES_EVENT_H

@@ -24,7 +24,7 @@ namespace NovelRT::ResourceManagement
         bool _hasLoadedAssetDatabase = false;
 
     protected:
-        std::filesystem::path _resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
+        std::filesystem::path _resourcesRootDirectory = NovelRT::Core::Utilities::Misc::getExecutableDirPath() / "Resources";
         std::string _assetDatabaseFileName = "AssetDB.txt";
 
         [[nodiscard]] inline std::map<uuids::uuid, std::filesystem::path>& GetGuidsToFilePathsMap() noexcept

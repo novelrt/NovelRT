@@ -18,7 +18,7 @@ namespace NovelRT::Graphics::Vulkan
         VkInstance _vulkanInstance;
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter>>> _adapters;
+        NovelRT::Core::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter>>> _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
@@ -55,9 +55,9 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanInstance;
         }
 
-        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<const std::string> GetValidationLayers() const noexcept
+        [[nodiscard]] inline NovelRT::Core::Utilities::Misc::Span<const std::string> GetValidationLayers() const noexcept
         {
-            return NovelRT::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
+            return NovelRT::Core::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
                                                                      _finalValidationLayerSet.size());
         }
 

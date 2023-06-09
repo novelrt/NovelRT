@@ -7,8 +7,6 @@
 // Graphics.Vulkan dependencies
 #include "../../Core/Core.h"
 #include "../../PluginManagement/PluginManagement.h"
-#include "../../Utilities/Lazy.h"
-#include "../../Utilities/Misc.h"
 #include "../Graphics.h"
 #include <array>
 #include <map>

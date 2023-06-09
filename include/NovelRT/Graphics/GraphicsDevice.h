@@ -48,7 +48,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] virtual size_t GetContextIndex() const noexcept = 0;
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() = 0;
+        [[nodiscard]] virtual NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() = 0;
 
         [[nodiscard]] inline std::shared_ptr<GraphicsContext> GetCurrentContext()
         {
@@ -78,8 +78,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] virtual std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) = 0;
+            NovelRT::Core::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
+            NovelRT::Core::Utilities::Misc::Span<GraphicsPipelineResource> resources) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
             std::shared_ptr<GraphicsPipeline> pipeline,
@@ -87,12 +87,12 @@ namespace NovelRT::Graphics
             uint32_t vertexBufferStride,
             GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
             uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Misc::Span<uint8_t> byteData) = 0;
+            NovelRT::Core::Utilities::Misc::Span<uint8_t> byteData) = 0;
 
         virtual void PresentFrame() = 0;
         virtual void Signal(std::shared_ptr<GraphicsFence> fence) = 0;

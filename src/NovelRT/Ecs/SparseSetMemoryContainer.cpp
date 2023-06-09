@@ -196,8 +196,8 @@ namespace NovelRT::Ecs
         return _dense.size();
     }
 
-    void SparseSetMemoryContainer::ResetAndWriteDenseData(NovelRT::Utilities::Misc::Span<const size_t> ids,
-                                                          NovelRT::Utilities::Misc::Span<const uint8_t> data)
+    void SparseSetMemoryContainer::ResetAndWriteDenseData(NovelRT::Core::Utilities::Misc::Span<const size_t> ids,
+                                                          NovelRT::Core::Utilities::Misc::Span<const uint8_t> data)
     {
         _dense.clear();
         _dense.resize(ids.size());
@@ -223,8 +223,8 @@ namespace NovelRT::Ecs
     void SparseSetMemoryContainer::ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data)
     {
         ResetAndWriteDenseData(
-            NovelRT::Utilities::Misc::Span<const size_t>(ids, length),
-            NovelRT::Utilities::Misc::Span<const uint8_t>(data, length * GetSizeOfDataTypeInBytes()));
+            NovelRT::Core::Utilities::Misc::Span<const size_t>(ids, length),
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t>(data, length * GetSizeOfDataTypeInBytes()));
     }
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept

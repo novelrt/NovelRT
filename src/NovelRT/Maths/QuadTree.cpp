@@ -2,7 +2,7 @@
 // for more information.
 
 #include <NovelRT/Maths/Maths.h>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Core/Core.h>
 
 namespace NovelRT::Maths
 {

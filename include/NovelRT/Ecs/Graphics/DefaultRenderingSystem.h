@@ -23,7 +23,7 @@ namespace NovelRT::Ecs::Graphics
         inline static NovelRT::Core::AtomFactory& _ecsPrimitiveInfoConfigurationIdFactory =
             NovelRT::Core::AtomFactoryDatabase::GetFactory("EcsPrimitiveInfoConfigurationId");
 
-        Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;
+        NovelRT::Core::Utilities::Lazy<NovelRT::Graphics::GraphicsResourceManager> _resourceManager;
         std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
@@ -79,7 +79,7 @@ namespace NovelRT::Ecs::Graphics
                 frameMatrixConstantBufferRegion;
         };
 
-        Utilities::Event<std::reference_wrapper<DefaultRenderingSystem>, UIRenderEventArgs> UIRenderEvent;
+        NovelRT::Core::Utilities::Event<std::reference_wrapper<DefaultRenderingSystem>, UIRenderEventArgs> UIRenderEvent;
 
         DefaultRenderingSystem(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider> graphicsPluginProvider,
@@ -93,7 +93,7 @@ namespace NovelRT::Ecs::Graphics
         template<typename TSpanType>
         [[nodiscard]] Threading::FutureResult<TextureInfo> LoadTextureDataRaw(
             const std::string& textureDataName,
-            NovelRT::Utilities::Misc::Span<TSpanType> textureDataSpan,
+            NovelRT::Core::Utilities::Misc::Span<TSpanType> textureDataSpan,
             uint32_t width,
             uint32_t height,
             uuids::uuid textureAssetDataHandle)
@@ -131,7 +131,7 @@ namespace NovelRT::Ecs::Graphics
         template<typename TSpanType>
         [[nodiscard]] Threading::FutureResult<VertexInfo> LoadVertexDataRaw(
             const std::string& vertexDataName,
-            NovelRT::Utilities::Misc::Span<TSpanType> vertexDataSpan)
+            NovelRT::Core::Utilities::Misc::Span<TSpanType> vertexDataSpan)
         {
             static_assert(std::is_trivially_copyable_v<TSpanType> &&
                           "The specified vertex struct must be trivially copyable.");

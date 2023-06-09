@@ -3,6 +3,7 @@ set(CORE_SOURCES
   Core/Atom.cpp
   Core/LoggingService.cpp
   Core/EngineConfig.cpp
+  Core/Utilities/Misc.cpp
 
   Audio/AudioService.cpp
 
@@ -67,8 +68,6 @@ set(CORE_SOURCES
   Threading/VolatileState.cpp
 
   Timing/StepTimer.cpp
-
-  Utilities/Misc.cpp
 
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp

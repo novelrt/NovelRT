@@ -10,9 +10,6 @@
 #include "../Core/Core.h"
 #include "../Maths/Maths.h"
 #include "../Timing/Timestamp.h"
-#include "../Utilities/Event.h"
-#include "../Utilities/KeyValuePair.h"
-#include "../Utilities/Misc.h"
 #include "../PluginManagement/PluginManagement.h"
 #include "../Threading/Threading.h"
 #include <algorithm>

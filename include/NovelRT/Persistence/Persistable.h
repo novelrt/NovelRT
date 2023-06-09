@@ -14,12 +14,12 @@ namespace NovelRT::Persistence
     {
     protected:
         void ApplySerialisationRule(const std::string& serialisedName,
-                                    NovelRT::Utilities::Misc::Span<const uint8_t> componentData,
-                                    NovelRT::Utilities::Misc::Span<uint8_t> writeToData) const;
+                                    NovelRT::Core::Utilities::Misc::Span<const uint8_t> componentData,
+                                    NovelRT::Core::Utilities::Misc::Span<uint8_t> writeToData) const;
 
         void ApplyDeserialisationRule(const std::string& serialisedName,
-                                      NovelRT::Utilities::Misc::Span<const uint8_t> serialisedData,
-                                      NovelRT::Utilities::Misc::Span<uint8_t> writeToData) const;
+                                      NovelRT::Core::Utilities::Misc::Span<const uint8_t> serialisedData,
+                                      NovelRT::Core::Utilities::Misc::Span<uint8_t> writeToData) const;
 
     public:
         [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomSerialisationRule>>&

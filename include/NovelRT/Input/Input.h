@@ -8,7 +8,6 @@
 #include "NovelRT/Core/Core.h"
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Timing/Timestamp.h"
-#include "NovelRT/Utilities/Misc.h"
 #include <map>
 #include <string>
 

@@ -340,7 +340,7 @@ namespace NovelRT::Input::Glfw
         throw NovelRT::Core::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
-    NovelRT::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
+    NovelRT::Core::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
     {
         return _mappedActions;
     }

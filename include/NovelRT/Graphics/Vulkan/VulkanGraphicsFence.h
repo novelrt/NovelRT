@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsFence final : public GraphicsFence
     {
     private:
-        NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
+        NovelRT::Core::Utilities::Lazy<VkFence> _vulkanFence;
         Threading::VolatileState _state;
 
         [[nodiscard]] VkFence CreateVulkanFenceSignaled()

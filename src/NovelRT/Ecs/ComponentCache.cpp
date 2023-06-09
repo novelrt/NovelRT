@@ -10,7 +10,7 @@ namespace NovelRT::Ecs
         : _componentMap(
               std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, NovelRT::Core::AtomHashFunction>{}),
           _poolSize(poolSize),
-          _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
+          _bufferPrepEvent(NovelRT::Core::Utilities::Event<const std::vector<EntityId>&>())
     {
     }
 

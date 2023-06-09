@@ -12,7 +12,7 @@ namespace NovelRT::Persistence::Graphics
     }
 
     std::vector<uint8_t> RenderingComponentPersistenceRule::ExecuteSerialiseModification(
-        NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept
+        NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept
     {
         const Ecs::Graphics::RenderComponent* ptr =
             reinterpret_cast<const Ecs::Graphics::RenderComponent*>(component.data());
@@ -32,7 +32,7 @@ namespace NovelRT::Persistence::Graphics
     }
 
     std::vector<uint8_t> RenderingComponentPersistenceRule::ExecuteDeserialiseModification(
-        NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept
+        NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept
     {
         const uuids::uuid* guids = reinterpret_cast<const uuids::uuid*>(component.data());
 

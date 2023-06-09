@@ -13,10 +13,10 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipeline : public GraphicsPipeline
     {
     private:
-        NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
+        NovelRT::Core::Utilities::Lazy<VkPipeline> _vulkanPipeline;
         [[nodiscard]] VkPipeline CreateVulkanPipeline();
         [[nodiscard]] size_t GetInputElementsCount(
-            NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs) const noexcept;
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> inputs) const noexcept;
         [[nodiscard]] VkFormat GetInputElementFormat(std::type_index index) const noexcept;
 
     public:

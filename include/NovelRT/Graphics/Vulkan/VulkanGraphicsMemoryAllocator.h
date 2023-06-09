@@ -14,7 +14,7 @@ namespace NovelRT::Graphics::Vulkan
         : public GraphicsMemoryAllocatorImpl<IGraphicsMemoryRegionCollection<GraphicsResource>::DefaultMetadata>
     {
     private:
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>> _blockCollections;
+        NovelRT::Core::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>> _blockCollections;
         Threading::VolatileState _state;
 
         [[nodiscard]] size_t GetBlockCollectionIndex(GraphicsResourceAccess cpuAccess, uint32_t memoryTypeBits);

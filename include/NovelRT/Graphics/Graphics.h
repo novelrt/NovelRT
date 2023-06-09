@@ -10,9 +10,6 @@
 #include "NovelRT/ResourceManagement/ResourceManagement.h"
 #include "NovelRT/SceneGraph/SceneGraph.h"
 #include "NovelRT/Threading/Threading.h"
-#include "NovelRT/Utilities/Event.h"
-#include "NovelRT/Utilities/Lazy.h"
-#include "NovelRT/Utilities/Misc.h"
 #include "RGBAColour.h"
 #include <chrono>
 #include <cstdint>

@@ -37,9 +37,9 @@ namespace NovelRT::Ecs
         public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = Utilities::KeyValuePair<TKey, TValue>;
+            using value_type = NovelRT::Core::Utilities::KeyValuePair<TKey, TValue>;
             using pointer = SparseSetMemoryContainer::Iterator;
-            using reference = Utilities::KeyValuePair<TKey, TValue&>;
+            using reference = NovelRT::Core::Utilities::KeyValuePair<TKey, TValue&>;
 
         private:
             pointer _ptr;
@@ -94,9 +94,9 @@ namespace NovelRT::Ecs
         public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = Utilities::KeyValuePair<TKey, TValue>;
+            using value_type = NovelRT::Core::Utilities::KeyValuePair<TKey, TValue>;
             using pointer = SparseSetMemoryContainer::ConstIterator;
-            using reference = Utilities::KeyValuePair<TKey, const TValue&>;
+            using reference = NovelRT::Core::Utilities::KeyValuePair<TKey, const TValue&>;
 
         private:
             pointer _ptr;

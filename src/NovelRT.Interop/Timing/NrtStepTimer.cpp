@@ -5,7 +5,6 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Timing/NrtStepTimer.h>
 #include <NovelRT/Timing/StepTimer.h>
-#include <NovelRT/Utilities/Event.h>
 
 NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, NrtStepTimerHandle* output)
 {
@@ -135,7 +134,7 @@ NrtResult Nrt_StepTimer_tick(NrtStepTimerHandle timer, NrtUtilitiesEventWithTime
     }
 
     auto* time = reinterpret_cast<NovelRT::Timing::StepTimer*>(timer);
-    auto* eventWithTimestamp = reinterpret_cast<NovelRT::Utilities::Event<NovelRT::Timing::Timestamp>*>(event);
+    auto* eventWithTimestamp = reinterpret_cast<NovelRT::Core::Utilities::Event<NovelRT::Timing::Timestamp>*>(event);
     time->tick(*eventWithTimestamp);
     return NRT_SUCCESS;
 }

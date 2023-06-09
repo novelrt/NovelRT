@@ -9,7 +9,7 @@ using namespace NovelRT::Ecs::Audio;
 using namespace NovelRT::Input;
 using namespace NovelRT::PluginManagement;
 
-NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
+NovelRT::Core::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {

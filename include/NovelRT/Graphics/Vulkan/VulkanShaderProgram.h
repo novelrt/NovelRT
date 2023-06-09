@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanShaderProgram : public ShaderProgram
     {
     private:
-        NovelRT::Utilities::Lazy<VkShaderModule> _shaderModule;
+        NovelRT::Core::Utilities::Lazy<VkShaderModule> _shaderModule;
         std::vector<uint8_t> _bytecode;
         VkShaderModuleCreateInfo _shaderModuleCreateInfo;
 
@@ -23,9 +23,9 @@ namespace NovelRT::Graphics::Vulkan
         VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
                             std::string entryPointName,
                             ShaderProgramKind kind,
-                            NovelRT::Utilities::Misc::Span<uint8_t> bytecode) noexcept;
+                            NovelRT::Core::Utilities::Misc::Span<uint8_t> bytecode) noexcept;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept final;
+        [[nodiscard]] NovelRT::Core::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept final;
         [[nodiscard]] VkShaderModule GetShaderModule();
 
         ~VulkanShaderProgram() override;

@@ -16,7 +16,7 @@ namespace NovelRT::Ecs
         Catalogue& _catalogue;
         EntityId _owningEntity;
         EntityGraphComponent _component;
-        Utilities::Lazy<LinkedEntityListView> _childrenChanges;
+        NovelRT::Core::Utilities::Lazy<LinkedEntityListView> _childrenChanges;
         std::map<EntityId, EntityGraphView> _externalChanges;
         bool _hasBeenCommitted;
 

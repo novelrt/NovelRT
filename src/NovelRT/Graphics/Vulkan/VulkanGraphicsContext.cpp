@@ -378,7 +378,7 @@ namespace NovelRT::Graphics::Vulkan
 
         if (vulkanDescriptorSet != VK_NULL_HANDLE)
         {
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions =
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions =
                 primitive->GetInputResourceRegions();
             size_t inputResourceRegionsLength = inputResourceRegions.size();
 

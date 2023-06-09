@@ -147,7 +147,7 @@ namespace NovelRT::Graphics::Vulkan
 
         auto physicalDeviceExtensions = GetFinalPhysicalDeviceExtensionSet();
         auto physicalDeviceExtensionPtrs =
-            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
+            NovelRT::Core::Utilities::Misc::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
 
@@ -164,7 +164,7 @@ namespace NovelRT::Graphics::Vulkan
             auto validationLayers = GetAdapter()->GetProvider()->GetValidationLayers();
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             std::vector<const char*> allValidationLayerPtrs =
-                NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(validationLayers);
+                NovelRT::Core::Utilities::Misc::GetStringSpanAsCharPtrVector(validationLayers);
             createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         }
         else
@@ -385,7 +385,7 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(
         std::string entryPointName,
         ShaderProgramKind kind,
-        NovelRT::Utilities::Misc::Span<uint8_t> byteData)
+        NovelRT::Core::Utilities::Misc::Span<uint8_t> byteData)
     {
         return std::shared_ptr<ShaderProgram>(
             new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),
@@ -412,8 +412,8 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
-        NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-        NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources)
+        NovelRT::Core::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
+        NovelRT::Core::Utilities::Misc::Span<GraphicsPipelineResource> resources)
     {
         return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
             std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs,
@@ -474,7 +474,7 @@ namespace NovelRT::Graphics::Vulkan
         uint32_t vertexBufferStride,
         GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
         uint32_t indexBufferStride,
-        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+        NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
     {
         return std::static_pointer_cast<GraphicsPrimitive>(
             CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion,
@@ -487,7 +487,7 @@ namespace NovelRT::Graphics::Vulkan
         uint32_t vertexBufferStride,
         GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
         uint32_t indexBufferStride,
-        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
+        NovelRT::Core::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
     {
         return std::make_shared<VulkanGraphicsPrimitive>(
             std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), pipeline, vertexBufferRegion,

@@ -14,9 +14,9 @@ namespace NovelRT::Graphics::Vulkan
     {
     private:
         VkPhysicalDevice _vulkanPhysicalDevice;
-        NovelRT::Utilities::Lazy<VkPhysicalDeviceProperties> _vulkanPhysicalDeviceProperties;
-        NovelRT::Utilities::Lazy<VkPhysicalDeviceMemoryProperties> _vulkanPhysicalDeviceMemoryProperties;
-        NovelRT::Utilities::Lazy<std::string> _name;
+        NovelRT::Core::Utilities::Lazy<VkPhysicalDeviceProperties> _vulkanPhysicalDeviceProperties;
+        NovelRT::Core::Utilities::Lazy<VkPhysicalDeviceMemoryProperties> _vulkanPhysicalDeviceMemoryProperties;
+        NovelRT::Core::Utilities::Lazy<std::string> _name;
 
         Threading::VolatileState _state;
 

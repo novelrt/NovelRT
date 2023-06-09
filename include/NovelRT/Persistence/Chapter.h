@@ -18,7 +18,7 @@ namespace NovelRT::Persistence
     public:
         Chapter() noexcept;
 
-        explicit Chapter(NovelRT::Utilities::Misc::Span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>>
+        explicit Chapter(NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>>
                              componentCacheData) noexcept;
 
         void ToEcsInstance(Ecs::ComponentCache& componentCache, Ecs::EntityCache& entityCache) const;

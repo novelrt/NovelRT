@@ -17,9 +17,9 @@ namespace NovelRT::Persistence
 
         [[nodiscard]] virtual size_t GetSerialisedSize() const noexcept = 0;
         [[nodiscard]] virtual std::vector<uint8_t> ExecuteSerialiseModification(
-            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept = 0;
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept = 0;
         [[nodiscard]] virtual std::vector<uint8_t> ExecuteDeserialiseModification(
-            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept = 0;
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept = 0;
     };
 }
 #endif // NOVELRT_PERSISTENCE_ICUSTOMSERIALISATIONRULE_H

@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
-using namespace NovelRT::Utilities;
+using namespace NovelRT::Core::Utilities;
 using namespace NovelRT::Maths;
 
 TEST(BitCastTest, CastGlmVec2ToNovelRTGeoVector2F)

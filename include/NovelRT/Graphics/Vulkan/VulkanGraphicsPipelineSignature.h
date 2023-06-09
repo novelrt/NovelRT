@@ -13,9 +13,9 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipelineSignature final : public GraphicsPipelineSignature
     {
 
-        NovelRT::Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
-        NovelRT::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
-        NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
+        NovelRT::Core::Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
+        NovelRT::Core::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
+        NovelRT::Core::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
 
         [[nodiscard]] VkDescriptorPool CreateDescriptorPool();
         [[nodiscard]] VkDescriptorSet CreateDescriptorSet();
@@ -34,8 +34,8 @@ namespace NovelRT::Graphics::Vulkan
             std::shared_ptr<VulkanGraphicsDevice> device,
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
-            NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
+            NovelRT::Core::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
         {
@@ -62,7 +62,7 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanPipelineLayout.getActual();
         }
 
-        void DestroyDescriptorSets(NovelRT::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets);
+        void DestroyDescriptorSets(NovelRT::Core::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets);
 
         ~VulkanGraphicsPipelineSignature() final;
     };

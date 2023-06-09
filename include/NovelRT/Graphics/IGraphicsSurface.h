@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
     class IGraphicsSurface
     {
     public:
-        Utilities::Event<Maths::GeoVector2F> SizeChanged;
+        NovelRT::Core::Utilities::Event<Maths::GeoVector2F> SizeChanged;
 
         [[nodiscard]] virtual Maths::GeoVector2F GetSize() const noexcept = 0;
 

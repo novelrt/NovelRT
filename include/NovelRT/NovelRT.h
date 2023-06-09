@@ -80,11 +80,7 @@
   #include <NovelRT/Core/Core.h>
 
   // Value types
-  #include <NovelRT/Core/Atom.h>
   #include <NovelRT/Timing/Timestamp.h>
-  #include <NovelRT/Utilities/Event.h> //these have to exist up here due to include order issues
-  #include <NovelRT/Utilities/Lazy.h>
-  #include <NovelRT/Utilities/Misc.h>
 
   #include <NovelRT/Graphics/RGBAColour.h>
 

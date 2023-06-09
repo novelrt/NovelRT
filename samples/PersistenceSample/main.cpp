@@ -8,7 +8,7 @@ using namespace NovelRT::Input;
 using namespace NovelRT::PluginManagement;
 using namespace NovelRT::Persistence;
 
-NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
+NovelRT::Core::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
@@ -53,7 +53,7 @@ int main()
         }
 
         std::vector<uint8_t> ExecuteSerialiseModification(
-            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept final
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept final
         {
             TestStruct componentStruct = *reinterpret_cast<const TestStruct*>(component.data());
 
@@ -68,7 +68,7 @@ int main()
         }
 
         std::vector<uint8_t> ExecuteDeserialiseModification(
-            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept final
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept final
         {
             auto dataPtr = reinterpret_cast<const CopyStruct*>(component.data());
 

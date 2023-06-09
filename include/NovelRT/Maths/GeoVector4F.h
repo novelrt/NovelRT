@@ -1231,7 +1231,7 @@ namespace NovelRT::Maths
         [[nodiscard]] inline float Dot(GeoVector4F other) noexcept
         {
             return glm::dot(*reinterpret_cast<const glm::vec4*>(this),
-                            NovelRT::Utilities::Misc::BitCast<glm::vec4>(other));
+                            NovelRT::Core::Utilities::Misc::BitCast<glm::vec4>(other));
         }
 
         /**

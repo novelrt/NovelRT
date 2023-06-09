@@ -6,8 +6,6 @@
 
 // Dependencies for Audio
 #include "../Core/Core.h"
-#include "../Utilities/Lazy.h"
-#include "../Utilities/Misc.h"
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <cstdint>

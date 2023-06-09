@@ -17,8 +17,8 @@ namespace NovelRT::Audio
         const ALuint _noBuffer = 0;
         const ALfloat _pitch = 1.0f;
 
-        Utilities::Lazy<std::unique_ptr<ALCdevice, void (*)(ALCdevice*)>> _device;
-        Utilities::Lazy<std::unique_ptr<ALCcontext, void (*)(ALCcontext*)>> _context;
+        NovelRT::Core::Utilities::Lazy<std::unique_ptr<ALCdevice, void (*)(ALCdevice*)>> _device;
+        NovelRT::Core::Utilities::Lazy<std::unique_ptr<ALCcontext, void (*)(ALCcontext*)>> _context;
         std::string _deviceName;
         NovelRT::Core::LoggingService _logger;
         bool _manualLoad;
@@ -32,7 +32,7 @@ namespace NovelRT::Audio
         SoundBank _soundStorage;
         SoundBank _bufferStorage;
 
-        ALuint BufferAudioFrameData(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
+        ALuint BufferAudioFrameData(NovelRT::Core::Utilities::Misc::Span<const int16_t> audioFrameData,
                                     int32_t channelCount,
                                     int32_t sampleRate);
         std::string GetALError();
@@ -44,7 +44,7 @@ namespace NovelRT::Audio
         ~AudioService();
 
         bool InitializeAudio();
-        std::vector<ALuint>::iterator LoadMusic(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
+        std::vector<ALuint>::iterator LoadMusic(NovelRT::Core::Utilities::Misc::Span<const int16_t> audioFrameData,
                                                 int32_t channelCount,
                                                 int32_t sampleRate);
 
@@ -56,7 +56,7 @@ namespace NovelRT::Audio
         void StopMusic();
         void SetMusicVolume(float value);
         void CheckSources();
-        ALuint LoadSound(NovelRT::Utilities::Misc::Span<const int16_t> audioFrameData,
+        ALuint LoadSound(NovelRT::Core::Utilities::Misc::Span<const int16_t> audioFrameData,
                          int32_t channelCount,
                          int32_t sampleRate);
         void Unload(ALuint handle);

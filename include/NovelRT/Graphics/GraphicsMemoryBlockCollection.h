@@ -92,11 +92,11 @@ namespace NovelRT::Graphics
             size_t size,
             size_t alignment,
             GraphicsMemoryRegionAllocationFlags flags,
-            NovelRT::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions);
+            NovelRT::Core::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions);
 
         [[nodiscard]] bool TryAllocate(
             size_t size,
-            NovelRT::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions);
+            NovelRT::Core::Utilities::Misc::Span<GraphicsMemoryRegion<GraphicsMemoryBlock>> regions);
 
         void Free(const GraphicsMemoryRegion<GraphicsMemoryBlock>& region);
 

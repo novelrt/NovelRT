@@ -43,5 +43,6 @@ namespace NovelRT::Core
 #include "Exceptions/Exceptions.h"
 #include "LoggingService.h"
 #include "EngineConfig.h"
+#include "Utilities/Utilities.h"
 
 #endif // NOVELRT_WINDOWING_H

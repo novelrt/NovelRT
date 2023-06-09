@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 
 using namespace NovelRT;
-using namespace NovelRT::Utilities;
+using namespace NovelRT::Core::Utilities;
 
 enum class TestEnum : uint32_t
 {

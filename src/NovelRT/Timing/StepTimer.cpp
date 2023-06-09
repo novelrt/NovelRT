@@ -34,7 +34,7 @@ namespace NovelRT::Timing
         _framesThisSecond = 0;
     }
 
-    void StepTimer::tick(const Utilities::Event<Timestamp>& update)
+    void StepTimer::tick(const NovelRT::Core::Utilities::Event<Timestamp>& update)
     {
         auto currentCounter = glfwGetTimerValue();
         auto counterDelta = currentCounter - _lastCounter;

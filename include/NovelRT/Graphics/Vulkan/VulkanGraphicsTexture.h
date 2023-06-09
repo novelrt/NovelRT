@@ -19,8 +19,8 @@ namespace NovelRT::Graphics::Vulkan
 
         VkImage _vulkanImage;
 
-        NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
-        NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
+        NovelRT::Core::Utilities::Lazy<VkImageView> _vulkanImageView;
+        NovelRT::Core::Utilities::Lazy<VkSampler> _vulkanSampler;
 
         [[nodiscard]] VkImageView CreateVulkanImageView();
         [[nodiscard]] VkSampler CreateVulkanSampler();
@@ -82,7 +82,7 @@ namespace NovelRT::Graphics::Vulkan
     template<typename TMetadata> class VulkanGraphicsTextureImpl final : public VulkanGraphicsTexture
     {
     private:
-        NovelRT::Utilities::Lazy<TMetadata> _metadata;
+        NovelRT::Core::Utilities::Lazy<TMetadata> _metadata;
 
     public:
         VulkanGraphicsTextureImpl(std::shared_ptr<VulkanGraphicsDevice> device,

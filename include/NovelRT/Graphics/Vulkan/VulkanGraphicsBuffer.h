@@ -59,7 +59,7 @@ namespace NovelRT::Graphics::Vulkan
     template<typename TMetadata> class VulkanGraphicsBufferImpl final : public VulkanGraphicsBuffer
     {
     private:
-        NovelRT::Utilities::Lazy<TMetadata> _metadata;
+        NovelRT::Core::Utilities::Lazy<TMetadata> _metadata;
 
     public:
         VulkanGraphicsBufferImpl(std::shared_ptr<VulkanGraphicsDevice> device,

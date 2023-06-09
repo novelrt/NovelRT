@@ -5,9 +5,8 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Utilities/NrtEvent.h>
 #include <NovelRT/Timing/Timestamp.h>
-#include <NovelRT/Utilities/Event.h>
 
-using namespace NovelRT::Utilities;
+using namespace NovelRT::Core::Utilities;
 
 /**
  * Generic events
@@ -77,10 +76,10 @@ using namespace NovelRT::Utilities;
  */
 
 /**
- * Defines how a NovelRT::Utilities::Event type should interop with the C API,
+ * Defines how a NovelRT::Core::Utilities::Event type should interop with the C API,
  * i.e. how C function pointers are called by C++ and vice-versa.
  *
- * This class must be specialized by the targeted NovelRT::Utilities::Event type.
+ * This class must be specialized by the targeted NovelRT::Core::Utilities::Event type.
  *
  * Specializations of this class must be implemented with the following members
  * in order to be make GenericEvent_* methods available:
@@ -93,7 +92,7 @@ using namespace NovelRT::Utilities;
  *
  *  <li>A MakeEventHandler function, with the following signature:
  *          EventHandler<Args> MakeEventHandler(Function func, void* context)
- *      This function should return a C++ NovelRT::Utilities::EventHandler (parameterized with
+ *      This function should return a C++ NovelRT::Core::Utilities::EventHandler (parameterized with
  *      the right types) calling the C function pointer.
  *
  *  <li>An Invoke function, with the following signature:
@@ -123,7 +122,7 @@ using namespace NovelRT::Utilities;
  *
  * @endcode
  *
- * @tparam T the parameterized type of NovelRT::Utilities::Event
+ * @tparam T the parameterized type of NovelRT::Core::Utilities::Event
  */
 template<typename T> struct EventImplementationDetails;
 

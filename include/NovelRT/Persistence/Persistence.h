@@ -7,7 +7,6 @@
 // Persistence dependencies
 #include "../Ecs/Ecs.h"
 #include "../ResourceManagement/ResourceManagement.h"
-#include "../Utilities/Misc.h"
 #include <map>
 #include <sstream>
 #include <string>

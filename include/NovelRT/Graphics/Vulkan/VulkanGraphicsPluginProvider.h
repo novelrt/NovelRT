@@ -9,7 +9,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPluginProvider final : public PluginManagement::IGraphicsPluginProvider
     {
     protected:
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsProvider>> _graphicsProvider;
+        NovelRT::Core::Utilities::Lazy<std::shared_ptr<VulkanGraphicsProvider>> _graphicsProvider;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsProvider> CreateVulkanGraphicsProviderInternal();
 

@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsMemoryBlock : public GraphicsMemoryBlock
     {
     private:
-        NovelRT::Utilities::Lazy<VkDeviceMemory> _vulkanDeviceMemory;
+        NovelRT::Core::Utilities::Lazy<VkDeviceMemory> _vulkanDeviceMemory;
 
         VkDeviceMemory CreateVulkanDeviceMemory();
         void DisposeVulkanDeviceMemory() noexcept;
@@ -48,7 +48,7 @@ namespace NovelRT::Graphics::Vulkan
     template<typename TMetadata> class VulkanGraphicsMemoryBlockImpl final : public VulkanGraphicsMemoryBlock
     {
     private:
-        NovelRT::Utilities::Lazy<TMetadata> _metadata;
+        NovelRT::Core::Utilities::Lazy<TMetadata> _metadata;
 
     public:
         VulkanGraphicsMemoryBlockImpl(std::shared_ptr<VulkanGraphicsDevice> device,

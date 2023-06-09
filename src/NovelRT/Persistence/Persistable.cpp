@@ -20,8 +20,8 @@ namespace NovelRT::Persistence
     }
 
     void Persistable::ApplySerialisationRule(const std::string& serialisedName,
-                                             NovelRT::Utilities::Misc::Span<const uint8_t> componentData,
-                                             NovelRT::Utilities::Misc::Span<uint8_t> writeToData) const
+                                             NovelRT::Core::Utilities::Misc::Span<const uint8_t> componentData,
+                                             NovelRT::Core::Utilities::Misc::Span<uint8_t> writeToData) const
     {
         auto& serialisationRules = GetSerialisationRules();
         auto it = serialisationRules.find(serialisedName);
@@ -36,8 +36,8 @@ namespace NovelRT::Persistence
     }
 
     void Persistable::ApplyDeserialisationRule(const std::string& serialisedName,
-                                               NovelRT::Utilities::Misc::Span<const uint8_t> serialisedData,
-                                               NovelRT::Utilities::Misc::Span<uint8_t> writeToData) const
+                                               NovelRT::Core::Utilities::Misc::Span<const uint8_t> serialisedData,
+                                               NovelRT::Core::Utilities::Misc::Span<uint8_t> writeToData) const
     {
         auto& serialisationRules = GetSerialisationRules();
         auto it = serialisationRules.find(serialisedName);

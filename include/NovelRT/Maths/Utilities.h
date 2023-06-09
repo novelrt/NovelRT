@@ -285,4 +285,4 @@ namespace NovelRT::Maths::Utilities
     }
 }
 
-#endif // NOVELRT_UTILITIES_H
+#endif // NOVELRT_CORE_UTILITIES_H

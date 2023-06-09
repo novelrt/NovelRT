@@ -4,7 +4,7 @@
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
-#include "../Utilities/Event.h"
+#include "../Core/Core.h"
 #include "Timestamp.h"
 
 #ifndef NOVELRT_TIMING_STEPTIMER_H
@@ -95,7 +95,7 @@ namespace NovelRT::Timing
         }
 
         void resetElapsedTime() noexcept;
-        void tick(const Utilities::Event<Timestamp>& update);
+        void tick(const NovelRT::Core::Utilities::Event<Timestamp>& update);
     };
 }
 

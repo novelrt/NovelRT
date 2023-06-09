@@ -31,7 +31,7 @@ namespace NovelRT::Graphics
             return _kind;
         }
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept = 0;
+        [[nodiscard]] virtual NovelRT::Core::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept = 0;
     };
 }
 

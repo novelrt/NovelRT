@@ -226,12 +226,12 @@ namespace NovelRT::Graphics::Vulkan
 
         _finalExtensionSet = GetFinalInstanceExtensionSet();
         std::vector<const char*> allExtensionullptrs =
-            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalExtensionSet);
+            NovelRT::Core::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalExtensionSet);
         size_t extensionLength = allExtensionullptrs.size();
 
         _finalValidationLayerSet = GetFinalValidationLayerSet();
         std::vector<const char*> allValidationLayerPtrs =
-            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalValidationLayerSet);
+            NovelRT::Core::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalValidationLayerSet);
         size_t validationLayerLength = allValidationLayerPtrs.size();
 
         VkInstanceCreateInfo createInfo{};

@@ -25,10 +25,10 @@ namespace NovelRT::Persistence::Graphics
         }
 
         [[nodiscard]] std::vector<uint8_t> ExecuteSerialiseModification(
-            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept final;
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept final;
 
         [[nodiscard]] std::vector<uint8_t> ExecuteDeserialiseModification(
-            NovelRT::Utilities::Misc::Span<const uint8_t> component) const noexcept final;
+            NovelRT::Core::Utilities::Misc::Span<const uint8_t> component) const noexcept final;
     };
 }
 

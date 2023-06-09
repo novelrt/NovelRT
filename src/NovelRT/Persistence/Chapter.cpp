@@ -9,7 +9,7 @@ namespace NovelRT::Persistence
     {
     }
 
-    Chapter::Chapter(NovelRT::Utilities::Misc::Span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>>
+    Chapter::Chapter(NovelRT::Core::Utilities::Misc::Span<std::shared_ptr<Ecs::ComponentBufferMemoryContainer>>
                          componentCacheData) noexcept
         : _componentCacheData{}
     {
@@ -142,10 +142,10 @@ namespace NovelRT::Persistence
                 {
                     componentJumpValue = componentMetadata.sizeOfSerialisedDataInBytes;
                     ApplySerialisationRule(dataPair.first,
-                                           NovelRT::Utilities::Misc::Span<const uint8_t>(
+                                           NovelRT::Core::Utilities::Misc::Span<const uint8_t>(
                                                reinterpret_cast<const uint8_t*>(dataView.GetDataHandle()),
                                                dataPair.second.GetSizeOfDataTypeInBytes()),
-                                           NovelRT::Utilities::Misc::Span<uint8_t>(
+                                           NovelRT::Core::Utilities::Misc::Span<uint8_t>(
                                                componentPtr, componentMetadata.sizeOfSerialisedDataInBytes));
                 }
 
@@ -232,9 +232,9 @@ namespace NovelRT::Persistence
                 {
                     ApplyDeserialisationRule(
                         pair.first,
-                        NovelRT::Utilities::Misc::Span<const uint8_t>(serialisedDataPtr,
+                        NovelRT::Core::Utilities::Misc::Span<const uint8_t>(serialisedDataPtr,
                                                                       pair.second.sizeOfSerialisedDataInBytes),
-                        NovelRT::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
+                        NovelRT::Core::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(bufferDataPtr),
                                                                 pair.second.sizeOfComponentInBytes));
                     bufferDataPtr += pair.second.sizeOfComponentInBytes;
                     serialisedDataPtr += pair.second.sizeOfSerialisedDataInBytes;

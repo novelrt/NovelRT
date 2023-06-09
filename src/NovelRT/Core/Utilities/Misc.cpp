@@ -11,7 +11,7 @@
 #include <unistd.h>
 #endif
 
-namespace NovelRT::Utilities
+namespace NovelRT::Core::Utilities
 {
 #ifdef __APPLE__
     /**
@@ -93,4 +93,4 @@ namespace NovelRT::Utilities
         return path;
 #endif
     }
-} // namespace NovelRT::Utilities
+} // namespace NovelRT::Core::Utilities
