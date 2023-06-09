@@ -87,7 +87,7 @@ namespace NovelRT::Core::Utilities
 
         void operator-=(NovelRT::Core::Atom atom)
         {
-            if (NovelRT::Core::Atom == NovelRT::Core::Atom())
+            if (atom == NovelRT::Core::Atom())
                 return;
 
             for (auto it = _handlers.begin(); it != _handlers.end(); ++it)
