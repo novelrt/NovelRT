@@ -1,9 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/NovelRT.h>
+#include <NovelRT/Core/Core.h>
 
 #if defined(WIN32)
+#include <Windows.h>
 #include <shellapi.h>
 #elif defined(__APPLE__)
 #include <CoreFoundation/CoreFoundation.h>

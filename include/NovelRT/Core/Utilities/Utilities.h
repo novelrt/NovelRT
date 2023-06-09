@@ -4,6 +4,13 @@
 #ifndef NOVELRT_CORE_UTILITIES_H
 #define NOVELRT_CORE_UTILITIES_H
 
+// Core::Utilities dependencies
+#include <functional>
+#include <vector>
+#include <filesystem>
+#include <type_traits>
+#include <memory>
+
 /**
  * @brief Misc. Classes belonging to the NovelRT engine core.
  */
@@ -18,19 +25,11 @@ namespace NovelRT::Core::Utilities
     template<typename TKey, typename TValueType> class KeyValuePair;
 }
 
-// Core::Utilities dependencies
-#include <functional>
-#include <vector>
-
 #ifdef __has_builtin
 #define _NOVELRT_CORE_UTILITIES_HAS_BUILTIN_BIT_CAST __has_builtin(__builtin_bit_cast)
 #else
 #define _NOVELRT_CORE_UTILITIES_HAS_BUILTIN_BIT_CAST false
 #endif
-
-#include <filesystem>
-#include <type_traits>
-#include <vector>
 
 #if __has_include(<version>)
 #include <version>

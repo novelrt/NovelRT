@@ -1,5 +1,6 @@
+add_subdirectory(NovelRT/Core)
 add_subdirectory(NovelRT)
 if (NOVELRT_BUILD_INTEROP)
-  message(STATUS "Building NovelRT with Interop Support")
-  add_subdirectory(NovelRT.Interop)
+ message(STATUS "Building NovelRT with Interop Support")
+ add_subdirectory(NovelRT.Interop)
 endif()

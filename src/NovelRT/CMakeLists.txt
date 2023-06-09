@@ -1,10 +1,4 @@
 set(CORE_SOURCES
-
-  Core/Atom.cpp
-  Core/LoggingService.cpp
-  Core/EngineConfig.cpp
-  Core/Utilities/Misc.cpp
-
   Audio/AudioService.cpp
 
   Ecs/Catalogue.cpp
@@ -155,6 +149,7 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
+    NovelRT_Core
     Vulkan::Vulkan
     TBB::tbb
     OpenAL::OpenAL
