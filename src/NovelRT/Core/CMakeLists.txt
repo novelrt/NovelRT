@@ -39,7 +39,7 @@ set(CORE_SOURCES
   Utilities/Misc.cpp
 )
 
-add_library(NovelRT_Core SHARED ${CORE_SOURCES})
+add_library(NovelRT_Core STATIC ${CORE_SOURCES})
 set_property(TARGET NovelRT_Core PROPERTY VERSION ${PROJECT_VERSION})
 
 if(GENERATOR_IS_MULTI_CONFIG)
