@@ -71,6 +71,7 @@ extern "C"
 #include "Audio/NrtAudioTypedefs.h"
 #include "Ecs/Audio/NrtEcsAudioTypedefs.h"
 #include "Ecs/Graphics/NrtEcsGraphicsTypedefs.h"
+#include "Ecs/Input/NrtEcsInputTypedefs.h"
 #include "Ecs/NrtEcsTypedefs.h"
 #include "Graphics/NrtGraphicsTypedefs.h"
 #include "Input/NrtInputTypedefs.h"
@@ -78,6 +79,7 @@ extern "C"
 #include "ResourceManagement/NrtResourceManagementTypedefs.h"
 #include "SceneGraph/NrtSceneGraphTypedefs.h"
 #include "Windowing/NrtWindowingTypedefs.h"
+#include "Threading/NrtThreadingTypedefs.h"
 
     // clang-format on
 

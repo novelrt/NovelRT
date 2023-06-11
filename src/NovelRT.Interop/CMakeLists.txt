@@ -8,6 +8,7 @@ set(INTEROP_SOURCES
   Ecs/NrtConfigurator.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
   Ecs/NrtComponentCache.cpp
+  Ecs/NrtEcsComponents.cpp
   Ecs/NrtEntityCache.cpp
   Ecs/NrtEntityIdVector.cpp
   Ecs/NrtSparseSetMemoryContainer.cpp
@@ -17,8 +18,13 @@ set(INTEROP_SOURCES
   Ecs/Audio/NrtAudioSystem.cpp
   Ecs/Audio/NrtAudioEmitterComponent.cpp
   Ecs/Audio/NrtAudioEmitterStateComponent.cpp
+  Ecs/Audio/NrtEcsAudioComponents.cpp
 
   Ecs/Graphics/NrtDefaultRenderingSystem.cpp
+  Ecs/Graphics/NrtTextureInfo.cpp
+  Ecs/Graphics/NrtEcsGraphicsComponents.cpp
+
+  Ecs/Input/NrtEcsInputComponents.cpp
 
   Graphics/NrtRGBAColour.cpp
   Graphics/NrtGraphicsProvider.cpp
@@ -43,7 +49,7 @@ set(INTEROP_SOURCES
   ResourceManagement/NrtTextureMetadata.cpp
   ResourceManagement/NrtResourceLoader.cpp
   ResourceManagement/NrtUint8Vector.cpp
-        ResourceManagement/NrtInt16Vector.cpp
+  ResourceManagement/NrtInt16Vector.cpp
   ResourceManagement/NrtUuidFilePathMap.cpp
 
   PluginManagement/NrtDefaultPluginSelector.cpp
@@ -61,14 +67,15 @@ set(INTEROP_SOURCES
   SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
   SceneGraph/NrtSceneNodeDepthFirstIterator.cpp
 
+  Threading/NrtFutureResult.cpp
+
   Timing/NrtStepTimer.cpp
   Timing/NrtTimestamp.cpp
 
   Utilities/NrtMisc.cpp
   Utilities/NrtEvent.cpp
 
-  Windowing/NrtIWindowingDevice.cpp
-)
+  Windowing/NrtIWindowingDevice.cpp)
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
 add_dependencies(Interop Engine)

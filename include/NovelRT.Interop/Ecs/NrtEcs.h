@@ -9,6 +9,7 @@
 #include "NrtComponentCache.h"
 #include "NrtConfigurator.h"
 #include "NrtEntityCache.h"
+#include "NrtEcsComponents.h"
 #include "NrtEntityIdVector.h"
 #include "NrtSparseSetMemoryContainer.h"
 #include "NrtSystemScheduler.h"

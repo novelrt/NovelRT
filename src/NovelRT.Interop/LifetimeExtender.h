@@ -3,55 +3,69 @@
 #ifndef NOVELRT_INTEROP_LIFETIMEEXTENDER_H
 #define NOVELRT_INTEROP_LIFETIMEEXTENDER_H
 #include <memory>
+#include <unordered_map>
 #include <vector>
-/*
- * Extends the lifetime of objects contained in a shared_ptr.
- * This lets the API consumer take ownership of an object without double indirection.
- */
-namespace NovelRT::Interop::Lifetime
+
+// Unfortunately need to include Threading.h for ConcurrentLifetime, as
+// the other solution requires include order madness.
+// Another solution could be to create ConcurrentLifetimeExtender.h,
+// but that's maybe too much, who knows?
+#include <NovelRT/Threading/Threading.h>
+
+namespace NovelRT::Interop
 {
-    template<typename T>[[nodiscard]] std::vector<std::shared_ptr<T>>& AliveObjects() noexcept
+    /*
+     * Extends the lifetime of objects contained in a shared_ptr-like structure.
+     * By default, this stores instances of shared_ptr, but can be configured to some
+     * other pointer type using the template argument P.
+     * This lets the API consumer take ownership of an object without double indirection.
+     *
+     * This class uses an unordered_map internally, which map pointers to their shared_ptr.
+     */
+    template<template<typename> typename P = std::shared_ptr> class PtrLifetime
     {
-        static std::vector<std::shared_ptr<T>> aliveObjects{};
+    public:
+        PtrLifetime() = delete;
 
-        return aliveObjects;
-    }
-
-    template<typename T> void KeepAlive(std::shared_ptr<T>&& object) noexcept
-    {
-        AliveObjects<T>().emplace_back(std::move(object));
-    }
-
-    template<typename T> void KeepAlive(const std::shared_ptr<T>& object) noexcept
-    {
-        AliveObjects<T>().emplace_back(object);
-    }
-
-    template<typename T>[[nodiscard]] std::shared_ptr<T> Find(T* object) noexcept
-    {
-        for (auto& aliveObject : AliveObjects<T>())
+        template<typename T> [[nodiscard]] static std::unordered_map<T*, P<T>>& AliveObjects() noexcept
         {
-            if (aliveObject.get() == object)
+            static std::unordered_map<T*, P<T>> aliveObjects{};
+
+            return aliveObjects;
+        }
+
+        // KeepAlive does nothing if the pointer already exists.
+        template<typename T> static void KeepAlive(P<T>&& object) noexcept
+        {
+            AliveObjects<T>().insert({object.get(), std::move(object)});
+        }
+
+        template<typename T> static void KeepAlive(P<T>& object) noexcept
+        {
+            AliveObjects<T>().insert({object.get(), object});
+        }
+
+        template<typename T> [[nodiscard]] static P<T> Find(T* object) noexcept
+        {
+            auto& alive = AliveObjects<T>();
+            if (auto finding = alive.find(object); finding != alive.end())
             {
-                return aliveObject;
+                return finding->second;
+            }
+            else
+            {
+                return nullptr;
             }
         }
-        return nullptr;
-    }
 
-    template<typename T> bool Release(T* object) noexcept
-    {
-        auto& aliveObjects = AliveObjects<T>();
-        for (auto it = aliveObjects.begin(); it != aliveObjects.end(); ++it)
+        template<typename T> static bool Release(T* object) noexcept
         {
-            if ((*it).get() == object)
-            {
-                aliveObjects.erase(it);
-                return true;
-            }
+            return AliveObjects<T>().erase(object) == 1;
         }
-        return false;
-    }
+    };
+
+    using Lifetime = PtrLifetime<>;
+    using ConcurrentLifetime = PtrLifetime<NovelRT::Threading::ConcurrentSharedPtr>;
 }
 
 #endif // NOVELRT_INTEROP_LIFETIMEEXTENDER_H
