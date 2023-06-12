@@ -1,58 +1,47 @@
-set(CORE_SOURCES
+### NovelRT - Core Library
+set(NOVELRT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/NovelRT)
 
-  Ecs/Narrative/NarrativePlayerSystem.cpp
+### Dependencies
+find_package(glm REQUIRED)
+find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
+find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
+find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 
-  Maths/GeoBounds.cpp
-  Maths/QuadTree.cpp
-
-  Persistence/Chapter.cpp
-  Persistence/Persistable.cpp
-  Persistence/Graphics/RenderingComponentPersistenceRule.cpp
-
-  PluginManagement/TemporaryFnPtrs.cpp
-
-  ResourceManagement/ResourceLoader.cpp
-  ResourceManagement/Desktop/DesktopResourceLoader.cpp
-  ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
-
-  Threading/VolatileState.cpp
-
-  Timing/StepTimer.cpp
-
-  Windowing/Glfw/GlfwWindowingDevice.cpp
-  Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+### Required files
+set(ECS_INPUT_SOURCES
+  InputSystem.cpp
 )
-add_library(Engine SHARED ${CORE_SOURCES})
-set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})
-add_dependencies(Engine runtime compiler)
 
+add_library(NovelRT_ECS_Input STATIC ${ECS_INPUT_SOURCES})
+add_dependencies(NovelRT_ECS_Input NovelRT_Core NovelRT_ECS NovelRT_Input)
+set_property(TARGET NovelRT_ECS_Input PROPERTY VERSION ${PROJECT_VERSION})
 
 if(GENERATOR_IS_MULTI_CONFIG)
-  set_target_properties(Engine PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>" )
+  set_target_properties(NovelRT_ECS_Input PROPERTIES OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT_ECS_Input,NovelRT_ECS_Input-$<CONFIG>" )
 else()
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(ENGINE_NAME "NovelRT")
+    set(ENGINE_NAME "NovelRT_ECS_Input")
   elseif(CMAKE_BUILD_TYPE)
-    set(ENGINE_NAME "NovelRT-${CMAKE_BUILD_TYPE}")
+    set(ENGINE_NAME "NovelRT_ECS_Input-${CMAKE_BUILD_TYPE}")
   else()
-    set(ENGINE_NAME "NovelRT-\$<CONFIG>")
+    set(ENGINE_NAME "NovelRT_ECS_Input-\$<CONFIG>")
   endif()
-  set_target_properties(Engine PROPERTIES OUTPUT_NAME ${ENGINE_NAME})
+  set_target_properties(NovelRT_ECS_Input PROPERTIES OUTPUT_NAME ${ENGINE_NAME})
 endif()
 
 if(APPLE)
-  get_target_property(ENGINE_NAME_FINAL Engine OUTPUT_NAME)
-  set_target_properties(Engine PROPERTIES
+  get_target_property(ENGINE_NAME_FINAL NovelRT_ECS_Input OUTPUT_NAME)
+  set_target_properties(NovelRT_ECS_Input PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     NO_SONAME TRUE
   )
-  target_link_options(Engine PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>)
+  target_link_options(NovelRT_ECS_Input PRIVATE $<$<CXX_COMPILER_ID:AppleClang>:-install_name @rpath/lib${ENGINE_NAME_FINAL}.dylib>)
 elseif(WIN32)
-  set_property(TARGET Engine PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+  set_property(TARGET NovelRT_ECS_Input PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 
-target_compile_features(Engine PUBLIC cxx_std_17)
-target_include_directories(Engine
+target_compile_features(NovelRT_ECS_Input PUBLIC cxx_std_17)
+target_include_directories(NovelRT_ECS_Input
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:glm::glm,INTERFACE_INCLUDE_DIRECTORIES>>
@@ -60,7 +49,7 @@ target_include_directories(Engine
     $<INSTALL_INTERFACE:include>
 )
 
-target_compile_options(Engine
+target_compile_options(NovelRT_ECS_Input
   PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
@@ -99,34 +88,20 @@ target_compile_options(Engine
 )
 
 if(MSVC)
-  set_property(TARGET Engine PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
-  target_compile_definitions(Engine PUBLIC -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
+  set_property(TARGET NovelRT_ECS_Input PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  target_compile_definitions(NovelRT_ECS_Input PUBLIC -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
 endif()
 
-target_link_libraries(Engine
+target_link_libraries(NovelRT_ECS_Input
   PUBLIC
-    Vulkan::Vulkan
-    TBB::tbb
-    OpenAL::OpenAL
-    SndFile::sndfile
-    glfw
-    png
-    spdlog::spdlog
-    nlohmann_json::nlohmann_json
-    stduuid
-    runtime
-    Vorbis::vorbis
-    Vorbis::vorbisenc
-    FLAC::FLAC
-    Opus::opus
-    Ogg::ogg
-    $<$<CXX_COMPILER_ID:MSVC>:Winmm>
-    $<$<BOOL:${APPLE}>:${COREFOUNDATION}>
+    NovelRT_Core
+    NovelRT_Input
+    NovelRT_ECS
 )
 
 if(NOVELRT_INSTALL)
   install(
-    TARGETS Engine
+    TARGETS NovelRT_ECS_Input
     EXPORT NovelRT
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib

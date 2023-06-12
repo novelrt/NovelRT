@@ -157,7 +157,7 @@ endif()
 # find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 # find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 # find_package(SndFile REQUIRED)
-# find_package(nlohmann_json REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 
 
@@ -199,7 +199,7 @@ endif()
 #
 # Add subdirectories
 #
-# add_subdirectory(internal/Fabulist)
+add_subdirectory(internal/Fabulist)
 add_subdirectory(resources)
 add_subdirectory(src)
 

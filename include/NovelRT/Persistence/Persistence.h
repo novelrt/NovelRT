@@ -5,7 +5,7 @@
 #define NOVELRT_PERSISTENCE_H
 
 // Persistence dependencies
-#include "../Ecs/Ecs.h"
+#include "../Ecs/Graphics/Ecs.Graphics.h"
 #include "../ResourceManagement/ResourceManagement.h"
 #include <map>
 #include <sstream>
@@ -25,8 +25,6 @@ namespace NovelRT::Persistence
 #include "ICustomSerialisationRule.h"
 #include "Persistable.h"
 #include "Chapter.h"
-
-#include "Graphics/Persistence.Graphics.h"
 
 // clang-format on
 
