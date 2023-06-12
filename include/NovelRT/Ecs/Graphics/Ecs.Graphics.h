@@ -4,12 +4,14 @@
 #ifndef NOVELRT_ECS_GRAPHICS_H
 #define NOVELRT_ECS_GRAPHICS_H
 
+#include "../Ecs.h"
+
 #ifndef NOVELRT_ECS_H
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
 // Ecs.Graphics Dependencies
-#include "NovelRT/Graphics/RGBAColour.h"
+#include "../../Graphics/RGBAColour.h"
 
 namespace NovelRT::Ecs::Graphics
 {

@@ -80,16 +80,6 @@ if(NOVELRT_USE_STD_SPAN)
 endif()
 
 #
-# Do a Vulkan check before we bother getting other deps
-# since we scaffold the others
-#
-if(APPLE)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
-else()
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
-
-#
 # Handle Apple-specific requirements for CMake
 #
 if(APPLE)
@@ -155,31 +145,31 @@ endif()
 
 # Packages w/o version specified typically break as they don't support
 # versioning like the others do.
-find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
-find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
-find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
-find_package(stduuid CONFIG REQUIRED)
-find_package(glfw3 ${NOVELRT_GLFW_VERSION} CONFIG REQUIRED)
-find_package(glm REQUIRED)
-find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
-find_package(OpenAL CONFIG REQUIRED)
-find_package(Opus REQUIRED)
-find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
-find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
-find_package(SndFile REQUIRED)
-find_package(nlohmann_json REQUIRED)
+# find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
+# find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
+# find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
+# find_package(stduuid CONFIG REQUIRED)
+# find_package(glfw3 ${NOVELRT_GLFW_VERSION} CONFIG REQUIRED)
+# find_package(glm REQUIRED)
+# find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
+# find_package(OpenAL CONFIG REQUIRED)
+# find_package(Opus REQUIRED)
+# find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
+# find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
+# find_package(SndFile REQUIRED)
+# find_package(nlohmann_json REQUIRED)
 
 
 
-if(NOVELRT_DEPS_INSTALLED)
-  #CMake-standard FindZLIB breaks runtime deps for Windows
-  #So we just use our version that doesn't :)
-  find_package(ZLIB CONFIG REQUIRED)
-  include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-else()
-  find_package(ZLIB REQUIRED)
-  find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
-endif()
+# if(NOVELRT_DEPS_INSTALLED)
+#   #CMake-standard FindZLIB breaks runtime deps for Windows
+#   #So we just use our version that doesn't :)
+#   find_package(ZLIB CONFIG REQUIRED)
+#   include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
+# else()
+#   find_package(ZLIB REQUIRED)
+#   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
+# endif()
 
 #
 # Generate required files for install
@@ -209,84 +199,84 @@ endif()
 #
 # Add subdirectories
 #
-add_subdirectory(internal/Fabulist)
+# add_subdirectory(internal/Fabulist)
 add_subdirectory(resources)
 add_subdirectory(src)
 
-if(NOVELRT_BUILD_SAMPLES)
-  add_subdirectory(samples)
-endif()
+# if(NOVELRT_BUILD_SAMPLES)
+#   add_subdirectory(samples)
+# endif()
 
-if(NOVELRT_BUILD_TESTS)
-  add_subdirectory(tests)
-endif()
+# if(NOVELRT_BUILD_TESTS)
+#   add_subdirectory(tests)
+# endif()
 
-if(DOXYGEN_FOUND AND NOVELRT_BUILD_DOCUMENTATION)
-  add_subdirectory(doxygen)
-endif()
+# if(DOXYGEN_FOUND AND NOVELRT_BUILD_DOCUMENTATION)
+#   add_subdirectory(doxygen)
+# endif()
 
 #
 # Install files other than the libraries themselves
 # Targets' CMakeLists contains respective installations
 #
-if(NOVELRT_INSTALL)
-  install(
-    EXPORT NovelRT
-    FILE NovelRTTargets.cmake
-    EXPORT_LINK_INTERFACE_LIBRARIES
-    NAMESPACE NovelRT::
-    DESTINATION "${NOVELRT_CONFIG_PATH}"
-  )
+# if(NOVELRT_INSTALL)
+#   install(
+#     EXPORT NovelRT
+#     FILE NovelRTTargets.cmake
+#     EXPORT_LINK_INTERFACE_LIBRARIES
+#     NAMESPACE NovelRT::
+#     DESTINATION "${NOVELRT_CONFIG_PATH}"
+#   )
 
-  install(
-    FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
-          "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
-    DESTINATION "${NOVELRT_CONFIG_PATH}")
+#   install(
+#     FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
+#           "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
+#     DESTINATION "${NOVELRT_CONFIG_PATH}")
 
-  install(
-    FILES "${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake"
-    DESTINATION "${NOVELRT_CONFIG_PATH}"
-  )
+#   install(
+#     FILES "${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake"
+#     DESTINATION "${NOVELRT_CONFIG_PATH}"
+#   )
 
-  #Moved to main CMakeLists as headers should always be distributed for now
-  install(
-    DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
-    DESTINATION include/NovelRT
-    FILES_MATCHING PATTERN "*.h"
-  )
+#   #Moved to main CMakeLists as headers should always be distributed for now
+#   install(
+#     DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
+#     DESTINATION include/NovelRT
+#     FILES_MATCHING PATTERN "*.h"
+#   )
 
-  if(NOVELRT_BUILD_INTEROP)
-    install(
-      DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
-      DESTINATION include/NovelRT.Interop
-      FILES_MATCHING PATTERN "*.h"
-    )
-  endif()
+#   if(NOVELRT_BUILD_INTEROP)
+#     install(
+#       DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
+#       DESTINATION include/NovelRT.Interop
+#       FILES_MATCHING PATTERN "*.h"
+#     )
+#   endif()
 
-  if(NOVELRT_DEPS_INSTALLED)
-    install(
-      DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
-      DESTINATION lib
-      PATTERN "*gtest*" EXCLUDE
-    )
-    install(
-      DIRECTORY ${NOVELRT_DEPS_PATH}/include/
-      DESTINATION include
-      PATTERN "gtest" EXCLUDE
-    )
-    install(
-      DIRECTORY ${NOVELRT_DEPS_PATH}/share/
-      DESTINATION share
-      PATTERN "doc" EXCLUDE
-      PATTERN "man" EXCLUDE
-    )
-    if(WIN32)
-      install(
-        DIRECTORY ${NOVELRT_DEPS_PATH}/bin/
-        DESTINATION bin
-        PATTERN "png*.exe" EXCLUDE
-        PATTERN "gtest*" EXCLUDE
-      )
-    endif()
-  endif()
-endif()
+#   if(NOVELRT_DEPS_INSTALLED)
+#     install(
+#       DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
+#       DESTINATION lib
+#       PATTERN "*gtest*" EXCLUDE
+#     )
+#     install(
+#       DIRECTORY ${NOVELRT_DEPS_PATH}/include/
+#       DESTINATION include
+#       PATTERN "gtest" EXCLUDE
+#     )
+#     install(
+#       DIRECTORY ${NOVELRT_DEPS_PATH}/share/
+#       DESTINATION share
+#       PATTERN "doc" EXCLUDE
+#       PATTERN "man" EXCLUDE
+#     )
+#     if(WIN32)
+#       install(
+#         DIRECTORY ${NOVELRT_DEPS_PATH}/bin/
+#         DESTINATION bin
+#         PATTERN "png*.exe" EXCLUDE
+#         PATTERN "gtest*" EXCLUDE
+#       )
+#     endif()
+#   endif()
+# endif()

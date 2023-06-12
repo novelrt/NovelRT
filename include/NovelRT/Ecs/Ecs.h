@@ -44,7 +44,7 @@
  */
 namespace NovelRT::Ecs
 {
-    class Configurator;
+    //class Configurator;
     class Catalogue;
     class ComponentBufferMemoryContainer;
     class ComponentCache;
@@ -76,11 +76,11 @@ namespace NovelRT::Ecs
 #include "Catalogue.h"
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
-#include "Graphics/Ecs.Graphics.h"
-#include "Audio/Ecs.Audio.h"
-#include "Input/Ecs.Input.h"
-#include "Narrative/Ecs.Narrative.h"
-#include "Configurator.h"
+//#include "Graphics/Ecs.Graphics.h"
+//#include "Audio/Ecs.Audio.h"
+//#include "Input/Ecs.Input.h"
+//#include "Narrative/Ecs.Narrative.h"
+//#include "Configurator.h"
 #include "LinkedEntityListView.h"
 #include "EntityGraphView.h"
 

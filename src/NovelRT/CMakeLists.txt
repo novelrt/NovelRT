@@ -1,46 +1,9 @@
 set(CORE_SOURCES
-  Audio/AudioService.cpp
 
-  Ecs/Catalogue.cpp
-  Ecs/ComponentBufferMemoryContainer.cpp
-  Ecs/ComponentCache.cpp
-  Ecs/EcsUtils.cpp
-  Ecs/EntityCache.cpp
-  Ecs/EntityGraphView.cpp
-  Ecs/LinkedEntityListView.cpp
-  Ecs/SparseSetMemoryContainer.cpp
-  Ecs/SystemScheduler.cpp
-  Ecs/UnsafeComponentView.cpp
-  Ecs/Graphics/DefaultRenderingSystem.cpp
-  Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
-  Graphics/GraphicsMemoryBlock.cpp
-  Graphics/GraphicsMemoryBlockCollection.cpp
-  Graphics/GraphicsPipeline.cpp
-  Graphics/GraphicsPipelineInput.cpp
-  Graphics/GraphicsPipelineInputElement.cpp
-  Graphics/GraphicsPipelineResource.cpp
-  Graphics/GraphicsPipelineSignature.cpp
-  Graphics/GraphicsResourceManager.cpp
-  Graphics/ShaderProgram.cpp
-  Graphics/Vulkan/VulkanGraphicsAdapter.cpp
-  Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
-  Graphics/Vulkan/VulkanGraphicsBuffer.cpp
-  Graphics/Vulkan/VulkanGraphicsContext.cpp
-  Graphics/Vulkan/VulkanGraphicsDevice.cpp
-  Graphics/Vulkan/VulkanGraphicsFence.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
-  Graphics/Vulkan/VulkanGraphicsPipeline.cpp
-  Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
-  Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
-  Graphics/Vulkan/VulkanGraphicsProvider.cpp
-  Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
-  Graphics/Vulkan/VulkanGraphicsTexture.cpp
-  Graphics/Vulkan/VulkanShaderProgram.cpp
+
 
   Input/Glfw/GlfwInputDevice.cpp
   Input/Glfw/GlfwInputPluginProvider.cpp
@@ -149,7 +112,6 @@ endif()
 
 target_link_libraries(Engine
   PUBLIC
-    NovelRT_Core
     Vulkan::Vulkan
     TBB::tbb
     OpenAL::OpenAL

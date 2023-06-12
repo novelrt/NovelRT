@@ -4,6 +4,8 @@
 #ifndef NOVELRT_ECS_AUDIO_H
 #define NOVELRT_ECS_AUDIO_H
 
+#include "../Ecs.h"
+
 #ifndef NOVELRT_ECS_H
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
@@ -11,6 +13,7 @@
 #include "../../Audio/Audio.h"
 #include "../../Timing/StepTimer.h"
 #include "../../Timing/Timestamp.h"
+
 #include <chrono>
 #include <map>
 
