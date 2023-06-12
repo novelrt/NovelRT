@@ -16,7 +16,8 @@ namespace NovelRT::PluginManagement
         [[nodiscard]] virtual ResourceManagement::ResourceLoader* GetResourceLoaderInternal(bool initAssets) = 0;
 
     public:
-        [[nodiscard]] inline std::shared_ptr<ResourceManagement::ResourceLoader> GetResourceLoader(bool initAssets = true)
+        [[nodiscard]] inline std::shared_ptr<ResourceManagement::ResourceLoader> GetResourceLoader(
+            bool initAssets = true)
         {
             return GetResourceLoaderInternal(initAssets)->shared_from_this();
         }
