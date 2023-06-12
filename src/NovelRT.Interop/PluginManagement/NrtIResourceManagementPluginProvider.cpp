@@ -27,6 +27,7 @@ NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPl
 }
 
 NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceManagementPluginProviderHandle plugin,
+                                                                  NrtBool initAssets,
                                                                   NrtResourceLoaderHandle* outputLoader)
 {
     if (plugin == nullptr)
@@ -41,7 +42,8 @@ NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceMa
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
-    auto&& resourceLoader = reinterpret_cast<IResourceManagementPluginProvider*>(plugin)->GetResourceLoader();
+    const bool initBool = static_cast<bool>(initAssets);
+    auto&& resourceLoader = reinterpret_cast<IResourceManagementPluginProvider*>(plugin)->GetResourceLoader(initBool);
     *outputLoader = reinterpret_cast<NrtResourceLoaderHandle>(resourceLoader.get());
     Lifetime::KeepAlive(std::move(resourceLoader));
 

@@ -62,6 +62,32 @@ extern "C"
         return NRT_SUCCESS;
     }
 
+    NrtBool Nrt_ResourceLoader_GetIsAssetDBInitialised(NrtResourceLoaderHandle resourceLoader)
+    {
+        return reinterpret_cast<ResourceLoader*>(resourceLoader)->GetIsAssetDBInitialised();
+    }
+
+    NrtResult Nrt_ResourceLoader_InitAssetDatabase(NrtResourceLoaderHandle resourceLoader)
+    {
+        if (resourceLoader == nullptr)
+        {
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        try
+        {
+            reinterpret_cast<ResourceLoader*>(resourceLoader)->InitAssetDatabase();
+        }
+        catch (const NovelRT::Exceptions::IOException&)
+        {
+            Nrt_setErrMsgIsFileNotFoundInternal();
+            return NRT_FAILURE_FILE_NOT_FOUND;
+        }
+
+        return NRT_SUCCESS;
+    }
+
     NrtUuidFilePathMapHandle Nrt_ResourceLoader_GetGuidsToFilePathsMap(NrtResourceLoaderHandle resourceLoader)
     {
         return reinterpret_cast<NrtUuidFilePathMapHandle>(

@@ -13,12 +13,12 @@ namespace NovelRT::PluginManagement
     class IResourceManagementPluginProvider : public std::enable_shared_from_this<IResourceManagementPluginProvider>
     {
     private:
-        [[nodiscard]] virtual ResourceManagement::ResourceLoader* GetResourceLoaderInternal() = 0;
+        [[nodiscard]] virtual ResourceManagement::ResourceLoader* GetResourceLoaderInternal(bool initAssets) = 0;
 
     public:
-        [[nodiscard]] inline std::shared_ptr<ResourceManagement::ResourceLoader> GetResourceLoader()
+        [[nodiscard]] inline std::shared_ptr<ResourceManagement::ResourceLoader> GetResourceLoader(bool initAssets = true)
         {
-            return GetResourceLoaderInternal()->shared_from_this();
+            return GetResourceLoaderInternal(initAssets)->shared_from_this();
         }
 
         virtual ~IResourceManagementPluginProvider() = default;

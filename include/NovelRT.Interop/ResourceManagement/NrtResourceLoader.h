@@ -16,6 +16,10 @@ extern "C"
     NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader,
                                                                  const char* newDirectory);
 
+    NrtBool Nrt_ResourceLoader_GetIsAssetDBInitialised(NrtResourceLoaderHandle resourceLoader);
+
+    NrtResult Nrt_ResourceLoader_InitAssetDatabase(NrtResourceLoaderHandle resourceLoader);
+
     NrtUuidFilePathMapHandle Nrt_ResourceLoader_GetGuidsToFilePathsMap(NrtResourceLoaderHandle resourceLoader);
 
     NrtFilePathUuidMapHandle Nrt_ResourceLoader_GetFilePathsToGuidsMap(NrtResourceLoaderHandle resourceLoader);
