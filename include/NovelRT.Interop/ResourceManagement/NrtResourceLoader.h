@@ -11,6 +11,8 @@ extern "C"
 {
 #endif
 
+    NrtResult Nrt_ResourceLoader_Destroy(NrtResourceLoaderHandle resourceLoader);
+
     char* Nrt_ResourceLoader_GetResourcesRootDirectory(NrtResourceLoaderHandle resourceLoader);
 
     NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader,
