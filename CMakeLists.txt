@@ -5,6 +5,14 @@ if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
 endif()
 
+# Hacky hack hack for Windows
+# Needs to be set before project is called. -__-
+# We require windows SDK version: v10.0.22621 due to the D3D12 enum values
+# we want only being available from this version onwards.
+if(WIN32)
+  set(CMAKE_SYSTEM_VERSION 10.0.22621.0)
+endif()
+
 project(NovelRT
   VERSION 1.0.0 #MVP Version
   DESCRIPTION "NovelRT game engine"

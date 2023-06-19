@@ -5,8 +5,7 @@ include(NovelRTBuildDeps)
 #
 # Platform-specific changes
 #
-# We require windows SDK version: v10.0.22621 due to the D3D12 enum values we want only being available from this version onwards.
-set(CMAKE_SYSTEM_VERSION 10.0.22621.0)
+
 if(MSVC)
   # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
