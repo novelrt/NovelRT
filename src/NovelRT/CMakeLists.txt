@@ -4,7 +4,7 @@ set(CORE_SOURCES
   LoggingService.cpp
   EngineConfig.cpp
 
-  Audio/AudioService.cpp
+  #Audio/AudioService.cpp
 
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
