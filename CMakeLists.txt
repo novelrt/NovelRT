@@ -12,6 +12,9 @@ project(NovelRT
   LANGUAGES C CXX
 )
 
+#
+# Set the proper backend target for NovelRT
+#
 set(NOVELRT_TARGET_OPTIONS "Win32" "Linux" "macOS")
 if(NOT DEFINED NOVELRT_TARGET)
   if(WIN32)
@@ -25,17 +28,14 @@ if(NOT DEFINED NOVELRT_TARGET)
   endif()
 endif()
 
-# Prepend so that our FindVulkan gets picked up first
+#
+# Prepend so that our FindVulkan gets picked up first when needed
+#
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-include(cmake/NovelRTPlatformConfig.cmake)
-
-if(NOT GENERATOR_IS_MULTI_CONFIG AND CMAKE_BUILD_TYPE STREQUAL "")
-  message(STATUS "Defaulting to Debug build as no build type was specified")
-  set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
-
+#
+# Defining options
+#
 option(NOVELRT_FETCH_DEPENDENCIES "Fetch and build NovelRT dependencies instead of providing system-based ones" ON)
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" OFF)
@@ -46,6 +46,9 @@ option(NOVELRT_INSTALL "Generate installation targets" ON)
 option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
 option(NOVELRT_BUILD_DEPS_WITH_MAX_CPU "Use all available CPU processing power when scaffolding/building the NovelRT internal dependences" OFF)
 
+#
+# Dependency Version Constraints
+#
 set(NOVELRT_DOXYGEN_VERSION "1.8.17" CACHE STRING "Doxygen version")
 set(NOVELRT_FLAC_VERSION "1.3.4" CACHE STRING "FLAC version")
 set(NOVELRT_GLFW_VERSION "3.3.7" CACHE STRING "GLFW3 version")
@@ -61,13 +64,18 @@ set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Vorbis version")
 set(NOVELRT_VULKAN_VERSION "1.3.231" CACHE STRING "Vulkan version")
 
 #
-# Allow for generating documentation
+# Configure Platforms
 #
-if(NOVELRT_BUILD_DOCUMENTATION)
-  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
-    COMPONENTS dot
-  )
+include(NovelRTPlatformConfig)
+
+#
+# Set default build type when not defined and not multi-config
+#
+if(NOT GENERATOR_IS_MULTI_CONFIG AND CMAKE_BUILD_TYPE STREQUAL "")
+  message(STATUS "Defaulting to Debug build as no build type was specified")
+  set(CMAKE_BUILD_TYPE "Debug")
 endif()
+
 
 #
 # Alias "NovelRT::Utilities::Misc:Span" to "std::span" instead of "gsl::span".
@@ -75,6 +83,14 @@ endif()
 #
 if(NOVELRT_USE_STD_SPAN)
   add_compile_definitions(NOVELRT_USE_STD_SPAN=true)
+endif()
+
+#
+# Setup Debug Output
+#
+if(NOVELRT_VERBOSE_BUILD)
+  set(CMAKE_VERBOSE_MAKEFILE TRUE)
+  set(VERBOSE TRUE)
 endif()
 
 
@@ -92,11 +108,15 @@ write_basic_package_version_file(src/NovelRTConfigVersion.cmake
                                 COMPATIBILITY SameMajorVersion)
 
 #
-# Setup Debug Output
+# Documentation Generation target
 #
-if(NOVELRT_VERBOSE_BUILD)
-  set(CMAKE_VERBOSE_MAKEFILE TRUE)
-  set(VERBOSE TRUE)
+if(NOVELRT_BUILD_DOCUMENTATION)
+  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
+    COMPONENTS dot
+  )
+  if(DOXYGEN_FOUND)
+    add_subdirectory(doxygen)
+  endif()
 endif()
 
 #
@@ -114,9 +134,6 @@ if(NOVELRT_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
-if(DOXYGEN_FOUND AND NOVELRT_BUILD_DOCUMENTATION)
-  add_subdirectory(doxygen)
-endif()
 
 #
 # Install files other than the libraries themselves
