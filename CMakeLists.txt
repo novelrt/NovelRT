@@ -16,15 +16,17 @@ project(NovelRT
 # Set the proper backend target for NovelRT
 #
 set(NOVELRT_TARGET_OPTIONS "Win32" "Linux" "macOS")
+set(NOVELRT_TARGET_OPTIONS "${NOVELRT_TARGET_OPTIONS}" CACHE INTERNAL "List of valid platforms for NovelRT")
 if(NOT DEFINED NOVELRT_TARGET)
+  message(STATUS "No backend specified - setting default based on detected OS.")
   if(WIN32)
-    set(NOVELRT_TARGET "Win32")
+    set(NOVELRT_TARGET "Win32" CACHE STRING "")
   elseif(APPLE)
-    set(NOVELRT_TARGET "macOS")
+    set(NOVELRT_TARGET "macOS" CACHE STRING "")
   elseif(UNIX)
-    set(NOVELRT_TARGET "Linux")
+    set(NOVELRT_TARGET "Linux" CACHE STRING "")
   else()
-    set(NOVELRT_TARGET "Unknown")
+    set(NOVELRT_TARGET "Unknown" CACHE STRING "")
   endif()
 endif()
 

@@ -15,7 +15,7 @@ endif()
 # this is needed, because Windows can be weird, man.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
-include(../NovelRTBuildDeps.cmake)
+include(NovelRTBuildDeps)
 
 ### Dependency checks
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)

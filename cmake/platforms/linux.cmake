@@ -1,6 +1,6 @@
 message(STATUS "Building NovelRT for Linux")
 
-include(../NovelRTBuildDeps.cmake)
+include(NovelRTBuildDeps)
 
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
