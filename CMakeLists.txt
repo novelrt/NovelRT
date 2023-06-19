@@ -5,11 +5,6 @@ if(POLICY CMP0135)
   cmake_policy(SET CMP0135 NEW)
 endif()
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS / OS X deployment version")
-# We require windows SDK version: v10.0.22621 due to the D3D12 enum values we want only being available from this version onwards.
-# The value sets the minimal version that we need to use during building
-set(CMAKE_SYSTEM_VERSION 10.0.22621.0)
-
 project(NovelRT
   VERSION 1.0.0 #MVP Version
   DESCRIPTION "NovelRT game engine"
@@ -17,26 +12,29 @@ project(NovelRT
   LANGUAGES C CXX
 )
 
-if(MSVC)
-  # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
-  string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-  string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  string(REGEX REPLACE " /M[TD]d?" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-  string(REGEX REPLACE " /M[TD]d?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(NOVELRT_TARGET_OPTIONS "Win32" "Linux" "macOS")
+if(NOT DEFINED NOVELRT_TARGET)
+  if(WIN32)
+    set(NOVELRT_TARGET "Win32")
+  elseif(APPLE)
+    set(NOVELRT_TARGET "macOS")
+  elseif(UNIX)
+    set(NOVELRT_TARGET "Linux")
+  else()
+    set(NOVELRT_TARGET "Unknown")
+  endif()
 endif()
+
+# Prepend so that our FindVulkan gets picked up first
+list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+include(cmake/NovelRTPlatformConfig.cmake)
 
 if(NOT GENERATOR_IS_MULTI_CONFIG AND CMAKE_BUILD_TYPE STREQUAL "")
   message(STATUS "Defaulting to Debug build as no build type was specified")
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-if(WIN32)
-  # this is needed, because Windows can be weird, man.
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-endif()
-
-# Prepend so that our FindVulkan gets picked up first
-list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 option(NOVELRT_FETCH_DEPENDENCIES "Fetch and build NovelRT dependencies instead of providing system-based ones" ON)
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
@@ -79,107 +77,6 @@ if(NOVELRT_USE_STD_SPAN)
   add_compile_definitions(NOVELRT_USE_STD_SPAN=true)
 endif()
 
-#
-# Do a Vulkan check before we bother getting other deps
-# since we scaffold the others
-#
-if(APPLE)
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
-else()
-  find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-endif()
-
-#
-# Handle Apple-specific requirements for CMake
-#
-if(APPLE)
-  find_library(COREFOUNDATION CoreFoundation "/")
-  set(CMAKE_MACOSX_RPATH 1)
-  set(CMAKE_SKIP_BUILD_RPATH FALSE)
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-  set(CMAKE_INSTALL_RPATH "@loader_path/")
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "@loader_path/" isSystemDir)
-  if("${isSystemDir}" STREQUAL "-1")
-    set(CMAKE_INSTALL_RPATH "@loader_path/")
-  endif("${isSystemDir}" STREQUAL "-1")
-endif()
-
-#
-# Generate and Locate NovelRT's Dependencies
-#
-include(ProcessorCount)
-ProcessorCount(CORES)
-if(CORES EQUAL 0)
-  set(CORES_AMT 1)
-else()
-  math(EXPR CORES_AMT "${CORES} / 2")
-  if(CORES_AMT LESS 1)
-    set(CORES_AMT 1)
-  endif()
-endif()
-if(NOVELRT_FETCH_DEPENDENCIES)
-  if(NOT NOVELRT_DEPS_INSTALLED)
-    if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-      set(GENERATOR_ARCH_PARAM -A ${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE})
-    endif()
-
-    execute_process(
-      COMMAND ${CMAKE_COMMAND} -S ${CMAKE_CURRENT_SOURCE_DIR}/internal -B ${CMAKE_CURRENT_BINARY_DIR}/depbuild -DCMAKE_BUILD_TYPE=Release -G ${CMAKE_GENERATOR} ${GENERATOR_ARCH_PARAM} -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/dist
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND_ERROR_IS_FATAL LAST
-    )
-
-    if(NOVELRT_BUILD_DEPS_WITH_MAX_CPU)
-      set(NOVELRT_DEPENDENCY_CORE_COUNT ${CORES})
-    else()
-      set(NOVELRT_DEPENDENCY_CORE_COUNT ${CORES_AMT})
-    endif()
-
-    execute_process(
-      COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release -j${NOVELRT_DEPENDENCY_CORE_COUNT}
-      COMMAND_ERROR_IS_FATAL LAST
-    )
-    execute_process(
-      COMMAND ${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/depbuild --config Release
-      COMMAND_ERROR_IS_FATAL LAST
-    )
-
-    set(NOVELRT_DEPS_PATH "${CMAKE_CURRENT_BINARY_DIR}/dist" CACHE FILEPATH "Path where NovelRT's Dependencies were previously installed")
-    set(NOVELRT_DEPS_INSTALLED TRUE CACHE BOOL "Indicates if NovelRT's Dependencies have been installed locally via FetchContent")
-  endif()
-  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist)
-  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist/share)
-  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR}/dist/lib/cmake)
-endif()
-
-# Packages w/o version specified typically break as they don't support
-# versioning like the others do.
-find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
-find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
-find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
-find_package(stduuid CONFIG REQUIRED)
-find_package(glfw3 ${NOVELRT_GLFW_VERSION} CONFIG REQUIRED)
-find_package(glm REQUIRED)
-find_package(Ogg ${NOVELRT_OGG_VERSION} REQUIRED)
-find_package(OpenAL CONFIG REQUIRED)
-find_package(Opus REQUIRED)
-find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
-find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
-find_package(SndFile REQUIRED)
-find_package(nlohmann_json REQUIRED)
-
-
-
-if(NOVELRT_DEPS_INSTALLED)
-  #CMake-standard FindZLIB breaks runtime deps for Windows
-  #So we just use our version that doesn't :)
-  find_package(ZLIB CONFIG REQUIRED)
-  include(${NOVELRT_DEPS_PATH}/lib/libpng/libpng16.cmake)
-else()
-  find_package(ZLIB REQUIRED)
-  find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
-endif()
 
 #
 # Generate required files for install
@@ -199,12 +96,8 @@ write_basic_package_version_file(src/NovelRTConfigVersion.cmake
 #
 if(NOVELRT_VERBOSE_BUILD)
   set(CMAKE_VERBOSE_MAKEFILE TRUE)
-  if(CMAKE_GENERATOR STREQUAL "Visual Studio 2019 16" OR CMAKE_GENERATOR STREQUAL "Visual Studio 2022 17")
-    string(APPEND CMAKE_CXX_FLAGS "-v:detailed")
-  endif()
   set(VERBOSE TRUE)
 endif()
-
 
 #
 # Add subdirectories
@@ -280,13 +173,5 @@ if(NOVELRT_INSTALL)
       PATTERN "doc" EXCLUDE
       PATTERN "man" EXCLUDE
     )
-    if(WIN32)
-      install(
-        DIRECTORY ${NOVELRT_DEPS_PATH}/bin/
-        DESTINATION bin
-        PATTERN "png*.exe" EXCLUDE
-        PATTERN "gtest*" EXCLUDE
-      )
-    endif()
   endif()
 endif()
