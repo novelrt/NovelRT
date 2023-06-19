@@ -93,6 +93,12 @@ endif()
 if(NOVELRT_VERBOSE_BUILD)
   set(CMAKE_VERBOSE_MAKEFILE TRUE)
   set(VERBOSE TRUE)
+  message(VERBOSE "NovelRT - Target Link Libs:")
+  message(VERBOSE ${NOVELRT_ENGINE_LINK_LIBS})
+  message(VERBOSE "NovelRT - Target Compile Definitions:")
+  message(VERBOSE ${NOVELRT_TARGET_COMPILE_DEFS})
+  message(VERBOSE "NovelRT - Target Compile Options:")
+  message(VERBOSE ${NOVELRT_TARGET_COMPILE_OPTIONS})
 endif()
 
 

@@ -1,23 +1,29 @@
 message(STATUS "Building NovelRT for Windows 10/11")
 
-# We require windows SDK version: v10.0.22621 due to the D3D12 enum values we want only being available from this version onwards.
-# The value sets the minimal version that we need to use during building
-set(CMAKE_SYSTEM_VERSION 10.0.22621.0)
+include(NovelRTBuildDeps)
 
+#
+# Platform-specific changes
+#
+# We require windows SDK version: v10.0.22621 due to the D3D12 enum values we want only being available from this version onwards.
+set(CMAKE_SYSTEM_VERSION 10.0.22621.0)
 if(MSVC)
   # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
   string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  list(APPEND NOVELRT_ENGINE_LINK_LIBS Winmm)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  list(APPEND NOVELRT_TARGET_COMPILE_DEFS -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
 endif()
 
 # this is needed, because Windows can be weird, man.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
-include(NovelRTBuildDeps)
-
-### Dependency checks
+#
+# Dependency checks
+#
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -32,8 +38,6 @@ find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
-
-
 if(NOVELRT_DEPS_INSTALLED)
   #CMake-standard FindZLIB breaks runtime deps for Windows
   #So we just use our version that doesn't :)
@@ -44,12 +48,49 @@ else()
   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 endif()
 
+
+#
+# Libraries to be linked
+#
+list(APPEND NOVELRT_ENGINE_LINK_LIBS
+  Vulkan::Vulkan
+  TBB::tbb
+  OpenAL::OpenAL
+  SndFile::sndfile
+  glfw
+  png
+  spdlog::spdlog
+  nlohmann_json::nlohmann_json
+  stduuid
+  Vorbis::vorbis
+  Vorbis::vorbisenc
+  FLAC::FLAC
+  Opus::opus
+  Ogg::ogg
+)
+
+#
+# Compile Options
+#
+list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
+  /W4
+  /WX
+  /wd4611
+  /MP
+)
+
+#
+# Any verbose behaviour changes
+#
 if(NOVELRT_VERBOSE_BUILD)
   if(CMAKE_GENERATOR STREQUAL "Visual Studio 2019 16" OR CMAKE_GENERATOR STREQUAL "Visual Studio 2022 17")
     string(APPEND CMAKE_CXX_FLAGS "-v:detailed")
   endif()
 endif()
 
+#
+# Installation behaviour changes
+#
 if(NOVELRT_DEPS_INSTALLED)
   install(
     DIRECTORY ${NOVELRT_DEPS_PATH}/bin/
