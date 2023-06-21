@@ -5,6 +5,13 @@ include(NovelRTBuildDeps)
 #
 # Platform-specific changes
 #
+if(CMAKE_GENERATOR STREQUAL "Visual Studio 2017 15")
+  message(FATAL_ERROR
+    " NovelRT is not compatible with Visual Studio 2017."
+    " Please use Visual Studio 2019 or higher, or Build "
+    " Tools for Visual Studio 2019 or higher at this time."
+  )
+endif()
 
 if(MSVC)
   # CMake by default appends /W3, so we need to strip it to prevent warnings (D9025)
