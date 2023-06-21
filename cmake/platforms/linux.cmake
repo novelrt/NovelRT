@@ -5,6 +5,14 @@ include(NovelRTBuildDeps)
 #
 # Platform-specific changes
 #
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  message(WARNING
+    " GCC is not fully guaranteed to be compatible with NovelRT at this time."
+    " If this is meant for a production workload, we HIGHLY recommend switching "
+    " your compiler to the recommended version of Clang as noted in the NovelRT "
+    " repository before continuing. If proceeding, your mileage may vary."
+  )
+endif()
 
 #
 # Dependency checks
