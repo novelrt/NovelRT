@@ -54,30 +54,26 @@ list(APPEND NOVELRT_ENGINE_LINK_LIBS
 #
 # Compile Options
 #
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
-    -pedantic
-    -pedantic-errors
-    -Wall
-    -Wextra
-    -Werror
-    -Wno-float-equal
-    -Wno-padded
-  )
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
-    -pedantic
-    -pedantic-errors
-    -Wall
-    -Wextra
-    -Werror
-    -Wno-c++98-compat
-    -Wno-c++98-compat-pedantic
-    -Wno-float-equal
-    -Wno-padded
-    -Wno-reserved-id-macro
-  )
-endif()
+list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
+  $<$<CXX_COMPILER_ID:GNU>:-pedantic>
+  $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
+  $<$<CXX_COMPILER_ID:GNU>:-Wall>
+  $<$<CXX_COMPILER_ID:GNU>:-Wextra>
+  $<$<CXX_COMPILER_ID:GNU>:-Werror>
+  $<$<CXX_COMPILER_ID:GNU>:-Wno-float-equal>
+  $<$<CXX_COMPILER_ID:GNU>:-Wno-padded>
+
+  $<$<CXX_COMPILER_ID:Clang>:-pedantic>
+  $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
+  $<$<CXX_COMPILER_ID:Clang>:-Wall>
+  $<$<CXX_COMPILER_ID:Clang>:-Wextra>
+  $<$<CXX_COMPILER_ID:Clang>:-Werror>
+  $<$<CXX_COMPILER_ID:Clang>:-Wno-c++98-compat>
+  $<$<CXX_COMPILER_ID:Clang>:-Wno-c++98-compat-pedantic>
+  $<$<CXX_COMPILER_ID:Clang>:-Wno-float-equal>
+  $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
+  $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
+)
 
 #
 # Any verbose behaviour changes
