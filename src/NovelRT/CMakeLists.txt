@@ -74,6 +74,7 @@ set(CORE_SOURCES
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
 )
+
 add_library(Engine SHARED ${CORE_SOURCES})
 set_property(TARGET Engine PROPERTY VERSION ${PROJECT_VERSION})
 add_dependencies(Engine runtime compiler)
@@ -112,68 +113,13 @@ target_include_directories(Engine
     $<INSTALL_INTERFACE:include>
 )
 
-target_compile_options(Engine
-  PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4611>
-    $<$<CXX_COMPILER_ID:MSVC>:/MP>
-
-    $<$<CXX_COMPILER_ID:GNU>:-pedantic>
-    $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
-    $<$<CXX_COMPILER_ID:GNU>:-Wall>
-    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
-    $<$<CXX_COMPILER_ID:GNU>:-Werror>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-float-equal>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-padded>
-
-    $<$<CXX_COMPILER_ID:Clang>:-pedantic>
-    $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
-    $<$<CXX_COMPILER_ID:Clang>:-Wall>
-    $<$<CXX_COMPILER_ID:Clang>:-Wextra>
-    $<$<CXX_COMPILER_ID:Clang>:-Werror>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-c++98-compat>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-c++98-compat-pedantic>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-float-equal>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
-
-    $<$<CXX_COMPILER_ID:AppleClang>:-pedantic>
-    $<$<CXX_COMPILER_ID:AppleClang>:-pedantic-errors>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wall>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wextra>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Werror>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-c++98-compat>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-c++98-compat-pedantic>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-float-equal>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
-)
-
-if(MSVC)
-  set_property(TARGET Engine PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
-  target_compile_definitions(Engine PUBLIC -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
-endif()
+target_compile_options(Engine PRIVATE ${NOVELRT_TARGET_COMPILE_OPTIONS})
+target_compile_definitions(Engine PUBLIC ${NOVELRT_TARGET_COMPILE_DEFS})
 
 target_link_libraries(Engine
   PUBLIC
-    Vulkan::Vulkan
-    TBB::tbb
-    OpenAL::OpenAL
-    SndFile::sndfile
-    glfw
-    png
-    spdlog::spdlog
-    nlohmann_json::nlohmann_json
-    stduuid
     runtime
-    Vorbis::vorbis
-    Vorbis::vorbisenc
-    FLAC::FLAC
-    Opus::opus
-    Ogg::ogg
-    $<$<CXX_COMPILER_ID:MSVC>:Winmm>
-    $<$<BOOL:${APPLE}>:${COREFOUNDATION}>
+    ${NOVELRT_ENGINE_LINK_LIBS}
 )
 
 if(NOVELRT_INSTALL)
