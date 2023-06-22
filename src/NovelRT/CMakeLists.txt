@@ -73,6 +73,8 @@ set(CORE_SOURCES
 
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+
+  ${NOVELRT_ENGINE_PLATFORM_SOURCES}
 )
 
 add_library(Engine SHARED ${CORE_SOURCES})

@@ -5,27 +5,27 @@
 #define NOVELRT_AUDIO_H
 
 // Dependencies for Audio
-#include "../Exceptions/Exceptions.h"
-#include "../LoggingService.h"
-#include "../Utilities/Lazy.h"
-#include "../Utilities/Misc.h"
-#include <AL/al.h>
-#include <AL/alc.h>
 #include <cstdint>
-#include <fstream>
-#include <vector>
+#include <map>
+#include <string>
 
 /***
- * @brief Contains audio features, such as playing audio, and managing audio resources.
+ * @brief Contains audio interfaces for usage, such as the NovelRT Audio Engine and Audio Sources.
  */
 namespace NovelRT::Audio
 {
-    typedef std::vector<ALuint> SoundBank;
-    typedef std::vector<ALuint> MusicBank;
-    typedef class AudioService AudioService;
+    enum class SourceState : uint32_t;
+    class IAudioSource;
+    struct SoundDefinition;
+    typedef std::map<uint32_t, IAudioSource> SourceMap;
+    typedef std::map<std::string, SoundDefinition> SoundMap;
+    class IAudioEngine;
 }
 
 // Audio Types
-#include "AudioService.h"
+#include "SourceState.h"
+#include "IAudioSource.h"
+#include "SoundDefinition.h"
+#include "IAudioEngine.h"
 
 #endif // NOVELRT_AUDIO_H

@@ -129,9 +129,6 @@
   #include <NovelRT/ResourceManagement/ResourceManagement.h>
   #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 
-  // Engine service types
-  #include <NovelRT/Audio/AudioService.h>
-
   // Scene Graph types
   #include <NovelRT/SceneGraph/SceneGraph.h>
 #endif // __cplusplus
@@ -143,8 +140,8 @@
   #include <NovelRT.Interop/NrtErrorHandling.h>
   #include <NovelRT.Interop/NrtLoggingService.h>
 
-  // Audio
-  #include <NovelRT.Interop/Audio/NrtAudio.h>
+//   // Audio
+//   #include <NovelRT.Interop/Audio/NrtAudio.h>
 
   // Ecs
   #include <NovelRT.Interop/Ecs/NrtCatalogue.h>

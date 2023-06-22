@@ -54,6 +54,12 @@ else()
   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 endif()
 
+#
+# Sources to be compiled
+#
+list(APPEND NOVELRT_ENGINE_PLATFORM_SOURCES
+  Audio/XAudio2/XAudio2Engine.cpp
+)
 
 #
 # Libraries to be linked
