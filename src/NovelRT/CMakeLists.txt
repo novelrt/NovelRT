@@ -62,8 +62,7 @@ set(CORE_SOURCES
   PluginManagement/TemporaryFnPtrs.cpp
 
   ResourceManagement/ResourceLoader.cpp
-  ResourceManagement/Desktop/DesktopResourceLoader.cpp
-  ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.cpp
+
 
   Threading/VolatileState.cpp
 

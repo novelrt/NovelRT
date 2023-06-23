@@ -13,6 +13,7 @@
 // Dependencies for Audio
 #include "../../Exceptions/Exceptions.h"
 #include "../../Utilities/Misc.h"
+#include "../../ResourceManagement/Windows/ResourceManagement.Desktop.h"
 #include <memory>
 #include <comdef.h>
 #include <xaudio2.h>

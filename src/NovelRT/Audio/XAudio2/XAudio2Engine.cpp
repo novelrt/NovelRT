@@ -7,8 +7,8 @@ namespace NovelRT::Audio::XAudio2
 {
     XAudio2Engine::XAudio2Engine() noexcept
     {
-        _sounds = SoundMap();
-        _sources = SourceMap();
+        _bufferMap = BufferMap();
+        _voiceMap = VoiceMap();
     }
 
     void XAudio2Engine::Initialise()
@@ -57,7 +57,52 @@ namespace NovelRT::Audio::XAudio2
 
     void XAudio2Engine::LoadSound(const NovelRT::Audio::SoundDefinition& sound)
     {
-        unused(sound);
+        //Check if sound exists in voice map
+        auto voiceIt = _voiceMap.find(sound.soundName);
+        if(voiceIt != _voiceMap.end())
+        {
+            return;
+        }
+
+        //Voice does not exist, check if it is loaded already.
+        auto it = _bufferMap.find(sound.soundName);
+        if(it == _bufferMap.end())
+        {
+            auto metadata = NovelRT::ResourceManagement::Desktop::DesktopResourceLoader::LoadAudioFrameData(sound.soundName);
+            it = CreateAudioBuffer(sound.soundName, metadata);
+        }
+
+        auto sharedVoice = std::shared_ptr<IXAudio2SourceVoice>(nullptr);
+        IXAudio2SourceVoice* voice = sharedVoice.get();
+        HRESULT hr;
+        hr = _xAudio->CreateSourceVoice(&voice, reinterpret_cast<WAVEFORMATEX*>(&(it->second.first)));
+        if(FAILED(hr))
+        {
+            //TODO: make this log, but not throw its toys out the pram
+            _com_error err(hr);
+            std::string msg = err.ErrorMessage();
+            throw NovelRT::Exceptions::InvalidOperationException(msg);
+        }
+
+        hr = voice->SubmitSourceBuffer(&(it->second.second));
+        if(FAILED(hr))
+        {
+            //TODO: make this log, but not throw its toys out the pram
+            _com_error err(hr);
+            std::string msg = err.ErrorMessage();
+            throw NovelRT::Exceptions::InvalidOperationException(msg);
+        }
+
+        voice->SetVolume(XAudio2DecibelsToAmplitudeRatio(sound.defaultVolumeIndB));
+        if(FAILED(hr))
+        {
+            //TODO: make this log, but not throw its toys out the pram
+            _com_error err(hr);
+            std::string msg = err.ErrorMessage();
+            throw NovelRT::Exceptions::InvalidOperationException(msg);
+        }
+
+        _voiceMap.emplace(sound.soundName, sharedVoice);
     }
 
     void XAudio2Engine::UnloadSound(const std::string& soundName)
@@ -94,4 +139,15 @@ namespace NovelRT::Audio::XAudio2
         return false;
     }
 
+    XAudio2Engine::BufferMap::iterator XAudio2Engine::CreateAudioBuffer(const std::string& soundName, NovelRT::ResourceManagement::AudioMetadata metadata)
+    {
+        WAVEFORMATEXTENSIBLE wfx = *(reinterpret_cast<WAVEFORMATEXTENSIBLE*>(metadata.formatData.data()));
+        XAUDIO2_BUFFER buffer = {0};
+        buffer.AudioBytes = metadata.audioDataSize;
+        buffer.pAudioData = reinterpret_cast<BYTE*>(metadata.audioData.data());
+        buffer.Flags = XAUDIO2_END_OF_STREAM;   // Indicates all data for this stream was read already.
+
+        auto result = _bufferMap.emplace(soundName, std::pair<WAVEFORMATEXTENSIBLE, XAUDIO2_BUFFER>(wfx, buffer));
+        return result.first;
+    }
 }

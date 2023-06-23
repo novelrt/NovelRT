@@ -21,7 +21,7 @@ if(MSVC)
   string(REGEX REPLACE " /M[TD]d?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   list(APPEND NOVELRT_ENGINE_LINK_LIBS Winmm)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-  list(APPEND NOVELRT_TARGET_COMPILE_DEFS -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
+  list(APPEND NOVELRT_TARGET_COMPILE_DEFS -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0> -DXAUDIO2_HELPER_FUNCTIONS)
 endif()
 
 # this is needed, because Windows can be weird, man.
@@ -59,6 +59,9 @@ endif()
 #
 list(APPEND NOVELRT_ENGINE_PLATFORM_SOURCES
   Audio/XAudio2/XAudio2Engine.cpp
+
+  ResourceManagement/Windows/DesktopResourceLoader.cpp
+  ResourceManagement/Windows/DesktopResourceManagementPluginProvider.cpp
 )
 
 #

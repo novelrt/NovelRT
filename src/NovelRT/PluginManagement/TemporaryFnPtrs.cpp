@@ -1,12 +1,20 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+//TODO: Hacky hack, fix this before merging.
+#if defined(_WIN32)
+#include <NovelRT/ResourceManagement/Windows/ResourceManagement.Desktop.h>
+#else
+#include <NovelRT/ResourceManagement/Linux/ResourceManagement.Desktop.h>
+#endif
+
 #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.h>
 #include <NovelRT/Input/Glfw/Input.Glfw.h>
 #include <NovelRT/PluginManagement/PluginManagement.h>
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
-#include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+
+
 
 namespace NovelRT::PluginManagement
 {

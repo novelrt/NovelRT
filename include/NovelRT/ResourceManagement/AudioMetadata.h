@@ -12,10 +12,11 @@ namespace NovelRT::ResourceManagement
 {
     struct AudioMetadata
     {
-        std::vector<int16_t> processedAudioFrames;
-        int32_t channelCount;
-        int32_t sampleRate;
-        uuids::uuid databaseHandle;
+        std::vector<int16_t> audioData;
+        uint32_t audioDataSize;
+        std::vector<int16_t> formatData;
+        // TODO: Restore this when working on ECS
+        // uuids::uuid databaseHandle;
     };
 }
 

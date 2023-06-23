@@ -103,9 +103,9 @@ namespace NovelRT::ResourceManagement
 
         virtual void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) = 0;
 
-        [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) = 0;
+        //[[nodiscard]] static AudioMetadata LoadAudioFrameData(const std::string& soundName);
 
-        [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(uuids::uuid assetId) = 0;
+        // [[nodiscard]] virtual AudioMetadata LoadAudioFrameData(uuids::uuid assetId) = 0;
 
         [[nodiscard]] virtual StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) = 0;
 

@@ -16,6 +16,9 @@ namespace NovelRT::ResourceManagement::Desktop
         LoggingService _logger;
         bool _isAssetDBInitialised;
 
+        static bool FindWaveChunk(HANDLE file, uint32_t chunkHeader, uint32_t& chunkSize, uint32_t& chunkDataPosition);
+        static void ReadChunk(HANDLE file, void* buffer, uint32_t bufferSize, uint32_t bufferOffset);
+
     protected:
         void WriteAssetDatabaseFile() final;
         void LoadAssetDatabaseFile() final;
@@ -34,8 +37,9 @@ namespace NovelRT::ResourceManagement::Desktop
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
         [[nodiscard]] BinaryPackage LoadPackage(uuids::uuid assetId) final;
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
-        [[nodiscard]] AudioMetadata LoadAudioFrameData(std::filesystem::path filePath) final;
-        [[nodiscard]] AudioMetadata LoadAudioFrameData(uuids::uuid assetId) final;
+        [[nodiscard]] static AudioMetadata LoadAudioFrameData(const std::string& soundName);
+        //TODO: Put this back when working on ECS
+        // [[nodiscard]] AudioMetadata LoadAudioFrameData(uuids::uuid assetId) final;
         [[nodiscard]] StreamableAssetMetadata GetStreamToAsset(std::filesystem::path filePath) final;
         [[nodiscard]] StreamableAssetMetadata GetStreamToAsset(uuids::uuid assetId) final;
         ~DesktopResourceLoader() final = default;

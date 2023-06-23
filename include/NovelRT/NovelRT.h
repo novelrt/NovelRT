@@ -127,7 +127,6 @@
 
  // ResourceManagement types
   #include <NovelRT/ResourceManagement/ResourceManagement.h>
-  #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 
   // Scene Graph types
   #include <NovelRT/SceneGraph/SceneGraph.h>

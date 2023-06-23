@@ -12,9 +12,16 @@ namespace NovelRT::Audio::XAudio2
 {
     class XAudio2Engine final : public NovelRT::Audio::IAudioEngine
     {
+        typedef std::map<std::string, std::pair<WAVEFORMATEXTENSIBLE, XAUDIO2_BUFFER>> BufferMap;
+        typedef std::map<std::string, std::shared_ptr<IXAudio2SourceVoice>> VoiceMap;
+
     private:
         std::shared_ptr<IXAudio2> _xAudio;
         std::shared_ptr<IXAudio2MasteringVoice> _masterVoice;
+        BufferMap _bufferMap;
+        VoiceMap _voiceMap;
+
+        BufferMap::iterator CreateAudioBuffer(const std::string& soundName, NovelRT::ResourceManagement::AudioMetadata metadata);
 
     public:
         XAudio2Engine() noexcept;

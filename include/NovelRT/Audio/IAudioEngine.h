@@ -12,9 +12,9 @@ namespace NovelRT::Audio
 {
     class IAudioEngine
     {
-    protected:
-        SoundMap _sounds;
-        SourceMap _sources;
+    // protected:
+    //     SoundMap _sounds;
+    //     SourceMap _sources;
 
     public:
         virtual void Initialise() = 0;

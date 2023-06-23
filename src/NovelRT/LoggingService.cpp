@@ -1,7 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/NovelRT.h>
+#include <NovelRT/LoggingService.h>
+#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Utilities/Misc.h>
 #include <iostream>
 
 namespace NovelRT

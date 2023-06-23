@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include "../ResourceManagement/ResourceManagement.h"
 
 /***
  * @brief Contains audio interfaces for usage, such as the NovelRT Audio Engine and Audio Sources.
@@ -17,8 +18,6 @@ namespace NovelRT::Audio
     enum class SourceState : uint32_t;
     class IAudioSource;
     struct SoundDefinition;
-    typedef std::map<uint32_t, IAudioSource> SourceMap;
-    typedef std::map<std::string, SoundDefinition> SoundMap;
     class IAudioEngine;
 }
 
