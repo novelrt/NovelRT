@@ -388,11 +388,11 @@ namespace NovelRT::ResourceManagement::Desktop
 
     AudioMetadata DesktopResourceLoader::LoadAudioFrameData(const std::string& soundName)
     {
-        //constexpr size_t _bufferSize = 2048;
+        
         //Revisit to add Big Endian support when necessary
         std::string fileName = soundName + ".wav";
         std::filesystem::path rootPath = NovelRT::Utilities::Misc::getExecutableDirPath();
-        std::filesystem::path filePath = rootPath / "Resources" / "Audio" / fileName;
+        std::filesystem::path filePath = rootPath / "Resources" / "Sounds" / fileName;
 
         //Load the file using Win32 API
         HANDLE file = CreateFile(reinterpret_cast<LPCSTR>(filePath.string().c_str()), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -440,8 +440,8 @@ namespace NovelRT::ResourceManagement::Desktop
             // Should this really be an exception? Will determine before merging.
             throw NovelRT::Exceptions::NotSupportedException("Could not find format information in provided wave file.");
         }
-        std::vector<int16_t> wfx = std::vector<int16_t>(chunkSize);
-        ReadChunk(file, &wfx, chunkSize, chunkPosition);
+        std::vector<uint8_t> wfx = std::vector<uint8_t>(chunkSize);
+        ReadChunk(file, wfx.data(), chunkSize, chunkPosition);
 
         res = FindWaveChunk(file, headerDATA, chunkSize, chunkPosition);
         if(!res)
@@ -449,9 +449,12 @@ namespace NovelRT::ResourceManagement::Desktop
             // Should this really be an exception? Will determine before merging.
             throw NovelRT::Exceptions::NotSupportedException("Could not find data chunk in provided wave file.");
         }
-        std::vector<int16_t> data = std::vector<int16_t>(chunkSize);
-        ReadChunk(file, data.data(), chunkSize, chunkPosition);
+        
+        std::vector<uint8_t> data = std::vector<uint8_t>(chunkSize);
+        BYTE* byteData = new BYTE[chunkSize];
+        ReadChunk(file, byteData, chunkSize, chunkPosition);
 
+        std::copy(byteData, byteData + chunkSize, data.begin());
         // auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
         // uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 

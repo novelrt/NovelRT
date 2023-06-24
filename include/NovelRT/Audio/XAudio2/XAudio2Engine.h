@@ -8,20 +8,24 @@
 #error NovelRT does not support including types explicitly by default. Please include Audio.XAudio2.h instead for the Audio namespace subset.
 #endif
 
+
+
 namespace NovelRT::Audio::XAudio2
 {
     class XAudio2Engine final : public NovelRT::Audio::IAudioEngine
     {
-        typedef std::map<std::string, std::pair<WAVEFORMATEXTENSIBLE, XAUDIO2_BUFFER>> BufferMap;
-        typedef std::map<std::string, std::shared_ptr<IXAudio2SourceVoice>> VoiceMap;
-
+        using BufferMap = std::map<std::string, std::pair<WAVEFORMATEXTENSIBLE, XAUDIO2_BUFFER>>;
+        using VoiceMap = std::map<std::string, IXAudio2SourceVoice*>;
+        using MetadataMap = std::map<std::string, NovelRT::ResourceManagement::AudioMetadata>;
     private:
-        std::shared_ptr<IXAudio2> _xAudio;
-        std::shared_ptr<IXAudio2MasteringVoice> _masterVoice;
+        IXAudio2* _xAudio;
+        IXAudio2MasteringVoice* _masterVoice;
         BufferMap _bufferMap;
         VoiceMap _voiceMap;
+        MetadataMap _metaMap;
+        NovelRT::LoggingService _logger;
 
-        BufferMap::iterator CreateAudioBuffer(const std::string& soundName, NovelRT::ResourceManagement::AudioMetadata metadata);
+        BufferMap::iterator CreateAudioBuffer(const std::string& soundName, const NovelRT::ResourceManagement::AudioMetadata& metadata);
 
     public:
         XAudio2Engine() noexcept;

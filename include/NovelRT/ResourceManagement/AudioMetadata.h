@@ -12,9 +12,9 @@ namespace NovelRT::ResourceManagement
 {
     struct AudioMetadata
     {
-        std::vector<int16_t> audioData;
+        std::vector<uint8_t> audioData;
         uint32_t audioDataSize;
-        std::vector<int16_t> formatData;
+        std::vector<uint8_t> formatData;
         // TODO: Restore this when working on ECS
         // uuids::uuid databaseHandle;
     };

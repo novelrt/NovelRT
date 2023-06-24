@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include "../LoggingService.h"
 #include "../ResourceManagement/ResourceManagement.h"
 
 /***

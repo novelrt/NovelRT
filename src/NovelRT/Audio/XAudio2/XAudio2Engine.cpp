@@ -3,16 +3,21 @@
 
 #include <NovelRT/Audio/XAudio2/Audio.XAudio2.h>
 
+
+
 namespace NovelRT::Audio::XAudio2
 {
     XAudio2Engine::XAudio2Engine() noexcept
     {
         _bufferMap = BufferMap();
         _voiceMap = VoiceMap();
+        _metaMap = MetadataMap();
+        _logger = NovelRT::LoggingService("XAUDIO");
     }
 
     void XAudio2Engine::Initialise()
     {
+        _logger.logDebugLine("Initialising COM...");
         //Note - We will want to revisit this when it is time for UWP support.
         HRESULT hr;
         hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
@@ -25,24 +30,26 @@ namespace NovelRT::Audio::XAudio2
             throw NovelRT::Exceptions::InitialisationFailureException(msg);
         }
 
-        _xAudio = std::shared_ptr<IXAudio2>(nullptr);
-        IXAudio2* xA = _xAudio.get();
-        if(FAILED(hr = XAudio2Create(&xA, 0, XAUDIO2_DEFAULT_PROCESSOR)))
+        _logger.logDebugLine("Creating XAudio2 object...");
+        
+        if(FAILED(hr = XAudio2Create(&_xAudio, 0, XAUDIO2_DEFAULT_PROCESSOR)))
         {
             _com_error err(hr);
             std::string msg = err.ErrorMessage();
             throw NovelRT::Exceptions::InitialisationFailureException(msg);
         }
 
-        _masterVoice = std::shared_ptr<IXAudio2MasteringVoice>(nullptr);
-        IXAudio2MasteringVoice* mV = _masterVoice.get();
-        if(FAILED(hr = _xAudio->CreateMasteringVoice(&mV)))
+        _logger.logDebugLine("Initialising XAudio2 mastering voice...");
+        
+        if(FAILED(hr = _xAudio->CreateMasteringVoice(&_masterVoice)))
         {
             _com_error err(hr);
             std::string msg = err.ErrorMessage();
+            _logger.logErrorLine(msg);
             throw NovelRT::Exceptions::InitialisationFailureException(msg);
         }
 
+        _logger.logDebugLine("Initialisation complete.");
     }
 
     void XAudio2Engine::Update()
@@ -52,7 +59,7 @@ namespace NovelRT::Audio::XAudio2
 
     void XAudio2Engine::TearDown()
     {
-
+        auto it = _voiceMap.begin();
     }
 
     void XAudio2Engine::LoadSound(const NovelRT::Audio::SoundDefinition& sound)
@@ -69,40 +76,40 @@ namespace NovelRT::Audio::XAudio2
         if(it == _bufferMap.end())
         {
             auto metadata = NovelRT::ResourceManagement::Desktop::DesktopResourceLoader::LoadAudioFrameData(sound.soundName);
-            it = CreateAudioBuffer(sound.soundName, metadata);
+            auto metaIt = _metaMap.emplace(sound.soundName, metadata);
+            it = CreateAudioBuffer(sound.soundName, metaIt.first->second);
         }
 
-        auto sharedVoice = std::shared_ptr<IXAudio2SourceVoice>(nullptr);
-        IXAudio2SourceVoice* voice = sharedVoice.get();
+        IXAudio2SourceVoice* voice;
         HRESULT hr;
         hr = _xAudio->CreateSourceVoice(&voice, reinterpret_cast<WAVEFORMATEX*>(&(it->second.first)));
         if(FAILED(hr))
         {
-            //TODO: make this log, but not throw its toys out the pram
             _com_error err(hr);
             std::string msg = err.ErrorMessage();
-            throw NovelRT::Exceptions::InvalidOperationException(msg);
+            _logger.logWarning("Error when creating source voice:", msg);
+            return;
         }
 
         hr = voice->SubmitSourceBuffer(&(it->second.second));
         if(FAILED(hr))
         {
-            //TODO: make this log, but not throw its toys out the pram
             _com_error err(hr);
             std::string msg = err.ErrorMessage();
-            throw NovelRT::Exceptions::InvalidOperationException(msg);
+            _logger.logWarning("Error when submitting source buffer:", msg);
+            return;
         }
 
-        voice->SetVolume(XAudio2DecibelsToAmplitudeRatio(sound.defaultVolumeIndB));
+        voice->SetVolume(XAudio2DecibelsToAmplitudeRatio(6.0));
         if(FAILED(hr))
         {
-            //TODO: make this log, but not throw its toys out the pram
             _com_error err(hr);
             std::string msg = err.ErrorMessage();
-            throw NovelRT::Exceptions::InvalidOperationException(msg);
+            _logger.logWarning("Error when setting volume:", msg);
+            return;
         }
 
-        _voiceMap.emplace(sound.soundName, sharedVoice);
+        _voiceMap.emplace(sound.soundName, voice);
     }
 
     void XAudio2Engine::UnloadSound(const std::string& soundName)
@@ -112,8 +119,27 @@ namespace NovelRT::Audio::XAudio2
 
     uint32_t XAudio2Engine::PlaySound(const std::string& soundName, float volumeIndB)
     {
-        unused(soundName);
+        auto voiceIt = _voiceMap.find(soundName);
+        if(voiceIt == _voiceMap.end())
+        {
+            _logger.logWarning("Unable to find voice with loaded soundfile:", soundName);
+            return 100;
+        }
+
+        HRESULT hr;
+
         unused(volumeIndB);
+
+        hr = voiceIt->second->Start(0);
+        if(FAILED(hr))
+        {
+            _com_error err(hr);
+            std::string msg = err.ErrorMessage();
+            _logger.logWarning("Error when starting playback:", msg);
+            return 100;
+        }
+
+        _logger.logDebugLine("Playing sound:" + soundName);
         return 0;
     }
 
@@ -139,12 +165,12 @@ namespace NovelRT::Audio::XAudio2
         return false;
     }
 
-    XAudio2Engine::BufferMap::iterator XAudio2Engine::CreateAudioBuffer(const std::string& soundName, NovelRT::ResourceManagement::AudioMetadata metadata)
+    XAudio2Engine::BufferMap::iterator XAudio2Engine::CreateAudioBuffer(const std::string& soundName, const NovelRT::ResourceManagement::AudioMetadata& metadata)
     {
-        WAVEFORMATEXTENSIBLE wfx = *(reinterpret_cast<WAVEFORMATEXTENSIBLE*>(metadata.formatData.data()));
-        XAUDIO2_BUFFER buffer = {0};
+        WAVEFORMATEXTENSIBLE wfx = *(reinterpret_cast<const WAVEFORMATEXTENSIBLE*>(metadata.formatData.data()));
+        XAUDIO2_BUFFER buffer = {0};        
         buffer.AudioBytes = metadata.audioDataSize;
-        buffer.pAudioData = reinterpret_cast<BYTE*>(metadata.audioData.data());
+        buffer.pAudioData = reinterpret_cast<const BYTE*>(metadata.audioData.data());
         buffer.Flags = XAUDIO2_END_OF_STREAM;   // Indicates all data for this stream was read already.
 
         auto result = _bufferMap.emplace(soundName, std::pair<WAVEFORMATEXTENSIBLE, XAUDIO2_BUFFER>(wfx, buffer));

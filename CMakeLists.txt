@@ -141,6 +141,7 @@ endif()
 add_subdirectory(internal/Fabulist)
 add_subdirectory(resources)
 add_subdirectory(src)
+add_subdirectory(samples/XAudio)
 
 if(NOVELRT_BUILD_SAMPLES)
   add_subdirectory(samples)
