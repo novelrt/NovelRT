@@ -121,6 +121,12 @@ namespace NovelRT::Graphics
                                                                                           size_t dataLength,
                                                                                           size_t alignment)
     {
+        assert(data != nullptr &&
+               "data is a nullptr, make sure that you are passing in a valid pointer into the method.");
+        assert(dataTypeSize != 0 && "dataTypeSize is zero, make sure the correct size of the type has been passed in.");
+        assert(dataLength != 0 &&
+               "dataLength is zero, make sure that the length of the buffer is properly calculated and passed in.");
+
         size_t sizeToStage = dataTypeSize * dataLength;
         auto currentContext = _graphicsDevice->GetCurrentContext();
 
@@ -131,11 +137,9 @@ namespace NovelRT::Graphics
             GetOrCreateGraphicsBufferForAllocationSize(sizeToStage, GraphicsBufferKind::Vertex);
         auto vertexRegion = vertexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(vertexRegion);
-#ifdef WIN32
-        memcpy_s(writeArea, sizeToStage, data, sizeToStage);
-#else
-        memcpy(writeArea, data, sizeToStage);
-#endif
+
+        NovelRT::Utilities::Memory::Copy(writeArea, sizeToStage, data, sizeToStage);
+
         stagingBuffer->UnmapAndWrite(vertexRegion);
         currentContext->Copy(vertexBuffer, stagingBuffer);
 
@@ -147,6 +151,12 @@ namespace NovelRT::Graphics
                                                                                          size_t dataLength,
                                                                                          size_t alignment)
     {
+        assert(data != nullptr &&
+               "data is a nullptr, make sure that you are passing in a valid pointer into the method.");
+        assert(dataTypeSize != 0 && "dataTypeSize is zero, make sure the correct size of the type has been passed in.");
+        assert(dataLength != 0 &&
+               "dataLength is zero, make sure that the length of the buffer is properly calculated and passed in.");
+
         size_t sizeToStage = dataTypeSize * dataLength;
         auto currentContext = _graphicsDevice->GetCurrentContext();
 
@@ -157,11 +167,9 @@ namespace NovelRT::Graphics
             GetOrCreateGraphicsBufferForAllocationSize(sizeToStage, GraphicsBufferKind::Index);
         auto indexRegion = indexBuffer->Allocate(sizeToStage, alignment);
         auto writeArea = stagingBuffer->Map<uint8_t>(indexRegion);
-#ifdef WIN32
-        memcpy_s(writeArea, sizeToStage, data, sizeToStage);
-#else
-        memcpy(writeArea, data, sizeToStage);
-#endif
+
+        NovelRT::Utilities::Memory::Copy(writeArea, sizeToStage, data, sizeToStage);
+
         stagingBuffer->UnmapAndWrite(indexRegion);
         currentContext->Copy(indexBuffer, stagingBuffer);
 
@@ -263,6 +271,11 @@ namespace NovelRT::Graphics
         GraphicsTextureAddressMode addressMode,
         GraphicsTextureKind textureKind)
     {
+        assert(metadata.data.size() != 0 &&
+               "metadata.data.size is zero, make sure you are passing in metadata that has a valid size on the data.");
+        assert(metadata.data.data() != nullptr &&
+               "metadata.data.data() returns a nullptr, make sure it returns a valid pointer.");
+
         auto currentContext = _graphicsDevice->GetCurrentContext();
 
         std::shared_ptr<GraphicsTexture> texture2d =
@@ -276,11 +289,8 @@ namespace NovelRT::Graphics
         auto texture2dRegion = texture2d->Allocate(texture2d->GetSize(), 4);
         auto pTextureData = stagingBuffer->Map<uint8_t>(texture2dRegion);
 
-#ifdef WIN32
-        memcpy_s(pTextureData, metadata.data.size(), metadata.data.data(), metadata.data.size());
-#else
-        memcpy(pTextureData, metadata.data.data(), metadata.data.size());
-#endif
+        NovelRT::Utilities::Memory::Copy(pTextureData, metadata.data.size(), metadata.data.data(),
+                                         metadata.data.size());
 
         stagingBuffer->UnmapAndWrite(texture2dRegion);
         currentContext->Copy(texture2d, stagingBuffer);
@@ -345,15 +355,15 @@ namespace NovelRT::Graphics
                                                                                                       size_t size,
                                                                                                       size_t alignment)
     {
+        assert(data != nullptr &&
+               "data is a nullptr, make sure that you are passing in a valid pointer into the method.");
+        assert(size != 0 && "size is zero, make sure the correct size has been passed in.");
+
         auto bufferPtr = GetOrCreateGraphicsBufferForAllocationSize(size, GraphicsBufferKind::Constant);
         auto allocation = bufferPtr->Allocate(size, alignment);
         uint8_t* destination = bufferPtr->Map<uint8_t>(allocation);
 
-#ifdef WIN32
-        memcpy_s(destination, size, data, size);
-#else
-        memcpy(destination, data, size);
-#endif
+        NovelRT::Utilities::Memory::Copy(destination, size, data, size);
 
         bufferPtr->UnmapAndWrite(allocation);
         return allocation;
@@ -364,6 +374,10 @@ namespace NovelRT::Graphics
         void* data,
         size_t size)
     {
+        assert(data != nullptr &&
+               "data is a nullptr, make sure that you are passing in a valid pointer into the method.");
+        assert(size != 0 && "dataTypeSize is zero, make sure the correct size has been passed in.");
+
         auto bufferPtr = std::dynamic_pointer_cast<GraphicsBuffer>(targetMemoryResource.GetCollection());
 
         if (bufferPtr == nullptr)
@@ -384,11 +398,7 @@ namespace NovelRT::Graphics
 
         uint8_t* destination = bufferPtr->Map<uint8_t>(targetMemoryResource);
 
-#ifdef WIN32
-        memcpy_s(destination, size, data, size);
-#else
-        memcpy(destination, data, size);
-#endif
+        NovelRT::Utilities::Memory::Copy(destination, size, data, size);
 
         bufferPtr->UnmapAndWrite(targetMemoryResource);
     }

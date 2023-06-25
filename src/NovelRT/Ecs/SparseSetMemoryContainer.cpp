@@ -34,7 +34,7 @@ namespace NovelRT::Ecs
         _sparse[key] = _dense.size() - 1;
         _data.resize(GetStartingByteIndexForDenseIndex(_dense.size()));
         auto dataPtr = GetDataObjectStartAtIndex(_dense.size() - 1);
-        std::memcpy(dataPtr, value, _sizeOfDataTypeInBytes);
+        NovelRT::Utilities::Memory::Copy(dataPtr, _sizeOfDataTypeInBytes, value, _sizeOfDataTypeInBytes);
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)
@@ -205,8 +205,11 @@ namespace NovelRT::Ecs
         _data.clear();
         _data.resize(data.size());
 
-        std::memcpy(_dense.data(), ids.data(), sizeof(size_t) * ids.size());
-        std::memcpy(_data.data(), data.data(), sizeof(uint8_t) * data.size());
+        const size_t denseSize = sizeof(size_t) * ids.size();
+        const size_t dataSize = sizeof(uint8_t) * data.size();
+
+        NovelRT::Utilities::Memory::Copy(_dense.data(), denseSize, ids.data(), denseSize);
+        NovelRT::Utilities::Memory::Copy(_data.data(), dataSize, data.data(), dataSize);
 
         for (size_t denseIndex = 0; denseIndex < _dense.size(); denseIndex++)
         {
