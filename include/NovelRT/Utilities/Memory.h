@@ -17,7 +17,7 @@ namespace NovelRT::Utilities
         static void Copy(void* destination, size_t destinationSize, const void* source, size_t count)
         {
             #ifdef WIN32
-            int result = memcpy_s(destination, destinationSize, source, count);
+            errno_t result = memcpy_s(destination, destinationSize, source, count);
 
             if (result != 0)
             {
@@ -34,10 +34,10 @@ namespace NovelRT::Utilities
                 }
             }
             #else
-            assert(destination != nullptr);
-            assert(source != nullptr);
-            assert(count != 0);
-            assert(destinationSize >= count);
+            if (destination == nullptr || source == nullptr || count <= 0 || destinationSize < count)
+            {
+                throw Exceptions::InvalidOperationException("Due to invalid values passed in.");
+            }
 
             memcpy(destination, source, count);
             #endif
