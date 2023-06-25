@@ -271,8 +271,10 @@ namespace NovelRT::Graphics
         GraphicsTextureAddressMode addressMode,
         GraphicsTextureKind textureKind)
     {
-        assert(metadata.data.size() != 0 && "metadata.data.size is zero, make sure you are passing in metadata that has a valid size on the data.");
-        assert(metadata.data.data() != nullptr && "metadata.data.data() returns a nullptr, make sure it returns a valid pointer.");
+        assert(metadata.data.size() != 0 &&
+               "metadata.data.size is zero, make sure you are passing in metadata that has a valid size on the data.");
+        assert(metadata.data.data() != nullptr &&
+               "metadata.data.data() returns a nullptr, make sure it returns a valid pointer.");
 
         auto currentContext = _graphicsDevice->GetCurrentContext();
 

@@ -10,8 +10,8 @@
 #include "../../LoggingService.h"
 #include "../../PluginManagement/PluginManagement.h"
 #include "../../Utilities/Lazy.h"
-#include "../../Utilities/Misc.h"
 #include "../../Utilities/Memory.h"
+#include "../../Utilities/Misc.h"
 #include "../Graphics.h"
 #include <array>
 #include <map>

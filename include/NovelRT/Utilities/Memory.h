@@ -4,10 +4,10 @@
 #ifndef NOVELRT_UTILITIES_MEMORY_H
 #define NOVELRT_UTILITIES_MEMORY_H
 
-#include <string.h>
+#include <NovelRT/Exceptions/Exceptions.h>
 #include <cassert>
 #include <cstring>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <string.h>
 
 namespace NovelRT::Utilities
 {
@@ -16,7 +16,7 @@ namespace NovelRT::Utilities
     public:
         static void Copy(void* destination, size_t destinationSize, const void* source, size_t count)
         {
-            #ifdef WIN32
+#ifdef WIN32
             errno_t result = memcpy_s(destination, destinationSize, source, count);
 
             if (result != 0)
@@ -33,14 +33,14 @@ namespace NovelRT::Utilities
                         throw Exceptions::InvalidOperationException("Unknown error");
                 }
             }
-            #else
+#else
             if (destination == nullptr || source == nullptr || count <= 0 || destinationSize < count)
             {
                 throw Exceptions::InvalidOperationException("Due to invalid values passed in.");
             }
 
             memcpy(destination, source, count);
-            #endif
+#endif
         }
     };
 }
