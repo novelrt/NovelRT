@@ -73,6 +73,7 @@ list(APPEND NOVELRT_ENGINE_LINK_LIBS
   FLAC::FLAC
   Opus::opus
   Ogg::ogg
+  VulkanMemoryAllocator
 )
 
 #
@@ -83,6 +84,7 @@ list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
   /WX
   /wd4611
   /MP
+  /Zf
 )
 
 #
