@@ -74,20 +74,6 @@ set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Vorbis version")
 set(NOVELRT_VULKAN_VERSION "1.3.231" CACHE STRING "Vulkan version")
 
 #
-# Configure Platforms
-#
-include(NovelRTPlatformConfig)
-
-#
-# Set default build type when not defined and not multi-config
-#
-if(NOT GENERATOR_IS_MULTI_CONFIG AND CMAKE_BUILD_TYPE STREQUAL "")
-  message(STATUS "Defaulting to Debug build as no build type was specified")
-  set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
-
-#
 # Alias "NovelRT::Utilities::Misc:Span" to "std::span" instead of "gsl::span".
 # If enabled, you need to make sure you current configuration supports "std::span".
 #

@@ -21,15 +21,8 @@ FetchContent_Declare(TBB
         INSTALL_COMMAND "${CMAKE_COMMAND} --install ${CMAKE_CURRENT_BINARY_DIR}/build --prefix \"${CMAKE_CURRENT_BINARY_DIR}/inst\""
 )
 
-# Manually change the output directory so folders don't spawn randomly in the build env
-# This gets appended to "${CMAKE_BINARY_DIR}/" so we want to redirect it back into the
-# internal folder without modifying the logic too much.
-#file(RELATIVE_PATH output_location "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/build")
-#set(TBB_OUTPUT_DIR_BASE "${output_location}/" CACHE INTERNAL "Set output directory for oneTBB")
-
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
-# Set the values back to what they originally were
 FetchContent_MakeAvailable(TBB)
 
 if(APPLE)

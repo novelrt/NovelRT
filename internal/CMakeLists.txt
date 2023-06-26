@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 
-
 #CMP0048 - a few packages don't set versions
 #CMP0077 - prevent clearing of certain variables
 #CMP0091 - Use CMAKE_MSVC_RUNTIME_LIBRARY Abstraction
@@ -11,14 +10,6 @@ foreach(policy CMP0048 CMP0077 CMP0091 CMP0135)
     set(CMAKE_POLICY_DEFAULT_${policy} NEW)
   endif()
 endforeach()
-
-
-project(NovelRTDeps
-  VERSION 0.1.0
-  DESCRIPTION "NovelRT's Dependencies"
-  HOMEPAGE_URL "https://github.com/novelrt/NovelRT"
-  LANGUAGES C CXX
-)
 
 #
 # Setting common settings first
