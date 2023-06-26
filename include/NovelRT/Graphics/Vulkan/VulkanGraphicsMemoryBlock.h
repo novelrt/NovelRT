@@ -54,17 +54,21 @@ namespace NovelRT::Graphics::Vulkan
         VulkanGraphicsMemoryBlockImpl(std::shared_ptr<VulkanGraphicsDevice> device,
                                       std::shared_ptr<VulkanGraphicsMemoryBlockCollection> collection,
                                       size_t size)
-            : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)), _metadata([&, size]() {
-                  TMetadata metadata(GetDevice());
-                  const GraphicsMemoryAllocatorSettings& allocatorSettings =
-                      GetCollection()->GetAllocator()->GetSettings();
+            : VulkanGraphicsMemoryBlock(std::move(device), std::move(collection)),
+              _metadata(
+                  [&, size]()
+                  {
+                      TMetadata metadata(GetDevice());
+                      const GraphicsMemoryAllocatorSettings& allocatorSettings =
+                          GetCollection()->GetAllocator()->GetSettings();
 
-                  size_t minimumAllocatedRegionSize = allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
-                  size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
-                  metadata.Initialise(std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()), size,
-                                      minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
-                  return metadata;
-              })
+                      size_t minimumAllocatedRegionSize =
+                          allocatorSettings.MinimumAllocatedRegionMarginSize.value_or(0);
+                      size_t minimumFreeRegionSizeToRegister = allocatorSettings.MinimumFreeRegionSizeToRegister;
+                      metadata.Initialise(std::static_pointer_cast<VulkanGraphicsMemoryBlockImpl>(shared_from_this()),
+                                          size, minimumAllocatedRegionSize, minimumFreeRegionSizeToRegister);
+                      return metadata;
+                  })
         {
             static_assert(
                 std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsMemoryBlock>::IMetadata, TMetadata>);
@@ -127,11 +131,10 @@ namespace NovelRT::Graphics::Vulkan
             _metadata.getActual().Free(region);
         }
 
-        [[nodiscard]] bool TryAllocate(size_t size,
-                                       size_t alignment,
-                                       GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion) final
+        [[nodiscard]] std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> TryAllocate(size_t size,
+                                                                                           size_t alignment) final
         {
-            return _metadata.getActual().TryAllocate(size, alignment, outRegion);
+            return _metadata.getActual().TryAllocate(size, alignment);
         }
 
         [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsMemoryBlock>>::iterator begin() final

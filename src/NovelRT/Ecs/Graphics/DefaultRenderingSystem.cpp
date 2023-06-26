@@ -269,12 +269,13 @@ namespace NovelRT::Ecs::Graphics
         for (auto [entity, transformComponent] : transformComponents)
         {
             RenderComponent renderComponent{};
-
-            if (!renderComponents.TryGetComponent(entity, renderComponent))
+            const auto value = renderComponents.TryGetComponent(entity);
+            if (!value.has_value())
             {
                 continue;
             }
 
+            renderComponent = value.value();
             int32_t layer = static_cast<int32_t>(transformComponent.positionAndLayer.z);
 
             if (transformLayerMap.find(layer) == transformLayerMap.end())

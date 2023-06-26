@@ -66,7 +66,7 @@ namespace NovelRT::Ecs
 
         if (_externalChanges.find(newChildEntity) == _externalChanges.end())
         {
-            unused(view.TryGetComponent(newChildEntity, component));
+            component = view.TryGetComponent(newChildEntity).value();
             _externalChanges.emplace(newChildEntity, EntityGraphView(_catalogue, newChildEntity, component));
         }
 
@@ -115,11 +115,11 @@ namespace NovelRT::Ecs
 
         childGraphView.GetRawComponentData().parent = std::numeric_limits<EntityId>::max();
         _childrenChanges.getActual().AddRemoveNodeInstruction(childToRemove);
+        auto optionalNodeAtBeginning = _childrenChanges.getActual().TryGetNewNodeAtBeginning();
 
-        if (_component.childrenStartNode == childToRemove &&
-            !_childrenChanges.getActual().TryGetNewNodeAtBeginning(_component.childrenStartNode))
+        if (_component.childrenStartNode == childToRemove)
         {
-            _component.childrenStartNode = std::numeric_limits<EntityId>::max();
+            _component.childrenStartNode = optionalNodeAtBeginning.has_value() ? optionalNodeAtBeginning.value() : std::numeric_limits<EntityId>::max();
         }
 
         return childGraphView;

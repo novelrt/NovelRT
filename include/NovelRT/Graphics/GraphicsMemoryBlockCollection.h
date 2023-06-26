@@ -29,10 +29,10 @@ namespace NovelRT::Graphics
         void RemoveBlockAt(std::vector<std::shared_ptr<GraphicsMemoryBlock>>::iterator iterator);
         void RemoveBlockAt(size_t index);
 
-        bool TryAllocateRegion(size_t size,
-                               size_t alignment,
-                               GraphicsMemoryRegionAllocationFlags flags,
-                               GraphicsMemoryRegion<GraphicsMemoryBlock>& region);
+        std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> TryAllocateRegion(
+            size_t size,
+            size_t alignment,
+            GraphicsMemoryRegionAllocationFlags flags);
 
     protected:
         [[nodiscard]] virtual GraphicsMemoryBlock* CreateBlock(size_t size) = 0;
@@ -81,12 +81,12 @@ namespace NovelRT::Graphics
             size_t alignment = 1,
             GraphicsMemoryRegionAllocationFlags flags = GraphicsMemoryRegionAllocationFlags::None);
 
-        [[nodiscard]] bool TryAllocate(size_t size,
-                                       size_t alignment,
-                                       GraphicsMemoryRegionAllocationFlags flags,
-                                       GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion);
+        [[nodiscard]] std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> TryAllocate(
+            size_t size,
+            size_t alignment,
+            GraphicsMemoryRegionAllocationFlags flags);
 
-        [[nodiscard]] bool TryAllocate(size_t size, GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion);
+        [[nodiscard]] std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> TryAllocate(size_t size);
 
         [[nodiscard]] bool TryAllocate(
             size_t size,

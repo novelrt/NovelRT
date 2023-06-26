@@ -103,20 +103,23 @@ namespace NovelRT::Graphics::Vulkan
                                     height,
                                     depth,
                                     vulkanImage),
-              _metadata([&]() {
-                  TMetadata metadata(GraphicsDeviceObject::GetDevice());
-                  GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegionInternal = GetBlockRegion();
-                  std::shared_ptr<GraphicsMemoryBlock> block = blockRegionInternal.GetCollection();
+              _metadata(
+                  [&]()
+                  {
+                      TMetadata metadata(GraphicsDeviceObject::GetDevice());
+                      GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegionInternal = GetBlockRegion();
+                      std::shared_ptr<GraphicsMemoryBlock> block = blockRegionInternal.GetCollection();
 
-                  size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
-                  size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
+                      size_t minimumAllocatedRegionMarginSize = block->GetMinimumAllocatedRegionMarginSize();
+                      size_t minimumFreeRegionSizeToRegister = block->GetMinimumFreeRegionSizeToRegister();
 
-                  metadata.Initialise(
-                      std::static_pointer_cast<VulkanGraphicsTextureImpl<TMetadata>>(shared_from_this()),
-                      blockRegionInternal.GetSize(), minimumAllocatedRegionMarginSize, minimumFreeRegionSizeToRegister);
+                      metadata.Initialise(
+                          std::static_pointer_cast<VulkanGraphicsTextureImpl<TMetadata>>(shared_from_this()),
+                          blockRegionInternal.GetSize(), minimumAllocatedRegionMarginSize,
+                          minimumFreeRegionSizeToRegister);
 
-                  return metadata;
-              })
+                      return metadata;
+                  })
         {
             static_assert(std::is_base_of_v<IGraphicsMemoryRegionCollection<GraphicsResource>::IMetadata, TMetadata>);
 
@@ -173,11 +176,10 @@ namespace NovelRT::Graphics::Vulkan
             _metadata.getActual().Free(region);
         }
 
-        [[nodiscard]] bool TryAllocate(size_t size,
-                                       size_t alignment,
-                                       GraphicsMemoryRegion<GraphicsResource>& outRegion) final
+        [[nodiscard]] std::optional<GraphicsMemoryRegion<GraphicsResource>> TryAllocate(size_t size,
+                                                                                        size_t alignment) final
         {
-            return _metadata.getActual().TryAllocate(size, alignment, outRegion);
+            return _metadata.getActual().TryAllocate(size, alignment);
         }
 
         [[nodiscard]] std::list<GraphicsMemoryRegion<GraphicsResource>>::iterator begin() final

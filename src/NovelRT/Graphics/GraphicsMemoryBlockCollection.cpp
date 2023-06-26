@@ -127,10 +127,10 @@ namespace NovelRT::Graphics
         RemoveBlockAt(std::next(_blocks.begin(), static_cast<ptrdiff_t>(index)));
     }
 
-    bool GraphicsMemoryBlockCollection::TryAllocateRegion(size_t size,
-                                                          size_t alignment,
-                                                          GraphicsMemoryRegionAllocationFlags flags,
-                                                          GraphicsMemoryRegion<GraphicsMemoryBlock>& region)
+    std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> GraphicsMemoryBlockCollection::TryAllocateRegion(
+        size_t size,
+        size_t alignment,
+        GraphicsMemoryRegionAllocationFlags flags)
     {
         bool useDedicatedBlock = (flags & GraphicsMemoryRegionAllocationFlags::DedicatedCollection) ==
                                  GraphicsMemoryRegionAllocationFlags::DedicatedCollection;
@@ -172,14 +172,14 @@ namespace NovelRT::Graphics
                 {
                     throw Exceptions::NullPointerException("The memory block is set to nullptr.");
                 }
-
-                if (currentBlock->TryAllocate(size, alignment, region))
+                const auto region = currentBlock->TryAllocate(size, alignment);
+                if (region.has_value())
                 {
                     if (currentBlock == _emptyBlock)
                     {
                         _emptyBlock = nullptr;
                     }
-                    return true;
+                    return region;
                 }
             }
         }
@@ -188,18 +188,18 @@ namespace NovelRT::Graphics
 
         if (!canCreateNewBlock)
         {
-            return false;
+            return std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>>{};
         }
 
         size_t blockSize = GetAdjustedBlockSize(sizeWithMargins);
 
         if (blockSize >= availableMemory)
         {
-            return false;
+            return std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>>{};
         }
 
         std::shared_ptr<GraphicsMemoryBlock> block = AddBlock(blockSize);
-        return block->TryAllocate(size, alignment, region);
+        return block->TryAllocate(size, alignment);
     }
 
     GraphicsMemoryBlockCollection::GraphicsMemoryBlockCollection(std::shared_ptr<GraphicsDevice> device,
@@ -244,16 +244,15 @@ namespace NovelRT::Graphics
         size_t alignment,
         GraphicsMemoryRegionAllocationFlags flags)
     {
-        GraphicsMemoryRegion<GraphicsMemoryBlock> outRegion(0, nullptr, nullptr, false, 0, 0);
-        bool succeeded = TryAllocate(size, alignment, flags, outRegion);
+        auto outRegion = TryAllocate(size, alignment, flags);
 
-        if (!succeeded)
+        if (!outRegion.has_value())
         {
             throw Exceptions::OutOfMemoryException("Attempted to allocate memory region of size: " +
                                                    std::to_string(size));
         }
 
-        return outRegion;
+        return outRegion.value();
     }
 
     void GraphicsMemoryBlockCollection::Free(const GraphicsMemoryRegion<GraphicsMemoryBlock>& region)
@@ -344,18 +343,18 @@ namespace NovelRT::Graphics
         IncrementallySortBlocks();
     }
 
-    bool GraphicsMemoryBlockCollection::TryAllocate(size_t size,
-                                                    size_t alignment,
-                                                    GraphicsMemoryRegionAllocationFlags flags,
-                                                    GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion)
+    std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> GraphicsMemoryBlockCollection::TryAllocate(
+        size_t size,
+        size_t alignment,
+        GraphicsMemoryRegionAllocationFlags flags)
     {
         std::lock_guard<std::mutex> guard(_mutex);
-        return TryAllocateRegion(size, alignment, flags, outRegion);
+        return TryAllocateRegion(size, alignment, flags);
     }
 
-    bool GraphicsMemoryBlockCollection::TryAllocate(size_t size, GraphicsMemoryRegion<GraphicsMemoryBlock>& outRegion)
+    std::optional<GraphicsMemoryRegion<GraphicsMemoryBlock>> GraphicsMemoryBlockCollection::TryAllocate(size_t size)
     {
-        return TryAllocate(size, 1, GraphicsMemoryRegionAllocationFlags::None, outRegion);
+        return TryAllocate(size, 1, GraphicsMemoryRegionAllocationFlags::None);
     }
 
     bool GraphicsMemoryBlockCollection::TryAllocate(
@@ -373,10 +372,12 @@ namespace NovelRT::Graphics
 
             for (index = 0; index < regions.size(); ++index)
             {
-                succeeded = TryAllocateRegion(size, alignment, flags, regions[index]);
+                auto region = TryAllocateRegion(size, alignment, flags);
+                regions[index] = region.value();
 
-                if (!succeeded)
+                if (!region.has_value())
                 {
+                    succeeded = false;
                     break;
                 }
             }

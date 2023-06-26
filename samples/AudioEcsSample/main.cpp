@@ -147,19 +147,21 @@ int main()
 
         NovelRT::Ecs::Input::InputEventComponent input;
         bool triggered = false;
-        if (events.TryGetComponent(mouseClick, input) && (input.state == KeyState::KeyDown))
+        const auto value = events.TryGetComponent(mouseClick);
+        if (value.has_value() && (value.value().state == KeyState::KeyDown))
         {
             triggered =
-                uwuBounds.PointIsWithinBounds(NovelRT::Maths::GeoVector2F(input.mousePositionX, input.mousePositionY));
+                uwuBounds.PointIsWithinBounds(NovelRT::Maths::GeoVector2F(value.value().mousePositionX, value.value().mousePositionY));
         }
 
         if (triggered)
         {
             logger.logInfoLine("Clicked!");
             auto states = catalogue.template GetComponentView<AudioEmitterStateComponent>();
-            AudioEmitterStateComponent state;
-            if (states.TryGetComponent(soundEnt, state))
+            const auto value = states.TryGetComponent(soundEnt);
+            if (value.has_value())
             {
+                AudioEmitterStateComponent state = value.value();
                 if (state.state == AudioEmitterState::Stopped)
                 {
                     state.state = AudioEmitterState::ToPlay;

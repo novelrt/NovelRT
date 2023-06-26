@@ -44,18 +44,16 @@ namespace NovelRT::Graphics
 
         virtual void Free(const GraphicsMemoryRegion<TSelf>& region) = 0;
 
-        [[nodiscard]] virtual bool TryAllocate(size_t size,
-                                               size_t alignment,
-                                               GraphicsMemoryRegion<TSelf>& outRegion) = 0;
+        [[nodiscard]] virtual std::optional<GraphicsMemoryRegion<TSelf>> TryAllocate(size_t size, size_t alignment) = 0;
 
         [[nodiscard]] GraphicsMemoryRegion<TSelf> Allocate(size_t size)
         {
             return Allocate(size, 1);
         }
 
-        [[nodiscard]] bool TryAllocate(size_t size, GraphicsMemoryRegion<TSelf>& outRegion)
+        [[nodiscard]] std::optional<GraphicsMemoryRegion<TSelf>> TryAllocate(size_t size)
         {
-            return TryAllocate(size, 1, outRegion);
+            return TryAllocate(size, 1);
         }
 
         [[nodiscard]] virtual TIterator begin() = 0;
@@ -206,16 +204,15 @@ namespace NovelRT::Graphics
 
             [[nodiscard]] GraphicsMemoryRegion<TSelf> Allocate(size_t size, size_t alignment) final
             {
-                GraphicsMemoryRegion<TSelf> region(0, nullptr, nullptr, false, 0, 0);
-                auto result = TryAllocate(size, alignment, region);
+                auto result = TryAllocate(size, alignment);
 
-                if (!result)
+                if (!result.has_value())
                 {
-                    throw Exceptions::OutOfMemoryException("A size of " + std::to_string(result) +
+                    throw Exceptions::OutOfMemoryException("A size of " + std::to_string(size) +
                                                            " bytes was requested, but this size is too large.");
                 }
 
-                return region;
+                return result.value();
             }
 
             void Clear() final
@@ -283,7 +280,7 @@ namespace NovelRT::Graphics
                 Clear();
             }
 
-            [[nodiscard]] bool TryAllocate(size_t size, size_t alignment, GraphicsMemoryRegion<TSelf>& outRegion) final
+            [[nodiscard]] std::optional<GraphicsMemoryRegion<TSelf>> TryAllocate(size_t size, size_t alignment) final
             {
                 if (size == 0)
                 {
@@ -298,6 +295,7 @@ namespace NovelRT::Graphics
 
                 size_t sizeWithMargins = size + (2 * GetMinimumAllocatedRegionMarginSize());
                 bool allocatedRegion = false;
+                std::optional<GraphicsMemoryRegion<TSelf>> outRegion{};
 
                 if (GetTotalFreeRegionSize() >= sizeWithMargins)
                 {
@@ -329,7 +327,7 @@ namespace NovelRT::Graphics
 
                 assert(Validate());
 
-                return allocatedRegion;
+                return outRegion;
             }
 
             [[nodiscard]] typename std::list<GraphicsMemoryRegion<TSelf>>::iterator begin() override

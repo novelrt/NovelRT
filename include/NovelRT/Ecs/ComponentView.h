@@ -183,13 +183,11 @@ namespace NovelRT::Ecs
          * calling a method.
          *
          * @param entity The entity to use for fetching the component.
-         * @param outComponent The output result for the fetched component, if there is one.
-         * @return true if a component was found and returned in outComponent.
-         * @return false if no component exists.
+         * @return optional of TComponent, if the fetch failed optional will not have a value
          */
-        [[nodiscard]] bool TryGetComponent(EntityId entity, TComponent& outComponent) const noexcept
+        [[nodiscard]] std::optional<TComponent> TryGetComponent(EntityId entity) const noexcept
         {
-            return _componentBuffer.TryGetComponent(entity, outComponent);
+            return _componentBuffer.TryGetComponent(entity);
         }
 
         /**
