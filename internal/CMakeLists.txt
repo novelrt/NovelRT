@@ -72,3 +72,4 @@ add_subdirectory(vorbis)      # Leave here for ordering purposes - libsndfile
 add_subdirectory(flac)        # Leave here for ordering purposes - libsndfile
 add_subdirectory(libsndfile)
 add_subdirectory(VulkanMemoryAllocator)
+add_subdirectory(Fabulist)

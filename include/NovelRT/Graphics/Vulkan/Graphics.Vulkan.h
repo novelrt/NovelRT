@@ -19,6 +19,7 @@
 #include <set>
 #include <vector>
 #include <vulkan/vulkan.h>
+#include <vk_mem_alloc.h>
 
 /**
  * @brief The default Vulkan implementation for the Graphics plugin API.

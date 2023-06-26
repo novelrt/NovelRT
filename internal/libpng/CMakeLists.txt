@@ -1,3 +1,4 @@
+message(STATUS "WHOA THIS IS COOL")
 include(FetchContent)
 
 FIND_PACKAGE(ZLIB REQUIRED)
@@ -24,13 +25,26 @@ endif()
 set(PNG_SHARED ON CACHE BOOL "" FORCE)
 set(PNG_STATIC OFF CACHE BOOL "" FORCE)
 set(PNG_BUILD_ZLIB OFF)
-FetchContent_MakeAvailable(libpng)
 
 #set_property(TARGET png_static PROPERTY POSITION_INDEPENDENT_CODE ON)
-set(NOVELRT_PNG_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src" CACHE STRING "" FORCE)
-set(NOVELRT_PNGLIBCONFG_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
-set(PNG_PNG_INCLUDE_DIR "${NOVELRT_PNG_SOURCE_DIR};${NOVELRT_PNGLIBCONFG_SOURCE_DIR}" CACHE STRING "Set PNG include dirs" FORCE)
-set(PNG_LIBRARY "png" CACHE STRING "Set PNG libraries" FORCE)
+#set(NOVELRT_PNG_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src" CACHE STRING "" FORCE)
+#set(NOVELRT_PNGLIBCONFG_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin" CACHE STRING "" FORCE)
+#set(PNG_PNG_INCLUDE_DIR "${NOVELRT_PNG_SOURCE_DIR};${NOVELRT_PNGLIBCONFG_SOURCE_DIR}" CACHE STRING "Set PNG include dirs" FORCE)
+#set(PNG_LIBRARY "png" CACHE STRING "Set PNG libraries" FORCE)
+
+FetchContent_MakeAvailable(libpng)
+# Hack around png not setting its include directories properly
+target_include_directories(png
+    INTERFACE
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/bin>
+      $<INSTALL_INTERFACE:include>
+)
+
+get_target_property(normal png INCLUDE_DIRECTORIES)
+get_target_property(interface png INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "PNG INCLUDE DIRS: ${normal} ${interface}")
+
 if(APPLE)
   set_target_properties(png PROPERTIES NO_SONAME TRUE)
   target_link_options(png PRIVATE -install_name @rpath/libpng16.dylib)

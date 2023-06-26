@@ -1,6 +1,6 @@
 message(STATUS "Building NovelRT for Windows 10/11")
 
-include(NovelRTBuildDeps)
+#include(NovelRTBuildDeps)
 
 #
 # Platform-specific changes
@@ -30,6 +30,8 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 #
 # Dependency checks
 #
+
+#[[
 find_package(spdlog ${NOVELRT_SPDLOG_VERSION} REQUIRED)
 find_package(TBB ${NOVELRT_ONETBB_VERSION} CONFIG REQUIRED)
 find_package(Microsoft.GSL ${NOVELRT_GSL_VERSION} REQUIRED)
@@ -43,7 +45,7 @@ find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(nlohmann_json REQUIRED)
-find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED)
+find_package(Vulkan ${NOVElRT_VULKAN_VERSION} REQUIRED)
 if(NOVELRT_DEPS_INSTALLED)
   #CMake-standard FindZLIB breaks runtime deps for Windows
   #So we just use our version that doesn't :)
@@ -53,6 +55,7 @@ else()
   find_package(ZLIB REQUIRED)
   find_package(PNG ${NOVELRT_PNG_VERSION} REQUIRED)
 endif()
+
 
 
 #
@@ -73,12 +76,14 @@ list(APPEND NOVELRT_ENGINE_LINK_LIBS
   FLAC::FLAC
   Opus::opus
   Ogg::ogg
-  VulkanMemoryAllocator
+  #VulkanMemoryAllocator
 )
+]]
 
 #
 # Compile Options
 #
+#[[
 list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
   /W4
   /WX
@@ -86,10 +91,12 @@ list(APPEND NOVELRT_TARGET_COMPILE_OPTIONS
   /MP
   /Zf
 )
+]]
+
 
 #
 # Any verbose behaviour changes
-#
+#[[
 if(NOVELRT_VERBOSE_BUILD)
   if(CMAKE_GENERATOR STREQUAL "Visual Studio 2019 16" OR CMAKE_GENERATOR STREQUAL "Visual Studio 2022 17")
     string(APPEND CMAKE_CXX_FLAGS "-v:detailed")
@@ -107,3 +114,4 @@ if(NOVELRT_DEPS_INSTALLED)
     PATTERN "gtest*" EXCLUDE
   )
 endif()
+]]

@@ -118,8 +118,22 @@ target_compile_definitions(Engine PUBLIC ${NOVELRT_TARGET_COMPILE_DEFS})
 
 target_link_libraries(Engine
   PUBLIC
-    runtime
-    ${NOVELRT_ENGINE_LINK_LIBS}
+  runtime
+  Vulkan::Vulkan
+  tbb
+  OpenAL
+  sndfile
+  glfw
+  png
+  spdlog
+  nlohmann_json
+  stduuid
+  vorbis
+  vorbisenc
+  FLAC
+  opus
+  ogg
+  VulkanMemoryAllocator
 )
 
 if(NOVELRT_INSTALL)

@@ -135,10 +135,12 @@ if(NOVELRT_BUILD_DOCUMENTATION)
   endif()
 endif()
 
+find_package(Vulkan ${NOVElRT_VULKAN_VERSION} REQUIRED)
+
 #
 # Add subdirectories
 #
-add_subdirectory(internal/Fabulist)
+add_subdirectory(internal)
 add_subdirectory(resources)
 add_subdirectory(src)
 

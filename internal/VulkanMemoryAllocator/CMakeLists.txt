@@ -2,8 +2,8 @@ include(FetchContent)
 message(STATUS "Fetching VulkanMemoryAllocator")
 
 FetchContent_Declare(VulkanMemoryAllocator
-        URL https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/refs/tags/v3.0.1.zip
-        URL_HASH SHA512=1BE4D3A84C9206944E40975D839C85998D14FAEA6B0CA81CD1A2F9D49EFDE4E5D5E7096052DDA509EF11856A80C0F4E345A97DB9D0F9BA1EA9C6279E590A13AF
+        URL https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/0aa3989b8f382f185fdf646cc83a1d16fa31d6ab.zip
+        URL_HASH SHA512=e9eeed2f5cc1130613b9440bf375e5574b58e800f4615cc771176644951eadc9e49cff91c5d303e63831fbdc76f354d2ad9a9da11826588ede76a7252c7a636a
 
         PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
         TMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/tmp"
@@ -16,7 +16,7 @@ FetchContent_Declare(VulkanMemoryAllocator
         LOG_DIR "${CMAKE_CURRENT_BINARY_DIR}/log"
 )
 
-set(VMA_STATIC_VULKAN_FUNCTIONS ON) #todo: I have no idea if this is doing what I want, not even sure we need it, I saw it in the VMA CMake and got desperate. :)
-set(BUILD_SHARED_LIBS OFF)
+#set(VMA_STATIC_VULKAN_FUNCTIONS ON) #todo: I have no idea if this is doing what I want, not even sure we need it, I saw it in the VMA CMake and got desperate. :)
+#set(BUILD_SHARED_LIBS OFF)
 
 FetchContent_MakeAvailable(VulkanMemoryAllocator)
