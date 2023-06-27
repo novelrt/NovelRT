@@ -24,9 +24,6 @@ if(MSVC)
   list(APPEND NOVELRT_TARGET_COMPILE_DEFS -D__TBB_NO_IMPLICIT_LINKAGE=$<IF:$<CONFIG:DEBUG>,1,0>)
 endif()
 
-# this is needed, because Windows can be weird, man.
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
-
 #
 # Dependency checks
 #

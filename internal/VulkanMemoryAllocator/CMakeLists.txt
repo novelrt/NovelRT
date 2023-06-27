@@ -17,6 +17,6 @@ FetchContent_Declare(VulkanMemoryAllocator
 )
 
 #set(VMA_STATIC_VULKAN_FUNCTIONS ON) #todo: I have no idea if this is doing what I want, not even sure we need it, I saw it in the VMA CMake and got desperate. :)
-#set(BUILD_SHARED_LIBS OFF)
+set(BUILD_SHARED_LIBS OFF)
 
 FetchContent_MakeAvailable(VulkanMemoryAllocator)

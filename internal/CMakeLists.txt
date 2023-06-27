@@ -11,15 +11,6 @@ foreach(policy CMP0048 CMP0077 CMP0091 CMP0135)
   endif()
 endforeach()
 
-#
-# Setting common settings first
-#
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-set(BUILD_SHARED_LIBS ON)
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/dist" CACHE STRING "Forced directory to install NovelRT's Dependencies" FORCE)
-endif()
-
 message(STATUS "NovelRT - Set dependencies install location to: ${CMAKE_INSTALL_PREFIX}")
 
 #
@@ -33,7 +24,6 @@ if(${NOVELRT_TARGET} STREQUAL "Win32")
     string(REGEX REPLACE " /M[TD]d?" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
     string(REGEX REPLACE " /M[TD]d?" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   endif()
-  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 elseif(${NOVELRT_TARGET} STREQUAL "macOS")
   set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS / OS X deployment version")
 # Override RPATH on macOS so that we can load in the same folder
