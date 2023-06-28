@@ -15,10 +15,8 @@ set(ZLIB_LIBRARY ZLIB::zlib)
 # We can't use generator expressions to provide this because libpng uses them
 # in compiler invocations at build time. It's quite a mess.
 get_target_property(incl ZLIB::zlib INTERFACE_INCLUDE_DIRECTORIES)
-message(STATUS "ZLIB INCL: ${incl}")
 string(REGEX MATCH [[\$<BUILD_INTERFACE:([^>]+)>?]] incl "${incl}")
 string(REGEX REPLACE [[\$<BUILD_INTERFACE:([^>]+)>?]] [[\1]] incl "${incl}")
-message(STATUS "ZLIB INCL: ${incl}")
 set(ZLIB_INCLUDE_DIR "${incl}")
 
 FetchContent_MakeAvailable(PNG)

@@ -7,6 +7,10 @@ set(ZLIB_ENABLE_TESTS OFF)
 
 FetchContent_MakeAvailable(ZLIB)
 
+set_target_properties(zlib
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE ON)
+
 install(
   TARGETS zlib
   EXPORT ZLIBExports
