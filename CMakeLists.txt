@@ -142,7 +142,7 @@ if(NOVELRT_BUILD_SAMPLES)
 endif()
 
 if(NOVELRT_BUILD_TESTS)
-  add_testing()
+  enable_testing()
   add_subdirectory(tests)
 endif()
 
