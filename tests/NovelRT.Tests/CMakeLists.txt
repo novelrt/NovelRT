@@ -108,6 +108,7 @@ target_compile_options(Engine_Tests
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-nullability-extension>
 )
 
 if(MSVC)
