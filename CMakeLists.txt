@@ -100,19 +100,6 @@ endif()
 
 
 #
-# Generate required files for install
-#
-include(CMakePackageConfigHelpers)
-set(NOVELRT_CONFIG_PATH lib/cmake/NovelRT)
-
-configure_package_config_file(cmake/NovelRTConfig.cmake.in
-                              src/NovelRTConfig.cmake
-                              INSTALL_DESTINATION ${NOVELRT_CONFIG_PATH})
-
-write_basic_package_version_file(src/NovelRTConfigVersion.cmake
-                                COMPATIBILITY SameMajorVersion)
-
-#
 # Documentation Generation target
 #
 if(NOVELRT_BUILD_DOCUMENTATION)
@@ -133,7 +120,7 @@ endif()
 #
 # Add subdirectories
 #
-add_subdirectory(internal)
+add_subdirectory(thirdparty)
 add_subdirectory(resources)
 add_subdirectory(src)
 
@@ -154,20 +141,9 @@ endif()
 if(NOVELRT_INSTALL)
   install(
     EXPORT NovelRT
-    FILE NovelRTTargets.cmake
     EXPORT_LINK_INTERFACE_LIBRARIES
     NAMESPACE NovelRT::
-    DESTINATION "${NOVELRT_CONFIG_PATH}"
-  )
-
-  install(
-    FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
-          "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
-    DESTINATION "${NOVELRT_CONFIG_PATH}")
-
-  install(
-    FILES "${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake"
-    DESTINATION "${NOVELRT_CONFIG_PATH}"
+    DESTINATION lib
   )
 
   #Moved to main CMakeLists as headers should always be distributed for now
