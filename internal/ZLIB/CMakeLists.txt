@@ -25,11 +25,6 @@ if(NOT TARGET ZLIB::zlib)
   add_library(ZLIB::zlib ALIAS zlib)
 endif()
 
-if(APPLE)
-  set_target_properties(zlib PROPERTIES NO_SONAME TRUE)
-  target_link_options(zlib PRIVATE -install_name @rpath/libz.dylib)
-endif()
-
 #install(EXPORT ZLIBConfig
 #  DESTINATION lib/cmake/ZLIB
 #  NAMESPACE ZLIB::)

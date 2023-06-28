@@ -9,9 +9,6 @@ set(FABULIST_THIRDPARTY_JSON OFF)
 
 FetchContent_MakeAvailable(Fabulist)
 
-if(APPLE)
-  set_target_properties(runtime PROPERTIES NO_SONAME TRUE)
-endif()
 
 # Appears to be a bug, doing this until established and/or resolved
 install(DIRECTORY

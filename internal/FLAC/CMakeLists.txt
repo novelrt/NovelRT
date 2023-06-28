@@ -24,8 +24,3 @@ target_compile_options(FLAC
     $<$<CXX_COMPILER_ID:Clang>:-Wno-cast-align>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-cast-align>
 )
-
-if(APPLE)
-  set_target_properties(FLAC PROPERTIES NO_SONAME TRUE)
-  target_link_options(FLAC PRIVATE -install_name @rpath/libFLAC.dylib)
-endif()

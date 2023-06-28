@@ -15,8 +15,3 @@ set_target_properties(opus
 if(NOT TARGET Opus::opus)
   add_library(Opus::opus ALIAS opus)
 endif()
-
-if(APPLE)
-  set_target_properties(opus PROPERTIES NO_SONAME TRUE)
-  target_link_options(opus PRIVATE -install_name @rpath/libopus.dylib)
-endif()

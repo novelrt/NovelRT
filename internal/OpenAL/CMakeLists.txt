@@ -14,11 +14,6 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 
 FetchContent_MakeAvailable(OpenAL)
 
-if(APPLE)
-  set_target_properties(OpenAL PROPERTIES NO_SONAME TRUE)
-  target_link_options(OpenAL PRIVATE -install_name @rpath/libopenal.dylib)
-endif()
-
 # These warnings are outside our scope as we do not manage the libraries themselves.
 # We'll silence the warnings so that output is a little cleaner.
 target_compile_options(OpenAL

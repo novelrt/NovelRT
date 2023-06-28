@@ -7,8 +7,3 @@ set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_DOCS OFF)
 
 FetchContent_MakeAvailable(glfw3)
-
-if(APPLE)
-  set_target_properties(glfw PROPERTIES NO_SONAME TRUE)
-  target_link_options(glfw PRIVATE -install_name @rpath/libglfw.dylib)
-endif()

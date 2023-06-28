@@ -28,8 +28,3 @@ target_include_directories(png
       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/bin>
       $<INSTALL_INTERFACE:include>
 )
-
-if(APPLE)
-  set_target_properties(png PROPERTIES NO_SONAME TRUE)
-  target_link_options(png PRIVATE -install_name @rpath/libpng16.dylib)
-endif()
