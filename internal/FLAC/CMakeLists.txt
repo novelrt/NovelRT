@@ -13,6 +13,11 @@ set(INSTALL_CMAKE_CONFIG_MODULE ON)
 
 FetchContent_MakeAvailable(flac)
 
+set_target_properties(FLAC
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
+
 target_compile_options(FLAC
   PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-align>

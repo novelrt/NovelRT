@@ -7,6 +7,11 @@ set(BUILD_TESTING OFF)
 
 FetchContent_MakeAvailable(Opus)
 
+set_target_properties(opus
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
+
 if(NOT TARGET Opus::opus)
   add_library(Opus::opus ALIAS opus)
 endif()
