@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
-cmake_policy(SET CMP0091 NEW)
-if(POLICY CMP0135)
-  cmake_policy(SET CMP0135 NEW)
-endif()
+cmake_policy(SET CMP0077 NEW) # option() honors normal variables
+cmake_policy(SET CMP0083 NEW) # control generation of PIE
+cmake_policy(SET CMP0091 NEW) # MSVC runtime library flags
+cmake_policy(SET CMP0135 NEW) # ExternalProject_Add respects timestamps
 
 # Hacky hack hack for Windows
 # Needs to be set before project is called. -__-
@@ -19,6 +19,9 @@ project(NovelRT
   HOMEPAGE_URL "https://novelrt.dev"
   LANGUAGES C CXX
 )
+
+include(CheckPIESupported)
+check_pie_supported()
 
 #
 # Set the proper backend target for NovelRT
