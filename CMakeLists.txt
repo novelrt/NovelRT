@@ -124,7 +124,11 @@ if(NOVELRT_BUILD_DOCUMENTATION)
   endif()
 endif()
 
-find_package(Vulkan ${NOVElRT_VULKAN_VERSION} REQUIRED)
+find_package(Vulkan ${NOVElRT_VULKAN_VERSION} REQUIRED
+  OPTIONAL_COMPONENTS MoltenVK)
+if(APPLE AND NOT Vulkan_MoltenVK_FOUND)
+  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+endif()
 
 #
 # Add subdirectories

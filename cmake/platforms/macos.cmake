@@ -17,7 +17,6 @@ endif("${isSystemDir}" STREQUAL "-1")
 #
 # Dependency checks
 #
-find_package(Vulkan ${NOVELRT_VULKAN_VERSION} REQUIRED COMPONENTS MoltenVK)
 find_library(COREFOUNDATION CoreFoundation "/")
 
 #
