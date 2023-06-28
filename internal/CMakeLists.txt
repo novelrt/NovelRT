@@ -67,8 +67,8 @@ thirdparty_module(PNG
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(SndFile
-  URL https://github.com/libsndfile/libsndfile/archive/refs/tags/1.1.0.tar.gz
-  URL_HASH SHA512=5e530c33165a2d2be1c22d3a4bd96f0f1817dded3a45d24bad0e3f2c7908ccc1f19327a91d5040c3ea4d591845876019180747a125bf2a6f8bd49a6f67eadacd
+  URL https://github.com/novelrt/libsndfile/archive/f76d63813c810c2ed09bdb3821bb807498a7558e.zip
+  URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
 )
 thirdparty_module(spdlog
   URL https://github.com/gabime/spdlog/archive/refs/tags/v1.10.0.zip
