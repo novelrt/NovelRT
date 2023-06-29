@@ -23,6 +23,7 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
+enable_testing()
 add_subdirectory(core)
 
 install(
