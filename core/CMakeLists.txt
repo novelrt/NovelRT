@@ -1,4 +1,4 @@
-add_library(NovelRT-Core OBJECT
+add_library(NovelRT-Core STATIC
   Atom.cpp
 )
 
