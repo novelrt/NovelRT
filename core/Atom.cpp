@@ -1,18 +1,15 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Atom.h>
-#ifndef __TBB_PREVIEW_MUTEXES
-#define __TBB_PREVIEW_MUTEXES 1
-#endif
-#include <NovelRT/Exceptions/Exceptions.h>
 #include <mutex>
-#include <oneapi/tbb/mutex.h>
 #include <unordered_map>
+
+#include <NovelRT/Core/Atom.hpp>
+//#include <NovelRT/Exceptions/Exceptions.h>
+//#include <oneapi/tbb/mutex.h>
 
 namespace NovelRT
 {
-
     Atom Atom::GetNextEcsPrimitiveInfoConfigurationId() noexcept
     {
         static std::atomic_uintptr_t _nextEcsPrimitiveInfoConfigurationId(0);
@@ -53,11 +50,11 @@ namespace NovelRT
 
     Atom AtomFactory::GetNext()
     {
-        if (_moved)
+        /*if (_moved)
         {
             throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the "
                                                         "next atomic value from a factory in this state.");
-        }
+        }*/
 
         auto value = ++_currentValue;
         return value;
@@ -65,20 +62,20 @@ namespace NovelRT
 
     void AtomFactory::SetToValue(Atom value)
     {
-        if (_moved)
+        /*if (_moved)
         {
             throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly "
                                                         "set the current atomic value from a factory in this state.");
-        }
+        }*/
 
         _currentValue = value;
     }
 
     AtomFactory& AtomFactoryDatabase::GetFactory(const std::string& factoryName) noexcept
     {
-        static tbb::mutex _mutex;
+        //static tbb::mutex _mutex;
         static std::unordered_map<std::string, AtomFactory> _factories;
-        std::scoped_lock lock(_mutex);
+        //std::scoped_lock lock(_mutex);
         auto it = _factories.find(factoryName);
 
         if (it == _factories.end())
