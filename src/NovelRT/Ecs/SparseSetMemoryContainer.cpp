@@ -140,7 +140,7 @@ namespace NovelRT::Ecs
 
     bool SparseSetMemoryContainer::ContainsKey(size_t key) const noexcept
     {
-        if (key >= _sparse.size())
+        if (key >= _sparse.size() || _dense.empty())
         {
             return false;
         }
