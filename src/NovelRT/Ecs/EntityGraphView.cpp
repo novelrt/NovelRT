@@ -119,7 +119,7 @@ namespace NovelRT::Ecs
 
         if (_component.childrenStartNode == childToRemove)
         {
-            _component.childrenStartNode = optionalNodeAtBeginning.has_value() ? optionalNodeAtBeginning.value() : std::numeric_limits<EntityId>::max();
+            _component.childrenStartNode = optionalNodeAtBeginning.value_or(std::numeric_limits<EntityId>::max());
         }
 
         return childGraphView;
