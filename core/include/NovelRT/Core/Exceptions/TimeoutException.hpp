@@ -1,8 +1,7 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-
-#ifndef NOVELRT_EXCEPTIONS_TIMEOUTEXCEPTION_H
-#define NOVELRT_EXCEPTIONS_TIMEOUTEXCEPTION_H
 
 #include <chrono>
 #include <stdexcept>

@@ -5,8 +5,7 @@
 #include <unordered_map>
 
 #include <NovelRT/Core/Atom.hpp>
-//#include <NovelRT/Exceptions/Exceptions.h>
-//#include <oneapi/tbb/mutex.h>
+#include <NovelRT/Core/Exceptions/InvalidOperationException.hpp>
 
 namespace NovelRT
 {
@@ -50,11 +49,11 @@ namespace NovelRT
 
     Atom AtomFactory::GetNext()
     {
-        /*if (_moved)
+        if (_moved)
         {
             throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to get the "
                                                         "next atomic value from a factory in this state.");
-        }*/
+        }
 
         auto value = ++_currentValue;
         return value;
@@ -62,11 +61,11 @@ namespace NovelRT
 
     void AtomFactory::SetToValue(Atom value)
     {
-        /*if (_moved)
+        if (_moved)
         {
             throw Exceptions::InvalidOperationException("AtomFactory object has been moved. It is invalid to directly "
                                                         "set the current atomic value from a factory in this state.");
-        }*/
+        }
 
         _currentValue = value;
     }

@@ -1,3 +1,5 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
@@ -6,15 +8,10 @@
 #include <limits>
 #include <string>
 
-#ifndef NOVELRT_ATOM_H
-#define NOVELRT_ATOM_H
-
 namespace NovelRT
 {
     class Atom
     {
-        friend class AtomHashFunction;
-
     private:
         uintptr_t _value;
 
@@ -100,22 +97,4 @@ namespace NovelRT
     public:
         [[nodiscard]] static AtomFactory& GetFactory(const std::string& factoryName) noexcept;
     };
-
-    class AtomHashFunction
-    {
-    public:
-        size_t operator()(Atom atom) const noexcept
-        {
-            return static_cast<size_t>(atom._value);
-        }
-    };
 }
-
-namespace std
-{
-    template<> class numeric_limits<NovelRT::Atom> : public numeric_limits<uintptr_t>
-    {
-    };
-}
-
-#endif // NOVELRT_ATOM_H
