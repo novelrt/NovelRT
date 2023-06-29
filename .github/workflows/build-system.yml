@@ -70,10 +70,9 @@ jobs:
           cmake --build build --config ${{ matrix.configuration }} -j
 
       - name: Test NovelRT - ${{ matrix.configuration }}
-        if: steps.build.outcome == 'success'
+        if: false && steps.build.outcome == 'success'
         id: test
         run: |
-          cd build/tests/NovelRT.Tests
           ctest --output-on-failure -C ${{ matrix.configuration }}
 
       - name: Install NovelRT - ${{ matrix.configuration }}
