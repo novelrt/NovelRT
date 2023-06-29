@@ -29,7 +29,7 @@ namespace NovelRT::Threading
 
         [[nodiscard]] bool IsValueCreated() noexcept
         {
-            return TryGetValue();
+            return TryGetValue().has_value();
         }
 
         [[nodiscard]] std::optional<TResultType> TryGetValue() noexcept
