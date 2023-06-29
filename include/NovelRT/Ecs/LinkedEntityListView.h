@@ -187,63 +187,57 @@ namespace NovelRT::Ecs
         void AddInsertBeforeIndexInstruction(size_t index, EntityId newNode);
         void AddInsertAfterIndexInstruction(size_t index, EntityId newNode);
 
-        [[nodiscard]] inline bool TryGetComposedDiffInstruction(
-            EntityId node,
-            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        [[nodiscard]] inline std::optional<LinkedEntityListNodeComponent> TryGetComposedDiffInstruction(
+            EntityId node) const noexcept
         {
             if (_changes.ContainsKey(node))
             {
-                outNodeComponent = _changes[node];
-                return true;
+                return _changes[node];
             }
 
-            return false;
+            return std::optional<LinkedEntityListNodeComponent>{};
         }
 
-        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtBeginning(
-            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        [[nodiscard]] inline std::optional<LinkedEntityListNodeComponent> TryGetComposedDiffInstructionAtBeginning()
+            const noexcept
         {
             if (_newBeginPostDiff.has_value())
             {
-                outNodeComponent = _changes[_newBeginPostDiff.value()];
-                return true;
+                return _changes[_newBeginPostDiff.value()];
             }
 
-            return false;
+            return std::optional<LinkedEntityListNodeComponent>{};
         }
 
-        [[nodiscard]] inline bool TryGetComposedDiffInstructionAtEnd(
-            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+        [[nodiscard]] inline std::optional<LinkedEntityListNodeComponent> TryGetComposedDiffInstructionAtEnd()
+            const noexcept
         {
             if (_newTailPostDiff.has_value())
             {
-                outNodeComponent = _changes[_newTailPostDiff.value()];
-                return true;
+                return std::optional<LinkedEntityListNodeComponent>(_changes[_newTailPostDiff.value()]);
             }
 
-            return false;
+            return std::optional<LinkedEntityListNodeComponent>{};
         }
 
-        [[nodiscard]] inline bool TryGetNewNodeAtBeginning(EntityId& outEntityId) const noexcept
+        [[nodiscard]] inline std::optional<EntityId> TryGetNewNodeAtBeginning() const noexcept
         {
             if (_newBeginPostDiff.has_value())
             {
-                outEntityId = _newBeginPostDiff.value();
-                return true;
+                return _newBeginPostDiff.value();
             }
 
-            return false;
+            return std::optional<EntityId>{};
         }
 
-        [[nodiscard]] inline bool TryGetNewNodeAtEnd(EntityId& outEntityId) const noexcept
+        [[nodiscard]] inline std::optional<EntityId> TryGetNewNodeAtEnd() const noexcept
         {
             if (_newTailPostDiff.has_value())
             {
-                outEntityId = _newTailPostDiff.value();
-                return true;
+                return _newTailPostDiff.value();
             }
 
-            return false;
+            return std::optional<EntityId>{};
         }
 
         [[nodiscard]] inline EntityId GetOriginalBeginning() const noexcept

@@ -29,21 +29,19 @@ namespace NovelRT::Threading
 
         [[nodiscard]] bool IsValueCreated() noexcept
         {
-            TResultType dummy;
-            return TryGetValue(dummy);
+            return TryGetValue().has_value();
         }
 
-        [[nodiscard]] bool TryGetValue(TResultType& outValue) noexcept
+        [[nodiscard]] std::optional<TResultType> TryGetValue() noexcept
         {
             std::scoped_lock<ConcurrentSharedPtr<TResultType>> ptrLock(_dataContainer);
 
             if (*_dataContainer == _nullState)
             {
-                return false;
+                return std::optional<TResultType>{};
             }
 
-            outValue = *_dataContainer;
-            return true;
+            return *_dataContainer;
         }
 
         [[nodiscard]] TResultType& GetValue()

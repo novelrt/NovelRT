@@ -33,7 +33,11 @@ namespace NovelRT::Ecs
         {
             finalDiffInstructionForNext = _changes[existingNextNode];
         }
-        else if (!nodeView.TryGetComponent(existingNextNode, finalDiffInstructionForNext))
+        else if (const auto value = nodeView.TryGetComponent(existingNextNode))
+        {
+            finalDiffInstructionForNext = value.value();
+        }
+        else
         {
             finalDiffInstructionForNext = nodeView.GetDeleteInstructionState();
         }
@@ -71,7 +75,11 @@ namespace NovelRT::Ecs
         {
             finalDiffInstructionForPrevious = _changes[existingPreviousNode];
         }
-        else if (!nodeView.TryGetComponent(existingPreviousNode, finalDiffInstructionForPrevious))
+        else if (const auto value = nodeView.TryGetComponent(existingPreviousNode))
+        {
+            finalDiffInstructionForPrevious = value.value();
+        }
+        else
         {
             finalDiffInstructionForPrevious = nodeView.GetDeleteInstructionState();
         }
@@ -153,7 +161,11 @@ namespace NovelRT::Ecs
         {
             finalDiffInstructionForPrevious = _changes[existingPreviousNode];
         }
-        else if (!nodeView.TryGetComponent(existingPreviousNode, finalDiffInstructionForPrevious))
+        else if (const auto value = nodeView.TryGetComponent(existingPreviousNode))
+        {
+            finalDiffInstructionForPrevious = value.value();
+        }
+        else
         {
             finalDiffInstructionForPrevious = nodeView.GetDeleteInstructionState();
         }
@@ -191,7 +203,11 @@ namespace NovelRT::Ecs
         {
             finalDiffInstructionForNext = _changes[existingNextNode];
         }
-        else if (!nodeView.TryGetComponent(existingNextNode, finalDiffInstructionForNext))
+        else if (const auto value = nodeView.TryGetComponent(existingNextNode))
+        {
+                finalDiffInstructionForNext = value.value();
+        }
+        else
         {
             finalDiffInstructionForNext = nodeView.GetDeleteInstructionState();
         }
@@ -256,12 +272,15 @@ namespace NovelRT::Ecs
         auto view = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
         LinkedEntityListNodeComponent currentBeginComponent{};
 
-        if (!view.TryGetComponent(_begin, currentBeginComponent))
+        const auto value = view.TryGetComponent(_begin);
+
+        if (!value.has_value())
         {
             _changes.Insert(_begin, LinkedEntityListNodeComponent{});
         }
         else
         {
+            currentBeginComponent = value.value();
             while (currentBeginComponent.previous != std::numeric_limits<EntityId>::max())
             {
                 _begin = currentBeginComponent.previous;
@@ -580,7 +599,7 @@ namespace NovelRT::Ecs
                         }
                         else
                         {
-                            unused(nodeView.TryGetComponent(currentBeginCandidate, testComponent));
+                            testComponent = nodeView.TryGetComponent(currentBeginCandidate).value();
                         }
                         nextBeginCandidate = testComponent.next;
                     }

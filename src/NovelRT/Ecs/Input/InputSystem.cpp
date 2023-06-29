@@ -23,9 +23,10 @@ namespace NovelRT::Ecs::Input
         {
             InputEventComponent in;
             auto state = _device->GetKeyState(input.first);
-            if (inputs.TryGetComponent(input.second, in))
-            {
 
+            if (const auto value = inputs.TryGetComponent(input.second))
+            {
+                in = value.value();
                 switch (state)
                 {
                     case NovelRT::Input::KeyState::KeyUp:

@@ -46,12 +46,10 @@ namespace NovelRT::Ecs
                   poolSize,
                   &deleteInstructionState,
                   sizeof(T),
-                  [](auto rootComponent, auto updateComponent, auto) {
-                      *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
-                  },
-                  [](const void* left, const void* right) {
-                      return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right);
-                  },
+                  [](auto rootComponent, auto updateComponent, auto)
+                  { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); },
+                  [](const void* left, const void* right)
+                  { return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right); },
                   serialisedTypeName))
         {
             static_assert(std::is_trivially_copyable<T>::value,
@@ -156,19 +154,16 @@ namespace NovelRT::Ecs
          * calling a method.
          *
          * @param entity The entity to use for fetching the component.
-         * @param outComponent The output result for the fetched component, if there is one.
-         * @return true if a component was found and returned in outComponent.
-         * @return false if no component exists.
+         * @return optional T result, if the fetch failed the optional will not have a value.
          */
-        [[nodiscard]] bool TryGetComponent(EntityId entity, T& outComponent) const noexcept
+        [[nodiscard]] std::optional<T> TryGetComponent(EntityId entity) const noexcept
         {
             if (!HasComponent(entity))
             {
-                return false;
+                return std::optional<T>{};
             }
 
-            outComponent = GetComponentUnsafe(entity);
-            return true;
+            return GetComponentUnsafe(entity);
         }
 
         /**
