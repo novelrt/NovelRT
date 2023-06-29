@@ -19,15 +19,14 @@ namespace NovelRT::Ecs
     void EntityCache::RemoveEntity(size_t poolId, EntityId entityToRemove) noexcept
     {
         _removalUpdateVectors[poolId].push_back(entityToRemove);
-        auto it = std::remove(_registrationUpdateVectors[poolId].begin(),
-                                                                _registrationUpdateVectors[poolId].end(),
-                                                                entityToRemove);
-                                                                
+        auto it = std::remove(_registrationUpdateVectors[poolId].begin(), _registrationUpdateVectors[poolId].end(),
+                              entityToRemove);
+
         if (it == _registrationUpdateVectors[poolId].end())
         {
             return;
         }
-        
+
         _registrationUpdateVectors[poolId].erase(it, _registrationUpdateVectors[poolId].end());
     }
 

@@ -150,8 +150,7 @@ namespace NovelRT::Graphics
         size_t maximumSharedBlockSize = GetMaximumSharedBlockSize();
         size_t sizeWithMargins = size + (2 * _allocator->GetSettings().MinimumAllocatedRegionMarginSize.value_or(0));
 
-        NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(_blocks.data(),
-                                                                                    _blocks.size());
+        NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsMemoryBlock>> blocks(_blocks.data(), _blocks.size());
         size_t blocksLength = blocks.size();
 
         size_t availableMemory = (budget.GetEstimatedUsage() < budget.GetEstimatedBudget())
