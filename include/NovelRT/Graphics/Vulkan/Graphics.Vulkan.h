@@ -5,6 +5,8 @@
 #define NOVELRT_GRAPHICS_VULKAN_H
 
 // Graphics.Vulkan dependencies
+
+// clang-format off
 #include "../../EngineConfig.h"
 #include "../../Exceptions/Exceptions.h"
 #include "../../LoggingService.h"
@@ -18,7 +20,9 @@
 #include <optional>
 #include <set>
 #include <vector>
+#include <vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
+// clang-format on
 
 /**
  * @brief The default Vulkan implementation for the Graphics plugin API.

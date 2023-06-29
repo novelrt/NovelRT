@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 
-cmake_policy(SET CMP0091 NEW)
-if(POLICY CMP0135)
-  cmake_policy(SET CMP0135 NEW)
-endif()
+cmake_policy(SET CMP0077 NEW) # option() honors normal variables
+cmake_policy(SET CMP0083 NEW) # control generation of PIE
+cmake_policy(SET CMP0091 NEW) # MSVC runtime library flags
+cmake_policy(SET CMP0135 NEW) # ExternalProject_Add respects timestamps
 
 # Hacky hack hack for Windows
 # Needs to be set before project is called. -__-
@@ -19,6 +19,9 @@ project(NovelRT
   HOMEPAGE_URL "https://novelrt.dev"
   LANGUAGES C CXX
 )
+
+include(CheckPIESupported)
+check_pie_supported()
 
 #
 # Set the proper backend target for NovelRT
@@ -74,20 +77,6 @@ set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Vorbis version")
 set(NOVELRT_VULKAN_VERSION "1.3.231" CACHE STRING "Vulkan version")
 
 #
-# Configure Platforms
-#
-include(NovelRTPlatformConfig)
-
-#
-# Set default build type when not defined and not multi-config
-#
-if(NOT GENERATOR_IS_MULTI_CONFIG AND CMAKE_BUILD_TYPE STREQUAL "")
-  message(STATUS "Defaulting to Debug build as no build type was specified")
-  set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
-
-#
 # Alias "NovelRT::Utilities::Misc:Span" to "std::span" instead of "gsl::span".
 # If enabled, you need to make sure you current configuration supports "std::span".
 #
@@ -111,19 +100,6 @@ endif()
 
 
 #
-# Generate required files for install
-#
-include(CMakePackageConfigHelpers)
-set(NOVELRT_CONFIG_PATH lib/cmake/NovelRT)
-
-configure_package_config_file(cmake/NovelRTConfig.cmake.in
-                              src/NovelRTConfig.cmake
-                              INSTALL_DESTINATION ${NOVELRT_CONFIG_PATH})
-
-write_basic_package_version_file(src/NovelRTConfigVersion.cmake
-                                COMPATIBILITY SameMajorVersion)
-
-#
 # Documentation Generation target
 #
 if(NOVELRT_BUILD_DOCUMENTATION)
@@ -135,10 +111,16 @@ if(NOVELRT_BUILD_DOCUMENTATION)
   endif()
 endif()
 
+find_package(Vulkan ${NOVElRT_VULKAN_VERSION} REQUIRED
+  OPTIONAL_COMPONENTS MoltenVK)
+if(APPLE AND NOT Vulkan_MoltenVK_FOUND)
+  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+endif()
+
 #
 # Add subdirectories
 #
-add_subdirectory(internal/Fabulist)
+add_subdirectory(thirdparty)
 add_subdirectory(resources)
 add_subdirectory(src)
 
@@ -147,6 +129,7 @@ if(NOVELRT_BUILD_SAMPLES)
 endif()
 
 if(NOVELRT_BUILD_TESTS)
+  enable_testing()
   add_subdirectory(tests)
 endif()
 
@@ -158,20 +141,9 @@ endif()
 if(NOVELRT_INSTALL)
   install(
     EXPORT NovelRT
-    FILE NovelRTTargets.cmake
     EXPORT_LINK_INTERFACE_LIBRARIES
     NAMESPACE NovelRT::
-    DESTINATION "${NOVELRT_CONFIG_PATH}"
-  )
-
-  install(
-    FILES "${PROJECT_BINARY_DIR}/src/NovelRTConfig.cmake"
-          "${PROJECT_BINARY_DIR}/src/NovelRTConfigVersion.cmake"
-    DESTINATION "${NOVELRT_CONFIG_PATH}")
-
-  install(
-    FILES "${PROJECT_SOURCE_DIR}/cmake/FindVulkan.cmake"
-    DESTINATION "${NOVELRT_CONFIG_PATH}"
+    DESTINATION lib
   )
 
   #Moved to main CMakeLists as headers should always be distributed for now

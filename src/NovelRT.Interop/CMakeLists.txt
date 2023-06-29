@@ -129,6 +129,7 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:Clang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-nullability-extension>
 
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic>
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic-errors>
@@ -140,6 +141,7 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-nullability-extension>
 )
 
 if(MSVC)
