@@ -66,15 +66,25 @@ jobs:
       - name: Build NovelRT - ${{ matrix.configuration }}
         id: build
         run: |
-          ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+          ${{ matrix.c }} ${{ matrix.cxx }} ${{ matrix.vulkan }} cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -G Ninja
           cmake --build build --config ${{ matrix.configuration }} --target Engine Interop Samples Engine_Tests -j
-          
+
       - name: Test NovelRT - ${{ matrix.configuration }}
         if: steps.build.outcome == 'success'
         id: test
         run: |
           cd build/tests/NovelRT.Tests
           ctest --output-on-failure -C ${{ matrix.configuration }}
+
+      - name: Install NovelRT - ${{ matrix.configuration }}
+        run: |
+          cmake --install build --prefix inst ${{ contains(matrix.configuration, 'Release') && '--strip' }}
+
+      - name: Upload Artifacts - ${{ matrix.configuration }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: NovelRT_${{ matrix.os }}_${{ matrix.configuration }}
+          path: inst
 
   Documentation:
     name: Doxygen - Ubuntu
