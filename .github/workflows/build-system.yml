@@ -77,7 +77,7 @@ jobs:
 
       - name: Install NovelRT - ${{ matrix.configuration }}
         run: |
-          cmake --install build --prefix inst ${{ contains(matrix.configuration, 'Release') && '--strip' }}
+          cmake --install build --prefix inst ${{ contains(matrix.configuration, 'Release') && '--strip' || '' }}
 
       - name: Upload Artifacts - ${{ matrix.configuration }}
         uses: actions/upload-artifact@v3
