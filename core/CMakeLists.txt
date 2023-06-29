@@ -1,4 +1,4 @@
-add_library(NovelRT-Core STATIC
+add_library(NovelRT-Core OBJECT
   Atom.cpp
 )
 
@@ -36,6 +36,26 @@ set_target_properties(NovelRT-Core
 target_compile_features(NovelRT-Core
   PUBLIC
     cxx_std_17
+)
+
+target_compile_options(NovelRT-Core
+  PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wall>
+    $<$<CXX_COMPILER_ID:GNU>:-Wabi>
+    $<$<CXX_COMPILER_ID:GNU>:-Werror>
+    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
+    $<$<CXX_COMPILER_ID:GNU>:-Wpedantic>
+    $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
+
+    $<$<CXX_COMPILER_ID:Clang>:-Wall>
+    $<$<CXX_COMPILER_ID:Clang>:-Werror>
+    $<$<CXX_COMPILER_ID:Clang>:-Wextra>
+    $<$<CXX_COMPILER_ID:Clang>:-Wpedantic>
+    $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
+
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    $<$<CXX_COMPILER_ID:MSVC>:/WX>
+    $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 )
 
 install(
