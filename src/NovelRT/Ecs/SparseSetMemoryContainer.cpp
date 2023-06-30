@@ -106,7 +106,6 @@ namespace NovelRT::Ecs
             _sparse.clear();
         }
 
-
         for (auto&& index : _sparse)
         {
             if (index < indexCutoff || index == 0)
