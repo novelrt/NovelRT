@@ -82,9 +82,9 @@ namespace NovelRT::Ecs
 
         _sparse[key] = 0;
 
-        bool canResize = true;
         if (!_dense.empty())
         {
+            bool canResize = true;
             for (auto it = _sparse.begin() + key; it != _sparse.end(); it++)
             {
                 if (*it == 0 && _dense[0] != key)
@@ -95,12 +95,17 @@ namespace NovelRT::Ecs
                 canResize = false;
                 break;
             }
+
+            if (canResize)
+            {
+                _sparse.erase(_sparse.begin() + key, _sparse.end());
+            }
+        }
+        else
+        {
+            _sparse.clear();
         }
 
-        if (canResize)
-        {
-            _sparse.erase(_sparse.begin() + key, _sparse.end());
-        }
 
         for (auto&& index : _sparse)
         {
@@ -140,7 +145,7 @@ namespace NovelRT::Ecs
 
     bool SparseSetMemoryContainer::ContainsKey(size_t key) const noexcept
     {
-        if (key >= _sparse.size() || _dense.empty())
+        if (key >= _sparse.size())
         {
             return false;
         }
