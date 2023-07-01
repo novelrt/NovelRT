@@ -87,7 +87,7 @@ namespace NovelRT::Ecs
             std::optional<std::vector<size_t>::iterator> targetStart{};
             size_t currentValue = 0;
             size_t finalDenseSize = _dense.size();
-            for (auto it = _sparse.rbegin() + key; it != _sparse.rend(); it++)
+            for (auto it = _sparse.rbegin(); it != _sparse.rend(); it++)
             {
                 currentValue = *it;
                 if (currentValue < finalDenseSize && _dense[currentValue] == currentValue)
