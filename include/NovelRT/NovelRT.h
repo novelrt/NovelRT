@@ -86,7 +86,7 @@
   #include <NovelRT/Utilities/Lazy.h>
   #include <NovelRT/Utilities/Misc.h>
 
-  #include <NovelRT/Graphics/RGBAColour.h>
+  #include <NovelRT/Graphics/RGBAColour.hpp>
 
   //Maths types
   #include <NovelRT/Maths/Maths.h>
@@ -107,14 +107,13 @@
   // Exception types
   #include <NovelRT/Exceptions/Exceptions.h>
 
-  // Experimental types
-  #include <NovelRT/Graphics/Graphics.h>
-  #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.h>
+  #include <NovelRT/Graphics/Graphics.hpp>
+  #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
 #ifdef WIN32
-  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.h>
+  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.hpp>
 #endif
 #ifdef TARGET_OS_MAC
-  #include <NovelRT/Graphics/Metal/Graphics.Metal.h>
+  #include <NovelRT/Graphics/Metal/Graphics.Metal.hpp>
 #endif
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>

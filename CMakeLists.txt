@@ -122,6 +122,7 @@ endif()
 #
 add_subdirectory(thirdparty)
 add_subdirectory(resources)
+add_subdirectory(graphics)
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)
@@ -140,7 +141,7 @@ endif()
 #
 if(NOVELRT_INSTALL)
   install(
-    EXPORT NovelRT
+    EXPORT NovelRTConfig
     EXPORT_LINK_INTERFACE_LIBRARIES
     NAMESPACE NovelRT::
     DESTINATION lib

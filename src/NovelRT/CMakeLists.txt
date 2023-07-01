@@ -21,32 +21,6 @@ set(CORE_SOURCES
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
-  Graphics/GraphicsMemoryBlock.cpp
-  Graphics/GraphicsMemoryBlockCollection.cpp
-  Graphics/GraphicsPipeline.cpp
-  Graphics/GraphicsPipelineInput.cpp
-  Graphics/GraphicsPipelineInputElement.cpp
-  Graphics/GraphicsPipelineResource.cpp
-  Graphics/GraphicsPipelineSignature.cpp
-  Graphics/GraphicsResourceManager.cpp
-  Graphics/ShaderProgram.cpp
-  Graphics/Vulkan/VulkanGraphicsAdapter.cpp
-  Graphics/Vulkan/VulkanGraphicsAdapterSelector.cpp
-  Graphics/Vulkan/VulkanGraphicsBuffer.cpp
-  Graphics/Vulkan/VulkanGraphicsContext.cpp
-  Graphics/Vulkan/VulkanGraphicsDevice.cpp
-  Graphics/Vulkan/VulkanGraphicsFence.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryAllocator.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryBlock.cpp
-  Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
-  Graphics/Vulkan/VulkanGraphicsPipeline.cpp
-  Graphics/Vulkan/VulkanGraphicsPipelineSignature.cpp
-  Graphics/Vulkan/VulkanGraphicsPluginProvider.cpp
-  Graphics/Vulkan/VulkanGraphicsProvider.cpp
-  Graphics/Vulkan/VulkanGraphicsSurfaceContext.cpp
-  Graphics/Vulkan/VulkanGraphicsTexture.cpp
-  Graphics/Vulkan/VulkanShaderProgram.cpp
-
   Input/Glfw/GlfwInputDevice.cpp
   Input/Glfw/GlfwInputPluginProvider.cpp
   Input/NovelKey.cpp
@@ -98,7 +72,6 @@ target_compile_definitions(Engine PUBLIC ${NOVELRT_TARGET_COMPILE_DEFS})
 target_link_libraries(Engine
   PUBLIC
   runtime
-  Vulkan::Vulkan
   tbb
   OpenAL
   sndfile
@@ -112,13 +85,13 @@ target_link_libraries(Engine
   FLAC
   opus
   ogg
-  VulkanMemoryAllocator
+  NovelRT-Graphics
 )
 
 if(NOVELRT_INSTALL)
   install(
     TARGETS Engine
-    EXPORT NovelRT
+    EXPORT NovelRTConfig
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
