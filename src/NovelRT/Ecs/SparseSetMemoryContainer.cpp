@@ -84,7 +84,6 @@ namespace NovelRT::Ecs
 
         if (!_dense.empty())
         {
-            auto bla = _sparse.rbegin().base();
             std::optional<std::vector<size_t>::iterator> targetStart{};
             size_t currentValue = 0;
             size_t finalDenseSize = _dense.size();
