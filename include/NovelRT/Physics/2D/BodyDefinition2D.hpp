@@ -1,8 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_PHYSICS_PHYSICS2D_BODYDEFINITION2D_H
-#define NOVELRT_PHYSICS_PHYSICS2D_BODYDEFINITION2D_H
+#pragma once
 
 #ifndef NOVELRT_PHYSICS_H
 #error NovelRT does not support including types explicitly by default. Please include Physics.h instead for the Physics namespace subset.
@@ -29,5 +28,3 @@ namespace NovelRT::Physics::Physics2D
 
 // TODO: when implementing box2d, instead of relying on gravity scale, set it to 1 or 0 (depending on
 // BodyFlags::UseWorldGravity) and apply a constant force during the world step.
-
-#endif // !NOVELRT_PHYSICS_PHYSICS2D_BODYDEFINITION2D_H

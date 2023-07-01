@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_PHYSICS_H
+#pragma once
 #define NOVELRT_PHYSICS_H
 
 // physics dependencies
@@ -31,5 +31,3 @@ namespace NovelRT::Physics
 #include "2D/Physics.2D.h"
 
 // clang-format on
-
-#endif // !NOVELRT_PHYSICS_H
