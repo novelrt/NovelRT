@@ -150,3 +150,7 @@ CTestTestfile.cmake
 .DS_Store
 internal/build*
 internal/dist*
+
+### KDevelop ###
+.kdev4/*
+*.kdev4

@@ -450,9 +450,10 @@ namespace NovelRT::Ecs::Graphics
 
         auto ptr = Threading::MakeConcurrentShared<TextureInfo>();
         std::vector<uint8_t> textureData{};
-        textureData.resize(dataTypeSize * dataLength);
+        const size_t size = dataTypeSize * dataLength;
+        textureData.resize(size);
 
-        memcpy(textureData.data(), data, dataTypeSize * dataLength);
+        NovelRT::Utilities::Memory::Copy(textureData.data(), size, data, size);
 
         ptr->textureName = textureDataName;
         ptr->textureData = textureData;
@@ -558,14 +559,14 @@ namespace NovelRT::Ecs::Graphics
         size_t size = dataTypeSize * dataLength;
         ptr->vertexInfoName = vertexDataName;
         ptr->stagingPtr = malloc(size);
+        if (ptr->stagingPtr == nullptr)
+        {
+            throw NovelRT::Exceptions::OutOfMemoryException();
+        }
         ptr->sizeOfVert = dataTypeSize;
         ptr->stagingPtrLength = dataLength;
 
-#ifdef WIN32
-        memcpy_s(ptr->stagingPtr, size, data, size);
-#else
-        memcpy(ptr->stagingPtr, data, size);
-#endif
+        NovelRT::Utilities::Memory::Copy(ptr->stagingPtr, size, data, size);
         _vertexDataToInitialise.push(ptr);
 
         return Threading::FutureResult<VertexInfo>(ptr, VertexInfo{});
