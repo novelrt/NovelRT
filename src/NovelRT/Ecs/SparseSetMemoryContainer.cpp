@@ -84,21 +84,23 @@ namespace NovelRT::Ecs
 
         if (!_dense.empty())
         {
-            bool canResize = true;
-            for (auto it = _sparse.begin() + key; it != _sparse.end(); it++)
+            auto bla = _sparse.rbegin().base();
+            std::optional<std::vector<size_t>::iterator> targetStart{};
+            size_t currentValue = 0;
+            size_t finalDenseSize = _dense.size();
+            for (auto it = _sparse.rbegin() + key; it != _sparse.rend(); it++)
             {
-                if (*it == 0 && _dense[0] != key)
+                currentValue = *it;
+                if (currentValue < finalDenseSize && _dense[currentValue] == currentValue)
                 {
-                    continue;
+                    targetStart = it.base();
+                    break;
                 }
-
-                canResize = false;
-                break;
             }
 
-            if (canResize)
+            if (targetStart.has_value() && targetStart.value() != _sparse.end())
             {
-                _sparse.erase(_sparse.begin() + key, _sparse.end());
+                _sparse.erase(targetStart.value(), _sparse.end());
             }
         }
         else
