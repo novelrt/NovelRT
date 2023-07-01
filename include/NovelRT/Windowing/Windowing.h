@@ -13,9 +13,9 @@ namespace NovelRT::Windowing
 }
 
 // Windowing dependencies
-#include <NovelRT/Graphics/Graphics.hpp>
 #include "NovelRT/Maths/Maths.h"
 #include "WindowMode.h"
+#include <NovelRT/Graphics/Graphics.hpp>
 
 // Windowing types
 #include "IWindowingDevice.h"
