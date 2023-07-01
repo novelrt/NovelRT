@@ -23,6 +23,8 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
+list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 enable_testing()
 add_subdirectory(core)
 

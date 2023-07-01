@@ -1,3 +1,5 @@
+include(GenerateCombinedHeader)
+
 add_library(NovelRT-Core STATIC
   Atom.cpp
 )
@@ -21,10 +23,17 @@ target_sources(NovelRT-Core
       include/NovelRT/Core/Exceptions/NotInitialisedException.hpp
       include/NovelRT/Core/Exceptions/NotSupportedException.hpp
       include/NovelRT/Core/Exceptions/NullPointerException.hpp
-      include/NovelRT/Core/Exceptions/OpenGLLinkageFailureException.hpp
       include/NovelRT/Core/Exceptions/OutOfMemoryException.hpp
       include/NovelRT/Core/Exceptions/RuntimeNotFoundException.hpp
       include/NovelRT/Core/Exceptions/TimeoutException.hpp
+)
+
+generate_combined_header(
+  TARGET NovelRT-Core
+  FILE_NAME Core.hpp
+  FILE_TEMPLATE "${PROJECT_SOURCE_DIR}/common/CombinedHeader.h.in"
+  INSTALL DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/NovelRT
+  HEADER_SETS public_headers
 )
 
 set_target_properties(NovelRT-Core
