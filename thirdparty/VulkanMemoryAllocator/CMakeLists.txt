@@ -6,3 +6,9 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 set(BUILD_SHARED_LIBS OFF)
 
 FetchContent_MakeAvailable(VulkanMemoryAllocator)
+
+target_compile_options(VulkanMemoryAllocator
+  PUBLIC
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-nullability-extension>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-nullability-extension>
+)
