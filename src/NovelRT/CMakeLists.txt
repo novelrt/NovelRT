@@ -4,8 +4,6 @@ set(CORE_SOURCES
   LoggingService.cpp
   EngineConfig.cpp
 
-  Audio/AudioService.cpp
-
   Ecs/Catalogue.cpp
   Ecs/ComponentBufferMemoryContainer.cpp
   Ecs/ComponentCache.cpp
@@ -84,6 +82,7 @@ target_link_libraries(Engine
   opus
   ogg
   NovelRT-Graphics
+  NovelRT-Audio
 )
 
 if(NOVELRT_INSTALL)

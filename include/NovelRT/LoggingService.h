@@ -9,6 +9,8 @@
 #pragma warning(disable : 4275)
 #endif
 
+#include "Exceptions/Exceptions.h"
+#include "Utilities/Misc.h"
 #include <spdlog/async.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
