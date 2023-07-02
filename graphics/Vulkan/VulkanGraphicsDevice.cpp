@@ -28,7 +28,6 @@ namespace NovelRT::Graphics::Vulkan
           _vulkanSwapchain([&]() { return CreateSwapChain(); }),
           _swapChainImages([&]() { return GetSwapChainImages(); }),
           _renderPass([&]() { return CreateRenderPass(); }),
-          _memoryAllocator([&]() { return CreateMemoryAllocator(); }),
           _indicesData{},
           _state()
     {
@@ -63,13 +62,6 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         return contexts;
-    }
-
-    std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsDevice::CreateMemoryAllocator()
-    {
-        GraphicsMemoryAllocatorSettings allocatorSettings{};
-        return std::make_shared<VulkanGraphicsMemoryAllocator>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), allocatorSettings);
     }
 
     std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet() const
@@ -468,32 +460,6 @@ namespace NovelRT::Graphics::Vulkan
         return _contextIndex;
     }
 
-    std::shared_ptr<GraphicsPrimitive> VulkanGraphicsDevice::CreatePrimitive(
-        std::shared_ptr<GraphicsPipeline> pipeline,
-        GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-        uint32_t vertexBufferStride,
-        GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-        uint32_t indexBufferStride,
-        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
-    {
-        return std::static_pointer_cast<GraphicsPrimitive>(
-            CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion,
-                                  vertexBufferStride, indexBufferRegion, indexBufferStride, inputResourceRegions));
-    }
-
-    std::shared_ptr<VulkanGraphicsPrimitive> VulkanGraphicsDevice::CreateVulkanPrimitive(
-        std::shared_ptr<VulkanGraphicsPipeline> pipeline,
-        GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-        uint32_t vertexBufferStride,
-        GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-        uint32_t indexBufferStride,
-        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
-    {
-        return std::make_shared<VulkanGraphicsPrimitive>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), pipeline, vertexBufferRegion,
-            vertexBufferStride, indexBufferRegion, indexBufferStride, inputResourceRegions);
-    }
-
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
@@ -546,11 +512,6 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("The VkDevice did not idle correctly! Reason: " +
                                      std::to_string(waitForIdleResult));
         }
-    }
-
-    VulkanGraphicsMemoryAllocator* VulkanGraphicsDevice::GetMemoryAllocatorInternal()
-    {
-        return _memoryAllocator.getActual().get();
     }
 
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)

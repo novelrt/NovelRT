@@ -16,9 +16,6 @@ namespace NovelRT::Graphics
         std::weak_ptr<GraphicsAdapter> _adapter;
         std::shared_ptr<GraphicsSurfaceContext> _surfaceContext;
 
-    protected:
-        [[nodiscard]] virtual GraphicsMemoryAllocator* GetMemoryAllocatorInternal() = 0;
-
     public:
         GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<GraphicsSurfaceContext> surfaceContext)
             : _adapter(std::move(adapter)), _surfaceContext(std::move(surfaceContext))
@@ -55,11 +52,6 @@ namespace NovelRT::Graphics
             return GetContexts()[GetContextIndex()];
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsMemoryAllocator> GetMemoryAllocator()
-        {
-            return std::dynamic_pointer_cast<GraphicsMemoryAllocator>(GetMemoryAllocatorInternal()->shared_from_this());
-        }
-
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
         {
             return _surfaceContext->GetSurface();
@@ -80,14 +72,6 @@ namespace NovelRT::Graphics
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) = 0;
-
-        [[nodiscard]] virtual std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
-            std::shared_ptr<GraphicsPipeline> pipeline,
-            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-            uint32_t vertexBufferStride,
-            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-            uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,
