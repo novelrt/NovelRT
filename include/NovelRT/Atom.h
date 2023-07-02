@@ -11,69 +11,7 @@
 
 namespace NovelRT
 {
-    class Atom
-    {
-        friend class AtomHashFunction;
-
-    private:
-        uintptr_t _value;
-
-    public:
-        constexpr Atom() noexcept : Atom(0)
-        {
-        }
-
-        constexpr Atom(uintptr_t value) noexcept : _value(value)
-        {
-        }
-
-        bool operator==(Atom other) const noexcept
-        {
-            return _value == other._value;
-        }
-
-        bool operator==(uintptr_t other) const noexcept
-        {
-            return _value == other;
-        }
-
-        bool operator!=(Atom other) const noexcept
-        {
-            return _value != other._value;
-        }
-
-        bool operator!=(uintptr_t other) const noexcept
-        {
-            return _value != other;
-        }
-
-        bool operator<(Atom other) const noexcept
-        {
-            return _value < other._value;
-        }
-
-        bool operator<=(Atom other) const noexcept
-        {
-            return _value <= other._value;
-        }
-
-        bool operator>(Atom other) const noexcept
-        {
-            return _value > other._value;
-        }
-
-        bool operator>=(Atom other) const noexcept
-        {
-            return _value >= other._value;
-        }
-
-        operator uintptr_t() const noexcept
-        {
-            return _value;
-        }
-
-        static Atom GetNextEcsPrimitiveInfoConfigurationId() noexcept;
-    };
+    using Atom = uintptr_t;
 
     class AtomFactory
     {
@@ -99,22 +37,6 @@ namespace NovelRT
     {
     public:
         [[nodiscard]] static AtomFactory& GetFactory(const std::string& factoryName) noexcept;
-    };
-
-    class AtomHashFunction
-    {
-    public:
-        size_t operator()(Atom atom) const noexcept
-        {
-            return static_cast<size_t>(atom._value);
-        }
-    };
-}
-
-namespace std
-{
-    template<> class numeric_limits<NovelRT::Atom> : public numeric_limits<uintptr_t>
-    {
     };
 }
 

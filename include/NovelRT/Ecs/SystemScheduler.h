@@ -23,7 +23,7 @@ namespace NovelRT::Ecs
         static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
-        std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>, AtomHashFunction> _systems;
+        std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
 
         EntityCache _entityCache;
         ComponentCache _componentCache;

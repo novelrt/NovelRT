@@ -7,8 +7,7 @@
 namespace NovelRT::Ecs
 {
     ComponentCache::ComponentCache(size_t poolSize) noexcept
-        : _componentMap(
-              std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>, AtomHashFunction>{}),
+        : _componentMap(std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>>{}),
           _poolSize(poolSize),
           _bufferPrepEvent(Utilities::Event<const std::vector<EntityId>&>())
     {

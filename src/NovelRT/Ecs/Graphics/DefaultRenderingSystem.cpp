@@ -292,7 +292,7 @@ namespace NovelRT::Ecs::Graphics
             size_t currentIndex = 0;
         };
 
-        std::unordered_map<Atom, std::map<int32_t, GpuSpanCounter>, AtomHashFunction> gpuSpanCounterMap{};
+        std::unordered_map<Atom, std::map<int32_t, GpuSpanCounter>> gpuSpanCounterMap{};
 
         for (auto reverseIt = transformLayerMap.rbegin(); reverseIt != transformLayerMap.rend(); reverseIt++)
         {

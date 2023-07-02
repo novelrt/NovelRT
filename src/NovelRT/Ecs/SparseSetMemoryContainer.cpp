@@ -82,24 +82,29 @@ namespace NovelRT::Ecs
 
         _sparse[key] = 0;
 
-        bool canResize = true;
         if (!_dense.empty())
         {
-            for (auto it = _sparse.begin() + key; it != _sparse.end(); it++)
+            std::optional<std::vector<size_t>::iterator> targetStart{};
+            size_t currentValue = 0;
+            size_t finalDenseSize = _dense.size();
+            for (auto it = _sparse.rbegin(); it != _sparse.rend(); it++)
             {
-                if (*it == 0 && _dense[0] != key)
+                currentValue = *it;
+                if (currentValue < finalDenseSize && _dense[currentValue] == currentValue)
                 {
-                    continue;
+                    targetStart = it.base();
+                    break;
                 }
+            }
 
-                canResize = false;
-                break;
+            if (targetStart.has_value() && targetStart.value() != _sparse.end())
+            {
+                _sparse.erase(targetStart.value(), _sparse.end());
             }
         }
-
-        if (canResize)
+        else
         {
-            _sparse.erase(_sparse.begin() + key, _sparse.end());
+            _sparse.clear();
         }
 
         for (auto&& index : _sparse)
@@ -140,7 +145,7 @@ namespace NovelRT::Ecs
 
     bool SparseSetMemoryContainer::ContainsKey(size_t key) const noexcept
     {
-        if (key >= _sparse.size() || _dense.empty())
+        if (key >= _sparse.size())
         {
             return false;
         }
