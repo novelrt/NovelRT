@@ -8,7 +8,7 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
-#include "../../Audio/Audio.h"
+#include <NovelRT/Audio/Audio.hpp>
 #include "../../Timing/StepTimer.h"
 #include "../../Timing/Timestamp.h"
 #include <chrono>

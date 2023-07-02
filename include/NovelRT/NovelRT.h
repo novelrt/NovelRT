@@ -97,9 +97,6 @@
   #include <NovelRT/LoggingService.h>
   #include <NovelRT/Timing/StepTimer.h>
 
-  // Audio types
-  #include <NovelRT/Audio/Audio.h>
-
   // ECS types
   #include <NovelRT/Ecs/Ecs.h>
 
@@ -126,9 +123,6 @@
  // ResourceManagement types
   #include <NovelRT/ResourceManagement/ResourceManagement.h>
   #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
-
-  // Engine service types
-  #include <NovelRT/Audio/AudioService.h>
 
   // Scene Graph types
   #include <NovelRT/SceneGraph/SceneGraph.h>
