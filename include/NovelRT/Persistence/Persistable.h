@@ -28,8 +28,6 @@ namespace NovelRT::Persistence
         [[nodiscard]] static std::unordered_map<std::string, std::unique_ptr<ICustomComponentLoadRule>>&
         GetComponentLoadRules() noexcept;
 
-        static void LoadDefaultRules(std::shared_ptr<Ecs::Graphics::DefaultRenderingSystem> renderingSystem) noexcept;
-
         [[nodiscard]] virtual ResourceManagement::BinaryPackage ToFileData() const noexcept = 0;
         virtual void LoadFileData(const ResourceManagement::BinaryPackage& data) = 0;
     };

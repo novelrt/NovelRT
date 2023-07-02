@@ -27,9 +27,6 @@ namespace NovelRT::Ecs
 
         inline void AddDefaultComponentsAndSystems(SystemScheduler& target)
         {
-            target.GetComponentCache().RegisterComponentType(Graphics::RenderComponent{0, 0, 0, 0, true},
-                                                             "NovelRT::Ecs::Graphics::RenderComponent");
-
             target.GetComponentCache().RegisterComponentType(
                 EntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
                 "NovelRT::Ecs::EntityGraphComponent");
@@ -42,9 +39,6 @@ namespace NovelRT::Ecs
             target.GetComponentCache().RegisterComponentType(
                 TransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN},
                 "NovelRT::Ecs::TransformComponent");
-
-            target.RegisterSystem(std::make_shared<Ecs::Graphics::DefaultRenderingSystem>(
-                _graphicsPluginProvider, _windowingPluginProvider, _resourceManagementPluginProvider));
 
             target.GetComponentCache().RegisterComponentType(
                 Input::InputEventComponent{0, NovelRT::Input::KeyState::Idle, 0, 0},

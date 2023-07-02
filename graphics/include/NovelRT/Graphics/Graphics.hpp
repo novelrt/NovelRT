@@ -80,32 +80,21 @@ namespace NovelRT::Graphics
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsContext.hpp>
 #include <NovelRT/Graphics/GraphicsFence.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryAllocatorSettings.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryRegion.hpp>
-#include <NovelRT/Graphics/IGraphicsMemoryRegionCollection.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp>
 #include <NovelRT/Graphics/TexelFormat.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryBlockCollection.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryBudget.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryBlock.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceKind.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
-#include <NovelRT/Graphics/GraphicsResource.hpp>
 #include <NovelRT/Graphics/GraphicsBufferKind.hpp>
-#include <NovelRT/Graphics/GraphicsBuffer.hpp>
 #include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
-#include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/IGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/ShaderProgram.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineSignature.hpp>
-#include <NovelRT/Graphics/GraphicsPrimitive.hpp>
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
@@ -113,7 +102,6 @@ namespace NovelRT::Graphics
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
-#include <NovelRT/Graphics/GraphicsResourceManager.hpp>
 
 // clang-format on
 

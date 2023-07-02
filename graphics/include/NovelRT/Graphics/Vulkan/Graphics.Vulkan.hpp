@@ -39,13 +39,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipelineSignature;
     class VulkanGraphicsContext;
     class VulkanGraphicsFence;
-    class VulkanGraphicsBuffer;
-    class VulkanGraphicsTexture;
-    class VulkanGraphicsPrimitive;
     class VulkanGraphicsProvider;
-    class VulkanGraphicsMemoryAllocator;
-    class VulkanGraphicsMemoryBlockCollection;
-    class VulkanGraphicsMemoryBlock;
     class VulkanGraphicsAdapter;
     class VulkanGraphicsAdapterSelector;
     class VulkanGraphicsSurfaceContext;
@@ -63,19 +57,13 @@ namespace NovelRT::Graphics::Vulkan
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryBlock.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPrimitive.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp>
 
 // clang-format on

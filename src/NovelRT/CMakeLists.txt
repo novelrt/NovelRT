@@ -16,7 +16,6 @@ set(CORE_SOURCES
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
-  Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
@@ -30,7 +29,6 @@ set(CORE_SOURCES
 
   Persistence/Chapter.cpp
   Persistence/Persistable.cpp
-  Persistence/Graphics/RenderingComponentPersistenceRule.cpp
 
   PluginManagement/TemporaryFnPtrs.cpp
 
