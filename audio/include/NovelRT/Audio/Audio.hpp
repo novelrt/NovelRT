@@ -5,10 +5,10 @@
 #define NOVELRT_AUDIO_H
 
 // Dependencies for Audio
-#include "../Exceptions/Exceptions.h"
-#include "../LoggingService.h"
-#include "../Utilities/Lazy.h"
-#include "../Utilities/Misc.h"
+#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/LoggingService.h>
+#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Utilities/Misc.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <cstdint>
@@ -26,6 +26,6 @@ namespace NovelRT::Audio
 }
 
 // Audio Types
-#include "AudioService.h"
+#include <NovelRT/Audio/AudioService.hpp>
 
 #endif // NOVELRT_AUDIO_H
