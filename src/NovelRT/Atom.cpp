@@ -12,14 +12,6 @@
 
 namespace NovelRT
 {
-
-    Atom Atom::GetNextEcsPrimitiveInfoConfigurationId() noexcept
-    {
-        static std::atomic_uintptr_t _nextEcsPrimitiveInfoConfigurationId(0);
-        auto value = ++_nextEcsPrimitiveInfoConfigurationId;
-        return Atom(value);
-    }
-
     AtomFactory::AtomFactory() noexcept : AtomFactory(0)
     {
     }
