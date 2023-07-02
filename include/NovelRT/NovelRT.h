@@ -95,7 +95,7 @@
 #include <NovelRT/Persistence/Persistence.h>
 
   // Physics types
-  #include <NovelRT/Physics/Physics.h>
+  #include <NovelRT/Physics/Physics.hpp>
 
   //Misc types
   #include <NovelRT/LoggingService.h>

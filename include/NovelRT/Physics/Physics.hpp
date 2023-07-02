@@ -2,7 +2,9 @@
 // for more information.
 
 #pragma once
-#define NOVELRT_PHYSICS_H
+#define NOVELRT_PHYSICS_HPP
+
+// TODO: replace *.h with *.hpp when they get renamed.
 
 // physics dependencies
 #include "NovelRT/Maths/Maths.h"
@@ -25,9 +27,9 @@ namespace NovelRT::Physics
 
 // clang-format off
 
-#include "BodyType.h"
-#include "RigidBodyCallbackFlags.h"
-#include "PhysicsProvider.h"
-#include "2D/Physics.2D.h"
+#include "BodyType.hpp"
+#include "RigidBodyCallbackFlags.hpp"
+#include "PhysicsProvider.hpp"
+#include "2D/Physics.2D.hpp"
 
 // clang-format on
