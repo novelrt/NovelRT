@@ -1,15 +1,17 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANSHADERPROGRAM_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANSHADERPROGRAM_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <memory>
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/ShaderProgram.hpp>
+#include <NovelRT/Utilities/Lazy.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
+    class VulkanGraphicsDevice;
+
     class VulkanShaderProgram : public ShaderProgram
     {
     private:
@@ -31,5 +33,3 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanShaderProgram() override;
     };
 }
-
-#endif // NOVELRT_GRAPHICS_VULKAN_VULKANSHADERPROGRAM_H

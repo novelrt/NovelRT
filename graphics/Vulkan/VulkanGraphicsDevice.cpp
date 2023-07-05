@@ -1,7 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
+#include <set>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {

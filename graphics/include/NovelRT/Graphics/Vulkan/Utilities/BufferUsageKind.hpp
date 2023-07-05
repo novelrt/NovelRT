@@ -1,12 +1,14 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H
-#define NOVELRT_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_UTILITIES_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.Utilities.h instead for the Graphics::Vulkan::Utilities namespace subset.
-#endif
+#include <cstdint>
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+#include <NovelRT/Graphics/GraphicsTextureKind.hpp>
+#include <NovelRT/Utilities/Misc.h> // we need this for the bitwise logic
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
@@ -81,5 +83,3 @@ namespace NovelRT::Graphics::Vulkan::Utilities
         return static_cast<uint32_t>(cpuAccessBit);
     }
 }
-
-#endif // NOVELRT_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H

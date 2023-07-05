@@ -103,14 +103,6 @@
   // Exception types
   #include <NovelRT/Exceptions/Exceptions.h>
 
-  #include <NovelRT/Graphics/Graphics.hpp>
-  #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
-#ifdef WIN32
-  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.hpp>
-#endif
-#ifdef TARGET_OS_MAC
-  #include <NovelRT/Graphics/Metal/Graphics.Metal.hpp>
-#endif
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
