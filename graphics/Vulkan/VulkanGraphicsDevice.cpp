@@ -520,6 +520,21 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext()
+    {
+        return std::dynamic_pointer_cast<VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
+    }
+
+    std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const noexcept
+    {
+        return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
+    }
+
+    std::shared_ptr<VulkanGraphicsSurfaceContext> VulkanGraphicsDevice::GetSurfaceContext() const noexcept
+    {
+        return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
+    }
+
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
