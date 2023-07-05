@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Graphics.hpp>
+#include <NovelRT/Graphics/ShaderProgram.hpp>
 
 namespace NovelRT::Graphics
 {

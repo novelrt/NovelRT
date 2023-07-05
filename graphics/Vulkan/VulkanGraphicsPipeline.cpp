@@ -1,7 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {

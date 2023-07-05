@@ -1,12 +1,10 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_GRAPHICSCONTEXT_H
-#define NOVELRT_GRAPHICS_GRAPHICSCONTEXT_H
-
-#ifndef NOVELRT_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
-#endif
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/RGBAColour.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -28,12 +26,10 @@ namespace NovelRT::Graphics
             return _index;
         }
 
-        virtual void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour) = 0;
+        virtual void BeginDrawing(RGBAColour backgroundColour) = 0;
         virtual void BeginFrame() = 0;
 
         virtual void EndDrawing() = 0;
         virtual void EndFrame() = 0;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_GRAPHICSCONTEXT_H

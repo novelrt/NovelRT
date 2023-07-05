@@ -1,12 +1,11 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_IGRAPHICSSURFACE_H
-#define NOVELRT_GRAPHICS_IGRAPHICSSURFACE_H
-
-#ifndef NOVELRT_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
-#endif
+#include <NovelRT/Graphics/GraphicsSurfaceKind.hpp>
+#include <NovelRT/Maths/Maths.h>
+#include <NovelRT/Utilities/Event.h>
 
 namespace NovelRT::Graphics
 {
@@ -32,5 +31,3 @@ namespace NovelRT::Graphics
         [[nodiscard]] virtual GraphicsSurfaceKind GetKind() const noexcept = 0;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_IGRAPHICSSURFACE_H

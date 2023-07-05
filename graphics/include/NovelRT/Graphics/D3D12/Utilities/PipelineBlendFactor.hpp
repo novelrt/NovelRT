@@ -1,12 +1,11 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_D3D12_UTILITIES_PIPELINEBLENDFACTOR_H
-#define NOVELRT_GRAPHICS_D3D12_UTILITIES_PIPELINEBLENDFACTOR_H
-
-#ifndef NOVELRT_GRAPHICS_D3D12_UTILITIES_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.D3D12.Utilities.h instead for the Graphics::D3D12::Utilities namespace subset.
-#endif
+#include <d3d12.h>
+#include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
+#include <NovelRT/Exceptions/Exceptions.h>
 
 namespace NovelRT::Graphics::D3D12::Utilities
 {
@@ -44,5 +43,3 @@ namespace NovelRT::Graphics::D3D12::Utilities
         return NovelRTToD3D12Blend[static_cast<uint32_t>(blendFactor)];
     }
 }
-
-#endif // !NOVELRT_GRAPHICS_D3D12_UTILITIES_PIPELINEBLENDFACTOR_H

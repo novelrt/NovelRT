@@ -3,16 +3,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <cstdint>
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 
 namespace NovelRT::Graphics
 {
-    enum class ShaderProgramVisibility : uint32_t
+    class GraphicsResource : public GraphicsDeviceObject
     {
-        NoneOrUnknown = 0,
-        Vertex = 1 << 0,
-        Pixel = 1 << 1,
-        Fragment = Pixel,
-        All = Vertex | Pixel
+    private:
+    public:
     };
 }

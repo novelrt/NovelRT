@@ -1,8 +1,14 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPLUGINPROVIDER_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPLUGINPROVIDER_H
+#include <memory>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/PluginManagement/PluginManagement.h>
+#include <NovelRT/Utilities/Lazy.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -37,5 +43,3 @@ namespace NovelRT::Graphics::Vulkan
             std::shared_ptr<IGraphicsSurface> surface);
     };
 }
-
-#endif // NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPLUGINPROVIDER_H
