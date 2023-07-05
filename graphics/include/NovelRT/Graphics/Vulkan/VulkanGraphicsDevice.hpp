@@ -88,20 +88,11 @@ namespace NovelRT::Graphics::Vulkan
                 &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
         }
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext()
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext();
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;
 
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,
