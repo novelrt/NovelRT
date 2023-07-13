@@ -223,7 +223,7 @@ namespace NovelRT::Graphics::Vulkan
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = EngineConfig::EngineName().c_str();
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_2;
+        appInfo.apiVersion = GetApiVersion();
 
         _finalExtensionSet = GetFinalInstanceExtensionSet();
         std::vector<const char*> allExtensionullptrs =
@@ -337,6 +337,12 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         vkDestroyInstance(_vulkanInstance, nullptr);
+    }
+
+    
+    uint32_t VulkanGraphicsProvider::GetApiVersion() const noexcept
+    {
+        return VK_API_VERSION_1_2;
     }
 
     std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept
