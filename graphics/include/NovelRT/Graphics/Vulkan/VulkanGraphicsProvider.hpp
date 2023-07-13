@@ -60,6 +60,8 @@ namespace NovelRT::Graphics::Vulkan
             return NovelRT::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
                                                                      _finalValidationLayerSet.size());
         }
+        
+        [[nodiscard]] uint32_t GetApiVersion() const noexcept final;
 
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept final;
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept final;

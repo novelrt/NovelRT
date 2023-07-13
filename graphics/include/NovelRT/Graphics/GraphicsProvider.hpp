@@ -31,6 +31,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept = 0;
         [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept = 0;
+        [[nodiscard]] virtual uint32_t GetApiVersion() const noexcept = 0;
 
         virtual ~GraphicsProvider() = default;
     };

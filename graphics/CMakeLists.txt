@@ -1,4 +1,5 @@
 add_library(NovelRT-Graphics STATIC
+  GraphicsMemoryAllocator.cpp
   GraphicsPipeline.cpp
   GraphicsPipelineInput.cpp
   GraphicsPipelineInputElement.cpp
@@ -31,6 +32,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/GraphicsDevice.hpp
       include/NovelRT/Graphics/GraphicsDeviceObject.hpp
       include/NovelRT/Graphics/GraphicsFence.hpp
+      include/NovelRT/Graphics/GraphicsMemoryAllocator.hpp
       include/NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp
       include/NovelRT/Graphics/GraphicsPipeline.hpp
       include/NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp
