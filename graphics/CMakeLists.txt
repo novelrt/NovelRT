@@ -27,6 +27,7 @@ target_sources(NovelRT-Graphics
     FILES
       include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
+      include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsBufferKind.hpp
       include/NovelRT/Graphics/GraphicsContext.hpp
       include/NovelRT/Graphics/GraphicsDevice.hpp
@@ -48,6 +49,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/GraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/GraphicsSurfaceKind.hpp
       include/NovelRT/Graphics/GraphicsTexture.hpp
+      include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
       include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
       include/NovelRT/Graphics/GraphicsTextureKind.hpp
       include/NovelRT/Graphics/IGraphicsAdapterSelector.hpp
