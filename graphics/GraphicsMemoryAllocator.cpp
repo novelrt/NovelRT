@@ -1,6 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
+#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
@@ -8,9 +10,6 @@
 #include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/TexelFormat.hpp>
-#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
-#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
-
 
 namespace NovelRT::Graphics
 {
@@ -41,7 +40,8 @@ namespace NovelRT::Graphics
                                                                           GraphicsResourceAccess gpuAccessKind,
                                                                           size_t size)
     {
-        return CreateBuffer(GraphicsBufferCreateInfo { bufferKind, cpuAccessKind, gpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None });
+        return CreateBuffer(GraphicsBufferCreateInfo{bufferKind, cpuAccessKind, gpuAccessKind, size,
+                                                     GraphicsMemoryRegionAllocationFlags::None});
     }
 
     std::shared_ptr<GraphicsTexture> GraphicsMemoryAllocator::CreateTexture2DRepeatGpuWriteOnly(uint32_t width,
