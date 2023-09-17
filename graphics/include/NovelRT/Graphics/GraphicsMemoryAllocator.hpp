@@ -33,14 +33,14 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsProvider> GetProvider() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsAdapter> GetAdapter() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsDevice> GetDevice() const noexcept;
-        
+
         [[nodiscard]] virtual std::shared_ptr<GraphicsBuffer> CreateBuffer(
             const GraphicsBufferCreateInfo& createInfo) = 0;
-    
+
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBuffer(GraphicsBufferKind bufferKind,
-                                                                          GraphicsResourceAccess cpuAccessKind,
-                                                                          GraphicsResourceAccess gpuAccessKind,
-                                                                          size_t size);
+                                                                   GraphicsResourceAccess cpuAccessKind,
+                                                                   GraphicsResourceAccess gpuAccessKind,
+                                                                   size_t size);
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
             const GraphicsTextureCreateInfo& createInfo) = 0;
