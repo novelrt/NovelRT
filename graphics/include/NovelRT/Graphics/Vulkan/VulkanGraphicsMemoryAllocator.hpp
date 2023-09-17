@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -13,6 +14,8 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsMemoryAllocator final : public GraphicsMemoryAllocator
     {
     private:
+    VmaAllocator _allocator;
+
     public:
         VulkanGraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider,
                                       std::shared_ptr<GraphicsAdapter> adapter,

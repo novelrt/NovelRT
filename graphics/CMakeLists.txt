@@ -11,6 +11,7 @@ add_library(NovelRT-Graphics STATIC
   Vulkan/VulkanGraphicsContext.cpp
   Vulkan/VulkanGraphicsDevice.cpp
   Vulkan/VulkanGraphicsFence.cpp
+  Vulkan/VulkanGraphicsMemoryAllocator.cpp
   Vulkan/VulkanGraphicsPipeline.cpp
   Vulkan/VulkanGraphicsPipelineSignature.cpp
   Vulkan/VulkanGraphicsPluginProvider.cpp
