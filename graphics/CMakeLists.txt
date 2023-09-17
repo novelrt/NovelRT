@@ -66,6 +66,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp

@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <memory>
 
+
 namespace NovelRT::Graphics
 {
     class GraphicsAdapter;
@@ -43,15 +44,10 @@ namespace NovelRT::Graphics
             size_t size,
             GraphicsMemoryRegionAllocationFlags allocationFlags) = 0;
 
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBuffer(
-            GraphicsBufferKind bufferKind,
-            GraphicsResourceAccess cpuAccessKind,
-            GraphicsResourceAccess gpuAccessKind,
-            size_t size)
-        {
-            return CreateBuffer(bufferKind, cpuAccessKind, gpuAccessKind, size,
-                                GraphicsMemoryRegionAllocationFlags::None);
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBuffer(GraphicsBufferKind bufferKind,
+                                                                   GraphicsResourceAccess cpuAccessKind,
+                                                                   GraphicsResourceAccess gpuAccessKind,
+                                                                   size_t size);
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsTexture> CreateTexture(
             GraphicsTextureAddressMode addressMode,
@@ -64,26 +60,17 @@ namespace NovelRT::Graphics
             GraphicsMemoryRegionAllocationFlags allocationFlags,
             TexelFormat texelFormat) = 0;
 
-        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(
-            GraphicsTextureAddressMode addressMode,
-            GraphicsTextureKind textureKind,
-            GraphicsResourceAccess cpuAccessKind,
-            GraphicsResourceAccess gpuAccessKind,
-            uint32_t width)
-        {
-            return CreateTexture(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, 1);
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(GraphicsTextureAddressMode addressMode,
+                                                                     GraphicsTextureKind textureKind,
+                                                                     GraphicsResourceAccess cpuAccessKind,
+                                                                     GraphicsResourceAccess gpuAccessKind,
+                                                                     uint32_t width);
 
-        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(
-            GraphicsTextureAddressMode addressMode,
-            GraphicsTextureKind textureKind,
-            GraphicsResourceAccess cpuAccessKind,
-            GraphicsResourceAccess gpuAccessKind,
-            uint32_t width,
-            uint32_t height)
-        {
-            return CreateTexture(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
-                                 GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM);
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(GraphicsTextureAddressMode addressMode,
+                                                                     GraphicsTextureKind textureKind,
+                                                                     GraphicsResourceAccess cpuAccessKind,
+                                                                     GraphicsResourceAccess gpuAccessKind,
+                                                                     uint32_t width,
+                                                                     uint32_t height);
     };
 }
