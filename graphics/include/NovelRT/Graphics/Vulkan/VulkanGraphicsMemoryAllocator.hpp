@@ -25,7 +25,6 @@ namespace NovelRT::Graphics::Vulkan
             size_t size,
             GraphicsMemoryRegionAllocationFlags allocationFlags) final;
 
-
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(
             GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
@@ -43,7 +42,7 @@ namespace NovelRT::Graphics::Vulkan
             GraphicsResourceAccess gpuAccessKind,
             size_t size,
             GraphicsMemoryRegionAllocationFlags allocationFlags);
-        
+
         [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> CreateVulkanTexture(
             GraphicsTextureAddressMode addressMode,
             GraphicsTextureKind textureKind,
