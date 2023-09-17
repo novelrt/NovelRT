@@ -102,7 +102,7 @@ namespace NovelRT::Windowing::Glfw
 
     void GlfwWindowingDevice::TearDown() noexcept
     {
-        _window.reset();
+        _window.reset();    
     }
 
     GlfwWindowingDevice::~GlfwWindowingDevice()

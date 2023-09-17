@@ -13,7 +13,6 @@ namespace NovelRT::Windowing::SDL
     private:
         std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> _window;
         std::string _currentTitle;
-        SDL_WindowEventID WindowEventID;
 
     public:
         SDLWindowingDevice() noexcept;
@@ -37,13 +36,10 @@ namespace NovelRT::Windowing::SDL
             return SDL_GetWindowFlags(GetRawSDLWindowHandle()) != SDL_WINDOW_HIDDEN;
         }
 
-        [[nodiscard]] inline bool GetShouldClose() const noexcept final
-        {
-            return WindowEventID == SDL_WINDOWEVENT_CLOSE; // most likely wrong atm, need to find an SDL Get current window event method.
-        }
+        [[nodiscard]] inline bool GetShouldClose() const noexcept final;
 
 
-        [[nodiscard]] inline std::string GetWindowTitle()
+        [[nodiscard]] inline std::string GetWindowTitle() const noexcept final
         {
             return _currentTitle;
         }

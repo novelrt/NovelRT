@@ -13,15 +13,34 @@ namespace NovelRT::Windowing::SDL
     }
 
     SDL_Window* window = NULL; //here for scope
+    SDL_Surface* monitor = NULL;
+    bool quit; //will determine whether the window should be closed or not
+
 
     void SDLWindowingDevice::Initialise(NovelRT::Windowing::WindowMode windowMode,
         Maths::GeoVector2F desiredWindowSize)
     {
-        SDL_Surface* moniter = NULL;
+
+        window = SDL_CreateWindow("SDLWnd", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, static_cast<int32_t>(desiredWindowSize.x),
+                                  static_cast<int32_t>(desiredWindowSize.y), SDL_WINDOW_SHOWN);
 
 
-        window = SDL_CreateWindow("SDLWnd", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, desiredWindowSize.x,
-                                   desiredWindowSize.y, SDL_WINDOW_SHOWN);
+        //set window mode
+        switch (windowMode)
+        {
+            case NovelRT::Windowing::WindowMode::Windowed:
+                SDL_SetWindowFullscreen(window, 0);
+                break;
+            case NovelRT::Windowing::WindowMode::Borderless:
+                SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+                break;
+            case NovelRT::Windowing::WindowMode::Fullscreen:
+                SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                break;
+
+        }
+
+
 
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
@@ -34,20 +53,14 @@ namespace NovelRT::Windowing::SDL
             {
                 throw Exceptions::InitialisationFailureException("SDL2 Window could not be created! ", SDL_GetError());
             }
-            moniter = SDL_GetWindowSurface(window);
-            SDL_FillRect(moniter, NULL, SDL_MapRGB(moniter->format, 0, 0, 0));
+            monitor = SDL_GetWindowSurface(window);
+            SDL_FillRect(monitor, NULL, SDL_MapRGB(monitor->format, 0, 0, 0));
             SDL_UpdateWindowSurface(window);
+            
 
-            //hack to keep the window open for now
-            SDL_Event e;
-            bool quit = false;
             while (quit == false)
             {
-                while (SDL_PollEvent(&e))
-                {
-                    if (e.type == SDL_QUIT)
-                        quit = true;
-                }
+                ProcessAllMessages();
             }
 
         }
@@ -56,7 +69,46 @@ namespace NovelRT::Windowing::SDL
 
     }
 
-    void SDLWindowShouldClose(SDL_Window * window);
+    bool SDLWindowShouldClose()
+    {
+        return quit;
+    }
+
+    void SDLWindowingDevice::ProcessAllMessages()
+    {
+        SDL_Event e;
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+                quit = true;
+        }
+    }
+
+    Maths::GeoVector2F SDLWindowingDevice::GetSize() const noexcept
+    {
+        int32_t width = 0;
+        int32_t height = 0;
+
+        SDL_GetWindowSize(window, &width, &height);
+
+        if (width == 0 || height == 0)
+        {
+            return Maths::GeoVector2F::Zero();
+        }
+
+        return Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+
+    }
+
+    void* SDLWindowingDevice::GetHandle() const noexcept
+    {
+        return nullptr;
+    }
+
+    Graphics::GraphicsSurfaceKind SDLWindowingDevice::GetKind() const noexcept
+    {
+        return Graphics::GraphicsSurfaceKind::Unknown;
+    }
 
     void SDLWindowingDevice::TearDown() noexcept
     {

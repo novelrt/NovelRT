@@ -17,6 +17,7 @@ namespace NovelRT::Windowing::Glfw
         std::string _currentTitle;
 
     public:
+
         GlfwWindowingDevice() noexcept;
 
         [[nodiscard]] Maths::GeoVector2F GetSize() const noexcept final;

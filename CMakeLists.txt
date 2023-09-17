@@ -58,6 +58,7 @@ set(NOVELRT_SNDFILE_VERSION "1.1.0" CACHE STRING "SndFile version")
 set(NOVELRT_SPDLOG_VERSION "1.10.0" CACHE STRING "spdlog version")
 set(NOVELRT_VORBIS_VERSION "1.3.7" CACHE STRING "Vorbis version")
 set(NOVELRT_VULKAN_VERSION "1.3.231" CACHE STRING "Vulkan version")
+set(NOVELRT_SDL2_VERSION "2.26.0" CACHE STRING "SDL2 version")
 
 #
 # Allow for generating documentation
@@ -165,6 +166,7 @@ find_package(Vorbis ${NOVELRT_VORBIS_VERSION} REQUIRED)
 find_package(flac ${NOVELRT_FLAC_VERSION} REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(SDL2 ${NOVELRT_SDL2_VERSION} CONFIG REQUIRED)
 
 
 
