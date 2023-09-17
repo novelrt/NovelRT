@@ -2,6 +2,15 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp>
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+#include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
+#include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
+#include <NovelRT/Graphics/GraphicsTextureKind.hpp>
+#include <NovelRT/Graphics/TexelFormat.hpp>
+#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
+#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
+
 
 namespace NovelRT::Graphics
 {
@@ -32,26 +41,15 @@ namespace NovelRT::Graphics
                                                                           GraphicsResourceAccess gpuAccessKind,
                                                                           size_t size)
     {
-        return CreateBuffer(bufferKind, cpuAccessKind, gpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None);
+        return CreateBuffer(GraphicsBufferCreateInfo { bufferKind, cpuAccessKind, gpuAccessKind, size, GraphicsMemoryRegionAllocationFlags::None });
     }
 
-    std::shared_ptr<GraphicsTexture> GraphicsMemoryAllocator::CreateTexture(GraphicsTextureAddressMode addressMode,
-                                                                            GraphicsTextureKind textureKind,
-                                                                            GraphicsResourceAccess cpuAccessKind,
-                                                                            GraphicsResourceAccess gpuAccessKind,
-                                                                            uint32_t width)
+    std::shared_ptr<GraphicsTexture> GraphicsMemoryAllocator::CreateTexture2DRepeatGpuWriteOnly(uint32_t width,
+                                                                                                uint32_t height)
     {
-        return CreateTexture(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, 1);
-    }
-
-    std::shared_ptr<GraphicsTexture> GraphicsMemoryAllocator::CreateTexture(GraphicsTextureAddressMode addressMode,
-                                                                            GraphicsTextureKind textureKind,
-                                                                            GraphicsResourceAccess cpuAccessKind,
-                                                                            GraphicsResourceAccess gpuAccessKind,
-                                                                            uint32_t width,
-                                                                            uint32_t height)
-    {
-        return CreateTexture(addressMode, textureKind, cpuAccessKind, gpuAccessKind, width, height, 1,
-                             GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM);
+        return CreateTexture(
+            GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
+                                      GraphicsResourceAccess::None, GraphicsResourceAccess::Write, width, height, 1,
+                                      GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});
     }
 }
