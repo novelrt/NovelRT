@@ -14,19 +14,24 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsMemoryAllocator final : public GraphicsMemoryAllocator
     {
     private:
-    VmaAllocator _allocator;
+        VmaAllocator _allocator;
 
     public:
         VulkanGraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider,
-                                      std::shared_ptr<GraphicsAdapter> adapter,
                                       std::shared_ptr<GraphicsDevice> device);
+
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
+
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsProvider> GetProvider() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBuffer(const GraphicsBufferCreateInfo& createInfo) final;
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(const GraphicsTextureCreateInfo& createInfo) final;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsBuffer> CreateVulkanBuffer(const GraphicsBufferCreateInfo& createInfo);
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsBuffer> CreateVulkanBuffer(
+            const GraphicsBufferCreateInfo& createInfo);
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> CreateVulkanTexture(const GraphicsTextureCreateInfo& createInfo);
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> CreateVulkanTexture(
+            const GraphicsTextureCreateInfo& createInfo);
     };
 }
