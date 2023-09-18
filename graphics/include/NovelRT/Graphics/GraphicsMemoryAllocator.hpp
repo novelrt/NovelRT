@@ -18,21 +18,15 @@ namespace NovelRT::Graphics
     class GraphicsTexture;
     struct GraphicsTextureCreateInfo;
 
-    class GraphicsMemoryAllocator
+    class GraphicsMemoryAllocator : public GraphicsDeviceObject
     {
     private:
         std::shared_ptr<GraphicsProvider> _provider;
-        std::shared_ptr<GraphicsAdapter> _adapter;
-        std::shared_ptr<GraphicsDevice> _device;
 
     public:
-        GraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider,
-                                std::shared_ptr<GraphicsAdapter> adapter,
-                                std::shared_ptr<GraphicsDevice> device);
+        GraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider, std::shared_ptr<GraphicsDevice> device);
 
         [[nodiscard]] std::shared_ptr<GraphicsProvider> GetProvider() const noexcept;
-        [[nodiscard]] std::shared_ptr<GraphicsAdapter> GetAdapter() const noexcept;
-        [[nodiscard]] std::shared_ptr<GraphicsDevice> GetDevice() const noexcept;
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsBuffer> CreateBuffer(
             const GraphicsBufferCreateInfo& createInfo) = 0;

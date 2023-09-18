@@ -14,25 +14,14 @@
 namespace NovelRT::Graphics
 {
     GraphicsMemoryAllocator::GraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider,
-                                                     std::shared_ptr<GraphicsAdapter> adapter,
                                                      std::shared_ptr<GraphicsDevice> device)
-        : _provider(provider), _adapter(_adapter), _device(device)
+        : GraphicsDeviceObject(device), _provider(provider)
     {
     }
 
     std::shared_ptr<GraphicsProvider> GraphicsMemoryAllocator::GetProvider() const noexcept
     {
         return _provider;
-    }
-
-    std::shared_ptr<GraphicsAdapter> GraphicsMemoryAllocator::GetAdapter() const noexcept
-    {
-        return _adapter;
-    }
-
-    std::shared_ptr<GraphicsDevice> GraphicsMemoryAllocator::GetDevice() const noexcept
-    {
-        return _device;
     }
 
     std::shared_ptr<GraphicsBuffer> GraphicsMemoryAllocator::CreateBuffer(GraphicsBufferKind bufferKind,
