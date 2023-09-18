@@ -4,7 +4,6 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
-#include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {

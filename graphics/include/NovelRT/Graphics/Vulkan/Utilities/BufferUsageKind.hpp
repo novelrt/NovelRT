@@ -86,6 +86,6 @@ namespace NovelRT::Graphics::Vulkan::Utilities
 
     [[nodiscard]] inline uint32_t GetVmaAllocationKind(GraphicsResourceAccess resourceAccessType) noexcept
     {
-
+        
     }
 }
