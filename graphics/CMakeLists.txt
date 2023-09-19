@@ -66,6 +66,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp
@@ -75,6 +76,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp

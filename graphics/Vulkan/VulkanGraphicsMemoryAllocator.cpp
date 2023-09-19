@@ -8,8 +8,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <vk_mem_alloc.h>
-//#include <NovelRT/Graphics/Vulkan/VulkanGraphics
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -48,6 +47,18 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<GraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
         const GraphicsBufferCreateInfo& createInfo)
     {
+        return CreateVulkanBuffer(createInfo);
+    }
+
+    std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
+        const GraphicsTextureCreateInfo& createInfo)
+    {
+        return CreateVulkanTexture(createInfo);
+    }
+
+    std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateVulkanBuffer(
+        const GraphicsBufferCreateInfo& createInfo)
+    {
         VkBufferCreateInfo bufferCreateInfo{};
         bufferCreateInfo.size = createInfo.size;
         bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(createInfo.bufferKind, createInfo.gpuAccessKind);
@@ -68,18 +79,6 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         //return std::static_pointer_cast<GraphicsBuffer>(std::make_shared<VulkanGraphicsBuffer>()); //TODO: implement type!
-        return nullptr;
-    }
-
-    std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
-        const GraphicsTextureCreateInfo& createInfo)
-    {
-        return nullptr;
-    }
-
-    std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateVulkanBuffer(
-        const GraphicsBufferCreateInfo& createInfo)
-    {
         return nullptr;
     }
 
