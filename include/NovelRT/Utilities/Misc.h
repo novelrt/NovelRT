@@ -44,12 +44,30 @@ namespace NovelRT::Utilities
         static inline const char* CONSOLE_LOG_INPUT = "Input";
         static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
 
-        template<class T>
 #ifdef NOVELRT_USE_STD_SPAN
-        using Span = std::span<T>;
+        static const size_t DynamicExtent = std::dynamic_extent;
 #else
-        using Span = gsl::span<T>;
+        static const size_t DynamicExtent = gsl::dynamic_extent;
 #endif
+
+        template<class T, std::size_t Extent = DynamicExtent>
+#ifdef NOVELRT_USE_STD_SPAN
+        using Span = std::span<T, Extent>;
+#else
+        using Span = gsl::span<T, Extent>;
+#endif
+
+        template <typename TTo, typename TFrom, std::size_t NFrom>
+        auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
+        {
+            return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
+        }
+
+        template <typename TTo, typename TFrom>
+        auto SpanCast<TTo, TFrom, DynamicExtent>(Span<TFrom, gsl::dynamic_extent> s) noexcept -> Span<TTo, DynamicExtent>
+        {
+            return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
+        }
 
         /**
          * @brief Gets the path to the executable.
