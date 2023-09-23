@@ -79,8 +79,7 @@ namespace NovelRT::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException("Failed to correctly initialise the newly requested Vulkan Buffer based on the supplied createInfo object.", result);
         }
 
-        //return std::static_pointer_cast<GraphicsBuffer>(std::make_shared<VulkanGraphicsBuffer>()); //TODO: implement type!
-        return nullptr;
+        return std::make_shared<VulkanGraphicsBuffer>();
     }
 
     std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateVulkanTexture(

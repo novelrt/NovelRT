@@ -4,12 +4,57 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+#include <NovelRT/Utilities/Misc.h>
+#include <cstdint>
+#include <memory>
 
 namespace NovelRT::Graphics
 {
+    class GraphicsMemoryAllocator;
+
     class GraphicsResource : public GraphicsDeviceObject
     {
     private:
+        GraphicsResourceAccess _cpuAccess;
+
     public:
+        GraphicsResource(std::weak_ptr<GraphicsDevice> graphicsDevice, GraphicsResourceAccess cpuAccess) noexcept;
+        ~GraphicsResource() override = default;
+
+        //[[nodiscard]] virtual size_t GetAlignment() const noexcept = 0; //TODO: Do we still need this?
+        [[nodiscard]] virtual std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept = 0;
+        [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
+        [[nodiscard]] virtual size_t GetDeviceMemoryOffset() const noexcept = 0;
+        [[nodiscard]] virtual size_t GetSize() const noexcept = 0;
+        [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes();
+        [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead();
+        [[nodiscard]] virtual const Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+                                                                                         size_t rangeLength) = 0;
+        virtual void UnmapBytes() = 0;
+        void UnmapBytesAndWrite();
+        virtual void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
+
+        template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map()
+        {
+            return Utilities::Misc::SpanCast<T>(MapBytes());
+        }
+
+        template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map(size_t rangeOffset, size_t rangeLength)
+        {
+            return Utilities::Misc::SpanCast<T>(MapBytes(rangeOffset, rangeLength));
+        }
+
+        template<typename T> [[nodiscard]] Utilities::Misc::Span<const T> MapForRead()
+        {
+            return Utilities::Misc::SpanCast<const T>(MapBytesForRead());
+        }
+
+        template<typename T>
+        [[nodiscard]] Utilities::Misc::Span<const T> MapForRead(size_t rangeOffset, size_t rangeLength)
+        {
+            return Utilities::Misc::SpanCast<const T>(MapBytesForRead(rangeOffset, rangeLength));
+        }
     };
 }

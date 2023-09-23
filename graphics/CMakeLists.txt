@@ -5,6 +5,7 @@ add_library(NovelRT-Graphics STATIC
   GraphicsPipelineInputElement.cpp
   GraphicsPipelineResource.cpp
   GraphicsPipelineSignature.cpp
+  GraphicsResource.cpp
   ShaderProgram.cpp
   Vulkan/VulkanGraphicsAdapter.cpp
   Vulkan/VulkanGraphicsAdapterSelector.cpp
