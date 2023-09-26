@@ -9,23 +9,32 @@
 #include <NovelRT/LoggingService.h>
 #include <NovelRT/Utilities/Lazy.h>
 #include <NovelRT/Utilities/Misc.h>
-#include <AL/al.h>
-#include <AL/alc.h>
+#include <NovelRT/Maths/Maths.h>
+//#include <AL/al.h>
+//#include <AL/alc.h>
 #include <cstdint>
 #include <fstream>
 #include <vector>
+#include <map>
 
 /***
  * @brief Contains audio features, such as playing audio, and managing audio resources.
  */
 namespace NovelRT::Audio
 {
-    typedef std::vector<ALuint> SoundBank;
-    typedef std::vector<ALuint> MusicBank;
-    typedef class AudioService AudioService;
+    typedef struct IAudioObject IAudioObject;
+    typedef struct IAudioImpl IAudioImpl;
+    typedef struct IAudioListener IAudioListener;
+    typedef struct ISound ISound;
+    typedef class AudioEngine AudioEngine;
+    //typedef class AudioService AudioService;
 }
 
 // Audio Types
-#include <NovelRT/Audio/AudioService.hpp>
+#include <NovelRT/Audio/IAudioObject.hpp>
+#include <NovelRT/Audio/IAudioListener.hpp>
+#include <NovelRT/Audio/IAudioImpl.hpp>
+#include <NovelRT/Audio/ISound.hpp>
+#include <NovelRT/Audio/AudioEngine.hpp>
 
 #endif // NOVELRT_AUDIO_H

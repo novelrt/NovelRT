@@ -1,5 +1,6 @@
 add_library(NovelRT-Audio STATIC
-  AudioService.cpp
+  #AudioService.cpp
+  AudioEngine.cpp
 )
 
 target_sources(NovelRT-Audio
@@ -9,7 +10,6 @@ target_sources(NovelRT-Audio
     BASE_DIRS include
     FILES
       include/NovelRT/Audio/Audio.hpp
-      include/NovelRT/Audio/AudioService.hpp
 )
 
 set_target_properties(NovelRT-Audio
