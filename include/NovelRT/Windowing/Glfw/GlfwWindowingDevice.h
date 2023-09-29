@@ -12,6 +12,23 @@ namespace NovelRT::Windowing::Glfw
 {
     class GlfwWindowingDevice final : public IWindowingDevice
     {
+    public:
+        struct MouseClickEventArgs
+        {
+            int32_t button = 0;
+            int32_t action = 0;
+            Maths::GeoVector2F mousePosition = Maths::GeoVector2F::Zero();
+        };
+
+        struct KeyboardButtonChangeEventArgs
+        {
+            int32_t key = 0;
+            int32_t action = 0;
+        };
+
+        Utilities::Event<MouseClickEventArgs> MouseButtonClicked;
+        Utilities::Event<KeyboardButtonChangeEventArgs> KeyboardButtonChanged;
+
     private:
         std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)> _window;
         std::string _currentTitle;

@@ -16,6 +16,7 @@ namespace NovelRT::Input::Glfw
 #define GLFW_INCLUDE_NONE
 #include "NovelRT/Input/Input.h"
 #include "NovelRT/PluginManagement/PluginManagement.h"
+#include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
 #include <GLFW/glfw3.h>
 #include <cstdint>
 

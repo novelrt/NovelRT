@@ -12,12 +12,10 @@ namespace NovelRT::Input
 {
     class NovelKey
     {
-    private:
+    public:
         int32_t _pairedKey;
         std::string _keyName;
         int32_t _modifier;
-
-    public:
         NovelKey(std::string keyName = "", int32_t pairedKeyCode = -1, int32_t modifier = 0) noexcept;
         void PairKey(int32_t externalKeyCode) noexcept;
         void UnpairKey() noexcept;
@@ -27,9 +25,19 @@ namespace NovelRT::Input
 
         [[nodiscard]] inline bool operator==(NovelKey& other) noexcept
         {
-            return (_keyName == other.GetKeyName()) || (_pairedKey == other.GetExternalKeyCode());
+            return (_keyName == other.GetKeyName()) && (_pairedKey == other.GetExternalKeyCode());
         };
     };
+
+    inline bool operator==(NovelKey const& lhs, NovelKey const& rhs) noexcept
+    {
+        return lhs._pairedKey == rhs._pairedKey && (lhs._modifier == rhs._modifier) && lhs._keyName == rhs._keyName;
+    }
+
+    inline bool operator!=(NovelKey const& lhs, NovelKey const& rhs) noexcept
+    {
+        return lhs._pairedKey != rhs._pairedKey || (lhs._modifier == rhs._modifier) || lhs._keyName == rhs._keyName;
+    }
 }
 
 #endif // NOVELRT_INPUT_NOVELKEY_H

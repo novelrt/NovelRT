@@ -16,6 +16,18 @@ namespace NovelRT::Input
         NovelKey pairedKey;
         KeyState state = KeyState::Idle;
     };
+
+    inline bool operator==(InputAction const& lhs, InputAction const& rhs) noexcept
+    {
+        return lhs.state == rhs.state && (lhs.pairedKey == rhs.pairedKey) && lhs.actionName == rhs.actionName;
+    }
+
+    inline bool operator!=(const InputAction& lhs, const InputAction& rhs) noexcept
+    {
+        return (lhs.state != rhs.state) || (lhs.pairedKey != rhs.pairedKey) || (lhs.actionName != rhs.actionName);
+    }
+
+
 }
 
 #endif // NOVELRT_INPUT_INPUTACTION_H

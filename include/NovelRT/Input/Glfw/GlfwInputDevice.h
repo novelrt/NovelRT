@@ -13,15 +13,22 @@ namespace NovelRT::Input::Glfw
     class GlfwInputDevice final : public Input::IInputDevice
     {
     private:
+        uint32_t _previousBufferIndex;
+        uint32_t _currentBufferIndex;
         bool _isInitialised;
         GLFWwindow* _window;
         std::vector<InputAction> _previousStates;
         NovelRT::Maths::GeoVector2F _mousePos;
+        NovelRT::Maths::GeoVector2F _windowDimensions;
+
+        void ProcessKeyInput(int32_t key, int32_t action);
+        void ProcessMouseInput(int32_t key, int32_t action, NovelRT::Maths::GeoVector2F pos);
+        void ProcessKeyState(int32_t action, KeyState state);
 
     public:
         GlfwInputDevice() noexcept;
 
-        void Initialise(void* window) final;
+        void Initialise(NovelRT::Windowing::IWindowingDevice* device, uint32_t inputBufferCount) final;
         void Update(Timing::Timestamp delta) final;
         [[nodiscard]] bool IsKeyPressed(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept final;

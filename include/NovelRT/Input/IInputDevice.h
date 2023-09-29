@@ -13,12 +13,15 @@ namespace NovelRT::Input
     class IInputDevice : public std::enable_shared_from_this<IInputDevice>
     {
     protected:
+        static inline const uint32_t DEFAULT_INPUT_BUFFER_COUNT = 2;
         LoggingService _logger;
         std::vector<InputAction> _mappedActions;
         std::map<std::string, NovelKey> _availableKeys;
+        std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> _keyStates;
+        uint32_t _inputBufferCount;
 
     public:
-        virtual void Initialise(void* window) = 0;
+        virtual void Initialise(NovelRT::Windowing::IWindowingDevice* device, uint32_t inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT) = 0;
         virtual void Update(Timing::Timestamp delta) = 0;
         [[nodiscard]] virtual bool IsKeyPressed(const std::string& key) = 0;
         [[nodiscard]] virtual bool IsKeyHeld(const std::string& key) = 0;

@@ -9,8 +9,10 @@
 #include "NovelRT/Maths/Maths.h"
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Misc.h"
+#include "NovelRT/Windowing/Windowing.h"
 #include <map>
 #include <string>
+#include <functional>
 
 /**
  * @brief The input plugin API.
@@ -18,6 +20,7 @@
 namespace NovelRT::Input
 {
     enum class KeyState;
+    class KeyStateFrameChangeLog;
     class IInputDevice;
     class NovelKey;
     struct InputAction;
@@ -25,10 +28,11 @@ namespace NovelRT::Input
 
 // clang-format off
 // Input Types
-#include "IInputDevice.h"
 #include "KeyState.h"
+#include "KeyStateFrameChangeLog.h"
 #include "NovelKey.h"
 #include "InputAction.h"
+#include "IInputDevice.h"
 // clang-format on
 
 #endif // NOVELRT_INPUT_H

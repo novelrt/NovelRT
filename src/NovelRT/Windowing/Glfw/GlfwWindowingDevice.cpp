@@ -63,6 +63,19 @@ namespace NovelRT::Windowing::Glfw
             thisDevice->SizeChanged(Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height)));
         });
 
+        glfwSetKeyCallback(window, [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
+                auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+                thisPtr->KeyboardButtonChanged(KeyboardButtonChangeEventArgs{key, action});
+        });
+
+        glfwSetMouseButtonCallback(window, [](auto window, auto mouseButton, auto action, auto /*mods*/) {
+            auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+            double x = 0, y = 0;
+            glfwGetCursorPos(window, &x, &y);
+            thisPtr->MouseButtonClicked(
+                MouseClickEventArgs{mouseButton, action, Maths::GeoVector2F((float)x, (float)y)});
+        });
+
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
 
         if (glfwVulkanSupported() == GLFW_FALSE)

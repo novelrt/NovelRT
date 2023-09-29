@@ -15,10 +15,10 @@ namespace NovelRT::Input
      */
     enum class KeyState : int32_t
     {
-        Idle = 0,
-        KeyUp = 1,
-        KeyDown = 2,
-        KeyDownHeld = 3
+        Idle = -1,
+        KeyUp = 0,
+        KeyDown = 1,
+        KeyDownHeld = 2
     };
 }
 

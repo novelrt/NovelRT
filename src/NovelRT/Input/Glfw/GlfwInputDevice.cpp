@@ -12,7 +12,7 @@ namespace NovelRT::Input::Glfw
     {
     }
 
-    void GlfwInputDevice::Initialise(void* window)
+    void GlfwInputDevice::Initialise(NovelRT::Windowing::IWindowingDevice* device, uint32_t inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT)
     {
         if (!glfwInit())
         {
@@ -21,17 +21,37 @@ namespace NovelRT::Input::Glfw
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
 
-        if (window == nullptr)
+        if (device == nullptr)
         {
             throw Exceptions::NullPointerException(
-                "Could not initialise GLFW input service - null pointer was provided for window.");
+                "Could not initialise GLFW input service - null pointer was provided for windowing device.");
         }
 
         _logger.logInfoLine("Initialising GLFW input service.");
         _availableKeys = std::map<std::string, NovelKey>();
         _mappedActions = std::vector<InputAction>();
-        _window = reinterpret_cast<GLFWwindow*>(window);
+        _keyStates = std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>>(inputBufferCount);
+        _previousBufferIndex = 0;
+        _currentBufferIndex = 1;
+        if(inputBufferCount < DEFAULT_INPUT_BUFFER_COUNT)
+        {
+            _inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT;
+        }
+        else
+        {
+            _inputBufferCount = inputBufferCount;
+        }
 
+        auto properDevice = reinterpret_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice*>(device);
+        _window = properDevice->GetRawGLFWwindowHandle();
+        properDevice->KeyboardButtonChanged += [this](auto eventArgs)
+            { ProcessKeyInput(eventArgs.key, eventArgs.action); };
+        properDevice->MouseButtonClicked += [this](auto eventArgs)
+            { ProcessMouseInput(eventArgs.button, eventArgs.action, eventArgs.mousePosition); };
+
+
+
+#pragma region KeyMapping
         // Map GLFW keys to NovelKeys
         _availableKeys.emplace("LeftMouseButton", NovelKey("LeftMouseButton", GLFW_MOUSE_BUTTON_LEFT));
         _availableKeys.emplace("RightMouseButton", NovelKey("RightMouseButton", GLFW_MOUSE_BUTTON_RIGHT));
@@ -161,99 +181,143 @@ namespace NovelRT::Input::Glfw
         _availableKeys.emplace("Quote", NovelKey("Quote", GLFW_KEY_APOSTROPHE, GLFW_MOD_SHIFT));
         _availableKeys.emplace("Underscore", NovelKey("Underscore", GLFW_KEY_MINUS, GLFW_MOD_SHIFT));
         _availableKeys.emplace("Tilde", NovelKey("Tilde", GLFW_KEY_GRAVE_ACCENT, GLFW_MOD_SHIFT));
+#pragma endregion KeyMapping
 
         _isInitialised = true;
 
-        int width = 0;
-        int height = 0;
+        int32_t width = 0;
+        int32_t height = 0;
         glfwGetWindowSize(_window, &width, &height);
+        _windowDimensions = NovelRT::Maths::GeoVector2F(width, height);
+
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
 
     void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
     {
-        double x = 0;
-        double y = 0;
-        int width = 0;
-        int height = 0;
-        glfwGetCursorPos(_window, &x, &y);
-        glfwGetWindowSize(_window, &width, &height);
-        _mousePos.x = static_cast<float>(x - (width / 2));
-        _mousePos.y = static_cast<float>(-y + (height / 2));
+        // double x = 0;
+        // double y = 0;
+        int32_t width = 0;
+        int32_t height = 0;
+        // glfwGetCursorPos(_window, &x, &y);
+         glfwGetWindowSize(_window, &width, &height);
+        _windowDimensions.x = width;
+        _windowDimensions.y = height;
+        // _mousePos.x = static_cast<float>(x - (width / 2));
+        // _mousePos.y = static_cast<float>(-y + (height / 2));
 
-        _previousStates = _mappedActions;
+        // _currentBufferIndex++;
+        // _previousBufferIndex++;
+        // if(_currentBufferIndex >= _inputBufferCount)
+        // {
+        //     _currentBufferIndex = 0;
+        // }
+        // if(_previousBufferIndex >= _inputBufferCount)
+        // {
+        //     _previousBufferIndex = 0;
+        // }
 
-        size_t count = _mappedActions.size();
-        auto mapIterator = std::next(_mappedActions.begin(), 0);
-        auto stateIterator = std::next(_previousStates.begin(), 0);
+        //auto& currentBuffer = ;
 
-        for (size_t c = 0; c < count; c++)
+        for (const auto& [action, log] : _keyStates.at(_previousBufferIndex))
         {
-            mapIterator = std::next(_mappedActions.begin(), c);
-            stateIterator = std::next(_previousStates.begin(), c);
-
-            if (mapIterator->actionName == stateIterator->actionName)
+            for(const auto& [currentAction, currentLog] : _keyStates.at(_currentBufferIndex))
             {
-                bool press = false;
-                bool release = false;
+                if(currentAction != action)
+                    continue;
 
-                if ((mapIterator->pairedKey.GetKeyName() == "LeftMouseButton") ||
-                    (mapIterator->pairedKey.GetKeyName() == "RightMouseButton") ||
-                    (mapIterator->pairedKey.GetKeyName() == "MiddleMouseButton"))
-                {
-                    press = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
-                    release = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
-                }
-                else
-                {
-                    press = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
-                    release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
-                }
-
-                if (press &&
-                    (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
-                {
-                    mapIterator->state = KeyState::KeyDownHeld;
-                }
-                else if (press && stateIterator->state == KeyState::Idle)
-                {
-                    mapIterator->state = KeyState::KeyDown;
-                }
-                else if (release &&
-                         (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
-                {
-                    mapIterator->state = KeyState::KeyUp;
-                }
-                else
-                {
-                    mapIterator->state = KeyState::Idle;
-                }
+                ProcessKeyState(currentAction, currentLog.GetCurrentState());
             }
+            ProcessKeyState(action, log.GetCurrentState());
         }
+        // _previousStates = _mappedActions;
+
+        // size_t count = _mappedActions.size();
+        // auto mapIterator = std::next(_mappedActions.begin(), 0);
+        // auto stateIterator = std::next(_previousStates.begin(), 0);
+
+        // for (size_t c = 0; c < count; c++)
+        // {
+        //     mapIterator = std::next(_mappedActions.begin(), c);
+        //     stateIterator = std::next(_previousStates.begin(), c);
+
+        //     if (mapIterator->actionName == stateIterator->actionName)
+        //     {
+        //         bool press = false;
+        //         bool release = false;
+
+        //         if ((mapIterator->pairedKey.GetKeyName() == "LeftMouseButton") ||
+        //             (mapIterator->pairedKey.GetKeyName() == "RightMouseButton") ||
+        //             (mapIterator->pairedKey.GetKeyName() == "MiddleMouseButton"))
+        //         {
+        //             press = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
+        //             release = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+        //         }
+        //         else
+        //         {
+        //             press = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
+        //             release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
+        //         }
+
+        //         if (press &&
+        //             (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
+        //         {
+        //             mapIterator->state = KeyState::KeyDownHeld;
+        //         }
+        //         else if (press && stateIterator->state == KeyState::Idle)
+        //         {
+        //             mapIterator->state = KeyState::KeyDown;
+        //         }
+        //         else if (release &&
+        //                  (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
+        //         {
+        //             mapIterator->state = KeyState::KeyUp;
+        //         }
+        //         else
+        //         {
+        //             mapIterator->state = KeyState::Idle;
+        //         }
+        //     }
+        // }
     }
 
     KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
     {
-        size_t count = _mappedActions.size();
-        for (size_t c = 0; c < count; c++)
+        for(auto& action : _mappedActions)
         {
-            if (_mappedActions[c].actionName == key)
+            if(action.actionName != key)
+                continue;
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for(const auto& [currentKey, currentLog] : currentBuffer)
             {
-                return _mappedActions[c].state;
+                if (currentKey == key)
+                {
+                    return currentLog.GetCurrentState();
+                }
             }
         }
 
-        _logger.logWarning("Requested action is not mapped: {}", key);
         return KeyState::Idle;
     }
 
     bool GlfwInputDevice::IsKeyPressed(const std::string& input) noexcept
     {
-        for (auto action : _mappedActions)
+        for(auto& action : _mappedActions)
         {
-            if (action.actionName == input)
+            if(action.actionName != input)
+                continue;
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for(auto& [currentKey, currentLog] : currentBuffer)
             {
-                return action.state == KeyState::KeyDown;
+                if(currentKey != key)
+                    continue;
+
+                return currentLog.GetCurrentState() == KeyState::KeyDown;
             }
         }
 
@@ -263,11 +327,19 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyHeld(const std::string& input) noexcept
     {
-        for (auto action : _mappedActions)
+        for(auto& action : _mappedActions)
         {
-            if (action.actionName == input)
+            if(action.actionName != input)
+                continue;
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for(auto& [currentKey, currentLog] : currentBuffer)
             {
-                return action.state == KeyState::KeyDownHeld;
+                if(currentKey != key)
+                    continue;
+
+                return currentLog.GetCurrentState() == KeyState::KeyDownHeld;
             }
         }
 
@@ -277,11 +349,19 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyReleased(const std::string& input) noexcept
     {
-        for (auto action : _mappedActions)
+        for(auto& action : _mappedActions)
         {
-            if (action.actionName == input)
+            if(action.actionName != input)
+                continue;
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for(auto& [currentKey, currentLog] : currentBuffer)
             {
-                return action.state == KeyState::KeyUp;
+                if(currentKey != key)
+                    continue;
+
+                return currentLog.GetCurrentState() == KeyState::KeyUp;
             }
         }
 
@@ -349,6 +429,115 @@ namespace NovelRT::Input::Glfw
     NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition() noexcept
     {
         return _mousePos;
+    }
+
+    void GlfwInputDevice::ProcessKeyInput(int32_t key, int32_t state)
+    {
+        //auto keyState = static_cast<KeyState>(action);
+        auto& map = _keyStates.at(_currentBufferIndex);
+
+        for(auto& mapped : _mappedActions)
+        {
+            if(mapped.pairedKey.GetExternalKeyCode() != key)
+                continue;
+
+            KeyStateFrameChangeLog log{};
+            for(auto& [currentKey, currentLog] : map)
+            {
+                if(currentKey != mapped.pairedKey.GetExternalKeyCode())
+                    continue;
+
+                log = currentLog;
+                break;
+            }
+
+            log.PushNewState(static_cast<KeyState>(state));
+            map.insert_or_assign(key, log);
+            //map.insert_or_assign(action, log);
+        }
+    }
+
+    void GlfwInputDevice::ProcessMouseInput(int32_t key, int32_t state, NovelRT::Maths::GeoVector2F pos)
+    {
+        //auto keyState = static_cast<KeyState>(action);
+        auto& map = _keyStates.at(_currentBufferIndex);
+        for(auto& action : _mappedActions)
+        {
+            if(action.pairedKey.GetExternalKeyCode() != key)
+                continue;
+
+            auto vec4 = NovelRT::Maths::GeoVector4F(pos);
+            auto val = reinterpret_cast<glm::vec4&>(vec4);
+
+            auto value = val *
+                     glm::scale(glm::vec3(1920.0f / _windowDimensions.x, 1080.0f / _windowDimensions.y, 0.0f));
+
+            _mousePos.x = value.x;
+            _mousePos.y = value.y;
+            KeyStateFrameChangeLog log{};
+            for(auto& [currentKey, currentLog] : map)
+            {
+                if(currentKey != key)
+                    continue;
+
+                log = currentLog;
+                break;
+            }
+
+            log.PushNewState(static_cast<KeyState>(state));
+            map.insert_or_assign(key, log);
+        }
+    }
+
+    void GlfwInputDevice::ProcessKeyState(int32_t key, KeyState state)
+    {
+        auto& previousBuffer = _keyStates.at(_previousBufferIndex);
+        auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+
+        KeyState previousStateResult = KeyState::Idle;
+
+        for(auto& [previousKey, previousLog] : previousBuffer)
+        {
+            if(previousKey == key)
+            {
+                previousStateResult = previousLog.GetCurrentState();
+                break;
+            }
+        }
+
+        KeyStateFrameChangeLog changeLogObject = KeyStateFrameChangeLog();
+
+        for(auto& [currentKey, currentLog] : currentBuffer)
+        {
+            if(currentKey == key)
+            {
+                changeLogObject = currentLog;
+                break;
+            }
+        }
+
+        switch (state)
+        {
+            case KeyState::KeyDown:
+                if (previousStateResult == KeyState::KeyDown)
+                {
+                    changeLogObject.PushNewState(KeyState::KeyDownHeld);
+                }
+                else if (previousStateResult != KeyState::KeyDownHeld)
+                {
+                    changeLogObject.PushNewState(KeyState::KeyDown);
+                }
+                break;
+            case KeyState::KeyDownHeld:
+            case KeyState::KeyUp:
+                changeLogObject.PushNewState((previousStateResult == KeyState::KeyUp) ? KeyState::Idle : state);
+                break;
+            case KeyState::Idle:
+            default:
+                break;
+        }
+
+        currentBuffer.insert_or_assign(key, changeLogObject);
     }
 
     GlfwInputDevice::~GlfwInputDevice()
