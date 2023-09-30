@@ -24,11 +24,12 @@ namespace NovelRT::Input::Glfw
         void ProcessKeyInput(int32_t key, int32_t action);
         void ProcessMouseInput(int32_t key, int32_t action, NovelRT::Maths::GeoVector2F pos);
         void ProcessKeyState(int32_t action, KeyState state);
+        NovelRT::Maths::GeoVector2F DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos);
 
     public:
         GlfwInputDevice() noexcept;
 
-        void Initialise(NovelRT::Windowing::IWindowingDevice* device, uint32_t inputBufferCount) final;
+        void Initialise(NovelRT::Windowing::IWindowingDevice* device) final;
         void Update(Timing::Timestamp delta) final;
         [[nodiscard]] bool IsKeyPressed(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept final;
@@ -39,6 +40,9 @@ namespace NovelRT::Input::Glfw
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept final;
         [[nodiscard]] NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() noexcept final;
+        [[nodiscard]] KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) final;
+        [[nodiscard]] KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) final;
+        [[nodiscard]] std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() final;
 
         ~GlfwInputDevice() final;
     };

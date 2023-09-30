@@ -12,7 +12,7 @@ namespace NovelRT::Input::Glfw
     {
     }
 
-    void GlfwInputDevice::Initialise(NovelRT::Windowing::IWindowingDevice* device, uint32_t inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT)
+    void GlfwInputDevice::Initialise(NovelRT::Windowing::IWindowingDevice* device)
     {
         if (!glfwInit())
         {
@@ -30,17 +30,11 @@ namespace NovelRT::Input::Glfw
         _logger.logInfoLine("Initialising GLFW input service.");
         _availableKeys = std::map<std::string, NovelKey>();
         _mappedActions = std::vector<InputAction>();
-        _keyStates = std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>>(inputBufferCount);
+        _inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT;
+        _keyStates = std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>>(_inputBufferCount);
         _previousBufferIndex = 0;
         _currentBufferIndex = 1;
-        if(inputBufferCount < DEFAULT_INPUT_BUFFER_COUNT)
-        {
-            _inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT;
-        }
-        else
-        {
-            _inputBufferCount = inputBufferCount;
-        }
+
 
         auto properDevice = reinterpret_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice*>(device);
         _window = properDevice->GetRawGLFWwindowHandle();
@@ -195,90 +189,30 @@ namespace NovelRT::Input::Glfw
 
     void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
     {
-        // double x = 0;
-        // double y = 0;
+        double x = 0;
+        double y = 0;
         int32_t width = 0;
         int32_t height = 0;
-        // glfwGetCursorPos(_window, &x, &y);
-         glfwGetWindowSize(_window, &width, &height);
+        glfwGetWindowSize(_window, &width, &height);
+        glfwGetCursorPos(_window, &x, &y);
         _windowDimensions.x = width;
         _windowDimensions.y = height;
-        // _mousePos.x = static_cast<float>(x - (width / 2));
-        // _mousePos.y = static_cast<float>(-y + (height / 2));
+        //_mousePos = DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F(x, y));
 
-        // _currentBufferIndex++;
-        // _previousBufferIndex++;
-        // if(_currentBufferIndex >= _inputBufferCount)
-        // {
-        //     _currentBufferIndex = 0;
-        // }
-        // if(_previousBufferIndex >= _inputBufferCount)
-        // {
-        //     _previousBufferIndex = 0;
-        // }
+        auto& currentBuffer = _keyStates.at(_currentBufferIndex);
 
-        //auto& currentBuffer = ;
-
-        for (const auto& [action, log] : _keyStates.at(_previousBufferIndex))
+        for (const auto& [key, log] : _keyStates.at(_previousBufferIndex))
         {
-            for(const auto& [currentAction, currentLog] : _keyStates.at(_currentBufferIndex))
+            auto findResultForCurrent = currentBuffer.find(key);
+            if (findResultForCurrent != currentBuffer.end())
             {
-                if(currentAction != action)
-                    continue;
-
-                ProcessKeyState(currentAction, currentLog.GetCurrentState());
+                ProcessKeyState(findResultForCurrent->first, findResultForCurrent->second.GetCurrentState());
             }
-            ProcessKeyState(action, log.GetCurrentState());
+            else
+            {
+                ProcessKeyState(key, log.GetCurrentState());
+            }
         }
-        // _previousStates = _mappedActions;
-
-        // size_t count = _mappedActions.size();
-        // auto mapIterator = std::next(_mappedActions.begin(), 0);
-        // auto stateIterator = std::next(_previousStates.begin(), 0);
-
-        // for (size_t c = 0; c < count; c++)
-        // {
-        //     mapIterator = std::next(_mappedActions.begin(), c);
-        //     stateIterator = std::next(_previousStates.begin(), c);
-
-        //     if (mapIterator->actionName == stateIterator->actionName)
-        //     {
-        //         bool press = false;
-        //         bool release = false;
-
-        //         if ((mapIterator->pairedKey.GetKeyName() == "LeftMouseButton") ||
-        //             (mapIterator->pairedKey.GetKeyName() == "RightMouseButton") ||
-        //             (mapIterator->pairedKey.GetKeyName() == "MiddleMouseButton"))
-        //         {
-        //             press = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
-        //             release = glfwGetMouseButton(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
-        //         }
-        //         else
-        //         {
-        //             press = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_PRESS;
-        //             release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
-        //         }
-
-        //         if (press &&
-        //             (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
-        //         {
-        //             mapIterator->state = KeyState::KeyDownHeld;
-        //         }
-        //         else if (press && stateIterator->state == KeyState::Idle)
-        //         {
-        //             mapIterator->state = KeyState::KeyDown;
-        //         }
-        //         else if (release &&
-        //                  (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
-        //         {
-        //             mapIterator->state = KeyState::KeyUp;
-        //         }
-        //         else
-        //         {
-        //             mapIterator->state = KeyState::Idle;
-        //         }
-        //     }
-        // }
     }
 
     KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
@@ -433,7 +367,6 @@ namespace NovelRT::Input::Glfw
 
     void GlfwInputDevice::ProcessKeyInput(int32_t key, int32_t state)
     {
-        //auto keyState = static_cast<KeyState>(action);
         auto& map = _keyStates.at(_currentBufferIndex);
 
         for(auto& mapped : _mappedActions)
@@ -453,27 +386,18 @@ namespace NovelRT::Input::Glfw
 
             log.PushNewState(static_cast<KeyState>(state));
             map.insert_or_assign(key, log);
-            //map.insert_or_assign(action, log);
         }
     }
 
     void GlfwInputDevice::ProcessMouseInput(int32_t key, int32_t state, NovelRT::Maths::GeoVector2F pos)
     {
-        //auto keyState = static_cast<KeyState>(action);
         auto& map = _keyStates.at(_currentBufferIndex);
         for(auto& action : _mappedActions)
         {
             if(action.pairedKey.GetExternalKeyCode() != key)
                 continue;
 
-            auto vec4 = NovelRT::Maths::GeoVector4F(pos);
-            auto val = reinterpret_cast<glm::vec4&>(vec4);
-
-            auto value = val *
-                     glm::scale(glm::vec3(1920.0f / _windowDimensions.x, 1080.0f / _windowDimensions.y, 0.0f));
-
-            _mousePos.x = value.x;
-            _mousePos.y = value.y;
+            _mousePos = DetermineMouseScreenPosition(pos);
             KeyStateFrameChangeLog log{};
             for(auto& [currentKey, currentLog] : map)
             {
@@ -539,6 +463,44 @@ namespace NovelRT::Input::Glfw
 
         currentBuffer.insert_or_assign(key, changeLogObject);
     }
+
+    NovelRT::Maths::GeoVector2F GlfwInputDevice::DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos)
+    {
+        return NovelRT::Maths::GeoVector2F(static_cast<float>(pos.x - (_windowDimensions.x / 2)),
+            static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
+    }
+
+    KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(const std::string& key)
+    {
+        for(auto& action : _mappedActions)
+        {
+            if(action.actionName != key)
+                continue;
+
+            return _keyStates.at(_currentBufferIndex).at(action.pairedKey.GetExternalKeyCode());
+        }
+
+        return KeyStateFrameChangeLog();
+    }
+
+    KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(const std::string& key)
+    {
+        for(auto& action : _mappedActions)
+        {
+            if(action.actionName != key)
+                continue;
+
+            return _keyStates.at(_previousBufferIndex).at(action.pairedKey.GetExternalKeyCode());
+        }
+
+        return KeyStateFrameChangeLog();
+    }
+
+    std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputDevice::GetAllChangeLogs()
+    {
+        return _keyStates;
+    }
+
 
     GlfwInputDevice::~GlfwInputDevice()
     {

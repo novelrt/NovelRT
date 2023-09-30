@@ -13,7 +13,7 @@ namespace NovelRT::Input
     class IInputDevice : public std::enable_shared_from_this<IInputDevice>
     {
     protected:
-        static inline const uint32_t DEFAULT_INPUT_BUFFER_COUNT = 2;
+        static inline const uint32_t DEFAULT_INPUT_BUFFER_COUNT = 6;
         LoggingService _logger;
         std::vector<InputAction> _mappedActions;
         std::map<std::string, NovelKey> _availableKeys;
@@ -21,7 +21,7 @@ namespace NovelRT::Input
         uint32_t _inputBufferCount;
 
     public:
-        virtual void Initialise(NovelRT::Windowing::IWindowingDevice* device, uint32_t inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT) = 0;
+        virtual void Initialise(NovelRT::Windowing::IWindowingDevice* device) = 0;
         virtual void Update(Timing::Timestamp delta) = 0;
         [[nodiscard]] virtual bool IsKeyPressed(const std::string& key) = 0;
         [[nodiscard]] virtual bool IsKeyHeld(const std::string& key) = 0;
@@ -32,6 +32,9 @@ namespace NovelRT::Input
         [[nodiscard]] virtual NovelKey& GetAvailableKey(const std::string& keyRequested) = 0;
         [[nodiscard]] virtual NovelRT::Maths::GeoVector2F GetMousePosition() = 0;
         [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() = 0;
+        [[nodiscard]] virtual KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) = 0;
+        [[nodiscard]] virtual KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) = 0;
+        [[nodiscard]] virtual std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() = 0;
 
         virtual ~IInputDevice() = default;
     };
