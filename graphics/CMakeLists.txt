@@ -1,4 +1,5 @@
 add_library(NovelRT-Graphics STATIC
+  GraphicsBuffer.cpp
   GraphicsMemoryAllocator.cpp
   GraphicsPipeline.cpp
   GraphicsPipelineInput.cpp
@@ -9,6 +10,7 @@ add_library(NovelRT-Graphics STATIC
   ShaderProgram.cpp
   Vulkan/VulkanGraphicsAdapter.cpp
   Vulkan/VulkanGraphicsAdapterSelector.cpp
+  Vulkan/VulkanGraphicsBuffer.cpp
   Vulkan/VulkanGraphicsContext.cpp
   Vulkan/VulkanGraphicsDevice.cpp
   Vulkan/VulkanGraphicsFence.cpp
@@ -16,6 +18,7 @@ add_library(NovelRT-Graphics STATIC
   Vulkan/VulkanGraphicsPipeline.cpp
   Vulkan/VulkanGraphicsPipelineSignature.cpp
   Vulkan/VulkanGraphicsPluginProvider.cpp
+  Vulkan/VulkanGraphicsResource.cpp
   Vulkan/VulkanGraphicsProvider.cpp
   Vulkan/VulkanGraphicsSurfaceContext.cpp
   Vulkan/VulkanShaderProgram.cpp
@@ -76,6 +79,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp

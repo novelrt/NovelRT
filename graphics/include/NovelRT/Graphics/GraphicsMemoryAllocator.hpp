@@ -24,7 +24,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsProvider> _provider;
 
     public:
-        GraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider, std::shared_ptr<GraphicsDevice> device);
+        GraphicsMemoryAllocator(std::shared_ptr<GraphicsDevice> device, std::shared_ptr<GraphicsProvider> provider);
 
         [[nodiscard]] std::shared_ptr<GraphicsProvider> GetProvider() const noexcept;
 

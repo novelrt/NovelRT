@@ -13,8 +13,8 @@
 
 namespace NovelRT::Graphics
 {
-    GraphicsMemoryAllocator::GraphicsMemoryAllocator(std::shared_ptr<GraphicsProvider> provider,
-                                                     std::shared_ptr<GraphicsDevice> device)
+    GraphicsMemoryAllocator::GraphicsMemoryAllocator(std::shared_ptr<GraphicsDevice> device,
+                                                     std::shared_ptr<GraphicsProvider> provider)
         : GraphicsDeviceObject(device), _provider(provider)
     {
     }
