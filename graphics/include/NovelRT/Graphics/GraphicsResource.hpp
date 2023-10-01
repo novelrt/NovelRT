@@ -16,21 +16,24 @@ namespace NovelRT::Graphics
     class GraphicsResource : public GraphicsDeviceObject
     {
     private:
+        std::shared_ptr<GraphicsMemoryAllocator> _allocator;
         GraphicsResourceAccess _cpuAccess;
 
     public:
-        GraphicsResource(std::weak_ptr<GraphicsDevice> graphicsDevice, GraphicsResourceAccess cpuAccess) noexcept;
-        ~GraphicsResource() override = default;
+        GraphicsResource(std::shared_ptr<GraphicsDevice> graphicsDevice,
+                         std::shared_ptr<GraphicsMemoryAllocator> allocator,
+                         GraphicsResourceAccess cpuAccess) noexcept;
+        ~GraphicsResource() noexcept override = default;
 
         //[[nodiscard]] virtual size_t GetAlignment() const noexcept = 0; //TODO: Do we still need this?
-        [[nodiscard]] virtual std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept;
         [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
         [[nodiscard]] virtual size_t GetDeviceMemoryOffset() const noexcept = 0;
         [[nodiscard]] virtual size_t GetSize() const noexcept = 0;
         [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes();
         [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
         [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead();
-        [[nodiscard]] virtual const Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+        [[nodiscard]] virtual Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
                                                                                          size_t rangeLength) = 0;
         virtual void UnmapBytes() = 0;
         void UnmapBytesAndWrite();

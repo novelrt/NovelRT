@@ -15,8 +15,8 @@ namespace NovelRT::Graphics
         std::weak_ptr<GraphicsDevice> _graphicsDevice;
 
     public:
-        explicit GraphicsDeviceObject(std::weak_ptr<GraphicsDevice> graphicsDevice) noexcept
-            : _graphicsDevice(std::move(graphicsDevice))
+        explicit GraphicsDeviceObject(std::shared_ptr<GraphicsDevice> graphicsDevice) noexcept
+            : _graphicsDevice(graphicsDevice)
         {
         }
 
@@ -30,6 +30,6 @@ namespace NovelRT::Graphics
             return _graphicsDevice.lock();
         }
 
-        virtual ~GraphicsDeviceObject() = default;
+        virtual ~GraphicsDeviceObject() noexcept = default;
     };
 }
