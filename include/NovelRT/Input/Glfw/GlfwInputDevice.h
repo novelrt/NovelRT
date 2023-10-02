@@ -22,7 +22,7 @@ namespace NovelRT::Input::Glfw
         NovelRT::Maths::GeoVector2F _windowDimensions;
 
         void ProcessKeyInput(int32_t key, int32_t action);
-        void ProcessMouseInput(int32_t key, int32_t action, NovelRT::Maths::GeoVector2F pos);
+        void ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos);
         void ProcessKeyState(int32_t action, KeyState state);
         NovelRT::Maths::GeoVector2F DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos);
 

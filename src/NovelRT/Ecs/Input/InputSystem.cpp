@@ -6,7 +6,8 @@
 namespace NovelRT::Ecs::Input
 {
     InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
-                             std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider)
+                             std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider) :
+                             _logger(Utilities::Misc::CONSOLE_LOG_ECS_INPUT)
     {
         _inputMap = std::map<std::string, NovelRT::Atom>();
         _device = inputProvider->GetInputService();
@@ -18,7 +19,7 @@ namespace NovelRT::Ecs::Input
         _device->Update(delta);
 
         auto inputs = catalogue.GetComponentView<InputEventComponent>();
-
+        auto mouse = _device->GetMousePosition();
         for (auto&& input : _inputMap)
         {
             InputEventComponent in;
@@ -32,7 +33,8 @@ namespace NovelRT::Ecs::Input
                     case NovelRT::Input::KeyState::KeyDown:
                     case NovelRT::Input::KeyState::KeyDownHeld:
                     {
-                        auto event = InputEventComponent{in.actionId, state, in.mousePositionX, in.mousePositionY};
+
+                        auto event = InputEventComponent{in.actionId, state, mouse.x, mouse.y};
                         inputs.PushComponentUpdateInstruction(in.actionId, event);
                         break;
                     }
@@ -48,7 +50,6 @@ namespace NovelRT::Ecs::Input
             {
                 if (state != NovelRT::Input::KeyState::Idle)
                 {
-                    auto mouse = _device->GetMousePosition();
                     in = InputEventComponent{input.second, state, mouse.x, mouse.y};
                     inputs.AddComponent(input.second, in);
                 }

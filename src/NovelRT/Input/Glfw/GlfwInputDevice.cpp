@@ -10,6 +10,7 @@ namespace NovelRT::Input::Glfw
           _previousStates(std::vector<InputAction>()),
           _mousePos(NovelRT::Maths::GeoVector2F::Zero())
     {
+        _logger = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_INPUT);
     }
 
     void GlfwInputDevice::Initialise(NovelRT::Windowing::IWindowingDevice* device)
@@ -41,7 +42,11 @@ namespace NovelRT::Input::Glfw
         properDevice->KeyboardButtonChanged += [this](auto eventArgs)
             { ProcessKeyInput(eventArgs.key, eventArgs.action); };
         properDevice->MouseButtonClicked += [this](auto eventArgs)
-            { ProcessMouseInput(eventArgs.button, eventArgs.action, eventArgs.mousePosition); };
+            { ProcessKeyInput(eventArgs.key, eventArgs.action); };
+        properDevice->CursorMoved += [this](auto eventArgs)
+            {
+                NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(eventArgs.x, eventArgs.y);
+                ProcessCursorMovement(nativePos);};
 
 
 
@@ -375,13 +380,30 @@ namespace NovelRT::Input::Glfw
                 continue;
 
             KeyStateFrameChangeLog log{};
+            bool mouseMod = false;
             for(auto& [currentKey, currentLog] : map)
             {
                 if(currentKey != mapped.pairedKey.GetExternalKeyCode())
                     continue;
 
                 log = currentLog;
+                if(currentKey == GLFW_MOUSE_BUTTON_LEFT ||
+                currentKey == GLFW_MOUSE_BUTTON_MIDDLE ||
+                currentKey == GLFW_MOUSE_BUTTON_RIGHT)
+                {
+                    mouseMod = true;
+                }
                 break;
+            }
+
+            if(mouseMod)
+            {
+                auto currentState = log.GetCurrentState();
+                if(state == (int32_t)KeyState::KeyDown && (currentState == KeyState::KeyDown ||
+                    currentState == KeyState::KeyDownHeld))
+                {
+                    state = (int32_t)KeyState::KeyDownHeld;
+                }
             }
 
             log.PushNewState(static_cast<KeyState>(state));
@@ -389,28 +411,9 @@ namespace NovelRT::Input::Glfw
         }
     }
 
-    void GlfwInputDevice::ProcessMouseInput(int32_t key, int32_t state, NovelRT::Maths::GeoVector2F pos)
+    void GlfwInputDevice::ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos)
     {
-        auto& map = _keyStates.at(_currentBufferIndex);
-        for(auto& action : _mappedActions)
-        {
-            if(action.pairedKey.GetExternalKeyCode() != key)
-                continue;
-
-            _mousePos = DetermineMouseScreenPosition(pos);
-            KeyStateFrameChangeLog log{};
-            for(auto& [currentKey, currentLog] : map)
-            {
-                if(currentKey != key)
-                    continue;
-
-                log = currentLog;
-                break;
-            }
-
-            log.PushNewState(static_cast<KeyState>(state));
-            map.insert_or_assign(key, log);
-        }
+        _mousePos = DetermineMouseScreenPosition(pos);
     }
 
     void GlfwInputDevice::ProcessKeyState(int32_t key, KeyState state)
