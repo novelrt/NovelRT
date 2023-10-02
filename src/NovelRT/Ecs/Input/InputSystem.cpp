@@ -6,8 +6,8 @@
 namespace NovelRT::Ecs::Input
 {
     InputSystem::InputSystem(std::shared_ptr<PluginManagement::IWindowingPluginProvider> windowingProvider,
-                             std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider) :
-                             _logger(Utilities::Misc::CONSOLE_LOG_ECS_INPUT)
+                             std::shared_ptr<PluginManagement::IInputPluginProvider> inputProvider)
+        : _logger(Utilities::Misc::CONSOLE_LOG_ECS_INPUT)
     {
         _inputMap = std::map<std::string, NovelRT::Atom>();
         _device = inputProvider->GetInputService();

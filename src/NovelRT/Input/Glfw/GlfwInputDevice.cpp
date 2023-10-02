@@ -36,19 +36,16 @@ namespace NovelRT::Input::Glfw
         _previousBufferIndex = 0;
         _currentBufferIndex = 1;
 
-
         auto properDevice = reinterpret_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice*>(device);
         _window = properDevice->GetRawGLFWwindowHandle();
-        properDevice->KeyboardButtonChanged += [this](auto eventArgs)
-            { ProcessKeyInput(eventArgs.key, eventArgs.action); };
-        properDevice->MouseButtonClicked += [this](auto eventArgs)
-            { ProcessKeyInput(eventArgs.key, eventArgs.action); };
-        properDevice->CursorMoved += [this](auto eventArgs)
-            {
-                NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(eventArgs.x, eventArgs.y);
-                ProcessCursorMovement(nativePos);};
-
-
+        properDevice->KeyboardButtonChanged +=
+            [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
+        properDevice->MouseButtonClicked +=
+            [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
+        properDevice->CursorMoved += [this](auto eventArgs) {
+            NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(eventArgs.x, eventArgs.y);
+            ProcessCursorMovement(nativePos);
+        };
 
 #pragma region KeyMapping
         // Map GLFW keys to NovelKeys
@@ -222,15 +219,15 @@ namespace NovelRT::Input::Glfw
 
     KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
     {
-        for(auto& action : _mappedActions)
+        for (auto& action : _mappedActions)
         {
-            if(action.actionName != key)
+            if (action.actionName != key)
                 continue;
 
             auto key = action.pairedKey.GetExternalKeyCode();
 
             auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for(const auto& [currentKey, currentLog] : currentBuffer)
+            for (const auto& [currentKey, currentLog] : currentBuffer)
             {
                 if (currentKey == key)
                 {
@@ -244,16 +241,16 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyPressed(const std::string& input) noexcept
     {
-        for(auto& action : _mappedActions)
+        for (auto& action : _mappedActions)
         {
-            if(action.actionName != input)
+            if (action.actionName != input)
                 continue;
 
             auto key = action.pairedKey.GetExternalKeyCode();
             auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for(auto& [currentKey, currentLog] : currentBuffer)
+            for (auto& [currentKey, currentLog] : currentBuffer)
             {
-                if(currentKey != key)
+                if (currentKey != key)
                     continue;
 
                 return currentLog.GetCurrentState() == KeyState::KeyDown;
@@ -266,16 +263,16 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyHeld(const std::string& input) noexcept
     {
-        for(auto& action : _mappedActions)
+        for (auto& action : _mappedActions)
         {
-            if(action.actionName != input)
+            if (action.actionName != input)
                 continue;
 
             auto key = action.pairedKey.GetExternalKeyCode();
             auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for(auto& [currentKey, currentLog] : currentBuffer)
+            for (auto& [currentKey, currentLog] : currentBuffer)
             {
-                if(currentKey != key)
+                if (currentKey != key)
                     continue;
 
                 return currentLog.GetCurrentState() == KeyState::KeyDownHeld;
@@ -288,16 +285,16 @@ namespace NovelRT::Input::Glfw
 
     bool GlfwInputDevice::IsKeyReleased(const std::string& input) noexcept
     {
-        for(auto& action : _mappedActions)
+        for (auto& action : _mappedActions)
         {
-            if(action.actionName != input)
+            if (action.actionName != input)
                 continue;
 
             auto key = action.pairedKey.GetExternalKeyCode();
             auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for(auto& [currentKey, currentLog] : currentBuffer)
+            for (auto& [currentKey, currentLog] : currentBuffer)
             {
-                if(currentKey != key)
+                if (currentKey != key)
                     continue;
 
                 return currentLog.GetCurrentState() == KeyState::KeyUp;
@@ -374,33 +371,32 @@ namespace NovelRT::Input::Glfw
     {
         auto& map = _keyStates.at(_currentBufferIndex);
 
-        for(auto& mapped : _mappedActions)
+        for (auto& mapped : _mappedActions)
         {
-            if(mapped.pairedKey.GetExternalKeyCode() != key)
+            if (mapped.pairedKey.GetExternalKeyCode() != key)
                 continue;
 
             KeyStateFrameChangeLog log{};
             bool mouseMod = false;
-            for(auto& [currentKey, currentLog] : map)
+            for (auto& [currentKey, currentLog] : map)
             {
-                if(currentKey != mapped.pairedKey.GetExternalKeyCode())
+                if (currentKey != mapped.pairedKey.GetExternalKeyCode())
                     continue;
 
                 log = currentLog;
-                if(currentKey == GLFW_MOUSE_BUTTON_LEFT ||
-                currentKey == GLFW_MOUSE_BUTTON_MIDDLE ||
-                currentKey == GLFW_MOUSE_BUTTON_RIGHT)
+                if (currentKey == GLFW_MOUSE_BUTTON_LEFT || currentKey == GLFW_MOUSE_BUTTON_MIDDLE ||
+                    currentKey == GLFW_MOUSE_BUTTON_RIGHT)
                 {
                     mouseMod = true;
                 }
                 break;
             }
 
-            if(mouseMod)
+            if (mouseMod)
             {
                 auto currentState = log.GetCurrentState();
-                if(state == (int32_t)KeyState::KeyDown && (currentState == KeyState::KeyDown ||
-                    currentState == KeyState::KeyDownHeld))
+                if (state == (int32_t)KeyState::KeyDown &&
+                    (currentState == KeyState::KeyDown || currentState == KeyState::KeyDownHeld))
                 {
                     state = (int32_t)KeyState::KeyDownHeld;
                 }
@@ -423,9 +419,9 @@ namespace NovelRT::Input::Glfw
 
         KeyState previousStateResult = KeyState::Idle;
 
-        for(auto& [previousKey, previousLog] : previousBuffer)
+        for (auto& [previousKey, previousLog] : previousBuffer)
         {
-            if(previousKey == key)
+            if (previousKey == key)
             {
                 previousStateResult = previousLog.GetCurrentState();
                 break;
@@ -434,9 +430,9 @@ namespace NovelRT::Input::Glfw
 
         KeyStateFrameChangeLog changeLogObject = KeyStateFrameChangeLog();
 
-        for(auto& [currentKey, currentLog] : currentBuffer)
+        for (auto& [currentKey, currentLog] : currentBuffer)
         {
-            if(currentKey == key)
+            if (currentKey == key)
             {
                 changeLogObject = currentLog;
                 break;
@@ -470,14 +466,14 @@ namespace NovelRT::Input::Glfw
     NovelRT::Maths::GeoVector2F GlfwInputDevice::DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos)
     {
         return NovelRT::Maths::GeoVector2F(static_cast<float>(pos.x - (_windowDimensions.x / 2)),
-            static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
+                                           static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
     }
 
     KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(const std::string& key)
     {
-        for(auto& action : _mappedActions)
+        for (auto& action : _mappedActions)
         {
-            if(action.actionName != key)
+            if (action.actionName != key)
                 continue;
 
             return _keyStates.at(_currentBufferIndex).at(action.pairedKey.GetExternalKeyCode());
@@ -488,9 +484,9 @@ namespace NovelRT::Input::Glfw
 
     KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(const std::string& key)
     {
-        for(auto& action : _mappedActions)
+        for (auto& action : _mappedActions)
         {
-            if(action.actionName != key)
+            if (action.actionName != key)
                 continue;
 
             return _keyStates.at(_previousBufferIndex).at(action.pairedKey.GetExternalKeyCode());
@@ -503,7 +499,6 @@ namespace NovelRT::Input::Glfw
     {
         return _keyStates;
     }
-
 
     GlfwInputDevice::~GlfwInputDevice()
     {

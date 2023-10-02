@@ -64,19 +64,18 @@ namespace NovelRT::Windowing::Glfw
         });
 
         glfwSetKeyCallback(window, [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
-                auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
-                thisPtr->KeyboardButtonChanged(ButtonChangeEventArgs{key, action});
+            auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+            thisPtr->KeyboardButtonChanged(ButtonChangeEventArgs{key, action});
         });
 
         glfwSetMouseButtonCallback(window, [](auto window, auto mouseButton, auto action, auto /*mods*/) {
             auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
-            thisPtr->MouseButtonClicked(
-                ButtonChangeEventArgs{mouseButton, action});
+            thisPtr->MouseButtonClicked(ButtonChangeEventArgs{mouseButton, action});
         });
 
         glfwSetCursorPosCallback(window, [](auto window, double x, double y) {
-           auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
-           thisPtr->CursorMoved(CursorPositionEventArgs{x, y});
+            auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+            thisPtr->CursorMoved(CursorPositionEventArgs{x, y});
         });
 
         _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);

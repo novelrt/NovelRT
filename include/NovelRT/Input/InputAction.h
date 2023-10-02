@@ -27,7 +27,6 @@ namespace NovelRT::Input
         return (lhs.state != rhs.state) || (lhs.pairedKey != rhs.pairedKey) || (lhs.actionName != rhs.actionName);
     }
 
-
 }
 
 #endif // NOVELRT_INPUT_INPUTACTION_H

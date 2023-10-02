@@ -10,9 +10,9 @@
 #include "NovelRT/Timing/Timestamp.h"
 #include "NovelRT/Utilities/Misc.h"
 #include "NovelRT/Windowing/Windowing.h"
+#include <functional>
 #include <map>
 #include <string>
-#include <functional>
 
 /**
  * @brief The input plugin API.
