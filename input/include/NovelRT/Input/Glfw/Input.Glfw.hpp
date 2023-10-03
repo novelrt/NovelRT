@@ -14,14 +14,14 @@ namespace NovelRT::Input::Glfw
 
 // Input.Glfw dependencies
 #define GLFW_INCLUDE_NONE
-#include "NovelRT/Input/Input.h"
+#include <NovelRT/Input/Input.hpp>
 #include "NovelRT/PluginManagement/PluginManagement.h"
 #include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
 #include <GLFW/glfw3.h>
 #include <cstdint>
 
 // Input.Glfw types
-#include "GlfwInputDevice.h"
-#include "GlfwInputPluginProvider.h"
+#include "GlfwInputDevice.hpp"
+#include "GlfwInputPluginProvider.hpp"
 
 #endif // NOVELRT_INPUT_GLFW_H

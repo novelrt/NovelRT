@@ -19,9 +19,9 @@ set(CORE_SOURCES
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
-  Input/Glfw/GlfwInputDevice.cpp
-  Input/Glfw/GlfwInputPluginProvider.cpp
-  Input/NovelKey.cpp
+  #Input/Glfw/GlfwInputDevice.cpp
+  #Input/Glfw/GlfwInputPluginProvider.cpp
+  #Input/NovelKey.cpp
 
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
@@ -85,6 +85,7 @@ target_link_libraries(Engine
   ogg
   NovelRT-Graphics
   NovelRT-Audio
+  NovelRT-Input
 )
 
 if(NOVELRT_INSTALL)

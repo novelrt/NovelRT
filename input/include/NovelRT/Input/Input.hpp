@@ -28,11 +28,11 @@ namespace NovelRT::Input
 
 // clang-format off
 // Input Types
-#include "KeyState.h"
-#include "KeyStateFrameChangeLog.h"
-#include "NovelKey.h"
-#include "InputAction.h"
-#include "IInputDevice.h"
+#include "KeyState.hpp"
+#include "KeyStateFrameChangeLog.hpp"
+#include "NovelKey.hpp"
+#include "InputAction.hpp"
+#include "IInputDevice.hpp"
 // clang-format on
 
 #endif // NOVELRT_INPUT_H

@@ -5,7 +5,7 @@
 #define NOVELRT_PLUGINMANAGEMENT_H
 
 // PluginManagement Dependencies
-#include "../Input/Input.h"
+#include <NovelRT/Input/Input.hpp>
 #include "../ResourceManagement/ResourceManagement.h"
 #include "../Windowing/Windowing.h"
 #include <NovelRT/Graphics/Graphics.hpp>
