@@ -43,7 +43,7 @@ namespace NovelRT::Input::Glfw
         properDevice->MouseButtonClicked +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
         properDevice->CursorMoved += [this](auto eventArgs) {
-            NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(eventArgs.x, eventArgs.y);
+            NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y);
             ProcessCursorMovement(nativePos);
         };
 
@@ -184,7 +184,7 @@ namespace NovelRT::Input::Glfw
         int32_t width = 0;
         int32_t height = 0;
         glfwGetWindowSize(_window, &width, &height);
-        _windowDimensions = NovelRT::Maths::GeoVector2F(width, height);
+        _windowDimensions = NovelRT::Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height);
 
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
@@ -197,8 +197,8 @@ namespace NovelRT::Input::Glfw
         int32_t height = 0;
         glfwGetWindowSize(_window, &width, &height);
         glfwGetCursorPos(_window, &x, &y);
-        _windowDimensions.x = width;
-        _windowDimensions.y = height;
+        _windowDimensions.x = static_cast<float>(width);
+        _windowDimensions.y =static_cast<float>(height);
         //_mousePos = DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F(x, y));
 
         auto& currentBuffer = _keyStates.at(_currentBufferIndex);
@@ -224,12 +224,12 @@ namespace NovelRT::Input::Glfw
             if (action.actionName != key)
                 continue;
 
-            auto key = action.pairedKey.GetExternalKeyCode();
+            auto externalKeyCode = action.pairedKey.GetExternalKeyCode();
 
             auto& currentBuffer = _keyStates.at(_currentBufferIndex);
             for (const auto& [currentKey, currentLog] : currentBuffer)
             {
-                if (currentKey == key)
+                if (currentKey == externalKeyCode)
                 {
                     return currentLog.GetCurrentState();
                 }
