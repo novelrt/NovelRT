@@ -43,7 +43,7 @@ namespace NovelRT::Input::Glfw
         properDevice->MouseButtonClicked +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
         properDevice->CursorMoved += [this](auto eventArgs) {
-            NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y);
+            NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y));
             ProcessCursorMovement(nativePos);
         };
 
@@ -184,7 +184,7 @@ namespace NovelRT::Input::Glfw
         int32_t width = 0;
         int32_t height = 0;
         glfwGetWindowSize(_window, &width, &height);
-        _windowDimensions = NovelRT::Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height);
+        _windowDimensions = NovelRT::Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
 
         _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
     }
