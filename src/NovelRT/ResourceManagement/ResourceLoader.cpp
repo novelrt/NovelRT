@@ -43,6 +43,7 @@ namespace NovelRT::ResourceManagement
 
             guidPathMap.emplace(guid, filePath);
             pathGuidMap.emplace(filePath, guid);
+            return guid;
         }
 
         return it->second;

@@ -32,7 +32,7 @@ namespace NovelRT::Persistence
         }
 
         auto newData = it->second->ExecuteSerialiseModification(componentData);
-        memcpy(writeToData.data(), newData.data(), writeToData.size());
+        NovelRT::Utilities::Memory::Copy(writeToData.data(), writeToData.size(), newData.data(), writeToData.size());
     }
 
     void Persistable::ApplyDeserialisationRule(const std::string& serialisedName,
@@ -48,7 +48,7 @@ namespace NovelRT::Persistence
         }
 
         auto newData = it->second->ExecuteDeserialiseModification(serialisedData);
-        memcpy(writeToData.data(), newData.data(), writeToData.size());
+        NovelRT::Utilities::Memory::Copy(writeToData.data(), writeToData.size(), newData.data(), writeToData.size());
     }
 
     // TODO: Rework this at a later date.

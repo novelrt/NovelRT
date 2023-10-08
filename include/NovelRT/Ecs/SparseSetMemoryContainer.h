@@ -47,12 +47,12 @@ namespace NovelRT::Ecs
 
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
-                std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(outputLocation, _sizeOfObject, &(*_iteratorAtValue), _sizeOfObject);
             }
 
             inline void WriteToLocation(void* data) noexcept
             {
-                std::memcpy(&(*_iteratorAtValue), data, _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(&(*_iteratorAtValue), _sizeOfObject, data, _sizeOfObject);
             }
 
             [[nodiscard]] inline void* GetDataHandle() const noexcept
@@ -91,7 +91,7 @@ namespace NovelRT::Ecs
 
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
-                std::memcpy(outputLocation, &(*_iteratorAtValue), _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(outputLocation, _sizeOfObject, &(*_iteratorAtValue), _sizeOfObject);
             }
 
             [[nodiscard]] const void* GetDataHandle() const noexcept

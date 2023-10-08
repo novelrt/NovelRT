@@ -34,7 +34,7 @@ namespace NovelRT::Ecs
         _sparse[key] = _dense.size() - 1;
         _data.resize(GetStartingByteIndexForDenseIndex(_dense.size()));
         auto dataPtr = GetDataObjectStartAtIndex(_dense.size() - 1);
-        std::memcpy(dataPtr, value, _sizeOfDataTypeInBytes);
+        NovelRT::Utilities::Memory::Copy(dataPtr, _sizeOfDataTypeInBytes, value, _sizeOfDataTypeInBytes);
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)
@@ -82,24 +82,29 @@ namespace NovelRT::Ecs
 
         _sparse[key] = 0;
 
-        bool canResize = true;
         if (!_dense.empty())
         {
-            for (auto it = _sparse.begin() + key; it != _sparse.end(); it++)
+            std::optional<std::vector<size_t>::iterator> targetStart{};
+            size_t currentValue = 0;
+            size_t finalDenseSize = _dense.size();
+            for (auto it = _sparse.rbegin(); it != _sparse.rend(); it++)
             {
-                if (*it == 0 && _dense[0] != key)
+                currentValue = *it;
+                if (currentValue < finalDenseSize && _dense[currentValue] == currentValue)
                 {
-                    continue;
+                    targetStart = it.base();
+                    break;
                 }
+            }
 
-                canResize = false;
-                break;
+            if (targetStart.has_value() && targetStart.value() != _sparse.end())
+            {
+                _sparse.erase(targetStart.value(), _sparse.end());
             }
         }
-
-        if (canResize)
+        else
         {
-            _sparse.erase(_sparse.begin() + key, _sparse.end());
+            _sparse.clear();
         }
 
         for (auto&& index : _sparse)
@@ -205,8 +210,11 @@ namespace NovelRT::Ecs
         _data.clear();
         _data.resize(data.size());
 
-        std::memcpy(_dense.data(), ids.data(), sizeof(size_t) * ids.size());
-        std::memcpy(_data.data(), data.data(), sizeof(uint8_t) * data.size());
+        const size_t denseSize = sizeof(size_t) * ids.size();
+        const size_t dataSize = sizeof(uint8_t) * data.size();
+
+        NovelRT::Utilities::Memory::Copy(_dense.data(), denseSize, ids.data(), denseSize);
+        NovelRT::Utilities::Memory::Copy(_data.data(), dataSize, data.data(), dataSize);
 
         for (size_t denseIndex = 0; denseIndex < _dense.size(); denseIndex++)
         {

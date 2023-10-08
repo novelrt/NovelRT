@@ -58,7 +58,6 @@
    * It is aimed at designers and developers alike, however many of the designer tools and features we have on our roadmap have yet to be implemented.
    */
   namespace NovelRT {
-    typedef class Atom Atom;
     typedef class LoggingService LoggingService;
   }
 
@@ -86,7 +85,7 @@
   #include <NovelRT/Utilities/Lazy.h>
   #include <NovelRT/Utilities/Misc.h>
 
-  #include <NovelRT/Graphics/RGBAColour.h>
+  #include <NovelRT/Graphics/RGBAColour.hpp>
 
   //Maths types
   #include <NovelRT/Maths/Maths.h>
@@ -98,23 +97,19 @@
   #include <NovelRT/LoggingService.h>
   #include <NovelRT/Timing/StepTimer.h>
 
-  // Audio types
-  #include <NovelRT/Audio/Audio.h>
-
   // ECS types
   #include <NovelRT/Ecs/Ecs.h>
 
   // Exception types
   #include <NovelRT/Exceptions/Exceptions.h>
 
-  // Experimental types
-  #include <NovelRT/Graphics/Graphics.h>
-  #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.h>
+  #include <NovelRT/Graphics/Graphics.hpp>
+  #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
 #ifdef WIN32
-  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.h>
+  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.hpp>
 #endif
 #ifdef TARGET_OS_MAC
-  #include <NovelRT/Graphics/Metal/Graphics.Metal.h>
+  #include <NovelRT/Graphics/Metal/Graphics.Metal.hpp>
 #endif
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
@@ -128,9 +123,6 @@
  // ResourceManagement types
   #include <NovelRT/ResourceManagement/ResourceManagement.h>
   #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
-
-  // Engine service types
-  #include <NovelRT/Audio/AudioService.h>
 
   // Scene Graph types
   #include <NovelRT/SceneGraph/SceneGraph.h>

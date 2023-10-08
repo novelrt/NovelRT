@@ -131,7 +131,8 @@ namespace NovelRT::Persistence
 
             for (auto&& [entity, dataView] : dataPair.second)
             {
-                std::memcpy(entityPtr, &entity, sizeof(Ecs::EntityId));
+                const size_t sizeOfEntityId = sizeof(Ecs::EntityId);
+                NovelRT::Utilities::Memory::Copy(entityPtr, sizeOfEntityId, &entity, sizeOfEntityId);
 
                 size_t componentJumpValue = sizeOfComponentType;
                 if (componentMetadata.sizeOfSerialisedDataInBytes == 0)

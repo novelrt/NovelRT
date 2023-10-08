@@ -59,7 +59,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/CopyBuildProducts.cmake)
 
 if(APPLE)
   add_executable(Engine_Tests MACOSX_BUNDLE ${SOURCES})
-  set_target_properties(Engine_Tests 
+  set_target_properties(Engine_Tests
     PROPERTIES
       BUNDLE True
       MACOSX_BUNDLE_GUI_IDENTIFIER dev.novelrt.samples.Engine_Tests
@@ -96,6 +96,7 @@ target_compile_options(Engine_Tests
     $<$<CXX_COMPILER_ID:Clang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-nullability-extension>
 
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic>
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic-errors>
@@ -107,6 +108,7 @@ target_compile_options(Engine_Tests
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-float-equal>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-nullability-extension>
 )
 
 if(MSVC)
@@ -144,7 +146,7 @@ target_link_libraries(Engine_Tests
     Engine
     $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop>
     GTest::gtest_main
-) 
+)
 
 gtest_discover_tests(Engine_Tests
   EXTRA_ARGS "--gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/../results/"

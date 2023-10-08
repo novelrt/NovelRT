@@ -4,7 +4,7 @@
 #include "../LifetimeExtender.h"
 #include <NovelRT.Interop/Graphics/NrtGraphicsProvider.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Graphics/Graphics.h>
+#include <NovelRT/Graphics/Graphics.hpp>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Interop;
