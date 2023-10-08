@@ -30,6 +30,8 @@
 
 #define unused(x) (void)(x)
 
+#define assert_message(exp, msg) assert((static_cast<void>(msg), exp));
+
 namespace NovelRT::Utilities
 {
     class Misc

@@ -23,20 +23,30 @@ namespace NovelRT::Graphics
         GraphicsResource(std::shared_ptr<GraphicsDevice> graphicsDevice,
                          std::shared_ptr<GraphicsMemoryAllocator> allocator,
                          GraphicsResourceAccess cpuAccess) noexcept;
+
         ~GraphicsResource() noexcept override = default;
 
         //[[nodiscard]] virtual size_t GetAlignment() const noexcept = 0; //TODO: Do we still need this?
         [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept;
+
         [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
+
         [[nodiscard]] virtual size_t GetDeviceMemoryOffset() const noexcept = 0;
+
         [[nodiscard]] virtual size_t GetSize() const noexcept = 0;
+
         [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes();
+
         [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+
         [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead();
+
         [[nodiscard]] virtual Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
                                                                                          size_t rangeLength) = 0;
         virtual void UnmapBytes() = 0;
+
         void UnmapBytesAndWrite();
+
         virtual void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
 
         template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map()

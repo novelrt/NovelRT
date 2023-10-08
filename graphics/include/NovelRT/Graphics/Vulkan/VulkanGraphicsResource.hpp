@@ -28,6 +28,8 @@ namespace NovelRT::Graphics::Vulkan
         
         [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept;
 
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
+
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept final;
 
         [[nodiscard]] size_t GetSize() const noexcept final;

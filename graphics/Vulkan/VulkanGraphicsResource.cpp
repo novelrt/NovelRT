@@ -23,6 +23,11 @@ namespace NovelRT::Graphics::Vulkan
         return std::reinterpret_pointer_cast<VulkanGraphicsMemoryAllocator>(GraphicsResource::GetAllocator());
     }
 
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsResource::GetDevice() const noexcept
+    {
+        return std::reinterpret_pointer_cast<VulkanGraphicsDevice>(GraphicsResource::GetDevice());
+    }
+
     size_t VulkanGraphicsResource::GetDeviceMemoryOffset() const noexcept
     {
         return _allocationInfo.offset;
