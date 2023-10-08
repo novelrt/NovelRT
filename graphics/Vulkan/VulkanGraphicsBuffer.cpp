@@ -4,6 +4,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Utilities/Misc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -11,10 +12,10 @@ namespace NovelRT::Graphics::Vulkan
                                                std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                                                GraphicsResourceAccess cpuAccess,
                                                GraphicsBufferKind kind,
-                                               VkBuffer vulkanBuffer,
                                                VmaAllocation allocation,
                                                VmaAllocationInfo allocationInfo,
-                                               size_t subAllocations)
+                                               size_t subAllocations,
+                                               VkBuffer vulkanBuffer)
         : VulkanGraphicsResource(graphicsDevice, allocator, cpuAccess, allocation, allocationInfo),
           GraphicsBuffer(graphicsDevice, allocator, cpuAccess, kind),
           _vulkanBuffer(vulkanBuffer),
@@ -27,18 +28,9 @@ namespace NovelRT::Graphics::Vulkan
         auto allocator = VulkanGraphicsResource::GetAllocator()->GetVmaAllocator();
         auto allocation = GetAllocation();
 
-        while (_subAllocations > 0)
-        {
-            --_subAllocations;
-            vmaUnmapMemory(allocator, allocation);
-        }
+        assert_message("Attempted to destroy a VkBuffer containing mapped regions.", _subAllocations != 0);
 
         vmaDestroyBuffer(allocator, GetVulkanBuffer(), allocation);
-    }
-
-    VkBuffer VulkanGraphicsBuffer::GetVulkanBuffer() const noexcept
-    {
-        return _vulkanBuffer;
     }
 
     Utilities::Misc::Span<uint8_t> VulkanGraphicsBuffer::MapBytes(size_t rangeOffset, size_t rangeLength)
@@ -78,14 +70,24 @@ namespace NovelRT::Graphics::Vulkan
                 "Attempted to map a subrange of a VkBuffer that exceeded the VkBuffer's size.");
         }
 
-        void* data = nullptr;
-        VkResult result =
-            vmaMapMemory(VulkanGraphicsResource::GetAllocator()->GetVmaAllocator(), GetAllocation(), &data);
+        VmaAllocator allocator = VulkanGraphicsResource::GetAllocator()->GetVmaAllocator();
+        VmaAllocation allocation = GetAllocation();
 
-        if (result != VK_SUCCESS)
+        void* data = nullptr;
+        VkResult mapResult = vmaMapMemory(allocator, allocation, &data);
+
+        if (mapResult != VK_SUCCESS)
         {
             // TODO: Make this a real exception
-            throw std::runtime_error("Failed to map Vulkan memory to the CPU. Reason: " + std::to_string(result));
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU. Reason: " + std::to_string(mapResult));
+        }
+
+        VkResult invalidateResult = vmaInvalidateAllocation(allocator, allocation, rangeOffset, rangeLength);
+
+        if (invalidateResult != VK_SUCCESS)
+        {
+            // TODO: Make this a real exception
+            throw std::runtime_error("Failed to invalidate mapped memory. Reason: " + std::to_string(mapResult));
         }
 
         return Utilities::Misc::Span<const uint8_t>(reinterpret_cast<const uint8_t*>(data), rangeLength);
@@ -119,5 +121,10 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         vmaUnmapMemory(allocator, allocation);
+    }
+
+    VkBuffer VulkanGraphicsBuffer::GetVulkanBuffer() const noexcept
+    {
+        return _vulkanBuffer;
     }
 }

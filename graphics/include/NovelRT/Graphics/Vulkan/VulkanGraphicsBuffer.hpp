@@ -24,22 +24,22 @@ namespace NovelRT::Graphics::Vulkan
                              std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                              GraphicsResourceAccess cpuAccess,
                              GraphicsBufferKind kind,
-                             VkBuffer vulkanBuffer,
                              VmaAllocation allocation,
                              VmaAllocationInfo allocationInfo,
-                             size_t subAllocations);
+                             size_t subAllocations,
+                             VkBuffer vulkanBuffer);
 
         ~VulkanGraphicsBuffer() noexcept final;
 
-        [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
-        [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
-
-        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
                                                                            size_t rangeLength) final;
 
         void UnmapBytes() final;
 
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
+        
+        [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;
     };
 }
