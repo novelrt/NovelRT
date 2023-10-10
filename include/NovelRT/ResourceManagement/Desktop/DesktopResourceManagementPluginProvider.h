@@ -16,7 +16,7 @@ namespace NovelRT::ResourceManagement::Desktop
         std::shared_ptr<DesktopResourceLoader> _resourceLoader;
 
     protected:
-        [[nodiscard]] DesktopResourceLoader* GetResourceLoaderInternal() final;
+        [[nodiscard]] DesktopResourceLoader* GetResourceLoaderInternal(bool initAssets) final;
 
     public:
         DesktopResourceManagementPluginProvider() noexcept;
