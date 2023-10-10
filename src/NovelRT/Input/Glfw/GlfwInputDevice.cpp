@@ -210,7 +210,8 @@ namespace NovelRT::Input::Glfw
                     release = glfwGetKey(_window, mapIterator->pairedKey.GetExternalKeyCode()) == GLFW_RELEASE;
                 }
 
-                if (press && stateIterator->state == KeyState::KeyDown)
+                if (press &&
+                    (stateIterator->state == KeyState::KeyDown || stateIterator->state == KeyState::KeyDownHeld))
                 {
                     mapIterator->state = KeyState::KeyDownHeld;
                 }

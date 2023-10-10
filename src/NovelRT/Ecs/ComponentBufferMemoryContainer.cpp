@@ -21,7 +21,8 @@ namespace NovelRT::Ecs
           _componentComparatorLogic(std::move(componentComparatorLogic)),
           _serialisedTypeName(serialisedTypeName)
     {
-        std::memcpy(_deleteInstructionState.data(), deleteInstructionState, _sizeOfDataTypeInBytes);
+        NovelRT::Utilities::Memory::Copy(_deleteInstructionState.data(), _sizeOfDataTypeInBytes, deleteInstructionState,
+                                         _sizeOfDataTypeInBytes);
         for (size_t i = 0; i < poolSize; i++)
         {
             _updateSets.emplace_back(sizeOfDataTypeInBytes);
