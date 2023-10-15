@@ -13,7 +13,7 @@ namespace NovelRT::Input::Glfw
         _logger = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_INPUT);
     }
 
-    void GlfwInputDevice::Initialise(NovelRT::Windowing::IWindowingDevice* device)
+    void GlfwInputDevice::Initialise(std::shared_ptr<NovelRT::Windowing::IWindowingDevice> device)
     {
         if (!glfwInit())
         {
@@ -36,7 +36,7 @@ namespace NovelRT::Input::Glfw
         _previousBufferIndex = 0;
         _currentBufferIndex = 1;
 
-        auto properDevice = reinterpret_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice*>(device);
+        auto properDevice = reinterpret_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice*>(device.get());
         _window = properDevice->GetRawGLFWwindowHandle();
         properDevice->KeyboardButtonChanged +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };

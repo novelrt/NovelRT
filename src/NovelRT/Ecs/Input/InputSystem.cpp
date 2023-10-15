@@ -11,7 +11,7 @@ namespace NovelRT::Ecs::Input
     {
         _inputMap = std::map<std::string, NovelRT::Atom>();
         _device = inputProvider->GetInputService();
-        _device->Initialise(windowingProvider->GetWindowingDevice().get());
+        _device->Initialise(windowingProvider->GetWindowingDevice());
     }
 
     void InputSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)

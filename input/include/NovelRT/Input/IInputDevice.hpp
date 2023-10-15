@@ -21,7 +21,7 @@ namespace NovelRT::Input
         uint32_t _inputBufferCount;
 
     public:
-        virtual void Initialise(NovelRT::Windowing::IWindowingDevice* device) = 0;
+        virtual void Initialise(std::shared_ptr<NovelRT::Windowing::IWindowingDevice> device) = 0;
         virtual void Update(Timing::Timestamp delta) = 0;
         [[nodiscard]] virtual bool IsKeyPressed(const std::string& key) = 0;
         [[nodiscard]] virtual bool IsKeyHeld(const std::string& key) = 0;

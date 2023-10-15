@@ -57,6 +57,7 @@ target_link_libraries(NovelRT-Input
   PUBLIC
     spdlog
     glfw
+    tbb
 )
 
 install(

@@ -29,7 +29,7 @@ namespace NovelRT::Input::Glfw
     public:
         GlfwInputDevice() noexcept;
 
-        void Initialise(NovelRT::Windowing::IWindowingDevice* device) final;
+        void Initialise(std::shared_ptr<NovelRT::Windowing::IWindowingDevice> device) final;
         void Update(Timing::Timestamp delta) final;
         [[nodiscard]] bool IsKeyPressed(const std::string& input) noexcept final;
         [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept final;

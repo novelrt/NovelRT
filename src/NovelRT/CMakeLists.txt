@@ -19,10 +19,6 @@ set(CORE_SOURCES
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
-  #Input/Glfw/GlfwInputDevice.cpp
-  #Input/Glfw/GlfwInputPluginProvider.cpp
-  #Input/NovelKey.cpp
-
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
 
