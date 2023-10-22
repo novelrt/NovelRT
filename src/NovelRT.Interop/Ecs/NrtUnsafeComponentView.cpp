@@ -27,13 +27,13 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (instructionData == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -45,17 +45,17 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGivenInternal();
+            Nrt_SetErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -64,7 +64,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -75,17 +75,17 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGivenInternal();
+            Nrt_SetErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -97,13 +97,13 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -117,7 +117,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
-            Nrt_setErrMsgKeyNotFoundInternal();
+            Nrt_SetErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -162,7 +162,7 @@ extern "C"
     {
         if (componentView == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

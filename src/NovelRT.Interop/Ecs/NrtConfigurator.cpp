@@ -20,7 +20,7 @@ NrtResult Nrt_Configurator_AddDefaultSystemsAndComponents(NrtConfiguratorHandle 
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -33,7 +33,7 @@ NrtResult Nrt_Configurator_Destroy(NrtConfiguratorHandle configurator)
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -47,13 +47,13 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -61,7 +61,7 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
     auto providerSharedPtr = Lifetime::Find(pluginProvider);
     if (providerSharedPtr == nullptr)
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
@@ -76,13 +76,13 @@ NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle conf
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -90,7 +90,7 @@ NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle conf
     auto providerSharedPtr = Lifetime::Find(pluginProvider);
     if (providerSharedPtr == nullptr)
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
@@ -105,13 +105,13 @@ NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHa
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -119,7 +119,7 @@ NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHa
     auto providerSharedPtr = Lifetime::Find(pluginProvider);
     if (providerSharedPtr == nullptr)
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
@@ -134,13 +134,13 @@ NrtResult Nrt_Configurator_AddInputPluginProvider(NrtConfiguratorHandle configur
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (provider == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -148,7 +148,7 @@ NrtResult Nrt_Configurator_AddInputPluginProvider(NrtConfiguratorHandle configur
     auto providerSharedPtr = Lifetime::Find(pluginProvider);
     if (providerSharedPtr == nullptr)
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
@@ -162,13 +162,13 @@ NrtResult Nrt_Configurator_InitialiseAndRegisterComponents(NrtConfiguratorHandle
 {
     if (configurator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputSystemScheduler == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 

@@ -37,7 +37,7 @@ extern "C"
     {
         if (numberOfArgs <= 1)
         {
-            Nrt_setErrMsgCustomInternal("Cannot append file path when nothing is being appended!");
+            Nrt_SetErrMsgCustomInternal("Cannot append file path when nothing is being appended!");
             return NULL;
         }
 
@@ -63,7 +63,7 @@ extern "C"
 
         if (finalPath == nullptr)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NULL;
         }
 
@@ -76,7 +76,7 @@ extern "C"
     {
         if (numberOfArgs <= 1)
         {
-            Nrt_setErrMsgCustomInternal("Cannot append text when nothing is being appended!");
+            Nrt_SetErrMsgCustomInternal("Cannot append text when nothing is being appended!");
             return NULL;
         }
 
@@ -90,7 +90,7 @@ extern "C"
         char* finalText = new char[finalString.length() + 1];
         if (strlen(finalText) < (finalString.length() + 1))
         {
-            Nrt_setErrMsgCustomInternal("Could not properly allocate memory for text!");
+            Nrt_SetErrMsgCustomInternal("Could not properly allocate memory for text!");
             return NULL;
         }
 

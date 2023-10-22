@@ -31,7 +31,7 @@ TEST(InteropQuadTreePointTest, DeleteReturnsNullInstanceFailureWhenGivenNullptr)
 {
     const char* outputError = "Unable to continue. A null instance was provided when an instance was expected.";
     ASSERT_EQ(Nrt_QuadTreePoint_Destroy(nullptr), NRT_FAILURE_NULL_INSTANCE_PROVIDED);
-    EXPECT_STREQ(outputError, Nrt_getLastError());
+    EXPECT_STREQ(outputError, Nrt_GetLastError());
 }
 
 TEST(InteropQuadTreePointTest,
@@ -44,5 +44,5 @@ TEST(InteropQuadTreePointTest,
     ASSERT_EQ(Nrt_QuadTreePoint_Destroy(reinterpret_cast<NrtQuadTreePointHandle>(ptr.get())),
               NRT_FAILURE_ALREADY_DELETED_OR_REMOVED);
 
-    EXPECT_STREQ(outputError, Nrt_getLastError());
+    EXPECT_STREQ(outputError, Nrt_GetLastError());
 }

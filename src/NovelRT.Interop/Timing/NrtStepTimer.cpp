@@ -10,7 +10,7 @@ NrtResult Nrt_StepTimer_create(uint32_t targetFrameRate, double maxSecondDelta, 
 {
     if (output == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -53,7 +53,7 @@ NrtResult Nrt_StepTimer_setTargetElapsedTicks(NrtStepTimerHandle timer, uint64_t
 {
     if (timer == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -72,7 +72,7 @@ NrtResult Nrt_StepTimer_setTargetElapsedTime(NrtStepTimerHandle timer, NrtTimest
 {
     if (timer == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -103,7 +103,7 @@ NrtResult Nrt_StepTimer_setIsFixedTimeStep(NrtStepTimerHandle timer, int32_t inp
 {
     if (timer == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -116,7 +116,7 @@ NrtResult Nrt_StepTimer_resetElapsedTime(NrtStepTimerHandle timer)
 {
     if (timer == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -129,7 +129,7 @@ NrtResult Nrt_StepTimer_tick(NrtStepTimerHandle timer, NrtUtilitiesEventWithTime
 {
     if (event == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

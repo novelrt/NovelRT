@@ -11,31 +11,31 @@ extern "C"
 {
 #endif
 
-    const char* Nrt_getLastError();
+    const char* Nrt_GetLastError();
 
     // Internal
-    const char* Nrt_getLastErrorInternal();
-    void Nrt_setErrMsgIsNullInstanceProvidedInternal();
-    void Nrt_setErrMsgIsNullArgumentProvidedInternal();
-    void Nrt_setErrMsgIsNaNInternal();
-    void Nrt_setErrMsgDupKeyGivenInternal();
-    void Nrt_setErrMsgCompilationErrorInternal();
-    void Nrt_setErrMsgIsFileNotFoundInternal();
-    void Nrt_setErrMsgIsDivideByZeroInternal();
-    void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
-    void Nrt_setErrMsgIsNotSupportedInternal();
-    void Nrt_setErrMsgIsInitialisationFailureInternal();
-    void Nrt_setErrMsgIsFunctionNotFoundInternal();
-    void Nrt_setErrMsgIsNotInitialisedInternal();
-    void Nrt_setErrMsgIsArgumentOutOfRangeInternal();
-    void Nrt_setErrMsgIsInvalidOperationInternal();
-    void Nrt_setErrMsgIsCharacterNotFoundInternal();
-    void Nrt_setErrMsgIsOutOfMemoryInternal();
-    void Nrt_setErrMsgKeyNotFoundInternal();
-    void Nrt_setErrMsgRuntimeNotFoundInternal();
-    void Nrt_setErrMsgErrorUnknownInternal();
-    void Nrt_setErrMsgIsInvalidPathInternal();
-    void Nrt_setErrMsgCustomInternal(const char* message);
+    const char* Nrt_GetLastErrorInternal();
+    void Nrt_SetErrMsgIsNullInstanceProvidedInternal();
+    void Nrt_SetErrMsgIsNullArgumentProvidedInternal();
+    void Nrt_SetErrMsgIsNaNInternal();
+    void Nrt_SetErrMsgDupKeyGivenInternal();
+    void Nrt_SetErrMsgCompilationErrorInternal();
+    void Nrt_SetErrMsgIsFileNotFoundInternal();
+    void Nrt_SetErrMsgIsDivideByZeroInternal();
+    void Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
+    void Nrt_SetErrMsgIsNotSupportedInternal();
+    void Nrt_SetErrMsgIsInitialisationFailureInternal();
+    void Nrt_SetErrMsgIsFunctionNotFoundInternal();
+    void Nrt_SetErrMsgIsNotInitialisedInternal();
+    void Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
+    void Nrt_SetErrMsgIsInvalidOperationInternal();
+    void Nrt_SetErrMsgIsCharacterNotFoundInternal();
+    void Nrt_SetErrMsgIsOutOfMemoryInternal();
+    void Nrt_SetErrMsgKeyNotFoundInternal();
+    void Nrt_SetErrMsgRuntimeNotFoundInternal();
+    void Nrt_SetErrMsgErrorUnknownInternal();
+    void Nrt_SetErrMsgIsInvalidPathInternal();
+    void Nrt_SetErrMsgCustomInternal(const char* message);
 
 #ifdef __cplusplus
 }
