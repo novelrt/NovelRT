@@ -11,10 +11,10 @@ extern "C"
 {
 #endif
 
-    const char* Nrt_getExecutablePath();
-    const char* Nrt_getExecutableDirPath();
-    const char* Nrt_appendFilePath(int32_t numberOfArgs, const char* const* args);
-    const char* Nrt_appendText(int32_t numberOfArgs, const char* const* args);
+    const char* Nrt_GetExecutablePath();
+    const char* Nrt_GetExecutableDirPath();
+    const char* Nrt_AppendFilePath(int32_t numberOfArgs, const char* const* args);
+    const char* Nrt_AppendText(int32_t numberOfArgs, const char* const* args);
 
 #ifdef __cplusplus
 }

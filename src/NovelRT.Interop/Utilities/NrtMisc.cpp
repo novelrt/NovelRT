@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    const char* Nrt_getExecutablePath()
+    const char* Nrt_GetExecutablePath()
     {
         std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
 
@@ -22,7 +22,7 @@ extern "C"
         return returnPtr;
     }
 
-    const char* Nrt_getExecutableDirPath()
+    const char* Nrt_GetExecutableDirPath()
     {
         std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
 
@@ -33,7 +33,7 @@ extern "C"
         return returnPtr;
     }
 
-    const char* Nrt_appendFilePath(int32_t numberOfArgs, const char* const* args)
+    const char* Nrt_AppendFilePath(int32_t numberOfArgs, const char* const* args)
     {
         if (numberOfArgs <= 1)
         {
@@ -72,7 +72,7 @@ extern "C"
         return finalPath;
     }
 
-    const char* Nrt_appendText(int32_t numberOfArgs, const char* const* args)
+    const char* Nrt_AppendText(int32_t numberOfArgs, const char* const* args)
     {
         if (numberOfArgs <= 1)
         {
