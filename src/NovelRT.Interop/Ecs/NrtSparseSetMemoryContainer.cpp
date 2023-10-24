@@ -244,7 +244,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_begin(
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_Begin(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
@@ -255,7 +255,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_IteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_end(
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_End(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
@@ -266,7 +266,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_IteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cbegin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_Cbegin(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
@@ -277,7 +277,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cend(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_Cend(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
