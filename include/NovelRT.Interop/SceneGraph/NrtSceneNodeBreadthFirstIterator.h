@@ -11,17 +11,17 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_Create(NrtSceneNodeHandle node,
                                                        int32_t (*func)(NrtSceneNodeHandle, void*),
                                                        void* context,
                                                        NrtSceneNodeBreadthFirstIteratorHandle* outputIterator);
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_increment(NrtSceneNodeBreadthFirstIteratorHandle iterator);
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_postFixIncrement(NrtSceneNodeBreadthFirstIteratorHandle iterator);
-    NrtBool Nrt_SceneNodeBreadthFirstIterator_isEnd(NrtSceneNodeBreadthFirstIteratorHandle iterator);
-    int32_t Nrt_SceneNodeBreadthFirstIterator_runFunction(NrtSceneNodeBreadthFirstIteratorHandle iterator);
-    NrtBool Nrt_SceneNodeBreadthFirstIterator_isEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_Increment(NrtSceneNodeBreadthFirstIteratorHandle iterator);
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_PostFixIncrement(NrtSceneNodeBreadthFirstIteratorHandle iterator);
+    NrtBool Nrt_SceneNodeBreadthFirstIterator_IsEnd(NrtSceneNodeBreadthFirstIteratorHandle iterator);
+    int32_t Nrt_SceneNodeBreadthFirstIterator_RunFunction(NrtSceneNodeBreadthFirstIteratorHandle iterator);
+    NrtBool Nrt_SceneNodeBreadthFirstIterator_IsEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
                                                       NrtSceneNodeBreadthFirstIteratorHandle other);
-    NrtBool Nrt_SceneNodeBreadthFirstIterator_isNotEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
+    NrtBool Nrt_SceneNodeBreadthFirstIterator_IsNotEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
                                                          NrtSceneNodeBreadthFirstIteratorHandle other);
 
 #ifdef __cplusplus

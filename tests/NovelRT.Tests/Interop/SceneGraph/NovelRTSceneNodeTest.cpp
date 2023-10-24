@@ -177,13 +177,13 @@ TEST(InteropSceneNodeTest, childNodeIsReachableFromParentBreadthFirst)
 
     int32_t loopResult = 0;
     int32_t isEqual = 0;
-    loopResult = Nrt_SceneNodeBreadthFirstIterator_isEnd(it);
+    loopResult = Nrt_SceneNodeBreadthFirstIterator_IsEnd(it);
 
     while ((isEqual != NRT_TRUE) && (loopResult == NRT_FALSE))
     {
-        Nrt_SceneNodeBreadthFirstIterator_increment(it);
-        loopResult = Nrt_SceneNodeBreadthFirstIterator_isEnd(it);
-        isEqual = Nrt_SceneNodeBreadthFirstIterator_runFunction(it);
+        Nrt_SceneNodeBreadthFirstIterator_Increment(it);
+        loopResult = Nrt_SceneNodeBreadthFirstIterator_IsEnd(it);
+        isEqual = Nrt_SceneNodeBreadthFirstIterator_RunFunction(it);
     }
 
     ASSERT_EQ(true, isEqual);
