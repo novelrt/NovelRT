@@ -139,7 +139,7 @@ extern "C"
         return reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetImmutableDataLength();
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_begin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_Begin(
         NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
@@ -149,7 +149,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_end(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_End(
         NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
