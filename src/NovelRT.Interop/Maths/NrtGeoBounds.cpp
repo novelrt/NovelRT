@@ -12,7 +12,7 @@ extern "C"
     using namespace NovelRT;
 #endif
 
-    NrtGeoBounds Nrt_GeoBounds_zero()
+    NrtGeoBounds Nrt_GeoBounds_Zero()
     {
         return NrtGeoBounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
     }
