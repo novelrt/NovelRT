@@ -31,10 +31,10 @@ extern "C"
 
     size_t Nrt_UnsafeComponentView_GetImmutableDataLength(NrtUnsafeComponentViewHandle componentView);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_begin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_Begin(
         NrtUnsafeComponentViewHandle componentView);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_end(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_End(
         NrtUnsafeComponentViewHandle componentView);
 
     NrtResult Nrt_UnsafeComponentView_Destroy(NrtUnsafeComponentViewHandle componentView);

@@ -97,9 +97,9 @@ TEST_F(InteropCatalogueTest, CanGetValidComponentView)
 {
     auto compView = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, charComponentTypeId);
     NrtSparseSetMemoryContainer_ConstIteratorHandle beginIterator = nullptr;
-    NrtSparseSetMemoryContainer_ConstIteratorHandle endIterator = Nrt_UnsafeComponentView_end(compView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIterator = Nrt_UnsafeComponentView_End(compView);
 
-    for (beginIterator = Nrt_UnsafeComponentView_begin(compView);
+    for (beginIterator = Nrt_UnsafeComponentView_Begin(compView);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIterator, endIterator) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIterator))
     {
@@ -126,9 +126,9 @@ TEST_F(InteropCatalogueTest, CanRemoveComponentFromEntityBasedOnView)
 {
     auto compView = Nrt_Catalogue_GetComponentViewByIdUnsafe(catalogue, intComponentTypeId);
     NrtSparseSetMemoryContainer_ConstIteratorHandle beginIterator = nullptr;
-    NrtSparseSetMemoryContainer_ConstIteratorHandle endIterator = Nrt_UnsafeComponentView_end(compView);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIterator = Nrt_UnsafeComponentView_End(compView);
 
-    for (beginIterator = Nrt_UnsafeComponentView_begin(compView);
+    for (beginIterator = Nrt_UnsafeComponentView_Begin(compView);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIterator, endIterator) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIterator))
     {

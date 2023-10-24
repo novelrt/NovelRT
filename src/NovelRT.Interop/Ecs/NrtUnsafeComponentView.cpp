@@ -136,7 +136,7 @@ extern "C"
         return reinterpret_cast<UnsafeComponentView*>(componentView)->GetImmutableDataLength();
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_begin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_Begin(
         NrtUnsafeComponentViewHandle componentView)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(
@@ -147,7 +147,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_end(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_UnsafeComponentView_End(
         NrtUnsafeComponentViewHandle componentView)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(
