@@ -31,13 +31,13 @@ extern "C"
 #endif
 
     // External methods
-    NrtSceneNodeHandle Nrt_SceneNode_create()
+    NrtSceneNodeHandle Nrt_SceneNode_Create()
     {
         _sceneNodeCollection.push_back(std::make_shared<SceneGraph::SceneNode>());
         return reinterpret_cast<NrtSceneNodeHandle>(_sceneNodeCollection.back().get());
     }
 
-    NrtResult Nrt_SceneNode_getChildren(NrtSceneNodeHandle node, NrtSceneNodeSetHandle* outputSet)
+    NrtResult Nrt_SceneNode_GetChildren(NrtSceneNodeHandle node, NrtSceneNodeSetHandle* outputSet)
     {
         if (node == nullptr)
         {
@@ -58,7 +58,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_getParents(NrtSceneNodeHandle node, NrtSceneNodeSetHandle* outputSet)
+    NrtResult Nrt_SceneNode_GetParents(NrtSceneNodeHandle node, NrtSceneNodeSetHandle* outputSet)
     {
         if (node == nullptr)
         {
@@ -79,28 +79,28 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_SceneNode_insert(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToInsert)
+    NrtBool Nrt_SceneNode_Insert(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToInsert)
     {
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
         return static_cast<int32_t>(
             nodePointer->insert(reinterpret_cast<SceneGraph::SceneNode*>(nodeToInsert)->shared_from_this()));
     }
 
-    NrtBool Nrt_SceneNode_remove(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToRemove)
+    NrtBool Nrt_SceneNode_Remove(NrtSceneNodeHandle node, NrtSceneNodeHandle nodeToRemove)
     {
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(node);
         return static_cast<int32_t>(
             nodePointer->remove(reinterpret_cast<SceneGraph::SceneNode*>(nodeToRemove)->shared_from_this()));
     }
 
-    NrtBool Nrt_SceneNode_isAdjacent(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode)
+    NrtBool Nrt_SceneNode_IsAdjacent(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode)
     {
         auto nodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
         return static_cast<int32_t>(
             nodePointer->isAdjacent(reinterpret_cast<SceneGraph::SceneNode*>(secondNode)->shared_from_this()));
     }
 
-    NrtResult Nrt_SceneNode_traverseBreadthFirst(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNode_TraverseBreadthFirst(NrtSceneNodeHandle node,
                                                  void (*action)(NrtSceneNodeHandle, void*),
                                                  void* context)
     {
@@ -122,7 +122,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_traverseBreadthFirstWithIterator(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNode_TraverseBreadthFirstWithIterator(NrtSceneNodeHandle node,
                                                              int32_t (*action)(NrtSceneNodeHandle, void*),
                                                              void* context,
                                                              NrtSceneNodeBreadthFirstIteratorHandle* outputIterator)
@@ -143,7 +143,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_traverseDepthFirst(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNode_TraverseDepthFirst(NrtSceneNodeHandle node,
                                                void (*action)(NrtSceneNodeHandle, void*),
                                                void* context)
     {
@@ -166,7 +166,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNode_traverseDepthFirstWithIterator(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNode_TraverseDepthFirstWithIterator(NrtSceneNodeHandle node,
                                                            int32_t (*action)(NrtSceneNodeHandle, void*),
                                                            void* context,
                                                            NrtSceneNodeDepthFirstIteratorHandle* outputIterator)
@@ -193,7 +193,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_SceneNode_canReach(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode)
+    NrtBool Nrt_SceneNode_CanReach(NrtSceneNodeHandle firstNode, NrtSceneNodeHandle secondNode)
     {
         auto firstNodePointer = reinterpret_cast<SceneGraph::SceneNode*>(firstNode);
         return static_cast<int32_t>(
@@ -232,12 +232,12 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    size_t Nrt_SceneNodeSet_getSize(const NrtSceneNodeSetHandle nodeSet)
+    size_t Nrt_SceneNodeSet_GetSize(const NrtSceneNodeSetHandle nodeSet)
     {
         return reinterpret_cast<std::set<std::shared_ptr<SceneGraph::SceneNode>>*>(nodeSet)->size();
     }
 
-    NrtResult Nrt_SceneNodeSet_getSceneNodeFromIndex(const NrtSceneNodeSetHandle nodeSet,
+    NrtResult Nrt_SceneNodeSet_GetSceneNodeFromIndex(const NrtSceneNodeSetHandle nodeSet,
                                                      size_t index,
                                                      NrtSceneNodeHandle* outputSceneNode)
     {
