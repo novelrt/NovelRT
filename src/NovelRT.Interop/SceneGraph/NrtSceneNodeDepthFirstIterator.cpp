@@ -21,7 +21,7 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SceneNodeDepthFirstIterator_create(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNodeDepthFirstIterator_Create(NrtSceneNodeHandle node,
                                                      int32_t (*action)(NrtSceneNodeHandle, void* context),
                                                      void* context,
                                                      NrtSceneNodeDepthFirstIteratorHandle* outputIterator)
@@ -42,7 +42,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNodeDepthFirstIterator_increment(NrtSceneNodeDepthFirstIteratorHandle iterator)
+    NrtResult Nrt_SceneNodeDepthFirstIterator_Increment(NrtSceneNodeDepthFirstIteratorHandle iterator)
     {
         if (iterator == nullptr)
         {
@@ -56,7 +56,7 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNodeDepthFirstIterator_postFixIncrement(NrtSceneNodeDepthFirstIteratorHandle iterator)
+    NrtResult Nrt_SceneNodeDepthFirstIterator_PostFixIncrement(NrtSceneNodeDepthFirstIteratorHandle iterator)
     {
         if (iterator == nullptr)
         {
@@ -70,14 +70,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_SceneNodeDepthFirstIterator_isEnd(NrtSceneNodeDepthFirstIteratorHandle iterator)
+    NrtBool Nrt_SceneNodeDepthFirstIterator_IsEnd(NrtSceneNodeDepthFirstIteratorHandle iterator)
     {
         SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>* cppIterator =
             reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
         return static_cast<int32_t>(cppIterator->isEnd());
     }
 
-    NrtBool Nrt_SceneNodeDepthFirstIterator_isEqual(NrtSceneNodeDepthFirstIteratorHandle iterator,
+    NrtBool Nrt_SceneNodeDepthFirstIterator_IsEqual(NrtSceneNodeDepthFirstIteratorHandle iterator,
                                                     NrtSceneNodeDepthFirstIteratorHandle other)
     {
         auto cppIterator =
@@ -87,7 +87,7 @@ extern "C"
         return static_cast<int32_t>(*cppIterator == *otherCppIterator);
     }
 
-    NrtBool Nrt_SceneNodeDepthFirstIterator_isNotEqual(NrtSceneNodeDepthFirstIteratorHandle iterator,
+    NrtBool Nrt_SceneNodeDepthFirstIterator_IsNotEqual(NrtSceneNodeDepthFirstIteratorHandle iterator,
                                                        NrtSceneNodeDepthFirstIteratorHandle other)
     {
         auto cppIterator =
@@ -97,7 +97,7 @@ extern "C"
         return static_cast<int32_t>(*cppIterator != *otherCppIterator);
     }
 
-    int32_t Nrt_SceneNodeDepthFirstIterator_runFunction(NrtSceneNodeDepthFirstIteratorHandle iterator)
+    int32_t Nrt_SceneNodeDepthFirstIterator_RunFunction(NrtSceneNodeDepthFirstIteratorHandle iterator)
     {
         auto cppIterator =
             reinterpret_cast<SceneGraph::SceneNode::depth_first_traversal_result_iterator<int32_t>*>(iterator);
