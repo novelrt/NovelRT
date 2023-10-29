@@ -40,8 +40,8 @@ namespace NovelRT::Input::Glfw
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept final;
         [[nodiscard]] NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() noexcept final;
-        [[nodiscard]] KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) final;
-        [[nodiscard]] KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) final;
+        [[nodiscard]] KeyStateFrameChangeLog GetCurrentChangeLog(std::string& key) final;
+        [[nodiscard]] KeyStateFrameChangeLog GetPreviousChangeLog(std::string& key) final;
         [[nodiscard]] NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() final;
 
         ~GlfwInputDevice() final;
