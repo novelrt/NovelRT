@@ -34,7 +34,7 @@ namespace NovelRT::Input
         [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() = 0;
         [[nodiscard]] virtual KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) = 0;
         [[nodiscard]] virtual KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) = 0;
-        [[nodiscard]] virtual std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() = 0;
+        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() = 0;
 
         virtual ~IInputDevice() = default;
     };

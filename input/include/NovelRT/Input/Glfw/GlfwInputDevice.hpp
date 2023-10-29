@@ -42,7 +42,7 @@ namespace NovelRT::Input::Glfw
         [[nodiscard]] NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() noexcept final;
         [[nodiscard]] KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) final;
         [[nodiscard]] KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) final;
-        [[nodiscard]] std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() final;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() final;
 
         ~GlfwInputDevice() final;
     };

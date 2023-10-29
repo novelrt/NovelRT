@@ -494,7 +494,7 @@ namespace NovelRT::Input::Glfw
         return KeyStateFrameChangeLog();
     }
 
-    std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputDevice::GetAllChangeLogs()
+    NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputDevice::GetAllChangeLogs()
     {
         return _keyStates;
     }
