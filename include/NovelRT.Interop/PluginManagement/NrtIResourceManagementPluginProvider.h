@@ -13,6 +13,7 @@ extern "C"
     NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPluginProviderHandle plugin);
 
     NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceManagementPluginProviderHandle plugin,
+                                                                      NrtBool initAssets,
                                                                       NrtResourceLoaderHandle* outputLoader);
 
 #ifdef __cplusplus
