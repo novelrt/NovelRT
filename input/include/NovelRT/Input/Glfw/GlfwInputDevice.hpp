@@ -4,10 +4,6 @@
 #ifndef NOVELRT_INPUT_GLFW_GLFWINPUTDEVICE_H
 #define NOVELRT_INPUT_GLFW_GLFWINPUTDEVICE_H
 
-#ifndef NOVELRT_INPUT_GLFW_H
-#error NovelRT does not support including types explicitly by default. Please include Input.Glfw.h instead for the Input::Glfw namespace subset.
-#endif
-
 namespace NovelRT::Input::Glfw
 {
     class GlfwInputDevice final : public Input::IInputDevice

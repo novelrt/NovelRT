@@ -4,10 +4,6 @@
 #ifndef NOVELRT_INPUT_GLFW_GLFWINPUTPLUGINPROVIDER_H
 #define NOVELRT_INPUT_GLFW_GLFWINPUTPLUGINPROVIDER_H
 
-#ifndef NOVELRT_INPUT_GLFW_H
-#error NovelRT does not support including types explicitly by default. Please include Input.Glfw.h instead for the Input::Glfw namespace subset.
-#endif
-
 namespace NovelRT::Input::Glfw
 {
     class GlfwInputPluginProvider final : public PluginManagement::IInputPluginProvider

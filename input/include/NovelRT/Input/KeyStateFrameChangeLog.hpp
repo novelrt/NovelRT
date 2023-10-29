@@ -4,10 +4,6 @@
 #ifndef NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H
 #define NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H
 
-#ifndef NOVELRT_INPUT_H
-#error NovelRT does not support including types explicitly by default. Please include Input.h instead for the Input namespace subset.
-#endif
-
 namespace NovelRT::Input
 {
     class KeyStateFrameChangeLog
@@ -18,36 +14,9 @@ namespace NovelRT::Input
         uint32_t _changeCount = 0;
 
     public:
-        inline void PushNewState(KeyState newState) noexcept
-        {
-            if (_currentState == newState)
-            {
-                return;
-            }
-
-            _currentState = newState;
-            _changeCount++;
-        }
-
-        inline KeyState GetCurrentState() const noexcept
-        {
-            return _currentState;
-        }
-
-        inline uint32_t GetChangeCount() const noexcept
-        {
-            return _changeCount;
-        }
+        void PushNewState(KeyState newState) noexcept;
+        KeyState GetCurrentState() const noexcept;
+        uint32_t GetChangeCount() const noexcept;
     };
-
-    inline bool operator==(const KeyStateFrameChangeLog& lhs, const KeyState& rhs) noexcept
-    {
-        return lhs.GetCurrentState() == rhs;
-    }
-
-    inline bool operator==(const KeyState& lhs, const KeyStateFrameChangeLog& rhs) noexcept
-    {
-        return rhs == lhs;
-    }
 }
 #endif //! NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H

@@ -4,10 +4,6 @@
 #ifndef NOVELRT_INPUT_KEYSTATE_H
 #define NOVELRT_INPUT_KEYSTATE_H
 
-#ifndef NOVELRT_INPUT_H
-#error NovelRT does not support including types explicitly by default. Please include Input.h instead for the Input namespace subset.
-#endif
-
 namespace NovelRT::Input
 {
     /**

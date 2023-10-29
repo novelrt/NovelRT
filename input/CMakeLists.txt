@@ -1,4 +1,5 @@
 add_library(NovelRT-Input STATIC
+  KeyStateFrameChangeLog.cpp
   NovelKey.cpp
   Glfw/GlfwInputDevice.cpp
   Glfw/GlfwInputPluginProvider.cpp
