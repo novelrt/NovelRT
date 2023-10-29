@@ -199,7 +199,6 @@ namespace NovelRT::Input::Glfw
         glfwGetCursorPos(_window, &x, &y);
         _windowDimensions.x = static_cast<float>(width);
         _windowDimensions.y =static_cast<float>(height);
-        //_mousePos = DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F(x, y));
 
         auto& currentBuffer = _keyStates.at(_currentBufferIndex);
 
