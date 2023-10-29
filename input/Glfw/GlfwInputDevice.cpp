@@ -36,7 +36,7 @@ namespace NovelRT::Input::Glfw
         _previousBufferIndex = 0;
         _currentBufferIndex = 1;
 
-        auto properDevice = reinterpret_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice*>(device.get());
+        auto properDevice = std::reinterpret_pointer_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice>(device);
         _window = properDevice->GetRawGLFWwindowHandle();
         properDevice->KeyboardButtonChanged +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
