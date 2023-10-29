@@ -28,8 +28,8 @@ namespace NovelRT::Input
         [[nodiscard]] virtual NovelKey& GetAvailableKey(const std::string& keyRequested) = 0;
         [[nodiscard]] virtual NovelRT::Maths::GeoVector2F GetMousePosition() = 0;
         [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() = 0;
-        [[nodiscard]] virtual KeyStateFrameChangeLog GetCurrentChangeLog(std::string& key) = 0;
-        [[nodiscard]] virtual KeyStateFrameChangeLog GetPreviousChangeLog(std::string& key) = 0;
+        [[nodiscard]] virtual KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) = 0;
+        [[nodiscard]] virtual KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) = 0;
         [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GetAllChangeLogs() = 0;
 
         virtual ~IInputDevice() = default;

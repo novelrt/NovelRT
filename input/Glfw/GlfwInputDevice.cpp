@@ -468,7 +468,7 @@ namespace NovelRT::Input::Glfw
                                            static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
     }
 
-    KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(std::string& key)
+    KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(const std::string& key)
     {
         for (auto& action : _mappedActions)
         {
@@ -481,7 +481,7 @@ namespace NovelRT::Input::Glfw
         return KeyStateFrameChangeLog();
     }
 
-    KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(std::string& key)
+    KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(const std::string& key)
     {
         for (auto& action : _mappedActions)
         {
