@@ -3,7 +3,7 @@
 
 #include <NovelRT.Interop/Input/NrtNovelKey.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Input/Input.hpp>
+#include <NovelRT/Input/NovelKey.hpp>
 
 using namespace NovelRT::Input;
 

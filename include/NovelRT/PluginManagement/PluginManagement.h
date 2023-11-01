@@ -8,7 +8,7 @@
 #include "../ResourceManagement/ResourceManagement.h"
 #include "../Windowing/Windowing.h"
 #include <NovelRT/Graphics/Graphics.hpp>
-#include <NovelRT/Input/Input.hpp>
+#include <NovelRT/Input/IInputDevice.hpp>
 
 /**
  * @brief The NovelRT engine plugin system for loading modules such as Vulkan, GLFW3, OpenAL, and more.

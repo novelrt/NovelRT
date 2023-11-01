@@ -8,7 +8,11 @@
 #error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
 #endif
 
-#include <NovelRT/Input/Input.hpp>
+#include <NovelRT/Input/IInputDevice.hpp>
+#include <NovelRT/Input/InputAction.hpp>
+#include <NovelRT/Input/KeyState.hpp>
+#include <NovelRT/Input/KeyStateFrameChangeLog.hpp>
+#include <NovelRT/Input/NovelKey.hpp>
 #include <map>
 
 namespace NovelRT::Ecs::Input

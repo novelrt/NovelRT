@@ -1,8 +1,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#pragma once
 
-#ifndef NOVELRT_INPUT_IINPUTSERVICE_H
-#define NOVELRT_INPUT_IINPUTSERVICE_H
+#include <cstdint>
+#include <vector>
+#include <map>
+#include <NovelRT/Windowing/Windowing.h>
+#include <NovelRT/LoggingService.h>
+#include <NovelRT/Input/InputAction.hpp>
+#include <NovelRT/Input/NovelKey.hpp>
+#include <NovelRT/Input/KeyStateFrameChangeLog.hpp>
+#include <NovelRT/Timing/Timestamp.h>
+
 
 namespace NovelRT::Input
 {
@@ -35,5 +44,3 @@ namespace NovelRT::Input
         virtual ~IInputDevice() = default;
     };
 }
-
-#endif // NOVELRT_INPUT_IINPUTSERVICE_H

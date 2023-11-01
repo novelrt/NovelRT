@@ -1,8 +1,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#pragma once
 
-#ifndef NOVELRT_INPUT_GLFW_GLFWINPUTDEVICE_H
-#define NOVELRT_INPUT_GLFW_GLFWINPUTDEVICE_H
+#include <cstdint>
+#include <GLFW/glfw3.h>
+#include <NovelRT/Input/IInputDevice.hpp>
+#include <NovelRT/Input/InputAction.hpp>
+#include <NovelRT/Input/KeyState.hpp>
+#include <NovelRT/Input/KeyStateFrameChangeLog.hpp>
+#include <NovelRT/Input/NovelKey.hpp>
+#include <NovelRT/Maths/Maths.h>
+#include <NovelRT/Timing/Timestamp.h>
+#include <NovelRT/Utilities/Misc.h>
 
 namespace NovelRT::Input::Glfw
 {
@@ -44,4 +53,3 @@ namespace NovelRT::Input::Glfw
     };
 }
 
-#endif // NOVELRT_INPUT_GLFW_GLFWINPUTDEVICE_H

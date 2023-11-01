@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#pragma once
 
-#ifndef NOVELRT_INPUT_GLFW_GLFWINPUTPLUGINPROVIDER_H
-#define NOVELRT_INPUT_GLFW_GLFWINPUTPLUGINPROVIDER_H
+#include <NovelRT/PluginManagement/PluginManagement.h>
+#include <NovelRT/Input/Glfw/GlfwInputDevice.hpp>
 
 namespace NovelRT::Input::Glfw
 {
@@ -23,4 +24,3 @@ namespace NovelRT::Input::Glfw
     };
 }
 
-#endif // NOVELRT_INPUT_GLFW_GLFWINPUTPLUGINPROVIDER_H

@@ -11,13 +11,11 @@ target_sources(NovelRT-Input
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/NovelRT/Input/Input.hpp
       include/NovelRT/Input/IInputDevice.hpp
       include/NovelRT/Input/InputAction.hpp
       include/NovelRT/Input/KeyState.hpp
       include/NovelRT/Input/KeyStateFrameChangeLog.hpp
       include/NovelRT/Input/NovelKey.hpp
-      include/NovelRT/Input/Glfw/Input.Glfw.hpp
       include/NovelRT/Input/Glfw/GlfwInputDevice.hpp
       include/NovelRT/Input/Glfw/GlfwInputPluginProvider.hpp
 )

@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#pragma once
 
-#ifndef NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H
-#define NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H
+#include <cstdint>
+#include <NovelRT/Input/KeyState.hpp>
 
 namespace NovelRT::Input
 {
@@ -19,4 +20,4 @@ namespace NovelRT::Input
         uint32_t GetChangeCount() const noexcept;
     };
 }
-#endif //! NOVELRT_INPUT_KEYSTATEFRAMECHANGELOG_H
+

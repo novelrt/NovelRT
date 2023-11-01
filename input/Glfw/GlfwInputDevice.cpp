@@ -1,7 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Input/Glfw/Input.Glfw.hpp>
+#include <NovelRT/Input/Glfw/GlfwInputDevice.hpp>
+#include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 
 namespace NovelRT::Input::Glfw
 {

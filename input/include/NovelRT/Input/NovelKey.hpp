@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#pragma once
 
-#ifndef NOVELRT_INPUT_NOVELKEY_H
-#define NOVELRT_INPUT_NOVELKEY_H
+#include <cstdint>
+#include <string>
 
 namespace NovelRT::Input
 {
@@ -24,16 +25,5 @@ namespace NovelRT::Input
             return (_keyName == other.GetKeyName()) && (_pairedKey == other.GetExternalKeyCode());
         };
     };
-
-    inline bool operator==(NovelKey const& lhs, NovelKey const& rhs) noexcept
-    {
-        return lhs._pairedKey == rhs._pairedKey && (lhs._modifier == rhs._modifier) && lhs._keyName == rhs._keyName;
-    }
-
-    inline bool operator!=(NovelKey const& lhs, NovelKey const& rhs) noexcept
-    {
-        return lhs._pairedKey != rhs._pairedKey || (lhs._modifier == rhs._modifier) || lhs._keyName == rhs._keyName;
-    }
 }
 
-#endif // NOVELRT_INPUT_NOVELKEY_H

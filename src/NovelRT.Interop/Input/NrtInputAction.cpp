@@ -4,7 +4,7 @@
 #include <NovelRT.Interop/Input/NrtInputAction.h>
 #include <NovelRT.Interop/Input/NrtNovelKey.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Input/Input.hpp>
+#include <NovelRT/Input/InputAction.hpp>
 
 using namespace NovelRT::Input;
 
