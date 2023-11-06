@@ -1,5 +1,6 @@
 add_library(NovelRT-Audio STATIC
-  AudioService.cpp
+  AudioMixer.cpp
+  OpenAL/OpenALAudioProvider.cpp
 )
 
 target_sources(NovelRT-Audio
@@ -8,8 +9,9 @@ target_sources(NovelRT-Audio
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/NovelRT/Audio/Audio.hpp
-      include/NovelRT/Audio/AudioService.hpp
+    include/NovelRT/Audio/AudioMixer.hpp
+    include/NovelRT/Audio/IAudioProvider.hpp
+    include/NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp
 )
 
 set_target_properties(NovelRT-Audio
