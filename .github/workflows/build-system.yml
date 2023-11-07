@@ -89,6 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       checks: write
+      pull-requests: write
     if: always()
 
     steps:
