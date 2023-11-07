@@ -74,7 +74,35 @@ jobs:
         id: test
         run: |
           cd build/tests/NovelRT.Tests
-          ctest --output-on-failure -C ${{ matrix.configuration }}
+          ctest --output-junit test-results.xml -C ${{ matrix.configuration }}
+      
+      - name: Upload NovelRT test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test Results (${{ matrix.os }})
+          path: ./**/test-results.xml
+
+  Publish:
+    name: "Publish Test Results"
+    needs: CI
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+    if: always()
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/*.xml"
+          json_file: "tests-results.json"
+          json_suite_details: true
 
   Documentation:
     name: Doxygen - Ubuntu
