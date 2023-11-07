@@ -1,6 +1,7 @@
+#pragma once
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#pragma once
+
 
 #include <cstdint>
 #include <GLFW/glfw3.h>
@@ -30,6 +31,7 @@ namespace NovelRT::Input::Glfw
         void ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos);
         void ProcessKeyState(int32_t action, KeyState state);
         NovelRT::Maths::GeoVector2F DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos);
+        void MapAllGlfwKeysToNovelKeys();
 
     public:
         GlfwInputDevice() noexcept;

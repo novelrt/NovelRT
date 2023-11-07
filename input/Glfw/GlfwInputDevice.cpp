@@ -48,8 +48,356 @@ namespace NovelRT::Input::Glfw
             ProcessCursorMovement(nativePos);
         };
 
-#pragma region KeyMapping
-        // Map GLFW keys to NovelKeys
+        MapAllGlfwKeysToNovelKeys();
+        _isInitialised = true;
+
+        int32_t width = 0;
+        int32_t height = 0;
+        glfwGetWindowSize(_window, &width, &height);
+        _windowDimensions = NovelRT::Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+
+        _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
+    }
+
+    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
+    {
+        double x = 0;
+        double y = 0;
+        int32_t width = 0;
+        int32_t height = 0;
+        glfwGetWindowSize(_window, &width, &height);
+        glfwGetCursorPos(_window, &x, &y);
+        _windowDimensions.x = static_cast<float>(width);
+        _windowDimensions.y =static_cast<float>(height);
+
+        auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+
+        for (const auto& [key, log] : _keyStates.at(_previousBufferIndex))
+        {
+            auto findResultForCurrent = currentBuffer.find(key);
+            if (findResultForCurrent != currentBuffer.end())
+            {
+                ProcessKeyState(findResultForCurrent->first, findResultForCurrent->second.GetCurrentState());
+            }
+            else
+            {
+                ProcessKeyState(key, log.GetCurrentState());
+            }
+        }
+    }
+
+    KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
+    {
+        for (auto& action : _mappedActions)
+        {
+            if (action.actionName != key)
+            {
+                continue;
+            }
+
+            auto externalKeyCode = action.pairedKey.GetExternalKeyCode();
+
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for (const auto& [currentKey, currentLog] : currentBuffer)
+            {
+                if (currentKey == externalKeyCode)
+                {
+                    return currentLog.GetCurrentState();
+                }
+            }
+        }
+
+        return KeyState::Idle;
+    }
+
+    bool GlfwInputDevice::IsKeyPressed(const std::string& input) noexcept
+    {
+        for (auto& action : _mappedActions)
+        {
+            if (action.actionName != input)
+            {
+                continue;
+            }
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for (auto& [currentKey, currentLog] : currentBuffer)
+            {
+                if (currentKey != key)
+                {
+                    continue;
+                }
+
+                return currentLog.GetCurrentState() == KeyState::KeyDown;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", input);
+        return false;
+    }
+
+    bool GlfwInputDevice::IsKeyHeld(const std::string& input) noexcept
+    {
+        for (auto& action : _mappedActions)
+        {
+            if (action.actionName != input)
+            {
+                continue;
+            }
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for (auto& [currentKey, currentLog] : currentBuffer)
+            {
+                if (currentKey != key)
+                {
+                    continue;
+                }
+
+                return currentLog.GetCurrentState() == KeyState::KeyDownHeld;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", input);
+        return false;
+    }
+
+    bool GlfwInputDevice::IsKeyReleased(const std::string& input) noexcept
+    {
+        for (auto& action : _mappedActions)
+        {
+            if (action.actionName != input)
+            {
+                continue;
+            }
+
+            auto key = action.pairedKey.GetExternalKeyCode();
+            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+            for (auto& [currentKey, currentLog] : currentBuffer)
+            {
+                if (currentKey != key)
+                {
+                    continue;
+                }
+
+                return currentLog.GetCurrentState() == KeyState::KeyUp;
+            }
+        }
+
+        _logger.logWarning("Requested action is not mapped: {}", input);
+        return false;
+    }
+
+    InputAction& GlfwInputDevice::AddInputAction(const std::string& actionName, const std::string& keyIdentifier)
+    {
+        bool nameExists = false;
+        bool keyBoundAlready = false;
+        NovelKey pairedKey = GetAvailableKey(keyIdentifier);
+
+        for (auto existingAction : _mappedActions)
+        {
+            if (existingAction.actionName == actionName)
+            {
+                nameExists = true;
+            }
+            if (existingAction.pairedKey == pairedKey)
+            {
+                keyBoundAlready = true;
+            }
+        }
+
+        if (nameExists)
+        {
+            throw Exceptions::InvalidOperationException("Cannot add InputAction as the name has already been mapped!");
+        }
+        else if (keyBoundAlready)
+        {
+            throw Exceptions::InvalidOperationException("Cannot add InputAction as key has already been bound!");
+        }
+        else
+        {
+            _mappedActions.emplace_back(InputAction{actionName, pairedKey});
+            return _mappedActions.back();
+        }
+    }
+
+    NovelKey& GlfwInputDevice::GetAvailableKey(const std::string& keyRequested)
+    {
+        if (keyRequested == "")
+        {
+            throw NovelRT::Exceptions::InvalidOperationException("Cannot request a key with no name.");
+        }
+
+        for (auto key : _availableKeys)
+        {
+            if (key.first == keyRequested)
+            {
+                return _availableKeys.at(key.first);
+            }
+        }
+
+        _logger.logError("Key {} not available from this input service.", keyRequested);
+        throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
+    }
+
+    NovelRT::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
+    {
+        return _mappedActions;
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition() noexcept
+    {
+        return _mousePos;
+    }
+
+    void GlfwInputDevice::ProcessKeyInput(int32_t key, int32_t state)
+    {
+        auto& map = _keyStates.at(_currentBufferIndex);
+
+        for (auto& mapped : _mappedActions)
+        {
+            if (mapped.pairedKey.GetExternalKeyCode() != key)
+            {
+                continue;
+            }
+
+            KeyStateFrameChangeLog log{};
+            bool mouseMod = false;
+            for (auto& [currentKey, currentLog] : map)
+            {
+                if (currentKey != mapped.pairedKey.GetExternalKeyCode())
+                {
+                    continue;
+                }
+                log = currentLog;
+                if (currentKey == GLFW_MOUSE_BUTTON_LEFT || currentKey == GLFW_MOUSE_BUTTON_MIDDLE ||
+                    currentKey == GLFW_MOUSE_BUTTON_RIGHT)
+                {
+                    mouseMod = true;
+                }
+                break;
+            }
+
+            if (mouseMod)
+            {
+                auto currentState = log.GetCurrentState();
+                if (state == (int32_t)KeyState::KeyDown &&
+                    (currentState == KeyState::KeyDown || currentState == KeyState::KeyDownHeld))
+                {
+                    state = (int32_t)KeyState::KeyDownHeld;
+                }
+            }
+
+            log.PushNewState(static_cast<KeyState>(state));
+            map.insert_or_assign(key, log);
+        }
+    }
+
+    void GlfwInputDevice::ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos)
+    {
+        _mousePos = DetermineMouseScreenPosition(pos);
+    }
+
+    void GlfwInputDevice::ProcessKeyState(int32_t key, KeyState state)
+    {
+        auto& previousBuffer = _keyStates.at(_previousBufferIndex);
+        auto& currentBuffer = _keyStates.at(_currentBufferIndex);
+
+        KeyState previousStateResult = KeyState::Idle;
+
+        for (auto& [previousKey, previousLog] : previousBuffer)
+        {
+            if (previousKey == key)
+            {
+                previousStateResult = previousLog.GetCurrentState();
+                break;
+            }
+        }
+
+        KeyStateFrameChangeLog changeLogObject = KeyStateFrameChangeLog();
+
+        for (auto& [currentKey, currentLog] : currentBuffer)
+        {
+            if (currentKey == key)
+            {
+                changeLogObject = currentLog;
+                break;
+            }
+        }
+
+        switch (state)
+        {
+            case KeyState::KeyDown:
+            {
+                if (previousStateResult == KeyState::KeyDown)
+                {
+                    changeLogObject.PushNewState(KeyState::KeyDownHeld);
+                }
+                else if (previousStateResult != KeyState::KeyDownHeld)
+                {
+                    changeLogObject.PushNewState(KeyState::KeyDown);
+                }
+                break;
+            }
+            case KeyState::KeyDownHeld:
+            case KeyState::KeyUp:
+            {
+                changeLogObject.PushNewState((previousStateResult == KeyState::KeyUp) ? KeyState::Idle : state);
+                break;
+            }
+            case KeyState::Idle:
+            default:
+            {
+                break;
+            }
+        }
+
+        currentBuffer.insert_or_assign(key, changeLogObject);
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwInputDevice::DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos)
+    {
+        return NovelRT::Maths::GeoVector2F(static_cast<float>(pos.x - (_windowDimensions.x / 2)),
+                                           static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
+    }
+
+    KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(const std::string& key)
+    {
+        for (auto& action : _mappedActions)
+        {
+            if (action.actionName != key)
+            {
+                continue;
+            }
+
+            return _keyStates.at(_currentBufferIndex).at(action.pairedKey.GetExternalKeyCode());
+        }
+
+        return KeyStateFrameChangeLog();
+    }
+
+    KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(const std::string& key)
+    {
+        for (auto& action : _mappedActions)
+        {
+            if (action.actionName != key)
+            {
+                continue;
+            }
+
+            return _keyStates.at(_previousBufferIndex).at(action.pairedKey.GetExternalKeyCode());
+        }
+
+        return KeyStateFrameChangeLog();
+    }
+
+    NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputDevice::GetAllChangeLogs()
+    {
+        return _keyStates;
+    }
+
+    void GlfwInputDevice::MapAllGlfwKeysToNovelKeys()
+    {
         _availableKeys.emplace("LeftMouseButton", NovelKey("LeftMouseButton", GLFW_MOUSE_BUTTON_LEFT));
         _availableKeys.emplace("RightMouseButton", NovelKey("RightMouseButton", GLFW_MOUSE_BUTTON_RIGHT));
         _availableKeys.emplace("MiddleMouseButton", NovelKey("MiddleMouseButton", GLFW_MOUSE_BUTTON_MIDDLE));
@@ -178,326 +526,6 @@ namespace NovelRT::Input::Glfw
         _availableKeys.emplace("Quote", NovelKey("Quote", GLFW_KEY_APOSTROPHE, GLFW_MOD_SHIFT));
         _availableKeys.emplace("Underscore", NovelKey("Underscore", GLFW_KEY_MINUS, GLFW_MOD_SHIFT));
         _availableKeys.emplace("Tilde", NovelKey("Tilde", GLFW_KEY_GRAVE_ACCENT, GLFW_MOD_SHIFT));
-#pragma endregion KeyMapping
-
-        _isInitialised = true;
-
-        int32_t width = 0;
-        int32_t height = 0;
-        glfwGetWindowSize(_window, &width, &height);
-        _windowDimensions = NovelRT::Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
-
-        _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
-    }
-
-    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
-    {
-        double x = 0;
-        double y = 0;
-        int32_t width = 0;
-        int32_t height = 0;
-        glfwGetWindowSize(_window, &width, &height);
-        glfwGetCursorPos(_window, &x, &y);
-        _windowDimensions.x = static_cast<float>(width);
-        _windowDimensions.y =static_cast<float>(height);
-
-        auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-
-        for (const auto& [key, log] : _keyStates.at(_previousBufferIndex))
-        {
-            auto findResultForCurrent = currentBuffer.find(key);
-            if (findResultForCurrent != currentBuffer.end())
-            {
-                ProcessKeyState(findResultForCurrent->first, findResultForCurrent->second.GetCurrentState());
-            }
-            else
-            {
-                ProcessKeyState(key, log.GetCurrentState());
-            }
-        }
-    }
-
-    KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
-    {
-        for (auto& action : _mappedActions)
-        {
-            if (action.actionName != key)
-                continue;
-
-            auto externalKeyCode = action.pairedKey.GetExternalKeyCode();
-
-            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for (const auto& [currentKey, currentLog] : currentBuffer)
-            {
-                if (currentKey == externalKeyCode)
-                {
-                    return currentLog.GetCurrentState();
-                }
-            }
-        }
-
-        return KeyState::Idle;
-    }
-
-    bool GlfwInputDevice::IsKeyPressed(const std::string& input) noexcept
-    {
-        for (auto& action : _mappedActions)
-        {
-            if (action.actionName != input)
-                continue;
-
-            auto key = action.pairedKey.GetExternalKeyCode();
-            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for (auto& [currentKey, currentLog] : currentBuffer)
-            {
-                if (currentKey != key)
-                    continue;
-
-                return currentLog.GetCurrentState() == KeyState::KeyDown;
-            }
-        }
-
-        _logger.logWarning("Requested action is not mapped: {}", input);
-        return false;
-    }
-
-    bool GlfwInputDevice::IsKeyHeld(const std::string& input) noexcept
-    {
-        for (auto& action : _mappedActions)
-        {
-            if (action.actionName != input)
-                continue;
-
-            auto key = action.pairedKey.GetExternalKeyCode();
-            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for (auto& [currentKey, currentLog] : currentBuffer)
-            {
-                if (currentKey != key)
-                    continue;
-
-                return currentLog.GetCurrentState() == KeyState::KeyDownHeld;
-            }
-        }
-
-        _logger.logWarning("Requested action is not mapped: {}", input);
-        return false;
-    }
-
-    bool GlfwInputDevice::IsKeyReleased(const std::string& input) noexcept
-    {
-        for (auto& action : _mappedActions)
-        {
-            if (action.actionName != input)
-                continue;
-
-            auto key = action.pairedKey.GetExternalKeyCode();
-            auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-            for (auto& [currentKey, currentLog] : currentBuffer)
-            {
-                if (currentKey != key)
-                    continue;
-
-                return currentLog.GetCurrentState() == KeyState::KeyUp;
-            }
-        }
-
-        _logger.logWarning("Requested action is not mapped: {}", input);
-        return false;
-    }
-
-    InputAction& GlfwInputDevice::AddInputAction(const std::string& actionName, const std::string& keyIdentifier)
-    {
-        bool nameExists = false;
-        bool keyBoundAlready = false;
-        NovelKey pairedKey = GetAvailableKey(keyIdentifier);
-
-        for (auto existingAction : _mappedActions)
-        {
-            if (existingAction.actionName == actionName)
-            {
-                nameExists = true;
-            }
-            if (existingAction.pairedKey == pairedKey)
-            {
-                keyBoundAlready = true;
-            }
-        }
-
-        if (nameExists)
-        {
-            throw Exceptions::InvalidOperationException("Cannot add InputAction as the name has already been mapped!");
-        }
-        else if (keyBoundAlready)
-        {
-            throw Exceptions::InvalidOperationException("Cannot add InputAction as key has already been bound!");
-        }
-        else
-        {
-            _mappedActions.emplace_back(InputAction{actionName, pairedKey});
-            return _mappedActions.back();
-        }
-    }
-
-    NovelKey& GlfwInputDevice::GetAvailableKey(const std::string& keyRequested)
-    {
-        if (keyRequested == "")
-        {
-            throw NovelRT::Exceptions::InvalidOperationException("Cannot request a key with no name.");
-        }
-
-        for (auto key : _availableKeys)
-        {
-            if (key.first == keyRequested)
-            {
-                return _availableKeys.at(key.first);
-            }
-        }
-
-        _logger.logError("Key {} not available from this input service.", keyRequested);
-        throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
-    }
-
-    NovelRT::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
-    {
-        return _mappedActions;
-    }
-
-    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition() noexcept
-    {
-        return _mousePos;
-    }
-
-    void GlfwInputDevice::ProcessKeyInput(int32_t key, int32_t state)
-    {
-        auto& map = _keyStates.at(_currentBufferIndex);
-
-        for (auto& mapped : _mappedActions)
-        {
-            if (mapped.pairedKey.GetExternalKeyCode() != key)
-                continue;
-
-            KeyStateFrameChangeLog log{};
-            bool mouseMod = false;
-            for (auto& [currentKey, currentLog] : map)
-            {
-                if (currentKey != mapped.pairedKey.GetExternalKeyCode())
-                    continue;
-
-                log = currentLog;
-                if (currentKey == GLFW_MOUSE_BUTTON_LEFT || currentKey == GLFW_MOUSE_BUTTON_MIDDLE ||
-                    currentKey == GLFW_MOUSE_BUTTON_RIGHT)
-                {
-                    mouseMod = true;
-                }
-                break;
-            }
-
-            if (mouseMod)
-            {
-                auto currentState = log.GetCurrentState();
-                if (state == (int32_t)KeyState::KeyDown &&
-                    (currentState == KeyState::KeyDown || currentState == KeyState::KeyDownHeld))
-                {
-                    state = (int32_t)KeyState::KeyDownHeld;
-                }
-            }
-
-            log.PushNewState(static_cast<KeyState>(state));
-            map.insert_or_assign(key, log);
-        }
-    }
-
-    void GlfwInputDevice::ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos)
-    {
-        _mousePos = DetermineMouseScreenPosition(pos);
-    }
-
-    void GlfwInputDevice::ProcessKeyState(int32_t key, KeyState state)
-    {
-        auto& previousBuffer = _keyStates.at(_previousBufferIndex);
-        auto& currentBuffer = _keyStates.at(_currentBufferIndex);
-
-        KeyState previousStateResult = KeyState::Idle;
-
-        for (auto& [previousKey, previousLog] : previousBuffer)
-        {
-            if (previousKey == key)
-            {
-                previousStateResult = previousLog.GetCurrentState();
-                break;
-            }
-        }
-
-        KeyStateFrameChangeLog changeLogObject = KeyStateFrameChangeLog();
-
-        for (auto& [currentKey, currentLog] : currentBuffer)
-        {
-            if (currentKey == key)
-            {
-                changeLogObject = currentLog;
-                break;
-            }
-        }
-
-        switch (state)
-        {
-            case KeyState::KeyDown:
-                if (previousStateResult == KeyState::KeyDown)
-                {
-                    changeLogObject.PushNewState(KeyState::KeyDownHeld);
-                }
-                else if (previousStateResult != KeyState::KeyDownHeld)
-                {
-                    changeLogObject.PushNewState(KeyState::KeyDown);
-                }
-                break;
-            case KeyState::KeyDownHeld:
-            case KeyState::KeyUp:
-                changeLogObject.PushNewState((previousStateResult == KeyState::KeyUp) ? KeyState::Idle : state);
-                break;
-            case KeyState::Idle:
-            default:
-                break;
-        }
-
-        currentBuffer.insert_or_assign(key, changeLogObject);
-    }
-
-    NovelRT::Maths::GeoVector2F GlfwInputDevice::DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos)
-    {
-        return NovelRT::Maths::GeoVector2F(static_cast<float>(pos.x - (_windowDimensions.x / 2)),
-                                           static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
-    }
-
-    KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(const std::string& key)
-    {
-        for (auto& action : _mappedActions)
-        {
-            if (action.actionName != key)
-                continue;
-
-            return _keyStates.at(_currentBufferIndex).at(action.pairedKey.GetExternalKeyCode());
-        }
-
-        return KeyStateFrameChangeLog();
-    }
-
-    KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(const std::string& key)
-    {
-        for (auto& action : _mappedActions)
-        {
-            if (action.actionName != key)
-                continue;
-
-            return _keyStates.at(_previousBufferIndex).at(action.pairedKey.GetExternalKeyCode());
-        }
-
-        return KeyStateFrameChangeLog();
-    }
-
-    NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputDevice::GetAllChangeLogs()
-    {
-        return _keyStates;
     }
 
     GlfwInputDevice::~GlfwInputDevice()
