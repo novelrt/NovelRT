@@ -1,15 +1,17 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSFENCE_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSFENCE_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/GraphicsFence.hpp>
+#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Threading/Threading.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
+    class VulkanGraphicsDevice;
+
     class VulkanGraphicsFence final : public GraphicsFence
     {
     private:
@@ -51,5 +53,3 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanGraphicsFence() final;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSFENCE_H

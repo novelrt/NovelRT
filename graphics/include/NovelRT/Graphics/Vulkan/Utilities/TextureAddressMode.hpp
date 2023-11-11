@@ -1,12 +1,11 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_UTILITIES_TEXTUREADDRESSMODE_H
-#define NOVELRT_GRAPHICS_VULKAN_UTILITIES_TEXTUREADDRESSMODE_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_UTILITIES_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.Utilities.h instead for the Graphics::Vulkan::Utilities namespace subset.
-#endif
+#include <vulkan/vulkan.h>
+#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
@@ -36,5 +35,3 @@ namespace NovelRT::Graphics::Vulkan::Utilities
         }
     }
 }
-
-#endif // !NOVELRT_GRAPHICS_VULKAN_UTILITIES_TEXTUREADDRESSMODE_H

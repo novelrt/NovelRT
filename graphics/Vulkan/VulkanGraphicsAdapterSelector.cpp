@@ -1,7 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
+// TODO: clean this up good grief
+#include <vector>
+#include <set>
+#include <string>
+#include <NovelRT/EngineConfig.h>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp>
+#include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {

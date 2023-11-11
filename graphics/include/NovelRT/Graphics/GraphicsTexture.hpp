@@ -1,12 +1,14 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_GRAPHICSTEXTURE_H
-#define NOVELRT_GRAPHICS_GRAPHICSTEXTURE_H
-
-#ifndef NOVELRT_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
-#endif
+#include <NovelRT/Graphics/GraphicsResource.hpp>
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+#include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
+#include <NovelRT/Graphics/GraphicsTextureKind.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <cstdint>
 
 namespace NovelRT::Graphics
 {
@@ -21,47 +23,24 @@ namespace NovelRT::Graphics
 
     public:
         GraphicsTexture(std::shared_ptr<GraphicsDevice> device,
+                        std::shared_ptr<GraphicsMemoryAllocator> allocator,
+                        GraphicsResourceAccess cpuAccess,
                         GraphicsTextureAddressMode addressMode,
                         GraphicsTextureKind kind,
-                        GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                        GraphicsResourceAccess cpuAccess,
                         uint32_t width,
                         uint32_t height,
-                        uint16_t depth)
-            : GraphicsResource(std::move(device), std::move(blockRegion), cpuAccess),
-              _addressMode(addressMode),
-              _kind(kind),
-              _width(width),
-              _height(height),
-              _depth(depth)
-        {
-        }
+                        uint16_t depth);
+        
+        virtual ~GraphicsTexture() noexcept override = default;
 
-        [[nodiscard]] inline uint16_t GetDepth() const noexcept
-        {
-            return _depth;
-        }
+        [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
+        
+        [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
-        [[nodiscard]] inline uint32_t GetHeight() const noexcept
-        {
-            return _height;
-        }
+        [[nodiscard]] uint32_t GetWidth() const noexcept;
+        
+        [[nodiscard]] uint32_t GetHeight() const noexcept;
 
-        [[nodiscard]] inline GraphicsTextureKind GetKind() const noexcept
-        {
-            return _kind;
-        }
-
-        [[nodiscard]] inline GraphicsTextureAddressMode GetAddressMode() const noexcept
-        {
-            return _addressMode;
-        }
-
-        [[nodiscard]] inline uint32_t GetWidth() const noexcept
-        {
-            return _width;
-        }
+        [[nodiscard]] uint16_t GetDepth() const noexcept;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_GRAPHICSTEXTURE_H

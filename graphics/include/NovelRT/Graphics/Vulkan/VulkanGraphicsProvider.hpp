@@ -1,12 +1,12 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPROVIDER_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPROVIDER_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Threading/Threading.h>
+#include <NovelRT/Utilities/Lazy.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -60,6 +60,8 @@ namespace NovelRT::Graphics::Vulkan
             return NovelRT::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
                                                                      _finalValidationLayerSet.size());
         }
+        
+        [[nodiscard]] uint32_t GetApiVersion() const noexcept final;
 
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept final;
         std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept final;
@@ -67,5 +69,3 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanGraphicsProvider() final;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPROVIDER_H

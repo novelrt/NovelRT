@@ -1,12 +1,10 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H
-#define NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H
-
-#ifndef NOVELRT_GRAPHICS_METAL_UTILITIES_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Metal.Utilities.h instead for the Graphics::Metal::Utilities namespace subset.
-#endif
+#include <Metal/Metal.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
 
 namespace NovelRT::Graphics::Metal::Utilities
 {
@@ -44,5 +42,3 @@ namespace NovelRT::Graphics::Metal::Utilities
         return NovelRTToMetalBlend[static_cast<uint32_t>(blendFactor)];
     }
 }
-
-#endif // !NOVELRT_GRAPHICS_METAL_UTILITIES_PIPELINEBLENDFACTOR_H

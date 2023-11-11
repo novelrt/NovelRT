@@ -1,7 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Graphics.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineSignature.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 
 namespace NovelRT::Graphics
 {

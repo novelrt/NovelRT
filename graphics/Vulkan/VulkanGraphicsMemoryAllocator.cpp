@@ -1,261 +1,99 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
+#include <NovelRT/Exceptions/InitialisationFailureException.h>
+#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    // TODO: I have no idea if this works. Lol.
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#elif defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#endif
-    size_t VulkanGraphicsMemoryAllocator::GetBlockCollectionIndex(GraphicsResourceAccess cpuAccess,
-                                                                  uint32_t memoryTypeBits)
+    VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsProvider> provider,
+                                                                 std::shared_ptr<VulkanGraphicsDevice> device)
+        : GraphicsMemoryAllocator(device, provider), _allocator(VK_NULL_HANDLE)
     {
-        bool isIntegratedGpu = GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceProperties().deviceType ==
-                               VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU;
+        auto vulkanDevice = GetDevice();
+        auto vulkanAdapter = vulkanDevice->GetAdapter();
+        auto vulkanProvider = GetProvider();
 
-        VkMemoryPropertyFlagBits requiredMemoryPropertyFlags = static_cast<VkMemoryPropertyFlagBits>(0);
-        VkMemoryPropertyFlagBits preferredMemoryPropertyFlags = static_cast<VkMemoryPropertyFlagBits>(0);
-        VkMemoryPropertyFlagBits unpreferredMemoryPropertyFlags = static_cast<VkMemoryPropertyFlagBits>(0);
+        VmaAllocatorCreateInfo createInfo{};
+        createInfo.vulkanApiVersion = vulkanProvider->GetApiVersion();
+        createInfo.physicalDevice = vulkanAdapter->GetVulkanPhysicalDevice();
+        createInfo.device = vulkanDevice->GetVulkanDevice();
+        createInfo.instance = vulkanProvider->GetVulkanInstance();
 
-        switch (cpuAccess)
+        VkResult result = vmaCreateAllocator(&createInfo, &_allocator);
+
+        if (result != VK_SUCCESS)
         {
-            case GraphicsResourceAccess::Read:
-                requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-                preferredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
-                break;
-            case GraphicsResourceAccess::Write:
-                requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-                preferredMemoryPropertyFlags |=
-                    isIntegratedGpu ? static_cast<VkMemoryPropertyFlagBits>(0) : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-                break;
-            case GraphicsResourceAccess::ReadWrite:
-                requiredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-                preferredMemoryPropertyFlags |= VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
-                preferredMemoryPropertyFlags |=
-                    isIntegratedGpu ? static_cast<VkMemoryPropertyFlagBits>(0) : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-                break;
-            default:
-            case GraphicsResourceAccess::None:
-                preferredMemoryPropertyFlags |=
-                    isIntegratedGpu ? static_cast<VkMemoryPropertyFlagBits>(0) : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-                break;
+            Exceptions::InitialisationFailureException("Failed to create the VulkanMemoryAllocator.", result);
         }
-
-        int32_t index = -1;
-        int32_t lowestCost = std::numeric_limits<int32_t>::max();
-
-        const VkPhysicalDeviceMemoryProperties& memoryProperties =
-            GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties();
-
-        for (int32_t i = 0; i < static_cast<int32_t>(_blockCollections.getActual().size()); i++)
-        {
-            if ((memoryTypeBits & (1 << i)) == 0)
-            {
-                continue;
-            }
-
-            VkMemoryPropertyFlags memoryPropertyFlags = memoryProperties.memoryTypes[i].propertyFlags;
-
-            if ((requiredMemoryPropertyFlags & memoryPropertyFlags) !=
-                static_cast<VkMemoryPropertyFlags>(requiredMemoryPropertyFlags))
-            {
-                continue;
-            }
-
-            if (memoryProperties.memoryHeaps[memoryProperties.memoryTypes[i].heapIndex].flags &
-                VK_MEMORY_HEAP_MULTI_INSTANCE_BIT)
-            {
-                continue;
-            }
-
-            int32_t cost =
-                Maths::Utilities::PopCount(static_cast<uint32_t>(preferredMemoryPropertyFlags) & ~memoryPropertyFlags) +
-                Maths::Utilities::PopCount(static_cast<uint32_t>(unpreferredMemoryPropertyFlags) &
-                                           ~memoryPropertyFlags);
-
-            if (cost >= lowestCost)
-            {
-                continue;
-            }
-
-            index = i;
-
-            if (cost == 0)
-            {
-                break;
-            }
-
-            lowestCost = cost;
-        }
-
-        if (index == -1)
-        {
-            throw std::out_of_range("Requested memory type unavailable on this physical device.");
-        }
-
-        return index;
     }
-#ifdef _MSC_VER
-#pragma warning(pop)
-#elif defined(__clang__)
-#pragma clang diagnostic pop
-#endif
 
-    VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
-                                                                 GraphicsMemoryAllocatorSettings settings)
-        : GraphicsMemoryAllocatorImpl<IGraphicsMemoryRegionCollection<GraphicsResource>::DefaultMetadata>(
-              std::move(device),
-              std::move(settings)),
-          _blockCollections([&]() {
-              std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>> returnVec{};
-              uint32_t memoryTypeCount =
-                  GetDevice()->GetAdapter()->GetVulkanPhysicalDeviceMemoryProperties().memoryTypeCount;
-              returnVec.reserve(memoryTypeCount);
-
-              for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < memoryTypeCount; memoryTypeIndex++)
-              {
-                  returnVec.emplace_back(std::static_pointer_cast<GraphicsMemoryBlockCollection>(
-                      std::make_shared<VulkanGraphicsMemoryBlockCollection>(
-                          GetDevice(), std::dynamic_pointer_cast<VulkanGraphicsMemoryAllocator>(shared_from_this()),
-                          memoryTypeIndex)));
-              }
-
-              return returnVec;
-          })
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsMemoryAllocator::GetDevice() const noexcept
     {
-        if (!_settings.BlockCreationLogicDelegate.has_value())
-        {
-            _settings.BlockCreationLogicDelegate = std::function<GraphicsMemoryBlock*(
-                std::shared_ptr<GraphicsDevice>, std::shared_ptr<GraphicsMemoryBlockCollection>, size_t)>(
-                [](auto device, auto collection, auto size) {
-                    return new VulkanGraphicsMemoryBlockImpl<
-                        IGraphicsMemoryRegionCollection<GraphicsMemoryBlock>::DefaultMetadata>(
-                        std::dynamic_pointer_cast<VulkanGraphicsDevice>(device),
-                        std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(collection), size);
-                });
-        }
+        return std::reinterpret_pointer_cast<VulkanGraphicsDevice>(GraphicsDeviceObject::GetDevice());
+    }
+
+    std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
+    {
+        return std::reinterpret_pointer_cast<VulkanGraphicsProvider>(GraphicsMemoryAllocator::GetProvider());
     }
 
     std::shared_ptr<GraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
-        GraphicsBufferKind bufferKind,
-        GraphicsResourceAccess cpuAccessKind,
-        GraphicsResourceAccess gpuAccessKind,
-        size_t size,
-        GraphicsMemoryRegionAllocationFlags allocationFlags)
+        const GraphicsBufferCreateInfo& createInfo)
     {
-        VkDevice vulkanDevice = GetDevice()->GetVulkanDevice();
-
-        VkBufferCreateInfo bufferCreateInfo{};
-        bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferCreateInfo.size = size;
-        bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(bufferKind, gpuAccessKind);
-
-        VkBuffer vulkanBuffer = VK_NULL_HANDLE;
-
-        VkResult bufferCreationResult = vkCreateBuffer(vulkanDevice, &bufferCreateInfo, nullptr, &vulkanBuffer);
-        if (bufferCreationResult != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to create requested VkBuffer instance.",
-                                                             bufferCreationResult);
-        }
-
-        VkMemoryRequirements memoryRequirements{};
-        vkGetBufferMemoryRequirements(vulkanDevice, vulkanBuffer, &memoryRequirements);
-
-        size_t index = GetBlockCollectionIndex(cpuAccessKind, memoryRequirements.memoryTypeBits);
-        std::shared_ptr<VulkanGraphicsMemoryBlockCollection> blockCollection =
-            std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(_blockCollections.getActual().at(index));
-
-        GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion =
-            blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
-
-        return std::static_pointer_cast<GraphicsBuffer>(std::make_shared<VulkanGraphicsBufferImpl<Metadata>>(
-            GetDevice(), bufferKind, std::move(blockRegion), cpuAccessKind, vulkanBuffer));
+        return CreateVulkanBuffer(createInfo);
     }
 
     std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
-        GraphicsTextureAddressMode addressMode,
-        GraphicsTextureKind textureKind,
-        GraphicsResourceAccess cpuAccessKind,
-        GraphicsResourceAccess gpuAccessKind,
-        uint32_t width,
-        uint32_t height,
-        uint32_t depth,
-        GraphicsMemoryRegionAllocationFlags allocationFlags,
-        TexelFormat texelFormat)
+        const GraphicsTextureCreateInfo& createInfo)
     {
-        VkDevice vulkanDevice = GetDevice()->GetVulkanDevice();
-        VkImageType imageType;
+        return CreateVulkanTexture(createInfo);
+    }
 
-        switch (textureKind)
+    std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateVulkanBuffer(
+        const GraphicsBufferCreateInfo& createInfo)
+    {
+        VkBufferCreateInfo bufferCreateInfo{};
+        bufferCreateInfo.size = createInfo.size;
+        bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(createInfo.bufferKind, createInfo.gpuAccessKind);
+
+        VmaAllocationCreateInfo allocationCreateInfo{};
+        allocationCreateInfo.flags = Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind);
+        allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
+
+        VkBuffer outBuffer = VK_NULL_HANDLE;
+        VmaAllocation outAllocation = VK_NULL_HANDLE;
+        VmaAllocationInfo outAllocationInfo{}; // TODO: I haven't figured out what I am doing with this yet, but I'm
+                                               // fairly sure we need it. Lol.
+
+        VkResult result = vmaCreateBuffer(_allocator, &bufferCreateInfo, &allocationCreateInfo, &outBuffer,
+                                          &outAllocation, &outAllocationInfo);
+
+        if (result != VK_SUCCESS)
         {
-            case GraphicsTextureKind::OneDimensional:
-                imageType = VK_IMAGE_TYPE_1D;
-                break;
-            case GraphicsTextureKind::TwoDimensional:
-                imageType = VK_IMAGE_TYPE_2D;
-                break;
-            case GraphicsTextureKind::ThreeDimensional:
-                imageType = VK_IMAGE_TYPE_3D;
-                break;
-            default:
-            case GraphicsTextureKind::Unknown:
-                throw Exceptions::NotSupportedException(
-                    "The specified texture kind is not supported in the default Vulkan pipeline.");
+            throw Exceptions::InitialisationFailureException("Failed to correctly initialise the newly requested "
+                                                             "Vulkan Buffer based on the supplied createInfo object.",
+                                                             result);
         }
 
-        VkExtent3D extent{};
-        extent.width = width;
-        extent.height = height;
-        extent.depth = depth;
-
-        VkImageCreateInfo imageCreateInfo{};
-        imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        imageCreateInfo.imageType = imageType;
-        imageCreateInfo.format = Utilities::Map(texelFormat);
-        imageCreateInfo.extent = extent;
-        imageCreateInfo.mipLevels = 1;
-        imageCreateInfo.arrayLayers = 1;
-        imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-        imageCreateInfo.usage = Utilities::GetVulkanImageUsageKind(textureKind, gpuAccessKind);
-
-        VkImage vulkanImage = VK_NULL_HANDLE;
-
-        VkResult createImageResult = vkCreateImage(vulkanDevice, &imageCreateInfo, nullptr, &vulkanImage);
-        if (createImageResult != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to create VkImage with the specified parameters.",
-                                                             createImageResult);
-        }
-
-        VkMemoryRequirements memoryRequirements{};
-        vkGetImageMemoryRequirements(vulkanDevice, vulkanImage, &memoryRequirements);
-
-        size_t index = GetBlockCollectionIndex(cpuAccessKind, memoryRequirements.memoryTypeBits);
-        std::shared_ptr<VulkanGraphicsMemoryBlockCollection> blockCollection =
-            std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(_blockCollections.getActual().at(index));
-
-        GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion =
-            blockCollection->Allocate(memoryRequirements.size, memoryRequirements.alignment, allocationFlags);
-
-        return std::static_pointer_cast<GraphicsTexture>(std::make_shared<VulkanGraphicsTextureImpl<Metadata>>(
-            GetDevice(), addressMode, textureKind, std::move(blockRegion), cpuAccessKind, width, height,
-            static_cast<uint16_t>(depth), vulkanImage));
+        return std::make_shared<VulkanGraphicsBuffer>();
     }
 
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::begin()
+    std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateVulkanTexture(
+        const GraphicsTextureCreateInfo& createInfo)
     {
-        return _blockCollections.getActual().begin();
+        return nullptr;
     }
 
-    std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator VulkanGraphicsMemoryAllocator::end()
+    VmaAllocator VulkanGraphicsMemoryAllocator::GetVmaAllocator() const noexcept
     {
-        return _blockCollections.getActual().end();
+        return _allocator;
     }
-} // namespace NovelRT::Graphics::Vulkan
+}

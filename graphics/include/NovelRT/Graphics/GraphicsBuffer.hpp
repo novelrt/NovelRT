@@ -1,12 +1,10 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_GRAPHICSBUFFER_H
-#define NOVELRT_GRAPHICS_GRAPHICSBUFFER_H
-
-#ifndef NOVELRT_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
-#endif
+#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
+#include <NovelRT/Graphics/GraphicsResource.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -16,19 +14,9 @@ namespace NovelRT::Graphics
         GraphicsBufferKind _kind;
 
     public:
-        GraphicsBuffer(std::shared_ptr<GraphicsDevice> device,
-                       GraphicsBufferKind kind,
-                       GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                       GraphicsResourceAccess cpuAccess)
-            : GraphicsResource(std::move(device), std::move(blockRegion), cpuAccess), _kind(kind)
-        {
-        }
+        GraphicsBuffer(std::shared_ptr<GraphicsDevice> graphicsDevice, std::shared_ptr<GraphicsMemoryAllocator> allocator, GraphicsResourceAccess cpuAccess, GraphicsBufferKind kind);
+        ~GraphicsBuffer() noexcept override = default;
 
-        [[nodiscard]] inline GraphicsBufferKind GetKind() const noexcept
-        {
-            return _kind;
-        }
+        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_GRAPHICSBUFFER_H

@@ -1,15 +1,16 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSSURFACECONTEXT_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSSURFACECONTEXT_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <vulkan/vulkan.h>
+#include <NovelRT/LoggingService.h>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
+
     class VulkanGraphicsSurfaceContext final : public GraphicsSurfaceContext
     {
     private:
@@ -38,5 +39,3 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanGraphicsSurfaceContext() final;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSSURFACECONTEXT_H

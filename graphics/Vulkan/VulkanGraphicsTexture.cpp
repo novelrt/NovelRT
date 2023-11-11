@@ -1,253 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
-                                                 GraphicsTextureAddressMode addressMode,
-                                                 GraphicsTextureKind kind,
-                                                 GraphicsMemoryRegion<GraphicsMemoryBlock> blockRegion,
-                                                 GraphicsResourceAccess cpuAccess,
-                                                 uint32_t width,
-                                                 uint32_t height,
-                                                 uint16_t depth,
-                                                 VkImage vulkanImage)
-        : GraphicsTexture(std::move(device),
-                          addressMode,
-                          kind,
-                          std::move(blockRegion),
-                          cpuAccess,
-                          width,
-                          height,
-                          depth),
-          _vulkanImage(vulkanImage),
-          _vulkanImageView([&]() { return CreateVulkanImageView(); }),
-          _vulkanSampler([&]() { return CreateVulkanSampler(); })
-    {
-        VkResult result = vkBindImageMemory(GetAllocator()->GetDevice()->GetVulkanDevice(), vulkanImage,
-                                            GetBlock()->GetVulkanDeviceMemory(), GetBlockRegion().GetOffset());
-
-        if (result != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to bind VkImage to VkImageMemory correctly.",
-                                                             result);
-        }
-    }
-
-    void* Vulkan::VulkanGraphicsTexture::MapUntyped()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        void* pDestination = nullptr;
-        VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
-
-        if (mapMemoryResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to map VkMemory to T*! Reason: " + std::to_string(mapMemoryResult));
-        }
-
-        return pDestination;
-    }
-
-    void* VulkanGraphicsTexture::MapUntyped(size_t rangeOffset, size_t /*rangeLength*/)
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        void* pDestination = nullptr;
-
-        VkResult result = vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
-
-        if (result != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to map VkDeviceMemory! Reason: " + std::to_string(result));
-        }
-
-        return reinterpret_cast<uint8_t*>(pDestination) + rangeOffset;
-    }
-
-    const void* VulkanGraphicsTexture::MapForReadUntyped()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        void* pDestination = nullptr;
-        VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
-
-        if (mapMemoryResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to map VkMemory to T*! Reason: " + std::to_string(mapMemoryResult));
-        }
-
-        size_t nonCoherentAtomSize =
-            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
-        size_t offset = GetOffset();
-        size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
-
-        VkMappedMemoryRange mappedMemoryRange{};
-        mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedMemoryRange.memory = vulkanDeviceMemory;
-        mappedMemoryRange.offset = offset;
-        mappedMemoryRange.size = size;
-
-        VkResult invalidateResult = vkInvalidateMappedMemoryRanges(vulkanDevice, 1, &mappedMemoryRange);
-
-        if (invalidateResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to invalidate memory ranges to prevent writing! Reason: " +
-                                     std::to_string(invalidateResult));
-        }
-
-        return pDestination;
-    }
-
-    const void* VulkanGraphicsTexture::MapForReadUntyped(size_t readRangeOffset, size_t readRangeLength)
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        void* pDestination = nullptr;
-        VkResult mapMemoryResult =
-            vkMapMemory(vulkanDevice, vulkanDeviceMemory, GetOffset(), GetSize(), 0, &pDestination);
-
-        if (mapMemoryResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to map VkMemory to T*! Reason: " + std::to_string(mapMemoryResult));
-        }
-
-        if (readRangeLength != 0)
-        {
-            size_t nonCoherentAtomSize =
-                device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
-            size_t offset = GetOffset() + readRangeOffset;
-            size_t size = (readRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
-
-            VkMappedMemoryRange mappedMemoryRange{};
-            mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-            mappedMemoryRange.memory = vulkanDeviceMemory;
-            mappedMemoryRange.offset = offset;
-            mappedMemoryRange.size = size;
-
-            VkResult invalidateResult = vkInvalidateMappedMemoryRanges(vulkanDevice, 1, &mappedMemoryRange);
-
-            if (invalidateResult != VK_SUCCESS)
-            {
-                // TODO: Add real exception.
-                throw std::runtime_error("Failed to invalidate memory ranges to prevent writing! Reason: " +
-                                         std::to_string(invalidateResult));
-            }
-        }
-
-        return reinterpret_cast<uint8_t*>(pDestination) + readRangeOffset;
-    }
-
-    void VulkanGraphicsTexture::Unmap()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        vkUnmapMemory(vulkanDevice, vulkanDeviceMemory);
-    }
-
-    void VulkanGraphicsTexture::UnmapAndWrite()
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        size_t nonCoherentAtomSize =
-            device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
-        size_t offset = GetOffset();
-        size_t size = (GetSize() + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
-
-        VkMappedMemoryRange mappedMemoryRange{};
-        mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedMemoryRange.memory = vulkanDeviceMemory;
-        mappedMemoryRange.offset = offset;
-        mappedMemoryRange.size = size;
-
-        VkResult flushResult = vkFlushMappedMemoryRanges(vulkanDevice, 1, &mappedMemoryRange);
-
-        if (flushResult != VK_SUCCESS)
-        {
-            // TODO: Add real exception.
-            throw std::runtime_error("Failed to flush memory ranges after writing! Reason: " +
-                                     std::to_string(flushResult));
-        }
-
-        vkUnmapMemory(vulkanDevice, vulkanDeviceMemory);
-    }
-
-    void VulkanGraphicsTexture::UnmapAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
-    {
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
-
-        VkDevice vulkanDevice = device->GetVulkanDevice();
-        VkDeviceMemory vulkanDeviceMemory = GetBlock()->GetVulkanDeviceMemory();
-
-        if (writtenRangeLength != 0)
-        {
-            size_t nonCoherentAtomSize =
-                device->GetAdapter()->GetVulkanPhysicalDeviceProperties().limits.nonCoherentAtomSize;
-            size_t offset = GetOffset() + writtenRangeOffset;
-            size_t size = (writtenRangeLength + nonCoherentAtomSize - 1) & ~(nonCoherentAtomSize - 1);
-
-            VkMappedMemoryRange mappedMemoryRange{};
-            mappedMemoryRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-            mappedMemoryRange.memory = vulkanDeviceMemory;
-            mappedMemoryRange.offset = offset;
-            mappedMemoryRange.size = size;
-
-            VkResult flushResult = vkFlushMappedMemoryRanges(vulkanDevice, 1, &mappedMemoryRange);
-
-            if (flushResult != VK_SUCCESS)
-            {
-                // TODO: Add real exception.
-                throw std::runtime_error("Failed to flush memory ranges after writing! Reason: " +
-                                         std::to_string(flushResult));
-            }
-        }
-        vkUnmapMemory(vulkanDevice, vulkanDeviceMemory);
-    }
-
-    VulkanGraphicsTexture::~VulkanGraphicsTexture()
-    {
-        DisposeVulkanSampler();
-        DisposeVulkanImage();
-        DisposeVulkanImageView();
-        GetBlockRegion().GetCollection()->Free(GetBlockRegion());
-    }
-
-    VulkanGraphicsDevice* VulkanGraphicsTexture::GetDeviceInternal() const noexcept
-    {
-        // TODO: This feels like it might be a perf issue later.
-        return dynamic_cast<VulkanGraphicsDevice*>(GraphicsDeviceObject::GetDevice().get());
-    }
-
     VkImageView VulkanGraphicsTexture::CreateVulkanImageView()
     {
         VkImageView vulkanImageView = VK_NULL_HANDLE;
 
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
+        std::shared_ptr<VulkanGraphicsDevice> device = VulkanGraphicsResource::GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
 
@@ -303,7 +68,7 @@ namespace NovelRT::Graphics::Vulkan
     {
         VkSampler vulkanSampler = VK_NULL_HANDLE;
 
-        std::shared_ptr<VulkanGraphicsDevice> device = GetAllocator()->GetDevice();
+        std::shared_ptr<VulkanGraphicsDevice> device = VulkanGraphicsResource::GetAllocator()->GetDevice();
 
         VkDevice vulkanDevice = device->GetVulkanDevice();
 
@@ -330,29 +95,152 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanSampler;
     }
 
-    void VulkanGraphicsTexture::DisposeVulkanImage() noexcept
+    VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
+                                                 std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+                                                 GraphicsResourceAccess cpuAccess,
+                                                 GraphicsTextureAddressMode addressMode,
+                                                 GraphicsTextureKind kind,
+                                                 uint32_t width,
+                                                 uint32_t height,
+                                                 uint16_t depth,
+                                                 VmaAllocation allocation,
+                                                 VmaAllocationInfo allocationInfo,
+                                                 size_t subAllocations,
+                                                 VkImage vulkanImage)
+        : VulkanGraphicsResource(device, allocator, cpuAccess, allocation, allocationInfo),
+          GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
+          _vulkanImage(vulkanImage),
+          _subAllocations(0),
+          _vulkanImageView([&]() { return CreateVulkanImageView(); }),
+          _vulkanSampler([&]() { return CreateVulkanSampler(); })
     {
-        if (_vulkanImage != VK_NULL_HANDLE)
-        {
-            vkDestroyImage(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanImage, nullptr);
-        }
     }
 
-    void VulkanGraphicsTexture::DisposeVulkanImageView() noexcept
+    VulkanGraphicsTexture::~VulkanGraphicsTexture() noexcept
     {
+        auto vulkanDevice = VulkanGraphicsResource::GetDevice()->GetVulkanDevice();
+        auto allocator = VulkanGraphicsResource::GetAllocator()->GetVmaAllocator();
+        auto allocation = GetAllocation();
+
+        assert_message(_subAllocations != 0, "Attempted to destroy a VkImage containing mapped regions.");
+
         if (_vulkanImageView.isCreated())
         {
-            vkDestroyImageView(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanImageView.getActual(), nullptr);
+            vkDestroyImageView(vulkanDevice, _vulkanImageView.getActual(), nullptr);
             _vulkanImageView.reset();
         }
-    }
 
-    void VulkanGraphicsTexture::DisposeVulkanSampler() noexcept
-    {
         if (_vulkanSampler.isCreated())
         {
-            vkDestroySampler(GetAllocator()->GetDevice()->GetVulkanDevice(), _vulkanSampler.getActual(), nullptr);
+            vkDestroyImageView(vulkanDevice, _vulkanImageView.getActual(), nullptr);
             _vulkanSampler.reset();
         }
+
+        vmaDestroyImage(allocator, GetVulkanImage(), allocation);
     }
-} // namespace NovelRT::Graphics::Vulkan
+
+    NovelRT::Utilities::Misc::Span<uint8_t> VulkanGraphicsTexture::MapBytes(size_t rangeOffset, size_t rangeLength)
+    {
+        size_t sizeOfBuffer = GetAllocationInfo().size;
+        size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
+
+        if (rangeValidationValue < rangeLength)
+        {
+            throw Exceptions::InvalidOperationException(
+                "Attempted to map a subrange of a VkTexture that exceeded the VkBuffer's size.");
+        }
+
+        void* data = nullptr;
+        VkResult result =
+            vmaMapMemory(VulkanGraphicsResource::GetAllocator()->GetVmaAllocator(), GetAllocation(), &data);
+
+        if (result != VK_SUCCESS)
+        {
+            // TODO: Make this a real exception
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU. Reason: " + std::to_string(result));
+        }
+
+        _subAllocations++;
+
+        return NovelRT::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(data) + rangeOffset, rangeLength);
+    }
+
+    NovelRT::Utilities::Misc::Span<const uint8_t> VulkanGraphicsTexture::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
+    {
+        size_t sizeOfBuffer = GetAllocationInfo().size;
+        size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
+
+        if (rangeValidationValue < rangeLength)
+        {
+            throw Exceptions::InvalidOperationException(
+                "Attempted to map a subrange of a VkBuffer that exceeded the VkBuffer's size.");
+        }
+
+        VmaAllocator allocator = VulkanGraphicsResource::GetAllocator()->GetVmaAllocator();
+        VmaAllocation allocation = GetAllocation();
+
+        void* data = nullptr;
+        VkResult mapResult = vmaMapMemory(allocator, allocation, &data);
+
+        if (mapResult != VK_SUCCESS)
+        {
+            // TODO: Make this a real exception
+            throw std::runtime_error("Failed to map Vulkan memory to the CPU. Reason: " + std::to_string(mapResult));
+        }
+
+        VkResult invalidateResult = vmaInvalidateAllocation(allocator, allocation, rangeOffset, rangeLength);
+
+        if (invalidateResult != VK_SUCCESS)
+        {
+            // TODO: Make this a real exception
+            throw std::runtime_error("Failed to invalidate mapped memory. Reason: " + std::to_string(mapResult));
+        }
+
+        return NovelRT::Utilities::Misc::Span<const uint8_t>(reinterpret_cast<const uint8_t*>(data), rangeLength);
+    }
+
+    void VulkanGraphicsTexture::UnmapBytes()
+    {
+        vmaUnmapMemory(VulkanGraphicsResource::GetAllocator()->GetVmaAllocator(), GetAllocation());
+    }
+
+    void VulkanGraphicsTexture::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
+    {
+        size_t sizeOfBuffer = GetAllocationInfo().size;
+        size_t rangeValidationValue = sizeOfBuffer - writtenRangeOffset;
+
+        if (rangeValidationValue < writtenRangeLength)
+        {
+            throw Exceptions::InvalidOperationException(
+                "Attempted to write a subrange of a VkImage that exceeded the VkBuffer's size.");
+        }
+
+        auto allocator = VulkanGraphicsResource::GetAllocator()->GetVmaAllocator();
+        auto allocation = GetAllocation();
+
+        VkResult result = vmaFlushAllocation(allocator, allocation, writtenRangeOffset, writtenRangeLength);
+
+        if (result != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to write VkBuffer subrange to GPU memory. Reason: " +
+                                     std::to_string(result));
+        }
+
+        vmaUnmapMemory(allocator, allocation);
+    }
+
+    VkImage VulkanGraphicsTexture::GetVulkanImage() const noexcept
+    {
+        return _vulkanImage;
+    }
+
+    VkImageView VulkanGraphicsTexture::GetOrCreateVulkanImageView()
+    {
+        return _vulkanImageView.getActual();
+    }
+
+    VkSampler VulkanGraphicsTexture::GetOrCreateVulkanSampler()
+    {
+        return _vulkanSampler.getActual();
+    }
+}

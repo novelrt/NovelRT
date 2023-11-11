@@ -1,12 +1,13 @@
 add_library(NovelRT-Graphics STATIC
-  GraphicsMemoryBlock.cpp
-  GraphicsMemoryBlockCollection.cpp
+  GraphicsBuffer.cpp
+  GraphicsMemoryAllocator.cpp
   GraphicsPipeline.cpp
   GraphicsPipelineInput.cpp
   GraphicsPipelineInputElement.cpp
   GraphicsPipelineResource.cpp
   GraphicsPipelineSignature.cpp
-  GraphicsResourceManager.cpp
+  GraphicsResource.cpp
+  GraphicsTexture.cpp
   ShaderProgram.cpp
   Vulkan/VulkanGraphicsAdapter.cpp
   Vulkan/VulkanGraphicsAdapterSelector.cpp
@@ -15,11 +16,10 @@ add_library(NovelRT-Graphics STATIC
   Vulkan/VulkanGraphicsDevice.cpp
   Vulkan/VulkanGraphicsFence.cpp
   Vulkan/VulkanGraphicsMemoryAllocator.cpp
-  Vulkan/VulkanGraphicsMemoryBlock.cpp
-  Vulkan/VulkanGraphicsMemoryBlockCollection.cpp
   Vulkan/VulkanGraphicsPipeline.cpp
   Vulkan/VulkanGraphicsPipelineSignature.cpp
   Vulkan/VulkanGraphicsPluginProvider.cpp
+  Vulkan/VulkanGraphicsResource.cpp
   Vulkan/VulkanGraphicsProvider.cpp
   Vulkan/VulkanGraphicsSurfaceContext.cpp
   Vulkan/VulkanGraphicsTexture.cpp
@@ -32,20 +32,15 @@ target_sources(NovelRT-Graphics
     TYPE HEADERS
     BASE_DIRS include
     FILES
-      include/NovelRT/Graphics/Graphics.hpp
       include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
+      include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsBufferKind.hpp
       include/NovelRT/Graphics/GraphicsContext.hpp
       include/NovelRT/Graphics/GraphicsDevice.hpp
       include/NovelRT/Graphics/GraphicsDeviceObject.hpp
       include/NovelRT/Graphics/GraphicsFence.hpp
       include/NovelRT/Graphics/GraphicsMemoryAllocator.hpp
-      include/NovelRT/Graphics/GraphicsMemoryAllocatorSettings.hpp
-      include/NovelRT/Graphics/GraphicsMemoryBlock.hpp
-      include/NovelRT/Graphics/GraphicsMemoryBlockCollection.hpp
-      include/NovelRT/Graphics/GraphicsMemoryBudget.hpp
-      include/NovelRT/Graphics/GraphicsMemoryRegion.hpp
       include/NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp
       include/NovelRT/Graphics/GraphicsPipeline.hpp
       include/NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp
@@ -55,31 +50,24 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/GraphicsPipelineResource.hpp
       include/NovelRT/Graphics/GraphicsPipelineResourceKind.hpp
       include/NovelRT/Graphics/GraphicsPipelineSignature.hpp
-      include/NovelRT/Graphics/GraphicsPrimitive.hpp
       include/NovelRT/Graphics/GraphicsProvider.hpp
       include/NovelRT/Graphics/GraphicsResource.hpp
       include/NovelRT/Graphics/GraphicsResourceAccess.hpp
-      include/NovelRT/Graphics/GraphicsResourceManager.hpp
       include/NovelRT/Graphics/GraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/GraphicsSurfaceKind.hpp
       include/NovelRT/Graphics/GraphicsTexture.hpp
       include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
+      include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
       include/NovelRT/Graphics/GraphicsTextureKind.hpp
       include/NovelRT/Graphics/IGraphicsAdapterSelector.hpp
-      include/NovelRT/Graphics/IGraphicsMemoryRegionCollection.hpp
       include/NovelRT/Graphics/IGraphicsSurface.hpp
       include/NovelRT/Graphics/RGBAColour.hpp
       include/NovelRT/Graphics/ShaderProgram.hpp
       include/NovelRT/Graphics/ShaderProgramKind.hpp
       include/NovelRT/Graphics/ShaderProgramVisibility.hpp
       include/NovelRT/Graphics/TexelFormat.hpp
-      include/NovelRT/Graphics/D3D12/Graphics.D3D12.hpp
-      include/NovelRT/Graphics/D3D12/Utilities/Graphics.D3D12.Utilities.hpp
       include/NovelRT/Graphics/D3D12/Utilities/PipelineBlendFactor.hpp
-      include/NovelRT/Graphics/Metal/Graphics.Metal.hpp
-      include/NovelRT/Graphics/Metal/Utilities/Graphics.Metal.Utilities.hpp
       include/NovelRT/Graphics/Metal/Utilities/PipelineBlendFactor.hpp
-      include/NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp
       include/NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp
       include/NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp
@@ -89,18 +77,15 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryBlock.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryBlockCollection.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsPrimitive.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/Graphics.Vulkan.Utilities.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp

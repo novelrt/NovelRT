@@ -1,72 +1,39 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSMEMORYALLOCATOR_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSMEMORYALLOCATOR_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsMemoryAllocator final
-        : public GraphicsMemoryAllocatorImpl<IGraphicsMemoryRegionCollection<GraphicsResource>::DefaultMetadata>
+    class VulkanGraphicsTexture;
+    class VulkanGraphicsBuffer;
+
+    class VulkanGraphicsMemoryAllocator final : public GraphicsMemoryAllocator
     {
     private:
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>> _blockCollections;
-        Threading::VolatileState _state;
-
-        [[nodiscard]] size_t GetBlockCollectionIndex(GraphicsResourceAccess cpuAccess, uint32_t memoryTypeBits);
+        VmaAllocator _allocator;
 
     public:
-        VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
-                                      GraphicsMemoryAllocatorSettings settings);
+        VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsProvider> provider,
+                                      std::shared_ptr<VulkanGraphicsDevice> device);
 
-        [[nodiscard]] inline size_t GetCount() final
-        {
-            return _blockCollections.getActual().size();
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GraphicsDeviceObject::GetDevice());
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsProvider> GetProvider() const noexcept;
 
-        std::shared_ptr<GraphicsBuffer> CreateBuffer(GraphicsBufferKind bufferKind,
-                                                     GraphicsResourceAccess cpuAccessKind,
-                                                     GraphicsResourceAccess gpuAccessKind,
-                                                     size_t size,
-                                                     GraphicsMemoryRegionAllocationFlags allocationFlags) final;
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateBuffer(const GraphicsBufferCreateInfo& createInfo) final;
 
-        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(
-            GraphicsTextureAddressMode addressMode,
-            GraphicsTextureKind textureKind,
-            GraphicsResourceAccess cpuAccessKind,
-            GraphicsResourceAccess gpuAccessKind,
-            uint32_t width,
-            uint32_t height,
-            uint32_t depth,
-            GraphicsMemoryRegionAllocationFlags allocationFlags,
-            TexelFormat texelFormat) final;
+        [[nodiscard]] std::shared_ptr<GraphicsTexture> CreateTexture(const GraphicsTextureCreateInfo& createInfo) final;        
 
-        [[nodiscard]] inline GraphicsMemoryBudget GetBudget(
-            std::shared_ptr<VulkanGraphicsMemoryBlockCollection> /*collection*/)
-        {
-            return GraphicsMemoryBudget(std::numeric_limits<uint64_t>::max(), 0, 0, 0);
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsBuffer> CreateVulkanBuffer(
+            const GraphicsBufferCreateInfo& createInfo);
 
-        [[nodiscard]] inline GraphicsMemoryBudget GetBudget(
-            std::shared_ptr<GraphicsMemoryBlockCollection> blockCollection) final
-        {
-            return GetBudget(std::dynamic_pointer_cast<VulkanGraphicsMemoryBlockCollection>(blockCollection));
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> CreateVulkanTexture(
+            const GraphicsTextureCreateInfo& createInfo);
 
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator begin() final;
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsMemoryBlockCollection>>::iterator end() final;
-
-        ~VulkanGraphicsMemoryAllocator() final = default;
+        [[nodiscard]] VmaAllocator GetVmaAllocator() const noexcept;
     };
 }
-
-#endif // NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSMEMORYALLOCATOR_H

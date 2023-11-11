@@ -1,8 +1,7 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-
-#ifndef NOVELRT_GRAPHICS_RGBACOLOUR_H
-#define NOVELRT_GRAPHICS_RGBACOLOUR_H
 
 #include <cstdint>
 
@@ -42,5 +41,3 @@ namespace NovelRT::Graphics
         }
     };
 }
-
-#endif // NOVELRT_GRAPHICS_RGBACOLOUR_H

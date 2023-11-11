@@ -1,15 +1,21 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSADAPTER_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSADAPTER_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <string>
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/GraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Threading/Threading.h>
+#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
+    class VulkanGraphicsProvider;
+    class VulkanGraphicsDevice;
+
     class VulkanGraphicsAdapter final : public GraphicsAdapter
     {
     private:
@@ -77,5 +83,3 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanGraphicsAdapter() final = default;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSADAPTER_H

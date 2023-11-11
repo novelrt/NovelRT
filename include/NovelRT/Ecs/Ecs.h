@@ -82,7 +82,6 @@ namespace NovelRT::Ecs
 #include "SystemScheduler.h"
 #include "UnsafeComponentView.h"
 #include "Audio/Ecs.Audio.h"
-#include "Graphics/Ecs.Graphics.h"
 #include "Input/Ecs.Input.h"
 #include "Narrative/Ecs.Narrative.h"
 #include "Configurator.h"

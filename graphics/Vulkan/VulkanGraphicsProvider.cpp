@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
 #include <iostream>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -222,7 +223,7 @@ namespace NovelRT::Graphics::Vulkan
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = EngineConfig::EngineName().c_str();
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_2;
+        appInfo.apiVersion = GetApiVersion();
 
         _finalExtensionSet = GetFinalInstanceExtensionSet();
         std::vector<const char*> allExtensionullptrs =
@@ -336,6 +337,12 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         vkDestroyInstance(_vulkanInstance, nullptr);
+    }
+
+    
+    uint32_t VulkanGraphicsProvider::GetApiVersion() const noexcept
+    {
+        return VK_API_VERSION_1_2;
     }
 
     std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept

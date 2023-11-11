@@ -1,17 +1,20 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H
-#define NOVELRT_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_UTILITIES_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.Utilities.h instead for the Graphics::Vulkan::Utilities namespace subset.
-#endif
+#include <cstdint>
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+#include <NovelRT/Graphics/GraphicsTextureKind.hpp>
+#include <NovelRT/Utilities/Misc.h> // we need this for the bitwise logic
+#include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
     [[nodiscard]] inline uint32_t GetVulkanBufferUsageKind(GraphicsBufferKind kind,
-                                                           GraphicsResourceAccess gpuAccess) noexcept
+                                                           GraphicsResourceAccess resourceAccessType) noexcept
     {
         VkBufferUsageFlagBits vulkanBufferUsageKind = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
@@ -34,7 +37,7 @@ namespace NovelRT::Graphics::Vulkan::Utilities
 
         VkBufferUsageFlagBits cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-        switch (gpuAccess)
+        switch (resourceAccessType)
         {
             case GraphicsResourceAccess::Read:
                 cpuAccessBit = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
@@ -56,11 +59,11 @@ namespace NovelRT::Graphics::Vulkan::Utilities
     }
 
     [[nodiscard]] inline uint32_t GetVulkanImageUsageKind(GraphicsTextureKind /*kind*/,
-                                                          GraphicsResourceAccess gpuAccess) noexcept
+                                                          GraphicsResourceAccess resourceAccessType) noexcept
     {
         VkImageUsageFlagBits cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-        switch (gpuAccess)
+        switch (resourceAccessType)
         {
             case GraphicsResourceAccess::Read:
                 cpuAccessBit = VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
@@ -80,6 +83,9 @@ namespace NovelRT::Graphics::Vulkan::Utilities
         cpuAccessBit |= static_cast<VkImageUsageFlagBits>(VK_IMAGE_USAGE_SAMPLED_BIT);
         return static_cast<uint32_t>(cpuAccessBit);
     }
-}
 
-#endif // NOVELRT_GRAPHICS_VULKAN_UTILITIES_BUFFERUSAGEKIND_H
+    [[nodiscard]] inline uint32_t GetVmaAllocationKind(GraphicsResourceAccess resourceAccessType) noexcept
+    {
+        
+    }
+}

@@ -1,7 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
+#include <set>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -28,7 +34,6 @@ namespace NovelRT::Graphics::Vulkan
           _vulkanSwapchain([&]() { return CreateSwapChain(); }),
           _swapChainImages([&]() { return GetSwapChainImages(); }),
           _renderPass([&]() { return CreateRenderPass(); }),
-          _memoryAllocator([&]() { return CreateMemoryAllocator(); }),
           _indicesData{},
           _state()
     {
@@ -63,13 +68,6 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         return contexts;
-    }
-
-    std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsDevice::CreateMemoryAllocator()
-    {
-        GraphicsMemoryAllocatorSettings allocatorSettings{};
-        return std::make_shared<VulkanGraphicsMemoryAllocator>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), allocatorSettings);
     }
 
     std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet() const
@@ -468,32 +466,6 @@ namespace NovelRT::Graphics::Vulkan
         return _contextIndex;
     }
 
-    std::shared_ptr<GraphicsPrimitive> VulkanGraphicsDevice::CreatePrimitive(
-        std::shared_ptr<GraphicsPipeline> pipeline,
-        GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-        uint32_t vertexBufferStride,
-        GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-        uint32_t indexBufferStride,
-        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
-    {
-        return std::static_pointer_cast<GraphicsPrimitive>(
-            CreateVulkanPrimitive(std::dynamic_pointer_cast<VulkanGraphicsPipeline>(pipeline), vertexBufferRegion,
-                                  vertexBufferStride, indexBufferRegion, indexBufferStride, inputResourceRegions));
-    }
-
-    std::shared_ptr<VulkanGraphicsPrimitive> VulkanGraphicsDevice::CreateVulkanPrimitive(
-        std::shared_ptr<VulkanGraphicsPipeline> pipeline,
-        GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-        uint32_t vertexBufferStride,
-        GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-        uint32_t indexBufferStride,
-        NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions)
-    {
-        return std::make_shared<VulkanGraphicsPrimitive>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), pipeline, vertexBufferRegion,
-            vertexBufferStride, indexBufferRegion, indexBufferStride, inputResourceRegions);
-    }
-
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
@@ -548,9 +520,19 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    VulkanGraphicsMemoryAllocator* VulkanGraphicsDevice::GetMemoryAllocatorInternal()
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext()
     {
-        return _memoryAllocator.getActual().get();
+        return std::dynamic_pointer_cast<VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
+    }
+
+    std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const noexcept
+    {
+        return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
+    }
+
+    std::shared_ptr<VulkanGraphicsSurfaceContext> VulkanGraphicsDevice::GetSurfaceContext() const noexcept
+    {
+        return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
     }
 
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)

@@ -1,15 +1,22 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSDEVICE_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSDEVICE_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <cstdint>
+#include <memory>
+#include <vulkan/vulkan.h>
+#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
+    class VulkanGraphicsAdapter;
+
     class VulkanGraphicsDevice final : public GraphicsDevice
     {
     private:
@@ -36,14 +43,12 @@ namespace NovelRT::Graphics::Vulkan
         NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
         NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
         NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsMemoryAllocator>> _memoryAllocator;
 
         QueueFamilyIndices _indicesData;
 
         Threading::VolatileState _state;
 
         [[nodiscard]] std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContexts(uint32_t contextCount);
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> CreateMemoryAllocator();
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
         [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet() const;
@@ -62,9 +67,6 @@ namespace NovelRT::Graphics::Vulkan
 
         VkRenderPass CreateRenderPass();
 
-    protected:
-        VulkanGraphicsMemoryAllocator* GetMemoryAllocatorInternal() final;
-
     public:
         VulkanGraphicsDevice(const std::shared_ptr<VulkanGraphicsAdapter>& adapter,
                              const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
@@ -72,22 +74,6 @@ namespace NovelRT::Graphics::Vulkan
 
         void TearDown() final;
         size_t GetContextIndex() const noexcept override;
-
-        std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
-            std::shared_ptr<GraphicsPipeline> pipeline,
-            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-            uint32_t vertexBufferStride,
-            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-            uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) final;
-
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsPrimitive> CreateVulkanPrimitive(
-            std::shared_ptr<VulkanGraphicsPipeline> pipeline,
-            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-            uint32_t vertexBufferStride,
-            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-            uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions);
 
         void PresentFrame() final;
 
@@ -102,20 +88,11 @@ namespace NovelRT::Graphics::Vulkan
                 &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
         }
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext()
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext();
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept
-        {
-            return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
-        }
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;
 
         [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,
@@ -189,5 +166,3 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanGraphicsDevice() final;
     };
 }
-
-#endif // NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSDEVICE_H

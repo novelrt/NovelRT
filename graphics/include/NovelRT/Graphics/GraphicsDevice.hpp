@@ -1,23 +1,34 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_GRAPHICSDEVICE_H
-#define NOVELRT_GRAPHICS_GRAPHICSDEVICE_H
-
-#ifndef NOVELRT_GRAPHICS_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.h instead for the Graphics namespace subset.
-#endif
+#include <memory>
+#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/IGraphicsSurface.hpp>
+#include <NovelRT/Graphics/ShaderProgramKind.hpp>
+#include <NovelRT/Utilities/Misc.h>
+#include <stdexcept>
 
 namespace NovelRT::Graphics
 {
+    class GraphicsAdapter;
+    class GraphicsFence;
+    class GraphicsSurfaceContext;
+    class GraphicsContext;
+    class GraphicsPipeline;
+    class GraphicsPipelineInput;
+    class GraphicsPipelineResource;
+    class GraphicsPipelineSignature;
+    class ShaderProgram;
+
     class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
     {
     private:
         std::weak_ptr<GraphicsAdapter> _adapter;
         std::shared_ptr<GraphicsSurfaceContext> _surfaceContext;
-
-    protected:
-        [[nodiscard]] virtual GraphicsMemoryAllocator* GetMemoryAllocatorInternal() = 0;
 
     public:
         GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<GraphicsSurfaceContext> surfaceContext)
@@ -55,11 +66,6 @@ namespace NovelRT::Graphics
             return GetContexts()[GetContextIndex()];
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsMemoryAllocator> GetMemoryAllocator()
-        {
-            return std::dynamic_pointer_cast<GraphicsMemoryAllocator>(GetMemoryAllocatorInternal()->shared_from_this());
-        }
-
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
         {
             return _surfaceContext->GetSurface();
@@ -81,14 +87,6 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) = 0;
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsPrimitive> CreatePrimitive(
-            std::shared_ptr<GraphicsPipeline> pipeline,
-            GraphicsMemoryRegion<GraphicsResource>& vertexBufferRegion,
-            uint32_t vertexBufferStride,
-            GraphicsMemoryRegion<GraphicsResource>& indexBufferRegion,
-            uint32_t indexBufferStride,
-            NovelRT::Utilities::Misc::Span<const GraphicsMemoryRegion<GraphicsResource>> inputResourceRegions) = 0;
-
         [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
@@ -101,5 +99,3 @@ namespace NovelRT::Graphics
         virtual ~GraphicsDevice() = default;
     };
 }
-
-#endif // !NOVELRT_GRAPHICS_GRAPHICSDEVICE_H

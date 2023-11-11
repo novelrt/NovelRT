@@ -1,12 +1,16 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPIPELINE_H
-#define NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPIPELINE_H
-
-#ifndef NOVELRT_GRAPHICS_VULKAN_H
-#error NovelRT does not support including types explicitly by default. Please include Graphics.Vulkan.h instead for the Graphics::Vulkan namespace subset.
-#endif
+#include <memory>
+#include <typeindex>
+#include <vulkan/vulkan.h>
+#include <NovelRT/Graphics/GraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
+#include <NovelRT/Utilities/Lazy.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -51,5 +55,3 @@ namespace NovelRT::Graphics::Vulkan
         }
     };
 }
-
-#endif // NOVELRT_GRAPHICS_VULKAN_VULKANGRAPHICSPIPELINE_H
