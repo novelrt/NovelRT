@@ -1,6 +1,5 @@
-//
-// Created by Matt on 06/01/2021.
-//
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #ifndef NOVELRT_EXCEPTIONS_H
 #define NOVELRT_EXCEPTIONS_H
@@ -17,7 +16,6 @@
 #include "NotInitialisedException.h"
 #include "NotSupportedException.h"
 #include "NullPointerException.h"
-#include "OpenGLLinkageFailureException.h"
 #include "OutOfMemoryException.h"
 #include "RuntimeNotFoundException.h"
 #include "TimeoutException.h"

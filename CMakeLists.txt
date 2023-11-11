@@ -124,6 +124,7 @@ add_subdirectory(thirdparty)
 add_subdirectory(resources)
 add_subdirectory(graphics)
 add_subdirectory(audio)
+add_subdirectory(input)
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)
