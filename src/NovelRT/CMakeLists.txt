@@ -43,6 +43,7 @@ set(CORE_SOURCES
 )
 
 add_library(Engine SHARED ${CORE_SOURCES})
+add_library(NovelRT::Engine ALIAS Engine)
 set_target_properties(Engine
   PROPERTIES
     OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>"

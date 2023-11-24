@@ -71,6 +71,7 @@ set(INTEROP_SOURCES
 )
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
+add_library(NovelRT::Interop ALIAS Interop)
 add_dependencies(Interop Engine)
 set_property(TARGET Interop PROPERTY VERSION ${PROJECT_VERSION})
 
