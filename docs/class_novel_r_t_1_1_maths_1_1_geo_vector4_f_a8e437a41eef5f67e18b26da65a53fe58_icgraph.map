@@ -1,0 +1,11 @@
+<map id="NovelRT::Maths::GeoVector4F::GeoVector4F" name="NovelRT::Maths::GeoVector4F::GeoVector4F">
+<area shape="rect" id="node1" title="Creates a GeoVector4F with all components set to zero." alt="" coords="515,169,721,211"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a1aa65add871919a0797485012fa9e8b2" title="Constructs a unit GeoVector4F with a magnitude of one by normalising this vector." alt="" coords="260,5,467,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a033b8806689bf5a21398051029536804" title="Calculates the Hadamard product of this GeoVector4F and another GeoVector4F." alt="" coords="260,71,467,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a0f1effcf7ea4a42d3b0d2874ed8fc2cb" title="Calculates the entrywise sum of this GeoVector4F and another GeoVector4F." alt="" coords="260,136,467,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a3820671ebb16e68c5c23ec39fc8c14e8" title="Calculates the entrywise difference of this GeoVector4F and another GeoVector4F." alt="" coords="260,201,467,243"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a40a6f3d2b08b7bb1fac478ff81952f63" title="Calculates the quotients of a Hadamard division using this GeoVector4F and another GeoVector4F." alt="" coords="260,267,467,308"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a3da958dc2cb11eadca47c5576d25c2bb" title="Creates a new uniform GeoVector4F based on the specified value." alt="" coords="260,332,467,373"/>
+<area shape="rect" id="node8" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a43c1c56c95ad3011c554ef4201d5b463" title="Creates a new GeoVector4F instance with a uniform value of one." alt="" coords="5,299,212,340"/>
+<area shape="rect" id="node9" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a2085519e4f362f9fe7e6e63ac95b1196" title="Creates a new GeoVector4F instance with a uniform value of zero." alt="" coords="5,364,212,405"/>
+</map>
