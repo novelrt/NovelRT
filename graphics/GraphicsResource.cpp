@@ -5,7 +5,7 @@
 
 namespace NovelRT::Graphics
 {
-    GraphicsResource::GraphicsResource(std::shared_ptr<GraphicsDevice> graphicsDevice, std::shared_ptr<GraphicsMemoryAllocator> allocator, GraphicsResourceAccess cpuAccess)
+    GraphicsResource::GraphicsResource(std::shared_ptr<GraphicsDevice> graphicsDevice, std::shared_ptr<GraphicsMemoryAllocator> allocator, GraphicsResourceAccess cpuAccess) noexcept
         : GraphicsDeviceObject(graphicsDevice), _allocator(allocator), _cpuAccess(cpuAccess)
     {
     }

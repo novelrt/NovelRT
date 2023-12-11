@@ -122,7 +122,7 @@ endif()
 #
 add_subdirectory(thirdparty)
 add_subdirectory(resources)
-add_subdirectory(graphics)
+add_subdirectory(Graphics)
 add_subdirectory(audio)
 add_subdirectory(src)
 

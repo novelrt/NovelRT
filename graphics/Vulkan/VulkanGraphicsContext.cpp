@@ -177,45 +177,45 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsContext::BeginCopy(VkImage vulkanImage) noexcept
-    {
-        VkImageSubresourceRange subresourceRange{};
-        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresourceRange.levelCount = 1;
-        subresourceRange.layerCount = 1;
+    //void VulkanGraphicsContext::BeginCopy(VkImage vulkanImage) noexcept
+    //{
+        //VkImageSubresourceRange subresourceRange{};
+        //subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        //subresourceRange.levelCount = 1;
+        //subresourceRange.layerCount = 1;
 
-        VkImageMemoryBarrier vulkanImageMemoryBarrier{};
-        vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
-        vulkanImageMemoryBarrier.image = vulkanImage;
+        //VkImageMemoryBarrier vulkanImageMemoryBarrier{};
+        //vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        //vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        //vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        //vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        //vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
+        //vulkanImageMemoryBarrier.image = vulkanImage;
 
-        vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
-                             nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
-    }
+        //vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
+                             //nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
+    //}
 
-    void VulkanGraphicsContext::EndCopy(VkImage vulkanImage) noexcept
-    {
-        VkImageSubresourceRange subresourceRange{};
-        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresourceRange.levelCount = 1;
-        subresourceRange.layerCount = 1;
+    //void VulkanGraphicsContext::EndCopy(VkImage vulkanImage) noexcept
+    //{
+        //VkImageSubresourceRange subresourceRange{};
+        //subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        //subresourceRange.levelCount = 1;
+        //subresourceRange.layerCount = 1;
 
-        VkImageMemoryBarrier vulkanImageMemoryBarrier{};
-        vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-        vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
-        vulkanImageMemoryBarrier.image = vulkanImage;
+        //VkImageMemoryBarrier vulkanImageMemoryBarrier{};
+        //vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        //vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        //vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        //vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        //vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        //vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
+        //vulkanImageMemoryBarrier.image = vulkanImage;
 
-        vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT,
-                             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
-                             &vulkanImageMemoryBarrier);
-    }
+        //vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT,
+                             //VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
+                             //&vulkanImageMemoryBarrier);
+    //}
 
     VulkanGraphicsContext::VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : GraphicsContext(std::move(device), index),

@@ -5,11 +5,11 @@
 
 namespace NovelRT::Graphics
 {
-    GraphicsPipeline::GraphicsPipeline(const std::shared_ptr<GraphicsDevice>& device,
+    GraphicsPipeline::GraphicsPipeline(std::shared_ptr<GraphicsDevice> device,
                                        std::shared_ptr<GraphicsPipelineSignature> signature,
                                        std::shared_ptr<ShaderProgram> vertexShader,
                                        std::shared_ptr<ShaderProgram> pixelShader) noexcept
-        : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)),
+        : GraphicsDeviceObject(device),
           _signature(signature),
           _vertexShader(vertexShader),
           _pixelShader(pixelShader)
@@ -40,4 +40,4 @@ namespace NovelRT::Graphics
     {
         return _signature;
     }
-} // namespace NovelRT::Graphics
+}

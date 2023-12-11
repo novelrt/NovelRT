@@ -16,13 +16,14 @@ namespace NovelRT::Graphics::Vulkan
     private:
         VmaAllocation _allocation;
         VmaAllocationInfo _allocationInfo;
+        VmaVirtualBlock _virtualBlock;
 
     public:
         VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                                GraphicsResourceAccess cpuAccess,
                                VmaAllocation allocation,
-                               VmaAllocationInfo allocationInfo) noexcept;
+                               VmaAllocationInfo allocationInfo);
 
         ~VulkanGraphicsResource() noexcept override = default;
         
@@ -33,6 +34,10 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept final;
 
         [[nodiscard]] size_t GetSize() const noexcept final;
+        
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion> Allocate(size_t size, size_t alignment) final;
+
+        [[nodiscard]] void Free(std::shared_ptr<GraphicsResourceMemoryRegion> region) final;
 
         [[nodiscard]] VmaAllocation GetAllocation() const noexcept;
 

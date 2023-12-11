@@ -11,6 +11,8 @@ namespace NovelRT::Graphics
 {
     class GraphicsPipelineSignature : public GraphicsDeviceObject
     {
+        class GraphicsDescriptorSet;
+
     private:
         GraphicsPipelineBlendFactor _srcBlendFactor;
         GraphicsPipelineBlendFactor _dstBlendFactor;
@@ -24,17 +26,16 @@ namespace NovelRT::Graphics
                                   NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
                                   NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
 
+        virtual ~GraphicsPipelineSignature() = default;
+        
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs() const noexcept;
+
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources() const noexcept;
 
-        [[nodiscard]] inline GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
-        {
-            return _srcBlendFactor;
-        }
+        [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
 
-        [[nodiscard]] inline GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept
-        {
-            return _dstBlendFactor;
-        }
+        [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
+
+        [[nodiscard]] virtual std::shared_ptr<GraphicsDescriptorSet> CreateDescriptorSet() = 0;
     };
 }
