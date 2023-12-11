@@ -12,6 +12,7 @@
 namespace NovelRT::Graphics
 {
     class GraphicsMemoryAllocator;
+    class GraphicsResourceMemoryRegion;
 
     class GraphicsResource : public GraphicsDeviceObject
     {
@@ -35,6 +36,10 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] virtual size_t GetSize() const noexcept = 0;
 
+        [[nodiscard]] virtual std::shared_ptr<GraphicsResourceMemoryRegion> Allocate(size_t size, size_t alignment) = 0;
+
+        [[nodiscard]] virtual void Free(std::shared_ptr<GraphicsResourceMemoryRegion> region) = 0;
+
         [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes();
 
         [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
@@ -42,7 +47,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead();
 
         [[nodiscard]] virtual Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                                         size_t rangeLength) = 0;
+                                                                                   size_t rangeLength) = 0;
         virtual void UnmapBytes() = 0;
 
         void UnmapBytesAndWrite();

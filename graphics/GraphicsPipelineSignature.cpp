@@ -7,7 +7,6 @@
 
 namespace NovelRT::Graphics
 {
-
     GraphicsPipelineSignature::GraphicsPipelineSignature(
         std::shared_ptr<GraphicsDevice> device,
         GraphicsPipelineBlendFactor srcBlendFactor,
@@ -26,10 +25,21 @@ namespace NovelRT::Graphics
     {
         return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
     }
+
     NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources()
         const noexcept
     {
         return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
                                                                               _resources.size());
     }
-} // namespace NovelRT::Graphics
+
+    [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
+    {
+        return _srcBlendFactor;
+    }
+
+    [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetDstBlendFactor() const noexcept
+    {
+        return _dstBlendFactor;
+    }
+}

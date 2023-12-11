@@ -14,10 +14,12 @@ namespace NovelRT::Graphics
         size_t _index;
 
     public:
-        GraphicsContext(const std::shared_ptr<GraphicsDevice>& device, size_t index) noexcept
-            : GraphicsDeviceObject(std::weak_ptr<GraphicsDevice>(device)), _index(index)
+        GraphicsContext(std::shared_ptr<GraphicsDevice> device, size_t index) noexcept
+            : GraphicsDeviceObject(device), _index(index)
         {
         }
+        
+        virtual ~GraphicsContext() override = default;
 
         [[nodiscard]] virtual std::shared_ptr<GraphicsFence> GetFence() const noexcept = 0;
 

@@ -15,7 +15,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<ShaderProgram> _pixelShader;
 
     public:
-        GraphicsPipeline(const std::shared_ptr<GraphicsDevice>& device,
+        GraphicsPipeline(std::shared_ptr<GraphicsDevice> device,
                          std::shared_ptr<GraphicsPipelineSignature> signature,
                          std::shared_ptr<ShaderProgram> vertexShader,
                          std::shared_ptr<ShaderProgram> pixelShader) noexcept;

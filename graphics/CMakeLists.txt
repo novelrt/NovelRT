@@ -1,5 +1,7 @@
 add_library(NovelRT-Graphics STATIC
   GraphicsBuffer.cpp
+  GraphicsCmdList.cpp
+  GraphicsDescriptorSet.cpp
   GraphicsMemoryAllocator.cpp
   GraphicsPipeline.cpp
   GraphicsPipelineInput.cpp
@@ -7,6 +9,7 @@ add_library(NovelRT-Graphics STATIC
   GraphicsPipelineResource.cpp
   GraphicsPipelineSignature.cpp
   GraphicsResource.cpp
+  GraphicsResourceMemoryRegion.cpp
   GraphicsTexture.cpp
   ShaderProgram.cpp
   Vulkan/VulkanGraphicsAdapter.cpp
@@ -20,6 +23,7 @@ add_library(NovelRT-Graphics STATIC
   Vulkan/VulkanGraphicsPipelineSignature.cpp
   Vulkan/VulkanGraphicsPluginProvider.cpp
   Vulkan/VulkanGraphicsResource.cpp
+  Vulkan/VulkanGraphicsResourceMemoryRegion.cpp
   Vulkan/VulkanGraphicsProvider.cpp
   Vulkan/VulkanGraphicsSurfaceContext.cpp
   Vulkan/VulkanGraphicsTexture.cpp
@@ -34,9 +38,12 @@ target_sources(NovelRT-Graphics
     FILES
       include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
+      include/NovelRT/Graphics/GraphicsCmdList.hpp
       include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsBufferKind.hpp
+      include/NovelRT/Graphics/GraphicsCmdList.hpp
       include/NovelRT/Graphics/GraphicsContext.hpp
+      include/NovelRT/Graphics/GraphicsDescriptorSet.hpp
       include/NovelRT/Graphics/GraphicsDevice.hpp
       include/NovelRT/Graphics/GraphicsDeviceObject.hpp
       include/NovelRT/Graphics/GraphicsFence.hpp
@@ -52,6 +59,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/GraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/GraphicsProvider.hpp
       include/NovelRT/Graphics/GraphicsResource.hpp
+      include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/GraphicsResourceAccess.hpp
       include/NovelRT/Graphics/GraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/GraphicsSurfaceKind.hpp
@@ -82,6 +90,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
