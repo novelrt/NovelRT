@@ -12,7 +12,7 @@ extern "C"
     using namespace NovelRT;
 #endif
 
-    NrtGeoBounds Nrt_GeoBounds_zero()
+    NrtGeoBounds Nrt_GeoBounds_Zero()
     {
         return NrtGeoBounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
     }
@@ -55,7 +55,7 @@ extern "C"
     {
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -77,7 +77,7 @@ extern "C"
         }
         catch (const Exceptions::NotSupportedException)
         {
-            Nrt_setErrMsgIsNotSupportedInternal();
+            Nrt_SetErrMsgIsNotSupportedInternal();
             return NRT_FAILURE_NOT_SUPPORTED;
         }
     }

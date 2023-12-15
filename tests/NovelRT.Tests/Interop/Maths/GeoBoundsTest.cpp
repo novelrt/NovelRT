@@ -14,7 +14,7 @@ TEST(InteropGeoBoundsTest, zeroReturnsZeroedOutGeoBounds)
 {
     NrtGeoBounds expectedBounds{Nrt_GeoVector2F_Zero(), Nrt_GeoVector2F_Zero(), 0.0f};
 
-    EXPECT_TRUE(Nrt_GeoBounds_Equal(expectedBounds, Nrt_GeoBounds_zero()));
+    EXPECT_TRUE(Nrt_GeoBounds_Equal(expectedBounds, Nrt_GeoBounds_Zero()));
 }
 
 TEST(InteropGeoBoundsTest, EqualsOperatorReturnsTrueWhenBoundsAreEqual)

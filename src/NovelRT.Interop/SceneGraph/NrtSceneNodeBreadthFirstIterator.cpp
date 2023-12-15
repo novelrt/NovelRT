@@ -21,14 +21,14 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_create(NrtSceneNodeHandle node,
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_Create(NrtSceneNodeHandle node,
                                                        int32_t (*action)(NrtSceneNodeHandle, void* context),
                                                        void* context,
                                                        NrtSceneNodeBreadthFirstIteratorHandle* outputIterator)
     {
         if (node == nullptr || action == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -41,11 +41,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_increment(NrtSceneNodeBreadthFirstIteratorHandle iterator)
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_Increment(NrtSceneNodeBreadthFirstIteratorHandle iterator)
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -55,11 +55,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_SceneNodeBreadthFirstIterator_postFixIncrement(NrtSceneNodeBreadthFirstIteratorHandle iterator)
+    NrtResult Nrt_SceneNodeBreadthFirstIterator_PostFixIncrement(NrtSceneNodeBreadthFirstIteratorHandle iterator)
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -69,14 +69,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_SceneNodeBreadthFirstIterator_isEnd(NrtSceneNodeBreadthFirstIteratorHandle iterator)
+    NrtBool Nrt_SceneNodeBreadthFirstIterator_IsEnd(NrtSceneNodeBreadthFirstIteratorHandle iterator)
     {
         SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>* cppIterator =
             reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);
         return static_cast<int32_t>(cppIterator->isEnd());
     }
 
-    NrtBool Nrt_SceneNodeBreadthFirstIterator_isEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
+    NrtBool Nrt_SceneNodeBreadthFirstIterator_IsEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
                                                       NrtSceneNodeBreadthFirstIteratorHandle other)
     {
         auto cppIterator =
@@ -86,7 +86,7 @@ extern "C"
         return static_cast<int32_t>(*cppIterator == *otherCppIterator);
     }
 
-    NrtBool Nrt_SceneNodeBreadthFirstIterator_isNotEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
+    NrtBool Nrt_SceneNodeBreadthFirstIterator_IsNotEqual(NrtSceneNodeBreadthFirstIteratorHandle iterator,
                                                          NrtSceneNodeBreadthFirstIteratorHandle other)
     {
         auto cppIterator =
@@ -96,7 +96,7 @@ extern "C"
         return static_cast<int32_t>(*cppIterator != *otherCppIterator);
     }
 
-    int32_t Nrt_SceneNodeBreadthFirstIterator_runFunction(NrtSceneNodeBreadthFirstIteratorHandle iterator)
+    int32_t Nrt_SceneNodeBreadthFirstIterator_RunFunction(NrtSceneNodeBreadthFirstIteratorHandle iterator)
     {
         auto cppIterator =
             reinterpret_cast<SceneGraph::SceneNode::breadth_first_traversal_result_iterator<int32_t>*>(iterator);

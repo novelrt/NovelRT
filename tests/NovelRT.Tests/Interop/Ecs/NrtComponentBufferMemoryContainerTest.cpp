@@ -135,9 +135,9 @@ TEST(InteropComponentBufferMemoryContainerTest, IterationWorksCorrectly)
                                                              reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
     NrtSparseSetMemoryContainer_ConstIteratorHandle beginIt = nullptr;
-    NrtSparseSetMemoryContainer_ConstIteratorHandle endIt = Nrt_ComponentBufferMemoryContainer_end(container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIt = Nrt_ComponentBufferMemoryContainer_End(container);
 
-    for (beginIt = Nrt_ComponentBufferMemoryContainer_begin(container);
+    for (beginIt = Nrt_ComponentBufferMemoryContainer_Begin(container);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIt, endIt) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIt))
     {
@@ -203,9 +203,9 @@ TEST(InteropComponentBufferMemoryContainerTest, ConcurrentAccessWorksCorrectly)
                                                              reinterpret_cast<NrtEntityIdVectorHandle>(&dummyVec));
 
     NrtSparseSetMemoryContainer_ConstIteratorHandle beginIt = nullptr;
-    NrtSparseSetMemoryContainer_ConstIteratorHandle endIt = Nrt_ComponentBufferMemoryContainer_end(container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle endIt = Nrt_ComponentBufferMemoryContainer_End(container);
 
-    for (beginIt = Nrt_ComponentBufferMemoryContainer_begin(container);
+    for (beginIt = Nrt_ComponentBufferMemoryContainer_Begin(container);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(beginIt, endIt) == NRT_TRUE;
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(beginIt))
     {

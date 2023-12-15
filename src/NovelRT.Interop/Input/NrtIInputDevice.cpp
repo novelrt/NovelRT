@@ -13,7 +13,7 @@ NrtResult Nrt_IInputDevice_Destroy(NrtIInputDeviceHandle device)
 {
     if (device == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -23,7 +23,7 @@ NrtResult Nrt_IInputDevice_Destroy(NrtIInputDeviceHandle device)
     }
     else
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 }
@@ -55,7 +55,7 @@ NrtResult Nrt_IInputDevice_AddInputAction(NrtIInputDeviceHandle device,
 {
     if (device == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -67,12 +67,12 @@ NrtResult Nrt_IInputDevice_AddInputAction(NrtIInputDeviceHandle device,
     }
     catch (const NovelRT::Exceptions::InvalidOperationException&)
     {
-        Nrt_setErrMsgIsInvalidOperationInternal();
+        Nrt_SetErrMsgIsInvalidOperationInternal();
         return NRT_FAILURE_INVALID_OPERATION;
     }
     catch (...)
     {
-        Nrt_setErrMsgErrorUnknownInternal();
+        Nrt_SetErrMsgErrorUnknownInternal();
         return NRT_FAILURE_UNKNOWN;
     }
 }
@@ -83,7 +83,7 @@ NrtResult Nrt_IInputDevice_GetAvailableKey(NrtIInputDeviceHandle device,
 {
     if (device == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -95,12 +95,12 @@ NrtResult Nrt_IInputDevice_GetAvailableKey(NrtIInputDeviceHandle device,
     }
     catch (const NovelRT::Exceptions::InvalidOperationException&)
     {
-        Nrt_setErrMsgIsInvalidOperationInternal();
+        Nrt_SetErrMsgIsInvalidOperationInternal();
         return NRT_FAILURE_INVALID_OPERATION;
     }
     catch (...)
     {
-        Nrt_setErrMsgErrorUnknownInternal();
+        Nrt_SetErrMsgErrorUnknownInternal();
         return NRT_FAILURE_UNKNOWN;
     }
 }

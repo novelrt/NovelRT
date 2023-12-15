@@ -318,9 +318,9 @@ TEST(InteropSparseSetMemoryContainerTest, IteratingTheMutableCollectionReturnsCo
     ASSERT_EQ(Nrt_SparseSetMemoryContainer_Insert(container, 2, &testValueThree), NRT_SUCCESS);
 
     NrtSparseSetMemoryContainer_IteratorHandle begin = nullptr;
-    NrtSparseSetMemoryContainer_IteratorHandle end = Nrt_SparseSetMemoryContainer_end(container);
+    NrtSparseSetMemoryContainer_IteratorHandle end = Nrt_SparseSetMemoryContainer_End(container);
 
-    for (begin = Nrt_SparseSetMemoryContainer_begin(container);
+    for (begin = Nrt_SparseSetMemoryContainer_Begin(container);
          Nrt_SparseSetMemoryContainer_Iterator_NotEqual(begin, end);
          Nrt_SparseSetMemoryContainer_Iterator_MoveNext(begin))
     {
@@ -352,9 +352,9 @@ TEST(InteropSparseSetMemoryContainerTest, IteratingTheConstCollectionReturnsCorr
     ASSERT_EQ(Nrt_SparseSetMemoryContainer_Insert(container, 2, &testValueThree), NRT_SUCCESS);
 
     NrtSparseSetMemoryContainer_ConstIteratorHandle begin = nullptr;
-    NrtSparseSetMemoryContainer_ConstIteratorHandle end = Nrt_SparseSetMemoryContainer_cend(container);
+    NrtSparseSetMemoryContainer_ConstIteratorHandle end = Nrt_SparseSetMemoryContainer_Cend(container);
 
-    for (begin = Nrt_SparseSetMemoryContainer_cbegin(container);
+    for (begin = Nrt_SparseSetMemoryContainer_Cbegin(container);
          Nrt_SparseSetMemoryContainer_ConstIterator_NotEqual(begin, end);
          Nrt_SparseSetMemoryContainer_ConstIterator_MoveNext(begin))
     {

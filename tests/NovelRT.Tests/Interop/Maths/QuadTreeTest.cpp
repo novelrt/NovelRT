@@ -117,7 +117,7 @@ TEST_F(InteropQuadTreeTest, GetIntersectingPointsReturnsNullInstanceFailureWhenG
 TEST_F(InteropQuadTreeTest, GetBoundsGetsCorrectBounds)
 {
     NrtGeoBounds expectedBounds = GetCenteredBoundsC(TEST_WIDTH, TEST_HEIGHT);
-    NrtGeoBounds actualBounds = Nrt_GeoBounds_zero();
+    NrtGeoBounds actualBounds = Nrt_GeoBounds_Zero();
     actualBounds = Nrt_QuadTree_GetBounds(_quadTree);
 
     EXPECT_TRUE(CheckBoundsForEquality(actualBounds, expectedBounds));

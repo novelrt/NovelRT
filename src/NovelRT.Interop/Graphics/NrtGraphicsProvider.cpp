@@ -13,13 +13,13 @@ NrtResult Nrt_GraphicsProvider_Destroy(NrtGraphicsProviderHandle provider)
 {
     if (provider == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (!Lifetime::Release(reinterpret_cast<GraphicsProvider*>(provider)))
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 

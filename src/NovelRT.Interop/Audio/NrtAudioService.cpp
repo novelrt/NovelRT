@@ -21,7 +21,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -40,7 +40,7 @@ extern "C"
         }
         catch (const Exceptions::InitialisationFailureException&)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
+            Nrt_SetErrMsgIsInitialisationFailureInternal();
             return NRT_FAILURE_INITIALISATION_FAILURE;
         }
     }
@@ -53,7 +53,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -66,7 +66,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -78,7 +78,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -90,7 +90,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -104,7 +104,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -116,7 +116,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -127,7 +127,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -139,7 +139,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -152,7 +152,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -164,7 +164,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -175,7 +175,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -187,7 +187,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -198,7 +198,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -210,7 +210,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -221,7 +221,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -233,7 +233,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -244,7 +244,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -262,7 +262,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -275,7 +275,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -286,7 +286,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -299,7 +299,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -311,7 +311,7 @@ extern "C"
         }
         catch (const Exceptions::NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
 
@@ -322,7 +322,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -335,7 +335,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -348,7 +348,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -361,7 +361,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -374,7 +374,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -387,7 +387,7 @@ extern "C"
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

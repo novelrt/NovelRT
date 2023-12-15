@@ -68,7 +68,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -79,82 +79,82 @@ extern "C"
         }
         catch (const std::bad_alloc&)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const CharacterNotFoundException&)
         {
-            Nrt_setErrMsgIsCharacterNotFoundInternal();
+            Nrt_SetErrMsgIsCharacterNotFoundInternal();
             return NRT_FAILURE_CHARACTER_NOT_FOUND;
         }
         catch (const CompilationErrorException&)
         {
-            Nrt_setErrMsgCompilationErrorInternal();
+            Nrt_SetErrMsgCompilationErrorInternal();
             return NRT_FAILURE_COMPILATION_ERROR;
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGivenInternal();
+            Nrt_SetErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const FileNotFoundException&)
         {
-            Nrt_setErrMsgIsFileNotFoundInternal();
+            Nrt_SetErrMsgIsFileNotFoundInternal();
             return NRT_FAILURE_FILE_NOT_FOUND;
         }
         catch (const FunctionNotFoundException&)
         {
-            Nrt_setErrMsgIsFunctionNotFoundInternal();
+            Nrt_SetErrMsgIsFunctionNotFoundInternal();
             return NRT_FAILURE_FUNCTION_NOT_FOUND;
         }
         catch (const InitialisationFailureException&)
         {
-            Nrt_setErrMsgIsInitialisationFailureInternal();
+            Nrt_SetErrMsgIsInitialisationFailureInternal();
             return NRT_FAILURE_INITIALISATION_FAILURE;
         }
         catch (const InvalidOperationException&)
         {
-            Nrt_setErrMsgIsInvalidOperationInternal();
+            Nrt_SetErrMsgIsInvalidOperationInternal();
             return NRT_FAILURE_INVALID_OPERATION;
         }
         catch (const KeyNotFoundException&)
         {
-            Nrt_setErrMsgKeyNotFoundInternal();
+            Nrt_SetErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
         catch (const NotInitialisedException&)
         {
-            Nrt_setErrMsgIsNotInitialisedInternal();
+            Nrt_SetErrMsgIsNotInitialisedInternal();
             return NRT_FAILURE_NOT_INITIALISED;
         }
         catch (const NotSupportedException&)
         {
-            Nrt_setErrMsgIsNotSupportedInternal();
+            Nrt_SetErrMsgIsNotSupportedInternal();
             return NRT_FAILURE_NOT_SUPPORTED;
         }
         catch (const NullPointerException&)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
         catch (const OutOfMemoryException&)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const RuntimeNotFoundException&)
         {
-            Nrt_setErrMsgRuntimeNotFoundInternal();
+            Nrt_SetErrMsgRuntimeNotFoundInternal();
             return NRT_FAILURE_RUNTIME_NOT_FOUND;
         }
         catch (...)
         {
-            Nrt_setErrMsgErrorUnknownInternal();
+            Nrt_SetErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -163,7 +163,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -177,7 +177,7 @@ extern "C"
     {
         if (systemScheduler == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

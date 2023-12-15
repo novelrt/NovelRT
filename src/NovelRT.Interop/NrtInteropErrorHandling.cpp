@@ -34,14 +34,14 @@ extern "C"
 {
 #endif
 
-    const char* Nrt_getLastError()
+    const char* Nrt_GetLastError()
     {
-        return Nrt_getLastErrorInternal();
+        return Nrt_GetLastErrorInternal();
     }
 
     // Internal
 
-    const char* Nrt_getLastErrorInternal()
+    const char* Nrt_GetLastErrorInternal()
     {
         if (currentErrorMessage == nullptr)
         {
@@ -62,127 +62,127 @@ extern "C"
         customMessageSet = false;
     }
 
-    void Nrt_setErrMsgIsNullInstanceProvidedInternal()
+    void Nrt_SetErrMsgIsNullInstanceProvidedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNullInstanceProvided;
     }
 
-    void Nrt_setErrMsgKeyNotFoundInternal()
+    void Nrt_SetErrMsgKeyNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgKeyNotFound;
     }
 
-    void Nrt_setErrMsgErrorUnknownInternal()
+    void Nrt_SetErrMsgErrorUnknownInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgErrorUnknown;
     }
 
-    void Nrt_setErrMsgIsFileNotFoundInternal()
+    void Nrt_SetErrMsgIsFileNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsFileNotFound;
     }
 
-    void Nrt_setErrMsgDupKeyGivenInternal()
+    void Nrt_SetErrMsgDupKeyGivenInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgDupKeyGiven;
     }
 
-    void Nrt_setErrMsgCompilationErrorInternal()
+    void Nrt_SetErrMsgCompilationErrorInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgCompilationError;
     }
 
-    void Nrt_setErrMsgIsNullArgumentProvidedInternal()
+    void Nrt_SetErrMsgIsNullArgumentProvidedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNullArg;
     }
 
-    void Nrt_setErrMsgIsNaNInternal()
+    void Nrt_SetErrMsgIsNaNInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNaN;
     }
 
-    void Nrt_setErrMsgIsDivideByZeroInternal()
+    void Nrt_SetErrMsgIsDivideByZeroInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsDivideByZero;
     }
 
-    void Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal()
+    void Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsAlreadyDeletedOrRemoved;
     }
 
-    void Nrt_setErrMsgIsInitialisationFailureInternal()
+    void Nrt_SetErrMsgIsInitialisationFailureInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsInitialisationFailure;
     }
 
-    void Nrt_setErrMsgIsNotSupportedInternal()
+    void Nrt_SetErrMsgIsNotSupportedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNotSupportedInternal;
     }
 
-    void Nrt_setErrMsgRuntimeNotFoundInternal()
+    void Nrt_SetErrMsgRuntimeNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgRuntimeNotFound;
     }
 
-    void Nrt_setErrMsgIsFunctionNotFoundInternal()
+    void Nrt_SetErrMsgIsFunctionNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsFunctionNotFound;
     }
 
-    void Nrt_setErrMsgIsNotInitialisedInternal()
+    void Nrt_SetErrMsgIsNotInitialisedInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsNotInitialised;
     }
 
-    void Nrt_setErrMsgIsArgumentOutOfRangeInternal()
+    void Nrt_SetErrMsgIsArgumentOutOfRangeInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsArgumentOutOfRange;
     }
 
-    void Nrt_setErrMsgIsInvalidOperationInternal()
+    void Nrt_SetErrMsgIsInvalidOperationInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsInvalidOperation;
     }
 
-    void Nrt_setErrMsgIsCharacterNotFoundInternal()
+    void Nrt_SetErrMsgIsCharacterNotFoundInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsCharacterNotFound;
     }
 
-    void Nrt_setErrMsgIsOutOfMemoryInternal()
+    void Nrt_SetErrMsgIsOutOfMemoryInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgIsOutOfMemory;
     }
 
-    void Nrt_setErrMsgIsInvalidPathInternal()
+    void Nrt_SetErrMsgIsInvalidPathInternal()
     {
         validateCustomMessageInternal();
         currentErrorMessage = errMsgInvalidPath;
     }
 
-    void Nrt_setErrMsgCustomInternal(const char* message)
+    void Nrt_SetErrMsgCustomInternal(const char* message)
     {
         currentErrorMessage = message;
         customMessageSet = true;

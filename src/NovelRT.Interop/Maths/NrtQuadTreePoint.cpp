@@ -40,7 +40,7 @@ extern "C"
     {
         if (point == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -48,7 +48,7 @@ extern "C"
 
         if (std::find(_pointCollection.begin(), _pointCollection.end(), ptr) == _pointCollection.end())
         { // TODO: This may prove to be a bottleneck later
-            Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+            Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
             return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
         }
 

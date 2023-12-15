@@ -13,7 +13,7 @@ NrtResult Nrt_IWindowingDevice_Destroy(NrtIWindowingDeviceHandle device)
 {
     if (device == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -23,7 +23,7 @@ NrtResult Nrt_IWindowingDevice_Destroy(NrtIWindowingDeviceHandle device)
     }
     else
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 }
@@ -53,7 +53,7 @@ NrtResult Nrt_IWindowingDevice_SetWindowTitle(NrtIWindowingDeviceHandle device, 
 {
     if (device == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -66,7 +66,7 @@ NrtResult Nrt_IWindowingDevice_ProcessAllMessages(NrtIWindowingDeviceHandle devi
 {
     if (device == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

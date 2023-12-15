@@ -11,13 +11,13 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_QuadTreeNode_create(NrtQuadTreeScenePointArrayHandle points, NrtQuadTreeNodeHandle* outputPoint);
-    NrtResult Nrt_QuadTreeNode_getTopLeft(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
-    NrtResult Nrt_QuadTreeNode_getTopRight(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
-    NrtResult Nrt_QuadTreeNode_getBottomLeft(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
-    NrtResult Nrt_QuadTreeNode_getBottomRight(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
+    NrtResult Nrt_QuadTreeNode_Create(NrtQuadTreeScenePointArrayHandle points, NrtQuadTreeNodeHandle* outputPoint);
+    NrtResult Nrt_QuadTreeNode_GetTopLeft(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
+    NrtResult Nrt_QuadTreeNode_GetTopRight(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
+    NrtResult Nrt_QuadTreeNode_GetBottomLeft(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
+    NrtResult Nrt_QuadTreeNode_GetBottomRight(NrtQuadTreeNodeHandle node, NrtQuadTreeScenePointHandle* outputPoint);
 
-    NrtResult Nrt_QuadTreeScenePointArray_create(NrtQuadTreeScenePointHandle pointOne,
+    NrtResult Nrt_QuadTreeScenePointArray_Create(NrtQuadTreeScenePointHandle pointOne,
                                                  NrtQuadTreeScenePointHandle pointTwo,
                                                  NrtQuadTreeScenePointHandle pointThree,
                                                  NrtQuadTreeScenePointHandle pointFour,
