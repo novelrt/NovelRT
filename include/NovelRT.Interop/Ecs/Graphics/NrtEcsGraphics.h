@@ -4,5 +4,7 @@
 #define NOVELRT_INTEROP_ECS_GRAPHICS_NRTECSGRAPHICS_H
 
 #include "NrtDefaultRenderingSystem.h"
+#include "NrtEcsGraphicsComponents.h"
+#include "NrtTextureInfo.h"
 
 #endif // NOVELRT_INTEROP_ECS_GRAPHICS_NRTECSGRAPHICS_H
