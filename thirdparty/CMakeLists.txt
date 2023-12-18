@@ -66,7 +66,7 @@ thirdparty_module(PNG
   URL_HASH SHA512=65df0c2befa06d0b9ec0c6395a73987fb071754610d328b94ce01a6b8f7161c71ce97ddf0e0a8e28c2e50019a103368c4b4f0b63bd8cd75e168b32f940922d96
   OVERRIDE_FIND_PACKAGE
 )
-thirdparty_module(SDL2
+thirdparty_module(SDL
   URL https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-2.28.5.zip
   URL_HASH SHA512=03b04bca236bde18bee05774aa82169db05479dedb9c7df61096afc140948e3a2c54935ca59ac4f0be1def110f199ea3d6a1017790696425aff1e7b4d152d22c
 )
@@ -108,7 +108,7 @@ foreach(module
   glm
   GSL
   GTest
-  Opus Ogg FLAC Vorbis SDL2 SndFile OpenAL
+  Opus Ogg FLAC Vorbis SDL SndFile OpenAL
   ZLIB PNG
   spdlog
   stduuid
