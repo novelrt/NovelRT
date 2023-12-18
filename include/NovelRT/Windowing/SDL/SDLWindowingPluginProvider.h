@@ -20,7 +20,7 @@ namespace NovelRT::Windowing::SDL
 
         [[nodiscard]] inline std::shared_ptr<SDLWindowingDevice> GetWindowingDevice()
         {
-            return std::dynamic_pointer_cast<SDLWindowingDevice>(GetWindowingDeviceInternal()->shared_from_this()
+            return std::dynamic_pointer_cast<SDLWindowingDevice>(GetWindowingDeviceInternal()->shared_from_this());
         }
     };
 }

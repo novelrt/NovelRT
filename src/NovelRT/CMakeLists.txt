@@ -74,6 +74,7 @@ target_link_libraries(Engine
   png
   spdlog
   nlohmann_json
+  SDL2
   stduuid
   vorbis
   vorbisenc

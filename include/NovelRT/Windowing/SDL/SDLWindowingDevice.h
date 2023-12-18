@@ -28,7 +28,7 @@ namespace NovelRT::Windowing::SDL
         Utilities::Event<ButtonChangeEventArgs> KeyboardButtonChanged;
 
     private:
-        std::unique_ptr<SDLWindow, decltaype(&SDLDestroyWindow)> _window;
+        std::unique_ptr<SDLWindow, decltype(&SDLDestroyWindow)> _window;
         std::string _currentTitle;
 
     public:
@@ -42,11 +42,11 @@ namespace NovelRT::Windowing::SDL
         {
             return _window.get();
         }
-        void Initialize(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) final;
+        void Initialise(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize) final;
         void TearDown() noexcept final;
 
 
-        [[nodiscard]] inline bool GetIsVisible() const noexcept final;
+        [[nodiscard]] inline bool GetIsVisible() const noexcept final
         {
             return SDL_GetWindowFlags(GetRawSDLWindowHandle()) & SDL_WINDOW_SHOWN;
         }
