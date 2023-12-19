@@ -1,7 +1,8 @@
 include(FetchContent)
 
-
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
+set(SDL_STATIC_ENABLED_BY_DEFAULT OFF)
+set(BUILD_SHARED_LIBS ON)
 
 FetchContent_MakeAvailable(SDL2) 
