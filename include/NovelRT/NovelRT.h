@@ -114,6 +114,7 @@
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+  #include <NovelRT/Windowing/SDL/Windowing.SDL.h>
 
   // Plugin Management types
   #include <NovelRT/PluginManagement/PluginManagement.h>
