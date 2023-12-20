@@ -108,7 +108,7 @@ foreach(module
   glm
   GSL
   GTest
-  Opus Ogg FLAC Vorbis SDL SndFile OpenAL
+  Opus Ogg FLAC Vorbis SDL2 SndFile OpenAL
   ZLIB PNG
   spdlog
   stduuid

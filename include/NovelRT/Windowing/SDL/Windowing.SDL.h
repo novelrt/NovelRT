@@ -11,6 +11,8 @@ namespace NovelRT::Windowing::SDL
 #include "NovelRT/PluginManagement/PluginManagement.h"
 #include "NovelRT/Windowing/Windowing.h"
 
+//#include <SDL2/SDL2.h>
+#include <SDL2/SDL_revision.h>
 
 #include "NovelRT/Maths/Maths.h"
 #include "SDLWindowingDevice.h"

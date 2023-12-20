@@ -40,6 +40,8 @@ set(CORE_SOURCES
 
   Windowing/Glfw/GlfwWindowingDevice.cpp
   Windowing/Glfw/GlfwWindowingPluginProvider.cpp
+  Windowing/SDL/SDLWindowingDevice.cpp
+  Windowing/SDL/SDLWindowingPluginProvider.cpp
 )
 
 add_library(Engine SHARED ${CORE_SOURCES})
@@ -74,7 +76,8 @@ target_link_libraries(Engine
   png
   spdlog
   nlohmann_json
-  SDL2
+  #SDL2::SDL2
+  $<BUILD_INTERFACE:SDL2>
   stduuid
   vorbis
   vorbisenc

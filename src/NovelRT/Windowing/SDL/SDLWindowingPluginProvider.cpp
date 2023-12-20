@@ -3,6 +3,7 @@
 namespace NovelRT::Windowing::SDL
 {
     SDLWindowingPluginProvider::SDLWindowingPluginProvider() noexcept
+        : _windowingDevice(std::make_shared<SDLWindowingDevice>())
     {
     }
 
