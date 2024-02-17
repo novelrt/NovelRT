@@ -4,6 +4,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 set(SPDLOG_INSTALL ON)
 set(SPDLOG_ENABLE_PCH ON)
+set(SPDLOG_FMT_EXTERNAL ON)
 
 FetchContent_MakeAvailable(spdlog)
 

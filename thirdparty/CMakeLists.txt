@@ -26,6 +26,10 @@ thirdparty_module(FLAC
   URL_HASH SHA256=8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737
   OVERRIDE_FIND_PACKAGE
 )
+thirdparty_module(fmt
+  URL https://github.com/fmtlib/fmt/releases/download/10.2.1/fmt-10.2.1.zip
+  URL_HASH SHA512=1cf0e3dd09c7d87e0890b8743559159d3be2a8f33c135516962d17c4eeb7b00659e6acd74518bd5566ee4e83ddaba155fecb4c229f90cd258b3b832e72ad82cd
+)
 thirdparty_module(glfw3
   URL https://github.com/glfw/glfw/archive/refs/tags/3.3.7.zip
   URL_HASH SHA512=0ee020ddbbed783b5f0d271ee0a98b37fe489b633e0a8407821f12b2bcfc3b80645751076192b5224bfe1d26d6092c27af9a9bcd7953a419dcec0182e3716341
@@ -71,8 +75,8 @@ thirdparty_module(SndFile
   URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
 )
 thirdparty_module(spdlog
-  URL https://github.com/gabime/spdlog/archive/refs/tags/v1.10.0.zip
-  URL_HASH SHA512=9f1c778482446f52fb6e35f752226715412011f608bdcbfc87be5ae4a246d6733179a910fce09c2609e4dc1ba50664a6b0c3421749a7a12d8648dcf2b61c0b99
+  URL https://github.com/gabime/spdlog/archive/refs/tags/v1.13.0.zip
+  URL_HASH SHA512=851febf19949006a17ead8b6392f12ae81e626926268829478d4d0d28a1dfe7682ef57a6c4f151031cf4cc60f1486cf8453999ee7ce40a1f0d3f545c4d7f8555
 )
 thirdparty_module(stduuid
   URL https://github.com/mariusbancila/stduuid/archive/3afe7193facd5d674de709fccc44d5055e144d7a.zip
@@ -99,7 +103,9 @@ thirdparty_module(ZLIB
 
 # N.B. Order matters here, for dependency searching!
 foreach(module
-  nlohmann_json Fabulist
+  nlohmann_json
+  Fabulist
+  fmt
   glfw3
   glm
   GSL
