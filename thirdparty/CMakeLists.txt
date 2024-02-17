@@ -103,7 +103,9 @@ thirdparty_module(ZLIB
 
 # N.B. Order matters here, for dependency searching!
 foreach(module
-  nlohmann_json Fabulist
+  nlohmann_json
+  Fabulist
+  fmt
   glfw3
   glm
   GSL
