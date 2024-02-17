@@ -9,28 +9,73 @@ namespace NovelRT::Audio
 {
     void AudioMixer::Initialise()
     {
+        _sourceContextCache = std::map<uint32_t, AudioSourceContext>();
         _audioProvider = std::make_unique<OpenAL::OpenALAudioProvider>();
-        _audioProvider->OpenOutputStream();
     }
 
-    void AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer)
+    uint32_t AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t>& buffer)
     {
-        _audioProvider->SubmitAudioBuffer(buffer);
+        auto newContext = AudioSourceContext();
+        uint32_t sourceId = _audioProvider->SubmitAudioBuffer(buffer, newContext);
+        _sourceContextCache.emplace(sourceId, newContext);
+        return sourceId;
     }
 
-    void AudioMixer::PlayOutputStream()
+    AudioSourceState AudioMixer::GetSourceState(uint32_t id)
     {
-        _audioProvider->PlayOutputStream();
+        return _audioProvider->GetSourceState(id);
     }
 
-    void AudioMixer::StopOutputStream()
+    void AudioMixer::PlaySource(uint32_t id)
     {
-        _audioProvider->StopOutputStream();
+        _audioProvider->PlaySource(id);
+    }
+
+    void AudioMixer::StopSource(uint32_t id)
+    {
+        _audioProvider->StopSource(id);
+    }
+
+    void AudioMixer::PauseSource(uint32_t id)
+    {
+        _audioProvider->PauseSource(id);
+    }
+
+    AudioSourceContext& AudioMixer::GetSourceContext(uint32_t id)
+    {
+        return _sourceContextCache.at(id);
+    }
+
+    void AudioMixer::SetSourceContext(uint32_t id, AudioSourceContext& context)
+    {
+        _sourceContextCache.erase(id);
+        _sourceContextCache.emplace(id, context);
+        _audioProvider->SetSourceProperties(id, context);
+    }
+
+    void AudioMixer::SetSourceVolume(uint32_t id, float volume)
+    {
+       auto& context = _sourceContextCache.at(id);
+       context.Volume = volume;
+       _audioProvider->SetSourceProperties(id, context);
+    }
+
+    void AudioMixer::SetSourcePitch(uint32_t id, float pitch)
+    {
+       auto& context = _sourceContextCache.at(id);
+       context.Pitch = pitch;
+       _audioProvider->SetSourceProperties(id, context);
+    }
+
+    void AudioMixer::SetSourceLoop(uint32_t id, bool isLooping)
+    {
+        auto& context = _sourceContextCache.at(id);
+        context.Loop = isLooping;
+        _audioProvider->SetSourceProperties(id, context);
     }
 
     void AudioMixer::TearDown()
     {
-        _audioProvider->CloseOutputStream();
         _audioProvider.reset();
     }
 
