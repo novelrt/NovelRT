@@ -3,14 +3,21 @@
 #include <NovelRT/Audio/AudioMixer.hpp>
 
 //Conditional
+#if defined(_WIN32)
+#include <NovelRT/Audio/XAudio2/XAudio2AudioProvider.hpp>
+#else
 #include <NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
-
+#endif
 namespace NovelRT::Audio
 {
     void AudioMixer::Initialise()
     {
         _sourceContextCache = std::map<uint32_t, AudioSourceContext>();
+#if defined(_WIN32)
+        _audioProvider = std::make_unique<XAudio2::XAudio2AudioProvider>();
+#else
         _audioProvider = std::make_unique<OpenAL::OpenALAudioProvider>();
+#endif
     }
 
     uint32_t AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, int32_t channelCount, int32_t originalSampleRate)
