@@ -6,21 +6,23 @@
 #include <al/al.h>
 #include <al/alext.h>
 #include <vector>
+#include <spdlog/spdlog.h>
 
 namespace NovelRT::Audio::OpenAL
 {
     class OpenALAudioProvider : public IAudioProvider
     {
         private:
-            ALuint _outputSource;
             ALCdevice* _device;
             ALCcontext* _context;
             std::vector<uint32_t> _sources;
             std::vector<uint32_t> _buffers;
+            std::shared_ptr<spdlog::logger> _logger;
 
-            void GetALError();
+            std::string GetALError();
             AudioSourceState ConvertToAudioSourceState(ALenum oalSourceState);
             ALenum DetermineChannelFormat(int32_t numberOfChannels);
+            void LogOpenALMessages(char level, const char* message);
 
         protected:
             void Dispose() final;

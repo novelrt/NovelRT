@@ -27,7 +27,7 @@ target_compile_options(OpenAL
 
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
 )
-target_compile_options(common
+target_compile_options(alcommon
   PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/wd4127>
     $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
