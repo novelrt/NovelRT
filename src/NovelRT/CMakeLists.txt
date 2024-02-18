@@ -71,7 +71,7 @@ target_link_libraries(Engine
   PUBLIC
   runtime
   tbb
-  OpenAL
+  $<$<BOOL:${UNIX}>:OpenAL>
   sndfile
   glfw
   png

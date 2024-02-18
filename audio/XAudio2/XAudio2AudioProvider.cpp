@@ -36,6 +36,8 @@ namespace NovelRT::Audio::XAudio2
             throw new Exceptions::InitialisationFailureException("Failed to create an output voice!", _hr);
         }
 
+        _masterVoice->SetVolume(1.0f);
+
         XAUDIO2_DEBUG_CONFIGURATION debug{};
         debug.TraceMask = XAUDIO2_LOG_ERRORS;
         _device->SetDebugConfiguration(&debug);
@@ -79,6 +81,7 @@ namespace NovelRT::Audio::XAudio2
         {
             _logger->error("Could not create source voice - Code: {hr}", _hr);
         }
+        newVoice->SetVolume(1.0f);
 
         _sources.emplace(nextSource, newVoice);
         return nextSource;
@@ -102,19 +105,20 @@ namespace NovelRT::Audio::XAudio2
 
     void XAudio2AudioProvider::PauseSource(uint32_t sourceId)
     {
-        PlaySource(sourceId);
+        StopSource(sourceId);
     }
 
     uint32_t XAudio2AudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context)
     {
-        uint32_t nextBuffer = ++_bufferCounter;
+        //uint32_t nextBuffer = ++_bufferCounter;
         XAUDIO2_BUFFER xABuffer =
         {
             XAUDIO2_END_OF_STREAM,          // Flags
             static_cast<uint32_t>(buffer.size()*sizeof(int16_t)),  // AudioBytes
-            static_cast<byte*>(new byte[buffer.size()*sizeof(int16_t)])
+            static_cast<byte*>(new byte[buffer.size()*sizeof(int16_t)]) //new buffer to copy int16_t* to
         };
 
+        //Because XAudio2 expects a BYTE*, we'll have to cast it up and copy the data from the provided span :(
         std::memcpy((void*)(xABuffer.pAudioData),
              reinterpret_cast<void*>(buffer.data()), buffer.size()*sizeof(int16_t));
         if(context.Loop)
@@ -122,21 +126,20 @@ namespace NovelRT::Audio::XAudio2
             xABuffer.LoopCount = XAUDIO2_LOOP_INFINITE;
         }
 
-        _buffers.emplace(nextBuffer, xABuffer);
         uint32_t sourceId = OpenSource(context);
-
         if(FAILED(_hr = _sources.at(sourceId)->SubmitSourceBuffer(&xABuffer)))
         {
             _logger->error("Failed to submit buffer to source {sourceId} - Code: {hr}", sourceId, std::to_string(_hr));
         }
 
+        _buffers.emplace(sourceId, xABuffer);
         return sourceId;
     }
 
     void XAudio2AudioProvider::SetSourceProperties(uint32_t sourceId, AudioSourceContext& context)
     {
         //volume
-        if(FAILED(_hr = _sources.at(sourceId)->SetVolume(ConvertToXAudio2VolumeUnits(context.Volume))))
+        if(FAILED(_hr = _sources.at(sourceId)->SetVolume(context.Volume)))
         {
             _logger->error("Error when setting volume for source {id} - Code: {hr}", sourceId, _hr);
         }
@@ -151,25 +154,41 @@ namespace NovelRT::Audio::XAudio2
     {
         XAUDIO2_VOICE_STATE voiceState;
         _sources.at(sourceId)->GetState(&voiceState, 0);
-        return ConvertToAudioSourceState(voiceState);
-    }
-
-    float XAudio2AudioProvider::ConvertToXAudio2VolumeUnits(float inputVolume)
-    {
-        return inputVolume * (XAUDIO2_MAX_VOLUME_LEVEL - (-XAUDIO2_MAX_VOLUME_LEVEL)) + -XAUDIO2_MAX_VOLUME_LEVEL;
+        AudioSourceState state = ConvertToAudioSourceState(voiceState);
+        if(state == AudioSourceState::SOURCE_STOPPED)
+        {
+            if(voiceState.pCurrentBufferContext == NULL && voiceState.BuffersQueued == 0 && voiceState.SamplesPlayed == 0)
+            {
+                auto source = _sources.at(sourceId);
+                source->Stop(0);
+                source->SubmitSourceBuffer(&_buffers.at(sourceId));
+            }
+        }
+        return state;
     }
 
     AudioSourceState XAudio2AudioProvider::ConvertToAudioSourceState(XAUDIO2_VOICE_STATE sourceState)
     {
-        switch(sourceState.BuffersQueued)
+        if(sourceState.BuffersQueued == 0)
         {
-            case NULL:
+            if(sourceState.SamplesPlayed > 0 || (sourceState.pCurrentBufferContext == NULL && sourceState.SamplesPlayed == 0))
             {
                 return AudioSourceState::SOURCE_STOPPED;
             }
-            default:
+            else
             {
                 return AudioSourceState::SOURCE_PLAYING;
+            }
+        }
+        else
+        {
+            if(sourceState.SamplesPlayed > 0)
+            {
+                return AudioSourceState::SOURCE_PLAYING;
+            }
+            else
+            {
+                return AudioSourceState::SOURCE_STOPPED;
             }
         }
     }

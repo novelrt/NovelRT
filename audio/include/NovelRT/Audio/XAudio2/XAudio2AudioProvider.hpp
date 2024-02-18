@@ -22,10 +22,7 @@ namespace NovelRT::Audio::XAudio2
             std::map<uint32_t, XAUDIO2_BUFFER> _buffers;
             HRESULT _hr;
 
-            float ConvertToXAudio2VolumeUnits(float inputVolume);
             AudioSourceState ConvertToAudioSourceState(XAUDIO2_VOICE_STATE sourceState);
-            // ALenum DetermineChannelFormat(int32_t numberOfChannels);
-            // void LogOpenALMessages(char level, const char* message);
 
         protected:
             void Dispose() final;
