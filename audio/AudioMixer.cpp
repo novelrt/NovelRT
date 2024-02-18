@@ -13,9 +13,11 @@ namespace NovelRT::Audio
         _audioProvider = std::make_unique<OpenAL::OpenALAudioProvider>();
     }
 
-    uint32_t AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t>& buffer)
+    uint32_t AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, int32_t channelCount, int32_t originalSampleRate)
     {
-        auto newContext = AudioSourceContext();
+        auto newContext = AudioSourceContext{};
+        newContext.Channels = channelCount;
+        newContext.SampleRate = originalSampleRate;
         uint32_t sourceId = _audioProvider->SubmitAudioBuffer(buffer, newContext);
         _sourceContextCache.emplace(sourceId, newContext);
         return sourceId;

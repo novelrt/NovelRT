@@ -12,5 +12,7 @@ namespace NovelRT::Audio
             float Volume = 0.75f;
             float Pitch = 1.0f;
             bool Loop = false;
+            int32_t Channels = 2;
+            int32_t SampleRate = 44100;
     };
 }
