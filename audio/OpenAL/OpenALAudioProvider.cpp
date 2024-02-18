@@ -29,11 +29,12 @@ namespace NovelRT::Audio::OpenAL
 
     void OpenALAudioProvider::Dispose()
     {
-        alSourceStopv(static_cast<int>(_sources.size()), _sources.data());
-        alDeleteSources(static_cast<int>(_sources.size()), _sources.data());
+        alSourceStopv(static_cast<int>(_sources.size()), reinterpret_cast<ALuint*>(_sources.data()));
+        alDeleteSources(static_cast<int>(_sources.size()), reinterpret_cast<ALuint*>(_sources.data()));
         _sources.clear();
-        alDeleteBuffers(static_cast<int>(_buffers.size()), _buffers.data());
+        alDeleteBuffers(static_cast<int>(_buffers.size()), reinterpret_cast<ALuint*>(_buffers.data()));
         _buffers.clear();
+        alcMakeContextCurrent(NULL);
         alcDestroyContext(_context);
         alcCloseDevice(_device);
     }
@@ -45,6 +46,7 @@ namespace NovelRT::Audio::OpenAL
         alSourcef(source, AL_GAIN, context.Volume);
         alSourcef(source, AL_PITCH, context.Pitch);
         alSourcei(source, AL_LOOPING, static_cast<int>(context.Loop));
+        _sources.emplace_back(static_cast<uint32_t>(source));
         return source;
     }
 
@@ -68,7 +70,7 @@ namespace NovelRT::Audio::OpenAL
         alSourcePause(sourceId);
     }
 
-    std::string OpenALAudioProvider::GetALError()
+    void OpenALAudioProvider::GetALError()
     {
         auto err = alGetError();
         switch (err)
@@ -100,11 +102,12 @@ namespace NovelRT::Audio::OpenAL
         }
     }
 
-    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t>& buffer, AudioSourceContext& context)
+    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context)
     {
         ALuint alBuffer;
         alGenBuffers(1, &alBuffer);
-        alBufferData(alBuffer, AL_FORMAT_STEREO16, buffer.data(), static_cast<ALsizei>(buffer.size() * sizeof(int16_t)), 44100);
+        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(), static_cast<ALsizei>(buffer.size() * sizeof(int16_t)), context.SampleRate);
+        _buffers.emplace_back(static_cast<uint32_t>(alBuffer));
         uint32_t sourceId = OpenSource(context);
         alSourcei(sourceId, AL_BUFFER, alBuffer);
         return sourceId;
@@ -143,6 +146,22 @@ namespace NovelRT::Audio::OpenAL
         ALenum state = 0x0;
         alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
         return ConvertToAudioSourceState(state);
+    }
+
+    ALenum OpenALAudioProvider::DetermineChannelFormat(int32_t numberOfChannels)
+    {
+        switch(numberOfChannels)
+        {
+            case 1:
+                return AL_FORMAT_MONO16;
+            case 5:
+                return AL_FORMAT_51CHN16;
+            case 7:
+                return AL_FORMAT_71CHN16;
+            case 2:
+            default:
+                return AL_FORMAT_STEREO16;
+        }
     }
 
 }

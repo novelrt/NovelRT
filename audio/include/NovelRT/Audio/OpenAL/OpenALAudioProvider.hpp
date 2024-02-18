@@ -18,8 +18,9 @@ namespace NovelRT::Audio::OpenAL
             std::vector<uint32_t> _sources;
             std::vector<uint32_t> _buffers;
 
-            std::string GetALError();
+            void GetALError();
             AudioSourceState ConvertToAudioSourceState(ALenum oalSourceState);
+            ALenum DetermineChannelFormat(int32_t numberOfChannels);
 
         protected:
             void Dispose() final;
@@ -31,7 +32,7 @@ namespace NovelRT::Audio::OpenAL
             void StopSource(uint32_t sourceId) final;
             void PauseSource(uint32_t sourceId) final;
             void SetSourceProperties(uint32_t sourceId, AudioSourceContext& context) final;
-            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t>& buffer, AudioSourceContext& context) final;
+            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context) final;
             AudioSourceState GetSourceState(uint32_t id) final;
 
             ~OpenALAudioProvider() final;
