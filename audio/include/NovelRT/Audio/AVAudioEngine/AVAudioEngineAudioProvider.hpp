@@ -7,30 +7,39 @@
 #include <map>
 #include <spdlog/spdlog.h>
 
+
 #ifdef __OBJC__
     @class AVAudioEngine;
     @class AVAudioPlayerNode;
     @class AVAudioPCMBuffer;
     @class AVAudioUnitEQ;
+    @class AVAudioFormat;
+    ::AVAudioEngine* _impl;     // represents Obj-C object
+    ::AVAudioFormat* _mixerFormat;
 #else
     typedef struct objc_object AVAudioEngine;
     typedef struct objc_object AVAudioPlayerNode;
     typedef struct objc_object AVAudioPCMBuffer;
     typedef struct objc_object AVAudioUnitEQ;
+    typedef struct objc_object AVAudioFormat;
 #endif
+
+
 
 namespace NovelRT::Audio::AVAudioEngine
 {
     class AVAudioEngineAudioProvider : public IAudioProvider
     {
         private:
-            ::AVAudioEngine* _impl;     // represents Obj-C object
+            
             std::map<uint32_t, ::AVAudioPlayerNode*> _sources;
             std::map<uint32_t, ::AVAudioUnitEQ*> _sourceEQUnits;
             std::map<uint32_t, ::AVAudioPCMBuffer*> _buffers;
             std::map<uint32_t, AudioSourceState> _sourceStates;
             std::shared_ptr<spdlog::logger> _logger;
             uint32_t _sourceCounter = 0;
+
+            uint32_t OpenSourceInternal(AudioSourceContext& context, ::AVAudioPCMBuffer* buffer, ::AVAudioFormat* format);
 
         protected:
             void Dispose() final;

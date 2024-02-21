@@ -28,6 +28,10 @@ copy_build_products(AudioEcsSample
 )
 
 if(${NOVELRT_TARGET} STREQUAL "macOS")
+  target_link_libraries(AudioEcsSample
+  PRIVATE
+  "-framework AVFoundation"
+  )
   copy_runtime_dependencies(AudioEcsSample
     DEPENDENCY Engine
     LIBRARY Vulkan::MoltenVK
