@@ -5,6 +5,8 @@
 //Conditional
 #if defined(_WIN32)
 #include <NovelRT/Audio/XAudio2/XAudio2AudioProvider.hpp>
+#elif __APPLE__
+#include <NovelRT/Audio/AVAudioEngine/AVAudioEngineAudioProvider.hpp>
 #else
 #include <NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
 #endif
@@ -15,6 +17,8 @@ namespace NovelRT::Audio
         _sourceContextCache = std::map<uint32_t, AudioSourceContext>();
 #if defined(_WIN32)
         _audioProvider = std::make_unique<XAudio2::XAudio2AudioProvider>();
+#elif defined(__APPLE__)
+        _audioProvider = std::make_unique<AVAudioEngine::AVAudioEngineAudioProvider>();
 #else
         _audioProvider = std::make_unique<OpenAL::OpenALAudioProvider>();
 #endif
