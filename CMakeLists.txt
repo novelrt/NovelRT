@@ -34,12 +34,16 @@ if(NOT DEFINED NOVELRT_TARGET)
     set(NOVELRT_TARGET "Win32" CACHE STRING "")
   elseif(APPLE)
     set(NOVELRT_TARGET "macOS" CACHE STRING "")
+    find_library(AVFOUNDATION_LIB AVFoundation)
+    find_library(FOUNDATION_LIB Foundation)
+    find_library(OBJC_LIB ObjC)
   elseif(UNIX)
     set(NOVELRT_TARGET "Linux" CACHE STRING "")
   else()
     set(NOVELRT_TARGET "Unknown" CACHE STRING "")
   endif()
 endif()
+message("Using OS: ${NOVELRT_TARGET}")
 
 #
 # Prepend so that our FindVulkan gets picked up first when needed

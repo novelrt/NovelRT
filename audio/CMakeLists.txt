@@ -1,8 +1,8 @@
 add_library(NovelRT-Audio STATIC
   AudioMixer.cpp
-  $<$<BOOL:${WIN32}>:XAudio2/XAudio2AudioProvider.cpp>
-  $<$<BOOL:${UNIX}>:OpenAL/OpenALAudioProvider.cpp>
-  $<$<BOOL:${APPLE}>:OpenAL/OpenALAudioProvider.cpp>
+  $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Win32>>:XAudio2/XAudio2AudioProvider.cpp>
+  $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},macOS>>:AVAudioEngine/AVAudioEngineAudioProvider.mm>
+  $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Linux>>:OpenAL/OpenALAudioProvider.cpp>
 )
 
 target_sources(NovelRT-Audio
@@ -13,9 +13,17 @@ target_sources(NovelRT-Audio
     FILES
     include/NovelRT/Audio/AudioMixer.hpp
     include/NovelRT/Audio/IAudioProvider.hpp
-    $<$<BOOL:${WIN32}>:include/NovelRT/Audio/XAudio2/XAudio2AudioProvider.hpp>
-    $<$<BOOL:${UNIX}>:include/NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
-    $<$<BOOL:${APPLE}>:include/NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
+)
+
+target_sources(NovelRT-Audio
+  PRIVATE
+    FILE_SET private_headers
+    TYPE HEADERS
+    BASE_DIRS include
+    FILES
+    $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Win32>>:include/NovelRT/Audio/XAudio2/XAudio2AudioProvider.hpp>
+    $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Linux>>:include/NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
+    $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},macOS>>:include/NovelRT/Audio/AVAudioEngine/AVAudioEngineAudioProvider.hpp>
 )
 
 set_target_properties(NovelRT-Audio
@@ -53,9 +61,15 @@ target_include_directories(NovelRT-Audio PRIVATE "$<TARGET_PROPERTY:Engine,INCLU
 target_link_libraries(NovelRT-Audio
   PUBLIC
     spdlog
-    $<$<BOOL:${APPLE}>:OpenAL>
-    $<$<BOOL:${UNIX}>:OpenAL>
+    $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Linux>>:OpenAL>
 )
+
+if(${NOVELRT_TARGET} STREQUAL "macOS")
+  target_link_libraries(NovelRT-Audio
+    PRIVATE
+      "-framework AVFoundation"
+  )
+endif()
 
 install(
   TARGETS NovelRT-Audio

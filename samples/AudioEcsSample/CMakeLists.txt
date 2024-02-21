@@ -24,10 +24,10 @@ target_link_libraries(AudioEcsSample
 
 copy_build_products(AudioEcsSample
   DEPENDENCY Resources
-  TARGET_LOCATION $<IF:$<BOOL:${APPLE}>,$<TARGET_FILE_DIR:AudioEcsSample>/../Resources,$<TARGET_FILE_DIR:AudioEcsSample>/Resources>
+  TARGET_LOCATION $<IF:$<BOOL:$<STREQUAL:${NOVELRT_TARGET},macOS>>,$<TARGET_FILE_DIR:AudioEcsSample>/../Resources,$<TARGET_FILE_DIR:AudioEcsSample>/Resources>
 )
 
-if(APPLE)
+if(${NOVELRT_TARGET} STREQUAL "macOS")
   copy_runtime_dependencies(AudioEcsSample
     DEPENDENCY Engine
     LIBRARY Vulkan::MoltenVK

@@ -1,4 +1,4 @@
-if(NOT ${WIN32})
+if(${NOVELRT_TARGET} STREQUAL Linux)
   include(FetchContent)
 
   set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
