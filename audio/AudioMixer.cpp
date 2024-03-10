@@ -24,7 +24,7 @@ namespace NovelRT::Audio
 #endif
     }
 
-    uint32_t AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, int32_t channelCount, int32_t originalSampleRate)
+    uint32_t AudioMixer::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, int32_t channelCount, int32_t originalSampleRate)
     {
         auto newContext = AudioSourceContext{};
         newContext.Channels = channelCount;

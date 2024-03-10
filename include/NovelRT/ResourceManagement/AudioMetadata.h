@@ -8,7 +8,7 @@ namespace NovelRT::ResourceManagement
 {
     struct AudioMetadata
     {
-        std::vector<int16_t> processedAudioFrames;
+        std::vector<float> processedAudioFrames;
         int32_t channelCount;
         int32_t sampleRate;
         uuids::uuid databaseHandle;

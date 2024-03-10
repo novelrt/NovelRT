@@ -21,7 +21,7 @@ namespace NovelRT::Audio
 
         public:
             void Initialise();
-            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, int32_t channelCount, int32_t originalSampleRate);
+            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, int32_t channelCount, int32_t originalSampleRate);
             void PlaySource(uint32_t id);
             void StopSource(uint32_t id);
             void PauseSource(uint32_t id);

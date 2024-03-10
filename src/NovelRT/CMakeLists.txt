@@ -72,6 +72,7 @@ target_link_libraries(Engine
   runtime
   tbb
   sndfile
+  samplerate
   glfw
   png
   spdlog

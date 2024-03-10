@@ -15,7 +15,7 @@ namespace NovelRT::Audio
             virtual uint32_t OpenSource(AudioSourceContext& context) = 0;
 
         public:
-            virtual uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context) = 0;
+            virtual uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context) = 0;
             virtual void PlaySource(uint32_t sourceId) = 0;
             virtual void StopSource(uint32_t sourceId) = 0;
             virtual void PauseSource(uint32_t sourceId) = 0;

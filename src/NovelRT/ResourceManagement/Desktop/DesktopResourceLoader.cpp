@@ -3,6 +3,7 @@
 
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <iostream>
+#include <samplerate.h>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -389,6 +390,7 @@ namespace NovelRT::ResourceManagement::Desktop
     AudioMetadata DesktopResourceLoader::LoadAudioFrameData(std::filesystem::path filePath)
     {
         constexpr size_t _bufferSize = 2048;
+        constexpr int32_t _sampleRate = 44100;
 
         if (filePath.is_relative())
         {
@@ -405,23 +407,47 @@ namespace NovelRT::ResourceManagement::Desktop
             throw NovelRT::Exceptions::IOException(filePath.string(), std::string(sf_strerror(file)));
         }
 
-        std::vector<int16_t> data;
-        std::vector<short> readBuffer;
+        std::vector<float> data;
+        std::vector<float> readBuffer;
         readBuffer.resize(_bufferSize);
 
-        sf_command(file, SFC_SET_SCALE_FLOAT_INT_READ, nullptr, SF_TRUE);
+        //sf_command(file, SFC_SET_SCALE, nullptr, SF_TRUE);
 
         sf_count_t readSize = 0;
 
-        while ((readSize = sf_read_short(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
+        while ((readSize = sf_read_float(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
         {
             data.insert(data.end(), readBuffer.begin(), readBuffer.begin() + readSize);
         }
 
         sf_close(file);
-
+        
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
         uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
+
+        if(info.samplerate != _sampleRate)
+        {
+            _logger.logDebug("Detected sample rate of {0}", info.samplerate);
+            info.samplerate > 44100 ? _logger.logDebug("Downscaling...") : _logger.logDebug("Upscaling...");
+            std::vector<float> resampledData = std::vector<float>(data.size());
+            SRC_DATA conversionInfo = SRC_DATA{};
+            conversionInfo.data_in = data.data();
+            conversionInfo.data_out = resampledData.data();
+            conversionInfo.input_frames = info.channels == 1 ? data.size() : data.size() / info.channels;
+            conversionInfo.output_frames = conversionInfo.input_frames;
+            double rate = 44100.0 / static_cast<double>(info.samplerate);
+            _logger.logDebug("Scaling by ratio of {0:f}", rate);
+            conversionInfo.src_ratio = rate;
+            int result = src_simple(&conversionInfo, SRC_SINC_MEDIUM_QUALITY, info.channels);
+            if(result != 0)
+            {
+                std::string err = src_strerror(result);
+                _logger.logErrorLine(err);
+                throw new NovelRT::Exceptions::InvalidOperationException(err);
+            }
+
+            return AudioMetadata{resampledData, info.channels, _sampleRate, databaseHandle};
+        }
 
         return AudioMetadata{data, info.channels, info.samplerate, databaseHandle};
     }
