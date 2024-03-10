@@ -31,6 +31,7 @@ namespace NovelRT::Ecs::Audio
             {
                 case AudioEmitterState::ToPlay:
                 {
+                    _mixer->SetSourceLoop(emitter.handle, emitter.numberOfLoops > 0);
                     _mixer->PlaySource(emitter.handle);
                     _logger.logDebug("Entity ID {} - EmitterState ToPlay -> Playing", entity);
                     states.PushComponentUpdateInstruction(
@@ -216,7 +217,7 @@ namespace NovelRT::Ecs::Audio
         }
 
         auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
-        auto handle = _mixer->SubmitAudioBuffer(NovelRT::Utilities::Misc::Span<int16_t>(asset.processedAudioFrames.data(), asset.processedAudioFrames.size()), asset.channelCount, asset.sampleRate);
+        auto handle = _mixer->SubmitAudioBuffer(NovelRT::Utilities::Misc::Span<float>(asset.processedAudioFrames.data(), asset.processedAudioFrames.size()), asset.channelCount, asset.sampleRate);
         _soundCache.emplace(handle, asset);
         // if (_mixer->IsLoaded(handle))
         // {

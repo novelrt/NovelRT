@@ -70,6 +70,12 @@ thirdparty_module(PNG
   URL_HASH SHA512=65df0c2befa06d0b9ec0c6395a73987fb071754610d328b94ce01a6b8f7161c71ce97ddf0e0a8e28c2e50019a103368c4b4f0b63bd8cd75e168b32f940922d96
   OVERRIDE_FIND_PACKAGE
 )
+
+thirdparty_module(samplerate
+  URL https://github.com/libsndfile/libsamplerate/archive/refs/tags/0.2.2.zip
+  URL_HASH SHA512=dedd072bc83ccebfe1a33e8a3fb3f72559bfd36282b958b1d5463b786f2325f684137580db38d91f0f4f5345a1da3e9e1c4a1695e303182e57d542c085db829f
+)
+
 thirdparty_module(SndFile
   URL https://github.com/novelrt/libsndfile/archive/f76d63813c810c2ed09bdb3821bb807498a7558e.zip
   URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
@@ -110,7 +116,8 @@ foreach(module
   glm
   GSL
   GTest
-  Opus Ogg FLAC Vorbis SndFile OpenAL
+  Opus Ogg FLAC Vorbis SndFile samplerate
+  OpenAL
   ZLIB PNG
   fmt spdlog
   stduuid

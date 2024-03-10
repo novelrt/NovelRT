@@ -36,6 +36,7 @@ namespace NovelRT::Audio::AVAudioEngine
             std::map<uint32_t, ::AVAudioUnitEQ*> _sourceEQUnits;
             std::map<uint32_t, ::AVAudioPCMBuffer*> _buffers;
             std::map<uint32_t, AudioSourceState> _sourceStates;
+            std::map<uint32_t, AudioSourceContext> _sourceContexts;
             std::shared_ptr<spdlog::logger> _logger;
             uint32_t _sourceCounter = 0;
 
@@ -44,6 +45,7 @@ namespace NovelRT::Audio::AVAudioEngine
         protected:
             void Dispose() final;
             uint32_t OpenSource(AudioSourceContext& context) final;
+            void UpdateSourceState(uint32_t sourceId, AudioSourceState state);
 
         public:
             AVAudioEngineAudioProvider();
@@ -51,7 +53,7 @@ namespace NovelRT::Audio::AVAudioEngine
             void StopSource(uint32_t sourceId) final;
             void PauseSource(uint32_t sourceId) final;
             void SetSourceProperties(uint32_t sourceId, AudioSourceContext& context) final;
-            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context) final;
+            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context) final;
             AudioSourceState GetSourceState(uint32_t id) final;
 
             ~AVAudioEngineAudioProvider() final;

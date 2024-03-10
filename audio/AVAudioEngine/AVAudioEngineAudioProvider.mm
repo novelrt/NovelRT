@@ -14,6 +14,7 @@ namespace NovelRT::Audio::AVAudioEngine
     _sources(std::map<uint32_t, ::AVAudioPlayerNode*>()),
     _sourceEQUnits(std::map<uint32_t, ::AVAudioUnitEQ*>()),
     _sourceStates(std::map<uint32_t, AudioSourceState>()),
+    _sourceContexts(std::map<uint32_t, AudioSourceContext>()),
     _logger(spdlog::stdout_color_mt("AVAudioEngine"))
     {
         //Logger init
@@ -25,27 +26,6 @@ namespace NovelRT::Audio::AVAudioEngine
             ::NSError* err;
             _logger->debug("calling alloc and init");
             _impl = [::AVAudioEngine new];
-
-
-            _logger->debug("getting mainMixerNode and format");
-
-            _mixerFormat = [_impl.mainMixerNode outputFormatForBus:0];
-            _logger->debug("Retrieved format - Channels {0}, SampleRate {1}", _mixerFormat.channelCount, _mixerFormat.sampleRate);
-            // ::AVAudioMixerNode* mixNode = [[::AVAudioMixerNode alloc] init];
-            // _logger->debug("attaching mixer");
-            // [(::AVAudioEngine*)_impl attachNode:mixNode];
-            // _logger->debug("connecting nodes");
-            // [(::AVAudioEngine*)_impl connect:mixNode to:_impl.outputNode format:_mixerFormat];
-            //::AVAudioOutputNode* outputNode = ((::AVAudioEngine*)_impl).outputNode;
-
-            
-
-            // if([(::AVAudioEngine*)_impl startAndReturnError: &err])
-            // {
-            //     std::string error = std::string([err.localizedDescription UTF8String]);
-            //     _logger->error(error);
-            //     throw new Exceptions::InitialisationFailureException("Failed to initialise AVAudioEngine!", error);
-            // }
         }
         @catch(::NSException* ex)
         {
@@ -82,6 +62,8 @@ namespace NovelRT::Audio::AVAudioEngine
             [(::AVAudioPCMBuffer*)buffer release];
         }
         _buffers.clear();
+
+        _sourceContexts.clear();
     }
 
     uint32_t AVAudioEngineAudioProvider::OpenSource(AudioSourceContext& context)
@@ -92,16 +74,12 @@ namespace NovelRT::Audio::AVAudioEngine
 
     uint32_t AVAudioEngineAudioProvider::OpenSourceInternal(AudioSourceContext& context, ::AVAudioPCMBuffer* buffer, ::AVAudioFormat* format)
     {
-        if(format == nullptr)
-        {
-            _logger->error("SCREEEEEEEEEEEEEEEEEEEEEEEECH");
-        }
-
         uint32_t nextSource = ++_sourceCounter;
         ::AVAudioPlayerNode* node = [::AVAudioPlayerNode new];
         [_impl attachNode:node];
         _sources.emplace(nextSource, node);
         _sourceStates.emplace(nextSource, AudioSourceState::SOURCE_STOPPED);
+        _sourceContexts.emplace(nextSource, context);
 
         ::AVAudioUnitEQ* eq = [[::AVAudioUnitEQ alloc] initWithNumberOfBands: 1];
         [_impl attachNode:eq];
@@ -111,18 +89,6 @@ namespace NovelRT::Audio::AVAudioEngine
         [(::AVAudioEngine*)_impl connect:node to:eq format:nil];
         _logger->debug("Connecting source {0} EQ to mixer", nextSource);
         [(::AVAudioEngine*)_impl connect:eq to:_impl.mainMixerNode format:nil];
-
-        //[eq play]
-        // if(context.Loop)
-        // {
-        //     _logger->debug("Scheduling looping pcm buffer for source {0}", nextSource);
-        //     [node scheduleBuffer: buffer atTime: nil options: AVAudioPlayerNodeBufferLoops completionCallbackType: AVAudioPlayerNodeCompletionDataPlayedBack completionHandler: nil];
-        // }
-        // else
-        // {
-        //     _logger->debug("Scheduling pcm buffer for source {0}", nextSource);
-        //     [node scheduleBuffer: buffer completionHandler: nil];
-        // }
         _buffers.emplace(nextSource, buffer);
 
         return nextSource;
@@ -147,13 +113,32 @@ namespace NovelRT::Audio::AVAudioEngine
 
         if(!node.playing)
         {
-            [node scheduleBuffer: _buffers.at(sourceId) completionHandler: nil];
+            auto lambda = [this, sourceId = sourceId]()
+            {
+                this->UpdateSourceState(sourceId, AudioSourceState::SOURCE_STOPPED);
+            };
+            if(_sourceContexts.at(sourceId).Loop)
+            {
+                _logger->debug("Looping source ID {0}", sourceId);
+                [node scheduleBuffer: _buffers.at(sourceId) atTime: nil options: AVAudioPlayerNodeBufferLoops completionHandler: nil];
+            }
+            else
+            {
+                [node scheduleBuffer: _buffers.at(sourceId) completionHandler: lambda];
+            }
+
+
+            
+            
             [node play];
         }
 
-
         _sourceStates[sourceId] = AudioSourceState::SOURCE_PLAYING;
+    }
 
+    void AVAudioEngineAudioProvider::UpdateSourceState(uint32_t sourceId, AudioSourceState state)
+    {
+        _sourceStates[sourceId] = state;
     }
 
     void AVAudioEngineAudioProvider::StopSource(uint32_t sourceId)
@@ -176,41 +161,34 @@ namespace NovelRT::Audio::AVAudioEngine
         _sourceStates[sourceId] = AudioSourceState::SOURCE_PAUSED;
     }
 
-    uint32_t AVAudioEngineAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context)
+    uint32_t AVAudioEngineAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context)
     {
         _logger->debug("Loading audio buffer - SampleRate: {0}, Channels: {1}", context.SampleRate, context.Channels);
-        ::AVAudioFormat* format = [[::AVAudioFormat alloc] initWithCommonFormat:AVAudioCommonFormat::AVAudioPCMFormatInt16 sampleRate:context.SampleRate channels:context.Channels interleaved:true];
+        
+        uint32_t frameCap = buffer.size() * sizeof(float);
+        ::AVAudioFormat* format = [[::AVAudioFormat alloc] initWithCommonFormat:AVAudioCommonFormat::AVAudioPCMFormatFloat32 sampleRate:44100 channels:context.Channels interleaved:true];
+        ::AVAudioFormat* deformat = [[::AVAudioFormat alloc] initWithCommonFormat:AVAudioCommonFormat::AVAudioPCMFormatFloat32 sampleRate:44100 channels:context.Channels interleaved:false];
         AudioBufferList abl;
         abl.mNumberBuffers = 1;
-        abl.mBuffers[0].mData = (void *)buffer.data();
+        abl.mBuffers[0].mData = ((void *)new Byte[frameCap]);
         abl.mBuffers[0].mNumberChannels = context.Channels;
-        abl.mBuffers[0].mDataByteSize = buffer.size() * sizeof(int16_t);
+        abl.mBuffers[0].mDataByteSize = frameCap;
+
+        std::memcpy((void*)abl.mBuffers[0].mData, reinterpret_cast<void*>(buffer.data()), frameCap);
 
         ::AVAudioPCMBuffer* pcmBuffer = [[::AVAudioPCMBuffer alloc] initWithPCMFormat:format bufferListNoCopy:&abl deallocator:NULL];
-        if(context.SampleRate != _mixerFormat.sampleRate)
-        {
-        ::AVAudioConverter* convert = [[::AVAudioConverter alloc] initFromFormat:format toFormat:_mixerFormat];
 
-        ::AVAudioPCMBuffer* newBuffer = [[::AVAudioPCMBuffer alloc] initWithPCMFormat:format frameCapacity:pcmBuffer.frameCapacity];
-
-        _logger->debug("converting...");
-        [convert convertToBuffer:newBuffer error:nil withInputFromBlock: ^(::AVAudioPacketCount inNumberOfPackets, ::AVAudioConverterInputStatus *outStatus)
-        {
-            *outStatus = AVAudioConverterInputStatus::AVAudioConverterInputStatus_HaveData;
-            return pcmBuffer;
-        }];
-        // [convert convertToBuffer:newBuffer fromBuffer:pcmBuffer error:nil];
-
-            return OpenSourceInternal(context, newBuffer, format);
-        }
-        else
-        {
-            return OpenSourceInternal(context, pcmBuffer, format);
-        }
+        ::AVAudioConverter* convert = [[::AVAudioConverter alloc] initFromFormat:format toFormat:deformat];
+        ::AVAudioPCMBuffer* deinterleavedBuffer = [[::AVAudioPCMBuffer alloc] initWithPCMFormat:deformat frameCapacity:pcmBuffer.frameCapacity];
+        [convert convertToBuffer:deinterleavedBuffer fromBuffer:pcmBuffer error:nil];
+        
+        return OpenSourceInternal(context, deinterleavedBuffer, format);
     }
 
     void AVAudioEngineAudioProvider::SetSourceProperties(uint32_t sourceId, AudioSourceContext& context)
     {
+        _sourceContexts[sourceId] = context;
+
         ::AVAudioUnitEQ* eq = _sourceEQUnits.at(sourceId);
         eq.globalGain = context.Volume;
     }
