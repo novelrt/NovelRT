@@ -68,8 +68,8 @@ target_link_libraries(Engine
   PUBLIC
   runtime
   tbb
-  OpenAL
   sndfile
+  samplerate
   glfw
   png
   spdlog
@@ -80,10 +80,18 @@ target_link_libraries(Engine
   FLAC
   opus
   ogg
+  $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Linux>>:OpenAL>
   NovelRT-Graphics
   NovelRT-Audio
   NovelRT-Input
 )
+
+if(${NOVELRT_TARGET} STREQUAL "macOS")
+target_link_libraries(Engine
+  PRIVATE
+  "-framework AVFoundation"
+)
+endif()
 
 if(NOVELRT_INSTALL)
   install(
