@@ -34,7 +34,7 @@ namespace NovelRT::Audio::XAudio2
             void StopSource(uint32_t sourceId) final;
             void PauseSource(uint32_t sourceId) final;
             void SetSourceProperties(uint32_t sourceId, AudioSourceContext& context) final;
-            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context) final;
+            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context) final;
             AudioSourceState GetSourceState(uint32_t id) final;
 
             ~XAudio2AudioProvider() final;
