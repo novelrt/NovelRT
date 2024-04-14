@@ -38,6 +38,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 The dependencies that are handled by CMake that do not need to be manually installed are as follows:
 
 - Doxygen 1.8.17 (building docs)
+- fmt 10.2.1
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
@@ -46,7 +47,7 @@ The dependencies that are handled by CMake that do not need to be manually insta
 - Microsoft GSL 4.0.0
 - OneTBB 2021.5.0
 - OpenAL 1.21.1
-- spdlog 1.10.0
+- spdlog 1.13.0
 
 ### Build instructions
 
