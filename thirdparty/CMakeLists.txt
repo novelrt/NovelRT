@@ -26,6 +26,10 @@ thirdparty_module(FLAC
   URL_HASH SHA256=8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737
   OVERRIDE_FIND_PACKAGE
 )
+thirdparty_module(fmt
+  URL https://github.com/fmtlib/fmt/releases/download/10.2.1/fmt-10.2.1.zip
+  URL_HASH SHA512=1cf0e3dd09c7d87e0890b8743559159d3be2a8f33c135516962d17c4eeb7b00659e6acd74518bd5566ee4e83ddaba155fecb4c229f90cd258b3b832e72ad82cd
+)
 thirdparty_module(glfw3
   URL https://github.com/glfw/glfw/archive/refs/tags/3.3.7.zip
   URL_HASH SHA512=0ee020ddbbed783b5f0d271ee0a98b37fe489b633e0a8407821f12b2bcfc3b80645751076192b5224bfe1d26d6092c27af9a9bcd7953a419dcec0182e3716341
@@ -106,7 +110,7 @@ foreach(module
   GTest
   Opus Ogg FLAC Vorbis SndFile OpenAL
   ZLIB PNG
-  spdlog
+  fmt spdlog
   stduuid
   TBB
   VulkanMemoryAllocator)
