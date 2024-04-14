@@ -33,12 +33,12 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Cache Vulkan SDK (macOS)
         if: "contains(matrix.os, 'macos')"
         id: cache-vulkan-macOS
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: $GITHUB_WORKSPACE/VulkanSDK
           key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
@@ -78,7 +78,7 @@ jobs:
       
       - name: Upload NovelRT test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test Results (${{ matrix.os }})
           path: ./**/test-results.xml
@@ -94,7 +94,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
@@ -114,7 +114,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Generate Documentation
         run: |
@@ -129,7 +129,7 @@ jobs:
     steps:
       - name: Checkout Code
         id: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Check Formatting
         id: formatting
@@ -146,7 +146,7 @@ jobs:
         run: scripts/ci-checkdiff.sh
 
       - name: Upload Patch
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
           name: clang-format-patch
