@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::Utilities::IsPow2" name="NovelRT::Maths::Utilities::IsPow2">
+<area shape="rect" id="node1" title="Evaluates if the provided integer is a power of 2." alt="" coords="236,5,419,47"/>
+<area shape="rect" id="node2" href="$namespace_novel_r_t_1_1_maths_1_1_utilities.html#af05728034d8864a8800294cd5b4ef274" title="Rounds a given address up to the nearest alignment." alt="" coords="5,5,188,47"/>
+</map>

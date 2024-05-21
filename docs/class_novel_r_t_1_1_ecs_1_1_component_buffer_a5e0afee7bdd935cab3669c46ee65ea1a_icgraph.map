@@ -1,0 +1,6 @@
+<map id="NovelRT::Ecs::ComponentBuffer::HasComponent" name="NovelRT::Ecs::ComponentBuffer::HasComponent">
+<area shape="rect" id="node1" title="Verifies if a given entity has a component." alt="" coords="312,71,539,112"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#ab2a2c9edae3be4cc3a24d5efc24d3a3c" title="Verifies if a given entity has a component." alt="" coords="25,5,245,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#ad1ac5926fab49a4378f791825072e953" title="Attempts to get the component instance attached to this entity." alt="" coords="5,71,264,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a0230d7f5e387c84c77d58260280f3051" title="Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless ope..." alt="" coords="25,136,245,177"/>
+</map>

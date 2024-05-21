@@ -1,0 +1,5 @@
+<map id="NovelRT::Maths::GeoVector3F::Uniform" name="NovelRT::Maths::GeoVector3F::Uniform">
+<area shape="rect" id="node1" title="Creates a new uniform GeoVector3F based on the specified value." alt="" coords="260,39,467,80"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a95783a34300b846cf00e27776852fb9f" title="Creates a new GeoVector3F instance with a uniform value of one." alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#ac6af9b4e7813e2dedcdbf97906306da4" title="Creates a new GeoVector3F instance with a uniform value of zero." alt="" coords="5,71,212,112"/>
+</map>

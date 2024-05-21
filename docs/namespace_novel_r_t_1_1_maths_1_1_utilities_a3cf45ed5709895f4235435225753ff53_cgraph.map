@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::Utilities::Log2" name="NovelRT::Maths::Utilities::Log2">
+<area shape="rect" id="node1" title="Determines the exponent to which 2 should be raised with in order to get to the given value,..." alt="" coords="5,5,188,47"/>
+<area shape="rect" id="node2" href="$namespace_novel_r_t_1_1_maths_1_1_utilities.html#ababd3ad4b98b15faa458aeaa2a8d8d13" title="Creates a lookup table for calculating the log base 2 for a 32 bit integer." alt="" coords="236,5,419,47"/>
+</map>
