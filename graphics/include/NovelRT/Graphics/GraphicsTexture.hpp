@@ -12,6 +12,9 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TResource>
+    class GraphicsResourceMemoryRegion;
+    
     class GraphicsTexture : public GraphicsResource
     {
     private:
@@ -32,6 +35,8 @@ namespace NovelRT::Graphics
                         uint16_t depth);
         
         virtual ~GraphicsTexture() noexcept override = default;
+        
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture>>  Allocate(size_t size, size_t alignment);
 
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         

@@ -11,19 +11,19 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsResource;
 
-    class VulkanGraphicsResourceMemoryRegion final : public GraphicsResourceMemoryRegion
+    class VulkanGraphicsResourceMemoryRegionBase : public GraphicsResourceMemoryRegionBase
     {
     private:
         VmaVirtualAllocation _virtualAllocation;
         VmaVirtualAllocationInfo _virtualAllocationInfo;
 
     public:
-        VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
+        VulkanGraphicsResourceMemoryRegionBase(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                            std::shared_ptr<VulkanGraphicsResource> owningResource,
                                            VmaVirtualAllocation virtualAllocation,
                                            VmaVirtualAllocationInfo virtualAllocationInfo);
 
-        ~VulkanGraphicsResourceMemoryRegion() final = default;
+        ~VulkanGraphicsResourceMemoryRegionBase() override = default;
         
         [[nodiscard]] size_t GetRelativeOffset() const noexcept final;
 
@@ -32,5 +32,17 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VmaVirtualAllocation GetVirtualAllocation() const noexcept;
 
         [[nodiscard]] VmaVirtualAllocationInfo GetVirtualAllocationInfo() const noexcept;
+    };
+
+    template<typename TResource>
+    class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegionBase, public GraphicsResourceMemoryRegion<TResource>
+    {
+        VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
+                                         std::shared_ptr<VulkanGraphicsResource> owningResource)
+            : VulkanGraphicsResourceMemoryRegionBase(GraphicsDevice, owningResource)
+        {
+        }
+
+        ~GraphicsResourceMemoryRegion() override = default;
     };
 }

@@ -6,33 +6,33 @@
 
 namespace NovelRT::Graphics
 {
-    GraphicsResourceMemoryRegion::GraphicsResourceMemoryRegion(std::shared_ptr<GraphicsDevice> graphicsDevice,
+    GraphicsResourceMemoryRegionBase::GraphicsResourceMemoryRegionBase(std::shared_ptr<GraphicsDevice> graphicsDevice,
                                                                std::shared_ptr<GraphicsResource> owningResource)
         : GraphicsDeviceObject(graphicsDevice), _owningResource(owningResource)
     {
     }
 
-    std::shared_ptr<GraphicsResource> GraphicsResourceMemoryRegion::GetOwningResource() const noexcept
+    std::shared_ptr<GraphicsResource> GraphicsResourceMemoryRegionBase::GetOwningResource() const noexcept
     {
         return _owningResource;
     }
 
-    Utilities::Misc::Span<uint8_t> GraphicsResourceMemoryRegion::MapBytes()
+    Utilities::Misc::Span<uint8_t> GraphicsResourceMemoryRegionBase::MapBytes()
     {
         return _owningResource->MapBytes(GetRelativeOffset(), GetSize());
     }
 
-    Utilities::Misc::Span<const uint8_t> GraphicsResourceMemoryRegion::MapBytesForRead()
+    Utilities::Misc::Span<const uint8_t> GraphicsResourceMemoryRegionBase::MapBytesForRead()
     {
         return _owningResource->MapBytesForRead(GetRelativeOffset(), GetSize());
     }
 
-    void GraphicsResourceMemoryRegion::UnmapBytes()
+    void GraphicsResourceMemoryRegionBase::UnmapBytes()
     {
         _owningResource->UnmapBytes();
     }
 
-    void GraphicsResourceMemoryRegion::UnmapBytesAndWrite()
+    void GraphicsResourceMemoryRegionBase::UnmapBytesAndWrite()
     {
         _owningResource->UnmapBytesAndWrite(GetRelativeOffset(), GetSize());
     }

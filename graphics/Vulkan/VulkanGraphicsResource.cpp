@@ -9,6 +9,25 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
+    std::tuple<VmaVirtualAllocation, VkDeviceSize> VulkanGraphicsResource::GetVirtualAllocation(size_t size, size_t alignment)
+    {
+        VmaVirtualAllocationCreateInfo allocInfo{};
+        allocInfo.size = size;
+        allocInfo.alignment = alignment;
+
+        VmaVirtualAllocation allocHandle = VK_NULL_HANDLE;
+        VkDeviceSize offset{};
+
+        VkResult allocResult = vmaVirtualAllocate(_virtualBlock, &allocInfo, &allocHandle, &offset);
+
+        if (allocResult != VK_SUCCESS)
+        {
+            throw Exceptions::OutOfMemoryException("Unable to allocate additional memory in the Vulkan graphics resource.");
+        }
+
+        return std::make_tuple(allocHandle, offset);
+    }
+
     VulkanGraphicsResource::VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                                    std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                                                    GraphicsResourceAccess cpuAccess,
@@ -51,9 +70,9 @@ namespace NovelRT::Graphics::Vulkan
         return _allocationInfo.size;
     }
 
-    std::shared_ptr<GraphicsResourceMemoryRegion> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
+    std::shared_ptr<GraphicsResourceMemoryRegionBase> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
     {
-        
+        return VulkanAllocate(size, alignment);
     }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept
@@ -65,4 +84,16 @@ namespace NovelRT::Graphics::Vulkan
     {
         return _allocationInfo;
     }
+
+    VmaVirtualBlock VulkanGraphicsResource::GetVirtualBlock() const noexcept
+    {
+        return _virtualBlock;
+    }
+
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsResource::VulkanAllocate(size_t size, size_t alignment)
+    {
+        auto [allocation, offset] = GetVirtualAllocation(size, alignment);
+        return VulkanAllocateInternal(allocation, offset);
+    }
 }
+

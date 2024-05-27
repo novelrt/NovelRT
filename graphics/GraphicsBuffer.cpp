@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
+#include <NovelRT/Graphics/GraphicsResource.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -12,8 +13,13 @@ namespace NovelRT::Graphics
         : GraphicsResource(graphicsDevice, allocator, cpuAccess), _kind(kind)
     {
     }
+    
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer>> GraphicsBuffer::Allocate(size_t size, size_t alignment)
+    {
+        return std::reinterpret_pointer_cast<GraphicsResourceMemoryRegion<GraphicsBuffer>>(GraphicsResource::Allocate(size, alignment));
+    }
 
-    [[nodiscard]] GraphicsBufferKind GraphicsBuffer::GetKind() const noexcept
+    GraphicsBufferKind GraphicsBuffer::GetKind() const noexcept
     {
         return _kind;
     }

@@ -11,16 +11,16 @@ namespace NovelRT::Graphics
 {
     class GraphicsResource;
 
-    class GraphicsResourceMemoryRegion : public GraphicsDeviceObject
+    class GraphicsResourceMemoryRegionBase : public GraphicsDeviceObject
     {
     private:
         std::shared_ptr<GraphicsResource> _owningResource;
 
     public:
-        GraphicsResourceMemoryRegion(std::shared_ptr<GraphicsDevice> graphicsDevice,
-                                     std::shared_ptr<GraphicsResource> owningResource);
+        GraphicsResourceMemoryRegionBase(std::shared_ptr<GraphicsDevice> graphicsDevice,
+                                         std::shared_ptr<GraphicsResource> owningResource);
 
-        virtual ~GraphicsResourceMemoryRegion() = default;
+        virtual ~GraphicsResourceMemoryRegionBase() = default;
 
         [[nodiscard]] virtual size_t GetRelativeOffset() const noexcept = 0;
 
@@ -44,6 +44,22 @@ namespace NovelRT::Graphics
         template<typename T> [[nodiscard]] Utilities::Misc::Span<const T> MapForRead()
         {
             return Utilities::Misc::SpanCast<const T>(MapBytesForRead());
+        }
+    };
+
+    template<typename TResource> class GraphicsResourceMemoryRegion : public GraphicsResourceMemoryRegionBase
+    {
+        GraphicsResourceMemoryRegion(std::shared_ptr<GraphicsDevice> graphicsDevice,
+                                         std::shared_ptr<GraphicsResource> owningResource)
+            : GraphicsResourceMemoryRegionBase(GraphicsDevice, owningResource)
+        {
+        }
+
+        ~GraphicsResourceMemoryRegion() override = default;
+
+        [[nodiscard]] std::shared_ptr<TResource> GetOwningResource() const noexcept
+        {
+            return std::reinterpret_pointer_cast<TResource>(GraphicsResourceMemoryRegionBase::GetOwningResource());
         }
     };
 }

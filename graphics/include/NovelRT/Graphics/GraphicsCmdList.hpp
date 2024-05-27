@@ -16,6 +16,17 @@ namespace NovelRT::Graphics
     class GraphicsDescriptorSet;
     class GraphicsRenderPass;
 
+    // TODO: MOVE THIS
+    struct ViewportInfo
+    {
+        float x = 0;
+        float y = 0;
+        float width = 0;
+        float height = 0;
+        float minDepth = 0;
+        float maxDepth = 0;
+    };
+
     class GraphicsCmdList : public GraphicsDeviceObject
     {
     private:
@@ -33,8 +44,12 @@ namespace NovelRT::Graphics
         virtual void CmdBindDescriptorSets(
             NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet>> sets) = 0;
 
-        virtual void CmdBindVertexBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers,
-                                          uint32_t bufferStride) = 0;
+        virtual void CmdBindVertexBuffers(uint32_t firstBinding,
+                                          uint32_t bindingCount,
+                                          NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers,
+                                          NovelRT::Utilities::Misc::span<const size_t> offsets) = 0;
+
+        virtual void CmdBindVertexBuffers()
 
         virtual void CmdBindIndexBuffers(
             NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers) = 0;
@@ -50,5 +65,7 @@ namespace NovelRT::Graphics
         virtual void CmdSetScissor(Maths::GeoVector2F extent) = 0;
 
         virtual void CmdSetScissor(float xExtent, float yExtent) = 0;
+
+        virtual void CmdSetViewport(uint32_t firstViewport, uint32_t viewportCount, ViewportInfo viewportInfo) = 0;
     };
 }

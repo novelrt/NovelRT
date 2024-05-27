@@ -8,6 +8,9 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TResource>
+    class GraphicsResourceMemoryRegion;
+
     class GraphicsBuffer : public GraphicsResource
     {
     private:
@@ -15,7 +18,10 @@ namespace NovelRT::Graphics
 
     public:
         GraphicsBuffer(std::shared_ptr<GraphicsDevice> graphicsDevice, std::shared_ptr<GraphicsMemoryAllocator> allocator, GraphicsResourceAccess cpuAccess, GraphicsBufferKind kind);
+        
         ~GraphicsBuffer() noexcept override = default;
+
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer>>  Allocate(size_t size, size_t alignment);
 
         [[nodiscard]] GraphicsBufferKind GetKind() const noexcept;
     };
