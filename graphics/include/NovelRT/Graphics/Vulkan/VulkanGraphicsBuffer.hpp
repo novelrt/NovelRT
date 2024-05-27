@@ -12,12 +12,16 @@ namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsDevice;
     class VulkanGraphicsMemoryAllocator;
+    template<typename TResource> class VulkanGraphicsResourceMemoryRegion;
 
     class VulkanGraphicsBuffer final : public VulkanGraphicsResource, public GraphicsBuffer
     {
     private:
         VkBuffer _vulkanBuffer;
         size_t _subAllocations;
+
+    protected:
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanAllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) final;
 
     public:
         VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -34,12 +38,12 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                           size_t rangeLength) final;
+                                                                                    size_t rangeLength) final;
 
         void UnmapBytes() final;
 
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
-        
-        [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;
+
+        [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;    
     };
 }

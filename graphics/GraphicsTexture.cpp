@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
+#include <NovelRT/Graphics/GraphicsResource.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -15,6 +16,11 @@ namespace NovelRT::Graphics
                                      uint16_t depth)
         : GraphicsResource(device, allocator, cpuAccess), _addressMode(addressMode), _kind(kind), _width(width), _height(height), _depth(depth)
     {
+    }
+    
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture>>  GraphicsTexture::Allocate(size_t size, size_t alignment)
+    {
+        GraphicsResource::Allocate(size, alignment);
     }
 
     GraphicsTextureAddressMode GraphicsTexture::GetAddressMode() const noexcept

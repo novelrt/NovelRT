@@ -8,12 +8,12 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    VulkanGraphicsResourceMemoryRegion::VulkanGraphicsResourceMemoryRegion(
+    VulkanGraphicsResourceMemoryRegionBase::VulkanGraphicsResourceMemoryRegionBase(
         std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
         std::shared_ptr<VulkanGraphicsResource> owningResource,
         VmaVirtualAllocation virtualAllocation,
         VmaVirtualAllocationInfo virtualAllocationInfo)
-        : GraphicsResourceMemoryRegion(graphicsDevice, owningResource),
+        : GraphicsResourceMemoryRegionBase(graphicsDevice, owningResource),
           _virtualAllocation(virtualAllocation),
           _virtualAllocationInfo(virtualAllocationInfo)
     {
@@ -24,22 +24,22 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    size_t VulkanGraphicsResourceMemoryRegion::GetRelativeOffset() const noexcept
+    size_t VulkanGraphicsResourceMemoryRegionBase::GetRelativeOffset() const noexcept
     {
         return _virtualAllocationInfo.offset;
     }
 
-    size_t VulkanGraphicsResourceMemoryRegion::GetSize() const noexcept
+    size_t VulkanGraphicsResourceMemoryRegionBase::GetSize() const noexcept
     {
         return _virtualAllocationInfo.size;
     }
 
-    VmaVirtualAllocation VulkanGraphicsResourceMemoryRegion::GetVirtualAllocation() const noexcept
+    VmaVirtualAllocation VulkanGraphicsResourceMemoryRegionBase::GetVirtualAllocation() const noexcept
     {
         return _virtualAllocation;
     }
 
-    VmaVirtualAllocationInfo VulkanGraphicsResourceMemoryRegion::GetVirtualAllocationInfo() const noexcept
+    VmaVirtualAllocationInfo VulkanGraphicsResourceMemoryRegionBase::GetVirtualAllocationInfo() const noexcept
     {
         return _virtualAllocationInfo;
     }
