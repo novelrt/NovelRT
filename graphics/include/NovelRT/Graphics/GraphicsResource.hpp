@@ -14,46 +14,84 @@ namespace NovelRT::Graphics
     class GraphicsMemoryAllocator;
     class GraphicsResourceMemoryRegionBase;
 
-    template<typename TResource>
-    class GraphicsResourceMemoryRegion;
+    template<typename TResource> class GraphicsResourceMemoryRegion;
 
-    class GraphicsResource : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsResource : public GraphicsDeviceObject
     {
+    public:
+        using BackendResourceType = TBackend::ResourceType;
+
     private:
-        std::shared_ptr<GraphicsMemoryAllocator> _allocator;
-        GraphicsResourceAccess _cpuAccess;
+        std::shared_ptr<BackendResourceType> _implementation;
 
     public:
-        GraphicsResource(std::shared_ptr<GraphicsDevice> graphicsDevice,
-                         std::shared_ptr<GraphicsMemoryAllocator> allocator,
-                         GraphicsResourceAccess cpuAccess) noexcept;
+        explicit GraphicsResource(std::shared_ptr<BackendResourceType> implementation) noexcept
+            : _implementation(implementation)
+        {
+        }
 
         ~GraphicsResource() noexcept override = default;
 
         //[[nodiscard]] virtual size_t GetAlignment() const noexcept = 0; //TODO: Do we still need this?
-        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept
+        {
+            return _implementation->GetAllocator();
+        }
 
-        [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
+        [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept
+        {
+            return _implementation->GetCpuAccess();
+        }
 
-        [[nodiscard]] virtual size_t GetDeviceMemoryOffset() const noexcept = 0;
+        [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept
+        {
+            return _implementation->GetDeviceMemoryOffset();
+        }
 
-        [[nodiscard]] virtual size_t GetSize() const noexcept = 0;
+        [[nodiscard]] size_t GetSize() const noexcept
+        {
+            return _implementation->GetSize();
+        }
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment) = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment)
+        {
+            return _implementation->Allocate(size, alignment);
+        }
 
-        [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes();
+        [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes()
+        {
+            return MapBytes(0, GetSize());
+        }
 
-        [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength)
+        {
+            return _implementation->MapBytes(rangeOffset, rangeLength);
+        }
 
-        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead();
+        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead()
+        {
+            return MapBytesForRead(0, GetSize());
+        }
 
-        [[nodiscard]] virtual Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                                   size_t rangeLength) = 0;
-        virtual void UnmapBytes() = 0;
+        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength)
+        {
+            return _implementation->MapBytesForRead(rangeOffset, rangeLength);
+        }
 
-        void UnmapBytesAndWrite();
+        void UnmapBytes()
+        {
+            return _implementation->UnmapBytes();
+        }
 
-        virtual void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
+        void UnmapBytesAndWrite()
+        {
+            UnmapBytesAndWrite(0, GetSize());
+        }
+
+        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
+        {
+            return _implementation->UnmapBytesAndWrite(writtenRangeOffset, writtenRangeLength);
+        }
 
         template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map()
         {
