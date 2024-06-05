@@ -3,7 +3,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
 #include <vma/vk_mem_alloc.h>
 #include <tuple>
@@ -13,7 +12,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsMemoryAllocator;
 
-    class VulkanGraphicsResource : public GraphicsResource
+    class VulkanGraphicsResource
     {
     private:
         VmaAllocation _allocation;
@@ -30,18 +29,16 @@ namespace NovelRT::Graphics::Vulkan
                                GraphicsResourceAccess cpuAccess,
                                VmaAllocation allocation,
                                VmaAllocationInfo allocationInfo);
-
-        ~VulkanGraphicsResource() noexcept override = default;
-        
+ 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
 
-        [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept final;
+        [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept;
 
-        [[nodiscard]] size_t GetSize() const noexcept final;
+        [[nodiscard]] size_t GetSize() const noexcept;
         
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment) final;
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment);
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanAllocate(size_t size, size_t alignment);
 

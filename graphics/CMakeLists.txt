@@ -8,12 +8,12 @@ add_library(NovelRT-Graphics STATIC
   GraphicsPipelineInputElement.cpp
   GraphicsPipelineResource.cpp
   GraphicsPipelineSignature.cpp
-  GraphicsResource.cpp
   GraphicsResourceMemoryRegion.cpp
   GraphicsTexture.cpp
   ShaderProgram.cpp
   Vulkan/VulkanGraphicsAdapter.cpp
   Vulkan/VulkanGraphicsAdapterSelector.cpp
+  Vulkan/VulkanGraphicsBackendTraits.cpp
   Vulkan/VulkanGraphicsBuffer.cpp
   Vulkan/VulkanGraphicsContext.cpp
   Vulkan/VulkanGraphicsDevice.cpp
@@ -37,6 +37,7 @@ target_sources(NovelRT-Graphics
     BASE_DIRS include
     FILES
       include/NovelRT/Graphics/GraphicsAdapter.hpp
+      include/NovelRT/Graphics/GraphicsBackendTraits.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
       include/NovelRT/Graphics/GraphicsCmdList.hpp
       include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
