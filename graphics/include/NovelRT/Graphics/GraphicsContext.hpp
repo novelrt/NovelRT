@@ -8,30 +8,53 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsContext : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsContext : public GraphicsDeviceObject<TBackend>
     {
+    public:
+        using BackendContextType = TBackend::ContextType;
+
     private:
+        std::shared_ptr<BackendContextType> _implementation;
         size_t _index;
 
     public:
-        GraphicsContext(std::shared_ptr<GraphicsDevice> device, size_t index) noexcept
-            : GraphicsDeviceObject(device), _index(index)
+        GraphicsContext(std::shared_ptr<BackendContextType> implemenetation,
+                        std::shared_ptr<GraphicsDevice<TBackend>> device,
+                        size_t index) noexcept
+            : GraphicsDeviceObject(device), _implementation(implemenetation), _index(index)
         {
         }
-        
+
         virtual ~GraphicsContext() override = default;
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsFence> GetFence() const noexcept = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept
+        {
+            return _implementation->GetFence();
+        }
 
         [[nodiscard]] inline size_t GetIndex() const noexcept
         {
             return _index;
         }
 
-        virtual void BeginDrawing(RGBAColour backgroundColour) = 0;
-        virtual void BeginFrame() = 0;
+        void BeginDrawing(RGBAColour backgroundColour)
+        {
+            _implementation->BeginDrawing(backgroundColour);
+        }
 
-        virtual void EndDrawing() = 0;
-        virtual void EndFrame() = 0;
+        void BeginFrame()
+        {
+            _implementation->BeginFrame();
+        }
+
+        void EndDrawing()
+        {
+            _implementation->EndDrawing();
+        }
+
+        void EndFrame()
+        {
+            _implementation->EndFrame();
+        }
     };
 }

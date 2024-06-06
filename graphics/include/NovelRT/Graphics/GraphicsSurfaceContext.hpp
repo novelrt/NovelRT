@@ -8,15 +8,19 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TBackend>
     class GraphicsSurfaceContext
     {
+        public:
+        using BackendSurfaceContextType = TBackend::SurfaceContextType;
     private:
+        std::shared_ptr<BackendSurfaceContextType> _implementation;
         std::shared_ptr<IGraphicsSurface> _surface;
-        std::shared_ptr<GraphicsProvider> _provider;
+        std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
-        GraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface, std::shared_ptr<GraphicsProvider> provider)
-            : _surface(std::move(surface)), _provider(std::move(provider))
+        GraphicsSurfaceContext(std::shared_ptr<BackendSurfaceContextType> implementation, std::shared_ptr<IGraphicsSurface> surface, std::shared_ptr<GraphicsProvider> provider)
+            : _implementation(implementation), _surface(surface), _provider(provider)
         {
             if (_surface == nullptr)
             {
@@ -27,7 +31,7 @@ namespace NovelRT::Graphics
             {
                 throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
             }
-        }
+        }        
 
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
         {
@@ -39,13 +43,15 @@ namespace NovelRT::Graphics
             return _provider;
         }
 
-        [[nodiscard]] virtual void* GetSurfaceContextHandleUntyped() = 0;
+        [[nodiscard]] virtual void* GetSurfaceContextHandleUntyped()
+        {
+            return _implementation->GetSurfaceCOntextHandleUntyped();
+        }
 
         template<typename THandleType>[[nodiscard]] THandleType GetSurfaceContextHandleAs()
         {
             return *reinterpret_cast<THandleType*>(GetSurfaceContextHandleUntyped());
         }
 
-        virtual ~GraphicsSurfaceContext() = default;
     };
 }

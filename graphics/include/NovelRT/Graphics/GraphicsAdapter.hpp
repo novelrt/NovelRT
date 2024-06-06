@@ -3,24 +3,30 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/Exceptions.h>
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <NovelRT/Exceptions/Exceptions.h>
 
 namespace NovelRT::Graphics
 {
-    class GraphicsDevice;
-    class GraphicsProvider;
-    class GraphicsSurfaceContext;
+    template<typename TBackend> class GraphicsDevice;
+    template<typename TBackend> class GraphicsProvider;
+    template<typename TBackend> class GraphicsSurfaceContext;
 
-    class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter>
+    template<typename TBackend> class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter<TBackend>>
     {
+    public:
+        using BackendAdapterType = TBackend::AdapterType;
+
     private:
-        std::weak_ptr<GraphicsProvider> _provider;
+        std::shared_ptr<BackendAdapterType> _implementation;
+        std::weak_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
-        explicit GraphicsAdapter(std::weak_ptr<GraphicsProvider> provider) : _provider(std::move(provider))
+        GraphicsAdapter(std::shared_ptr<BackendAdapterType> implementation,
+                        std::weak_ptr<GraphicsProvider<TBackend>> provider)
+            : _implementation(_implementation), _provider(provider)
         {
             if (_provider.expired())
             {
@@ -28,10 +34,18 @@ namespace NovelRT::Graphics
                     "The provided GraphicsProvider pointer is nullptr or an invalid pointer.");
             }
         }
+        
+        virtual ~GraphicsAdapter() noexcept override = default;
 
-        [[nodiscard]] virtual uint32_t GetDeviceId() = 0;
+        [[nodiscard]] uint32_t GetDeviceId()
+        {
+            return _implementation->GetDeviceId();
+        }
 
-        [[nodiscard]] virtual const std::string& GetName() = 0;
+        [[nodiscard]] const std::string& GetName()
+        {
+            return _implementation->GetName();
+        }
 
         [[nodiscard]] inline std::shared_ptr<GraphicsProvider> GetProvider() const
         {
@@ -43,12 +57,17 @@ namespace NovelRT::Graphics
             return _provider.lock();
         }
 
-        [[nodiscard]] virtual uint32_t GetVendorId() = 0;
+        [[nodiscard]] uint32_t GetVendorId()
+        {
+            return _implementation->GetVendorId();
+        }
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsDevice> CreateDevice(
-            std::shared_ptr<GraphicsSurfaceContext> surfaceContext,
-            int32_t contextCount) = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> CreateDevice(
+            std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext,
+            int32_t contextCount)
+        {
+            return _implementation->CreateDevice(surfaceContext, contextCount);
+        }
 
-        virtual ~GraphicsAdapter() = default;
     };
 }

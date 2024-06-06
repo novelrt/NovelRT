@@ -10,62 +10,96 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsContext;
-    class GraphicsBuffer;
-    class GraphicsTexture;
-    class GraphicsDescriptorSet;
-    class GraphicsRenderPass;
+    template<typename TBackend> class GraphicsContext;
+    template<typename TBackend> class GraphicsBuffer;
+    template<typename TBackend> class GraphicsTexture;
+    template<typename TBackend> class GraphicsDescriptorSet;
+    template<typename TBackend> class GraphicsRenderPass;
 
     // TODO: MOVE THIS
     struct ViewportInfo
     {
-        float x = 0;
-        float y = 0;
-        float width = 0;
-        float height = 0;
-        float minDepth = 0;
-        float maxDepth = 0;
+        float x;
+        float y;
+        float width;
+        float height;
+        float minDepth;
+        float maxDepth;
     };
 
-    class GraphicsCmdList : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsCmdList : public GraphicsDeviceObject<TBackend>
     {
+    public:
+        using BackendCmdListType = TBackend::CmdListType;
+
     private:
-        std::shared_ptr<GraphicsContext> _context;
+        std::shared_ptr<BackendCmdListType> _implementation;
+        std::shared_ptr<GraphicsContext<TBackend>> _context;
 
     public:
-        explicit GraphicsCmdList(std::shared_ptr<GraphicsContext> context) noexcept;
+        GraphicsCmdList(std::shared_ptr<BackendCmdListType> implementation,
+                        std::shared_ptr<GraphicsContext<TBackend>> context) noexcept;
 
-        virtual ~GraphicsCmdList() = default;
+        virtual ~GraphicsCmdList() override = default;
 
         [[nodiscard]] std::shared_ptr<GraphicsContext> GetContext() const noexcept;
 
-        virtual void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass> targetPass) = 0;
+        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass> targetPass)
+        {
+            _implementation->CmdBeginRenderPass(targetPass);
+        }
 
-        virtual void CmdBindDescriptorSets(
-            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet>> sets) = 0;
+        void CmdBindDescriptorSets(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet>> sets)
+        {
+            _implementation->CmdBindDescriptorSets(sets);
+        }
 
-        virtual void CmdBindVertexBuffers(uint32_t firstBinding,
-                                          uint32_t bindingCount,
-                                          NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers,
-                                          NovelRT::Utilities::Misc::span<const size_t> offsets) = 0;
+        void CmdBindVertexBuffers(uint32_t firstBinding,
+                                  uint32_t bindingCount,
+                                  NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers,
+                                  NovelRT::Utilities::Misc::span<const size_t> offsets)
+        {
+            _implementation->CmdBindVertexBuffers(firstBinding, bindingCount, buffers, offsets);
+        }
 
-        virtual void CmdBindVertexBuffers()
+        void CmdBindIndexBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers)
+        {
+            _implementation->CmdBindIndexbuffers(buffers);
+        }
 
-        virtual void CmdBindIndexBuffers(
-            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers) = 0;
+        void CmdCopy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source)
+        {
+            _implementation->CmdCopy(destination, source);
+        }
 
-        virtual void CmdCopy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
+        void CmdCopy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source)
+        {
+            _implementation->CmdCopy(destination, source);
+        }
 
-        virtual void CmdCopy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source) = 0;
+        void CmdDrawIndexed(uint32_t instanceCount)
+        {
+            _implementation->CmdDrawIndexed(instanceCount);
+        }
 
-        virtual void CmdDrawIndexed(uint32_t instanceCount) = 0;
+        void CmdDraw(uint32_t instanceCount, uint32_t bufferStride)
+        {
+            _implementation->CmdDraw(instanceCount, bufferStride);
+        }
 
-        virtual void CmdDraw(uint32_t instanceCount, uint32_t bufferStride) = 0;
+        void CmdSetScissor(Maths::GeoVector2F extent)
+        {
+            _implementation->CmdSetScissor(extent);
+        }
 
-        virtual void CmdSetScissor(Maths::GeoVector2F extent) = 0;
+        void CmdSetScissor(float xExtent, float yExtent)
+        {
+            _implementation->CmdSetScissor(xExtent, yExtent);
+        }
 
-        virtual void CmdSetScissor(float xExtent, float yExtent) = 0;
-
-        virtual void CmdSetViewport(uint32_t firstViewport, uint32_t viewportCount, ViewportInfo viewportInfo) = 0;
+        void CmdSetViewport(uint32_t firstViewport, uint32_t viewportCount, ViewportInfo viewportInfo)
+        {
+            _implementation->CmdSetViewport(firstViewport, viewportCount, viewportInfo);
+        }
     };
 }

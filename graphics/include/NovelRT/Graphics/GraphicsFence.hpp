@@ -7,23 +7,46 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsFence : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsFence : public GraphicsDeviceObject<TBackend>
     {
     public:
-        explicit GraphicsFence(std::shared_ptr<GraphicsDevice> device) noexcept : GraphicsDeviceObject(device)
+        using BackendFenceType = TBackend::FenceType;
+
+    private:
+        std::shared_ptr<BackendFenceType> _implementation;
+
+    public:
+        GraphicsFence(std::shared_ptr<BackendFenceType> implementation, std::shared_ptr<GraphicsDevice> device) noexcept
+            : GraphicsDeviceObject(device)
         {
         }
 
-        [[nodiscard]] virtual bool GetIsSignalled() = 0;
-        virtual void Reset() = 0;
+        virtual ~GraphicsFence() override = default;
+
+        [[nodiscard]] bool GetIsSignalled()
+        {
+            return _implementation->GetIsSignalled();
+        }
+
+        void Reset()
+        {
+            _implementation->Reset();
+        }
 
         [[nodiscard]] inline bool TryWait()
         {
             return TryWait(std::numeric_limits<uint64_t>::max());
         }
 
-        [[nodiscard]] virtual bool TryWait(uint64_t millisecondsTimeout) = 0;
-        [[nodiscard]] virtual bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout) = 0;
+        [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout)
+        {
+            return _implementation->TryWait(millisecondsTimeout);
+        }
+
+        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout)
+        {
+            return _implementation->TryWait(timeout);
+        }
 
         inline void Wait()
         {

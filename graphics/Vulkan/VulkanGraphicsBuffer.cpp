@@ -26,7 +26,6 @@ namespace NovelRT::Graphics::Vulkan
                                                size_t subAllocations,
                                                VkBuffer vulkanBuffer)
         : VulkanGraphicsResource(graphicsDevice, allocator, cpuAccess, allocation, allocationInfo),
-          GraphicsBuffer(graphicsDevice, allocator, cpuAccess, kind),
           _vulkanBuffer(vulkanBuffer),
           _subAllocations(subAllocations)
     {

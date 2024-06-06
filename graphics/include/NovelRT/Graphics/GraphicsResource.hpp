@@ -11,26 +11,34 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsMemoryAllocator;
-    class GraphicsResourceMemoryRegionBase;
+    template<typename TBackend> class GraphicsMemoryAllocator;
 
-    template<typename TResource> class GraphicsResourceMemoryRegion;
+    template<typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
-    template<typename TBackend> class GraphicsResource : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsResource : public GraphicsDeviceObject<TBackend>
     {
     public:
         using BackendResourceType = TBackend::ResourceType;
 
-    private:
+    protected:
         std::shared_ptr<BackendResourceType> _implementation;
 
+    private:
+        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> _allocator;
+        GraphicsResourceAccess _cpuAccess;
+
     public:
-        explicit GraphicsResource(std::shared_ptr<BackendResourceType> implementation) noexcept
-            : _implementation(implementation)
+        explicit GraphicsResource(std::shared_ptr<BackendResourceType> implementation,
+                                  std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
+                                  GraphicsResourceAccess cpuAccess) noexcept
+            : GraphicsDeviceObject(implementation->GetDevice()),
+              _implementation(implementation),
+              _allocator(allocator),
+              _cpuAccess(cpuAccess)
         {
         }
 
-        ~GraphicsResource() noexcept override = default;
+        virtual ~GraphicsResource() noexcept override = default;
 
         //[[nodiscard]] virtual size_t GetAlignment() const noexcept = 0; //TODO: Do we still need this?
         [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator> GetAllocator() const noexcept
@@ -53,7 +61,9 @@ namespace NovelRT::Graphics
             return _implementation->GetSize();
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment)
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>> Allocate(
+            size_t size,
+            size_t alignment)
         {
             return _implementation->Allocate(size, alignment);
         }

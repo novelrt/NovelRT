@@ -7,23 +7,50 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsPipeline : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsPipeline : public GraphicsDeviceObject<TBackend>
     {
     private:
-        std::shared_ptr<GraphicsPipelineSignature> _signature;
-        std::shared_ptr<ShaderProgram> _vertexShader;
-        std::shared_ptr<ShaderProgram> _pixelShader;
+        std::shared_ptr<GraphicsPipelineSignature<TBackend>> _signature;
+        std::shared_ptr<ShaderProgram<TBackend>> _vertexShader;
+        std::shared_ptr<ShaderProgram<TBackend>> _pixelShader;
 
     public:
         GraphicsPipeline(std::shared_ptr<GraphicsDevice> device,
-                         std::shared_ptr<GraphicsPipelineSignature> signature,
-                         std::shared_ptr<ShaderProgram> vertexShader,
-                         std::shared_ptr<ShaderProgram> pixelShader) noexcept;
+                                           std::shared_ptr<GraphicsPipelineSignature> signature,
+                                           std::shared_ptr<ShaderProgram> vertexShader,
+                                           std::shared_ptr<ShaderProgram> pixelShader) noexcept
+            : GraphicsDeviceObject(device),
+              _signature(signature),
+              _vertexShader(vertexShader),
+              _pixelShader(pixelShader)
+        {
+        }
 
-        [[nodiscard]] bool HasVertexShader() const noexcept;
-        [[nodiscard]] bool HasPixelShader() const noexcept;
-        [[nodiscard]] std::shared_ptr<ShaderProgram> GetVertexShader() const noexcept;
-        [[nodiscard]] std::shared_ptr<ShaderProgram> GetPixelShader() const noexcept;
-        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> GetSignature() const noexcept;
+        virtual ~GraphicsPipeline() override = default;
+
+        bool HasVertexShader() const noexcept
+        {
+            return _vertexShader != nullptr;
+        }
+
+        bool HasPixelShader() const noexcept
+        {
+            return _pixelShader != nullptr;
+        }
+
+        std::shared_ptr<ShaderProgram> GetVertexShader() const noexcept
+        {
+            return _vertexShader;
+        }
+
+        std::shared_ptr<ShaderProgram> GetPixelShader() const noexcept
+        {
+            return _pixelShader;
+        }
+
+        std::shared_ptr<GraphicsPipelineSignature> GetSignature() const noexcept
+        {
+            return _signature;
+        }
     };
 }
