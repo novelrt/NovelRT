@@ -46,21 +46,22 @@ namespace NovelRT::Graphics
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(GraphicsBufferKind bufferKind,
-                                                                   GraphicsResourceAccess cpuAccessKind,
-                                                                   GraphicsResourceAccess gpuAccessKind,
-                                                                   size_t size)
+                                                                             GraphicsResourceAccess cpuAccessKind,
+                                                                             GraphicsResourceAccess gpuAccessKind,
+                                                                             size_t size)
         {
             return CreateBuffer(GraphicsBufferCreateInfo{bufferKind, cpuAccessKind, gpuAccessKind, size,
                                                          GraphicsMemoryRegionAllocationFlags::None});
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture(const GraphicsTextureCreateInfo& createInfo)
+        [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture(
+            const GraphicsTextureCreateInfo& createInfo)
         {
             return _implementation->CreateTexture(createInfo);
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture2DRepeatGpuWriteOnly(uint32_t width,
-                                                                                         uint32_t height = 1)
+                                                                                                   uint32_t height = 1)
         {
             return CreateTexture(
                 GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
