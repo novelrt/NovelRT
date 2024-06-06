@@ -9,33 +9,64 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsPipelineSignature : public GraphicsDeviceObject
+    template<typename TBackend> class GraphicsDescriptorSet;
+
+    template<typename TBackend> class GraphicsPipelineSignature : public GraphicsDeviceObject<TBackend>
     {
-        class GraphicsDescriptorSet;
+    public:
+        using BackendPipelineSignatureType = TBackend::PipelineSignatureType;
 
     private:
+        std::shared_ptr<BackendPipelineSignatureType> _implementation;
         GraphicsPipelineBlendFactor _srcBlendFactor;
         GraphicsPipelineBlendFactor _dstBlendFactor;
         std::vector<GraphicsPipelineInput> _inputs;
         std::vector<GraphicsPipelineResource> _resources;
 
     public:
-        GraphicsPipelineSignature(std::shared_ptr<GraphicsDevice> device,
+        GraphicsPipelineSignature(std::shared_ptr<BackendPipelineSignatureType> implementation,
+                                  std::shared_ptr<GraphicsDevice<TBackend>> device,
                                   GraphicsPipelineBlendFactor srcBlendFactor,
                                   GraphicsPipelineBlendFactor dstBlendFactor,
                                   NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
+                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
+            : GraphicsDeviceObject(device),
+              _implementation(implementation),
+              _srcBlendFactor(srcBlendFactor),
+              _dstBlendFactor(dstBlendFactor),
+              _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
+              _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end()))
+        {
+        }
 
         virtual ~GraphicsPipelineSignature() = default;
         
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs() const noexcept;
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GraphicsPipelineSignature::GetInputs()
+            const noexcept
+        {
+            return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
+        }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources() const noexcept;
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources()
+            const noexcept
+        {
+            return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
+                                                                                  _resources.size());
+        }
 
-        [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
+        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
+        {
+            return _srcBlendFactor;
+        }
 
-        [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
+        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetDstBlendFactor() const noexcept
+        {
+            return _dstBlendFactor;
+        }
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsDescriptorSet> CreateDescriptorSet() = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet> CreateDescriptorSet()
+        {
+            return _implementation->CreateDescriptorSet();
+        }
     };
 }

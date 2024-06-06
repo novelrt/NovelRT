@@ -8,21 +8,36 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TResource>
-    class GraphicsResourceMemoryRegion;
+    template<typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
-    class GraphicsBuffer : public GraphicsResource
+    template<typename TBackend> class GraphicsBuffer : public GraphicsResource<TBackend>
     {
+    public:
+        using BackendBufferType = TBackend::BufferType;
+        using BackendResourceMemoryRegionType = TBackend::ResourceMemoryRegionType;
+
     private:
         GraphicsBufferKind _kind;
 
     public:
-        GraphicsBuffer(std::shared_ptr<GraphicsDevice> graphicsDevice, std::shared_ptr<GraphicsMemoryAllocator> allocator, GraphicsResourceAccess cpuAccess, GraphicsBufferKind kind);
+        GraphicsBuffer(std::shared_ptr<BackendBufferType> implementation,
+                       std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
+                       GraphicsResourceAccess cpuAccess,
+                       GraphicsBufferKind kind) noexcept
+            : GraphicsResource(implementation, allocator, cpuAccess), _kind(kind)
+        {
+        }
         
-        ~GraphicsBuffer() noexcept override = default;
+        virtual ~GraphicsBuffer() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer>>  Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer<TBackend>, TBackend>> Allocate(size_t size, size_t alignment)
+        {
+            return _implementation->Allocate(size, alignment);
+        }
 
-        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept;
+        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept
+        {
+            return _kind;
+        }
     };
 }

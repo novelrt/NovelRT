@@ -21,6 +21,7 @@ namespace NovelRT::Graphics
         using SurfaceContextType = Vulkan::VulkanGraphicsSurfaceContext;
         using ContextType = Vulkan::VulkanGraphicsSurfaceContext;
         using ResourceType = Vulkan::VulkanGraphicsResource;
+        using ResourceMemoryRegionType = Vulkan::VulkanGraphicsResourceMemoryRegion; 
         using MemoryAllocatorType = Vulkan::VulkanGraphicsMemoryAllocator;
         using BufferType = Vulkan::VulkanGraphicsBuffer;
         using TextureType = Vulkan::VulkanGraphicsTexture;

@@ -4,30 +4,47 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <memory>
 
 namespace NovelRT::Graphics
 {
-    class ShaderProgram : public GraphicsDeviceObject
+    template<typename TBackend> class ShaderProgram : public GraphicsDeviceObject<TBackend>
     {
+    public:
+        using BackendShaderProgramType = TBackend::ShaderProgramType;
+
     private:
+        std::shared_ptr<BackendShaderProgramType> _implementation;
         std::string _entryPointName;
         ShaderProgramKind _kind;
 
     public:
-        ShaderProgram(std::shared_ptr<GraphicsDevice> device,
+        ShaderProgram(std::shared_ptr<BackendShaderProgramType> implementation,
+                      std::shared_ptr<GraphicsDevice> device,
                       std::string entryPointName,
-                      ShaderProgramKind kind) noexcept;
+                      ShaderProgramKind kind) noexcept
+            : GraphicsDeviceObject(std::move(device)),
+              _implementation(implementation),
+              _entryPointName(entryPointName),
+              _kind(kind)
+        {
+        }
 
-        [[nodiscard]] inline const std::string& GetEntryPointName() const noexcept
+        virtual ~ShaderProgram() override = default;
+
+        [[nodiscard]] const std::string& GetEntryPointName() const noexcept
         {
             return _entryPointName;
         }
 
-        [[nodiscard]] inline ShaderProgramKind GetKind() const noexcept
+        [[nodiscard]] ShaderProgramKind GetKind() const noexcept
         {
             return _kind;
         }
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept = 0;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept
+        {
+            return _implementation->GetBytecode();
+        }
     };
 }

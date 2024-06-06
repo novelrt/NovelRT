@@ -3,36 +3,42 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
 #include <NovelRT/Exceptions/Exceptions.h>
 #include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Graphics/ShaderProgramKind.hpp>
 #include <NovelRT/Utilities/Misc.h>
+#include <memory>
 #include <stdexcept>
 
 namespace NovelRT::Graphics
 {
-    class GraphicsAdapter;
-    class GraphicsFence;
-    class GraphicsSurfaceContext;
-    class GraphicsContext;
-    class GraphicsPipeline;
+    template<typename TBackend> class GraphicsAdapter;
+    template<typename TBackend> class GraphicsFence;
+    template<typename TBackend> class GraphicsSurfaceContext;
+    template<typename TBackend> class GraphicsContext;
+    template<typename TBackend> class GraphicsPipeline;
     class GraphicsPipelineInput;
     class GraphicsPipelineResource;
-    class GraphicsPipelineSignature;
-    class ShaderProgram;
+    template<typename TBackend> class GraphicsPipelineSignature;
+    template<typename TBackend> class ShaderProgram;
 
-    class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
+    template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
     {
+    public:
+        using BackendDeviceType = TBackend::DeviceType;
+
     private:
-        std::weak_ptr<GraphicsAdapter> _adapter;
-        std::shared_ptr<GraphicsSurfaceContext> _surfaceContext;
+        std::shared_ptr<BackendDeviceType> _implementation;
+        std::weak_ptr<GraphicsAdapter<TBackend>> _adapter;
+        std::shared_ptr<GraphicsSurfaceContext<TBackend>> _surfaceContext;
 
     public:
-        GraphicsDevice(std::weak_ptr<GraphicsAdapter> adapter, std::shared_ptr<GraphicsSurfaceContext> surfaceContext)
-            : _adapter(std::move(adapter)), _surfaceContext(std::move(surfaceContext))
+        GraphicsDevice(std::shared_ptr<BackendDeviceType> implementation,
+                       std::weak_ptr<GraphicsAdapter<TBackend>> adapter,
+                       std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext)
+            : _implementation(implementation), _adapter(adapter), _surfaceContext(surfaceContext)
         {
             if (_adapter.expired())
             {
@@ -45,7 +51,10 @@ namespace NovelRT::Graphics
             }
         }
 
-        virtual void TearDown() = 0;
+        void TearDown()
+        {
+            _implementation->TearDown();
+        }
 
         [[nodiscard]] inline std::shared_ptr<GraphicsAdapter> GetAdapter() const
         {
@@ -57,11 +66,17 @@ namespace NovelRT::Graphics
             return _adapter.lock();
         }
 
-        [[nodiscard]] virtual size_t GetContextIndex() const noexcept = 0;
+        [[nodiscard]] size_t GetContextIndex() const noexcept
+        {
+            return _implementation->GetContextIndex();
+        }
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() = 0;
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext<TBackend>>> GetContexts()
+        {
+            return _implementation->GetContexts();
+        }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsContext> GetCurrentContext()
+        [[nodiscard]] inline std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
         {
             return GetContexts()[GetContextIndex()];
         }
@@ -71,31 +86,49 @@ namespace NovelRT::Graphics
             return _surfaceContext->GetSurface();
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsSurfaceContext> GetSurfaceContext() const noexcept
+        [[nodiscard]] inline std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept
         {
             return _surfaceContext;
         }
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsPipeline> CreatePipeline(
-            std::shared_ptr<GraphicsPipelineSignature> signature,
-            std::shared_ptr<ShaderProgram> vertexShader,
-            std::shared_ptr<ShaderProgram> pixelShader) = 0;
+        [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> CreatePipeline(
+            std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
+            std::shared_ptr<ShaderProgram<TBackend>> vertexShader,
+            std::shared_ptr<ShaderProgram<TBackend>> pixelShader)
+        {
+            return _implementation->CreatePipeline(signature, vertexShader, pixelShader);
+        }
 
-        [[nodiscard]] virtual std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
+        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) = 0;
+            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources)
+        {
+            return _implementation->CreatePipelineSignature(srcBlendFactor, dstBlendFactor, inputs, resources);
+        }
 
-        [[nodiscard]] virtual std::shared_ptr<ShaderProgram> CreateShaderProgram(
+        [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Misc::Span<uint8_t> byteData) = 0;
+            NovelRT::Utilities::Misc::Span<uint8_t> byteData)
+        {
+            return _implementation->CreateShaderProgram(entryPointName, kind, byteData);
+        }
 
-        virtual void PresentFrame() = 0;
-        virtual void Signal(std::shared_ptr<GraphicsFence> fence) = 0;
-        virtual void WaitForIdle() = 0;
+        void PresentFrame()
+        {
+            _implementation->PresentFrame();
+        } 
 
-        virtual ~GraphicsDevice() = default;
+        void Signal(std::shared_ptr<GraphicsFence<TBackend>> fence)
+        {
+            _implementation->Signal(fence);
+        }
+
+        void WaitForIdle()
+        {
+            _implementation->WaitForIdle();
+        }
     };
 }

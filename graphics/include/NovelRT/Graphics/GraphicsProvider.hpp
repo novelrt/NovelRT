@@ -3,36 +3,52 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/EngineConfig.h>
 #include <memory>
 #include <vector>
-#include <NovelRT/EngineConfig.h>
 
 namespace NovelRT::Graphics
 {
-    class GraphicsAdapter;
+    template<typename TBackend> class GraphicsAdapter;
 
-    class GraphicsProvider : public std::enable_shared_from_this<GraphicsProvider>
+    template<typename TBackend> class GraphicsProvider : public std::enable_shared_from_this<GraphicsProvider<TBackend>>
     {
+    public:
+        using BackendProviderType = TBackend::ProviderType;
+
     private:
+        std::shared_ptr<BackendProviderType> _implementation;
         bool _debugModeEnabled;
 
     public:
         static inline const std::string EnableDebugModeSwitchName =
             "NovelRT::Graphics::GraphicsProvider::EnableDebugMode";
 
-        GraphicsProvider() noexcept : _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
+        GraphicsProvider(std::shared_ptr<BackendProviderType> implementation) noexcept
+            : _implementation(implementation), _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
         {
         }
+        
+        virtual ~GraphicsProvider() override = default;
 
-        [[nodiscard]] inline bool GetDebugModeEnabled() const noexcept
+        [[nodiscard]] bool GetDebugModeEnabled() const noexcept
         {
             return _debugModeEnabled;
         }
 
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept = 0;
-        [[nodiscard]] virtual uint32_t GetApiVersion() const noexcept = 0;
+        [[nodiscard]] std::vector<std::shared_ptr<GraphicsAdapter<TBackend>>>::iterator begin() noexcept
+        {
+            return _implementation->begin();
+        }
 
-        virtual ~GraphicsProvider() = default;
+        [[nodiscard]] std::vector<std::shared_ptr<GraphicsAdapter<TBackend>>>::iterator end() noexcept
+        {
+            return _implementation->end();
+        }
+
+        [[nodiscard]] uint32_t GetApiVersion() const noexcept
+        {
+            return _implementation->GetApiVersion();
+        }
     };
 }

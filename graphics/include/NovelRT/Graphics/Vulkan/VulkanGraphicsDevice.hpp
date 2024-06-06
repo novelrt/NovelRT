@@ -82,9 +82,9 @@ namespace NovelRT::Graphics::Vulkan
 
         void WaitForIdle() final;
 
-        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>> GetContexts() final
+        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext<TBackend>>> GetContexts() final
         {
-            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext>>(
+            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext<TBackend>>>(
                 &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
         }
 

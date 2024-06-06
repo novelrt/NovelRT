@@ -9,18 +9,21 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsDeviceObject : public std::enable_shared_from_this<GraphicsDeviceObject>
+    template<typename TBackend>
+    class GraphicsDeviceObject : public std::enable_shared_from_this<GraphicsDeviceObject<TBackend>>
     {
     private:
-        std::weak_ptr<GraphicsDevice> _graphicsDevice;
+        std::weak_ptr<GraphicsDevice<TBackend>> _graphicsDevice;
 
     public:
-        explicit GraphicsDeviceObject(std::shared_ptr<GraphicsDevice> graphicsDevice) noexcept
+        explicit GraphicsDeviceObject(std::shared_ptr<GraphicsDevice<TBackend>> graphicsDevice) noexcept
             : _graphicsDevice(graphicsDevice)
         {
         }
+        
+        virtual ~GraphicsDeviceObject() noexcept = default;
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsDevice> GetDevice() const
+        [[nodiscard]] inline std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const
         {
             if (_graphicsDevice.expired())
             {
@@ -29,7 +32,5 @@ namespace NovelRT::Graphics
 
             return _graphicsDevice.lock();
         }
-
-        virtual ~GraphicsDeviceObject() noexcept = default;
     };
 }

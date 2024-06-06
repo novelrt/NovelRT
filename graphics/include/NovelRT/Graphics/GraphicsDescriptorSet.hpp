@@ -9,24 +9,40 @@
 
 namespace NovelRT::Graphics
 {
-    class GraphicsBuffer;
-    class GraphicsPipeline;
-    class GraphicsTexture;
+    template<typename TBackend> class GraphicsBuffer;
+    template<typename TBackend> class GraphicsPipeline;
+    template<typename TBackend> class GraphicsTexture;
 
-    class GraphicsDescriptorSet
+    template<typename TBackend> class GraphicsDescriptorSet
     {
+    public:
+        using BackendDescriptorSetType = TBackend::BackendDescriptorSetType;
+
     private:
-        std::shared_ptr<GraphicsPipeline> _pipeline;
+        std::shared_ptr<BackendDescriptorSetType> _implementation;
+        std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
 
     public:
-        explicit GraphicsDescriptorSet(std::shared_ptr<GraphicsPipeline> targetPipeline) noexcept;
+        explicit GraphicsDescriptorSet(std::shared_ptr<BackendDescriptorSetType> implementation,
+                                       std::shared_ptr<GraphicsPipeline<TBackend>> targetPipeline) noexcept
+            : _implementation(implementation), _pipeline(targetPipeline)
+        {
+        }
 
-        [[nodiscard]] std::shared_ptr<GraphicsPipeline> GetPipeline() const noexcept;
+        std::shared_ptr<GraphicsPipeline<TBackend>> GraphicsDescriptorSet::GetPipeline() const noexcept
+        {
+            return _pipeline;
+        }
 
-        void AddBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers);        
+        void GraphicsDescriptorSet::AddBuffers(
+            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers)
+        {
+            _implementation->AddBuffers(buffers);
+        }
 
-        void AddTextures(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsTexture>> textures);
-
-        virtual ~GraphicsDescriptorSet() = default;
+        void AddTextures(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsTexture<TBackend>>> textures)
+        {
+            _implementation->AddTextures(textures);
+        }
     };
 }
