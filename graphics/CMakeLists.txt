@@ -1,11 +1,7 @@
 add_library(NovelRT-Graphics STATIC
-  GraphicsMemoryAllocator.cpp
-  GraphicsPipeline.cpp
   GraphicsPipelineInput.cpp
   GraphicsPipelineInputElement.cpp
   GraphicsPipelineResource.cpp
-  GraphicsPipelineSignature.cpp
-  ShaderProgram.cpp
   Vulkan/VulkanGraphicsAdapter.cpp
   Vulkan/VulkanGraphicsAdapterSelector.cpp
   Vulkan/VulkanGraphicsBackendTraits.cpp
