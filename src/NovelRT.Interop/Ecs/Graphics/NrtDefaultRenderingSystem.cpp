@@ -14,13 +14,13 @@ NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle sc
 {
     if (scheduler == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputResult == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -34,7 +34,7 @@ NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle sc
     }
     catch (const NovelRT::Exceptions::KeyNotFoundException&)
     {
-        Nrt_setErrMsgKeyNotFoundInternal();
+        Nrt_SetErrMsgKeyNotFoundInternal();
         return NRT_FAILURE_KEY_NOT_FOUND;
     }
 }
@@ -43,7 +43,7 @@ NrtResult Nrt_DefaultRenderingSystem_ForceVertexTextureFutureResolution(NrtDefau
 {
     if (system == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

@@ -24,13 +24,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (value == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -42,17 +42,17 @@ extern "C"
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGivenInternal();
+            Nrt_SetErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
         catch (const std::bad_alloc&)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NRT_FAILURE_OUT_OF_MEMORY;
         }
         catch (const std::exception&)
         {
-            Nrt_setErrMsgErrorUnknownInternal();
+            Nrt_SetErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -68,7 +68,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -79,7 +79,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
-            Nrt_setErrMsgKeyNotFoundInternal();
+            Nrt_SetErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -105,13 +105,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -123,7 +123,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -141,13 +141,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -161,7 +161,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -183,13 +183,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -203,7 +203,7 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
     }
@@ -244,7 +244,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstByteIteratorViewHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_begin(
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_Begin(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
@@ -255,7 +255,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_IteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_end(
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_End(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<SparseSetMemoryContainer*>(container);
@@ -266,7 +266,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_IteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cbegin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_Cbegin(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
@@ -277,7 +277,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cend(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_Cend(
         NrtSparseSetMemoryContainerHandle container)
     {
         auto containerPtr = reinterpret_cast<const SparseSetMemoryContainer*>(container);
@@ -292,7 +292,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -331,7 +331,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -365,7 +365,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -404,13 +404,13 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputId == nullptr || outputView == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -426,12 +426,12 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const std::exception&) // TODO: I'm not sure if this will throw anything else. Docs weren't clear. :(
         {
-            Nrt_setErrMsgErrorUnknownInternal();
+            Nrt_SetErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -440,7 +440,7 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -479,13 +479,13 @@ extern "C"
     {
         if (iterator == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputId == nullptr || outputView == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -501,12 +501,12 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const std::exception&) // I'm not sure if this will throw anything else. Docs weren't clear. :(
         {
-            Nrt_setErrMsgErrorUnknownInternal();
+            Nrt_SetErrMsgErrorUnknownInternal();
             return NRT_FAILURE_UNKNOWN;
         }
     }
@@ -515,7 +515,7 @@ NrtResult Nrt_SparseSetMemoryContainer_ConstIterator_Destroy(NrtSparseSetMemoryC
 {
     if (iterator == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

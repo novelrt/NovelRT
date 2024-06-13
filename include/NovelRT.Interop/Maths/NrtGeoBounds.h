@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    NrtGeoBounds Nrt_GeoBounds_zero();
+    NrtGeoBounds Nrt_GeoBounds_Zero();
     NrtGeoVector2F Nrt_GeoBounds_GetCornerInLocalSpace(NrtGeoBounds bounds, int32_t index);
     NrtGeoVector2F Nrt_GeoBounds_GetCornerInWorldSpace(NrtGeoBounds bounds, int32_t index);
     NrtBool Nrt_GeoBounds_PointIsWithinBounds(NrtGeoBounds bounds, NrtGeoVector2F point);

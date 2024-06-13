@@ -13,13 +13,13 @@ extern "C"
 {
 #endif
 
-    NrtResult Nrt_QuadTreeScenePoint_createVector(NrtGeoVector2F position,
+    NrtResult Nrt_QuadTreeScenePoint_CreateVector(NrtGeoVector2F position,
                                                   NrtSceneNodeHandle node,
                                                   NrtQuadTreeScenePointHandle* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -31,14 +31,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeScenePoint_createFloat(float x,
+    NrtResult Nrt_QuadTreeScenePoint_CreateFloat(float x,
                                                  float y,
                                                  NrtSceneNodeHandle node,
                                                  NrtQuadTreeScenePointHandle* outputPoint)
     {
         if (node == nullptr || outputPoint == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -49,17 +49,17 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_QuadTreeScenePoint_getSceneNode(NrtQuadTreeScenePointHandle point, NrtSceneNodeHandle* outputNode)
+    NrtResult Nrt_QuadTreeScenePoint_GetSceneNode(NrtQuadTreeScenePointHandle point, NrtSceneNodeHandle* outputNode)
     {
         if (point == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputNode == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 

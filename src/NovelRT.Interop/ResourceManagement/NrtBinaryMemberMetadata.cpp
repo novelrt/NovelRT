@@ -20,7 +20,7 @@ extern "C"
     {
         if (memberMetadata == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

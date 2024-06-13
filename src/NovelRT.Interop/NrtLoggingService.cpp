@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-    NrtLoggingServiceHandle Nrt_LoggingService_create()
+    NrtLoggingServiceHandle Nrt_LoggingService_Create()
     {
         NovelRT::LoggingService* service = new NovelRT::LoggingService();
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
@@ -22,17 +22,17 @@ extern "C"
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
-    NrtLoggingServiceHandle Nrt_LoggingService_createCustomTitleAndLevel(const char* core, NrtLogLevel level)
+    NrtLoggingServiceHandle Nrt_LoggingService_CreateCustomTitleAndLevel(const char* core, NrtLogLevel level)
     {
         NovelRT::LoggingService* service = new NovelRT::LoggingService(core, static_cast<NovelRT::LogLevel>(level));
         return reinterpret_cast<NrtLoggingServiceHandle&>(service);
     }
 
-    NrtResult Nrt_LoggingService_log(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level)
+    NrtResult Nrt_LoggingService_Log(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -42,11 +42,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logInfoLine(NrtLoggingServiceHandle service, const char* message)
+    NrtResult Nrt_LoggingService_LogInfoLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -56,17 +56,17 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logErrorLine(NrtLoggingServiceHandle service, const char* message)
+    NrtResult Nrt_LoggingService_LogErrorLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -76,17 +76,17 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logWarningLine(NrtLoggingServiceHandle service, const char* message)
+    NrtResult Nrt_LoggingService_LogWarningLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -96,17 +96,17 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logDebugLine(NrtLoggingServiceHandle service, const char* message)
+    NrtResult Nrt_LoggingService_LogDebugLine(NrtLoggingServiceHandle service, const char* message)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -116,17 +116,17 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_logInternal(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level)
+    NrtResult Nrt_LoggingService_LogInternal(NrtLoggingServiceHandle service, const char* message, NrtLogLevel level)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (message == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -136,11 +136,11 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_setLogLevel(NrtLoggingServiceHandle service, NrtLogLevel level)
+    NrtResult Nrt_LoggingService_SetLogLevel(NrtLoggingServiceHandle service, NrtLogLevel level)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -150,19 +150,19 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_throwIfNullPtr(NrtLoggingServiceHandle service,
+    NrtResult Nrt_LoggingService_ThrowIfNullPtr(NrtLoggingServiceHandle service,
                                                 void* object,
                                                 const char* exceptionMessage)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (exceptionMessage == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -171,19 +171,19 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtResult Nrt_LoggingService_throwIfNotZero(NrtLoggingServiceHandle service,
+    NrtResult Nrt_LoggingService_ThrowIfNotZero(NrtLoggingServiceHandle service,
                                                 int32_t error,
                                                 const char* exceptionMessage)
     {
         if (service == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (exceptionMessage == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 

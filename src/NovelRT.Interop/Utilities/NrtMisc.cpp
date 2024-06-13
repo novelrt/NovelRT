@@ -11,7 +11,7 @@ extern "C"
 {
 #endif
 
-    const char* Nrt_getExecutablePath()
+    const char* Nrt_GetExecutablePath()
     {
         std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutablePath().string());
 
@@ -22,7 +22,7 @@ extern "C"
         return returnPtr;
     }
 
-    const char* Nrt_getExecutableDirPath()
+    const char* Nrt_GetExecutableDirPath()
     {
         std::string cppPath = std::string(NovelRT::Utilities::Misc::getExecutableDirPath().string());
 
@@ -33,11 +33,11 @@ extern "C"
         return returnPtr;
     }
 
-    const char* Nrt_appendFilePath(int32_t numberOfArgs, const char* const* args)
+    const char* Nrt_AppendFilePath(int32_t numberOfArgs, const char* const* args)
     {
         if (numberOfArgs <= 1)
         {
-            Nrt_setErrMsgCustomInternal("Cannot append file path when nothing is being appended!");
+            Nrt_SetErrMsgCustomInternal("Cannot append file path when nothing is being appended!");
             return NULL;
         }
 
@@ -63,7 +63,7 @@ extern "C"
 
         if (finalPath == nullptr)
         {
-            Nrt_setErrMsgIsOutOfMemoryInternal();
+            Nrt_SetErrMsgIsOutOfMemoryInternal();
             return NULL;
         }
 
@@ -72,11 +72,11 @@ extern "C"
         return finalPath;
     }
 
-    const char* Nrt_appendText(int32_t numberOfArgs, const char* const* args)
+    const char* Nrt_AppendText(int32_t numberOfArgs, const char* const* args)
     {
         if (numberOfArgs <= 1)
         {
-            Nrt_setErrMsgCustomInternal("Cannot append text when nothing is being appended!");
+            Nrt_SetErrMsgCustomInternal("Cannot append text when nothing is being appended!");
             return NULL;
         }
 
@@ -90,7 +90,7 @@ extern "C"
         char* finalText = new char[finalString.length() + 1];
         if (strlen(finalText) < (finalString.length() + 1))
         {
-            Nrt_setErrMsgCustomInternal("Could not properly allocate memory for text!");
+            Nrt_SetErrMsgCustomInternal("Could not properly allocate memory for text!");
             return NULL;
         }
 

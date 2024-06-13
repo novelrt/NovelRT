@@ -12,22 +12,22 @@ extern "C"
 {
 #endif
 
-    NrtSceneHandle Nrt_Scene_create()
+    NrtSceneHandle Nrt_Scene_Create()
     {
         return reinterpret_cast<NrtSceneHandle>(new SceneGraph::Scene());
     }
 
-    NrtResult Nrt_Scene_getNodes(NrtSceneHandle scene, NrtSceneNodeSetHandle* outputSet)
+    NrtResult Nrt_Scene_GetNodes(NrtSceneHandle scene, NrtSceneNodeSetHandle* outputSet)
     {
         if (scene == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputSet == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -40,14 +40,14 @@ extern "C"
         return NRT_SUCCESS;
     }
 
-    NrtBool Nrt_Scene_insert(NrtSceneHandle scene, NrtSceneNodeHandle nodeToInsert)
+    NrtBool Nrt_Scene_Insert(NrtSceneHandle scene, NrtSceneNodeHandle nodeToInsert)
     {
         auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
         auto cppNode = reinterpret_cast<SceneGraph::SceneNode*>(nodeToInsert)->shared_from_this();
         return static_cast<int32_t>(cppScene->insert(cppNode));
     }
 
-    NrtBool Nrt_Scene_remove(NrtSceneHandle scene, NrtSceneNodeHandle nodeToRemove)
+    NrtBool Nrt_Scene_Remove(NrtSceneHandle scene, NrtSceneNodeHandle nodeToRemove)
     {
         auto cppScene = reinterpret_cast<SceneGraph::Scene*>(&scene);
         auto cppNode = reinterpret_cast<SceneGraph::SceneNode*>(nodeToRemove)->shared_from_this();
@@ -58,7 +58,7 @@ extern "C"
     {
         if (scene == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -75,7 +75,7 @@ extern "C"
             // strcpy should be "safe" there since we called strlen earlier
             strcpy(target, message);
 
-            Nrt_setErrMsgCustomInternal(target);
+            Nrt_SetErrMsgCustomInternal(target);
             return NRT_FAILURE_UNKNOWN;
         }
 

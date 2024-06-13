@@ -57,13 +57,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (componentData == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -75,12 +75,12 @@ extern "C"
         }
         catch (const std::out_of_range&)
         {
-            Nrt_setErrMsgIsArgumentOutOfRangeInternal();
+            Nrt_SetErrMsgIsArgumentOutOfRangeInternal();
             return NRT_FAILURE_ARGUMENT_OUT_OF_RANGE;
         }
         catch (const DuplicateKeyException&)
         {
-            Nrt_setErrMsgDupKeyGivenInternal();
+            Nrt_SetErrMsgDupKeyGivenInternal();
             return NRT_FAILURE_DUPLICATE_KEY_PROVIDED;
         }
     }
@@ -92,13 +92,13 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outputResult == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -112,7 +112,7 @@ extern "C"
         }
         catch (const KeyNotFoundException&)
         {
-            Nrt_setErrMsgKeyNotFoundInternal();
+            Nrt_SetErrMsgKeyNotFoundInternal();
             return NRT_FAILURE_KEY_NOT_FOUND;
         }
     }
@@ -139,7 +139,7 @@ extern "C"
         return reinterpret_cast<ComponentBufferMemoryContainer*>(container)->GetImmutableDataLength();
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_begin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_Begin(
         NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
@@ -149,7 +149,7 @@ extern "C"
         return reinterpret_cast<NrtSparseSetMemoryContainer_ConstIteratorHandle>(ptr);
     }
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_end(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_ComponentBufferMemoryContainer_End(
         NrtComponentBufferMemoryContainerHandle container)
     {
         auto ptr = new SparseSetMemoryContainer::ConstIterator(std::make_tuple(
@@ -163,7 +163,7 @@ extern "C"
     {
         if (container == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -183,7 +183,7 @@ extern "C"
     {
         if (view == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 

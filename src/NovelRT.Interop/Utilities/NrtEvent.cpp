@@ -140,13 +140,13 @@ NrtResult GenericEvent_AddEventHandler(typename Details::NrtHandle event,
 {
     if (event == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (handler == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
@@ -166,7 +166,7 @@ NrtResult GenericEvent_RemoveEventHandler(typename Details::NrtHandle event, Nrt
 {
     if (event == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -180,7 +180,7 @@ NrtResult GenericEvent_Invoke(typename Details::NrtHandle event, Args&&... args)
 {
     if (event == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -194,7 +194,7 @@ NrtResult GenericEvent_Destroy(typename Details::NrtHandle event)
 {
     if (event == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 

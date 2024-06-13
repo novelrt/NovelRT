@@ -11,10 +11,10 @@ extern "C"
 {
 #endif
 
-    NrtSceneHandle Nrt_Scene_create();
-    NrtResult Nrt_Scene_getNodes(NrtSceneHandle scene, NrtSceneNodeSetHandle* outputSet);
-    NrtBool Nrt_Scene_insert(NrtSceneHandle scene, NrtSceneNodeHandle nodeToInsert);
-    NrtBool Nrt_Scene_remove(NrtSceneHandle scene, NrtSceneNodeHandle nodeToRemove);
+    NrtSceneHandle Nrt_Scene_Create();
+    NrtResult Nrt_Scene_GetNodes(NrtSceneHandle scene, NrtSceneNodeSetHandle* outputSet);
+    NrtBool Nrt_Scene_Insert(NrtSceneHandle scene, NrtSceneNodeHandle nodeToInsert);
+    NrtBool Nrt_Scene_Remove(NrtSceneHandle scene, NrtSceneNodeHandle nodeToRemove);
     NrtResult Nrt_Scene_Destroy(NrtSceneHandle scene);
 
 #ifdef __cplusplus

@@ -30,13 +30,13 @@ extern "C"
     {
         if (resourceLoader == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (newDirectory == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -49,14 +49,14 @@ extern "C"
         }
         catch (const std::runtime_error&)
         {
-            Nrt_setErrMsgIsInvalidPathInternal();
+            Nrt_SetErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
         }
 
         // TODO: not sure if we want an additional error code for this.
         if (cppPath.is_relative())
         {
-            Nrt_setErrMsgIsInvalidPathInternal();
+            Nrt_SetErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
         }
 
@@ -74,7 +74,7 @@ extern "C"
     {
         if (resourceLoader == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
@@ -84,7 +84,7 @@ extern "C"
         }
         catch (const NovelRT::Exceptions::IOException&)
         {
-            Nrt_setErrMsgIsFileNotFoundInternal();
+            Nrt_SetErrMsgIsFileNotFoundInternal();
             return NRT_FAILURE_FILE_NOT_FOUND;
         }
 
@@ -109,13 +109,13 @@ extern "C"
     {
         if (resourceLoader == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outTextureMetadata == nullptr || filePath == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -128,7 +128,7 @@ extern "C"
         }
         catch (const std::runtime_error&)
         {
-            Nrt_setErrMsgIsInvalidPathInternal();
+            Nrt_SetErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
         }
 
@@ -138,7 +138,7 @@ extern "C"
         }
         catch (const FileNotFoundException&)
         {
-            Nrt_setErrMsgIsFileNotFoundInternal();
+            Nrt_SetErrMsgIsFileNotFoundInternal();
             return NRT_FAILURE_FILE_NOT_FOUND;
         }
 
@@ -153,13 +153,13 @@ extern "C"
     {
         if (resourceLoader == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outShaderMetadata == nullptr || filePath == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -172,7 +172,7 @@ extern "C"
         }
         catch (const std::runtime_error&)
         {
-            Nrt_setErrMsgIsInvalidPathInternal();
+            Nrt_SetErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
         }
 
@@ -182,7 +182,7 @@ extern "C"
         }
         catch (const FileNotFoundException&)
         {
-            Nrt_setErrMsgIsFileNotFoundInternal();
+            Nrt_SetErrMsgIsFileNotFoundInternal();
             return NRT_FAILURE_FILE_NOT_FOUND;
         }
 
@@ -197,13 +197,13 @@ extern "C"
     {
         if (resourceLoader == nullptr)
         {
-            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            Nrt_SetErrMsgIsNullInstanceProvidedInternal();
             return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
         }
 
         if (outBinaryPackage == nullptr || filePath == nullptr)
         {
-            Nrt_setErrMsgIsNullArgumentProvidedInternal();
+            Nrt_SetErrMsgIsNullArgumentProvidedInternal();
             return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
         }
 
@@ -216,7 +216,7 @@ extern "C"
         }
         catch (const std::runtime_error&)
         {
-            Nrt_setErrMsgIsInvalidPathInternal();
+            Nrt_SetErrMsgIsInvalidPathInternal();
             return NRT_FAILURE_INVALID_DIRECTORY_PATH;
         }
 
@@ -226,7 +226,7 @@ extern "C"
         }
         catch (const FileNotFoundException&)
         {
-            Nrt_setErrMsgIsFileNotFoundInternal();
+            Nrt_SetErrMsgIsFileNotFoundInternal();
             return NRT_FAILURE_FILE_NOT_FOUND;
         }
 
@@ -240,7 +240,7 @@ NrtResult Nrt_ResourceLoader_Destroy(NrtResourceLoaderHandle resourceLoader)
 {
     if (resourceLoader == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
@@ -250,7 +250,7 @@ NrtResult Nrt_ResourceLoader_Destroy(NrtResourceLoaderHandle resourceLoader)
     }
     else
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 }

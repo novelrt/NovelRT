@@ -65,16 +65,16 @@ extern "C"
         NrtSparseSetMemoryContainerHandle container,
         size_t key);
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_begin(
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_Begin(
         NrtSparseSetMemoryContainerHandle container);
 
-    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_end(
+    NrtSparseSetMemoryContainer_IteratorHandle Nrt_SparseSetMemoryContainer_End(
         NrtSparseSetMemoryContainerHandle container);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cbegin(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_Cbegin(
         NrtSparseSetMemoryContainerHandle container);
 
-    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_cend(
+    NrtSparseSetMemoryContainer_ConstIteratorHandle Nrt_SparseSetMemoryContainer_Cend(
         NrtSparseSetMemoryContainerHandle container);
 
     NrtResult Nrt_SparseSetMemoryContainer_Destroy(NrtSparseSetMemoryContainerHandle container);

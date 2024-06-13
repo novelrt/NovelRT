@@ -13,13 +13,13 @@ NrtResult Nrt_IResourceManagementPluginProvider_Destroy(NrtIResourceManagementPl
 {
     if (plugin == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (!Lifetime::Release(reinterpret_cast<IResourceManagementPluginProvider*>(plugin)))
     {
-        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        Nrt_SetErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
@@ -32,13 +32,13 @@ NrtResult Nrt_IResourceManagementPluginProvider_GetResourceLoader(NrtIResourceMa
 {
     if (plugin == nullptr)
     {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        Nrt_SetErrMsgIsNullInstanceProvidedInternal();
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
     if (outputLoader == nullptr)
     {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
+        Nrt_SetErrMsgIsNullArgumentProvidedInternal();
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
