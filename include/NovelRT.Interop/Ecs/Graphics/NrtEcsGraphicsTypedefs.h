@@ -10,6 +10,17 @@ extern "C"
 
     typedef struct NrtDefaultRenderingSystem* NrtDefaultRenderingSystemHandle;
 
+    // Component types
+
+    typedef struct {
+        NrtAtom vertexDataId;
+        NrtAtom textureId;
+        NrtAtom pipelineId;
+        NrtAtom primitiveInfoId;
+        bool requiresCustomRendering;
+        bool markedForDeletion;
+    } NrtRenderComponent;
+
 #ifdef __cplusplus
 }
 #endif

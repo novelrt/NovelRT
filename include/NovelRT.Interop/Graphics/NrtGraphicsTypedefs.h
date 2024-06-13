@@ -18,6 +18,8 @@ extern "C"
 
     typedef struct NrtGraphicsProvider* NrtGraphicsProviderHandle;
 
+    typedef struct NrtTextureInfo* NrtTextureInfoHandle;
+
 #ifdef __cplusplus
 }
 #endif

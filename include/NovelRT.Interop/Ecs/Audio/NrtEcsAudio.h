@@ -7,5 +7,6 @@
 #include "NrtAudioEmitterComponent.h"
 #include "NrtAudioEmitterStateComponent.h"
 #include "NrtAudioSystem.h"
+#include "NrtEcsAudioComponents.h"
 
 #endif // NOVELRT_INTEROP_ECS_AUDIO_H

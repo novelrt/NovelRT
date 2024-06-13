@@ -34,6 +34,34 @@ extern "C"
     typedef NrtAtom NrtEntityId;
     typedef NrtAtom NrtComponentTypeId;
 
+    // Default components, equivalents in C structs
+    // When a component is modified in DefaultComponentTypes.h,
+    // it must also be updated there.
+
+    // Note that we do not use the NrtBool type,
+    // as it doesn't have the same as a standard C/C++ bool.
+
+    typedef struct
+    {
+        NrtGeoVector3F positionAndLayer;
+        NrtGeoVector2F scale;
+        float rotationInRadians;
+    } NrtTransformComponent;
+
+    typedef struct
+    {
+        bool isValid;
+        NrtEntityId parent;
+        NrtEntityId childrenStartNode;
+    } NrtEntityGraphComponent;
+
+    typedef struct
+    {
+        bool isValid;
+        NrtEntityId parent;
+        NrtEntityId childrenStartNode;
+    } NrtLinkedEntityListNodeComponent;
+
 #ifdef __cplusplus
 }
 #endif
