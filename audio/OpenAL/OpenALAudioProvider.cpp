@@ -63,11 +63,8 @@ namespace NovelRT::Audio::OpenAL
         GetALError();
         _buffers.clear();
         alcMakeContextCurrent(NULL);
-        GetALError();
         alcDestroyContext(_context);
-        GetALError();
         alcCloseDevice(_device);
-        GetALError();
     }
 
     uint32_t OpenALAudioProvider::OpenSource(AudioSourceContext& context)
