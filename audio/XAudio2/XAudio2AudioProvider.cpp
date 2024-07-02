@@ -67,14 +67,14 @@ namespace NovelRT::Audio::XAudio2
     {
         uint32_t nextSource = ++_sourceCounter;
         WAVEFORMATEX waveFormatContainer{};
-        waveFormatContainer.wFormatTag = WAVE_FORMAT_PCM;
-        waveFormatContainer.nChannels = 2;
-        waveFormatContainer.nSamplesPerSec = static_cast<long>(context.SampleRate);
-        waveFormatContainer.nAvgBytesPerSec = static_cast<long>(context.SampleRate / 0.25);
-        waveFormatContainer.nBlockAlign = 4;
-        waveFormatContainer.wBitsPerSample = 16;
+        waveFormatContainer.wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
         waveFormatContainer.cbSize = 0;
-
+        waveFormatContainer.nChannels = 2;
+        waveFormatContainer.wBitsPerSample = 32;
+        waveFormatContainer.nBlockAlign = 8;
+        waveFormatContainer.nSamplesPerSec = static_cast<long>(context.SampleRate);
+        waveFormatContainer.nAvgBytesPerSec = static_cast<long>(waveFormatContainer.nSamplesPerSec * waveFormatContainer.nBlockAlign);
+        
 
         IXAudio2SourceVoice* newVoice;
         if(FAILED(_hr = _device->CreateSourceVoice(&newVoice, &waveFormatContainer)))
@@ -108,19 +108,19 @@ namespace NovelRT::Audio::XAudio2
         StopSource(sourceId);
     }
 
-    uint32_t XAudio2AudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context)
+    uint32_t XAudio2AudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context)
     {
         //uint32_t nextBuffer = ++_bufferCounter;
         XAUDIO2_BUFFER xABuffer =
         {
             XAUDIO2_END_OF_STREAM,          // Flags
-            static_cast<uint32_t>(buffer.size()*sizeof(int16_t)),  // AudioBytes
-            static_cast<byte*>(new byte[buffer.size()*sizeof(int16_t)]) //new buffer to copy int16_t* to
+            static_cast<uint32_t>(buffer.size()*sizeof(float)),  // AudioBytes
+            static_cast<byte*>(new byte[buffer.size()*sizeof(float)]) //new buffer to copy float* to
         };
 
         //Because XAudio2 expects a BYTE*, we'll have to cast it up and copy the data from the provided span :(
         std::memcpy((void*)(xABuffer.pAudioData),
-             reinterpret_cast<void*>(buffer.data()), buffer.size()*sizeof(int16_t));
+             reinterpret_cast<void*>(buffer.data()), buffer.size()*sizeof(float));
         if(context.Loop)
         {
             xABuffer.LoopCount = XAUDIO2_LOOP_INFINITE;
