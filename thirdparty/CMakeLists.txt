@@ -1,6 +1,6 @@
 include(FetchContent)
 
-macro(thirdparty_module name)
+macro(thirdparty_module name flag)
   FetchContent_Declare(${name}
     ${ARGN}
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}/${name}"
@@ -43,8 +43,9 @@ thirdparty_module(GSL
   URL_HASH SHA512=710ab8b06b24dbca2cd1a8abb2eca2282548644224519784d04b1c7b70e3639f3b3e8d8f993f7f8c3dce3fcfe9ff0f3757b8d2625b676df36c84caa6f684133e
 )
 thirdparty_module(GTest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
-  URL_HASH SHA512=1479ea2f3172c622c0ca305f5b2bc45a42941221ec0ac7865e6d6d020ec4d008d952fc64e01a4c5138d7bed4148cf75596f25bb9e9044a98bbbf5662053ea11c
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+  URL_HASH SHA512=16cc8f5b03b862e2937d1b926ca6dc291234ac5670050dc4fc2752ec98497330ebcd46f292317cd2bbb111ce33bbdcfd088ddf6a7fe273e2442963908732d589
+  OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(nlohmann_json
   URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz
@@ -111,7 +112,6 @@ thirdparty_module(ZLIB
 foreach(module
   nlohmann_json
   Fabulist
-  fmt
   glfw3
   glm
   GSL
