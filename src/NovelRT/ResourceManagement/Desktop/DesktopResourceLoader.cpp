@@ -411,7 +411,7 @@ namespace NovelRT::ResourceManagement::Desktop
         std::vector<float> readBuffer;
         readBuffer.resize(_bufferSize);
 
-        //sf_command(file, SFC_SET_SCALE, nullptr, SF_TRUE);
+        // sf_command(file, SFC_SET_SCALE, nullptr, SF_TRUE);
 
         sf_count_t readSize = 0;
 
@@ -421,11 +421,11 @@ namespace NovelRT::ResourceManagement::Desktop
         }
 
         sf_close(file);
-        
+
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
         uuids::uuid databaseHandle = RegisterAsset(relativePathForAssetDatabase);
 
-        if(info.samplerate != _sampleRate)
+        if (info.samplerate != _sampleRate)
         {
             _logger.logDebug("Detected sample rate of {0}", info.samplerate);
             info.samplerate > 44100 ? _logger.logDebug("Downscaling...") : _logger.logDebug("Upscaling...");
@@ -439,7 +439,7 @@ namespace NovelRT::ResourceManagement::Desktop
             _logger.logDebug("Scaling by ratio of {0:f}", rate);
             conversionInfo.src_ratio = rate;
             int result = src_simple(&conversionInfo, SRC_SINC_MEDIUM_QUALITY, info.channels);
-            if(result != 0)
+            if (result != 0)
             {
                 std::string err = src_strerror(result);
                 _logger.logErrorLine(err);
