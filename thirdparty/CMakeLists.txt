@@ -1,6 +1,6 @@
 include(FetchContent)
 
-macro(thirdparty_module name flag)
+macro(thirdparty_module name)
   FetchContent_Declare(${name}
     ${ARGN}
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}/${name}"
