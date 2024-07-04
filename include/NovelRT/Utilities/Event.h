@@ -4,6 +4,7 @@
 #include "../Atom.h"
 #include <functional>
 #include <vector>
+#include <algorithm>
 
 #ifndef NOVELRT_UTILITIES_EVENT_H
 #define NOVELRT_UTILITIES_EVENT_H
