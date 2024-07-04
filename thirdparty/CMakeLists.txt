@@ -48,8 +48,9 @@ thirdparty_module(GTest
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(nlohmann_json
-  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz
-  URL_HASH SHA512=feb7dbdd1f1b6318131821f55d1411f0435262601c65eca368ccf3418750fd6348a37a3cd9d0694b31ccacfc91d02fbbecf94af52429005f8898490a5233c37d
+  URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+  URL_HASH SHA512=1aa94cdc3378a1fe0e3048ee73293e34bfa5ed9b46c6db0993e58e289ef818f7b7a472c0dc9c920114312e2e3ae1ff346ca797407ff48143744592adfd0a41ad
+  OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Ogg
   URL https://github.com/xiph/ogg/releases/download/v1.3.5/libogg-1.3.5.tar.gz
