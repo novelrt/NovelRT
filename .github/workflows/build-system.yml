@@ -29,9 +29,9 @@ jobs:
         - os: windows-latest
           name: Windows - Visual Studio 2022
         - os: macos-13
-          name: macOS 13 (x64) - Apple-Clang 14.0.0
+          name: macOS 13 (x64) - Apple-Clang 15
         - os: macos-14
-          name: macOS 14 (arm64) - Apple-Clang 14.0.3
+          name: macOS 14 (arm64) - Apple-Clang 15
           args: -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 
     steps:
