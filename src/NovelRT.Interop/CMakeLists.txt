@@ -125,6 +125,7 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-nullability-extension>
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:${CMAKE_CXX_COMPILER_VERSION},15.0.0>>:-Wno-unused-but-set-variable>
 
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic>
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic-errors>
@@ -137,6 +138,9 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-nullability-extension>
+    $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<VERSION_GREATER_EQUAL:${CMAKE_CXX_COMPILER_VERSION},15.0.0>>:-Wno-unused-but-set-variable>
+    
+    
 )
 
 if(MSVC)
