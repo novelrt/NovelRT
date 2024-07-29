@@ -58,8 +58,8 @@ thirdparty_module(Ogg
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(OpenAL
-  URL https://github.com/kcat/openal-soft/archive/1318bea2e0f0af9430335708e65ae2ff920d98c6.zip
-  URL_HASH SHA512=a561b962ecfc6135cb6f5e4d9ba7b9719b8e6dce85112ca0dd4fe3efd05d86308a4076e0cba9e628b1a4ee2f984efabe517c1aa1399809ca848bae90b449ba4f
+  URL https://github.com/kcat/openal-soft/archive/a0e238f54dbf57a2c88f2b45a0c49f6a13e0784c.zip
+  URL_HASH SHA512=bfe50a959b2e1d6edf78c282839f52b8f596d58b9e785d6948e4a9edc8629421f09df542dc38bc60a987b58c38de9f5be9377f731516a05c3cb02d9f883ae629
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Opus
