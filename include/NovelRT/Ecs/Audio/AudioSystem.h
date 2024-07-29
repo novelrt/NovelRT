@@ -21,7 +21,7 @@ namespace NovelRT::Ecs::Audio
         NovelRT::Timing::Timestamp _systemTime;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagerPluginProvider;
 
-        // void ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume);
+        void ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume);
 
     public:
         AudioSystem(std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider);

@@ -221,26 +221,14 @@ namespace NovelRT::Ecs::Audio
             NovelRT::Utilities::Misc::Span<float>(asset.processedAudioFrames.data(), asset.processedAudioFrames.size()),
             asset.channelCount, asset.sampleRate);
         _soundCache.emplace(handle, asset);
-        // if (_mixer->IsLoaded(handle))
-        // {
-        //     _soundCache.insert({_counter, handle});
-        //     value = _counter;
         _counter++;
-        // }
         return handle;
     }
 
-    // void AudioSystem::ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume)
-    // {
-    //     if (emitter.isMusic)
-    //     {
-    //         _mixer->SetMusicVolume(desiredVolume);
-    //     }
-    //     else
-    //     {
-    //         _mixer->SetSoundVolume(_soundCache.at(emitter.handle), desiredVolume);
-    //     }
-    // }
+    void AudioSystem::ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume)
+    {
+        _mixer->SetSourceVolume(emitter.handle, desiredVolume);
+    }
 
     AudioSystem::~AudioSystem() noexcept
     {
