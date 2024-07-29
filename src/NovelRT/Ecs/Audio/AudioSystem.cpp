@@ -190,7 +190,7 @@ namespace NovelRT::Ecs::Audio
                     {
                         _mixer->SetSourceVolume(emitter.handle, emitter.volume);
                         _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, soundContext.Volume,
-                                            emitter.volume);
+                                         emitter.volume);
                     }
                     if (_mixer->GetSourceState(emitter.handle) != NovelRT::Audio::AudioSourceState::SOURCE_PLAYING)
                     {
