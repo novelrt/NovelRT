@@ -2,8 +2,6 @@ set(INTEROP_SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
 
-  Audio/NrtAudioService.cpp
-
   Ecs/NrtCatalogue.cpp
   Ecs/NrtConfigurator.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
@@ -13,10 +11,6 @@ set(INTEROP_SOURCES
   Ecs/NrtSparseSetMemoryContainer.cpp
   Ecs/NrtSystemScheduler.cpp
   Ecs/NrtUnsafeComponentView.cpp
-
-  Ecs/Audio/NrtAudioSystem.cpp
-  Ecs/Audio/NrtAudioEmitterComponent.cpp
-  Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
   Ecs/Graphics/NrtDefaultRenderingSystem.cpp
 

@@ -42,11 +42,12 @@ The dependencies that are handled by CMake that do not need to be manually insta
 - GLFW 3.3.7
 - glm 0.9.9.9
 - gtest/gmock 1.11.0
+- fmt 10.2.1
 - libpng 1.6.35
 - libsndfile 1.1.0
 - Microsoft GSL 4.0.0
 - OneTBB 2021.5.0
-- OpenAL 1.21.1
+- OpenAL 1.23.1
 - spdlog 1.13.0
 
 ### Build instructions
@@ -144,7 +145,7 @@ cmake .. -DCMAKE_APPLE_SILICON_PROCESSOR="arm64"
 
 If Vulkan SDK is not installed in a system path and the `setup-env.sh` file did not properly add the required environment variables, you can specify the `VULKAN_SDK` environment variable to your local Vulkan SDK location as such:
 ```
-VULKAN_SDK=/Users/youruser/Vulkan SDK/1.3.231.1/macOS cmake .. 
+VULKAN_SDK=/Users/youruser/Vulkan SDK/1.3.231.1/macOS cmake ..
 ```
 Please ensure that the path includes the macOS folder, otherwise finding the proper libraries will fail.
 

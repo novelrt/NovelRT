@@ -2,6 +2,7 @@
 // for more information.
 
 #include "../Atom.h"
+#include <algorithm>
 #include <functional>
 #include <vector>
 
