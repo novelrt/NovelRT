@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#include <AL/alext.h>
 #include <NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
 #include <NovelRT/Exceptions/Exceptions.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -10,8 +11,8 @@ namespace NovelRT::Audio::OpenAL
     typedef void (ALC_APIENTRY*CallbackProvider)(LoggingCallback, void*) noexcept;
 
     OpenALAudioProvider::OpenALAudioProvider():
-    _buffers(std::vector<uint32_t>()),
     _sources(std::vector<uint32_t>()),
+    _buffers(std::vector<uint32_t>()),
     _logger(spdlog::stdout_color_mt("OpenAL"))
     {
         //Logger init
@@ -62,11 +63,8 @@ namespace NovelRT::Audio::OpenAL
         GetALError();
         _buffers.clear();
         alcMakeContextCurrent(NULL);
-        GetALError();
         alcDestroyContext(_context);
-        GetALError();
         alcCloseDevice(_device);
-        GetALError();
     }
 
     uint32_t OpenALAudioProvider::OpenSource(AudioSourceContext& context)
@@ -148,18 +146,18 @@ namespace NovelRT::Audio::OpenAL
             default:
             {
                 _logger->error("Unknown OpenAL Error - Code: {err}", err);
-                return std::string("Unknown OpenAL Error - Code: " + err);
+                return std::string("Unknown OpenAL Error - Code: " + std::to_string(err));
             }
         }
     }
 
-    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<int16_t> buffer, AudioSourceContext& context)
+    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context)
     {
         ALuint alBuffer;
         alGetError();
         alGenBuffers(1, &alBuffer);
         GetALError();
-        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(), static_cast<ALsizei>(buffer.size() * sizeof(int16_t)), context.SampleRate);
+        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(), static_cast<ALsizei>(buffer.size() * sizeof(float)), context.SampleRate);
         GetALError();
         _buffers.emplace_back(static_cast<uint32_t>(alBuffer));
         uint32_t sourceId = OpenSource(context);
@@ -214,14 +212,14 @@ namespace NovelRT::Audio::OpenAL
         switch(numberOfChannels)
         {
             case 1:
-                return AL_FORMAT_MONO16;
+                return AL_FORMAT_MONO_FLOAT32;
             case 5:
-                return AL_FORMAT_51CHN16;
+                return AL_FORMAT_51CHN32;
             case 7:
-                return AL_FORMAT_71CHN16;
+                return AL_FORMAT_71CHN32;
             case 2:
             default:
-                return AL_FORMAT_STEREO16;
+                return AL_FORMAT_STEREO_FLOAT32;
         }
     }
 

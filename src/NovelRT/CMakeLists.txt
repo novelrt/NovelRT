@@ -19,10 +19,6 @@ set(CORE_SOURCES
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
 
-  Input/Glfw/GlfwInputDevice.cpp
-  Input/Glfw/GlfwInputPluginProvider.cpp
-  Input/NovelKey.cpp
-
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
 
@@ -47,6 +43,7 @@ set(CORE_SOURCES
 )
 
 add_library(Engine SHARED ${CORE_SOURCES})
+add_library(NovelRT::Engine ALIAS Engine)
 set_target_properties(Engine
   PROPERTIES
     OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>"
@@ -86,6 +83,7 @@ target_link_libraries(Engine
   $<$<BOOL:$<STREQUAL:${NOVELRT_TARGET},Linux>>:OpenAL>
   NovelRT-Graphics
   NovelRT-Audio
+  NovelRT-Input
 )
 
 if(${NOVELRT_TARGET} STREQUAL "macOS")

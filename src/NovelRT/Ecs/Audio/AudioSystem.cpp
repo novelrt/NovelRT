@@ -217,7 +217,9 @@ namespace NovelRT::Ecs::Audio
         }
 
         auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
-        auto handle = _mixer->SubmitAudioBuffer(NovelRT::Utilities::Misc::Span<float>(asset.processedAudioFrames.data(), asset.processedAudioFrames.size()), asset.channelCount, asset.sampleRate);
+        auto handle = _mixer->SubmitAudioBuffer(
+            NovelRT::Utilities::Misc::Span<float>(asset.processedAudioFrames.data(), asset.processedAudioFrames.size()),
+            asset.channelCount, asset.sampleRate);
         _soundCache.emplace(handle, asset);
         // if (_mixer->IsLoaded(handle))
         // {

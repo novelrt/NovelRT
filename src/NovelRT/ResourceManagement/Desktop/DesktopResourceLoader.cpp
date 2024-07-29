@@ -411,8 +411,6 @@ namespace NovelRT::ResourceManagement::Desktop
         std::vector<float> readBuffer;
         readBuffer.resize(_bufferSize);
 
-        //sf_command(file, SFC_SET_SCALE, nullptr, SF_TRUE);
-
         sf_count_t readSize = 0;
 
         while ((readSize = sf_read_float(file, readBuffer.data(), static_cast<sf_count_t>(readBuffer.size()))) != 0)
