@@ -1,0 +1,10 @@
+<map id="NovelRT::Maths::QuadTree::TryRemove" name="NovelRT::Maths::QuadTree::TryRemove">
+<area shape="rect" id="node1" title="Attempts to remove a point from the QuadTree." alt="" coords="5,201,197,243"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a404a07a0bea95ff890cb5598e9ab6803" title="Returns the child QuadTree node for the bottom left area." alt="" coords="245,5,437,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a0c4da2e5e7972a5e4f8ab68c202e8f02" title="Returns the child QuadTree node for the bottom right area." alt="" coords="245,71,437,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac8b506602d31301d9058d0e93cd2b246" title="Returns the bounds this QuadTree covers." alt="" coords="245,136,437,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a1525933d6d75b6e339938a20d504f2e9" title="Returns the point instance under the specified index." alt="" coords="245,201,437,243"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a38ef70ac34e8975f62a49beb14fabb6b" title="Returns the amount of points stored in this QuadTree instance." alt="" coords="245,267,437,308"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a5fbef85b43775b7b36c7bda34d01d894" title="Returns the child QuadTree node for the top left area." alt="" coords="245,332,437,373"/>
+<area shape="rect" id="node8" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a868a86e8d590c30aeaa5fb66295133e4" title="Returns the child QuadTree node for the top right area." alt="" coords="245,397,437,439"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::QuadTree::TryInsert" name="NovelRT::Maths::QuadTree::TryInsert">
+<area shape="rect" id="node1" title="Attempts to store the given point within this QuadTree&#39;s hierarchy." alt="" coords="245,5,437,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#adf9924d7e60736a6537f314a10b593c5" title="Attempts to insert a bounding box into the QuadTree." alt="" coords="5,5,197,47"/>
+</map>

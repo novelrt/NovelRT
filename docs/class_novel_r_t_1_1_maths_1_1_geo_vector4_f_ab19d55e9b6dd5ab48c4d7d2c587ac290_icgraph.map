@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::GeoVector4F::GetMagnitude" name="NovelRT::Maths::GeoVector4F::GetMagnitude">
+<area shape="rect" id="node1" title="Calculates the magnitude of this GeoVector4F using its components." alt="" coords="260,5,467,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a95c93c6881740cfd5b9bd56f1ac0be93" title="Calculates the length of this GeoVector4F using its components." alt="" coords="5,5,212,47"/>
+</map>
