@@ -14,9 +14,14 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsPipeline : public GraphicsPipeline
+    class VulkanGraphicsPipeline
     {
     private:
+        std::shared_ptr<VulkanGraphicsDevice> _device;
+        std::shared_ptr<VulkanShaderProgram> _vertexShader;
+        std::shared_ptr<VulkanShaderProgram> _pixelShader;
+        std::shared_ptr<VulkanGraphicsPipelineSignature> _signature;
+
         NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
         [[nodiscard]] VkPipeline CreateVulkanPipeline();
         [[nodiscard]] size_t GetInputElementsCount(
@@ -29,29 +34,39 @@ namespace NovelRT::Graphics::Vulkan
                                std::shared_ptr<VulkanShaderProgram> vertexShader,
                                std::shared_ptr<VulkanShaderProgram> pixelShader) noexcept;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {
-            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GraphicsPipeline::GetDevice());
+            return _device;
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetPixelShader() const noexcept
         {
-            return std::dynamic_pointer_cast<VulkanShaderProgram>(GraphicsPipeline::GetPixelShader());
+            return _vertexShader;
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetVertexShader() const noexcept
         {
-            return std::dynamic_pointer_cast<VulkanShaderProgram>(GraphicsPipeline::GetVertexShader());
+            return _pixelShader;
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsPipelineSignature> GetSignature() const noexcept
         {
-            return std::dynamic_pointer_cast<VulkanGraphicsPipelineSignature>(GraphicsPipeline::GetSignature());
+            return _signature;
         }
 
         [[nodiscard]] inline VkPipeline GetVulkanPipeline()
         {
             return _vulkanPipeline.getActual();
+        }
+        
+        bool HasVertexShader() const noexcept
+        {
+            return _vertexShader != nullptr;
+        }
+
+        bool HasPixelShader() const noexcept
+        {
+            return _pixelShader != nullptr;
         }
     };
 }

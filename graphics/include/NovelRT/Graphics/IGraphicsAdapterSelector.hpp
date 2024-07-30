@@ -14,10 +14,18 @@ namespace NovelRT::Graphics
     template<typename TBackend> class IGraphicsAdapterSelector
     {
     public:
-        [[nodiscard]] virtual std::shared_ptr<GraphicsAdapter<TBackend>> GetDefaultRecommendedAdapter(
-            const std::shared_ptr<GraphicsProvider<TBackend>>& provider,
-            const std::shared_ptr<GraphicsSurfaceContext<TBackend>>& surfaceContext) const = 0;
+        using BackendAdapterSelectorType = TBackend::AdapterSelectorType;
 
-        virtual ~IGraphicsAdapterSelector() = default;
+    private:
+        std::shared_ptr<BackendAdapterSelectorType> _implementation;
+
+
+    public:
+        [[nodiscard]] virtual std::shared_ptr<GraphicsAdapter<TBackend>> GetDefaultRecommendedAdapter(
+            std::shared_ptr<GraphicsProvider<TBackend>> provider,
+            std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext) const
+        {
+            return _implementation->GetDefaultRecommendedAdapter(provider, surfaceContext)
+        }
     };
 }

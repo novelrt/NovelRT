@@ -16,9 +16,12 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipelineSignature;
     class VulkanGraphicsDevice;
 
-    class VulkanGraphicsContext final : public GraphicsContext
+    class VulkanGraphicsContext
     {
     private:
+        std::shared_ptr<VulkanGraphicsDevice> _device;
+        size_t _index;
+
         std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<VkDescriptorSet>>
             _vulkanDescriptorSets;
         std::shared_ptr<VulkanGraphicsFence> _fence;
@@ -50,15 +53,10 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {
-            return std::static_pointer_cast<VulkanGraphicsDevice>(GraphicsContext::GetDevice());
+            return _device;
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsFence> GetFence() const noexcept final
-        {
-            return _fence;
-        }
-
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetVulkanFence() const noexcept
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetFence() const noexcept
         {
             return _fence;
         }
@@ -88,14 +86,14 @@ namespace NovelRT::Graphics::Vulkan
             return _waitForExecuteCompletionFence;
         }
 
-        void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour) final;
-        void BeginFrame() final;
+        void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour);
+        void BeginFrame();
 
-        void EndDrawing() final;
-        void EndFrame() final;
+        void EndDrawing();
+        void EndFrame();
 
         void ResetContext();
 
-        ~VulkanGraphicsContext() final;
+        ~VulkanGraphicsContext();
     };
 }

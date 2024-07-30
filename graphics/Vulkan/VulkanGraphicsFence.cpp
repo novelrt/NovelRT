@@ -60,7 +60,7 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     VulkanGraphicsFence::VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept
-        : GraphicsFence(device),
+        : _device(device),
           _vulkanFence([=]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); }),
           _state()
     {

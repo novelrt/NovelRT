@@ -41,13 +41,23 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsPipelineSignature() = default;
         
-        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GraphicsPipelineSignature::GetInputs()
+        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
+        {
+            return _srcBlendFactor;
+        }
+
+        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetDstBlendFactor() const noexcept
+        {
+            return _dstBlendFactor;
+        }
+        
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GraphicsPipelineSignature::GetInputs()
             const noexcept
         {
             return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
         }
 
-        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources()
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources()
             const noexcept
         {
             return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),

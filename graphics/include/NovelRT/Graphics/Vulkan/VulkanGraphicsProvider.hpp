@@ -10,7 +10,7 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsProvider final : public GraphicsProvider
+    class VulkanGraphicsProvider final : public std::enable_shared_from_this<VulkanGraphicsProvider>
     {
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";

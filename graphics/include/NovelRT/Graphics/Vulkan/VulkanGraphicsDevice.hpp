@@ -16,14 +16,17 @@
 namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsAdapter;
+    class VulkanShaderProgram;
+    class VulkanGraphicsPipeline;
+    class VulkanGraphicsPipelineSignature;
 
-    class VulkanGraphicsDevice final : public GraphicsDevice
+    class VulkanGraphicsDevice
     {
     private:
         NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
         uint32_t _contextCount;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext>>> _contextPtrs;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contextPtrs;
 
         LoggingService _logger;
 
@@ -72,19 +75,19 @@ namespace NovelRT::Graphics::Vulkan
                              const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
                              int32_t contextCount);
 
-        void TearDown() final;
-        size_t GetContextIndex() const noexcept override;
+        void TearDown();
+        size_t GetContextIndex() const noexcept;
 
-        void PresentFrame() final;
+        void PresentFrame();
 
-        void Signal(std::shared_ptr<GraphicsFence> fence) final;
+        void Signal(std::shared_ptr<VulkanGraphicsFence> fence);
         void SignalVulkan(const std::shared_ptr<VulkanGraphicsFence>& fence) const;
 
-        void WaitForIdle() final;
+        void WaitForIdle();
 
-        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext<TBackend>>> GetContexts() final
+        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<VulkanGraphicsContext>> GetContexts()
         {
-            return NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext<TBackend>>>(
+            return NovelRT::Utilities::Misc::Span<std::shared_ptr<VulkanGraphicsContext>>(
                 &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
         }
 
@@ -94,21 +97,21 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<ShaderProgram> CreateShaderProgram(
+        [[nodiscard]] std::shared_ptr<VulkanShaderProgram> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Misc::Span<uint8_t> byteData) final;
+            NovelRT::Utilities::Misc::Span<uint8_t> byteData);
 
-        [[nodiscard]] std::shared_ptr<GraphicsPipeline> CreatePipeline(
-            std::shared_ptr<GraphicsPipelineSignature> signature,
-            std::shared_ptr<ShaderProgram> vertexShader,
-            std::shared_ptr<ShaderProgram> pixelShader) final;
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsPipeline> CreatePipeline(
+            std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
+            std::shared_ptr<VulkanShaderProgram> vertexShader,
+            std::shared_ptr<VulkanShaderProgram> pixelShader);
 
-        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature> CreatePipelineSignature(
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsPipelineSignature> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources) final;
+            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources);
 
         [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain()
         {
@@ -160,9 +163,9 @@ namespace NovelRT::Graphics::Vulkan
             return _presentCompletionFence.getActual();
         }
 
-        std::vector<std::shared_ptr<GraphicsContext>> CreateGraphicsContextPointers();
+        std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContextPointers();
         void ResizeGraphicsContexts(uint32_t newContextCount);
 
-        ~VulkanGraphicsDevice() final;
+        ~VulkanGraphicsDevice();
     };
 }

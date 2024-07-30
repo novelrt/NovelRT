@@ -1,18 +1,29 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
 
     VulkanGraphicsSurfaceContext::VulkanGraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
-                                                               const std::shared_ptr<VulkanGraphicsProvider>& provider)
-        : GraphicsSurfaceContext(std::move(surface), std::static_pointer_cast<GraphicsProvider>(provider)),
+                                                               std::shared_ptr<VulkanGraphicsProvider> provider)
+        : _surface(surface),
+          _provider(provider),
           _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
           _vulkanSurface(VK_NULL_HANDLE)
     {
+        if (_surface == nullptr)
+        {
+            throw Exceptions::NullPointerException("The supplied IGraphicsSurface is nullptr.");
+        }
+
+        if (_provider == nullptr)
+        {
+            throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
+        }
+
         std::shared_ptr<IGraphicsSurface> targetSurface = GetSurface();
         switch (targetSurface->GetKind())
         {

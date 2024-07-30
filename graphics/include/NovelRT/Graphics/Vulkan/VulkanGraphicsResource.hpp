@@ -38,9 +38,7 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] size_t GetSize() const noexcept;
         
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment);
-
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanAllocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment);
 
         [[nodiscard]] VmaAllocation GetAllocation() const noexcept;
 

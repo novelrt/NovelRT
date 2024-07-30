@@ -12,9 +12,10 @@ namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsDevice;
 
-    class VulkanGraphicsFence final : public GraphicsFence
+    class VulkanGraphicsFence
     {
     private:
+        std::shared_ptr<VulkanGraphicsDevice> _device;
         NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
         Threading::VolatileState _state;
 
@@ -31,11 +32,11 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] bool TryWaitInternal(uint64_t millisecondsTimeout);
 
     public:
-        explicit VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept;
+        VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {
-            return std::static_pointer_cast<VulkanGraphicsDevice>(GraphicsFence::GetDevice());
+            return _device;
         }
 
         [[nodiscard]] inline VkFence GetVulkanFence()
@@ -43,13 +44,27 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanFence.getActual();
         }
 
-        [[nodiscard]] bool GetIsSignalled() final;
+        [[nodiscard]] bool GetIsSignalled();
 
-        void Reset() final;
+        void Reset();
 
-        [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout) final;
-        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout) final;
+        [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
+        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
+        
+        inline void Wait(uint64_t millisecondsTimeout)
+        {
+            if (!TryWait(millisecondsTimeout))
+            {
+                throw Exceptions::TimeoutException(millisecondsTimeout);
+            }
+        }
 
-        ~VulkanGraphicsFence() final;
+        inline void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
+        {
+            if (!TryWait(timeout))
+            {
+                throw Exceptions::TimeoutException(timeout.count());
+            }
+        }
     };
 }

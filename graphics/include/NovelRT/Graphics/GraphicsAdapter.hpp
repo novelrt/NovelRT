@@ -21,11 +21,11 @@ namespace NovelRT::Graphics
 
     private:
         std::shared_ptr<BackendAdapterType> _implementation;
-        std::weak_ptr<GraphicsProvider<TBackend>> _provider;
+        std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
         GraphicsAdapter(std::shared_ptr<BackendAdapterType> implementation,
-                        std::weak_ptr<GraphicsProvider<TBackend>> provider)
+                        std::shared_ptr<GraphicsProvider<TBackend>> provider)
             : _implementation(_implementation), _provider(provider)
         {
             if (_provider.expired())
@@ -49,12 +49,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] inline std::shared_ptr<GraphicsProvider> GetProvider() const
         {
-            if (_provider.expired())
-            {
-                throw std::runtime_error("Provider has expired.");
-            }
-
-            return _provider.lock();
+            return _provider;
         }
 
         [[nodiscard]] uint32_t GetVendorId()

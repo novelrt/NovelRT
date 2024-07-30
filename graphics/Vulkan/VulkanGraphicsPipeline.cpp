@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
                                                    std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
                                                    std::shared_ptr<VulkanShaderProgram> vertexShader,
                                                    std::shared_ptr<VulkanShaderProgram> pixelShader) noexcept
-        : GraphicsPipeline(device, signature, vertexShader, pixelShader),
+        : _device(device), _signature(signature), _vertexShader(vertexShader), _pixelShader(pixelShader),
           _vulkanPipeline([&]() { return CreateVulkanPipeline(); })
     {
     }

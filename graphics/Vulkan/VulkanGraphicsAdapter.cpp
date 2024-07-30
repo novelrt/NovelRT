@@ -26,24 +26,22 @@ namespace NovelRT::Graphics::Vulkan
         return physicalDeviceMemoryProperties;
     }
 
-    VulkanGraphicsAdapter::VulkanGraphicsAdapter(const std::shared_ptr<VulkanGraphicsProvider>& provider,
+    VulkanGraphicsAdapter::VulkanGraphicsAdapter(std::shared_ptr<VulkanGraphicsProvider> provider,
                                                  VkPhysicalDevice physicalDevice)
-        : GraphicsAdapter(provider->weak_from_this()),
+        : _provider(provider->weak_from_this()),
           _vulkanPhysicalDevice(physicalDevice),
           _vulkanPhysicalDeviceProperties([&]() { return GetVulkanPhysicalDevicePropertiesInternal(); }),
           _vulkanPhysicalDeviceMemoryProperties([&]() { return GetVulkanPhysicalDeviceMemoryPropertiesInternal(); }),
-          _name([&]() { return GetNameInternal(); }),
-          _state()
+          _name([&]() { return GetNameInternal(); })
     {
-        static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
 
-    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsAdapter::CreateVulkanGraphicsDevice(
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsAdapter::CreateDevice(
         std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
         int32_t contextCount)
     {
         return std::make_shared<VulkanGraphicsDevice>(
-            std::dynamic_pointer_cast<VulkanGraphicsAdapter>(shared_from_this()), std::move(surfaceContext),
+            shared_from_this(), surfaceContext,
             contextCount);
     }
 } // namespace NovelRT::Graphics::Vulkan
