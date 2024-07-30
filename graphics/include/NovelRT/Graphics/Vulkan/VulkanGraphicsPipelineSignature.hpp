@@ -13,9 +13,13 @@ namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsDevice;
 
-    class VulkanGraphicsPipelineSignature final : public GraphicsPipelineSignature
+    class VulkanGraphicsPipelineSignature
     {
-
+        std::shared_ptr<VulkanGraphicsDevice> _device;
+        GraphicsPipelineBlendFactor _srcBlendFactor;
+        GraphicsPipelineBlendFactor _dstBlendFactor;
+        std::vector<GraphicsPipelineInput> _inputs;
+        std::vector<GraphicsPipelineResource> _resources;
         NovelRT::Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
         NovelRT::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
         NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
@@ -39,10 +43,12 @@ namespace NovelRT::Graphics::Vulkan
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
+        
+        ~VulkanGraphicsPipelineSignature();
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
         {
-            return std::dynamic_pointer_cast<VulkanGraphicsDevice>(GraphicsPipelineSignature::GetDevice());
+            return _device;
         }
 
         [[nodiscard]] inline VkDescriptorPool GetVulkanDescriptorPool()
@@ -64,9 +70,14 @@ namespace NovelRT::Graphics::Vulkan
         {
             return _vulkanPipelineLayout.getActual();
         }
+        
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources()
+            const noexcept
+        {
+            return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
+                                                                                  _resources.size());
+        }
 
         void DestroyDescriptorSets(NovelRT::Utilities::Misc::Span<VkDescriptorSet> vulkanDescriptorSets);
-
-        ~VulkanGraphicsPipelineSignature() final;
     };
 }

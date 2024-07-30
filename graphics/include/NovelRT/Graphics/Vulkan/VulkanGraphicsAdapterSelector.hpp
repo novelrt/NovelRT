@@ -12,7 +12,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsProvider;
     class VulkanGraphicsSurfaceContext;
 
-    class VulkanGraphicsAdapterSelector final : public IGraphicsAdapterSelector
+    class VulkanGraphicsAdapterSelector
     {
     private:
         [[nodiscard]] int32_t GetPhysicalDeviceOptionalExtensionSupportScore(
@@ -24,14 +24,8 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] bool CheckPhysicalDeviceRequiredExtensionSupport(VkPhysicalDevice physicalDevice) const noexcept;
 
     public:
-        [[nodiscard]] std::shared_ptr<GraphicsAdapter> GetDefaultRecommendedAdapter(
-            const std::shared_ptr<GraphicsProvider>& provider,
-            const std::shared_ptr<GraphicsSurfaceContext>& surfaceContext) const final;
-
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetDefaultRecommendedAdapterVulkan(
-            const std::shared_ptr<VulkanGraphicsProvider>& provider,
-            const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext) const;
-
-        ~VulkanGraphicsAdapterSelector() final = default;
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetDefaultRecommendedAdapter(
+            std::shared_ptr<VulkanGraphicsProvider> provider,
+            std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext) const;
     };
 }

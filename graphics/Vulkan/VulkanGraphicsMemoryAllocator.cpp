@@ -15,7 +15,7 @@ namespace NovelRT::Graphics::Vulkan
 {
     VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsProvider> provider,
                                                                  std::shared_ptr<VulkanGraphicsDevice> device)
-        : GraphicsMemoryAllocator(device, provider), _allocator(VK_NULL_HANDLE)
+        : _provider(provider), _device(device), _allocator(VK_NULL_HANDLE)
     {
         auto vulkanDevice = GetDevice();
         auto vulkanAdapter = vulkanDevice->GetAdapter();
@@ -37,21 +37,21 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsMemoryAllocator::GetDevice() const noexcept
     {
-        return std::reinterpret_pointer_cast<VulkanGraphicsDevice>(GraphicsDeviceObject::GetDevice());
+        return _device;
     }
 
     std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
     {
-        return std::reinterpret_pointer_cast<VulkanGraphicsProvider>(GraphicsMemoryAllocator::GetProvider());
+        return _provider;
     }
 
-    std::shared_ptr<GraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
+    std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
         const GraphicsBufferCreateInfo& createInfo)
     {
         return CreateVulkanBuffer(createInfo);
     }
 
-    std::shared_ptr<GraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
+    std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
         const GraphicsTextureCreateInfo& createInfo)
     {
         return CreateVulkanTexture(createInfo);

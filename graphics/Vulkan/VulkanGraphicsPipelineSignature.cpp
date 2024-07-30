@@ -2,8 +2,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -284,8 +284,12 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsPipelineBlendFactor dstBlendFactor,
         NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
         NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
-        : GraphicsPipelineSignature(std::move(device), srcBlendFactor, dstBlendFactor, inputs, resources),
-          _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
+        : _device(device),
+          _srcBlendFactor(srcBlendFactor),
+          _dstBlendFactor(dstBlendFactor),
+          _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
+          _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end())),
+              _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
           _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); }),
           _vulkanPipelineLayout([&]() { return CreatePipelineLayout(); })
     {

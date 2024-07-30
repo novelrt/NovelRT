@@ -13,7 +13,8 @@ namespace NovelRT::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsResource> owningResource,
         VmaVirtualAllocation virtualAllocation,
         VmaVirtualAllocationInfo virtualAllocationInfo)
-        : GraphicsResourceMemoryRegionBase(graphicsDevice, owningResource),
+        : _device(graphicsDevice),
+          _owningResource(owningResource),
           _virtualAllocation(virtualAllocation),
           _virtualAllocationInfo(virtualAllocationInfo)
     {
@@ -22,6 +23,16 @@ namespace NovelRT::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException(
                 "An invalid memory region of a Vulkan graphics resource was created.");
         }
+    }
+
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsResourceMemoryRegionBase::GetDevice() const noexcept
+    {
+        return _device;
+    }
+
+    std::shared_ptr<VulkanGraphicsResource> VulkanGraphicsResourceMemoryRegionBase::GetOwningResource() const noexcept
+    {
+        return _owningResource;
     }
 
     size_t VulkanGraphicsResourceMemoryRegionBase::GetRelativeOffset() const noexcept
