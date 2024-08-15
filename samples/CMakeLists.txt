@@ -15,7 +15,7 @@ add_subdirectory(EcsPipeline)
 add_subdirectory(InputEcsSample)
 add_subdirectory(PersistenceSample)
 add_subdirectory(UIEventExample)
-add_subdirectory(FabulistTest)
+#add_subdirectory(FabulistTest)
 add_subdirectory(AudioEcsSample)
 
 add_custom_target(Samples
@@ -25,6 +25,6 @@ add_custom_target(Samples
     InputEcsSample
     PersistenceSample
     UIEventExample
-    FabulistTest
+    #FabulistTest
     AudioEcsSample
 )

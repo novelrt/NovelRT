@@ -17,7 +17,7 @@ set(CORE_SOURCES
   Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
-  Ecs/Narrative/NarrativePlayerSystem.cpp
+  # Ecs/Narrative/NarrativePlayerSystem.cpp
 
   Maths/GeoBounds.cpp
   Maths/QuadTree.cpp
@@ -66,7 +66,7 @@ target_compile_definitions(Engine PUBLIC ${NOVELRT_TARGET_COMPILE_DEFS})
 
 target_link_libraries(Engine
   PUBLIC
-  runtime
+  # runtime
   tbb
   sndfile
   samplerate

@@ -42,11 +42,11 @@
 #include <vector>
 
 // Fabulist
-#include <fabulist/runtime/action.hpp>
-#include <fabulist/runtime/runtime.hpp>
-#include <fabulist/runtime/state.hpp>
-#include <fabulist/runtime/story.hpp>
-#include <fabulist/runtime/version.hpp>
+// #include <fabulist/runtime/action.hpp>
+// #include <fabulist/runtime/runtime.hpp>
+// #include <fabulist/runtime/state.hpp>
+// #include <fabulist/runtime/story.hpp>
+// #include <fabulist/runtime/version.hpp>
 
 // libpng
 #include <png.h>

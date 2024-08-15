@@ -10,9 +10,9 @@
 #include <filesystem>
 #include <fstream>
 #include <memory>
-#include <nlohmann/json.hpp>
 #include <uuid.h>
 #include <vector>
+#include <map>
 
 /**
  * @brief The APIs for managing assets and other resources that reside in persisted storage.

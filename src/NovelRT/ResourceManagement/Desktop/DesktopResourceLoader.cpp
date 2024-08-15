@@ -4,6 +4,7 @@
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <iostream>
 #include <samplerate.h>
+#include <nlohmann/json.hpp>
 
 namespace NovelRT::ResourceManagement::Desktop
 {

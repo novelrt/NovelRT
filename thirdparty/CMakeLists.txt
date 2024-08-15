@@ -17,10 +17,10 @@ macro(thirdparty_module name)
 endmacro()
 
 # N.B. Names here must match xConfig.cmake as produced by installation
-thirdparty_module(Fabulist
-  URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
-  URL_HASH SHA512=876f781279ecc55a309a7b5a9bae29017f6817893f81f5b943d317aa9f0ec626b264d8cf10c65189722ed612275fc849aa94c1c7553979334f960c2de23a78d9
-)
+# thirdparty_module(Fabulist
+#   URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
+#   URL_HASH SHA512=876f781279ecc55a309a7b5a9bae29017f6817893f81f5b943d317aa9f0ec626b264d8cf10c65189722ed612275fc849aa94c1c7553979334f960c2de23a78d9
+# )
 thirdparty_module(FLAC
   URL https://github.com/xiph/flac/releases/download/1.3.4/flac-1.3.4.tar.xz
   URL_HASH SHA256=8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737
@@ -112,7 +112,7 @@ thirdparty_module(ZLIB
 # N.B. Order matters here, for dependency searching!
 foreach(module
   nlohmann_json
-  Fabulist
+  # Fabulist
   glfw3
   glm
   GSL
