@@ -23,6 +23,10 @@ project(NovelRT
 include(CheckPIESupported)
 check_pie_supported()
 
+if (CMAKE_SIZEOF_VOID_P LESS_EQUAL 4)
+  message(FATAL_ERROR "NovelRT does not support 32-bit architectures at this time. Exiting...")
+endif()
+
 #
 # Set the proper backend target for NovelRT
 #
