@@ -104,8 +104,8 @@ thirdparty_module(VulkanMemoryAllocator
   URL_HASH SHA512=e9eeed2f5cc1130613b9440bf375e5574b58e800f4615cc771176644951eadc9e49cff91c5d303e63831fbdc76f354d2ad9a9da11826588ede76a7252c7a636a
 )
 thirdparty_module(ZLIB
-  URL https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.0.6.tar.gz
-  URL_HASH SHA512=4888f17160d0a87a9b349704047ae0d0dc57237a10e11adae09ace957afa9743cce5191db67cb082991421fc961ce68011199621034d2369c0e7724fad58b4c5
+  URL https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.2.1.tar.gz
+  URL_HASH SHA512=6374a673852935468f23a74ce56db6afb27af3923fab2a0ba182a7a95acea93ff2c979612db6cd355d8bd1a44ebb0779900be78bdd05a89374b339d29339647c
   OVERRIDE_FIND_PACKAGE
 )
 
