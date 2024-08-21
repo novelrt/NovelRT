@@ -13,6 +13,8 @@ target_sources(NovelRT-Audio
     FILES
     include/NovelRT/Audio/AudioMixer.hpp
     include/NovelRT/Audio/IAudioProvider.hpp
+    include/NovelRT/Audio/AudioSourceContext.hpp
+    include/NovelRT/Audio/AudioSourceState.hpp
 )
 
 target_sources(NovelRT-Audio
