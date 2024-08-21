@@ -29,20 +29,21 @@ if(NOT TARGET ZLIB::zlib)
 endif()
 
 
-set(ZLIB_PUB_HDRS
-  ${zlib_BINARY_DIR}/zlib.h
-  ${zlib_BINARY_DIR}/zlib_name_mangling.h
-  ${zlib_BINARY_DIR}/zconf.h
+install(FILES 
+    ${zlib_BINARY_DIR}/zlib.h
+    ${zlib_BINARY_DIR}/zlib_name_mangling.h
+    ${zlib_BINARY_DIR}/zconf.h
+  DESTINATION "include"
 )
-set_target_properties(zlib PROPERTIES PUBLIC_HEADER "${ZLIB_PUB_HDRS}")
+
 
 install(
   TARGETS zlib
   EXPORT ZLIB
-  PUBLIC_HEADER DESTINATION "include"
   RUNTIME DESTINATION "bin"
   ARCHIVE DESTINATION "lib"
   LIBRARY DESTINATION "lib"
+  INCLUDES DESTINATION "include"
 )
 install(
   EXPORT ZLIB
@@ -50,12 +51,6 @@ install(
   DESTINATION "lib/cmake/ZLIB"
 )
 
-
-# install(FILES 
-#     ${zlib_BINARY_DIR}/zlib.h
-#     ${zlib_BINARY_DIR}/zlib_name_mangling.h
-#     ${zlib_BINARY_DIR}/zconf.h
-#   DESTINATION "include")
 
 install(FILES 
     ${zlib_BINARY_DIR}/zlib.pc
@@ -74,5 +69,19 @@ install(FILES ${zlib_BINARY_DIR}/zlib-config.cmake
               ${zlib_BINARY_DIR}/zlib-config-version.cmake
     DESTINATION lib/cmake/ZLIB)
 
+# Problem #2 - zlib-ng (and regular zlib) both love to add
+# absolute references to the install path as an Interface
+# Include directory, causing NovelRT to fall over when
+# included unless it's installed in Program Files :)
+# Have to patch this at install time, unfortunately.
+install(CODE "
+  message(STATUS \"Patching zlib.cmake at: \${CMAKE_INSTALL_PREFIX}/lib/cmake/ZLIB/zlib.cmake\")
+  file(STRINGS \${CMAKE_INSTALL_PREFIX}/lib/cmake/ZLIB/ZLIB.cmake LINES)
+  file(WRITE \${CMAKE_INSTALL_PREFIX}/lib/cmake/ZLIB/zlib.cmake \"\")
+  foreach(LINE IN LISTS LINES)
+    string(REGEX REPLACE \"\\\"+.*;+\\\\\\\${_IMPORT_PREFIX}/include\\\"\" \"\\\"\\\${_IMPORT_PREFIX}/include\\\"\" REPLACED \"\${LINE}\")
+    file(APPEND \${CMAKE_INSTALL_PREFIX}/lib/cmake/ZLIB/zlib.cmake \"\${REPLACED}\n\")
+  endforeach()
+")
 
 
