@@ -7,7 +7,6 @@ set(SOURCES
   Ecs/ComponentBufferTest.cpp
   Ecs/ComponentCacheTest.cpp
   Ecs/ComponentViewTest.cpp
-  Ecs/ConfiguratorTest.cpp
   Ecs/EntityCacheTest.cpp
   Ecs/EntityGraphViewTest.cpp
   Ecs/LinkedEntityListViewTest.cpp

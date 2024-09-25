@@ -11,7 +11,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsResource;
 
-    class VulkanGraphicsResourceMemoryRegionBase
+    class VulkanGraphicsResourceMemoryRegionBase : public std::enable_shared_from_this<VulkanGraphicsResourceMemoryRegionBase>
     {
     private:
         std::shared_ptr<VulkanGraphicsDevice> _device;
@@ -41,14 +41,14 @@ namespace NovelRT::Graphics::Vulkan
     };
 
     template<typename TResource>
-    class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegionBase, public GraphicsResourceMemoryRegion<TResource>
+    class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegionBase
     {
         VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                          std::shared_ptr<VulkanGraphicsResource> owningResource)
-            : VulkanGraphicsResourceMemoryRegionBase(GraphicsDevice, owningResource)
+            : VulkanGraphicsResourceMemoryRegionBase(graphicsDevice, owningResource)
         {
         }
 
-        ~GraphicsResourceMemoryRegion() = default;
+        ~VulkanGraphicsResourceMemoryRegion() = default;
     };
 }

@@ -68,7 +68,7 @@ namespace NovelRT::Graphics::Vulkan
             std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
             int32_t contextCount);
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const noexcept
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const 
         {
             if (_provider.expired())
             {

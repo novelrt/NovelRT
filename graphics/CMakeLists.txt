@@ -79,7 +79,6 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsPluginProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp

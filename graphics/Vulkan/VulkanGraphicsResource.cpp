@@ -33,11 +33,14 @@ namespace NovelRT::Graphics::Vulkan
                                                    GraphicsResourceAccess cpuAccess,
                                                    VmaAllocation allocation,
                                                    VmaAllocationInfo allocationInfo)
-        : GraphicsResource(graphicsDevice, allocator, cpuAccess),
+        : _allocator(allocator),
+          _graphicsDevice(graphicsDevice),
           _allocation(allocation),
           _allocationInfo(allocationInfo),
           _virtualBlock(VK_NULL_HANDLE)
     {
+        unused(cpuAccess);
+
         VmaVirtualBlockCreateInfo createInfo{};
         createInfo.size = GetSize();
 
@@ -52,12 +55,12 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsResource::GetAllocator() const noexcept
     {
-        return std::reinterpret_pointer_cast<VulkanGraphicsMemoryAllocator>(GraphicsResource::GetAllocator());
+        return _allocator;
     }
 
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsResource::GetDevice() const noexcept
     {
-        return std::reinterpret_pointer_cast<VulkanGraphicsDevice>(GraphicsResource::GetDevice());
+        return _graphicsDevice;
     }
 
     size_t VulkanGraphicsResource::GetDeviceMemoryOffset() const noexcept
@@ -70,9 +73,10 @@ namespace NovelRT::Graphics::Vulkan
         return _allocationInfo.size;
     }
 
-    std::shared_ptr<GraphicsResourceMemoryRegionBase> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
     {
-        return VulkanAllocate(size, alignment);
+        auto [allocation, offset] = GetVirtualAllocation(size, alignment);
+        return AllocateInternal(allocation, offset);
     }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept
@@ -88,12 +92,6 @@ namespace NovelRT::Graphics::Vulkan
     VmaVirtualBlock VulkanGraphicsResource::GetVirtualBlock() const noexcept
     {
         return _virtualBlock;
-    }
-
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsResource::VulkanAllocate(size_t size, size_t alignment)
-    {
-        auto [allocation, offset] = GetVirtualAllocation(size, alignment);
-        return VulkanAllocateInternal(allocation, offset);
     }
 }
 

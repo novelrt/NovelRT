@@ -1,24 +1,23 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <set>
+#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
-#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
+#include <set>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    VulkanGraphicsDevice::VulkanGraphicsDevice(const std::shared_ptr<VulkanGraphicsAdapter>& adapter,
-                                               const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
+    VulkanGraphicsDevice::VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
+                                               std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
                                                int32_t contextCount)
-        : GraphicsDevice(adapter, std::static_pointer_cast<GraphicsSurfaceContext>(surfaceContext)),
-          _presentCompletionFence([&]() {
-              return std::make_shared<VulkanGraphicsFence>(
-                  std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), /* isSignaled*/ false);
-          }),
+        : _adapter(adapter),
+          _surfaceContext(surfaceContext),
+          _presentCompletionFence(
+              [&]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
           _contextCount(contextCount),
           _contexts([&]() { return CreateGraphicsContexts(_contextCount); }),
           _contextPtrs([&]() { return CreateGraphicsContextPointers(); }),
@@ -38,19 +37,19 @@ namespace NovelRT::Graphics::Vulkan
           _state()
     {
         _logger.logInfoLine("Provided GPU device: " + GetAdapter()->GetName());
-        static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+        unused(_state.Transition(Threading::VolatileState::Initialised));
         auto countFfs = GetSurface()->SizeChanged.getHandlerCount();
         unused(countFfs);
     }
 
-    std::vector<std::shared_ptr<GraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContextPointers()
+    std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateGraphicsContextPointers()
     {
-        std::vector<std::shared_ptr<GraphicsContext>> ptrs{};
+        std::vector<std::shared_ptr<VulkanGraphicsContext>> ptrs{};
         ptrs.reserve(_contexts.getActual().size());
 
         for (auto&& context : _contexts.getActual())
         {
-            ptrs.emplace_back(std::dynamic_pointer_cast<VulkanGraphicsContext>(context->shared_from_this()));
+            ptrs.emplace_back(context->shared_from_this());
         }
 
         return ptrs;
@@ -63,8 +62,7 @@ namespace NovelRT::Graphics::Vulkan
 
         for (uint32_t i = 0; i < contextCount; i++)
         {
-            contexts[i] = std::make_shared<VulkanGraphicsContext>(
-                std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
+            contexts[i] = std::make_shared<VulkanGraphicsContext>(shared_from_this(), i);
         }
 
         return contexts;
@@ -89,9 +87,9 @@ namespace NovelRT::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -104,9 +102,9 @@ namespace NovelRT::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanPhysicalDeviceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -380,14 +378,12 @@ namespace NovelRT::Graphics::Vulkan
         _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
     }
 
-    std::shared_ptr<ShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(
+    std::shared_ptr<VulkanShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(
         std::string entryPointName,
         ShaderProgramKind kind,
         NovelRT::Utilities::Misc::Span<uint8_t> byteData)
     {
-        return std::shared_ptr<ShaderProgram>(
-            new VulkanShaderProgram(std::static_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),
-                                    std::move(entryPointName), kind, byteData));
+        return std::make_shared<VulkanShaderProgram>(shared_from_this(), std::move(entryPointName), kind, byteData);
     }
 
     VulkanGraphicsDevice::~VulkanGraphicsDevice()
@@ -395,27 +391,22 @@ namespace NovelRT::Graphics::Vulkan
         TearDown();
     }
 
-    std::shared_ptr<GraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
-        std::shared_ptr<GraphicsPipelineSignature> signature,
-        std::shared_ptr<ShaderProgram> vertexShader,
-        std::shared_ptr<ShaderProgram> pixelShader)
+    std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
+        std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
+        std::shared_ptr<VulkanShaderProgram> vertexShader,
+        std::shared_ptr<VulkanShaderProgram> pixelShader)
     {
-        return std::static_pointer_cast<GraphicsPipeline>(std::make_shared<VulkanGraphicsPipeline>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()),
-            std::dynamic_pointer_cast<VulkanGraphicsPipelineSignature>(signature),
-            std::dynamic_pointer_cast<VulkanShaderProgram>(vertexShader),
-            std::dynamic_pointer_cast<VulkanShaderProgram>(pixelShader)));
+        return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader);
     }
 
-    std::shared_ptr<GraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
+    std::shared_ptr<VulkanGraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
         NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
         NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources)
     {
-        return std::static_pointer_cast<GraphicsPipelineSignature>(std::make_shared<VulkanGraphicsPipelineSignature>(
-            std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), srcBlendFactor, dstBlendFactor, inputs,
-            resources));
+        return std::make_shared<VulkanGraphicsPipelineSignature>(shared_from_this(), srcBlendFactor, dstBlendFactor,
+                                                                 inputs, resources);
     }
 
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()
@@ -504,9 +495,14 @@ namespace NovelRT::Graphics::Vulkan
         _contextIndex = contextIndex;
     }
 
-    void VulkanGraphicsDevice::Signal(std::shared_ptr<GraphicsFence> fence)
+    void VulkanGraphicsDevice::Signal(std::shared_ptr<VulkanGraphicsFence> fence) const
     {
-        SignalVulkan(std::dynamic_pointer_cast<VulkanGraphicsFence>(fence));
+        VkResult result = vkQueueSubmit(GetVulkanGraphicsQueue(), 0, nullptr, fence->GetVulkanFence());
+
+        if (result != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to signal VkQueue PresentQueue! Reason: " + std::to_string(result));
+        }
     }
 
     void VulkanGraphicsDevice::WaitForIdle()
@@ -522,17 +518,22 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext()
     {
-        return std::dynamic_pointer_cast<VulkanGraphicsContext>(GetContexts()[GetContextIndex()]);
+        return GetContexts()[GetContextIndex()];
     }
 
     std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const noexcept
     {
-        return std::dynamic_pointer_cast<VulkanGraphicsAdapter>(GraphicsDevice::GetAdapter());
+        return _adapter;
     }
 
     std::shared_ptr<VulkanGraphicsSurfaceContext> VulkanGraphicsDevice::GetSurfaceContext() const noexcept
     {
-        return std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(GraphicsDevice::GetSurfaceContext());
+        return _surfaceContext;
+    }
+
+    std::shared_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
+    {
+        return _surfaceContext->GetSurface();
     }
 
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)
@@ -558,16 +559,6 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    void VulkanGraphicsDevice::SignalVulkan(const std::shared_ptr<VulkanGraphicsFence>& fence) const
-    {
-        VkResult result = vkQueueSubmit(GetVulkanGraphicsQueue(), 0, nullptr, fence->GetVulkanFence());
-
-        if (result != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to signal VkQueue PresentQueue! Reason: " + std::to_string(result));
-        }
-    }
-
     void VulkanGraphicsDevice::ResizeGraphicsContexts(uint32_t newContextCount)
     {
         _contextCount = newContextCount;
@@ -582,8 +573,7 @@ namespace NovelRT::Graphics::Vulkan
 
         for (size_t i = oldSize; i < newContextCount; i++)
         {
-            contexts[i] = std::make_shared<VulkanGraphicsContext>(
-                std::dynamic_pointer_cast<VulkanGraphicsDevice>(shared_from_this()), i);
+            contexts[i] = std::make_shared<VulkanGraphicsContext>(shared_from_this(), i);
         }
 
         _contextPtrs.reset();

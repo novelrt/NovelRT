@@ -7,6 +7,8 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsPipeline : public GraphicsDeviceObject<TBackend>
     {
     private:
@@ -15,10 +17,10 @@ namespace NovelRT::Graphics
         std::shared_ptr<ShaderProgram<TBackend>> _pixelShader;
 
     public:
-        GraphicsPipeline(std::shared_ptr<GraphicsDevice> device,
-                                           std::shared_ptr<GraphicsPipelineSignature> signature,
-                                           std::shared_ptr<ShaderProgram> vertexShader,
-                                           std::shared_ptr<ShaderProgram> pixelShader) noexcept
+        GraphicsPipeline(std::shared_ptr<GraphicsDevice<TBackend>> device,
+                                           std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
+                                           std::shared_ptr<ShaderProgram<TBackend>> vertexShader,
+                                           std::shared_ptr<ShaderProgram<TBackend>> pixelShader) noexcept
             : GraphicsDeviceObject(device),
               _signature(signature),
               _vertexShader(vertexShader),
@@ -38,17 +40,17 @@ namespace NovelRT::Graphics
             return _pixelShader != nullptr;
         }
 
-        std::shared_ptr<ShaderProgram> GetVertexShader() const noexcept
+        std::shared_ptr<ShaderProgram<TBackend>> GetVertexShader() const noexcept
         {
             return _vertexShader;
         }
 
-        std::shared_ptr<ShaderProgram> GetPixelShader() const noexcept
+        std::shared_ptr<ShaderProgram<TBackend>> GetPixelShader() const noexcept
         {
             return _pixelShader;
         }
 
-        std::shared_ptr<GraphicsPipelineSignature> GetSignature() const noexcept
+        std::shared_ptr<GraphicsPipelineSignature<TBackend>> GetSignature() const noexcept
         {
             return _signature;
         }

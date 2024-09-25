@@ -271,7 +271,7 @@ namespace NovelRT::Graphics::Vulkan
         return returnInstance;
     }
 
-    std::vector<std::shared_ptr<GraphicsAdapter>> VulkanGraphicsProvider::GetGraphicsAdapters()
+    std::vector<std::shared_ptr<VulkanGraphicsAdapter>> VulkanGraphicsProvider::GetGraphicsAdapters()
     {
         VkInstance instance = GetVulkanInstance();
 
@@ -291,13 +291,12 @@ namespace NovelRT::Graphics::Vulkan
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-        std::vector<std::shared_ptr<GraphicsAdapter>> adapters{};
+        std::vector<std::shared_ptr<VulkanGraphicsAdapter>> adapters{};
         adapters.reserve(devices.size());
 
         for (auto&& physicalDevice : devices)
         {
-            adapters.emplace_back(std::make_shared<VulkanGraphicsAdapter>(
-                std::dynamic_pointer_cast<VulkanGraphicsProvider>(shared_from_this()), physicalDevice));
+            adapters.emplace_back(std::make_shared<VulkanGraphicsAdapter>(shared_from_this(), physicalDevice));
         }
 
         return adapters;
@@ -311,7 +310,8 @@ namespace NovelRT::Graphics::Vulkan
           _engineName(EngineConfig::EngineName()),
           _state(Threading::VolatileState()),
           _debugLogger(VK_NULL_HANDLE),
-          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX))
+          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
+          _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
     {
         if (GetDebugModeEnabled())
         {
@@ -345,12 +345,17 @@ namespace NovelRT::Graphics::Vulkan
         return VK_API_VERSION_1_2;
     }
 
-    std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept
+    bool VulkanGraphicsProvider::GetDebugModeEnabled() const noexcept
+    {
+        return _debugModeEnabled;
+    }
+
+    std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept
     {
         return _adapters.getActual().begin();
     }
 
-    std::vector<std::shared_ptr<GraphicsAdapter>>::iterator VulkanGraphicsProvider::end() noexcept
+    std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator VulkanGraphicsProvider::end() noexcept
     {
         return _adapters.getActual().end();
     }

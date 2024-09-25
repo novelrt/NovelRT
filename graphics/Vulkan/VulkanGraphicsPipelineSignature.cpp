@@ -289,7 +289,7 @@ namespace NovelRT::Graphics::Vulkan
           _dstBlendFactor(dstBlendFactor),
           _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
           _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end())),
-              _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
+          _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
           _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); }),
           _vulkanPipelineLayout([&]() { return CreatePipelineLayout(); })
     {

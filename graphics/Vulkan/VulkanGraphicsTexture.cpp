@@ -108,12 +108,19 @@ namespace NovelRT::Graphics::Vulkan
                                                  size_t subAllocations,
                                                  VkImage vulkanImage)
         : VulkanGraphicsResource(device, allocator, cpuAccess, allocation, allocationInfo),
-          GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
+          //GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
           _vulkanImage(vulkanImage),
           _subAllocations(0),
+          _addressMode(addressMode),
+          _kind(kind),
           _vulkanImageView([&]() { return CreateVulkanImageView(); }),
           _vulkanSampler([&]() { return CreateVulkanSampler(); })
     {
+        // TODO: make sure to implement APIs for these
+        unused(width); unused(height); unused(depth);
+
+        // TODO: Still need this?
+        unused(subAllocations);
     }
 
     VulkanGraphicsTexture::~VulkanGraphicsTexture() noexcept
@@ -137,6 +144,16 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         vmaDestroyImage(allocator, GetVulkanImage(), allocation);
+    }
+
+    GraphicsTextureAddressMode VulkanGraphicsTexture::GetAddressMode() const noexcept
+    {
+        return _addressMode;
+    }
+
+    GraphicsTextureKind VulkanGraphicsTexture::GetKind() const noexcept
+    {
+        return _kind;
     }
 
     NovelRT::Utilities::Misc::Span<uint8_t> VulkanGraphicsTexture::MapBytes(size_t rangeOffset, size_t rangeLength)

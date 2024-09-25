@@ -27,10 +27,12 @@ namespace NovelRT::Graphics
         float maxDepth;
     };
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsCmdList : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendCmdListType = TBackend::CmdListType;
+        using BackendCmdListType = GraphicsBackendTraits<TBackend>::CmdListType;
 
     private:
         std::shared_ptr<BackendCmdListType> _implementation;

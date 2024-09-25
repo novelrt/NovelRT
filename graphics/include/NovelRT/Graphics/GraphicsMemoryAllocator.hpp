@@ -7,6 +7,10 @@
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <cstdint>
 #include <memory>
+#include <NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp>
+#include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
+#include <NovelRT/Graphics/GraphicsTextureKind.hpp>
+#include <NovelRT/Graphics/TexelFormat.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -18,19 +22,21 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsTexture;
     struct GraphicsTextureCreateInfo;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsMemoryAllocator : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendMemoryAllocatorType = TBackend::MemoryAllocator;
+        using BackendMemoryAllocatorType = typename GraphicsBackendTraits<TBackend>::MemoryAllocator;
 
     private:
         std::shared_ptr<BackendMemoryAllocatorType> _implementation;
-        std::shared_ptr<GraphicsProvider> _provider;
+        std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
         GraphicsMemoryAllocator(std::shared_ptr<BackendMemoryAllocatorType> implementation,
-                                std::shared_ptr<GraphicsDevice> device,
-                                std::shared_ptr<GraphicsProvider> provider)
+                                std::shared_ptr<GraphicsDevice<TBackend>> device,
+                                std::shared_ptr<GraphicsProvider<TBackend>> provider)
             : GraphicsDeviceObject(device), _implementation(implementation), _provider(provider)
         {
         }

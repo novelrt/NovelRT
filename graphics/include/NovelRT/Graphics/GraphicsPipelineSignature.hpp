@@ -11,10 +11,12 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsDescriptorSet;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsPipelineSignature : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendPipelineSignatureType = TBackend::PipelineSignatureType;
+        using BackendPipelineSignatureType = typename GraphicsBackendTraits<TBackend>::PipelineSignatureType;
 
     private:
         std::shared_ptr<BackendPipelineSignatureType> _implementation;
@@ -41,42 +43,32 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsPipelineSignature() = default;
         
-        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
+        [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
         {
             return _srcBlendFactor;
         }
 
-        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetDstBlendFactor() const noexcept
+        [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept
         {
             return _dstBlendFactor;
         }
+
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet()
+        {
+            return _implementation->CreateDescriptorSet();
+        }
         
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GraphicsPipelineSignature::GetInputs()
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs()
             const noexcept
         {
             return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GraphicsPipelineSignature::GetResources()
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources()
             const noexcept
         {
             return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
                                                                                   _resources.size());
-        }
-
-        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
-        {
-            return _srcBlendFactor;
-        }
-
-        [[nodiscard]] inline GraphicsPipelineBlendFactor GraphicsPipelineSignature::GetDstBlendFactor() const noexcept
-        {
-            return _dstBlendFactor;
-        }
-
-        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet> CreateDescriptorSet()
-        {
-            return _implementation->CreateDescriptorSet();
         }
     };
 }

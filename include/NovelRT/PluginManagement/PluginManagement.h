@@ -17,6 +17,7 @@ namespace NovelRT::PluginManagement
 {
     class DefaultPluginSelector;
     class IResourceManagementPluginProvider;
+    template<typename TBackend>
     class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
     class IInputPluginProvider;

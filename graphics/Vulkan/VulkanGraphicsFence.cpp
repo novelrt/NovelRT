@@ -64,7 +64,7 @@ namespace NovelRT::Graphics::Vulkan
           _vulkanFence([=]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); }),
           _state()
     {
-        static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+        unused(_state.Transition(Threading::VolatileState::Initialised));
     }
 
     bool VulkanGraphicsFence::GetIsSignalled()

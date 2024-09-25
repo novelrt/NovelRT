@@ -8,10 +8,12 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsContext : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendContextType = TBackend::ContextType;
+        using BackendContextType = typename GraphicsBackendTraits<TBackend>::ContextType;
 
     private:
         std::shared_ptr<BackendContextType> _implementation;
