@@ -33,6 +33,7 @@ namespace NovelRT::Graphics::Vulkan
 
     public:
         VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept;
+        ~VulkanGraphicsFence();
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {
@@ -65,6 +66,11 @@ namespace NovelRT::Graphics::Vulkan
             {
                 throw Exceptions::TimeoutException(timeout.count());
             }
+        }
+
+        inline void Wait()
+        {
+            Wait(std::numeric_limits<uint64_t>::max());
         }
     };
 }

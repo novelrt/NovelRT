@@ -10,11 +10,13 @@ namespace NovelRT::Graphics
 {
     template<typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsBuffer : public GraphicsResource<TBackend>
     {
     public:
-        using BackendBufferType = TBackend::BufferType;
-        using BackendResourceMemoryRegionType = TBackend::ResourceMemoryRegionType;
+        using BackendBufferType = typename GraphicsBackendTraits<TBackend>::BufferType;
+        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::ResourceMemoryRegionType;
 
     private:
         GraphicsBufferKind _kind;
@@ -32,7 +34,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer<TBackend>, TBackend>> Allocate(size_t size, size_t alignment)
         {
-            return _implementation->Allocate(size, alignment);
+            return GraphicsResource<TBackend>::_implementation->Allocate(size, alignment);
         }
 
         [[nodiscard]] GraphicsBufferKind GetKind() const noexcept

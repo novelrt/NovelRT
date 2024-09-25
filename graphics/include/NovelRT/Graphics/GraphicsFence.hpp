@@ -7,16 +7,18 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsFence : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendFenceType = TBackend::FenceType;
+        using BackendFenceType = typename GraphicsBackendTraits<TBackend>::FenceType;
 
     private:
         std::shared_ptr<BackendFenceType> _implementation;
 
     public:
-        GraphicsFence(std::shared_ptr<BackendFenceType> implementation, std::shared_ptr<GraphicsDevice> device) noexcept
+        GraphicsFence(std::shared_ptr<BackendFenceType> implementation, std::shared_ptr<GraphicsDevice<TBackend>> device) noexcept
             : GraphicsDeviceObject(device)
         {
         }
@@ -51,22 +53,6 @@ namespace NovelRT::Graphics
         inline void Wait()
         {
             Wait(std::numeric_limits<uint64_t>::max());
-        }
-
-        inline void Wait(uint64_t millisecondsTimeout)
-        {
-            if (!TryWait(millisecondsTimeout))
-            {
-                throw Exceptions::TimeoutException(millisecondsTimeout);
-            }
-        }
-
-        inline void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
-        {
-            if (!TryWait(timeout))
-            {
-                throw Exceptions::TimeoutException(timeout.count());
-            }
         }
     };
 }

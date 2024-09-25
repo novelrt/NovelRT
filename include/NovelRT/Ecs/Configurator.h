@@ -4,15 +4,12 @@
 #ifndef NOVELRT_ECS_CONFIGURATOR_H
 #define NOVELRT_ECS_CONFIGURATOR_H
 
-#ifndef NOVELRT_ECS_H
-#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
-#endif
-
 namespace NovelRT::Ecs
 {
     /**
      * @brief A convenience type to help with the creation of an ECS instance.
      */
+    template <typename TGraphicsBackend>
     class Configurator
     {
     private:
@@ -20,7 +17,7 @@ namespace NovelRT::Ecs
         std::optional<uint32_t> _threadCount;
         std::vector<std::function<void(Timing::Timestamp, Catalogue)>> _systems;
         std::vector<std::shared_ptr<IEcsSystem>> _iecsSystems;
-        std::shared_ptr<PluginManagement::IGraphicsPluginProvider> _graphicsPluginProvider;
+        std::shared_ptr<PluginManagement::IGraphicsPluginProvider<TGraphicsBackend>> _graphicsPluginProvider;
         std::shared_ptr<PluginManagement::IWindowingPluginProvider> _windowingPluginProvider;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagementPluginProvider;
         std::shared_ptr<PluginManagement::IInputPluginProvider> _inputPluginProvider;
@@ -140,25 +137,9 @@ namespace NovelRT::Ecs
          * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
-        template<typename TPluginProvider>
-        [[nodiscard]] Configurator& WithPluginProvider(std::shared_ptr<TPluginProvider> /*pluginInstance*/)
-        {
-            throw Exceptions::NotSupportedException(
-                "This plugin provider type is invalid or not supported at this time.");
-        }
-
-        /**
-         * @brief Specifies a plugin provider object to use for creating the default systems.
-         *
-         * @tparam TPluginProvider The type of PluginProvider interface this provider implements.
-         * @return A reference to this to allow method chaining.
-         *
-         * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
-         * by default systems.
-         */
-        template<>
-        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IGraphicsPluginProvider>(
-            std::shared_ptr<PluginManagement::IGraphicsPluginProvider> pluginInstance)
+        template <typename TNewGraphicsBackend>
+        [[nodiscard]] Configurator<TNewGraphicsBackend> WithPluginProvider(
+            std::shared_ptr<PluginManagement::IGraphicsPluginProvider<TNewGraphicsBackend>> pluginInstance)
         {
             _graphicsPluginProvider = std::move(pluginInstance);
             return *this;
@@ -173,8 +154,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
-        template<>
-        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IWindowingPluginProvider>(
+        [[nodiscard]] Configurator& WithPluginProvider(
             std::shared_ptr<PluginManagement::IWindowingPluginProvider> pluginInstance)
         {
             _windowingPluginProvider = std::move(pluginInstance);
@@ -190,8 +170,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
-        template<>
-        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IResourceManagementPluginProvider>(
+        [[nodiscard]] Configurator& WithPluginProvider(
             std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> pluginInstance)
         {
             _resourceManagementPluginProvider = std::move(pluginInstance);
@@ -207,8 +186,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
-        template<>
-        [[nodiscard]] Configurator& WithPluginProvider<PluginManagement::IInputPluginProvider>(
+        [[nodiscard]] Configurator& WithPluginProvider(
             std::shared_ptr<PluginManagement::IInputPluginProvider> pluginInstance)
         {
             _inputPluginProvider = std::move(pluginInstance);
@@ -260,7 +238,7 @@ namespace NovelRT::Ecs
          *
          * @returns An instance of the ECS SystemScheduler based on the provided configuration.
          */
-        template<>[[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
+        [[nodiscard]] SystemScheduler InitialiseAndRegisterComponents()
         {
             SystemScheduler scheduler(_threadCount.value_or(0));
 

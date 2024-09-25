@@ -11,10 +11,12 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsAdapter;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsProvider : public std::enable_shared_from_this<GraphicsProvider<TBackend>>
     {
     public:
-        using BackendProviderType = TBackend::ProviderType;
+        using BackendProviderType = typename GraphicsBackendTraits<TBackend>::ProviderType;
 
     private:
         std::shared_ptr<BackendProviderType> _implementation;
@@ -36,12 +38,12 @@ namespace NovelRT::Graphics
             return _debugModeEnabled;
         }
 
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsAdapter<TBackend>>>::iterator begin() noexcept
+        [[nodiscard]] typename std::vector<std::shared_ptr<GraphicsAdapter<TBackend>>>::iterator begin() noexcept
         {
             return _implementation->begin();
         }
 
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsAdapter<TBackend>>>::iterator end() noexcept
+        [[nodiscard]] typename std::vector<std::shared_ptr<GraphicsAdapter<TBackend>>>::iterator end() noexcept
         {
             return _implementation->end();
         }

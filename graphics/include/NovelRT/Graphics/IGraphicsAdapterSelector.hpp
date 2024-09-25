@@ -11,10 +11,12 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsProvider;
     template<typename TBackend> class GraphicsSurfaceContext;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class IGraphicsAdapterSelector
     {
     public:
-        using BackendAdapterSelectorType = TBackend::AdapterSelectorType;
+        using BackendAdapterSelectorType = typename GraphicsBackendTraits<TBackend>::AdapterSelectorType;
 
     private:
         std::shared_ptr<BackendAdapterSelectorType> _implementation;
@@ -25,7 +27,7 @@ namespace NovelRT::Graphics
             std::shared_ptr<GraphicsProvider<TBackend>> provider,
             std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext) const
         {
-            return _implementation->GetDefaultRecommendedAdapter(provider, surfaceContext)
+            return _implementation->GetDefaultRecommendedAdapter(provider, surfaceContext);
         }
     };
 }

@@ -281,7 +281,7 @@ namespace NovelRT::Graphics::Vulkan
 
     void VulkanGraphicsContext::BeginFrame()
     {
-        std::shared_ptr<VulkanGraphicsFence> fence = GetVulkanFence();
+        std::shared_ptr<VulkanGraphicsFence> fence = GetFence();
         fence->Wait();
         fence->Reset();
 

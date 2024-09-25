@@ -16,7 +16,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipelineSignature;
     class VulkanGraphicsDevice;
 
-    class VulkanGraphicsContext
+    class VulkanGraphicsContext : public std::enable_shared_from_this<VulkanGraphicsContext>
     {
     private:
         std::shared_ptr<VulkanGraphicsDevice> _device;
@@ -54,6 +54,11 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {
             return _device;
+        }
+
+        [[nodiscard]] inline size_t GetIndex() const noexcept
+        {
+            return _index;
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetFence() const noexcept

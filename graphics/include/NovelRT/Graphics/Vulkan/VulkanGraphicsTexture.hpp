@@ -17,6 +17,8 @@ namespace NovelRT::Graphics::Vulkan
     private:
         VkImage _vulkanImage;
         size_t _subAllocations;
+        GraphicsTextureAddressMode _addressMode;
+        GraphicsTextureKind _kind;
 
         NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
         NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
@@ -38,7 +40,10 @@ namespace NovelRT::Graphics::Vulkan
                               size_t subAllocations,
                               VkImage vulkanImage);
 
-        ~VulkanGraphicsTexture() noexcept final;
+        ~VulkanGraphicsTexture() noexcept;
+
+        [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
+        [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength);
 

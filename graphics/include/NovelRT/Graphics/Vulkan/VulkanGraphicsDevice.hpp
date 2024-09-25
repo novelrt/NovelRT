@@ -20,9 +20,11 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipeline;
     class VulkanGraphicsPipelineSignature;
 
-    class VulkanGraphicsDevice
+    class VulkanGraphicsDevice : public std::enable_shared_from_this<VulkanGraphicsDevice>
     {
     private:
+        std::shared_ptr<VulkanGraphicsAdapter> _adapter;
+        std::shared_ptr<VulkanGraphicsSurfaceContext> _surfaceContext;
         NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
         uint32_t _contextCount;
         NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
@@ -71,8 +73,8 @@ namespace NovelRT::Graphics::Vulkan
         VkRenderPass CreateRenderPass();
 
     public:
-        VulkanGraphicsDevice(const std::shared_ptr<VulkanGraphicsAdapter>& adapter,
-                             const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
+        VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
+                             std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
                              int32_t contextCount);
 
         void TearDown();
@@ -80,8 +82,7 @@ namespace NovelRT::Graphics::Vulkan
 
         void PresentFrame();
 
-        void Signal(std::shared_ptr<VulkanGraphicsFence> fence);
-        void SignalVulkan(const std::shared_ptr<VulkanGraphicsFence>& fence) const;
+        void Signal(std::shared_ptr<VulkanGraphicsFence> fence) const;
 
         void WaitForIdle();
 
@@ -92,10 +93,11 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext();
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;
+
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept;
-
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanShaderProgram> CreateShaderProgram(
             std::string entryPointName,

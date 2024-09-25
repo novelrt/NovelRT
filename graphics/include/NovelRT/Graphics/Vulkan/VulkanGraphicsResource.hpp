@@ -3,6 +3,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
 #include <vma/vk_mem_alloc.h>
 #include <tuple>
@@ -12,16 +13,18 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsMemoryAllocator;
 
-    class VulkanGraphicsResource
+    class VulkanGraphicsResource : public std::enable_shared_from_this<VulkanGraphicsResource>
     {
     private:
+        std::shared_ptr<VulkanGraphicsMemoryAllocator> _allocator;
+        std::shared_ptr<VulkanGraphicsDevice> _graphicsDevice;
         VmaAllocation _allocation;
         VmaAllocationInfo _allocationInfo;
         VmaVirtualBlock _virtualBlock;
         [[nodiscard]] std::tuple<VmaVirtualAllocation, VkDeviceSize> GetVirtualAllocation(size_t size, size_t alignment);
 
     protected:
-        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanAllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) = 0;
+        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) = 0;
 
     public:
         VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -45,7 +48,5 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] const VmaAllocationInfo& GetAllocationInfo() const noexcept;
 
         [[nodiscard]] VmaVirtualBlock GetVirtualBlock() const noexcept;
-
-        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanAllocate(size_t size, size_t alignment);
     };
 }

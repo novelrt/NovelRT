@@ -11,22 +11,4 @@
 
 
 namespace NovelRT::Graphics
-{
-    template<>
-    struct GraphicsBackendTraits<Vulkan::VulkanGraphicsBackend>
-    {
-        using ProviderType = Vulkan::VulkanGraphicsProvider;
-        using AdapterType = Vulkan::VulkanGraphicsAdapter;
-        using DeviceType = Vulkan::VulkanGraphicsDevice;
-        using SurfaceContextType = Vulkan::VulkanGraphicsSurfaceContext;
-        using ContextType = Vulkan::VulkanGraphicsSurfaceContext;
-        using ResourceType = Vulkan::VulkanGraphicsResource;
-
-        template<typename TResource>
-        using ResourceMemoryRegionType = Vulkan::VulkanGraphicsResourceMemoryRegion<TResource>;
-
-        using MemoryAllocatorType = Vulkan::VulkanGraphicsMemoryAllocator;
-        using BufferType = Vulkan::VulkanGraphicsBuffer;
-        using TextureType = Vulkan::VulkanGraphicsTexture;
-    };
-}
+{ }

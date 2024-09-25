@@ -11,6 +11,8 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsResource;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion : public GraphicsDeviceObject<TBackend>
     {
@@ -18,7 +20,7 @@ namespace NovelRT::Graphics
                       "Incompatible type specified as the resource type.");
 
     public:
-        using BackendResourceMemoryRegionType = TBackend::ResourceMemoryRegionType;
+        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::ResourceMemoryRegionType;
 
     private:
         std::shared_ptr<BackendResourceMemoryRegionType> _implementation;

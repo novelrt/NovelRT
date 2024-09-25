@@ -4,16 +4,17 @@
 #ifndef NOVELRT_PLUGINMANAGEMENT_TEMPORARYFNPTRS_H
 #define NOVELRT_PLUGINMANAGEMENT_TEMPORARYFNPTRS_H
 
-#ifndef NOVELRT_PLUGINMANAGEMENT_H
-#error NovelRT does not support including types explicitly by default. Please include PluginManagement.h instead for the PluginManagement namespace subset.
-#endif
+namespace NovelRT::Graphics::Vulkan
+{
+    struct VulkanGraphicsBackend;
+}
 
 /**
  * @brief This whole header is a hack. It won't be here post-MVP.
  */
 namespace NovelRT::PluginManagement
 {
-    [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider> GetVulkanPluginProvider() noexcept;
+    [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>> GetVulkanPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IWindowingPluginProvider> GetGlfwWindowPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IInputPluginProvider> GetGlfwInputPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IResourceManagementPluginProvider>

@@ -3,6 +3,8 @@
 
 #include <NovelRT/NovelRT.h>
 
+#include <NovelRT/Graphics/Vulkan/VulkansGraphicsBackendTraits.hpp>
+
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Input;
 using namespace NovelRT::PluginManagement;
@@ -116,9 +118,9 @@ int main()
         selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
 
     auto scheduler =
-        Configurator()
+        Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>()
             .WithDefaultSystemsAndComponents()
-            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>())
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>())
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(resourceManagementProvider)

@@ -4,6 +4,8 @@
 #include <NovelRT/NovelRT.h>
 #include <gtest/gtest.h>
 
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Timing;
 

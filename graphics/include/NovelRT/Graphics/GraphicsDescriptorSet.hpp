@@ -13,10 +13,12 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsPipeline;
     template<typename TBackend> class GraphicsTexture;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsDescriptorSet
     {
     public:
-        using BackendDescriptorSetType = TBackend::BackendDescriptorSetType;
+        using BackendDescriptorSetType = GraphicsBackendTraits<TBackend>::BackendDescriptorSetType;
 
     private:
         std::shared_ptr<BackendDescriptorSetType> _implementation;

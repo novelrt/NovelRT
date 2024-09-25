@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -10,7 +10,9 @@ namespace NovelRT::Graphics::Vulkan
                                              std::string entryPointName,
                                              ShaderProgramKind kind,
                                              NovelRT::Utilities::Misc::Span<uint8_t> bytecode) noexcept
-        : ShaderProgram(device, std::move(entryPointName), kind),
+        : _device(device),
+          _entryPointName(entryPointName),
+          _kind(kind),
           _shaderModule(NovelRT::Utilities::Lazy<VkShaderModule>(
               std::function<VkShaderModule()>([this]() { return CreateShaderModule(); }))),
           _bytecode(std::vector<uint8_t>(bytecode.begin(), bytecode.end())),
@@ -43,6 +45,21 @@ namespace NovelRT::Graphics::Vulkan
     {
         vkDestroyShaderModule(std::static_pointer_cast<VulkanGraphicsDevice>(GetDevice())->GetVulkanDevice(),
                               _shaderModule.getActual(), nullptr);
+    }
+
+    std::shared_ptr<VulkanGraphicsDevice> VulkanShaderProgram::GetDevice() const noexcept
+    {
+        return _device;
+    }
+
+    std::string VulkanShaderProgram::GetEntryPointName() const noexcept
+    {
+        return _entryPointName;
+    }
+
+    ShaderProgramKind VulkanShaderProgram::GetKind() const noexcept
+    {
+        return _kind;
     }
 
     NovelRT::Utilities::Misc::Span<const uint8_t> VulkanShaderProgram::GetBytecode() const noexcept

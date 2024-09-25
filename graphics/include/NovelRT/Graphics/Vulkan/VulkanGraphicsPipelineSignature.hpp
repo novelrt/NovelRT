@@ -51,6 +51,21 @@ namespace NovelRT::Graphics::Vulkan
             return _device;
         }
 
+        [[nodiscard]] inline GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
+        {
+            return _srcBlendFactor;
+        }
+
+        [[nodiscard]] inline GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept
+        {
+            return _dstBlendFactor;
+        }
+
+        [[nodiscard]] inline std::vector<GraphicsPipelineInput> GetInputs() const noexcept
+        {
+            return _inputs;
+        }
+
         [[nodiscard]] inline VkDescriptorPool GetVulkanDescriptorPool()
         {
             return _vulkanDescriptorPool.getActual();

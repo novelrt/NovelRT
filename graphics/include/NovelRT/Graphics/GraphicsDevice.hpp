@@ -24,10 +24,12 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsPipelineSignature;
     template<typename TBackend> class ShaderProgram;
 
-    template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
+    template<typename TBackend> struct GraphicsBackendTraits;
+
+    template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
     {
     public:
-        using BackendDeviceType = TBackend::DeviceType;
+        using BackendDeviceType = typename GraphicsBackendTraits<TBackend>::DeviceType;
 
     private:
         std::shared_ptr<BackendDeviceType> _implementation;
@@ -56,7 +58,7 @@ namespace NovelRT::Graphics
             _implementation->TearDown();
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsAdapter> GetAdapter() const
+        [[nodiscard]] std::shared_ptr<GraphicsAdapter<TBackend>> GetAdapter() const
         {
             if (_adapter.expired())
             {

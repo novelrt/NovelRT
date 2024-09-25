@@ -14,10 +14,12 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsProvider;
     template<typename TBackend> class GraphicsSurfaceContext;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter<TBackend>>
     {
     public:
-        using BackendAdapterType = TBackend::AdapterType;
+        using BackendAdapterType = typename GraphicsBackendTraits<TBackend>::AdapterType;
 
     private:
         std::shared_ptr<BackendAdapterType> _implementation;
@@ -47,7 +49,7 @@ namespace NovelRT::Graphics
             return _implementation->GetName();
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsProvider> GetProvider() const
+        [[nodiscard]] inline std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const
         {
             return _provider;
         }

@@ -19,9 +19,11 @@ namespace NovelRT::Graphics::Vulkan
     private:
         VkBuffer _vulkanBuffer;
         size_t _subAllocations;
+        GraphicsResourceAccess _cpuAccess;
+        GraphicsBufferKind _kind;
 
     protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanAllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) final;
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) final;
 
     public:
         VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -34,6 +36,16 @@ namespace NovelRT::Graphics::Vulkan
                              VkBuffer vulkanBuffer);
 
         ~VulkanGraphicsBuffer() noexcept;
+
+        [[nodiscard]] GraphicsResourceAccess GetAccess() const noexcept
+        {
+            return _cpuAccess;
+        }
+
+        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept
+        {
+            return _kind;
+        }
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength);
 

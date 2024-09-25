@@ -10,7 +10,9 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsProvider final : public std::enable_shared_from_this<VulkanGraphicsProvider>
+    class VulkanGraphicsAdapter;
+
+    class VulkanGraphicsProvider : public std::enable_shared_from_this<VulkanGraphicsProvider>
     {
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
@@ -18,11 +20,12 @@ namespace NovelRT::Graphics::Vulkan
         VkInstance _vulkanInstance;
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter>>> _adapters;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsAdapter>>> _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
         LoggingService _logger;
+        bool _debugModeEnabled;
 
         static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                                             VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -45,7 +48,7 @@ namespace NovelRT::Graphics::Vulkan
         void ConfigureDebugLogger();
         VkInstance CreateInstance();
 
-        std::vector<std::shared_ptr<GraphicsAdapter>> GetGraphicsAdapters();
+        std::vector<std::shared_ptr<VulkanGraphicsAdapter>> GetGraphicsAdapters();
 
     public:
         VulkanGraphicsProvider();
@@ -61,11 +64,13 @@ namespace NovelRT::Graphics::Vulkan
                                                                      _finalValidationLayerSet.size());
         }
         
-        [[nodiscard]] uint32_t GetApiVersion() const noexcept final;
+        [[nodiscard]] uint32_t GetApiVersion() const noexcept;
 
-        std::vector<std::shared_ptr<GraphicsAdapter>>::iterator begin() noexcept final;
-        std::vector<std::shared_ptr<GraphicsAdapter>>::iterator end() noexcept final;
+        [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
 
-        ~VulkanGraphicsProvider() final;
+        std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator begin() noexcept;
+        std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator end() noexcept;
+
+        ~VulkanGraphicsProvider();
     };
 }

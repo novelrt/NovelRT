@@ -14,11 +14,13 @@ namespace NovelRT::Graphics
 {
     template<typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class GraphicsTexture : public GraphicsResource<TBackend>
     {
     public:
-        using BackendTextureType = TBackend::TextureType;
-        using BackendResourceMemoryRegionType = TBackend::ResourceMemoryRegionType;
+        using BackendTextureType = typename GraphicsBackendTraits<TBackend>::TextureType;
+        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::ResourceMemoryRegionType;
 
     private:
         GraphicsTextureAddressMode _addressMode;
@@ -46,34 +48,34 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsTexture() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture>> GraphicsTexture::Allocate(
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> Allocate(
             size_t size,
             size_t alignment)
         {
-            return _implementation->Allocate(size, alignment);
+            return GraphicsResource<TBackend>::_implementation->Allocate(size, alignment);
         }
 
-        [[nodiscard]] GraphicsTextureAddressMode GraphicsTexture::GetAddressMode() const noexcept
+        [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept
         {
             return _addressMode;
         }
 
-        [[nodiscard]] GraphicsTextureKind GraphicsTexture::GetKind() const noexcept
+        [[nodiscard]] GraphicsTextureKind GetKind() const noexcept
         {
             return _kind;
         }
 
-        [[nodiscard]] uint32_t GraphicsTexture::GetWidth() const noexcept
+        [[nodiscard]] uint32_t GetWidth() const noexcept
         {
             return _width;
         }
 
-        [[nodiscard]] uint32_t GraphicsTexture::GetHeight() const noexcept
+        [[nodiscard]] uint32_t GetHeight() const noexcept
         {
             return _height;
         }
 
-        [[nodiscard]] uint16_t GraphicsTexture::GetDepth() const noexcept
+        [[nodiscard]] uint16_t GetDepth() const noexcept
         {
             return _depth;
         }

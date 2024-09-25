@@ -8,10 +8,12 @@
 
 namespace NovelRT::Graphics
 {
+    template<typename TBackend> struct GraphicsBackendTraits;
+
     template<typename TBackend> class ShaderProgram : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendShaderProgramType = TBackend::ShaderProgramType;
+        using BackendShaderProgramType = typename GraphicsBackendTraits<TBackend>::ShaderProgramType;
 
     private:
         std::shared_ptr<BackendShaderProgramType> _implementation;
@@ -20,7 +22,7 @@ namespace NovelRT::Graphics
 
     public:
         ShaderProgram(std::shared_ptr<BackendShaderProgramType> implementation,
-                      std::shared_ptr<GraphicsDevice> device,
+                      std::shared_ptr<GraphicsDevice<TBackend>> device,
                       std::string entryPointName,
                       ShaderProgramKind kind) noexcept
             : GraphicsDeviceObject(std::move(device)),
