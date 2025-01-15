@@ -31,7 +31,7 @@ namespace NovelRT::Graphics
         {
         }
         
-        virtual ~GraphicsProvider() override = default;
+        virtual ~GraphicsProvider() = default;
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept
         {
