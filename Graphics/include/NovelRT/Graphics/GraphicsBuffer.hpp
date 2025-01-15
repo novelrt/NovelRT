@@ -26,10 +26,10 @@ namespace NovelRT::Graphics
                        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
                        GraphicsResourceAccess cpuAccess,
                        GraphicsBufferKind kind) noexcept
-            : GraphicsResource(implementation, allocator, cpuAccess), _kind(kind)
+            : GraphicsResource<TBackend>(implementation, allocator, cpuAccess), _kind(kind)
         {
         }
-        
+
         virtual ~GraphicsBuffer() noexcept override = default;
 
         [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer<TBackend>, TBackend>> Allocate(size_t size, size_t alignment)

@@ -12,7 +12,7 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsTexture final : public VulkanGraphicsResource
+    class VulkanGraphicsTexture : public VulkanGraphicsResource
     {
     private:
         VkImage _vulkanImage;
@@ -53,7 +53,7 @@ namespace NovelRT::Graphics::Vulkan
         void UnmapBytes();
 
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength);
-        
+
         [[nodiscard]] VkImage GetVulkanImage() const noexcept;
 
         [[nodiscard]] VkImageView GetOrCreateVulkanImageView();

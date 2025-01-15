@@ -29,7 +29,7 @@ namespace NovelRT::Graphics
     public:
         GraphicsResourceMemoryRegion(std::shared_ptr<BackendResourceMemoryRegionType> implementation,
                                      std::shared_ptr<TResource> owningResource)
-            : GraphicsDeviceObject(implementation->GetDevice()),
+            : GraphicsDeviceObject<TBackend>(implementation->GetDevice()),
               _implementation(implementation),
               _owningResource(owningResource)
         {

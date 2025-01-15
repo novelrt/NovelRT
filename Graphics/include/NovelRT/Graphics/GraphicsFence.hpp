@@ -19,7 +19,7 @@ namespace NovelRT::Graphics
 
     public:
         GraphicsFence(std::shared_ptr<BackendFenceType> implementation, std::shared_ptr<GraphicsDevice<TBackend>> device) noexcept
-            : GraphicsDeviceObject(device)
+            : GraphicsDeviceObject<TBackend>(device), _implementation(implementation)
         {
         }
 

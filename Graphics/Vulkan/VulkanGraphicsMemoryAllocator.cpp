@@ -15,7 +15,7 @@ namespace NovelRT::Graphics::Vulkan
 {
     VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsProvider> provider,
                                                                  std::shared_ptr<VulkanGraphicsDevice> device)
-        : _provider(provider), _device(device), _allocator(VK_NULL_HANDLE)
+        : _allocator(VK_NULL_HANDLE), _provider(provider), _device(device)
     {
         auto vulkanDevice = GetDevice();
         auto vulkanAdapter = vulkanDevice->GetAdapter();

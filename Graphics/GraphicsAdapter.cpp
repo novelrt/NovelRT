@@ -6,7 +6,7 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     GraphicsAdapter<TBackend>::GraphicsAdapter(std::shared_ptr<BackendAdapterType> implementation,
                                                std::shared_ptr<GraphicsProvider<TBackend>> provider)
-        : _implementation(_implementation), _provider(provider)
+        : _implementation(implementation), _provider(provider)
     {
         if (_provider.expired())
         {

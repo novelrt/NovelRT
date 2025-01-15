@@ -33,7 +33,7 @@ namespace NovelRT::Graphics
         explicit GraphicsResource(std::shared_ptr<BackendResourceType> implementation,
                                   std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
                                   GraphicsResourceAccess cpuAccess) noexcept
-            : GraphicsDeviceObject(implementation->GetDevice()),
+            : GraphicsDeviceObject<TBackend>(implementation->GetDevice()),
               _implementation(implementation),
               _allocator(allocator),
               _cpuAccess(cpuAccess)

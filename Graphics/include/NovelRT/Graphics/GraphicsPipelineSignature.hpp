@@ -32,7 +32,7 @@ namespace NovelRT::Graphics
                                   GraphicsPipelineBlendFactor dstBlendFactor,
                                   NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
                                   NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
-            : GraphicsDeviceObject(device),
+            : GraphicsDeviceObject<TBackend>(device),
               _implementation(implementation),
               _srcBlendFactor(srcBlendFactor),
               _dstBlendFactor(dstBlendFactor),
@@ -42,7 +42,7 @@ namespace NovelRT::Graphics
         }
 
         virtual ~GraphicsPipelineSignature() = default;
-        
+
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
         {
             return _srcBlendFactor;
@@ -57,7 +57,7 @@ namespace NovelRT::Graphics
         {
             return _implementation->CreateDescriptorSet();
         }
-        
+
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs()
             const noexcept
         {
