@@ -23,7 +23,7 @@ namespace NovelRT::Graphics
         GraphicsContext(std::shared_ptr<BackendContextType> implemenetation,
                         std::shared_ptr<GraphicsDevice<TBackend>> device,
                         size_t index) noexcept
-            : GraphicsDeviceObject(device), _implementation(implemenetation), _index(index)
+            : GraphicsDeviceObject<TBackend>(device), _implementation(implemenetation), _index(index)
         {
         }
 

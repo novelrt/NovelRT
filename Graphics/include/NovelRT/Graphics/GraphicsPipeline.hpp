@@ -21,7 +21,7 @@ namespace NovelRT::Graphics
                                            std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
                                            std::shared_ptr<ShaderProgram<TBackend>> vertexShader,
                                            std::shared_ptr<ShaderProgram<TBackend>> pixelShader) noexcept
-            : GraphicsDeviceObject(device),
+            : GraphicsDeviceObject<TBackend>(device),
               _signature(signature),
               _vertexShader(vertexShader),
               _pixelShader(pixelShader)

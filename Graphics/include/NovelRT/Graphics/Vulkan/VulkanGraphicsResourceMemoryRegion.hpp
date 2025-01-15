@@ -4,7 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
-#include <vma/vk_mem_alloc.h>
+#include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -26,11 +26,11 @@ namespace NovelRT::Graphics::Vulkan
                                            VmaVirtualAllocationInfo virtualAllocationInfo);
 
         ~VulkanGraphicsResourceMemoryRegionBase() = default;
-        
+
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsResource> GetOwningResource() const noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
-        
+
         [[nodiscard]] size_t GetRelativeOffset() const noexcept;
 
         [[nodiscard]] size_t GetSize() const noexcept;

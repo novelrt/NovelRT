@@ -25,7 +25,7 @@ namespace NovelRT::Graphics
                       std::shared_ptr<GraphicsDevice<TBackend>> device,
                       std::string entryPointName,
                       ShaderProgramKind kind) noexcept
-            : GraphicsDeviceObject(std::move(device)),
+            : GraphicsDeviceObject<TBackend>(std::move(device)),
               _implementation(implementation),
               _entryPointName(entryPointName),
               _kind(kind)

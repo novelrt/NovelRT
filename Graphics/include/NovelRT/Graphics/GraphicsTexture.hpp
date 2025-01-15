@@ -38,7 +38,8 @@ namespace NovelRT::Graphics
                         uint32_t width,
                         uint32_t height,
                         uint16_t depth) noexcept
-            : GraphicsResource(implementation, allocator, cpuAccess),
+            : GraphicsResource<TBackend>(implementation, allocator, cpuAccess),
+              _addressMode(addressMode),
               _kind(kind),
               _width(width),
               _height(height),

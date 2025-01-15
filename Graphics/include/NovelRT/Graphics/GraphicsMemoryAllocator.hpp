@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
         GraphicsMemoryAllocator(std::shared_ptr<BackendMemoryAllocatorType> implementation,
                                 std::shared_ptr<GraphicsDevice<TBackend>> device,
                                 std::shared_ptr<GraphicsProvider<TBackend>> provider)
-            : GraphicsDeviceObject(device), _implementation(implementation), _provider(provider)
+            : GraphicsDeviceObject<TBackend>(device), _implementation(implementation), _provider(provider)
         {
         }
 
@@ -56,8 +56,10 @@ namespace NovelRT::Graphics
                                                                              GraphicsResourceAccess gpuAccessKind,
                                                                              size_t size)
         {
-            return CreateBuffer(GraphicsBufferCreateInfo{bufferKind, cpuAccessKind, gpuAccessKind, size,
-                                                         GraphicsMemoryRegionAllocationFlags::None});
+            // TODO: unfuck this
+            unused(bufferKind); unused(cpuAccessKind); unused(gpuAccessKind); unused(size);
+            return nullptr; /*CreateBuffer(GraphicsBufferCreateInfo{bufferKind, cpuAccessKind, gpuAccessKind, size,
+                                                         GraphicsMemoryRegionAllocationFlags::None});*/
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture(
@@ -69,10 +71,12 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture2DRepeatGpuWriteOnly(uint32_t width,
                                                                                                    uint32_t height = 1)
         {
-            return CreateTexture(
+            // TODO: unfuck this
+            unused(width); unused(height);
+            return nullptr; /*CreateTexture(
                 GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
                                           GraphicsResourceAccess::None, GraphicsResourceAccess::Write, width, height, 1,
-                                          GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});
+                                          GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});*/
         }
     };
 }

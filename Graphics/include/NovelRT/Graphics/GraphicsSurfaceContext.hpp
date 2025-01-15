@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
 
-        [[nodiscard]] virtual void* GetSurfaceContextHandleUntyped();
+        [[nodiscard]] void* GetSurfaceContextHandleUntyped();
 
         template<typename THandleType> [[nodiscard]] THandleType GetSurfaceContextHandleAs()
         {
