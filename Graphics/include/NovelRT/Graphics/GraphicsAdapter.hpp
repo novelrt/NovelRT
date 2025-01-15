@@ -27,20 +27,46 @@ namespace NovelRT::Graphics
 
     public:
         GraphicsAdapter(std::shared_ptr<BackendAdapterType> implementation,
-                        std::shared_ptr<GraphicsProvider<TBackend>> provider);
-        
-        virtual ~GraphicsAdapter() noexcept = default;
+                        std::shared_ptr<GraphicsProvider<TBackend>> provider)
+            : _implementation(implementation), _provider(provider)
+        {
+            if (!_provider)
+            {
+                throw Exceptions::NullPointerException(
+                    "The provided GraphicsProvider pointer is nullptr or an invalid pointer.");
+            }
+        }
 
-        [[nodiscard]] uint32_t GetDeviceId();
+        ~GraphicsAdapter() noexcept = default;
 
-        [[nodiscard]] const std::string& GetName();
+        [[nodiscard]] uint32_t GetDeviceId()
+        {
+            return _implementation->GetDeviceId();
+        }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const;
+        [[nodiscard]] const std::string& GetName()
+        {
+            return _implementation->GetName();
+        }
 
-        [[nodiscard]] uint32_t GetVendorId();
+        [[nodiscard]] inline std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const
+        {
+            return _provider;
+        }
+
+        [[nodiscard]] uint32_t GetVendorId()
+        {
+            return _implementation->GetVendorId();
+        }
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> CreateDevice(
             std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext,
-            int32_t contextCount);
+            int32_t contextCount)
+        {
+            return std::make_shared<GraphicsDevice<TBackend>>(
+                _implementation->CreateDevice(surfaceContext->GetImplementation(), contextCount),
+                this->shared_from_this(),
+                surfaceContext);
+        }
     };
 }

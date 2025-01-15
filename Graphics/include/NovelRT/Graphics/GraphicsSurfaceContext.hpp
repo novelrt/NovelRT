@@ -8,8 +8,7 @@
 
 namespace NovelRT::PluginManagement
 {
-    template <typename TBackend>
-    class IGraphicsPluginProvider;
+    template<typename TBackend> class IGraphicsPluginProvider;
 }
 
 namespace NovelRT::Graphics
@@ -31,13 +30,38 @@ namespace NovelRT::Graphics
     public:
         GraphicsSurfaceContext(std::shared_ptr<BackendSurfaceContextType> implementation,
                                std::shared_ptr<IGraphicsSurface> surface,
-                               std::shared_ptr<GraphicsProvider<TBackend>> provider);
+                               std::shared_ptr<GraphicsProvider<TBackend>> provider)
+            : _implementation(implementation), _surface(surface), _provider(provider)
+        {
+            if (_surface == nullptr)
+            {
+                throw Exceptions::NullPointerException("The supplied IGraphicsSurface is nullptr.");
+            }
 
-        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
+            if (_provider == nullptr)
+            {
+                throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
+            }
+        }
 
-        [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
+        [[nodiscard]] std::shared_ptr<BackendSurfaceContextType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
 
-        [[nodiscard]] void* GetSurfaceContextHandleUntyped();
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
+        {
+            return _surface;
+        }
+        [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept
+        {
+            return _provider;
+        }
+
+        [[nodiscard]] void* GetSurfaceContextHandleUntyped()
+        {
+            return _implementation->GetSurfaceContextHandleUntyped();
+        }
 
         template<typename THandleType> [[nodiscard]] THandleType GetSurfaceContextHandleAs()
         {

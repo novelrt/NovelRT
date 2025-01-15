@@ -63,7 +63,7 @@ namespace NovelRT::Graphics::Vulkan
             return NovelRT::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
                                                                      _finalValidationLayerSet.size());
         }
-        
+
         [[nodiscard]] uint32_t GetApiVersion() const noexcept;
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
