@@ -62,3 +62,7 @@ namespace NovelRT::Graphics::Vulkan
         _logger.logInfoLine("VkSurface successfully destroyed.");
     }
 } // namespace NovelRT::Graphics::Vulkan
+
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+#include "../Graphics/GraphicsSurfaceContext.cpp"
+template class NovelRT::Graphics::GraphicsSurfaceContext<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

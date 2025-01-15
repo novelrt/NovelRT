@@ -43,9 +43,12 @@ namespace NovelRT::Graphics::Vulkan
     template<typename TResource>
     class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegionBase
     {
+    public:
         VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                                         std::shared_ptr<VulkanGraphicsResource> owningResource)
-            : VulkanGraphicsResourceMemoryRegionBase(graphicsDevice, owningResource)
+                                         std::shared_ptr<VulkanGraphicsResource> owningResource,
+                                         VmaVirtualAllocation virtualAllocation,
+                                           VmaVirtualAllocationInfo virtualAllocationInfo)
+            : VulkanGraphicsResourceMemoryRegionBase(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
         {
         }
 

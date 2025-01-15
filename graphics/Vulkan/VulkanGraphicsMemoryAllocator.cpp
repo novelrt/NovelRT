@@ -83,12 +83,16 @@ namespace NovelRT::Graphics::Vulkan
                                                              result);
         }
 
-        return std::make_shared<VulkanGraphicsBuffer>();
+        //return std::make_shared<VulkanGraphicsBuffer>();
+        //TODO: unfuck this
+        return nullptr;
     }
 
     std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateVulkanTexture(
         const GraphicsTextureCreateInfo& createInfo)
     {
+        //TODO: this
+        unused(createInfo);
         return nullptr;
     }
 

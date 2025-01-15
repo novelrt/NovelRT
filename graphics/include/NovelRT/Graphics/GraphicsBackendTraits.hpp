@@ -6,8 +6,8 @@
 namespace NovelRT::Graphics
 {
     template<typename TBackend>
-    struct GraphicsBackendTraits 
-    {
-        static_assert(false, "Backends need to specialise this type.");
-    };
+    struct GraphicsBackendTraits;
+    //{
+    //    static_assert(false, "Backends need to specialise this type.");
+    //};
 }
