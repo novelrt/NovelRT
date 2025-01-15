@@ -9,6 +9,6 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 
-template class NovelRT::Graphics::GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
-template class NovelRT::Graphics::GraphicsAdapter<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
-template class NovelRT::Graphics::GraphicsSurfaceContext<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
+//template class NovelRT::Graphics::GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
+//template class NovelRT::Graphics::GraphicsAdapter<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
+//template class NovelRT::Graphics::GraphicsSurfaceContext<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
