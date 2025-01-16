@@ -26,6 +26,11 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VkImageView CreateVulkanImageView();
         [[nodiscard]] VkSampler CreateVulkanSampler();
 
+    protected:
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> AllocateInternal(
+            VmaVirtualAllocation allocation,
+            VkDeviceSize offset) final;
+
     public:
         VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                               std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,

@@ -3,7 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
+#include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan
@@ -11,7 +12,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsTexture;
     class VulkanGraphicsBuffer;
 
-    class VulkanGraphicsMemoryAllocator
+    class VulkanGraphicsMemoryAllocator : public std::enable_shared_from_this<VulkanGraphicsMemoryAllocator>
     {
     private:
         VmaAllocator _allocator;
@@ -28,7 +29,7 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsBuffer> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> CreateTexture(const GraphicsTextureCreateInfo& createInfo);        
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> CreateTexture(const GraphicsTextureCreateInfo& createInfo);
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsBuffer> CreateVulkanBuffer(
             const GraphicsBufferCreateInfo& createInfo);
