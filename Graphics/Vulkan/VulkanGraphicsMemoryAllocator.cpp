@@ -4,6 +4,7 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.h>
 #include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Texel.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
@@ -73,7 +74,7 @@ namespace NovelRT::Graphics::Vulkan
         VmaAllocationInfo outAllocationInfo{}; // TODO: I haven't figured out what I am doing with this yet, but I'm
                                                // fairly sure we need it. Lol.
 
-        VkResult result = vmaCreateBuffer(_allocator, &bufferCreateInfo, &allocationCreateInfo, &outBuffer,
+        VkResult result = vmaCreateBuffer(GetVmaAllocator(), &bufferCreateInfo, &allocationCreateInfo, &outBuffer,
                                           &outAllocation, &outAllocationInfo);
 
         if (result != VK_SUCCESS)
@@ -83,17 +84,71 @@ namespace NovelRT::Graphics::Vulkan
                                                              result);
         }
 
-        //return std::make_shared<VulkanGraphicsBuffer>();
-        //TODO: unfuck this
-        return nullptr;
+        return std::make_shared<VulkanGraphicsBuffer>(GetDevice(), shared_from_this(), createInfo.cpuAccessKind,
+                                                      createInfo.bufferKind, outAllocation, outAllocationInfo, 0,
+                                                      outBuffer);
     }
 
     std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateVulkanTexture(
         const GraphicsTextureCreateInfo& createInfo)
     {
-        //TODO: this
-        unused(createInfo);
-        return nullptr;
+        VkImageType imageType{};
+
+        switch (createInfo.textureKind)
+        {
+            case GraphicsTextureKind::OneDimensional:
+                imageType = VK_IMAGE_TYPE_1D;
+                break;
+            case GraphicsTextureKind::TwoDimensional:
+                imageType = VK_IMAGE_TYPE_2D;
+                break;
+            case GraphicsTextureKind::ThreeDimensional:
+                imageType = VK_IMAGE_TYPE_3D;
+                break;
+            default:
+            case GraphicsTextureKind::Unknown:
+                throw Exceptions::NotSupportedException(
+                    "The specified texture kind is not supported in the default Vulkan pipeline.");
+        }
+
+        VkExtent3D extent{};
+        extent.width = createInfo.width;
+        extent.height = createInfo.height;
+        extent.depth = createInfo.depth;
+
+        VkImageCreateInfo imageCreateInfo{};
+        imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imageCreateInfo.imageType = imageType;
+        imageCreateInfo.format = Utilities::Map(createInfo.texelFormat);
+        imageCreateInfo.extent = extent;
+        imageCreateInfo.mipLevels = 1;
+        imageCreateInfo.arrayLayers = 1;
+        imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageCreateInfo.usage = Utilities::GetVulkanImageUsageKind(createInfo.textureKind, createInfo.gpuAccessKind);
+
+        VkImage vulkanImage = VK_NULL_HANDLE;
+        VmaAllocation outAllocation = VK_NULL_HANDLE;
+        VmaAllocationInfo outAllocationInfo{}; // TODO: I haven't figured out what I am doing with this yet, but I'm
+                                               // fairly sure we need it. Lol.
+
+        VmaAllocationCreateInfo allocationCreateInfo{};
+        allocationCreateInfo.flags = Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind);
+        allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
+        // allocationCreateInfo.priority = 1; //TODO: do I need this?
+
+        VkResult result = vmaCreateImage(GetVmaAllocator(), &imageCreateInfo, &allocationCreateInfo, &vulkanImage,
+                                         &outAllocation, &outAllocationInfo);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to correctly initialise the newly requested "
+                                                             "Vulkan Image based on the supplied createInfo object.",
+                                                             result);
+        }
+
+        return std::make_shared<VulkanGraphicsTexture>(
+            GetDevice(), shared_from_this(), createInfo.cpuAccessKind, createInfo.addressMode, createInfo.textureKind,
+            createInfo.width, createInfo.height, createInfo.depth, outAllocation, outAllocationInfo, 0, vulkanImage);
     }
 
     VmaAllocator VulkanGraphicsMemoryAllocator::GetVmaAllocator() const noexcept

@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
-#include <NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -95,6 +95,18 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanSampler;
     }
 
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsTexture::AllocateInternal(
+        VmaVirtualAllocation allocation,
+        VkDeviceSize offset)
+    {
+        unused(offset); // TODO: figure out if we need offset
+
+        VmaVirtualAllocationInfo allocInfo{};
+        vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(
+            GetDevice(), shared_from_this(), allocation, allocInfo);
+    }
+
     VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                                                  std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                                                  GraphicsResourceAccess cpuAccess,
@@ -108,7 +120,7 @@ namespace NovelRT::Graphics::Vulkan
                                                  size_t subAllocations,
                                                  VkImage vulkanImage)
         : VulkanGraphicsResource(device, allocator, cpuAccess, allocation, allocationInfo),
-          //GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
+          // GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
           _vulkanImage(vulkanImage),
           _subAllocations(0),
           _addressMode(addressMode),
@@ -117,7 +129,9 @@ namespace NovelRT::Graphics::Vulkan
           _vulkanSampler([&]() { return CreateVulkanSampler(); })
     {
         // TODO: make sure to implement APIs for these
-        unused(width); unused(height); unused(depth);
+        unused(width);
+        unused(height);
+        unused(depth);
 
         // TODO: Still need this?
         unused(subAllocations);
@@ -182,7 +196,8 @@ namespace NovelRT::Graphics::Vulkan
         return NovelRT::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(data) + rangeOffset, rangeLength);
     }
 
-    NovelRT::Utilities::Misc::Span<const uint8_t> VulkanGraphicsTexture::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
+    NovelRT::Utilities::Misc::Span<const uint8_t> VulkanGraphicsTexture::MapBytesForRead(size_t rangeOffset,
+                                                                                         size_t rangeLength)
     {
         size_t sizeOfBuffer = GetAllocationInfo().size;
         size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
