@@ -5,6 +5,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+#include <NovelRT/Exceptions/InitialisationFailureException.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -126,15 +127,21 @@ namespace NovelRT::Graphics::Vulkan
           _addressMode(addressMode),
           _kind(kind),
           _vulkanImageView([&]() { return CreateVulkanImageView(); }),
-          _vulkanSampler([&]() { return CreateVulkanSampler(); })
+          _vulkanSampler([&]() { return CreateVulkanSampler(); }),
+          _width(width),
+          _height(height),
+          _depth(depth)
     {
-        // TODO: make sure to implement APIs for these
-        unused(width);
-        unused(height);
-        unused(depth);
-
         // TODO: Still need this?
         unused(subAllocations);
+
+        VkResult result = vkBindImageMemory(GetDevice()->GetVulkanDevice(), GetVulkanImage(), GetAllocationInfo().deviceMemory, GetAllocationInfo().offset);
+        
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to bind VkImage to VkImageMemory correctly.",
+                                                             result);
+        } 
     }
 
     VulkanGraphicsTexture::~VulkanGraphicsTexture() noexcept
@@ -274,5 +281,20 @@ namespace NovelRT::Graphics::Vulkan
     VkSampler VulkanGraphicsTexture::GetOrCreateVulkanSampler()
     {
         return _vulkanSampler.getActual();
+    }
+
+    uint32_t VulkanGraphicsTexture::GetWidth() const noexcept
+    {
+        return _width;
+    }
+
+    uint32_t VulkanGraphicsTexture::GetHeight() const noexcept
+    {
+        return _height;
+    }
+
+    uint32_t VulkanGraphicsTexture::GetDepth() const noexcept
+    {
+        return _depth;
     }
 }

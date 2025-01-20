@@ -23,6 +23,10 @@ namespace NovelRT::Graphics::Vulkan
         NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
         NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
 
+        uint32_t _width;
+        uint32_t _height;
+        uint32_t _depth;
+
         [[nodiscard]] VkImageView CreateVulkanImageView();
         [[nodiscard]] VkSampler CreateVulkanSampler();
 
@@ -64,5 +68,11 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VkImageView GetOrCreateVulkanImageView();
 
         [[nodiscard]] VkSampler GetOrCreateVulkanSampler();
+
+        [[nodiscard]] uint32_t GetWidth() const noexcept;
+        
+        [[nodiscard]] uint32_t GetHeight() const noexcept;
+        
+        [[nodiscard]] uint32_t GetDepth() const noexcept;
     };
 }
