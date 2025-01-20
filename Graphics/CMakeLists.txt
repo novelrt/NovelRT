@@ -6,6 +6,7 @@ add_library(NovelRT-Graphics STATIC
   Vulkan/VulkanGraphicsAdapterSelector.cpp
   Vulkan/VulkanGraphicsBackendTraits.cpp
   Vulkan/VulkanGraphicsBuffer.cpp
+  Vulkan/VulkanGraphicsCmdList.cpp
   Vulkan/VulkanGraphicsContext.cpp
   Vulkan/VulkanGraphicsDevice.cpp
   Vulkan/VulkanGraphicsFence.cpp
@@ -73,6 +74,7 @@ target_sources(NovelRT-Graphics
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp
