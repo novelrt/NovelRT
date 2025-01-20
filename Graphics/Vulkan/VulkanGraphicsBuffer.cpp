@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
         VkDeviceSize offset)
     {
         unused(offset); // TODO: figure out if we need offset
-
+    
         VmaVirtualAllocationInfo allocInfo{};
         vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
         return std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, allocInfo);
