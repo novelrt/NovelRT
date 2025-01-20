@@ -40,11 +40,17 @@ namespace NovelRT::Graphics
 
     public:
         GraphicsCmdList(std::shared_ptr<BackendCmdListType> implementation,
-                        std::shared_ptr<GraphicsContext<TBackend>> context) noexcept;
+                        std::shared_ptr<GraphicsContext<TBackend>> context) noexcept
+            : _implementation(implementation), _context(context)
+        {
+        }
 
         virtual ~GraphicsCmdList() override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext> GetContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsContext> GetContext() const noexcept
+        {
+            return _context;
+        }
 
         void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass> targetPass)
         {
