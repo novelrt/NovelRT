@@ -35,6 +35,9 @@ namespace NovelRT::Graphics
         using BackendCmdListType = GraphicsBackendTraits<TBackend>::CmdListType;
 
     private:
+        using BackendDescriptorType = GraphicsBackendTraits<TBackend>::DescriptorSetType;
+        using BackendDescriptorType = GraphicsBackendTraits<TBackend>::BufferType;
+        
         std::shared_ptr<BackendCmdListType> _implementation;
         std::shared_ptr<GraphicsContext<TBackend>> _context;
 
@@ -54,35 +57,44 @@ namespace NovelRT::Graphics
 
         void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass> targetPass)
         {
-            _implementation->CmdBeginRenderPass(targetPass);
+            _implementation->CmdBeginRenderPass(targetPass->GetImplementation());
         }
 
         void CmdBindDescriptorSets(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet>> sets)
         {
+            std::vector<const std::shared_ptr<BackendDescriptorType>> transformedArgs{};
+            transformedArgs.resize(sets.size());
+            std::transform(sets.begin(), sets.end(), transformedArgs.begin(), [&](auto x){ return x->GetImplementation(); });
             _implementation->CmdBindDescriptorSets(sets);
         }
 
         void CmdBindVertexBuffers(uint32_t firstBinding,
                                   uint32_t bindingCount,
                                   NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers,
-                                  NovelRT::Utilities::Misc::span<const size_t> offsets)
+                                  NovelRT::Utilities::Misc::Span<const size_t> offsets)
         {
-            _implementation->CmdBindVertexBuffers(firstBinding, bindingCount, buffers, offsets);
+            std::vector<const std::shared_ptr<BufferType>> transformedArgs{};
+            transformedArgs.resize(buffers.size());
+            std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(), [&](auto x) { return x->GetImplementation(); });
+            _implementation->CmdBindVertexBuffers(firstBinding, bindingCount, transformedArgs, offsets);
         }
 
         void CmdBindIndexBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers)
         {
-            _implementation->CmdBindIndexbuffers(buffers);
+            std::vector<const std::shared_ptr<BufferType>> transformedArgs{};
+            transformedArgs.resize(buffers.size());
+            std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(), [&](auto x) { return x->GetImplementation(); });
+            _implementation->CmdBindIndexbuffers(transformedArgs);
         }
 
         void CmdCopy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source)
         {
-            _implementation->CmdCopy(destination, source);
+            _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
         void CmdCopy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source)
         {
-            _implementation->CmdCopy(destination, source);
+            _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
         void CmdDrawIndexed(uint32_t instanceCount)

@@ -39,5 +39,6 @@ namespace NovelRT::Graphics
         using MemoryAllocatorType = Vulkan::VulkanGraphicsMemoryAllocator;
         using BufferType = Vulkan::VulkanGraphicsBuffer;
         using TextureType = Vulkan::VulkanGraphicsTexture;
+        using DescriptorType = Vulkan::VulkanGraphicsDescriptorSet;
     };
 }

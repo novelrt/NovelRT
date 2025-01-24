@@ -12,13 +12,13 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsBuffer;
     template<typename TBackend> class GraphicsPipeline;
     template<typename TBackend> class GraphicsTexture;
-
     template<typename TBackend> struct GraphicsBackendTraits;
 
+    //TODO: I NEED TO REWORK THIS I AM SUCH A MORON HOW DID I MESS THIS UP SO BADLY LMAO
     template<typename TBackend> class GraphicsDescriptorSet
     {
     public:
-        using BackendDescriptorSetType = GraphicsBackendTraits<TBackend>::BackendDescriptorSetType;
+        using BackendDescriptorSetType = GraphicsBackendTraits<TBackend>::DescriptorSetType;
 
     private:
         std::shared_ptr<BackendDescriptorSetType> _implementation;
@@ -31,13 +31,12 @@ namespace NovelRT::Graphics
         {
         }
 
-        std::shared_ptr<GraphicsPipeline<TBackend>> GraphicsDescriptorSet::GetPipeline() const noexcept
+        [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> GetPipeline() const noexcept
         {
             return _pipeline;
         }
 
-        void GraphicsDescriptorSet::AddBuffers(
-            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers)
+        void AddBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers)
         {
             _implementation->AddBuffers(buffers);
         }
