@@ -45,12 +45,12 @@ jobs:
         with:
           path: ${{ github.workspace }}/VulkanSDK
           key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
-          restore-keys: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion}}-
+          restore-keys: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-
 
       - name: Install Vulkan SDK (macOS)
         if: "contains(matrix.os, 'macos') && steps.cache-vulkan-macOS.outputs.cache-hit != 'true'"
         id: install-vulkan-macOS
-        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} $GITHUB_WORKSPACE/VulkanSDK
+        run: scripts/ci-apple-installVulkanSDK.sh ${{ matrix.vulkanVersion }} ${{ github.workspace }}/VulkanSDK
 
       - name: Install Vulkan SDK (Windows)
         uses: humbletim/setup-vulkan-sdk@v1.2.0
