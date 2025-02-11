@@ -49,6 +49,7 @@ else
                 else
                     echo "Could not find MoltenVK!"
                     exit -1
+                fi
             fi
         else
             echo "Could not download Vulkan SDK! Check curl output for more information."
