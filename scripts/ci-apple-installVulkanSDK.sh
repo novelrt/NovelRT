@@ -41,6 +41,9 @@ else
                 echo "Could not find libvulkan.dylib!"
                 exit -1
             fi
+            test=$(find $sdk_path/$version/MoltenVK -print | grep -i libMoltenVK)
+            echo $test
+            
             if test -f $sdk_path/$version/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib; then
                 echo "Found MoltenVK!"
             else
