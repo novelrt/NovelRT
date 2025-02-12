@@ -44,7 +44,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/VulkanSDK
-          key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('**/mvk_vulkan.h') }}
+          key: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-${{ hashFiles('${{ github.workspace}}/VulkanSDK/macOS/lib/libMoltenVK.dylib') }}
           restore-keys: ${{ runner.os }}-vulkansdk-${{ matrix.vulkanVersion }}-
 
       - name: Install Vulkan SDK (macOS)
