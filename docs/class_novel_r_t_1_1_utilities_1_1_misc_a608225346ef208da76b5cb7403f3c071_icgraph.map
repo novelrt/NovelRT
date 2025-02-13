@@ -1,0 +1,4 @@
+<map id="NovelRT::Utilities::Misc::getExecutablePath" name="NovelRT::Utilities::Misc::getExecutablePath">
+<area shape="rect" id="node1" title="Gets the path to the executable." alt="" coords="260,5,448,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_utilities_1_1_misc.html#a8327102ae841d845d6005483b8246930" title="Gets the path to the directory that contains the executable." alt="" coords="5,5,212,47"/>
+</map>

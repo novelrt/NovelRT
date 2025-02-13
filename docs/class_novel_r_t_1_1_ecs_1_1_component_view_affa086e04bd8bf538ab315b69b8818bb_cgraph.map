@@ -1,0 +1,6 @@
+<map id="NovelRT::Ecs::ComponentView::RemoveComponent" name="NovelRT::Ecs::ComponentView::RemoveComponent">
+<area shape="rect" id="node1" title="Removes the specified component type from a given entity." alt="" coords="5,39,225,80"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a2b00ffe758e18df83bd1b20dd460ae3a" title="Gets the delete instruction state for type T." alt="" coords="286,5,513,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a2fd2a2e8141357fd203f78c15a6b05f5" title="Pushes a new Component state as an update instruction into the ComponentBuffer with the current threa..." alt="" coords="273,71,525,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a1d37e7e1e1f4396902ffbcf52dd760ff" title="Pushes in an update instruction for the given entity, component and thread pool ID." alt="" coords="573,71,825,112"/>
+</map>

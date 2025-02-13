@@ -1,0 +1,7 @@
+<map id="NovelRT::Ecs::IEcsSystem" name="NovelRT::Ecs::IEcsSystem">
+<area shape="rect" id="node1" title="An interface declaration allowing for systems to be defined as C++ types." alt="" coords="5,111,193,138"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_audio_1_1_audio_system.html" title=" " alt="" coords="263,5,413,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_graphics_1_1_default_rendering_system.html" title=" " alt="" coords="241,71,435,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_input_1_1_input_system.html" title=" " alt="" coords="265,136,411,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_ecs_1_1_narrative_1_1_narrative_player_system.html" title=" " alt="" coords="247,201,429,243"/>
+</map>

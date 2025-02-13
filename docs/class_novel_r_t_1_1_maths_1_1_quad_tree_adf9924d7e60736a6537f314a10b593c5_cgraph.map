@@ -1,0 +1,11 @@
+<map id="NovelRT::Maths::QuadTree::TryInsert" name="NovelRT::Maths::QuadTree::TryInsert">
+<area shape="rect" id="node1" title="Attempts to insert a bounding box into the QuadTree." alt="" coords="5,137,197,179"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_bounds.html#aba24c9411c198984402b8c3e6bc14eff" title="Gets the specified corner in world space, relative to the position, rotation and size of this GeoBoun..." alt="" coords="245,104,451,145"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac796012d9c6aecc40d4fc1057970ff40" title="Attempts to store the given point within this QuadTree&#39;s hierarchy." alt="" coords="252,169,444,211"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a404a07a0bea95ff890cb5598e9ab6803" title="Returns the child QuadTree node for the bottom left area." alt="" coords="499,5,691,47"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a0c4da2e5e7972a5e4f8ab68c202e8f02" title="Returns the child QuadTree node for the bottom right area." alt="" coords="499,71,691,112"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac8b506602d31301d9058d0e93cd2b246" title="Returns the bounds this QuadTree covers." alt="" coords="499,136,691,177"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a38ef70ac34e8975f62a49beb14fabb6b" title="Returns the amount of points stored in this QuadTree instance." alt="" coords="499,201,691,243"/>
+<area shape="rect" id="node8" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a5fbef85b43775b7b36c7bda34d01d894" title="Returns the child QuadTree node for the top left area." alt="" coords="499,267,691,308"/>
+<area shape="rect" id="node9" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a868a86e8d590c30aeaa5fb66295133e4" title="Returns the child QuadTree node for the top right area." alt="" coords="499,332,691,373"/>
+</map>

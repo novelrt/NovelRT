@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::ComponentView::GetDeleteInstructionState" name="NovelRT::Ecs::ComponentView::GetDeleteInstructionState">
+<area shape="rect" id="node1" title="Gets the immutable component state for a delete instruction." alt="" coords="5,5,225,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a2b00ffe758e18df83bd1b20dd460ae3a" title="Gets the delete instruction state for type T." alt="" coords="273,5,500,47"/>
+</map>
