@@ -14,11 +14,16 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsSurfaceContext;
     class VulkanGraphicsResource;
+    class VulkanGraphicsResourceMemoryRegionBase;
+
     template <typename TResource>
     class VulkanGraphicsResourceMemoryRegion;
+
     class VulkanGraphicsMemoryAllocator;
     class VulkanGraphicsBuffer;
     class VulkanGraphicsTexture;
+    class VulkanGraphicsDescriptorSet;
+    class VulkanGraphicsCmdList;
 }
 
 namespace NovelRT::Graphics
@@ -32,6 +37,7 @@ namespace NovelRT::Graphics
         using SurfaceContextType = Vulkan::VulkanGraphicsSurfaceContext;
         using ContextType = Vulkan::VulkanGraphicsSurfaceContext;
         using ResourceType = Vulkan::VulkanGraphicsResource;
+        using ResourceMemoryRegionBaseType = Vulkan::VulkanGraphicsResourceMemoryRegionBase;
 
         template<typename TResource>
         using ResourceMemoryRegionType = Vulkan::VulkanGraphicsResourceMemoryRegion<TResource>;
@@ -39,6 +45,7 @@ namespace NovelRT::Graphics
         using MemoryAllocatorType = Vulkan::VulkanGraphicsMemoryAllocator;
         using BufferType = Vulkan::VulkanGraphicsBuffer;
         using TextureType = Vulkan::VulkanGraphicsTexture;
-        using DescriptorType = Vulkan::VulkanGraphicsDescriptorSet;
+        using DescriptorSetType = Vulkan::VulkanGraphicsDescriptorSet;
+        using CmdListType = Vulkan::VulkanGraphicsCmdList;
     };
 }
