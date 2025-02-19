@@ -5,27 +5,34 @@
 
 #include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsPipeline;
-    class VulkanGraphicsBuffer;
-    class VulkanGraphicsTexture;
+    class VulkanGraphicsResource;
 
-    class VulkanGraphicsDescriptorSet final : public VulkanGraphicsResource
+    class VulkanGraphicsDescriptorSet 
     {
     private:
+        VkDescriptorSet _descriptorSetHandle;
         std::shared_ptr<VulkanGraphicsPipeline> _pipeline;
+        std::vector<std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>> _inputResourceRegions;
+        
 
     public:
         explicit VulkanGraphicsDescriptorSet(std::shared_ptr<VulkanGraphicsPipeline> targetPipeline) noexcept;
 
-        ~VulkanGraphicsDescriptorSet() = default;
+        ~VulkanGraphicsDescriptorSet();
+
+        [[nodiscard]] VkDescriptorSet GetVulkanDescriptorSet() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPipeline> GetPipeline() const noexcept;
 
-        void AddBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsBuffer>> buffers);
+        void AddMemoryRegionToInputs(std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> region);
         
-        void AddTextures(NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsTexture>> textures);
+        void AddMemoryRegionsToInputs(NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>> regions);
+
+        void UpdateDescriptorSetData();
     };
 }

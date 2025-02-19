@@ -83,8 +83,8 @@ thirdparty_module(SndFile
   URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
 )
 thirdparty_module(spdlog
-  URL https://github.com/gabime/spdlog/archive/refs/tags/v1.13.0.zip
-  URL_HASH SHA512=851febf19949006a17ead8b6392f12ae81e626926268829478d4d0d28a1dfe7682ef57a6c4f151031cf4cc60f1486cf8453999ee7ce40a1f0d3f545c4d7f8555
+  URL https://github.com/gabime/spdlog/archive/refs/tags/v1.15.1.zip
+  URL_HASH SHA512=67b82452e046cb8d77082edeaf163460f2b171b3555c7feb32f5e0296921de2f3ebf279224509a8f0821947b274dd0b7f40ef01f1b8f612c80ba93cbc3e156cc
 )
 thirdparty_module(stduuid
   URL https://github.com/mariusbancila/stduuid/archive/3afe7193facd5d674de709fccc44d5055e144d7a.zip

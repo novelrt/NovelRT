@@ -14,7 +14,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsBuffer;
     class VulkanGraphicsTexture;
 
-    class VulkanGraphicsCmdList final : public VulkanGraphicsResource
+    class VulkanGraphicsCmdList final 
     {
     private:
         std::shared_ptr<VulkanGraphicsContext> _context;

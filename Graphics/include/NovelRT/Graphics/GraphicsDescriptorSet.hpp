@@ -14,15 +14,17 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsTexture;
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    //TODO: I NEED TO REWORK THIS I AM SUCH A MORON HOW DID I MESS THIS UP SO BADLY LMAO
+    //TODO: FIX BASE TYPING
     template<typename TBackend> class GraphicsDescriptorSet
     {
     public:
-        using BackendDescriptorSetType = GraphicsBackendTraits<TBackend>::DescriptorSetType;
+        using BackendDescriptorSetType = typename GraphicsBackendTraits<TBackend>::DescriptorSetType;
 
     private:
         std::shared_ptr<BackendDescriptorSetType> _implementation;
         std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
+
+        using BackendMemoryRegionBaseType = typename GraphicsBackendTraits<TBackend>::ResourceMemoryRegionBaseType;
 
     public:
         explicit GraphicsDescriptorSet(std::shared_ptr<BackendDescriptorSetType> implementation,
@@ -30,20 +32,19 @@ namespace NovelRT::Graphics
             : _implementation(implementation), _pipeline(targetPipeline)
         {
         }
-
-        [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> GetPipeline() const noexcept
+        
+        void AddMemoryRegionToInputs(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource<TBackend>, TBackend>> region)
         {
-            return _pipeline;
-        }
+            _implementation->AddMemoryRegionToInputs(region->GetImplementation());
+        } 
 
-        void AddBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers)
+        void AddMemoryRegionsToInputs(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource<TBackend>, TBackend>>> regions)
         {
-            _implementation->AddBuffers(buffers);
-        }
+            std::vector<std::shared_ptr<BackendMemoryRegionBaseType>> args{};
+            args.resize(regions.size());
+            std::transform(regions.begin(), regions.end(), args.begin(), [&](auto x){ return x->GetImplementation(); });
 
-        void AddTextures(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsTexture<TBackend>>> textures)
-        {
-            _implementation->AddTextures(textures);
+            _implementation->AddMemoryRegionsToInputs(args);
         }
     };
 }

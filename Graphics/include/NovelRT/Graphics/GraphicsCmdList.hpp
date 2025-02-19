@@ -32,12 +32,11 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsCmdList : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendCmdListType = GraphicsBackendTraits<TBackend>::CmdListType;
+        using BackendCmdListType = typename GraphicsBackendTraits<TBackend>::CmdListType;
+        using BackendDescriptorType = typename GraphicsBackendTraits<TBackend>::DescriptorSetType;
+        using BackendBufferType = typename GraphicsBackendTraits<TBackend>::BufferType;
 
     private:
-        using BackendDescriptorType = GraphicsBackendTraits<TBackend>::DescriptorSetType;
-        using BackendDescriptorType = GraphicsBackendTraits<TBackend>::BufferType;
-        
         std::shared_ptr<BackendCmdListType> _implementation;
         std::shared_ptr<GraphicsContext<TBackend>> _context;
 
@@ -50,17 +49,17 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsCmdList() override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext> GetContext() const noexcept
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept
         {
             return _context;
         }
 
-        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass> targetPass)
+        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass)
         {
             _implementation->CmdBeginRenderPass(targetPass->GetImplementation());
         }
 
-        void CmdBindDescriptorSets(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet>> sets)
+        void CmdBindDescriptorSets(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
         {
             std::vector<const std::shared_ptr<BackendDescriptorType>> transformedArgs{};
             transformedArgs.resize(sets.size());
@@ -70,29 +69,29 @@ namespace NovelRT::Graphics
 
         void CmdBindVertexBuffers(uint32_t firstBinding,
                                   uint32_t bindingCount,
-                                  NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers,
+                                  NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers,
                                   NovelRT::Utilities::Misc::Span<const size_t> offsets)
         {
-            std::vector<const std::shared_ptr<BufferType>> transformedArgs{};
+            std::vector<const std::shared_ptr<BackendBufferType>> transformedArgs{};
             transformedArgs.resize(buffers.size());
             std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(), [&](auto x) { return x->GetImplementation(); });
             _implementation->CmdBindVertexBuffers(firstBinding, bindingCount, transformedArgs, offsets);
         }
 
-        void CmdBindIndexBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer>> buffers)
+        void CmdBindIndexBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers)
         {
-            std::vector<const std::shared_ptr<BufferType>> transformedArgs{};
+            std::vector<const std::shared_ptr<BackendBufferType>> transformedArgs{};
             transformedArgs.resize(buffers.size());
             std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(), [&](auto x) { return x->GetImplementation(); });
             _implementation->CmdBindIndexbuffers(transformedArgs);
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsBuffer> destination, std::shared_ptr<GraphicsBuffer> source)
+        void CmdCopy(std::shared_ptr<GraphicsBuffer<TBackend>> destination, std::shared_ptr<GraphicsBuffer<TBackend>> source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsTexture> destination, std::shared_ptr<GraphicsBuffer> source)
+        void CmdCopy(std::shared_ptr<GraphicsTexture<TBackend>> destination, std::shared_ptr<GraphicsBuffer<TBackend>> source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
