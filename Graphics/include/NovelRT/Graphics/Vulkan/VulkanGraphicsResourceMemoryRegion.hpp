@@ -15,23 +15,23 @@ namespace NovelRT::Graphics::Vulkan
     {
     private:
         std::shared_ptr<VulkanGraphicsDevice> _device;
-        std::shared_ptr<VulkanGraphicsResource> _owningResource;
         VmaVirtualAllocation _virtualAllocation;
         VmaVirtualAllocationInfo _virtualAllocationInfo;
 
-    public:
+    protected:
+        std::shared_ptr<VulkanGraphicsResource> _owningResource;
+
         VulkanGraphicsResourceMemoryRegionBase(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                            std::shared_ptr<VulkanGraphicsResource> owningResource,
                                            VmaVirtualAllocation virtualAllocation,
                                            VmaVirtualAllocationInfo virtualAllocationInfo);
 
+    public:
         ~VulkanGraphicsResourceMemoryRegionBase() = default;
-
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsResource> GetOwningResource() const noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
 
-        [[nodiscard]] size_t GetRelativeOffset() const noexcept;
+        [[nodiscard]] size_t GetOffset() const noexcept;
 
         [[nodiscard]] size_t GetSize() const noexcept;
 
@@ -45,11 +45,16 @@ namespace NovelRT::Graphics::Vulkan
     {
     public:
         VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                                         std::shared_ptr<VulkanGraphicsResource> owningResource,
+                                         std::shared_ptr<TResource> owningResource,
                                          VmaVirtualAllocation virtualAllocation,
                                            VmaVirtualAllocationInfo virtualAllocationInfo)
             : VulkanGraphicsResourceMemoryRegionBase(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
         {
+        }
+
+        [[nodiscard]] std::shared_ptr<TResource> GetOwningResource() const noexcept
+        {
+            return std::static_pointer_cast<TResource>(_owningResource);
         }
 
         ~VulkanGraphicsResourceMemoryRegion() = default;

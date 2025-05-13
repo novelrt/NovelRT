@@ -12,7 +12,7 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsTexture : public VulkanGraphicsResource
+    class VulkanGraphicsTexture : public VulkanGraphicsResource, public std::enable_shared_from_this<VulkanGraphicsTexture>
     {
     private:
         VkImage _vulkanImage;
@@ -36,6 +36,8 @@ namespace NovelRT::Graphics::Vulkan
             VkDeviceSize offset) final;
 
     public:
+        using std::enable_shared_from_this<VulkanGraphicsTexture>::shared_from_this;
+        
         VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                               std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                               GraphicsResourceAccess cpuAccess,

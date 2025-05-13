@@ -30,12 +30,7 @@ namespace NovelRT::Graphics::Vulkan
         return _device;
     }
 
-    std::shared_ptr<VulkanGraphicsResource> VulkanGraphicsResourceMemoryRegionBase::GetOwningResource() const noexcept
-    {
-        return _owningResource;
-    }
-
-    size_t VulkanGraphicsResourceMemoryRegionBase::GetRelativeOffset() const noexcept
+    size_t VulkanGraphicsResourceMemoryRegionBase::GetOffset() const noexcept
     {
         return _virtualAllocationInfo.offset;
     }

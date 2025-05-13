@@ -3,7 +3,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/RGBAColour.hpp>
 #include <NovelRT/Maths/GeoVector2F.h>
 #include <NovelRT/Utilities/Misc.h>
 #include <memory>
@@ -29,7 +29,21 @@ namespace NovelRT::Graphics
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsCmdList : public GraphicsDeviceObject<TBackend>
+    enum class IndexType
+    {
+        None = 0,
+        UInt16 = 1,
+        UInt32 = 2
+    };
+
+    struct ClearValue
+    {
+        RGBAColour colour;
+        float depth;
+        uint32_t stencil;
+    };
+
+    template<typename TBackend> class GraphicsCmdList
     {
     public:
         using BackendCmdListType = typename GraphicsBackendTraits<TBackend>::CmdListType;
@@ -54,9 +68,14 @@ namespace NovelRT::Graphics
             return _context;
         }
 
-        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass)
+        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass, Utilities::Misc::Span<const ClearValue> clearValues)
         {
-            _implementation->CmdBeginRenderPass(targetPass->GetImplementation());
+            _implementation->CmdBeginRenderPass(targetPass->GetImplementation(), clearValues);
+        }
+
+        void CmdEndRenderPass()
+        {
+            _implementation->CmdEndRenderPass();
         }
 
         void CmdBindDescriptorSets(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
@@ -86,39 +105,45 @@ namespace NovelRT::Graphics
             _implementation->CmdBindIndexbuffers(transformedArgs);
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsBuffer<TBackend>> destination, std::shared_ptr<GraphicsBuffer<TBackend>> source)
+        void CmdCopy(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer<TBackend>, TBackend>> destination, std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer<TBackend>, TBackend>> source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsTexture<TBackend>> destination, std::shared_ptr<GraphicsBuffer<TBackend>> source)
+        void CmdCopy(std::shared_ptr<GraphicsTexture<TBackend>> destination, std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer<TBackend>, TBackend>> source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
-        void CmdDrawIndexed(uint32_t instanceCount)
+        void CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, size_t vertexOffset, uint32_t firstInstance)
         {
-            _implementation->CmdDrawIndexed(instanceCount);
+            _implementation->CmdDrawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
         }
 
-        void CmdDraw(uint32_t instanceCount, uint32_t bufferStride)
+        void CmdDraw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
         {
-            _implementation->CmdDraw(instanceCount, bufferStride);
+            _implementation->CmdDraw(vertexCount, instanceCount, firstVertex, firstInstance);
         }
 
-        void CmdSetScissor(Maths::GeoVector2F extent)
+        void CmdSetScissor(Maths::GeoVector2F offset, Maths::GeoVector2F extent)
         {
-            _implementation->CmdSetScissor(extent);
+            _implementation->CmdSetScissor(offset, extent);
         }
 
-        void CmdSetScissor(float xExtent, float yExtent)
+        void CmdSetViewport(ViewportInfo viewportInfo)
         {
-            _implementation->CmdSetScissor(xExtent, yExtent);
+            _implementation->CmdSetViewport(viewportInfo);
         }
 
-        void CmdSetViewport(uint32_t firstViewport, uint32_t viewportCount, ViewportInfo viewportInfo)
+        void CmdBeginTexturePipelineBarrierLegacyVersion(std::shared_ptr<GraphicsTexture<TBackend>> texture)
         {
-            _implementation->CmdSetViewport(firstViewport, viewportCount, viewportInfo);
-        }
+            _implementation->CmdBeginTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
+        }    
+        
+        void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<GraphicsTexture<TBackend>> texture)
+        {
+            _implementation->CmdEndTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
+        }    
+        
     };
 }

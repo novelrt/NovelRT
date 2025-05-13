@@ -24,9 +24,9 @@ namespace NovelRT::Graphics::Vulkan
         _pipeline->GetSignature()->DestroyDescriptorSets(fuck);
     }
 
-    VkDescriptorSet VulkanGraphicsDescriptorSet::GetVulkanDescriptorSet() const noexcept
+    const VkDescriptorSet* VulkanGraphicsDescriptorSet::GetVulkanDescriptorSet() const noexcept
     {
-        return _descriptorSetHandle;
+        return &_descriptorSetHandle;
     }
 
     std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDescriptorSet::GetPipeline() const noexcept
@@ -67,7 +67,7 @@ namespace NovelRT::Graphics::Vulkan
                 {
                     VkDescriptorBufferInfo descriptorBufferInfo{};
                     descriptorBufferInfo.buffer = buffer->GetVulkanBuffer();
-                    descriptorBufferInfo.offset = inputResourceRegion->GetRelativeOffset();
+                    descriptorBufferInfo.offset = inputResourceRegion->GetOffset();
                     descriptorBufferInfo.range = inputResourceRegion->GetSize();
 
                     writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

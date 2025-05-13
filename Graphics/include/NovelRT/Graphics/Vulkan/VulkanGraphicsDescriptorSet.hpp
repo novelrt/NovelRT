@@ -25,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
 
         ~VulkanGraphicsDescriptorSet();
 
-        [[nodiscard]] VkDescriptorSet GetVulkanDescriptorSet() const noexcept;
+        [[nodiscard]] const VkDescriptorSet* GetVulkanDescriptorSet() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPipeline> GetPipeline() const noexcept;
 
