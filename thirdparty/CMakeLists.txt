@@ -47,6 +47,10 @@ thirdparty_module(GTest
   URL_HASH SHA512=16cc8f5b03b862e2937d1b926ca6dc291234ac5670050dc4fc2752ec98497330ebcd46f292317cd2bbb111ce33bbdcfd088ddf6a7fe273e2442963908732d589
   OVERRIDE_FIND_PACKAGE
 )
+thirdparty_module(imgui
+  URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9b.zip
+  URL_HASH SHA512=d99bc25165f814dda952e0f4a4cd6c028c1217c1b482e089c3ab04fa460d6fb1062beff7561c8d75998be63c1b514fa25b2ac514881f240d5e62f67f1b097b5e
+)
 thirdparty_module(nlohmann_json
   URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
   URL_HASH SHA512=1aa94cdc3378a1fe0e3048ee73293e34bfa5ed9b46c6db0993e58e289ef818f7b7a472c0dc9c920114312e2e3ae1ff346ca797407ff48143744592adfd0a41ad
@@ -108,6 +112,7 @@ thirdparty_module(ZLIB
   URL_HASH SHA512=4888f17160d0a87a9b349704047ae0d0dc57237a10e11adae09ace957afa9743cce5191db67cb082991421fc961ce68011199621034d2369c0e7724fad58b4c5
   OVERRIDE_FIND_PACKAGE
 )
+
 
 # N.B. Order matters here, for dependency searching!
 foreach(module
