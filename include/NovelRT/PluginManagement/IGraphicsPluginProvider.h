@@ -5,6 +5,8 @@
 #define NOVELRT_GRAPHICS_IGRAPHICSPLUGINPROVIDER_H
 
 #include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 namespace NovelRT::Graphics
 {

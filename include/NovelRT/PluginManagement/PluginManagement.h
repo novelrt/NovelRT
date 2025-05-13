@@ -7,7 +7,6 @@
 // PluginManagement Dependencies
 #include "../ResourceManagement/ResourceManagement.h"
 #include "../Windowing/Windowing.h"
-#include <NovelRT/Graphics/Graphics.hpp>
 #include <NovelRT/Input/IInputDevice.hpp>
 
 /**

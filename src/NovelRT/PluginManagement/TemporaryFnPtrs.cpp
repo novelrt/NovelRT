@@ -1,13 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-
-#include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
-#include <NovelRT/Input/Glfw/Input.Glfw.h>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Input/Glfw/GlfwInputPluginProvider.hpp>
 #include <NovelRT/PluginManagement/PluginManagement.h>
 #include <NovelRT/PluginManagement/TemporaryFnPtrs.h>
 #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 
