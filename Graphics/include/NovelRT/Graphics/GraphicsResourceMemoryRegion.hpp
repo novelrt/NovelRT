@@ -40,9 +40,9 @@ namespace NovelRT::Graphics
             return _owningResource;
         }
 
-        [[nodiscard]] size_t GetRelativeOffset() const noexcept
+        [[nodiscard]] size_t GetOffset() const noexcept
         {
-            return _implementation->GetRelativeOffset();
+            return _implementation->GetOffset();
         }
 
         [[nodiscard]] virtual size_t GetSize() const noexcept
@@ -52,12 +52,12 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes()
         {
-            return _implementation->MapBytes(GetRelativeOffset(), GetSize());
+            return _implementation->MapBytes(GetOffset(), GetSize());
         }
 
         [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead()
         {
-            return _implementation->MapBytesForRead(GetRelativeOffset(), GetSize());
+            return _implementation->MapBytesForRead(GetOffset(), GetSize());
         }
 
         void UnmapBytes()
@@ -67,7 +67,7 @@ namespace NovelRT::Graphics
 
         void UnmapBytesAndWrite()
         {
-            _implementation->UnmapBytesAndWrite(GetRelativeOffset(), GetSize());
+            _implementation->UnmapBytesAndWrite(GetOffset(), GetSize());
         }
 
         template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map()

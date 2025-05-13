@@ -18,6 +18,7 @@ namespace NovelRT::Graphics::Vulkan
     {
     private:
         std::shared_ptr<VulkanGraphicsContext> _context;
+        VkCommandBuffer _commandBuffer;
 
     public:
         explicit VulkanGraphicsCmdList(std::shared_ptr<VulkanGraphicsContext> context) noexcept;
@@ -26,7 +27,9 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetContext() const noexcept;
 
-        void CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass);
+        void CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass, Utilities::Misc::Span<ClearValue> clearValues);
+
+        void CmdEndRenderPass();
 
         void CmdBindDescriptorSets(
             NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsDescriptorSet>> sets);
@@ -36,20 +39,22 @@ namespace NovelRT::Graphics::Vulkan
                                   NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsBuffer>> buffers,
                                   NovelRT::Utilities::Misc::Span<const size_t> offsets);
 
-        void CmdBindIndexBuffers(NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsBuffer>> buffers);
-
-        void CmdCopy(std::shared_ptr<VulkanGraphicsBuffer> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
+        void CmdBindIndexBuffer(std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> buffer, IndexType indexType);
         
-        void CmdCopy(std::shared_ptr<VulkanGraphicsTexture> destination, std::shared_ptr<VulkanGraphicsBuffer> source);
-
-        void CmdDrawIndexed(uint32_t instanceCount);
-
-        void CmdDraw(uint32_t instanceCount, uint32_t bufferStride);
-
-        void CmdSetScissor(Maths::GeoVector2F extent);
+        void CmdCopy(std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> destination, std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> source);
         
-        void CmdSetScissor(float xExtent, float yExtent);
+        void CmdCopy(std::shared_ptr<VulkanGraphicsTexture> destination, std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> source);
 
-        void CmdSetViewport(uint32_t firstViewport, uint32_t viewportCount, ViewportInfo viewportInfo);
+        void CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, size_t vertexOffset, uint32_t firstInstance);
+
+        void CmdDraw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
+
+        void CmdSetScissor(Maths::GeoVector2F offset, Maths::GeoVector2F extent);        
+
+        void CmdSetViewport(ViewportInfo viewportInfo);
+
+        void CmdBeginTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture);    
+        
+        void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture);    
     };
 }

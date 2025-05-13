@@ -24,6 +24,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsTexture;
     class VulkanGraphicsDescriptorSet;
     class VulkanGraphicsCmdList;
+    class VulkanGraphicsRenderPass;
 }
 
 namespace NovelRT::Graphics
@@ -47,5 +48,6 @@ namespace NovelRT::Graphics
         using TextureType = Vulkan::VulkanGraphicsTexture;
         using DescriptorSetType = Vulkan::VulkanGraphicsDescriptorSet;
         using CmdListType = Vulkan::VulkanGraphicsCmdList;
+        using RenderPassType = Vulkan::VulkanGraphicsRenderPass;
     };
 }

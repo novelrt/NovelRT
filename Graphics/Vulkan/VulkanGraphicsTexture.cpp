@@ -104,7 +104,7 @@ namespace NovelRT::Graphics::Vulkan
 
         VmaVirtualAllocationInfo allocInfo{};
         vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
-        return std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsTexture>>(
             GetDevice(), shared_from_this(), allocation, allocInfo);
     }
 

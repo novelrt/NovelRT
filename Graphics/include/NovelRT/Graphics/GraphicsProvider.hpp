@@ -14,7 +14,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsProvider;
 }
 
-namespace NovelRT::Graphics::details
+namespace NovelRT::Graphics::Details
 {
     template <typename TBackend> struct GraphicsAdapterIterator
     {
@@ -76,7 +76,7 @@ namespace NovelRT::Graphics
     public:
         using BackendProviderType = typename GraphicsBackendTraits<TBackend>::ProviderType;
 
-        using iterator = typename details::GraphicsAdapterIterator<TBackend>;
+        using iterator = typename Details::GraphicsAdapterIterator<TBackend>;
 
     private:
         std::shared_ptr<BackendProviderType> _implementation;
