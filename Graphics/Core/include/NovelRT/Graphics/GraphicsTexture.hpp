@@ -42,7 +42,7 @@ namespace NovelRT::Graphics
               _kind(createInfo.textureKind),
               _width(createInfo.width),
               _height(createInfo.height),
-              _depth(createInfo.depth)
+              _depth(static_cast<uint16_t>(createInfo.depth)) // TODO: Figure this out later, seems wrong
         {
         }
 
