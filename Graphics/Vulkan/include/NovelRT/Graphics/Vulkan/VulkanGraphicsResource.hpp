@@ -24,7 +24,7 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::tuple<VmaVirtualAllocation, VkDeviceSize> GetVirtualAllocation(size_t size, size_t alignment);
 
     protected:
-        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) = 0;
+        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) = 0;
 
     public:
         VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -43,7 +43,15 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] size_t GetSize() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> Allocate(size_t size, size_t alignment);
+
+        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+
+        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) = 0;
+
+        virtual void UnmapBytes() = 0;
+
+        virtual void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
 
         [[nodiscard]] VmaAllocation GetAllocation() const noexcept;
 

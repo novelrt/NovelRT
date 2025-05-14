@@ -96,7 +96,7 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanSampler;
     }
 
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsTexture::AllocateInternal(
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsTexture::AllocateInternal(
         VmaVirtualAllocation allocation,
         VkDeviceSize offset)
     {
@@ -104,8 +104,9 @@ namespace NovelRT::Graphics::Vulkan
 
         VmaVirtualAllocationInfo allocInfo{};
         vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
-        return std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsTexture>>(
-            GetDevice(), shared_from_this(), allocation, allocInfo);
+        return std::static_pointer_cast<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>(
+            std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsTexture>>(
+                GetDevice(), shared_from_this(), allocation, allocInfo));
     }
 
     VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
@@ -136,12 +137,12 @@ namespace NovelRT::Graphics::Vulkan
         unused(subAllocations);
 
         VkResult result = vkBindImageMemory(GetDevice()->GetVulkanDevice(), GetVulkanImage(), GetAllocationInfo().deviceMemory, GetAllocationInfo().offset);
-        
+
         if (result != VK_SUCCESS)
         {
             throw Exceptions::InitialisationFailureException("Failed to bind VkImage to VkImageMemory correctly.",
                                                              result);
-        } 
+        }
     }
 
     VulkanGraphicsTexture::~VulkanGraphicsTexture() noexcept

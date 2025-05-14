@@ -6,6 +6,8 @@
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <vk_mem_alloc.h>
 
+#include <type_traits>
+
 namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsDevice;
@@ -41,20 +43,23 @@ namespace NovelRT::Graphics::Vulkan
     };
 
     template<typename TResource>
-    class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegionBase
+    class VulkanGraphicsResourceMemoryRegion
+        : public std::conditional_t<std::is_same_v<TResource, VulkanGraphicsResource>, VulkanGraphicsResourceMemoryRegionBase, VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>
     {
+    private:
+        using Super = std::conditional_t<std::is_same_v<TResource, VulkanGraphicsResource>, VulkanGraphicsResourceMemoryRegionBase, VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>;
     public:
         VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                          std::shared_ptr<TResource> owningResource,
                                          VmaVirtualAllocation virtualAllocation,
                                            VmaVirtualAllocationInfo virtualAllocationInfo)
-            : VulkanGraphicsResourceMemoryRegionBase(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
+            : Super(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
         {
         }
 
         [[nodiscard]] std::shared_ptr<TResource> GetOwningResource() const noexcept
         {
-            return std::static_pointer_cast<TResource>(_owningResource);
+            return std::static_pointer_cast<TResource>(VulkanGraphicsResourceMemoryRegionBase::_owningResource);
         }
 
         ~VulkanGraphicsResourceMemoryRegion() = default;

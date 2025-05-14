@@ -109,7 +109,7 @@ namespace NovelRT::Graphics::Vulkan
         return returnDescriptorPool;
     }
 
-    VkDescriptorSet VulkanGraphicsPipelineSignature::CreateDescriptorSet()
+    VkDescriptorSet VulkanGraphicsPipelineSignature::CreateDescriptorSetImpl()
     {
         VkDescriptorSet returnDescriptorSet = VK_NULL_HANDLE;
         VkDescriptorPool vulkanDescriptorPool = GetVulkanDescriptorPool();

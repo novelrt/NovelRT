@@ -32,7 +32,12 @@ namespace NovelRT::Graphics
         {
         }
 
-        virtual ~ShaderProgram() override = default;
+        virtual ~ShaderProgram() noexcept override = default;
+
+        [[nodiscard]] std::shared_ptr<BackendShaderProgramType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
 
         [[nodiscard]] const std::string& GetEntryPointName() const noexcept
         {

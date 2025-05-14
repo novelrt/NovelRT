@@ -31,7 +31,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept
         {
-            return _implementation->GetFence();
+            return std::make_shared<GraphicsFence<TBackend>>(_implementation->GetFence(), GraphicsDeviceObject<TBackend>::GetDevice());
         }
 
         [[nodiscard]] inline size_t GetIndex() const noexcept

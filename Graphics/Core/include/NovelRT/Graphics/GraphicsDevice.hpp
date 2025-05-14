@@ -64,7 +64,7 @@ namespace NovelRT::Graphics::Details
 
             inline auto operator*() const
             {
-                return std::make_shared<GraphicsContext<TBackend>>(*_iterator, _provider);
+                return std::make_shared<GraphicsContext<TBackend>>(*_iterator, _provider, _iterator->GetIndex());
             }
 
             inline auto operator++()
@@ -143,9 +143,9 @@ namespace NovelRT::Graphics
             return iterator{_implementation->end(), this->shared_from_this()};
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
         {
-            return std::make_shared<GraphicsContext<TBackend>>(this, _implementation->GetCurrentContext());
+            return std::make_shared<GraphicsContext<TBackend>>(_implementation->GetCurrentContext(), this->shared_from_this(), GetContextIndex());
         }
 
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
@@ -163,7 +163,15 @@ namespace NovelRT::Graphics
             std::shared_ptr<ShaderProgram<TBackend>> vertexShader,
             std::shared_ptr<ShaderProgram<TBackend>> pixelShader)
         {
-            return _implementation->CreatePipeline(signature, vertexShader, pixelShader);
+            return std::make_shared<GraphicsPipeline<TBackend>>(
+                _implementation->CreatePipeline(
+                    signature->GetImplementation(),
+                    vertexShader->GetImplementation(),
+                    pixelShader->GetImplementation()),
+                this->shared_from_this(),
+                signature,
+                vertexShader,
+                pixelShader);
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> CreatePipelineSignature(
@@ -172,7 +180,17 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources)
         {
-            return _implementation->CreatePipelineSignature(srcBlendFactor, dstBlendFactor, inputs, resources);
+            return std::make_shared<GraphicsPipelineSignature<TBackend>>(
+                _implementation->CreatePipelineSignature(
+                    srcBlendFactor,
+                    dstBlendFactor,
+                    inputs,
+                    resources),
+                this->shared_from_this(),
+                srcBlendFactor,
+                dstBlendFactor,
+                inputs,
+                resources);
         }
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(
@@ -180,7 +198,11 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Misc::Span<uint8_t> byteData)
         {
-            return _implementation->CreateShaderProgram(entryPointName, kind, byteData);
+            return std::make_shared<ShaderProgram<TBackend>>(
+                _implementation->CreateShaderProgram(entryPointName, kind, byteData),
+                this->shared_from_this(),
+                entryPointName,
+                kind);
         }
 
         void PresentFrame()
@@ -190,7 +212,7 @@ namespace NovelRT::Graphics
 
         void Signal(std::shared_ptr<GraphicsFence<TBackend>> fence)
         {
-            _implementation->Signal(fence);
+            _implementation->Signal(fence->GetImplementation());
         }
 
         void WaitForIdle()

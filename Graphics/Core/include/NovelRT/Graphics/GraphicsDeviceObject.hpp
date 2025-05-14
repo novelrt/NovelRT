@@ -18,11 +18,12 @@ namespace NovelRT::Graphics
         std::weak_ptr<GraphicsDevice<TBackend>> _graphicsDevice;
 
     public:
+
         explicit GraphicsDeviceObject(std::shared_ptr<GraphicsDevice<TBackend>> graphicsDevice) noexcept
             : _graphicsDevice(graphicsDevice)
         {
         }
-        
+
         virtual ~GraphicsDeviceObject() noexcept = default;
 
         [[nodiscard]] inline std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const

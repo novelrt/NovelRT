@@ -5,12 +5,15 @@
 
 #include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
+
 #include <vk_mem_alloc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsTexture;
     class VulkanGraphicsBuffer;
+    class VulkanGraphicsDevice;
+    class VulkanGraphicsProvider;
+    class VulkanGraphicsTexture;
 
     class VulkanGraphicsMemoryAllocator : public std::enable_shared_from_this<VulkanGraphicsMemoryAllocator>
     {

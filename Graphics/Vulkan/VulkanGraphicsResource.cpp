@@ -73,7 +73,7 @@ namespace NovelRT::Graphics::Vulkan
         return _allocationInfo.size;
     }
 
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
     {
         auto [allocation, offset] = GetVirtualAllocation(size, alignment);
         return AllocateInternal(allocation, offset);
@@ -94,4 +94,3 @@ namespace NovelRT::Graphics::Vulkan
         return _virtualBlock;
     }
 }
-

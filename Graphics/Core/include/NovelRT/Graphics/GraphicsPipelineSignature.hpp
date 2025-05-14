@@ -41,7 +41,12 @@ namespace NovelRT::Graphics
         {
         }
 
-        virtual ~GraphicsPipelineSignature() = default;
+        virtual ~GraphicsPipelineSignature() noexcept override = default;
+
+        [[nodiscard]] std::shared_ptr<BackendPipelineSignatureType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
 
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
         {
@@ -55,7 +60,10 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet()
         {
-            return _implementation->CreateDescriptorSet();
+            // TODO: this
+            return std::make_shared<GraphicsDescriptorSet<TBackend>>(
+                _implementation->CreateDescriptorSet(),
+                nullptr);
         }
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs()

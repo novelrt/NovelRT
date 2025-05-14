@@ -31,7 +31,7 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VkSampler CreateVulkanSampler();
 
     protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> AllocateInternal(
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(
             VmaVirtualAllocation allocation,
             VkDeviceSize offset) final;
 
@@ -56,14 +56,14 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength);
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                           size_t rangeLength);
+                                                                           size_t rangeLength) override;
 
-        void UnmapBytes();
+        void UnmapBytes() final;
 
-        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength);
+        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
         [[nodiscard]] VkImage GetVulkanImage() const noexcept;
 

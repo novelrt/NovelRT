@@ -13,29 +13,37 @@ namespace NovelRT::Graphics
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TResource, typename TBackend>
+    template<template <typename TBackend> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion : public GraphicsDeviceObject<TBackend>
     {
-        static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource>,
+        static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource<TBackend>>,
                       "Incompatible type specified as the resource type.");
 
     public:
-        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::ResourceMemoryRegionType;
+        using BackendResourceType = typename TResource<TBackend>::BackendResourceType;
+        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<BackendResourceType>;
 
     private:
         std::shared_ptr<BackendResourceMemoryRegionType> _implementation;
-        std::shared_ptr<TResource> _owningResource;
+        std::shared_ptr<TResource<TBackend>> _owningResource;
 
     public:
         GraphicsResourceMemoryRegion(std::shared_ptr<BackendResourceMemoryRegionType> implementation,
-                                     std::shared_ptr<TResource> owningResource)
-            : GraphicsDeviceObject<TBackend>(implementation->GetDevice()),
+                                     std::shared_ptr<TResource<TBackend>> owningResource)
+            : GraphicsDeviceObject<TBackend>(owningResource->GetDevice()),
               _implementation(implementation),
               _owningResource(owningResource)
         {
         }
 
-        [[nodiscard]] std::shared_ptr<TResource> GetOwningResource() const noexcept
+        virtual ~GraphicsResourceMemoryRegion() noexcept override = default;
+
+        [[nodiscard]] std::shared_ptr<BackendResourceMemoryRegionType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
+
+        [[nodiscard]] std::shared_ptr<TResource<TBackend>> GetOwningResource() const noexcept
         {
             return _owningResource;
         }

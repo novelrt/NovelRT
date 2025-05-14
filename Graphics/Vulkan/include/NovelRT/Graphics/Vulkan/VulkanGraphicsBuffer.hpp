@@ -3,7 +3,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsBuffer.hpp>
+#include <NovelRT/Graphics/GraphicsBufferKind.hpp>
+#include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <memory>
 #include <vk_mem_alloc.h>
@@ -23,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsBufferKind _kind;
 
     protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) final;
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) final;
 
     public:
         using std::enable_shared_from_this<VulkanGraphicsBuffer>::shared_from_this;
@@ -49,15 +51,15 @@ namespace NovelRT::Graphics::Vulkan
             return _kind;
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength);
+        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                                    size_t rangeLength);
+                                                                                    size_t rangeLength) final;
 
-        void UnmapBytes();
+        void UnmapBytes() final;
 
-        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength);
+        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
-        [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;    
+        [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;
     };
 }

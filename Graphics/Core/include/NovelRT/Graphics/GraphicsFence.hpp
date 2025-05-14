@@ -23,7 +23,12 @@ namespace NovelRT::Graphics
         {
         }
 
-        virtual ~GraphicsFence() override = default;
+        virtual ~GraphicsFence() noexcept override = default;
+
+        [[nodiscard]] std::shared_ptr<BackendFenceType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
 
         [[nodiscard]] bool GetIsSignalled()
         {
@@ -52,7 +57,7 @@ namespace NovelRT::Graphics
 
         inline void Wait()
         {
-            Wait(std::numeric_limits<uint64_t>::max());
+            _implementation->Wait();
         }
     };
 }

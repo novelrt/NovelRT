@@ -24,7 +24,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<BackendDescriptorSetType> _implementation;
         std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
 
-        using BackendMemoryRegionBaseType = typename GraphicsBackendTraits<TBackend>::ResourceMemoryRegionBaseType;
+        using BackendMemoryRegionBaseType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<typename GraphicsBackendTraits<TBackend>::ResourceType>;
 
     public:
         explicit GraphicsDescriptorSet(std::shared_ptr<BackendDescriptorSetType> implementation,
@@ -32,13 +32,18 @@ namespace NovelRT::Graphics
             : _implementation(implementation), _pipeline(targetPipeline)
         {
         }
-        
-        void AddMemoryRegionToInputs(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource<TBackend>, TBackend>> region)
+
+        [[nodiscard]] std::shared_ptr<BackendDescriptorSetType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
+
+        void AddMemoryRegionToInputs(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>> region)
         {
             _implementation->AddMemoryRegionToInputs(region->GetImplementation());
-        } 
+        }
 
-        void AddMemoryRegionsToInputs(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource<TBackend>, TBackend>>> regions)
+        void AddMemoryRegionsToInputs(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> regions)
         {
             std::vector<std::shared_ptr<BackendMemoryRegionBaseType>> args{};
             args.resize(regions.size());

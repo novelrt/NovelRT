@@ -11,6 +11,8 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
+    class VulkanGraphicsDescriptorSet;
+    class VulkanGraphicsDescriptorSet;
     class VulkanGraphicsDevice;
 
     class VulkanGraphicsPipelineSignature
@@ -25,7 +27,7 @@ namespace NovelRT::Graphics::Vulkan
         NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
 
         [[nodiscard]] VkDescriptorPool CreateDescriptorPool();
-        [[nodiscard]] VkDescriptorSet CreateDescriptorSet();
+        [[nodiscard]] VkDescriptorSet CreateDescriptorSetImpl();
         [[nodiscard]] VkDescriptorSetLayout CreateDescriptorSetLayout();
         [[nodiscard]] VkPipelineLayout CreatePipelineLayout();
 
@@ -43,7 +45,7 @@ namespace NovelRT::Graphics::Vulkan
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
-        
+
         ~VulkanGraphicsPipelineSignature();
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const
@@ -71,10 +73,17 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanDescriptorPool.getActual();
         }
 
-        [[nodiscard]] inline VkDescriptorSet GenerateVulkanDescriptorSet()
+        [[nodiscard]] inline VkDescriptorSet GetDescriptorSetHandle()
         {
-            return CreateDescriptorSet();
+            return CreateDescriptorSetImpl();
         }
+
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsDescriptorSet> CreateDescriptorSet()
+        {
+            // TODO: this
+            return nullptr;
+        }
+
 
         [[nodiscard]] inline VkDescriptorSetLayout GetVulkanDescriptorSetLayout()
         {
@@ -85,7 +94,7 @@ namespace NovelRT::Graphics::Vulkan
         {
             return _vulkanPipelineLayout.getActual();
         }
-        
+
         NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources()
             const noexcept
         {

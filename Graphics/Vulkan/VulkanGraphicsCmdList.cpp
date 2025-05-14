@@ -22,7 +22,7 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     void VulkanGraphicsCmdList::CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass,
-                                                   Utilities::Misc::Span<ClearValue> clearValues)
+                                                   Utilities::Misc::Span<const ClearValue> clearValues)
     {
         auto device = _context->GetDevice();
         auto surface = device->GetSurface();
@@ -127,7 +127,7 @@ namespace NovelRT::Graphics::Vulkan
         vulkanBufferCopy.srcOffset = source->GetOffset();
         vulkanBufferCopy.dstOffset = destination->GetOffset();
         vulkanBufferCopy.size = std::min(destination->GetSize(), source->GetSize());
-        
+
         vkCmdCopyBuffer(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), destination->GetOwningResource()->GetVulkanBuffer(), 1, &vulkanBufferCopy);
     }
 
@@ -215,8 +215,8 @@ namespace NovelRT::Graphics::Vulkan
 
         vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
                              nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
-    }  
-        
+    }
+
     void VulkanGraphicsCmdList::CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture)
     {
         VkImageSubresourceRange subresourceRange{};

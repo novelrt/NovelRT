@@ -8,15 +8,16 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegionBase> VulkanGraphicsBuffer::AllocateInternal(
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsBuffer::AllocateInternal(
         VmaVirtualAllocation allocation,
         VkDeviceSize offset)
     {
         unused(offset); // TODO: figure out if we need offset
-    
+
         VmaVirtualAllocationInfo allocInfo{};
         vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
-        return std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, allocInfo);
+        return std::static_pointer_cast<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>(
+            std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, allocInfo));
     }
 
     VulkanGraphicsBuffer::VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,

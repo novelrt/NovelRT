@@ -12,13 +12,13 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipeline;
     class VulkanGraphicsResource;
 
-    class VulkanGraphicsDescriptorSet 
+    class VulkanGraphicsDescriptorSet
     {
     private:
         VkDescriptorSet _descriptorSetHandle;
         std::shared_ptr<VulkanGraphicsPipeline> _pipeline;
         std::vector<std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>> _inputResourceRegions;
-        
+
 
     public:
         explicit VulkanGraphicsDescriptorSet(std::shared_ptr<VulkanGraphicsPipeline> targetPipeline) noexcept;
@@ -30,7 +30,7 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<VulkanGraphicsPipeline> GetPipeline() const noexcept;
 
         void AddMemoryRegionToInputs(std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> region);
-        
+
         void AddMemoryRegionsToInputs(NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>> regions);
 
         void UpdateDescriptorSetData();

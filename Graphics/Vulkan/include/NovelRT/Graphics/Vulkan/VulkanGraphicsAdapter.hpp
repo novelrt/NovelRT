@@ -3,9 +3,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsAdapter.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Threading/Threading.h>
 #include <NovelRT/Utilities/Lazy.h>
 #include <string>
@@ -13,8 +10,9 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsProvider;
     class VulkanGraphicsDevice;
+    class VulkanGraphicsProvider;
+    class VulkanGraphicsSurfaceContext;
 
     class VulkanGraphicsAdapter : public std::enable_shared_from_this<VulkanGraphicsAdapter>
     {
@@ -68,7 +66,7 @@ namespace NovelRT::Graphics::Vulkan
             std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
             int32_t contextCount);
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const 
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const
         {
             if (_provider.expired())
             {
