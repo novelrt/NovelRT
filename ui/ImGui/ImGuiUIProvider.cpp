@@ -70,33 +70,34 @@ namespace NovelRT::UI::DearImGui
         defaultRenderingSystem->ForceVertexTextureFutureResolution(); // force the atlas to be on the GPU before game launch
          */
 
+         
         auto graphicsContext = graphicsDevice->GetCurrentContext();
 
-        graphicsContext->BeginFrame();
-        auto textureStagingBuffer = graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-            Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write, Graphics::GraphicsResourceAccess::Read, 64 * 1024 * 4);
+        // graphicsContext->BeginFrame();
+        // auto textureStagingBuffer = graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
+        //     Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write, Graphics::GraphicsResourceAccess::Read, 64 * 1024 * 4);
 
-        _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
-            Graphics::GraphicsTextureAddressMode::Repeat, Graphics::GraphicsTextureKind::TwoDimensional,
-            Graphics::GraphicsResourceAccess::None, Graphics::GraphicsResourceAccess::Write, width, height);
-        Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource> texture2DRegion;
-        texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
-        auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+        // _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
+        //     Graphics::GraphicsTextureAddressMode::Repeat, Graphics::GraphicsTextureKind::TwoDimensional,
+        //     Graphics::GraphicsResourceAccess::None, Graphics::GraphicsResourceAccess::Write, width, height);
+        // Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource> texture2DRegion;
+        // texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
+        // auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
-        memcpy(pTextureData.data(), pixels, width * height);
+        // memcpy(pTextureData.data(), pixels, width * height);
         
-        textureStagingBuffer->UnmapAndWrite(0, textureStagingBuffer->GetSize());
+        // textureStagingBuffer->UnmapAndWrite(0, textureStagingBuffer->GetSize());
 
 
-        graphicsContext->Copy(_texture2D, textureStagingBuffer);
-        graphicsContext->EndFrame();
-        graphicsDevice->Signal(graphicsContext->GetFence());
-        graphicsDevice->WaitForIdle();
+        // graphicsContext->Copy(_texture2D, textureStagingBuffer);
+        // graphicsContext->EndFrame();
+        // graphicsDevice->Signal(graphicsContext->GetFence());
+        // graphicsDevice->WaitForIdle();
 
-        auto ptr = new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource>();
-        *ptr = texture2DRegion;
+        // auto ptr = new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource>();
+        // *ptr = texture2DRegion;
 
-        io.Fonts->SetTexID(ptr);
+        // io.Fonts->SetTexID(ptr);
     }
 
     void ImGuiUIProvider::BeginFrame(double deltaTime)
