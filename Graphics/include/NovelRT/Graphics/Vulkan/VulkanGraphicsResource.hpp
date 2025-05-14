@@ -33,6 +33,8 @@ namespace NovelRT::Graphics::Vulkan
                                VmaAllocation allocation,
                                VmaAllocationInfo allocationInfo);
 
+        virtual ~VulkanGraphicsResource() noexcept = default;
+
         [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;

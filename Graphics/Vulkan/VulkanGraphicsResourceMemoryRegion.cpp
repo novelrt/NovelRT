@@ -14,9 +14,9 @@ namespace NovelRT::Graphics::Vulkan
         VmaVirtualAllocation virtualAllocation,
         VmaVirtualAllocationInfo virtualAllocationInfo)
         : _device(graphicsDevice),
-          _owningResource(owningResource),
           _virtualAllocation(virtualAllocation),
-          _virtualAllocationInfo(virtualAllocationInfo)
+          _virtualAllocationInfo(virtualAllocationInfo),
+          _owningResource(owningResource)
     {
         if (_virtualAllocation == VK_NULL_HANDLE || _virtualAllocationInfo.size == 0)
         {

@@ -61,7 +61,7 @@ namespace NovelRT::Graphics
         {
         }
 
-        virtual ~GraphicsCmdList() override = default;
+        ~GraphicsCmdList() = default;
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept
         {
@@ -138,12 +138,12 @@ namespace NovelRT::Graphics
         void CmdBeginTexturePipelineBarrierLegacyVersion(std::shared_ptr<GraphicsTexture<TBackend>> texture)
         {
             _implementation->CmdBeginTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
-        }    
-        
+        }
+
         void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<GraphicsTexture<TBackend>> texture)
         {
             _implementation->CmdEndTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
-        }    
-        
+        }
+
     };
 }

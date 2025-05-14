@@ -37,7 +37,7 @@ namespace NovelRT::Graphics::Vulkan
 
     public:
         using std::enable_shared_from_this<VulkanGraphicsTexture>::shared_from_this;
-        
+
         VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                               std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
                               GraphicsResourceAccess cpuAccess,
@@ -51,7 +51,7 @@ namespace NovelRT::Graphics::Vulkan
                               size_t subAllocations,
                               VkImage vulkanImage);
 
-        ~VulkanGraphicsTexture() noexcept;
+        virtual ~VulkanGraphicsTexture() noexcept;
 
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
@@ -72,9 +72,9 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VkSampler GetOrCreateVulkanSampler();
 
         [[nodiscard]] uint32_t GetWidth() const noexcept;
-        
+
         [[nodiscard]] uint32_t GetHeight() const noexcept;
-        
+
         [[nodiscard]] uint32_t GetDepth() const noexcept;
     };
 }

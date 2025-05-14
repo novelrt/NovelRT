@@ -7,6 +7,8 @@
 #include <NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
+#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
+#include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/TexelFormat.hpp>
 #include <cstdint>
@@ -18,9 +20,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsDevice;
     template<typename TBackend> class GraphicsProvider;
     template<typename TBackend> class GraphicsBuffer;
-    struct GraphicsBufferCreateInfo;
     template<typename TBackend> class GraphicsTexture;
-    struct GraphicsTextureCreateInfo;
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
