@@ -1,4 +1,4 @@
-add_library(NovelRT-Graphics-Core STATIC
+add_library(NovelRT-Graphics-Core OBJECT
   GraphicsPipelineInput.cpp
   GraphicsPipelineInputElement.cpp
   GraphicsPipelineResource.cpp
