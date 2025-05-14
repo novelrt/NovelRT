@@ -64,7 +64,7 @@ namespace NovelRT::Graphics::Details
 
             inline auto operator*() const
             {
-                return std::make_shared<GraphicsContext<TBackend>>(*_iterator, _provider);
+                return std::make_shared<GraphicsContext<TBackend>>(*_iterator, _provider, _iterator->GetIndex());
             }
 
             inline auto operator++()
@@ -145,7 +145,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] inline std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
         {
-            return std::make_shared<GraphicsContext<TBackend>>(this, _implementation->GetCurrentContext());
+            return std::make_shared<GraphicsContext<TBackend>>(_implementation->GetCurrentContext(), this, GetContextIndex());
         }
 
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
