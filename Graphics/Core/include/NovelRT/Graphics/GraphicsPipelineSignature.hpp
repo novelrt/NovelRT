@@ -58,12 +58,12 @@ namespace NovelRT::Graphics
             return _dstBlendFactor;
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet()
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet(std::shared_ptr<GraphicsPipeline<TBackend> pipeline)
         {
             // TODO: this
             return std::make_shared<GraphicsDescriptorSet<TBackend>>(
                 _implementation->CreateDescriptorSet(),
-                nullptr);
+                pipeline);
         }
 
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs()
