@@ -143,10 +143,10 @@ namespace NovelRT::Graphics
             return iterator{_implementation->end(), this->shared_from_this()};
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
-        {
-            return std::make_shared<GraphicsContext<TBackend>>(_implementation->GetCurrentContext(), this, GetContextIndex());
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext();
+        // {
+        //     return _implementation->GetCurrentContext();
+        // }
 
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
         {
