@@ -86,11 +86,8 @@ namespace NovelRT::Graphics::Vulkan
 
         void WaitForIdle();
 
-        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<std::shared_ptr<VulkanGraphicsContext>> GetContexts()
-        {
-            return NovelRT::Utilities::Misc::Span<std::shared_ptr<VulkanGraphicsContext>>(
-                &(*_contextPtrs.getActual().begin()), _contextPtrs.getActual().size());
-        }
+        std::vector<std::shared_ptr<VulkanGraphicsContext>>::iterator begin() noexcept;
+        std::vector<std::shared_ptr<VulkanGraphicsContext>>::iterator end() noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext();
         [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;

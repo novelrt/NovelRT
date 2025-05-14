@@ -19,17 +19,77 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsSurfaceContext;
     template<typename TBackend> class GraphicsContext;
     template<typename TBackend> class GraphicsPipeline;
+    template<typename TBackend> class GraphicsDevice;
     class GraphicsPipelineInput;
     class GraphicsPipelineResource;
     template<typename TBackend> class GraphicsPipelineSignature;
     template<typename TBackend> class ShaderProgram;
 
     template<typename TBackend> struct GraphicsBackendTraits;
+}
 
+namespace NovelRT::Graphics::Details
+{
+    template <typename TBackend> struct GraphicsContextIterator
+    {
+        private:
+            using BackendDeviceType = typename GraphicsBackendTraits<TBackend>::DeviceType;
+            using BackendIteratorType = decltype(std::declval<BackendDeviceType>().begin());
+
+            BackendIteratorType _iterator;
+            std::shared_ptr<GraphicsDevice<TBackend>> _provider;
+
+        public:
+            GraphicsContextIterator(BackendIteratorType const& it, std::shared_ptr<GraphicsDevice<TBackend>> provider)
+                : _iterator(it), _provider(provider)
+            { }
+
+            using difference_type = typename std::iterator_traits<BackendIteratorType>::difference_type;
+            using value_type = std::shared_ptr<GraphicsContext<TBackend>>;
+            using pointer = void;
+            using reference = void;
+            using iterator_category = std::input_iterator_tag;
+
+            inline bool operator==(GraphicsContextIterator<TBackend> const& other)
+            {
+                return _provider == other._provider
+                    && _iterator == other._iterator;
+            }
+
+            inline bool operator!=(GraphicsContextIterator<TBackend> const& other)
+            {
+                return _provider != other._provider
+                    || _iterator != other._iterator;
+            }
+
+            inline auto operator*() const
+            {
+                return std::make_shared<GraphicsContext<TBackend>>(*_iterator, _provider);
+            }
+
+            inline auto operator++()
+            {
+                ++_iterator;
+                return *this;
+            }
+
+            inline auto operator++(int)
+            {
+                auto prev = *this;
+                ++_iterator;
+                return prev;
+            }
+    };
+}
+
+namespace NovelRT::Graphics
+{
     template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
     {
     public:
         using BackendDeviceType = typename GraphicsBackendTraits<TBackend>::DeviceType;
+
+        using iterator = typename Details::GraphicsContextIterator<TBackend>;
 
     private:
         std::shared_ptr<BackendDeviceType> _implementation;
@@ -73,14 +133,19 @@ namespace NovelRT::Graphics
             return _implementation->GetContextIndex();
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<std::shared_ptr<GraphicsContext<TBackend>>> GetContexts()
+        [[nodiscard]] iterator begin() noexcept
         {
-            return _implementation->GetContexts();
+            return iterator{_implementation->begin(), this->shared_from_this()};
+        }
+
+        [[nodiscard]] iterator end() noexcept
+        {
+            return iterator{_implementation->end(), this->shared_from_this()};
         }
 
         [[nodiscard]] inline std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
         {
-            return GetContexts()[GetContextIndex()];
+            return std::make_shared<GraphicsContext<TBackend>>(this, _implementation->GetCurrentContext());
         }
 
         [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
@@ -121,7 +186,7 @@ namespace NovelRT::Graphics
         void PresentFrame()
         {
             _implementation->PresentFrame();
-        } 
+        }
 
         void Signal(std::shared_ptr<GraphicsFence<TBackend>> fence)
         {
