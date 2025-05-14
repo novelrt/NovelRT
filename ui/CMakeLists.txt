@@ -1,4 +1,5 @@
 add_library(NovelRT-UI STATIC
+    ImGui/ImGuiUIProvider.cpp
 #   GraphicsPipelineInput.cpp
 #   Vulkan/VulkanGraphicsAdapter.cpp
 )
@@ -43,7 +44,11 @@ target_compile_options(NovelRT-UI
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 )
 
-target_include_directories(NovelRT-UI PRIVATE "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
+target_include_directories(NovelRT-UI PRIVATE 
+"$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>"
+$<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
+$<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
+)
 target_link_libraries(NovelRT-UI
   PUBLIC
     spdlog

@@ -130,6 +130,7 @@ add_subdirectory(resources)
 add_subdirectory(Graphics)
 add_subdirectory(audio)
 add_subdirectory(input)
+add_subdirectory(ui)
 add_subdirectory(src)
 
 if(NOVELRT_BUILD_SAMPLES)

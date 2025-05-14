@@ -128,7 +128,8 @@ foreach(module
   fmt spdlog
   stduuid
   TBB
-  VulkanMemoryAllocator)
+  VulkanMemoryAllocator
+  imgui)
   message(STATUS "Fetching ${module}...")
   add_subdirectory(${module})
 endforeach()
