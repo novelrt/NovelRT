@@ -13,7 +13,7 @@ namespace NovelRT::Graphics::Vulkan
 
     VulkanGraphicsDescriptorSet::VulkanGraphicsDescriptorSet(
         std::shared_ptr<VulkanGraphicsPipeline> targetPipeline) noexcept
-        : _pipeline(targetPipeline), _inputResourceRegions{}, _descriptorSetHandle(VK_NULL_HANDLE)
+        :  _descriptorSetHandle(VK_NULL_HANDLE), _pipeline(targetPipeline), _inputResourceRegions{}
     {
         _descriptorSetHandle = _pipeline->GetSignature()->GenerateVulkanDescriptorSet();
     }

@@ -4,6 +4,7 @@
 #ifndef NOVELRT_EXCEPTIONS_OPENGLLINKAGEFAILUREEXCEPTION_H
 #define NOVELRT_EXCEPTIONS_OPENGLLINKAGEFAILUREEXCEPTION_H
 
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 
