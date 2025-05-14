@@ -516,9 +516,19 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
+    std::vector<std::shared_ptr<VulkanGraphicsContext>>::iterator VulkanGraphicsDevice::begin() noexcept
+    {
+        return _contexts.getActual().begin();
+    }
+
+    std::vector<std::shared_ptr<VulkanGraphicsContext>>::iterator VulkanGraphicsDevice::end() noexcept
+    {
+        return _contexts.getActual().end();
+    }
+
     std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext()
     {
-        return GetContexts()[GetContextIndex()];
+        return _contexts.getActual()[GetContextIndex()];
     }
 
     std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const noexcept
