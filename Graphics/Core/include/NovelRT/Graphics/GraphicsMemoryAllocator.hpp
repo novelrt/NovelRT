@@ -52,7 +52,7 @@ namespace NovelRT::Graphics
         {
             return std::make_shared<GraphicsBuffer<TBackend>>(
                 _implementation->CreateBuffer(createInfo),
-                this->shared_from_this(),
+                GraphicsMemoryAllocator<TBackend>::shared_from_this(),
                 createInfo);
         }
 

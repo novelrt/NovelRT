@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Utilities/Misc.h>
 #include <memory>
+#include <type_traits>
 
 namespace NovelRT::Graphics
 {
@@ -14,27 +15,42 @@ namespace NovelRT::Graphics
     template<typename TBackend> struct GraphicsBackendTraits;
 
     template<template <typename TBackend> typename TResource, typename TBackend>
-    class GraphicsResourceMemoryRegion : public GraphicsDeviceObject<TBackend>
+    class GraphicsResourceMemoryRegion
+        : public std::conditional_t<
+            std::is_same_v<TResource<TBackend>, GraphicsResource<TBackend>>,
+            GraphicsDeviceObject<TBackend>,
+            GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>
     {
         static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource<TBackend>>,
                       "Incompatible type specified as the resource type.");
-
     public:
         using BackendResourceType = typename TResource<TBackend>::BackendResourceType;
         using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<BackendResourceType>;
+
+        using Super = std::conditional_t<std::is_same_v<TResource<TBackend>, GraphicsResource<TBackend>>, GraphicsDeviceObject<TBackend>, GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>;
 
     private:
         std::shared_ptr<BackendResourceMemoryRegionType> _implementation;
         std::shared_ptr<TResource<TBackend>> _owningResource;
 
     public:
+        template <typename S = Super, std::enable_if_t<std::is_same_v<S, GraphicsDeviceObject<TBackend>>, bool> = true>
         GraphicsResourceMemoryRegion(std::shared_ptr<BackendResourceMemoryRegionType> implementation,
                                      std::shared_ptr<TResource<TBackend>> owningResource)
-            : GraphicsDeviceObject<TBackend>(owningResource->GetDevice()),
-              _implementation(implementation),
-              _owningResource(owningResource)
-        {
-        }
+            : Super(owningResource->GetDevice()),
+                _implementation(implementation),
+                _owningResource(owningResource)
+            {
+            }
+
+        template <typename S = Super, std::enable_if_t<std::is_same_v<S, GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>, bool> = true>
+        GraphicsResourceMemoryRegion(std::shared_ptr<BackendResourceMemoryRegionType> implementation,
+                                     std::shared_ptr<TResource<TBackend>> owningResource)
+            : Super(implementation, owningResource),
+                _implementation(implementation),
+                _owningResource(owningResource)
+            {
+            }
 
         virtual ~GraphicsResourceMemoryRegion() noexcept override = default;
 
@@ -53,7 +69,7 @@ namespace NovelRT::Graphics
             return _implementation->GetOffset();
         }
 
-        [[nodiscard]] virtual size_t GetSize() const noexcept
+        [[nodiscard]] size_t GetSize() const noexcept
         {
             return _implementation->GetSize();
         }

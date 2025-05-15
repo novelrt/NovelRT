@@ -29,7 +29,11 @@ namespace NovelRT::Graphics
         GraphicsBuffer(std::shared_ptr<BackendBufferType> implementation,
                        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
                        const GraphicsBufferCreateInfo& createInfo) noexcept
-            : GraphicsResource<TBackend>(implementation, allocator, createInfo.cpuAccessKind), _kind(createInfo.bufferKind)
+            : GraphicsResource<TBackend>(
+                std::static_pointer_cast<typename GraphicsResource<TBackend>::BackendResourceType>(implementation),
+                allocator,
+                createInfo.cpuAccessKind),
+             _kind(createInfo.bufferKind)
         {
         }
 
