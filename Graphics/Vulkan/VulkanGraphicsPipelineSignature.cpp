@@ -298,18 +298,16 @@ namespace NovelRT::Graphics::Vulkan
     VkShaderStageFlags VulkanGraphicsPipelineSignature::GetVulkanShaderStageFlags(
         ShaderProgramVisibility shaderVisibility) const noexcept
     {
-        VkShaderStageFlags stageFlags = VK_SHADER_STAGE_ALL;
+        VkShaderStageFlags stageFlags = 0;
 
-        if (shaderVisibility != ShaderProgramVisibility::All)
+        if ((shaderVisibility & ShaderProgramVisibility::Vertex) == ShaderProgramVisibility::Vertex)
         {
-            if ((shaderVisibility & ShaderProgramVisibility::Vertex) == ShaderProgramVisibility::NoneOrUnknown)
-            {
-                stageFlags &= ~VK_SHADER_STAGE_VERTEX_BIT;
-            }
-            if ((shaderVisibility & ShaderProgramVisibility::Pixel) == ShaderProgramVisibility::NoneOrUnknown)
-            {
-                stageFlags &= ~VK_SHADER_STAGE_FRAGMENT_BIT;
-            }
+            stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+        }
+
+        if ((shaderVisibility & ShaderProgramVisibility::Pixel) == ShaderProgramVisibility::Pixel)
+        {
+            stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
         }
 
         return stageFlags;
