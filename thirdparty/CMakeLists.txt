@@ -27,8 +27,8 @@ thirdparty_module(FLAC
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(glfw3
-  URL https://github.com/glfw/glfw/archive/refs/tags/3.3.7.zip
-  URL_HASH SHA512=0ee020ddbbed783b5f0d271ee0a98b37fe489b633e0a8407821f12b2bcfc3b80645751076192b5224bfe1d26d6092c27af9a9bcd7953a419dcec0182e3716341
+  URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
+  URL_HASH SHA512=03de56a0599275ff57759ca19e8f69176058252b5e9976193cc3d9bb7b7b78b6a8dac6ed91de483d03c1b4807d21e1302e5e47c2f0c21e63becb4aba9d5affdc
 )
 thirdparty_module(glm
   URL https://github.com/novelrt/glm/archive/refs/heads/master.zip
