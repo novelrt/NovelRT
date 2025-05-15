@@ -66,7 +66,7 @@ struct TexturedVertex
 
 int main()
 {
-    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = false;
+    NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
     NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
 
     NovelRT::LoggingService logger = NovelRT::LoggingService();

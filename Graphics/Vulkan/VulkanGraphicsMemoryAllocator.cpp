@@ -62,6 +62,7 @@ namespace NovelRT::Graphics::Vulkan
         const GraphicsBufferCreateInfo& createInfo)
     {
         VkBufferCreateInfo bufferCreateInfo{};
+        bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferCreateInfo.size = createInfo.size;
         bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(createInfo.bufferKind, createInfo.gpuAccessKind);
 

@@ -155,12 +155,13 @@ namespace NovelRT::Graphics::Vulkan
         createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
         createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
 
+        std::vector<const char*> allValidationLayerPtrs{};
+
         if (GetAdapter()->GetProvider()->GetDebugModeEnabled())
         {
             auto validationLayers = GetAdapter()->GetProvider()->GetValidationLayers();
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-            std::vector<const char*> allValidationLayerPtrs =
-                NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(validationLayers);
+            allValidationLayerPtrs = NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(validationLayers);
             createInfo.ppEnabledLayerNames = allValidationLayerPtrs.data();
         }
         else
