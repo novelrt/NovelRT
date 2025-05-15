@@ -190,8 +190,10 @@ int main()
             std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>(
                 texture2DRegion)};
 
+    auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
+
     cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-    cmdList->CmdCopy(texture2D, stagingBufferRegion);
+    cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
     cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
     gfxContext->EndFrame();
