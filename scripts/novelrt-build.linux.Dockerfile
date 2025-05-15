@@ -36,5 +36,9 @@ RUN apt update \
         libxcb-util-dev \
         gh \
         vulkan-sdk \
+        libxkbcommon-dev \
+        wayland-protocols \
+        libwayland-dev \
+        extra-cmake-modules
 	&& rm -rf /var/lib/apt/lists/*
 
