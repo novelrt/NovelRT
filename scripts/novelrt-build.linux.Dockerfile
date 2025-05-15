@@ -39,6 +39,6 @@ RUN apt update \
         libxkbcommon-dev \
         wayland-protocols \
         libwayland-dev \
-        extra-cmake-modules
+        extra-cmake-modules \
 	&& rm -rf /var/lib/apt/lists/*
 
