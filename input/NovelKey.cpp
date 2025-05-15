@@ -1,8 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Input/Input.h>
-#include <NovelRT/PluginManagement/PluginManagement.h>
+#include <NovelRT/Input/NovelKey.hpp>
 
 namespace NovelRT::Input
 {

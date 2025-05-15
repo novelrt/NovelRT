@@ -8,15 +8,14 @@ namespace NovelRT::Ecs::Audio
     AudioSystem::AudioSystem(
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> resourceManagerPluginProvider)
         : _counter(1),
-          _fadeCache(std::map<EntityId, std::tuple<Timing::Timestamp, float>>()),
           _logger(Utilities::Misc::CONSOLE_LOG_AUDIO),
-          _musicCache(std::map<uint32_t, std::vector<ALuint>::iterator>()),
-          _service(std::make_shared<NovelRT::Audio::AudioService>()),
-          _soundCache(std::map<uint32_t, ALuint>()),
+          _mixer(std::make_shared<NovelRT::Audio::AudioMixer>()),
+          _soundCache(std::map<uint32_t, NovelRT::ResourceManagement::AudioMetadata>()),
+          _fadeCache(std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>>()),
           _systemTime(Timing::Timestamp::zero()),
           _resourceManagerPluginProvider(std::move(resourceManagerPluginProvider))
     {
-        _service->InitializeAudio();
+        _mixer->Initialise();
     }
 
     void AudioSystem::Update(Timing::Timestamp delta, Ecs::Catalogue catalogue)
@@ -32,14 +31,8 @@ namespace NovelRT::Ecs::Audio
             {
                 case AudioEmitterState::ToPlay:
                 {
-                    if (emitter.isMusic)
-                    {
-                        _service->PlayMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
-                    }
-                    else
-                    {
-                        _service->PlaySound(_soundCache.at(emitter.handle), emitter.numberOfLoops);
-                    }
+                    _mixer->SetSourceLoop(emitter.handle, emitter.numberOfLoops > 0);
+                    _mixer->PlaySource(emitter.handle);
                     _logger.logDebug("Entity ID {} - EmitterState ToPlay -> Playing", entity);
                     states.PushComponentUpdateInstruction(
                         entity, AudioEmitterStateComponent{AudioEmitterState::Playing, emitterState.fadeDuration});
@@ -47,14 +40,7 @@ namespace NovelRT::Ecs::Audio
                 }
                 case AudioEmitterState::ToStop:
                 {
-                    if (emitter.isMusic)
-                    {
-                        _service->StopMusic();
-                    }
-                    else
-                    {
-                        _service->StopSound(_soundCache.at(emitter.handle));
-                    }
+                    _mixer->StopSource(emitter.handle);
                     _logger.logDebug("Entity ID {} - EmitterState ToStop -> Stopped", entity);
                     states.PushComponentUpdateInstruction(
                         entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, emitterState.fadeDuration});
@@ -62,35 +48,23 @@ namespace NovelRT::Ecs::Audio
                 }
                 case AudioEmitterState::ToPause:
                 {
-                    if (emitter.isMusic)
-                    {
-                        _service->PauseMusic();
-                        _logger.logDebug("Entity ID {} - EmitterState ToPause -> Paused", entity);
-                        states.PushComponentUpdateInstruction(
-                            entity, AudioEmitterStateComponent{AudioEmitterState::Paused, emitterState.fadeDuration});
-                    }
+                    _mixer->PauseSource(emitter.handle);
+                    _logger.logDebug("Entity ID {} - EmitterState ToPause -> Paused", entity);
+                    states.PushComponentUpdateInstruction(
+                        entity, AudioEmitterStateComponent{AudioEmitterState::Paused, emitterState.fadeDuration});
                     break;
                 }
                 case AudioEmitterState::ToResume:
                 {
-                    if (emitter.isMusic)
-                    {
-                        _service->ResumeMusic();
-                        _logger.logDebug("Entity ID {} - EmitterState ToResume -> Playing", entity);
-                        states.PushComponentUpdateInstruction(
-                            entity, AudioEmitterStateComponent{AudioEmitterState::Playing, emitterState.fadeDuration});
-                    }
+                    _mixer->PlaySource(emitter.handle);
+                    _logger.logDebug("Entity ID {} - EmitterState ToResume -> Playing", entity);
+                    states.PushComponentUpdateInstruction(
+                        entity, AudioEmitterStateComponent{AudioEmitterState::Playing, emitterState.fadeDuration});
                     break;
                 }
                 case AudioEmitterState::ToFadeOut:
                 {
-                    if (emitter.isMusic && !_service->IsMusicPlaying())
-                    {
-                        states.PushComponentUpdateInstruction(
-                            entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, 0.0f, 0.0f});
-                        break;
-                    }
-                    else if (!emitter.isMusic && !_service->IsSoundPlaying(_soundCache.at(emitter.handle)))
+                    if (_mixer->GetSourceState(emitter.handle) == NovelRT::Audio::AudioSourceState::SOURCE_STOPPED)
                     {
                         states.PushComponentUpdateInstruction(
                             entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, 0.0f, 0.0f});
@@ -116,7 +90,8 @@ namespace NovelRT::Ecs::Audio
                     {
                         float slope = std::get<1>(_fadeCache.at(entity));
                         float newVolume = emitter.volume + (slope * delta.getSecondsFloat());
-                        ChangeAudioVolume(emitter, newVolume);
+                        _mixer->SetSourceVolume(emitter.handle, newVolume);
+
                         states.PushComponentUpdateInstruction(
                             entity, AudioEmitterStateComponent{AudioEmitterState::FadingOut, remainingDuration,
                                                                emitterState.fadeExpectedVolume});
@@ -130,15 +105,8 @@ namespace NovelRT::Ecs::Audio
                     }
                     else
                     {
-                        ChangeAudioVolume(emitter, 0.0f);
-                        if (emitter.isMusic)
-                        {
-                            _service->StopMusic();
-                        }
-                        else
-                        {
-                            _service->StopSound(_soundCache.at(emitter.handle));
-                        }
+                        _mixer->SetSourceVolume(emitter.handle, 0.0f);
+                        _mixer->StopSource(emitter.handle);
 
                         emitters.PushComponentUpdateInstruction(
                             entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
@@ -154,16 +122,10 @@ namespace NovelRT::Ecs::Audio
                 }
                 case AudioEmitterState::ToFadeIn:
                 {
-                    if (emitter.isMusic && !_service->IsMusicPlaying())
+                    if (_mixer->GetSourceState(emitter.handle) == NovelRT::Audio::AudioSourceState::SOURCE_STOPPED)
                     {
-                        _service->SetMusicVolume(0.0f);
-                        _service->PlayMusic(_musicCache.at(emitter.handle), emitter.numberOfLoops);
-                    }
-                    else if (!emitter.isMusic && !_service->IsSoundPlaying(emitter.handle))
-                    {
-                        auto sound = _soundCache.at(emitter.handle);
-                        _service->SetSoundVolume(sound, 0.0f);
-                        _service->PlaySound(sound, emitter.numberOfLoops);
+                        _mixer->SetSourceVolume(emitter.handle, 0.0f);
+                        _mixer->PlaySource(emitter.handle);
                     }
                     else
                     {
@@ -193,7 +155,7 @@ namespace NovelRT::Ecs::Audio
                     {
                         float slope = std::get<1>(_fadeCache.at(entity));
                         float newVolume = emitter.volume + (slope * delta.getSecondsFloat());
-                        ChangeAudioVolume(emitter, newVolume);
+                        _mixer->SetSourceVolume(emitter.handle, newVolume);
                         states.PushComponentUpdateInstruction(
                             entity, AudioEmitterStateComponent{AudioEmitterState::FadingIn, remainingDuration,
                                                                emitterState.fadeExpectedVolume});
@@ -209,7 +171,7 @@ namespace NovelRT::Ecs::Audio
                     {
                         if (emitter.volume < emitterState.fadeExpectedVolume)
                         {
-                            ChangeAudioVolume(emitter, emitterState.fadeExpectedVolume);
+                            _mixer->SetSourceVolume(emitter.handle, emitterState.fadeExpectedVolume);
                         }
                         emitters.PushComponentUpdateInstruction(
                             entity, AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops,
@@ -223,36 +185,17 @@ namespace NovelRT::Ecs::Audio
                 }
                 case AudioEmitterState::Playing:
                 {
-                    float currentVolume = 0;
-                    if (emitter.isMusic)
+                    auto soundContext = _mixer->GetSourceContext(emitter.handle);
+                    if (soundContext.Volume != emitter.volume)
                     {
-                        currentVolume = _service->GetMusicVolume();
-                        if (currentVolume != emitter.volume)
-                        {
-                            _service->SetMusicVolume(emitter.volume);
-                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume,
-                                             emitter.volume);
-                        }
-                        if (!_service->IsMusicPlaying())
-                        {
-                            states.PushComponentUpdateInstruction(
-                                entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
-                        }
+                        _mixer->SetSourceVolume(emitter.handle, emitter.volume);
+                        _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, soundContext.Volume,
+                                         emitter.volume);
                     }
-                    else
+                    if (_mixer->GetSourceState(emitter.handle) != NovelRT::Audio::AudioSourceState::SOURCE_PLAYING)
                     {
-                        currentVolume = _service->GetSoundVolume(_soundCache.at(emitter.handle));
-                        if (currentVolume != emitter.volume)
-                        {
-                            _service->SetSoundVolume(_soundCache.at(emitter.handle), emitter.volume);
-                            _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, currentVolume,
-                                             emitter.volume);
-                        }
-                        if (!_service->IsSoundPlaying(_soundCache.at(emitter.handle)))
-                        {
-                            states.PushComponentUpdateInstruction(
-                                entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
-                        }
+                        states.PushComponentUpdateInstruction(
+                            entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});
                     }
                     break;
                 }
@@ -264,64 +207,31 @@ namespace NovelRT::Ecs::Audio
                 }
             }
         }
-
-        _service->CheckSources();
     }
 
-    uint32_t AudioSystem::CreateAudio(std::string fileName, bool isMusic)
+    uint32_t AudioSystem::RegisterSound(std::string fileName)
     {
         if (_counter == UINT32_MAX)
         {
-            // add logging here
             return 0U;
         }
 
-        // 0 is not valid here since we're working with only positive numbers... not that anyone should be loading
-        // thousands of sounds.
-        uint32_t value = 0U;
-        if (isMusic)
-        {
-            auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
-            auto handle = _service->LoadMusic(asset.processedAudioFrames, asset.channelCount, asset.sampleRate);
-            if (_service->IsLoaded(handle))
-            {
-                _musicCache.insert({_counter, handle});
-                value = _counter;
-                _counter++;
-            }
-        }
-        else
-        {
-            auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
-            auto handle = _service->LoadSound(asset.processedAudioFrames, asset.channelCount, asset.sampleRate);
-            if (_service->IsLoaded(handle))
-            {
-                _soundCache.insert({_counter, handle});
-                value = _counter;
-                _counter++;
-            }
-        }
-
-        return value;
+        auto asset = _resourceManagerPluginProvider->GetResourceLoader()->LoadAudioFrameData(fileName);
+        auto handle = _mixer->SubmitAudioBuffer(
+            NovelRT::Utilities::Misc::Span<float>(asset.processedAudioFrames.data(), asset.processedAudioFrames.size()),
+            asset.channelCount, asset.sampleRate);
+        _soundCache.emplace(handle, asset);
+        _counter++;
+        return handle;
     }
 
     void AudioSystem::ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume)
     {
-        if (emitter.isMusic)
-        {
-            _service->SetMusicVolume(desiredVolume);
-        }
-        else
-        {
-            _service->SetSoundVolume(_soundCache.at(emitter.handle), desiredVolume);
-        }
+        _mixer->SetSourceVolume(emitter.handle, desiredVolume);
     }
 
     AudioSystem::~AudioSystem() noexcept
     {
         unused(_soundCache.empty());
-        unused(_musicCache.empty());
-        unused(_fadeCache.empty());
-        _service->TearDown();
     }
 }

@@ -1,6 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "NovelRT.Interop/ResourceManagement/NrtResourceLoader.h"
+#include "../LifetimeExtender.h"
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
 #include <NovelRT/Exceptions/Exceptions.h>
@@ -8,6 +10,7 @@
 
 using namespace NovelRT::ResourceManagement;
 using namespace NovelRT::Exceptions;
+using namespace NovelRT::Interop;
 
 extern "C"
 {
@@ -58,6 +61,32 @@ extern "C"
         }
 
         reinterpret_cast<ResourceLoader*>(resourceLoader)->ResourcesRootDirectory() = cppPath;
+
+        return NRT_SUCCESS;
+    }
+
+    NrtBool Nrt_ResourceLoader_GetIsAssetDBInitialised(NrtResourceLoaderHandle resourceLoader)
+    {
+        return reinterpret_cast<ResourceLoader*>(resourceLoader)->GetIsAssetDBInitialised();
+    }
+
+    NrtResult Nrt_ResourceLoader_InitAssetDatabase(NrtResourceLoaderHandle resourceLoader)
+    {
+        if (resourceLoader == nullptr)
+        {
+            Nrt_setErrMsgIsNullInstanceProvidedInternal();
+            return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+        }
+
+        try
+        {
+            reinterpret_cast<ResourceLoader*>(resourceLoader)->InitAssetDatabase();
+        }
+        catch (const NovelRT::Exceptions::IOException&)
+        {
+            Nrt_setErrMsgIsFileNotFoundInternal();
+            return NRT_FAILURE_FILE_NOT_FOUND;
+        }
 
         return NRT_SUCCESS;
     }
@@ -204,5 +233,24 @@ extern "C"
         *outBinaryPackage = reinterpret_cast<NrtBinaryPackageHandle>(returnPtr);
 
         return NRT_SUCCESS;
+    }
+}
+
+NrtResult Nrt_ResourceLoader_Destroy(NrtResourceLoaderHandle resourceLoader)
+{
+    if (resourceLoader == nullptr)
+    {
+        Nrt_setErrMsgIsNullInstanceProvidedInternal();
+        return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+    }
+
+    if (Lifetime::Release(resourceLoader))
+    {
+        return NRT_SUCCESS;
+    }
+    else
+    {
+        Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
+        return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 }

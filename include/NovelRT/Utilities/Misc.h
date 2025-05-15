@@ -47,6 +47,7 @@ namespace NovelRT::Utilities
         static inline const char* CONSOLE_LOG_AUDIO = "Audio";
         static inline const char* CONSOLE_LOG_INPUT = "Input";
         static inline const char* CONSOLE_LOG_WINDOWING = "WindowManager";
+        static inline const char* CONSOLE_LOG_ECS_INPUT = "EcsInputSystem";
 
 #ifdef NOVELRT_USE_STD_SPAN
         static const size_t DynamicExtent = std::dynamic_extent;
