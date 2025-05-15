@@ -48,13 +48,6 @@ set(INTEROP_SOURCES
 
   ResourceManagement/NrtResourceLoader.cpp
 
-  SceneGraph/NrtQuadTreeNode.cpp
-  SceneGraph/NrtQuadTreeScenePoint.cpp
-  SceneGraph/NrtScene.cpp
-  SceneGraph/NrtSceneNode.cpp
-  SceneGraph/NrtSceneNodeBreadthFirstIterator.cpp
-  SceneGraph/NrtSceneNodeDepthFirstIterator.cpp
-
   Timing/NrtStepTimer.cpp
   Timing/NrtTimestamp.cpp
 

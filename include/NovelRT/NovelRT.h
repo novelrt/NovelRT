@@ -149,14 +149,6 @@
   // Resource Management
   #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
 
-  // SceneGraph
-  #include <NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h>
-  #include <NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h>
-  #include <NovelRT.Interop/SceneGraph/NrtScene.h>
-  #include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
-  #include <NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h>
-  #include <NovelRT.Interop/SceneGraph/NrtSceneNodeDepthFirstIterator.h>
-
   // Timing
   #include <NovelRT.Interop/Timing/NrtStepTimer.h>
   #include <NovelRT.Interop/Timing/NrtTimestamp.h>

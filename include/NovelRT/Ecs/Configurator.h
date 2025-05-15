@@ -6,10 +6,11 @@
 
 namespace NovelRT::Ecs
 {
+    struct NovelRT::Graphics::Vulkan::VulkanGraphicsBackend;
     /**
      * @brief A convenience type to help with the creation of an ECS instance.
      */
-    template<typename TGraphicsBackend> class Configurator
+    template<typename TGraphicsBackend = NovelRT::Graphics::Vulkan::VulkanGraphicsBackend> class Configurator
     {
     private:
         bool _shouldAddDefaultSystems = false;

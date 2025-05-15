@@ -5,6 +5,7 @@
 #include <NovelRT.Interop/Ecs/NrtConfigurator.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Utilities/Misc.h>
 
 using namespace NovelRT::Ecs;
@@ -24,7 +25,7 @@ NrtResult Nrt_Configurator_AddDefaultSystemsAndComponents(NrtConfiguratorHandle 
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    unused(reinterpret_cast<Configurator*>(configurator)->WithDefaultSystemsAndComponents());
+    unused(reinterpret_cast<Configurator<>*>(configurator)->WithDefaultSystemsAndComponents());
 
     return NRT_SUCCESS;
 }
@@ -37,7 +38,7 @@ NrtResult Nrt_Configurator_Destroy(NrtConfiguratorHandle configurator)
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    delete reinterpret_cast<Configurator*>(configurator);
+    delete reinterpret_cast<Configurator<>*>(configurator);
 
     return NRT_SUCCESS;
 }
@@ -57,7 +58,8 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
-    auto* pluginProvider = reinterpret_cast<IGraphicsPluginProvider*>(provider);
+    auto* pluginProvider =
+        reinterpret_cast<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(provider);
     auto providerSharedPtr = Lifetime::Find(pluginProvider);
     if (providerSharedPtr == nullptr)
     {
@@ -65,8 +67,8 @@ NrtResult Nrt_Configurator_AddGraphicsPluginProvider(NrtConfiguratorHandle confi
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
-    unused(
-        reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IGraphicsPluginProvider>(providerSharedPtr));
+    unused(reinterpret_cast<Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(configurator)
+               ->WithPluginProvider(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -95,7 +97,7 @@ NrtResult Nrt_Configurator_AddWindowingPluginProvider(NrtConfiguratorHandle conf
     }
 
     unused(
-        reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IWindowingPluginProvider>(providerSharedPtr));
+        reinterpret_cast<Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(configurator)->WithPluginProvider(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -123,8 +125,8 @@ NrtResult Nrt_Configurator_AddResourceManagementPluginProvider(NrtConfiguratorHa
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
-    unused(reinterpret_cast<Configurator*>(configurator)
-               ->WithPluginProvider<IResourceManagementPluginProvider>(providerSharedPtr));
+    unused(reinterpret_cast<Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(configurator)
+               ->WithPluginProvider(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -152,7 +154,7 @@ NrtResult Nrt_Configurator_AddInputPluginProvider(NrtConfiguratorHandle configur
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
     }
 
-    unused(reinterpret_cast<Configurator*>(configurator)->WithPluginProvider<IInputPluginProvider>(providerSharedPtr));
+    unused(reinterpret_cast<Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(configurator)->WithPluginProvider(providerSharedPtr));
 
     return NRT_SUCCESS;
 }
@@ -172,7 +174,7 @@ NrtResult Nrt_Configurator_InitialiseAndRegisterComponents(NrtConfiguratorHandle
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
-    auto* configuratorPtr = reinterpret_cast<Configurator*>(configurator);
+    auto* configuratorPtr = reinterpret_cast<Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(configurator);
     // Move that scheduler to the heap.
     auto* systemScheduler = new SystemScheduler{configuratorPtr->InitialiseAndRegisterComponents()};
     *outputSystemScheduler = reinterpret_cast<NrtSystemSchedulerHandle>(systemScheduler);

@@ -4,7 +4,8 @@
 #include "../LifetimeExtender.h"
 #include <NovelRT.Interop/Graphics/NrtGraphicsProvider.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Graphics/Graphics.hpp>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Interop;
@@ -17,7 +18,7 @@ NrtResult Nrt_GraphicsProvider_Destroy(NrtGraphicsProviderHandle provider)
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (!Lifetime::Release(reinterpret_cast<GraphicsProvider*>(provider)))
+    if (!Lifetime::Release(reinterpret_cast<GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(provider)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
