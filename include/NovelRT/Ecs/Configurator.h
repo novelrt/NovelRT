@@ -4,7 +4,11 @@
 #ifndef NOVELRT_ECS_CONFIGURATOR_H
 #define NOVELRT_ECS_CONFIGURATOR_H
 
-struct NovelRT::Graphics::Vulkan::VulkanGraphicsBackend;
+namespace NovelRT::Graphics::Vulkan
+{
+    struct VulkanGraphicsBackend;
+}
+
 namespace NovelRT::Ecs
 {
     /**
