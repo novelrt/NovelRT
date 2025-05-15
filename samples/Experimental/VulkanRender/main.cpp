@@ -148,7 +148,7 @@ int main()
     // auto dummyRegion = GraphicsResourceMemoryRegion<GraphicsBuffer, VulkanGraphicsBackend>(0, nullptr, gfxDevice,
     // false, 0, 0);
 
-    auto vertexBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+    auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
     auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);

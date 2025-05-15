@@ -88,6 +88,7 @@ namespace NovelRT::Graphics::Vulkan::Utilities
     {
         switch (resourceAccessType)
         {
+            default:
             case GraphicsResourceAccess::None:
                 // If we're neither reading nor writing, we don't care
                 return static_cast<VmaAllocationCreateFlagBits>(0);
