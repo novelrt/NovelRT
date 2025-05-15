@@ -191,8 +191,8 @@ namespace NovelRT::Graphics::Vulkan
         viewport.y = viewportInfo.y;
         viewport.width = viewportInfo.width;
         viewport.height = viewportInfo.height;
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;
+        viewport.minDepth = viewport.minDepth;
+        viewport.maxDepth = viewport.maxDepth;
 
         vkCmdSetViewport(_commandBuffer, 0, 1, &viewport);
     }
