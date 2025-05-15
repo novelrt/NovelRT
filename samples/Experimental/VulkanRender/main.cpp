@@ -5,6 +5,7 @@
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsContext.hpp>
+#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
@@ -12,25 +13,24 @@
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElementKind.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
-#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
-#include <NovelRT/Graphics/GraphicsRenderPass.hpp>
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
-#include <NovelRT/Windowing/Windowing.h>
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+#include <NovelRT/Windowing/Windowing.h>
 #include <memory>
 
 using namespace NovelRT::Windowing::Glfw;
@@ -83,9 +83,7 @@ int main()
     VulkanGraphicsAdapterSelector selector{};
 
     auto surfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(
-        std::make_shared<VulkanGraphicsSurfaceContext>(device, gfxProvider->GetImplementation()),
-        device,
-        gfxProvider);
+        std::make_shared<VulkanGraphicsSurfaceContext>(device, gfxProvider->GetImplementation()), device, gfxProvider);
 
     std::shared_ptr<GraphicsAdapter<VulkanGraphicsBackend>> adapter =
         std::make_shared<GraphicsAdapter<VulkanGraphicsBackend>>(
@@ -246,7 +244,8 @@ int main()
             descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
             descriptorSetData->UpdateDescriptorSetData();
 
-            std::array<std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>, 1> descriptorData { descriptorSetData };
+            std::array<std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>, 1> descriptorData{
+                descriptorSetData};
             currentCmdList->CmdBindDescriptorSets(descriptorData);
 
             currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);

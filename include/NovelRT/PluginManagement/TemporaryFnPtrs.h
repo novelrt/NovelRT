@@ -14,7 +14,8 @@ namespace NovelRT::Graphics::Vulkan
  */
 namespace NovelRT::PluginManagement
 {
-    [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>> GetVulkanPluginProvider() noexcept;
+    [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>
+    GetVulkanPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IWindowingPluginProvider> GetGlfwWindowPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IInputPluginProvider> GetGlfwInputPluginProvider() noexcept;
     [[nodiscard]] std::shared_ptr<IResourceManagementPluginProvider>

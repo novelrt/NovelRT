@@ -49,8 +49,7 @@
  */
 namespace NovelRT::Ecs
 {
-    template<typename TBackend>
-    class Configurator;
+    template<typename TBackend> class Configurator;
     class Catalogue;
     class ComponentBufferMemoryContainer;
     class ComponentCache;

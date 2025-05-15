@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/NovelRT.h>
 #include <NovelRT/Graphics/Vulkan/VulkansGraphicsBackendTraits.hpp>
+#include <NovelRT/NovelRT.h>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::PluginManagement;
@@ -22,7 +22,8 @@ int main()
     auto scheduler =
         Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>()
             .WithDefaultSystemsAndComponents()
-            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>())
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<
+                                IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>())
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(resourceManagementProvider)
             .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>())

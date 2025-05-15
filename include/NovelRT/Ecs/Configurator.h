@@ -9,8 +9,7 @@ namespace NovelRT::Ecs
     /**
      * @brief A convenience type to help with the creation of an ECS instance.
      */
-    template <typename TGraphicsBackend>
-    class Configurator
+    template<typename TGraphicsBackend> class Configurator
     {
     private:
         bool _shouldAddDefaultSystems = false;
@@ -137,7 +136,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::NotSupportedException if the plugin provider type is currently not used or supported
          * by default systems.
          */
-        template <typename TNewGraphicsBackend>
+        template<typename TNewGraphicsBackend>
         [[nodiscard]] Configurator<TNewGraphicsBackend> WithPluginProvider(
             std::shared_ptr<PluginManagement::IGraphicsPluginProvider<TNewGraphicsBackend>> pluginInstance)
         {

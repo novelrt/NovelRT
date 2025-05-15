@@ -11,7 +11,8 @@
 
 namespace NovelRT::PluginManagement
 {
-    std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>> GetVulkanPluginProvider() noexcept
+    std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>
+    GetVulkanPluginProvider() noexcept
     {
         return std::make_shared<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>();
     }

@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
@@ -61,15 +61,13 @@ namespace NovelRT::Utilities
         using Span = gsl::span<T, Extent>;
 #endif
 
-
-        template <typename TTo, typename TFrom, std::size_t NFrom>
+        template<typename TTo, typename TFrom, std::size_t NFrom>
         static auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
         {
             return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
         }
-        
 
-        template <typename TTo, typename TFrom>
+        template<typename TTo, typename TFrom>
         static auto SpanCast(Span<TFrom, DynamicExtent> s) noexcept -> Span<TTo, DynamicExtent>
         {
             return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};

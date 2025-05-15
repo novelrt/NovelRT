@@ -120,7 +120,8 @@ int main()
     auto scheduler =
         Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>()
             .WithDefaultSystemsAndComponents()
-            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>())
+            .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<
+                                IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>())
             .WithPluginProvider(windowingProvider)
             .WithPluginProvider(inputProvider)
             .WithPluginProvider(resourceManagementProvider)

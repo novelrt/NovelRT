@@ -25,10 +25,12 @@ namespace NovelRT::PluginManagement
         }
 
         template<>
-        [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>> GetDefaultPluginTypeOnCurrentPlatformFor<
+        [[nodiscard]] std::shared_ptr<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>
+        GetDefaultPluginTypeOnCurrentPlatformFor<
             IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>()
         {
-            return std::static_pointer_cast<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>(GetVulkanPluginProvider());
+            return std::static_pointer_cast<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>(
+                GetVulkanPluginProvider());
         }
 
         template<>

@@ -8,8 +8,7 @@
 
 namespace NovelRT::Graphics
 {
-    template <typename TBackend>
-    struct GraphicsBackendTraits;
+    template<typename TBackend> struct GraphicsBackendTraits;
 }
 
 namespace NovelRT::PluginManagement
@@ -34,7 +33,6 @@ namespace NovelRT::PluginManagement
 
         [[nodiscard]] std::shared_ptr<Graphics::GraphicsSurfaceContext<TBackend>> CreateSurfaceContext(
             std::shared_ptr<Graphics::IGraphicsSurface> windowingDevice);
-
     };
 }
 
