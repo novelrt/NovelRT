@@ -84,10 +84,22 @@ namespace NovelRT::Graphics::Vulkan::Utilities
         return static_cast<uint32_t>(cpuAccessBit);
     }
 
-    [[nodiscard]] inline uint32_t GetVmaAllocationKind(GraphicsResourceAccess resourceAccessType) noexcept
+    [[nodiscard]] inline VmaAllocationCreateFlagBits GetVmaAllocationKind(GraphicsResourceAccess resourceAccessType) noexcept
     {
-        unused(resourceAccessType);
-        // TODO: this
-        return 0;
+        switch (resourceAccessType)
+        {
+            case GraphicsResourceAccess::None:
+                // If we're neither reading nor writing, we don't care
+                return static_cast<VmaAllocationCreateFlagBits>(0);
+            case GraphicsResourceAccess::Read:
+                // If we're planning on reading from the buffer, assume any reads can be random
+                return VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT;
+            case GraphicsResourceAccess::Write:
+                // If we're planning on writing to the buffer, assume it's going to be block-copies
+                return VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
+            case GraphicsResourceAccess::ReadWrite:
+                // If we're doing both, assume random access for safety.
+                return VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT;
+        }
     }
 }
