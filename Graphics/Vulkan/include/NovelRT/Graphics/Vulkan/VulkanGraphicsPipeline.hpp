@@ -41,12 +41,12 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetPixelShader() const noexcept
         {
-            return _vertexShader;
+            return _pixelShader;
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetVertexShader() const noexcept
         {
-            return _pixelShader;
+            return _vertexShader;
         }
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsPipelineSignature> GetSignature() const noexcept
@@ -58,7 +58,7 @@ namespace NovelRT::Graphics::Vulkan
         {
             return _vulkanPipeline.getActual();
         }
-        
+
         [[nodiscard]] bool HasVertexShader() const noexcept
         {
             return _vertexShader != nullptr;
