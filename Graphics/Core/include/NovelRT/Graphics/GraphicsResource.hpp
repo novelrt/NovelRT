@@ -118,7 +118,7 @@ namespace NovelRT::Graphics
             return Utilities::Misc::SpanCast<T>(MapBytes(rangeOffset, rangeLength));
         }
 
-        template <typename T, template <typename TBackend> typename TResource> [[nodiscard]] Utilities::Misc::Span<T> Map(std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> memoryRegion)
+        template <typename T, template <typename> typename TResource> [[nodiscard]] Utilities::Misc::Span<T> Map(std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> memoryRegion)
         {
             return Utilities::Misc::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }
@@ -134,7 +134,7 @@ namespace NovelRT::Graphics
             return Utilities::Misc::SpanCast<const T>(MapBytesForRead(rangeOffset, rangeLength));
         }
 
-        template <template <typename TBackend> typename TResource> void UnmapAndWrite(std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> memoryRegion)
+        template <template <typename> typename TResource> void UnmapAndWrite(std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> memoryRegion)
         {
             UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
         }

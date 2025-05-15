@@ -4,7 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
-#include <vk_mem_alloc.h>
+#include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 
 #include <type_traits>
 

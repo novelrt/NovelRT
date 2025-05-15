@@ -8,7 +8,7 @@
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Utilities/Lazy.h>
-#include <vk_mem_alloc.h>
+#include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {

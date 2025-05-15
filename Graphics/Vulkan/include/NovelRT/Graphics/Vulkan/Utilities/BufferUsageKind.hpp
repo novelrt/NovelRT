@@ -9,7 +9,7 @@
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Utilities/Misc.h> // we need this for the bitwise logic
-#include <vk_mem_alloc.h>
+#include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {

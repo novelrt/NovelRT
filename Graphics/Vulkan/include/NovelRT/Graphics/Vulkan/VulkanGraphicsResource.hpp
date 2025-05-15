@@ -5,7 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
-#include <vk_mem_alloc.h>
+#include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 #include <tuple>
 
 namespace NovelRT::Graphics::Vulkan

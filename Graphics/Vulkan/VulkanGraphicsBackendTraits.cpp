@@ -1,3 +1,7 @@
+#define VMA_IMPLEMENTATION
+
+#include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>

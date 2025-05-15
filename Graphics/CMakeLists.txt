@@ -7,6 +7,7 @@ add_library(NovelRT-Graphics STATIC empty.cpp)
 set_target_properties(NovelRT-Graphics
   PROPERTIES
     EXPORT_NAME Graphics
+    POSITION_INDEPENDENT_CODE ON
 )
 
 target_link_libraries(NovelRT-Graphics

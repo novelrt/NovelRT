@@ -88,8 +88,8 @@ thirdparty_module(Vorbis
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(VulkanMemoryAllocator
-  URL https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/0aa3989b8f382f185fdf646cc83a1d16fa31d6ab.zip
-  URL_HASH SHA512=e9eeed2f5cc1130613b9440bf375e5574b58e800f4615cc771176644951eadc9e49cff91c5d303e63831fbdc76f354d2ad9a9da11826588ede76a7252c7a636a
+  URL https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/refs/tags/v3.3.0.zip
+  URL_HASH SHA512=1d3aa42a788e40666e7078f0141d02728a3a6696ffe65de6da4638f3d06a28ea6673ac45f4aa9cfdb283831f8888f61f53b292b71e3292d8c43ba634d0f3274b
 )
 thirdparty_module(ZLIB
   URL https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.0.6.tar.gz

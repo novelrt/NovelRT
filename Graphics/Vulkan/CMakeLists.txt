@@ -86,12 +86,15 @@ target_compile_options(NovelRT-Graphics-Vulkan
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 )
 
-target_include_directories(NovelRT-Graphics-Vulkan PRIVATE "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
+target_include_directories(NovelRT-Graphics-Vulkan
+  PRIVATE
+    "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
 target_link_libraries(NovelRT-Graphics-Vulkan
   PUBLIC
     NovelRT-Graphics-Core
     Vulkan::Vulkan
-    VulkanMemoryAllocator
+  PRIVATE
+    GPUOpen::VulkanMemoryAllocator
 )
 
 install(

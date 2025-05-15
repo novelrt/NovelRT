@@ -6,7 +6,7 @@
 #include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 
-#include <vk_mem_alloc.h>
+#include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
