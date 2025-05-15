@@ -63,14 +63,14 @@ namespace NovelRT::Utilities
 
 
         template <typename TTo, typename TFrom, std::size_t NFrom>
-        auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
+        static auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
         {
             return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
         }
         
 
         template <typename TTo, typename TFrom>
-        auto SpanCast(Span<TFrom, DynamicExtent> s) noexcept -> Span<TTo, DynamicExtent>
+        static auto SpanCast(Span<TFrom, DynamicExtent> s) noexcept -> Span<TTo, DynamicExtent>
         {
             return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
         }

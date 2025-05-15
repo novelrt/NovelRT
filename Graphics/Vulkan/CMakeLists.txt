@@ -93,7 +93,6 @@ target_link_libraries(NovelRT-Graphics-Vulkan
   PUBLIC
     NovelRT-Graphics-Core
     Vulkan::Vulkan
-  PRIVATE
     GPUOpen::VulkanMemoryAllocator
 )
 

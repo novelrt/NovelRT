@@ -19,7 +19,14 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
-#include <NovelRT/NovelRT.h>
+#include <NovelRT/Windowing/Windowing.h>
+#include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <memory>
 
 using namespace NovelRT::Windowing::Glfw;
@@ -206,7 +213,7 @@ int main()
             colourDataStruct.depth = 0;
             colourDataStruct.stencil = 0;
 
-            std::vector<const ClearValue> colourData{colourDataStruct};
+            std::vector<ClearValue> colourData{colourDataStruct};
             currentCmdList->CmdBeginRenderPass(renderPass, colourData);
 
             ViewportInfo viewportInfoStruct{};
@@ -236,10 +243,11 @@ int main()
 
             currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
 
+            currentCmdList->CmdEndRenderPass();
+
             // auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex),
             //                                             dummyRegion, 0, inputResourceRegions);
             // context->Draw(primitive);
-            context->EndDrawing();
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();

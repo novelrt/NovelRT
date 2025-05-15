@@ -97,8 +97,6 @@ namespace NovelRT::Graphics::Vulkan
 
         void RegisterDescriptorSetForFrame(std::shared_ptr<VulkanGraphicsPipelineSignature> signature, std::shared_ptr<VulkanGraphicsDescriptorSet> set);
 
-        void EndDrawing();
-
         void EndFrame();
 
         void ResetContext();

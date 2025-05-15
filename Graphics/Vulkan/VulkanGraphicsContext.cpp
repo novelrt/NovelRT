@@ -314,11 +314,6 @@ namespace NovelRT::Graphics::Vulkan
         _vulkanDescriptorSets[signature].emplace_back(set);
     }
 
-    void VulkanGraphicsContext::EndDrawing()
-    {
-        vkCmdEndRenderPass(GetVulkanCommandBuffer());
-    }
-
     void VulkanGraphicsContext::EndFrame()
     {
         VkCommandBuffer commandBuffer = GetVulkanCommandBuffer();

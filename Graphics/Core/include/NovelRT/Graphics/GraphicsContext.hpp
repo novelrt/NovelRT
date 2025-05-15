@@ -46,11 +46,6 @@ namespace NovelRT::Graphics
             return std::make_shared<GraphicsCmdList<TBackend>>(_implementation->BeginFrame(), std::static_pointer_cast<GraphicsContext<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this()));
         }
 
-        void EndDrawing()
-        {
-            _implementation->EndDrawing();
-        }
-
         void EndFrame()
         {
             _implementation->EndFrame();
