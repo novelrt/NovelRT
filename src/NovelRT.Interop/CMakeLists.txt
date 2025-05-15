@@ -2,8 +2,6 @@ set(INTEROP_SOURCES
   NrtInteropErrorHandling.cpp
   NrtLoggingService.cpp
 
-  Audio/NrtAudioService.cpp
-
   Ecs/NrtCatalogue.cpp
   Ecs/NrtConfigurator.cpp
   Ecs/NrtComponentBufferMemoryContainer.cpp
@@ -13,10 +11,6 @@ set(INTEROP_SOURCES
   Ecs/NrtSparseSetMemoryContainer.cpp
   Ecs/NrtSystemScheduler.cpp
   Ecs/NrtUnsafeComponentView.cpp
-
-  Ecs/Audio/NrtAudioSystem.cpp
-  Ecs/Audio/NrtAudioEmitterComponent.cpp
-  Ecs/Audio/NrtAudioEmitterStateComponent.cpp
 
   Ecs/Graphics/NrtDefaultRenderingSystem.cpp
 
@@ -71,6 +65,7 @@ set(INTEROP_SOURCES
 )
 
 add_library(Interop SHARED ${INTEROP_SOURCES})
+add_library(NovelRT::Interop ALIAS Interop)
 add_dependencies(Interop Engine)
 set_property(TARGET Interop PROPERTY VERSION ${PROJECT_VERSION})
 
@@ -130,6 +125,7 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:Clang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-reserved-id-macro>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-nullability-extension>
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:${CMAKE_CXX_COMPILER_VERSION},15.0.0>>:-Wno-unused-but-set-variable>
 
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic>
     $<$<CXX_COMPILER_ID:AppleClang>:-pedantic-errors>
@@ -142,6 +138,9 @@ target_compile_options(Interop
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-padded>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-reserved-id-macro>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-nullability-extension>
+    $<$<AND:$<CXX_COMPILER_ID:AppleClang>,$<VERSION_GREATER_EQUAL:${CMAKE_CXX_COMPILER_VERSION},15.0.0>>:-Wno-unused-but-set-variable>
+    
+    
 )
 
 if(MSVC)

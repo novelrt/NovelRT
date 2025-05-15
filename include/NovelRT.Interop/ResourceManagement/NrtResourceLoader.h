@@ -11,10 +11,16 @@ extern "C"
 {
 #endif
 
+    NrtResult Nrt_ResourceLoader_Destroy(NrtResourceLoaderHandle resourceLoader);
+
     char* Nrt_ResourceLoader_GetResourcesRootDirectory(NrtResourceLoaderHandle resourceLoader);
 
     NrtResult Nrt_ResourceLoader_SetResourcesLoaderRootDirectory(NrtResourceLoaderHandle resourceLoader,
                                                                  const char* newDirectory);
+
+    NrtBool Nrt_ResourceLoader_GetIsAssetDBInitialised(NrtResourceLoaderHandle resourceLoader);
+
+    NrtResult Nrt_ResourceLoader_InitAssetDatabase(NrtResourceLoaderHandle resourceLoader);
 
     NrtUuidFilePathMapHandle Nrt_ResourceLoader_GetGuidsToFilePathsMap(NrtResourceLoaderHandle resourceLoader);
 

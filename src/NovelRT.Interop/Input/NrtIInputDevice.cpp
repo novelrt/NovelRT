@@ -4,7 +4,7 @@
 #include "../LifetimeExtender.h"
 #include <NovelRT.Interop/Input/NrtIInputDevice.h>
 #include <NovelRT.Interop/NrtErrorHandling.h>
-#include <NovelRT/Input/Input.h>
+#include <NovelRT/Input/IInputDevice.hpp>
 
 using namespace NovelRT::Input;
 using namespace NovelRT::Interop;

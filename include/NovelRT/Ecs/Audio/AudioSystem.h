@@ -14,11 +14,10 @@ namespace NovelRT::Ecs::Audio
     {
     private:
         uint32_t _counter;
-        std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>> _fadeCache;
         LoggingService _logger;
-        std::map<uint32_t, std::vector<ALuint>::iterator> _musicCache;
-        std::shared_ptr<NovelRT::Audio::AudioService> _service;
-        std::map<uint32_t, ALuint> _soundCache;
+        std::map<uint32_t, NovelRT::ResourceManagement::AudioMetadata> _soundCache;
+        std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>> _fadeCache;
+        std::shared_ptr<NovelRT::Audio::AudioMixer> _mixer;
         NovelRT::Timing::Timestamp _systemTime;
         std::shared_ptr<PluginManagement::IResourceManagementPluginProvider> _resourceManagerPluginProvider;
 
@@ -29,7 +28,7 @@ namespace NovelRT::Ecs::Audio
         ~AudioSystem() noexcept;
 
         void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final;
-        uint32_t CreateAudio(std::string fileName, bool isMusic);
+        uint32_t RegisterSound(std::string fileName);
     };
 }
 

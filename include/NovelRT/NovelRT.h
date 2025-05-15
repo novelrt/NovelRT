@@ -106,8 +106,6 @@
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
-  #include <NovelRT/Input/Input.h>
-  #include <NovelRT/Input/Glfw/Input.Glfw.h>
 
   // Plugin Management types
   #include <NovelRT/PluginManagement/PluginManagement.h>

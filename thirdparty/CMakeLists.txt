@@ -26,6 +26,10 @@ thirdparty_module(FLAC
   URL_HASH SHA256=8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737
   OVERRIDE_FIND_PACKAGE
 )
+thirdparty_module(fmt
+  URL https://github.com/fmtlib/fmt/releases/download/10.2.1/fmt-10.2.1.zip
+  URL_HASH SHA512=1cf0e3dd09c7d87e0890b8743559159d3be2a8f33c135516962d17c4eeb7b00659e6acd74518bd5566ee4e83ddaba155fecb4c229f90cd258b3b832e72ad82cd
+)
 thirdparty_module(glfw3
   URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
   URL_HASH SHA512=03de56a0599275ff57759ca19e8f69176058252b5e9976193cc3d9bb7b7b78b6a8dac6ed91de483d03c1b4807d21e1302e5e47c2f0c21e63becb4aba9d5affdc
@@ -39,12 +43,14 @@ thirdparty_module(GSL
   URL_HASH SHA512=710ab8b06b24dbca2cd1a8abb2eca2282548644224519784d04b1c7b70e3639f3b3e8d8f993f7f8c3dce3fcfe9ff0f3757b8d2625b676df36c84caa6f684133e
 )
 thirdparty_module(GTest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
-  URL_HASH SHA512=1479ea2f3172c622c0ca305f5b2bc45a42941221ec0ac7865e6d6d020ec4d008d952fc64e01a4c5138d7bed4148cf75596f25bb9e9044a98bbbf5662053ea11c
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+  URL_HASH SHA512=16cc8f5b03b862e2937d1b926ca6dc291234ac5670050dc4fc2752ec98497330ebcd46f292317cd2bbb111ce33bbdcfd088ddf6a7fe273e2442963908732d589
+  OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(nlohmann_json
-  URL https://github.com/nlohmann/json/releases/download/v3.10.5/json.tar.xz
-  URL_HASH SHA512=feb7dbdd1f1b6318131821f55d1411f0435262601c65eca368ccf3418750fd6348a37a3cd9d0694b31ccacfc91d02fbbecf94af52429005f8898490a5233c37d
+  URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+  URL_HASH SHA512=1aa94cdc3378a1fe0e3048ee73293e34bfa5ed9b46c6db0993e58e289ef818f7b7a472c0dc9c920114312e2e3ae1ff346ca797407ff48143744592adfd0a41ad
+  OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Ogg
   URL https://github.com/xiph/ogg/releases/download/v1.3.5/libogg-1.3.5.tar.gz
@@ -52,8 +58,8 @@ thirdparty_module(Ogg
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(OpenAL
-  URL https://github.com/kcat/openal-soft/archive/refs/tags/1.21.1.zip
-  URL_HASH SHA512=bc17d628548e59d0db3996917d207a4af0bbbf615ba3ba10ae8e99b28213e845e967a0510c8aad74e551aa66ddfb11499fe26082725af82160ac5d2db4e7e69d
+  URL https://github.com/kcat/openal-soft/archive/ef44737658313cc0a6394eed7878ad28d36fdca5.zip
+  URL_HASH SHA512=66b1e5a373ab6f5414220b7b22c46a0e0eba7d83e004088be75bb5ec808e4d4e2152fc14989ba182475c4d1d020332bbd9b3deb1b26f8506d40112f995e02206
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Opus
@@ -66,6 +72,12 @@ thirdparty_module(PNG
   URL_HASH SHA512=65df0c2befa06d0b9ec0c6395a73987fb071754610d328b94ce01a6b8f7161c71ce97ddf0e0a8e28c2e50019a103368c4b4f0b63bd8cd75e168b32f940922d96
   OVERRIDE_FIND_PACKAGE
 )
+
+thirdparty_module(samplerate
+  URL https://github.com/libsndfile/libsamplerate/archive/refs/tags/0.2.2.zip
+  URL_HASH SHA512=dedd072bc83ccebfe1a33e8a3fb3f72559bfd36282b958b1d5463b786f2325f684137580db38d91f0f4f5345a1da3e9e1c4a1695e303182e57d542c085db829f
+)
+
 thirdparty_module(SndFile
   URL https://github.com/novelrt/libsndfile/archive/f76d63813c810c2ed09bdb3821bb807498a7558e.zip
   URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
@@ -99,14 +111,16 @@ thirdparty_module(ZLIB
 
 # N.B. Order matters here, for dependency searching!
 foreach(module
-  nlohmann_json Fabulist
+  nlohmann_json
+  Fabulist
   glfw3
   glm
   GSL
   GTest
-  Opus Ogg FLAC Vorbis SndFile OpenAL
+  Opus Ogg FLAC Vorbis SndFile samplerate
+  OpenAL
   ZLIB PNG
-  spdlog
+  fmt spdlog
   stduuid
   TBB
   VulkanMemoryAllocator)

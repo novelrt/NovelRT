@@ -133,8 +133,7 @@ int main()
             scale += NovelRT::Maths::GeoVector2F{-0.2f, -0.2f};
         }
 
-        if (events.TryGetComponent(mouseClick, input) &&
-            (input.state == KeyState::KeyDown || input.state == KeyState::KeyDownHeld))
+        if (events.TryGetComponent(mouseClick, input) && input.state == KeyState::KeyDown)
         {
             logger.logInfo("Clicked at {}, {}", input.mousePositionX, input.mousePositionY);
         }

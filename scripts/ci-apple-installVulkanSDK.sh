@@ -41,11 +41,15 @@ else
                 echo "Could not find libvulkan.dylib!"
                 exit -1
             fi
-            if test -f $sdk_path/$version/MoltenVK/dylib/macOS/libMoltenVK.dylib; then
+            if test -f $sdk_path/$version/macOS/lib/libMoltenVK.dylib; then
                 echo "Found MoltenVK!"
             else
-                echo "Could not find MoltenVK!"
-                exit -1
+                if test -f $sdk_path/$version/MoltenVK/dylib/macOS/libMoltenVK.dylib; then
+                    echo "Found MoltenVK in legacy path!"
+                else
+                    echo "Could not find MoltenVK!"
+                    exit -1
+                fi
             fi
         else
             echo "Could not download Vulkan SDK! Check curl output for more information."

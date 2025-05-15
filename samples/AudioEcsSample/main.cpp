@@ -43,12 +43,12 @@ int main()
 
     // Create the sound components
     std::string uwu = (soundDir / "uwu.ogg").string();
-    auto uwuHandle = audioSystem->CreateAudio(uwu, true);
+    auto uwuHandle = audioSystem->RegisterSound(uwu);
     AudioEmitterComponent uwuComponent = AudioEmitterComponent{uwuHandle, true, -1, 0.75f};
     AudioEmitterStateComponent uwuState = AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 8.0f, 0.75f};
 
     std::string ahh = (soundDir / "goat.wav").string();
-    auto goatHandle = audioSystem->CreateAudio(ahh, false);
+    auto goatHandle = audioSystem->RegisterSound(ahh);
     AudioEmitterComponent goatComponent = AudioEmitterComponent{goatHandle, false, 0, 0.75f};
     AudioEmitterStateComponent goatState = AudioEmitterStateComponent{AudioEmitterState::Stopped, 0, 0};
 
