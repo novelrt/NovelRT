@@ -17,7 +17,7 @@ namespace NovelRT::Graphics
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsTexture : public GraphicsResource<TBackend>, public std::enable_shared_from_this<GraphicsTexture<TBackend>>
+    template<typename TBackend> class GraphicsTexture : public GraphicsResource<TBackend>
     {
     public:
         using BackendTextureType = typename GraphicsBackendTraits<TBackend>::TextureType;
@@ -32,7 +32,10 @@ namespace NovelRT::Graphics
         uint16_t _depth;
 
     public:
-        using std::enable_shared_from_this<GraphicsTexture>::shared_from_this;
+        std::shared_ptr<GraphicsTexture<TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsTexture<TBackend>>(GraphicsResource<TBackend>::shared_from_this());
+        }
 
         GraphicsTexture(std::shared_ptr<BackendTextureType> implementation,
                         std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,

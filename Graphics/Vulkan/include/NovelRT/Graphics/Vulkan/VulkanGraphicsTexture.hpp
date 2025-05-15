@@ -12,7 +12,7 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsTexture : public VulkanGraphicsResource, public std::enable_shared_from_this<VulkanGraphicsTexture>
+    class VulkanGraphicsTexture : public VulkanGraphicsResource
     {
     private:
         VkImage _vulkanImage;
@@ -36,7 +36,10 @@ namespace NovelRT::Graphics::Vulkan
             VmaVirtualAllocationInfo info) final;
 
     public:
-        using std::enable_shared_from_this<VulkanGraphicsTexture>::shared_from_this;
+        std::shared_ptr<VulkanGraphicsTexture> shared_from_this()
+        {
+            return std::static_pointer_cast<VulkanGraphicsTexture>(VulkanGraphicsResource::shared_from_this());
+        }
 
         VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                               std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,

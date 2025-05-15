@@ -16,7 +16,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsMemoryAllocator;
     template<typename TResource> class VulkanGraphicsResourceMemoryRegion;
 
-    class VulkanGraphicsBuffer final : public VulkanGraphicsResource, public std::enable_shared_from_this<VulkanGraphicsBuffer>
+    class VulkanGraphicsBuffer final : public VulkanGraphicsResource
     {
     private:
         VkBuffer _vulkanBuffer;
@@ -28,7 +28,10 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) final;
 
     public:
-        using std::enable_shared_from_this<VulkanGraphicsBuffer>::shared_from_this;
+        std::shared_ptr<VulkanGraphicsBuffer> shared_from_this()
+        {
+            return std::static_pointer_cast<VulkanGraphicsBuffer>(VulkanGraphicsResource::shared_from_this());
+        }
 
         VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                              std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,

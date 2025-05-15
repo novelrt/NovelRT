@@ -18,7 +18,7 @@ namespace NovelRT::Graphics
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsResource : public GraphicsDeviceObject<TBackend>, public std::enable_shared_from_this<GraphicsResource<TBackend>>
+    template<typename TBackend> class GraphicsResource : public GraphicsDeviceObject<TBackend>
     {
     public:
         using BackendResourceType = typename GraphicsBackendTraits<TBackend>::ResourceType;
@@ -31,7 +31,10 @@ namespace NovelRT::Graphics
         GraphicsResourceAccess _cpuAccess;
 
     public:
-        using std::enable_shared_from_this<GraphicsResource>::shared_from_this;
+        std::shared_ptr<GraphicsResource<TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsResource<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
+        }
 
         explicit GraphicsResource(std::shared_ptr<BackendResourceType> implementation,
                                   std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,

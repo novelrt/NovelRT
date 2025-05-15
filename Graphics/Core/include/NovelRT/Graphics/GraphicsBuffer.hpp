@@ -13,7 +13,7 @@ namespace NovelRT::Graphics
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsBuffer : public GraphicsResource<TBackend>, public std::enable_shared_from_this<GraphicsBuffer<TBackend>>
+    template<typename TBackend> class GraphicsBuffer : public GraphicsResource<TBackend>
     {
     public:
         using BackendBufferType = typename GraphicsBackendTraits<TBackend>::BufferType;
@@ -24,7 +24,10 @@ namespace NovelRT::Graphics
         GraphicsBufferKind _kind;
 
     public:
-        using std::enable_shared_from_this<GraphicsBuffer<TBackend>>::shared_from_this;
+        std::shared_ptr<GraphicsBuffer<TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsBuffer<TBackend>>(GraphicsResource<TBackend>::shared_from_this());
+        }
 
         GraphicsBuffer(std::shared_ptr<BackendBufferType> implementation,
                        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
@@ -48,7 +51,7 @@ namespace NovelRT::Graphics
         {
             return std::make_shared<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>(
                 std::static_pointer_cast<BackendResourceMemoryRegionType>(GraphicsResource<TBackend>::_implementation->Allocate(size, alignment)),
-                this->shared_from_this());
+                shared_from_this());
         }
 
         [[nodiscard]] GraphicsBufferKind GetKind() const noexcept

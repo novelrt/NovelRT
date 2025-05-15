@@ -24,7 +24,7 @@ namespace NovelRT::Graphics
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsMemoryAllocator : public GraphicsDeviceObject<TBackend>, public std::enable_shared_from_this<GraphicsMemoryAllocator<TBackend>>
+    template<typename TBackend> class GraphicsMemoryAllocator : public GraphicsDeviceObject<TBackend>
     {
     public:
         using BackendMemoryAllocatorType = typename GraphicsBackendTraits<TBackend>::MemoryAllocatorType;
@@ -34,7 +34,10 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
-    using std::enable_shared_from_this<GraphicsMemoryAllocator<TBackend>>::shared_from_this;
+        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsMemoryAllocator<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
+        }
 
         GraphicsMemoryAllocator(std::shared_ptr<BackendMemoryAllocatorType> implementation,
                                 std::shared_ptr<GraphicsDevice<TBackend>> device,
@@ -52,7 +55,7 @@ namespace NovelRT::Graphics
         {
             return std::make_shared<GraphicsBuffer<TBackend>>(
                 _implementation->CreateBuffer(createInfo),
-                GraphicsMemoryAllocator<TBackend>::shared_from_this(),
+                shared_from_this(),
                 createInfo);
         }
 
