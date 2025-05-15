@@ -18,7 +18,8 @@ NrtResult Nrt_GraphicsProvider_Destroy(NrtGraphicsProviderHandle provider)
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (!Lifetime::Release(reinterpret_cast<GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(provider)))
+    if (!Lifetime::Release(
+            reinterpret_cast<GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(provider)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;

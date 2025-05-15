@@ -6,7 +6,7 @@
 #include <NovelRT/Ecs/Ecs.h>
 
 using namespace NovelRT::Ecs;
-//using namespace NovelRT::Ecs::Graphics;
+// using namespace NovelRT::Ecs::Graphics;
 
 NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle scheduler,
                                                      NrtDefaultRenderingSystemHandle* outputResult)
@@ -14,19 +14,19 @@ NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle sc
     unused(scheduler);
     unused(outputResult);
     return NRT_FAILURE_UNKNOWN;
-    //if (scheduler == nullptr)
+    // if (scheduler == nullptr)
     //{
     //    Nrt_setErrMsgIsNullInstanceProvidedInternal();
     //    return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     //}
 
-    //if (outputResult == nullptr)
+    // if (outputResult == nullptr)
     //{
     //    Nrt_setErrMsgIsNullArgumentProvidedInternal();
     //    return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     //}
 
-    //try
+    // try
     //{
     //    auto* sched = reinterpret_cast<SystemScheduler*>(scheduler);
     //    std::shared_ptr<DefaultRenderingSystem> system = sched->GetRegisteredIEcsSystemAs<DefaultRenderingSystem>();
@@ -34,7 +34,7 @@ NrtResult Nrt_DefaultRenderingSystem_FindInScheduler(NrtSystemSchedulerHandle sc
 
     //    return NRT_SUCCESS;
     //}
-    //catch (const NovelRT::Exceptions::KeyNotFoundException&)
+    // catch (const NovelRT::Exceptions::KeyNotFoundException&)
     //{
     //    Nrt_setErrMsgKeyNotFoundInternal();
     //    return NRT_FAILURE_KEY_NOT_FOUND;
@@ -45,12 +45,12 @@ NrtResult Nrt_DefaultRenderingSystem_ForceVertexTextureFutureResolution(NrtDefau
 {
     unused(system);
     return NRT_FAILURE_UNKNOWN;
-    //if (system == nullptr)
+    // if (system == nullptr)
     //{
     //    Nrt_setErrMsgIsNullInstanceProvidedInternal();
     //    return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     //}
 
-    //reinterpret_cast<DefaultRenderingSystem*>(system)->ForceVertexTextureFutureResolution();
-    //return NRT_SUCCESS;
+    // reinterpret_cast<DefaultRenderingSystem*>(system)->ForceVertexTextureFutureResolution();
+    // return NRT_SUCCESS;
 }

@@ -14,7 +14,7 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-    //struct TestStruct
+    // struct TestStruct
     //{
     //    int32_t value;
     //    int32_t multiplier;
@@ -38,9 +38,9 @@ int main()
     //    }
     //};
 
-    //class TestStructSerialisationRule final : public NovelRT::Persistence::ICustomSerialisationRule
+    // class TestStructSerialisationRule final : public NovelRT::Persistence::ICustomSerialisationRule
     //{
-    //private:
+    // private:
     //    struct CopyStruct
     //    {
     //        int32_t value;
@@ -48,7 +48,7 @@ int main()
     //        EntityId testEntityValue;
     //    };
 
-    //public:
+    // public:
     //    size_t GetSerialisedSize() const noexcept final
     //    {
     //        return sizeof(CopyStruct);
@@ -87,9 +87,9 @@ int main()
     //    }
     //};
 
-    //class TestStructComponentLoadRule : public ICustomComponentLoadRule
+    // class TestStructComponentLoadRule : public ICustomComponentLoadRule
     //{
-    //public:
+    // public:
     //    void ExecuteComponentLoadModification(const SparseSet<EntityId, EntityId>& localToGlobalEntityMap,
     //                                          void* componentDataHandle) override
     //    {
@@ -102,22 +102,22 @@ int main()
     //    }
     //};
 
-    //NovelRT::Persistence::Persistable::GetSerialisationRules().emplace(
+    // NovelRT::Persistence::Persistable::GetSerialisationRules().emplace(
     //    "TestStruct", std::unique_ptr<ICustomSerialisationRule>(new TestStructSerialisationRule()));
 
-    //NovelRT::Persistence::Persistable::GetComponentLoadRules().emplace(
+    // NovelRT::Persistence::Persistable::GetComponentLoadRules().emplace(
     //    "TestStruct", std::unique_ptr<ICustomComponentLoadRule>(new TestStructComponentLoadRule()));
 
-    //NovelRT::LoggingService logger = NovelRT::LoggingService();
-    //logger.setLogLevel(NovelRT::LogLevel::Info);
+    // NovelRT::LoggingService logger = NovelRT::LoggingService();
+    // logger.setLogLevel(NovelRT::LogLevel::Info);
 
-    //DefaultPluginSelector selector;
-    //auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-    //auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
-    //auto resourceManagementProvider =
+    // DefaultPluginSelector selector;
+    // auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
+    // auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
+    // auto resourceManagementProvider =
     //    selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>();
 
-    //auto scheduler =
+    // auto scheduler =
     //    Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>()
     //        .WithDefaultSystemsAndComponents()
     //        .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<
@@ -127,52 +127,53 @@ int main()
     //        .WithPluginProvider(resourceManagementProvider)
     //        .InitialiseAndRegisterComponents<TestStruct>(std::make_tuple(TestStruct{0, 0, 0, true}, "TestStruct"));
 
-    //std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
+    // std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
     //    scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
-    //NovelRT::Persistence::Persistable::LoadDefaultRules(renderingSystem);
+    // NovelRT::Persistence::Persistable::LoadDefaultRules(renderingSystem);
 
-    //NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
+    // NovelRT::Threading::FutureResult<NovelRT::Ecs::Graphics::TextureInfo> textureFuture =
     //    renderingSystem->GetOrLoadTexture("novel-chan");
 
-    //renderingSystem->ForceVertexTextureFutureResolution();
+    // renderingSystem->ForceVertexTextureFutureResolution();
 
-    //auto transformBuffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
-    //auto entityGraphBuffer = scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>();
-    //auto testStructBuffer = scheduler.GetComponentCache().GetComponentBuffer<TestStruct>();
+    // auto transformBuffer = scheduler.GetComponentCache().GetComponentBuffer<TransformComponent>();
+    // auto entityGraphBuffer = scheduler.GetComponentCache().GetComponentBuffer<EntityGraphComponent>();
+    // auto testStructBuffer = scheduler.GetComponentCache().GetComponentBuffer<TestStruct>();
 
-    //EntityId parentEntity =
+    // EntityId parentEntity =
     //    renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
-    //EntityId childEntity =
+    // EntityId childEntity =
     //    renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
-    //EntityId childOfChildEntity =
+    // EntityId childOfChildEntity =
     //    renderingSystem->CreateSpriteEntityOutsideOfSystem(textureFuture.GetBackingConcurrentSharedPtr(), scheduler);
 
-    //transformBuffer.PushComponentUpdateInstruction(
+    // transformBuffer.PushComponentUpdateInstruction(
     //    0, childEntity,
     //    TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
-    //transformBuffer.PushComponentUpdateInstruction(
+    // transformBuffer.PushComponentUpdateInstruction(
     //    0, childOfChildEntity,
     //    TransformComponent{NovelRT::Maths::GeoVector3F(200, 200, 0), NovelRT::Maths::GeoVector2F::Zero(), 0});
-    //entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
-    //entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity, 0});
+    // entityGraphBuffer.PushComponentUpdateInstruction(0, childEntity, EntityGraphComponent{true, parentEntity, 0});
+    // entityGraphBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, EntityGraphComponent{true, childEntity,
+    // 0});
 
-    //testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, 5, false});
-    //testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, 10, false});
-    //testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, 15, false});
+    // testStructBuffer.PushComponentUpdateInstruction(0, parentEntity, TestStruct{2, 2, 5, false});
+    // testStructBuffer.PushComponentUpdateInstruction(0, childEntity, TestStruct{3, 5, 10, false});
+    // testStructBuffer.PushComponentUpdateInstruction(0, childOfChildEntity, TestStruct{4, 10, 15, false});
 
-    //auto& entityCache = scheduler.GetEntityCache();
-    //entityCache.AddEntity(0, 5);
-    //entityCache.AddEntity(0, 10);
-    //entityCache.AddEntity(0, 15);
+    // auto& entityCache = scheduler.GetEntityCache();
+    // entityCache.AddEntity(0, 5);
+    // entityCache.AddEntity(0, 10);
+    // entityCache.AddEntity(0, 15);
 
-    //NovelRT::Timing::Timestamp secondsPassed(0);
-    //Chapter chapterToLoad;
-    //bool fileSaved = false;
+    // NovelRT::Timing::Timestamp secondsPassed(0);
+    // Chapter chapterToLoad;
+    // bool fileSaved = false;
 
-    //scheduler.RegisterSystem([&](auto delta, auto catalogue) {
+    // scheduler.RegisterSystem([&](auto delta, auto catalogue) {
     //    secondsPassed += delta;
 
     //    if (secondsPassed >= NovelRT::Timing::Timestamp::fromSeconds(3))
@@ -206,20 +207,20 @@ int main()
     //    }
     //});
 
-    //entityCache.ProcessEntityRegistrationRequestsFromThreads();
-    //scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+    // entityCache.ProcessEntityRegistrationRequestsFromThreads();
+    // scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
-    //NovelRT::Timing::StepTimer timer;
+    // NovelRT::Timing::StepTimer timer;
 
-    //auto windowPtr = windowingProvider->GetWindowingDevice();
-    //windowPtr->SetWindowTitle("Persistence Test");
+    // auto windowPtr = windowingProvider->GetWindowingDevice();
+    // windowPtr->SetWindowTitle("Persistence Test");
 
-    //std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem =
+    // std::shared_ptr<NovelRT::Ecs::Input::InputSystem> inputSystem =
     //    scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Input::InputSystem>();
 
-    //DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
+    // DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
 
-    //while (!windowPtr->GetShouldClose())
+    // while (!windowPtr->GetShouldClose())
     //{
     //    windowPtr->ProcessAllMessages();
     //    timer.tick(DummyUpdateStuff);

@@ -14,13 +14,13 @@ NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 int main()
 {
-    //NovelRT::LoggingService logger = NovelRT::LoggingService();
-    //logger.setLogLevel(NovelRT::LogLevel::Info);
+    // NovelRT::LoggingService logger = NovelRT::LoggingService();
+    // logger.setLogLevel(NovelRT::LogLevel::Info);
 
-    //DefaultPluginSelector selector;
-    //auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
-    //auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
-    //auto scheduler =
+    // DefaultPluginSelector selector;
+    // auto windowingProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IWindowingPluginProvider>();
+    // auto inputProvider = selector.GetDefaultPluginTypeOnCurrentPlatformFor<IInputPluginProvider>();
+    // auto scheduler =
     //    Configurator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>()
     //        .WithDefaultSystemsAndComponents()
     //        .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<
@@ -30,17 +30,17 @@ int main()
     //        .WithPluginProvider(selector.GetDefaultPluginTypeOnCurrentPlatformFor<IResourceManagementPluginProvider>())
     //        .InitialiseAndRegisterComponents();
 
-    //std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
+    // std::shared_ptr<NovelRT::Ecs::Graphics::DefaultRenderingSystem> renderingSystem =
     //    scheduler.GetRegisteredIEcsSystemAs<NovelRT::Ecs::Graphics::DefaultRenderingSystem>();
 
-    //using namespace NovelRT::Threading;
-    //using namespace NovelRT::Ecs;
-    //using namespace NovelRT::Ecs::Graphics;
+    // using namespace NovelRT::Threading;
+    // using namespace NovelRT::Ecs;
+    // using namespace NovelRT::Ecs::Graphics;
 
-    //FutureResult<VertexInfo> squareVertexFuture(nullptr, VertexInfo{});
-    //FutureResult<TextureInfo> redTextureFuture(nullptr, TextureInfo{});
+    // FutureResult<VertexInfo> squareVertexFuture(nullptr, VertexInfo{});
+    // FutureResult<TextureInfo> redTextureFuture(nullptr, TextureInfo{});
 
-    //scheduler.RegisterSystem([&](auto delta, auto catalogue) {
+    // scheduler.RegisterSystem([&](auto delta, auto catalogue) {
     //    if (!squareVertexFuture.IsValid())
     //    {
     //        auto pVertexBuffer = std::vector<TexturedVertex>{
@@ -70,13 +70,13 @@ int main()
     //    }
     //});
 
-    //std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> inputResourceRegions{};
-    //std::optional<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> transformRegion;
+    // std::vector<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> inputResourceRegions{};
+    // std::optional<NovelRT::Graphics::GraphicsMemoryRegion<NovelRT::Graphics::GraphicsResource>> transformRegion;
 
     //// we cache the primitive here so its kept alive long enough so that Vulkan can execute the relevant cmd lists
-    //std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive> primitive = nullptr;
+    // std::shared_ptr<NovelRT::Graphics::GraphicsPrimitive> primitive = nullptr;
 
-    //renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args) {
+    // renderingSystem->UIRenderEvent += [&](auto system, DefaultRenderingSystem::UIRenderEventArgs args) {
     //    inputResourceRegions.clear();
     //    if (!squareVertexFuture.IsValid() || !squareVertexFuture.IsValueCreated())
     //    {
@@ -96,7 +96,8 @@ int main()
 
     //    if (!transformRegion.has_value())
     //    {
-    //        // this is the quickest way to get the constant buffer region that the shader expects since we don't rely on
+    //        // this is the quickest way to get the constant buffer region that the shader expects since we don't rely
+    //        on
     //        // ECS transform data here.
     //        transformRegion =
     //            args.resourceManager.AllocateConstantBufferRegion(sizeof(NovelRT::Maths::GeoMatrix4x4F) * 1000);
@@ -129,19 +130,20 @@ int main()
 
     //    primitive = args.graphicsDevice->CreatePrimitive(pipeline->gpuPipeline.GetUnderlyingSharedPtr(),
     //                                                     squareVertexFuture.GetValue().gpuVertexRegion,
-    //                                                     sizeof(TexturedVertex), dummyRegion, 0, inputResourceRegions);
+    //                                                     sizeof(TexturedVertex), dummyRegion, 0,
+    //                                                     inputResourceRegions);
     //    args.graphicsContext->Draw(primitive, 3);
     //};
 
-    //scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
+    // scheduler.GetComponentCache().PrepAllBuffersForNextFrame(std::vector<EntityId>{});
 
-    //NovelRT::Timing::StepTimer timer;
+    // NovelRT::Timing::StepTimer timer;
 
-    //auto windowPtr = windowingProvider->GetWindowingDevice();
-    //windowPtr->SetWindowTitle("UI Test");
+    // auto windowPtr = windowingProvider->GetWindowingDevice();
+    // windowPtr->SetWindowTitle("UI Test");
 
-    //DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
-    //while (!windowPtr->GetShouldClose())
+    // DummyUpdateStuff += [&](auto delta) { scheduler.ExecuteIteration(delta); };
+    // while (!windowPtr->GetShouldClose())
     //{
     //    windowPtr->ProcessAllMessages();
     //    timer.tick(DummyUpdateStuff);
