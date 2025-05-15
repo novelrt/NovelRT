@@ -4,9 +4,9 @@
 #ifndef NOVELRT_ECS_CONFIGURATOR_H
 #define NOVELRT_ECS_CONFIGURATOR_H
 
+struct NovelRT::Graphics::Vulkan::VulkanGraphicsBackend;
 namespace NovelRT::Ecs
 {
-    struct NovelRT::Graphics::Vulkan::VulkanGraphicsBackend;
     /**
      * @brief A convenience type to help with the creation of an ECS instance.
      */
