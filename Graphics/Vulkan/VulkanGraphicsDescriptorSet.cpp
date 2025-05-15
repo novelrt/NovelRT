@@ -24,7 +24,7 @@ namespace NovelRT::Graphics::Vulkan
         _pipeline->GetSignature()->DestroyDescriptorSets(fuck);
     }
 
-    const VkDescriptorSet* VulkanGraphicsDescriptorSet::GetVulkanDescriptorSet() const noexcept
+    VkDescriptorSet* VulkanGraphicsDescriptorSet::GetVulkanDescriptorSet() noexcept
     {
         return &_descriptorSetHandle;
     }

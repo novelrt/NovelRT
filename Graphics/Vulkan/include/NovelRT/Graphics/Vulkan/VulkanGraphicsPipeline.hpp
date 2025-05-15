@@ -14,7 +14,7 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsPipeline
+    class VulkanGraphicsPipeline : public std::enable_shared_from_this<VulkanGraphicsPipeline>
     {
     private:
         std::shared_ptr<VulkanGraphicsDevice> _device;
@@ -59,14 +59,16 @@ namespace NovelRT::Graphics::Vulkan
             return _vulkanPipeline.getActual();
         }
         
-        bool HasVertexShader() const noexcept
+        [[nodiscard]] bool HasVertexShader() const noexcept
         {
             return _vertexShader != nullptr;
         }
 
-        bool HasPixelShader() const noexcept
+        [[nodiscard]] bool HasPixelShader() const noexcept
         {
             return _pixelShader != nullptr;
         }
+
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsDescriptorSet> CreateDescriptorSet();
     };
 }

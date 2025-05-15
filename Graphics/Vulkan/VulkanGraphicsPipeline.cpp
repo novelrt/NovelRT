@@ -5,6 +5,7 @@
 #include <NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -225,5 +226,10 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         return returnFormat;
+    }
+        
+    std::shared_ptr<VulkanGraphicsDescriptorSet> VulkanGraphicsPipeline::CreateDescriptorSet()
+    {
+        return std::make_shared<VulkanGraphicsDescriptorSet>(shared_from_this());
     }
 } // namespace NovelRT::Graphics::Vulkan

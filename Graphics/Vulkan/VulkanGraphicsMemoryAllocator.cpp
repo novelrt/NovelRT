@@ -14,9 +14,9 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsProvider> provider,
-                                                                 std::shared_ptr<VulkanGraphicsDevice> device)
-        : _allocator(VK_NULL_HANDLE), _provider(provider), _device(device)
+    VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
+                                                                 std::shared_ptr<VulkanGraphicsProvider> provider)
+        : _allocator(VK_NULL_HANDLE), _device(device), _provider(provider)
     {
         auto vulkanDevice = GetDevice();
         auto vulkanAdapter = vulkanDevice->GetAdapter();
@@ -85,7 +85,7 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         return std::make_shared<VulkanGraphicsBuffer>(GetDevice(), shared_from_this(), createInfo.cpuAccessKind,
-                                                      createInfo.bufferKind, outAllocation, outAllocationInfo, 0,
+                                                      createInfo.bufferKind, outAllocation, outAllocationInfo,
                                                       outBuffer);
     }
 
@@ -148,7 +148,7 @@ namespace NovelRT::Graphics::Vulkan
 
         return std::make_shared<VulkanGraphicsTexture>(
             GetDevice(), shared_from_this(), createInfo.cpuAccessKind, createInfo.addressMode, createInfo.textureKind,
-            createInfo.width, createInfo.height, createInfo.depth, outAllocation, outAllocationInfo, 0, vulkanImage);
+            createInfo.width, createInfo.height, createInfo.depth, outAllocation, outAllocationInfo, vulkanImage);
     }
 
     VmaAllocator VulkanGraphicsMemoryAllocator::GetVmaAllocator() const noexcept

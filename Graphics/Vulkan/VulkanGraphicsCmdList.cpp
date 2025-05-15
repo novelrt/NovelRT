@@ -11,8 +11,8 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    VulkanGraphicsCmdList::VulkanGraphicsCmdList(std::shared_ptr<VulkanGraphicsContext> context) noexcept
-        : _context(context)
+    VulkanGraphicsCmdList::VulkanGraphicsCmdList(std::shared_ptr<VulkanGraphicsContext> context, VkCommandBuffer commandBuffer) noexcept
+        : _context(context), _commandBuffer(commandBuffer)
     {
     }
 
@@ -52,7 +52,6 @@ namespace NovelRT::Graphics::Vulkan
                         return returnStruct;
                        });
 
-        // TODO: clean this up
         VkRenderPassBeginInfo renderPassBeginInfo{};
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.renderPass = targetPass->GetVulkanRenderPass();
@@ -236,5 +235,10 @@ namespace NovelRT::Graphics::Vulkan
         vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
                              VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
                              &vulkanImageMemoryBarrier);
+    }
+    
+    void VulkanGraphicsCmdList::CmdBindPipeline(std::shared_ptr<VulkanGraphicsPipeline> pipeline)
+    {
+        vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetVulkanPipeline());
     }
 }

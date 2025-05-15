@@ -12,6 +12,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -47,7 +48,7 @@ namespace NovelRT::Graphics::Vulkan
 
         NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
         NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
-        NovelRT::Utilities::Lazy<VkRenderPass> _renderPass;
+        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsRenderPass>> _renderPass;
 
         QueueFamilyIndices _indicesData;
 
@@ -112,6 +113,11 @@ namespace NovelRT::Graphics::Vulkan
             NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources);
 
+        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsRenderPass> GetRenderPass()
+        {
+            return _renderPass.getActual();
+        }
+
         [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain()
         {
             return _vulkanSwapchain.getActual();
@@ -134,7 +140,7 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] inline VkRenderPass GetVulkanRenderPass()
         {
-            return _renderPass.getActual();
+            return _renderPass.getActual()->GetVulkanRenderPass();
         }
 
         [[nodiscard]] VkExtent2D GetSwapChainExtent() const noexcept

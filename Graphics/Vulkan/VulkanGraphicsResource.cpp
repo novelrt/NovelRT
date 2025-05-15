@@ -9,7 +9,7 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    std::tuple<VmaVirtualAllocation, VkDeviceSize> VulkanGraphicsResource::GetVirtualAllocation(size_t size, size_t alignment)
+    std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> VulkanGraphicsResource::GetVirtualAllocation(size_t size, size_t alignment)
     {
         VmaVirtualAllocationCreateInfo allocInfo{};
         allocInfo.size = size;
@@ -24,8 +24,11 @@ namespace NovelRT::Graphics::Vulkan
         {
             throw Exceptions::OutOfMemoryException("Unable to allocate additional memory in the Vulkan graphics resource.");
         }
+        
+        VmaVirtualAllocationInfo allocResultInfo{};
+        vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocHandle, &allocResultInfo);
 
-        return std::make_tuple(allocHandle, offset);
+        return std::make_tuple(allocHandle, allocResultInfo);
     }
 
     VulkanGraphicsResource::VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -75,8 +78,8 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
     {
-        auto [allocation, offset] = GetVirtualAllocation(size, alignment);
-        return AllocateInternal(allocation, offset);
+        auto [allocation, info] = GetVirtualAllocation(size, alignment);
+        return AllocateInternal(allocation, info);
     }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept

@@ -60,7 +60,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet(std::shared_ptr<GraphicsPipeline<TBackend>> pipeline)
         {
-            // TODO: this
             return std::make_shared<GraphicsDescriptorSet<TBackend>>(
                 _implementation->CreateDescriptorSet(),
                 pipeline);

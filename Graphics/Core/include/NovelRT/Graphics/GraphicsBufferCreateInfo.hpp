@@ -14,10 +14,10 @@ namespace NovelRT::Graphics
 {
     struct GraphicsBufferCreateInfo
     {
-        GraphicsBufferKind bufferKind;
-        GraphicsResourceAccess cpuAccessKind;
-        GraphicsResourceAccess gpuAccessKind;
-        size_t size;
-        GraphicsMemoryRegionAllocationFlags allocationFlags;
+        GraphicsBufferKind bufferKind = GraphicsBufferKind::Default;
+        GraphicsResourceAccess cpuAccessKind = GraphicsResourceAccess::None;
+        GraphicsResourceAccess gpuAccessKind = GraphicsResourceAccess::None;
+        size_t size = 0;
+        GraphicsMemoryRegionAllocationFlags allocationFlags = GraphicsMemoryRegionAllocationFlags::None;
     };
 }

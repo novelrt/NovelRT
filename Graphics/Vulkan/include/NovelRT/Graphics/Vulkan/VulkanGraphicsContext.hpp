@@ -15,6 +15,8 @@ namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsPipelineSignature;
     class VulkanGraphicsDevice;
+    class VulkanGraphicsCmdList;
+    class VulkanGraphicsDescriptorSet;
 
     class VulkanGraphicsContext : public std::enable_shared_from_this<VulkanGraphicsContext>
     {
@@ -22,7 +24,7 @@ namespace NovelRT::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsDevice> _device;
         size_t _index;
 
-        std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<VkDescriptorSet>>
+            std::unordered_map<std::shared_ptr<VulkanGraphicsPipelineSignature>, std::vector<std::shared_ptr<VulkanGraphicsDescriptorSet>>>
             _vulkanDescriptorSets;
         std::shared_ptr<VulkanGraphicsFence> _fence;
         std::shared_ptr<VulkanGraphicsFence> _waitForExecuteCompletionFence;
@@ -91,10 +93,12 @@ namespace NovelRT::Graphics::Vulkan
             return _waitForExecuteCompletionFence;
         }
 
-        void BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour);
-        void BeginFrame();
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsCmdList> BeginFrame();
+
+        void RegisterDescriptorSetForFrame(std::shared_ptr<VulkanGraphicsPipelineSignature> signature, std::shared_ptr<VulkanGraphicsDescriptorSet> set);
 
         void EndDrawing();
+
         void EndFrame();
 
         void ResetContext();

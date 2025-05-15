@@ -13,6 +13,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDescriptorSet;
     class VulkanGraphicsBuffer;
     class VulkanGraphicsTexture;
+    class VulkanGraphicsPipeline;
 
     class VulkanGraphicsCmdList final
     {
@@ -21,7 +22,7 @@ namespace NovelRT::Graphics::Vulkan
         VkCommandBuffer _commandBuffer;
 
     public:
-        explicit VulkanGraphicsCmdList(std::shared_ptr<VulkanGraphicsContext> context) noexcept;
+        explicit VulkanGraphicsCmdList(std::shared_ptr<VulkanGraphicsContext> context, VkCommandBuffer commandBuffer) noexcept;
 
         ~VulkanGraphicsCmdList() = default;
 
@@ -56,5 +57,7 @@ namespace NovelRT::Graphics::Vulkan
         void CmdBeginTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture);
 
         void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture);
+
+        void CmdBindPipeline(std::shared_ptr<VulkanGraphicsPipeline> pipeline);
     };
 }

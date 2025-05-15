@@ -4,6 +4,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -230,60 +232,62 @@ namespace NovelRT::Graphics::Vulkan
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
 
-    void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
-    {
-        DestroyDescriptorSets();
-        VkClearValue clearValue{};
-        clearValue.color.float32[0] = backgroundColour.getRScalar();
-        clearValue.color.float32[1] = backgroundColour.getGScalar();
-        clearValue.color.float32[2] = backgroundColour.getBScalar();
-        clearValue.color.float32[3] = backgroundColour.getAScalar();
+//    void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
+//    {
+//        DestroyDescriptorSets();
+//        VkClearValue clearValue{};
+//        clearValue.color.float32[0] = backgroundColour.getRScalar();
+//        clearValue.color.float32[1] = backgroundColour.getGScalar();
+//        clearValue.color.float32[2] = backgroundColour.getBScalar();
+//        clearValue.color.float32[3] = backgroundColour.getAScalar();
+// 
+//        std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
+//        std::shared_ptr<IGraphicsSurface> surface = device->GetSurface();
+// 
+//        float surfaceWidth = surface->GetWidth();
+//        float surfaceHeight = surface->GetHeight();
+// 
+//        VkExtent2D extent2D{};
+//        extent2D.width = static_cast<uint32_t>(surfaceWidth);
+//        extent2D.height = static_cast<uint32_t>(surfaceHeight);
+// 
+//        VkRect2D renderArea{};
+//        renderArea.extent = extent2D;
+// 
+//        VkRenderPassBeginInfo renderPassBeginInfo{};
+//        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+//        renderPassBeginInfo.renderPass = device->GetVulkanRenderPass();
+//        renderPassBeginInfo.framebuffer = GetVulkanFramebuffer();
+//        renderPassBeginInfo.renderArea = renderArea;
+//        renderPassBeginInfo.clearValueCount = 1;
+//        renderPassBeginInfo.pClearValues = &clearValue;
+// 
+//        VkCommandBuffer commandBuffer = GetVulkanCommandBuffer();
+//        vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+// 
+//        VkViewport viewport{};
+//        viewport.x = 0;
+//        viewport.y = surfaceHeight;
+//        viewport.width = surfaceWidth;
+//        viewport.height = -surfaceHeight;
+//        viewport.minDepth = 0.0f;
+//        viewport.maxDepth = 1.0f;
+// 
+//        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+// 
+//        VkRect2D scissorRect{};
+//        scissorRect.extent = extent2D;
+// 
+//        vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
+//    }
 
-        std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
-        std::shared_ptr<IGraphicsSurface> surface = device->GetSurface();
-
-        float surfaceWidth = surface->GetWidth();
-        float surfaceHeight = surface->GetHeight();
-
-        VkExtent2D extent2D{};
-        extent2D.width = static_cast<uint32_t>(surfaceWidth);
-        extent2D.height = static_cast<uint32_t>(surfaceHeight);
-
-        VkRect2D renderArea{};
-        renderArea.extent = extent2D;
-
-        VkRenderPassBeginInfo renderPassBeginInfo{};
-        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassBeginInfo.renderPass = device->GetVulkanRenderPass();
-        renderPassBeginInfo.framebuffer = GetVulkanFramebuffer();
-        renderPassBeginInfo.renderArea = renderArea;
-        renderPassBeginInfo.clearValueCount = 1;
-        renderPassBeginInfo.pClearValues = &clearValue;
-
-        VkCommandBuffer commandBuffer = GetVulkanCommandBuffer();
-        vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-        VkViewport viewport{};
-        viewport.x = 0;
-        viewport.y = surfaceHeight;
-        viewport.width = surfaceWidth;
-        viewport.height = -surfaceHeight;
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;
-
-        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-
-        VkRect2D scissorRect{};
-        scissorRect.extent = extent2D;
-
-        vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
-    }
-
-    void VulkanGraphicsContext::BeginFrame()
+    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
     {
         std::shared_ptr<VulkanGraphicsFence> fence = GetFence();
         fence->Wait();
         fence->Reset();
+
+        DestroyDescriptorSets();
 
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
         commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -295,6 +299,19 @@ namespace NovelRT::Graphics::Vulkan
             throw Exceptions::InitialisationFailureException(
                 "Failed to initialise on the VkCommandBuffer instance correctly.", result);
         }
+
+        return std::make_shared<VulkanGraphicsCmdList>(shared_from_this(), GetVulkanCommandBuffer());
+    }
+
+    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::shared_ptr<VulkanGraphicsPipelineSignature> signature, std::shared_ptr<VulkanGraphicsDescriptorSet> set)
+    {
+        if (_vulkanDescriptorSets.find(signature) == _vulkanDescriptorSets.end())
+        {
+            _vulkanDescriptorSets.emplace(signature, std::vector<std::shared_ptr<VulkanGraphicsDescriptorSet>>{set});
+            return;
+        }
+
+        _vulkanDescriptorSets[signature].emplace_back(set);
     }
 
     void VulkanGraphicsContext::EndDrawing()
@@ -373,7 +390,11 @@ namespace NovelRT::Graphics::Vulkan
     {
         for (auto&& pair : _vulkanDescriptorSets)
         {
-            pair.first->DestroyDescriptorSets(pair.second);
+            std::vector<VkDescriptorSet> sets(pair.second.size());
+
+            std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](std::shared_ptr<VulkanGraphicsDescriptorSet> set){ return *set->GetVulkanDescriptorSet(); });
+
+            pair.first->DestroyDescriptorSets(sets);
         }
 
         _vulkanDescriptorSets.clear();

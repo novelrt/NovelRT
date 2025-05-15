@@ -15,6 +15,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsTexture;
     template<typename TBackend> class GraphicsDescriptorSet;
     template<typename TBackend> class GraphicsRenderPass;
+    template<template<typename TBackend> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
     // TODO: MOVE THIS
     struct ViewportInfo
@@ -38,7 +39,7 @@ namespace NovelRT::Graphics
 
     struct ClearValue
     {
-        RGBAColour colour;
+        RGBAColour colour = RGBAColour(0, 0, 0, 0);
         float depth;
         uint32_t stencil;
     };
@@ -50,7 +51,8 @@ namespace NovelRT::Graphics
         using BackendDescriptorType = typename GraphicsBackendTraits<TBackend>::DescriptorSetType;
         using BackendBufferType = typename GraphicsBackendTraits<TBackend>::BufferType;
         template<typename TResource>
-        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<TResource>;
+        using BackendResourceMemoryRegionType =
+            typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<TResource>;
 
     private:
         std::shared_ptr<BackendCmdListType> _implementation;
@@ -70,7 +72,8 @@ namespace NovelRT::Graphics
             return _context;
         }
 
-        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass, Utilities::Misc::Span<const ClearValue> clearValues)
+        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass,
+                                Utilities::Misc::Span<const ClearValue> clearValues)
         {
             _implementation->CmdBeginRenderPass(targetPass->GetImplementation(), clearValues);
         }
@@ -80,41 +83,52 @@ namespace NovelRT::Graphics
             _implementation->CmdEndRenderPass();
         }
 
-        void CmdBindDescriptorSets(NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
+        void CmdBindDescriptorSets(
+            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
         {
             std::vector<std::shared_ptr<BackendDescriptorType>> transformedArgs{};
             transformedArgs.resize(sets.size());
-            std::transform(sets.begin(), sets.end(), transformedArgs.begin(), [&](auto x){ return x->GetImplementation(); });
+            std::transform(sets.begin(), sets.end(), transformedArgs.begin(),
+                           [&](auto x) { return x->GetImplementation(); });
             _implementation->CmdBindDescriptorSets(transformedArgs);
         }
 
-        void CmdBindVertexBuffers(uint32_t firstBinding,
-                                  uint32_t bindingCount,
-                                  NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers,
-                                  NovelRT::Utilities::Misc::Span<const size_t> offsets)
+        void CmdBindVertexBuffers(
+            uint32_t firstBinding,
+            uint32_t bindingCount,
+            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers,
+            NovelRT::Utilities::Misc::Span<const size_t> offsets)
         {
             std::vector<std::shared_ptr<BackendBufferType>> transformedArgs{};
             transformedArgs.resize(buffers.size());
-            std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(), [&](auto x) { return x->GetImplementation(); });
+            std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(),
+                           [&](auto x) { return x->GetImplementation(); });
             _implementation->CmdBindVertexBuffers(firstBinding, bindingCount, transformedArgs, offsets);
         }
 
-        void CmdBindIndexBuffer(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> buffer, IndexType indexType)
+        void CmdBindIndexBuffer(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> buffer,
+                                IndexType indexType)
         {
             _implementation->CmdBindIndexBuffer(buffer->GetImplementation(), indexType);
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> destination, std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> source)
+        void CmdCopy(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> destination,
+                     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsTexture<TBackend>> destination, std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> source)
+        void CmdCopy(std::shared_ptr<GraphicsTexture<TBackend>> destination,
+                     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
-        void CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, size_t vertexOffset, uint32_t firstInstance)
+        void CmdDrawIndexed(uint32_t indexCount,
+                            uint32_t instanceCount,
+                            uint32_t firstIndex,
+                            size_t vertexOffset,
+                            uint32_t firstInstance)
         {
             _implementation->CmdDrawIndexed(indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
         }
@@ -144,5 +158,9 @@ namespace NovelRT::Graphics
             _implementation->CmdEndTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
         }
 
+        void CmdBindPipeline(std::shared_ptr<GraphicsPipeline<TBackend>> pipeline)
+        {
+            _implementation->CmdBindPipeline(pipeline->GetImplementation());
+        }
     };
 }

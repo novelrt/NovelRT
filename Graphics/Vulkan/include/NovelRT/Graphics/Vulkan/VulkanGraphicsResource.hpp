@@ -21,10 +21,10 @@ namespace NovelRT::Graphics::Vulkan
         VmaAllocation _allocation;
         VmaAllocationInfo _allocationInfo;
         VmaVirtualBlock _virtualBlock;
-        [[nodiscard]] std::tuple<VmaVirtualAllocation, VkDeviceSize> GetVirtualAllocation(size_t size, size_t alignment);
+        [[nodiscard]] std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> GetVirtualAllocation(size_t size, size_t alignment);
 
     protected:
-        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) = 0;
+        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) = 0;
 
     public:
         VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,

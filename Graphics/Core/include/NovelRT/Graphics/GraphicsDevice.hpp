@@ -20,6 +20,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsContext;
     template<typename TBackend> class GraphicsPipeline;
     template<typename TBackend> class GraphicsDevice;
+    template<typename TBackend> class GraphicsRenderPass;
     class GraphicsPipelineInput;
     class GraphicsPipelineResource;
     template<typename TBackend> class GraphicsPipelineSignature;
@@ -113,6 +114,11 @@ namespace NovelRT::Graphics
             }
         }
 
+        [[nodiscard]] std::shared_ptr<BackendDeviceType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
+
         void TearDown()
         {
             _implementation->TearDown();
@@ -191,6 +197,11 @@ namespace NovelRT::Graphics
                 dstBlendFactor,
                 inputs,
                 resources);
+        }
+
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> GetRenderPass()
+        {
+            return std::make_shared<GraphicsRenderPass<TBackend>>(_implementation->GetRenderPass());
         }
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(

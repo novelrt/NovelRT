@@ -93,6 +93,11 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsProvider() = default;
 
+        [[nodiscard]] std::shared_ptr<BackendProviderType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
+
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept
         {
             return _debugModeEnabled;

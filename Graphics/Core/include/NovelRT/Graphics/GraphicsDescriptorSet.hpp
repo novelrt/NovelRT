@@ -6,6 +6,7 @@
 #include <NovelRT/Utilities/Misc.h>
 #include <memory>
 #include <vector>
+#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -13,8 +14,8 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsPipeline;
     template<typename TBackend> class GraphicsTexture;
     template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend> class GraphicsResource;
 
-    //TODO: FIX BASE TYPING
     template<typename TBackend> class GraphicsDescriptorSet
     {
     public:
@@ -50,6 +51,11 @@ namespace NovelRT::Graphics
             std::transform(regions.begin(), regions.end(), args.begin(), [&](auto x){ return x->GetImplementation(); });
 
             _implementation->AddMemoryRegionsToInputs(args);
+        }
+
+        void UpdateDescriptorSetData()
+        {
+            _implementation->UpdateDescriptorSetData();
         }
     };
 }

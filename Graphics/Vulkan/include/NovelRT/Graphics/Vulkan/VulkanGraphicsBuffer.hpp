@@ -25,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsBufferKind _kind;
 
     protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VkDeviceSize offset) final;
+        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) final;
 
     public:
         using std::enable_shared_from_this<VulkanGraphicsBuffer>::shared_from_this;
@@ -36,7 +36,6 @@ namespace NovelRT::Graphics::Vulkan
                              GraphicsBufferKind kind,
                              VmaAllocation allocation,
                              VmaAllocationInfo allocationInfo,
-                             size_t subAllocations,
                              VkBuffer vulkanBuffer);
 
         ~VulkanGraphicsBuffer() noexcept;

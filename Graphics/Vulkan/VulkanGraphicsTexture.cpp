@@ -98,15 +98,11 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsTexture::AllocateInternal(
         VmaVirtualAllocation allocation,
-        VkDeviceSize offset)
+        VmaVirtualAllocationInfo info)
     {
-        unused(offset); // TODO: figure out if we need offset
-
-        VmaVirtualAllocationInfo allocInfo{};
-        vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
         return std::static_pointer_cast<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>(
             std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsTexture>>(
-                GetDevice(), shared_from_this(), allocation, allocInfo));
+                GetDevice(), shared_from_this(), allocation, info));
     }
 
     VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
@@ -119,7 +115,6 @@ namespace NovelRT::Graphics::Vulkan
                                                  uint16_t depth,
                                                  VmaAllocation allocation,
                                                  VmaAllocationInfo allocationInfo,
-                                                 size_t subAllocations,
                                                  VkImage vulkanImage)
         : VulkanGraphicsResource(device, allocator, cpuAccess, allocation, allocationInfo),
           // GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
@@ -133,8 +128,6 @@ namespace NovelRT::Graphics::Vulkan
           _height(height),
           _depth(depth)
     {
-        // TODO: Still need this?
-        unused(subAllocations);
 
         VkResult result = vkBindImageMemory(GetDevice()->GetVulkanDevice(), GetVulkanImage(), GetAllocationInfo().deviceMemory, GetAllocationInfo().offset);
 
@@ -236,16 +229,30 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to invalidate mapped memory. Reason: " + std::to_string(mapResult));
         }
 
+        _subAllocations++;
+
         return NovelRT::Utilities::Misc::Span<const uint8_t>(reinterpret_cast<const uint8_t*>(data), rangeLength);
     }
 
     void VulkanGraphicsTexture::UnmapBytes()
     {
+        if (_subAllocations == 0)
+        {
+            throw Exceptions::InvalidOperationException("Attempted to unmap region of texture when no memory map was created.");
+        }
+
+        _subAllocations--;
+
         vmaUnmapMemory(VulkanGraphicsResource::GetAllocator()->GetVmaAllocator(), GetAllocation());
     }
 
     void VulkanGraphicsTexture::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
     {
+        if (_subAllocations == 0)
+        {
+            throw Exceptions::InvalidOperationException("Attempted to unmap region of texture when no memory map was created.");
+        }
+
         size_t sizeOfBuffer = GetAllocationInfo().size;
         size_t rangeValidationValue = sizeOfBuffer - writtenRangeOffset;
 
@@ -265,6 +272,8 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to write VkBuffer subrange to GPU memory. Reason: " +
                                      std::to_string(result));
         }
+
+        _subAllocations--;
 
         vmaUnmapMemory(allocator, allocation);
     }

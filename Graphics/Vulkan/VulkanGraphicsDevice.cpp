@@ -32,7 +32,7 @@ namespace NovelRT::Graphics::Vulkan
           _isAttachedToResizeEvent(false),
           _vulkanSwapchain([&]() { return CreateSwapChain(); }),
           _swapChainImages([&]() { return GetSwapChainImages(); }),
-          _renderPass([&]() { return CreateRenderPass(); }),
+          _renderPass([&]() { return std::make_shared<VulkanGraphicsRenderPass>(CreateRenderPass()); }),
           _indicesData{},
           _state()
     {

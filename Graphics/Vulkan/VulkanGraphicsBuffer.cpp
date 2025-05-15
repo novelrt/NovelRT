@@ -10,14 +10,10 @@ namespace NovelRT::Graphics::Vulkan
 {
     std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsBuffer::AllocateInternal(
         VmaVirtualAllocation allocation,
-        VkDeviceSize offset)
+        VmaVirtualAllocationInfo info)
     {
-        unused(offset); // TODO: figure out if we need offset
-
-        VmaVirtualAllocationInfo allocInfo{};
-        vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocation, &allocInfo);
         return std::static_pointer_cast<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>(
-            std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, allocInfo));
+            std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, info));
     }
 
     VulkanGraphicsBuffer::VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -26,11 +22,10 @@ namespace NovelRT::Graphics::Vulkan
                                                GraphicsBufferKind kind,
                                                VmaAllocation allocation,
                                                VmaAllocationInfo allocationInfo,
-                                               size_t subAllocations,
                                                VkBuffer vulkanBuffer)
         : VulkanGraphicsResource(graphicsDevice, allocator, cpuAccess, allocation, allocationInfo),
           _vulkanBuffer(vulkanBuffer),
-          _subAllocations(subAllocations),
+          _subAllocations(0),
           _cpuAccess(cpuAccess),
           _kind(kind)
     {}
@@ -101,17 +96,31 @@ namespace NovelRT::Graphics::Vulkan
             // TODO: Make this a real exception
             throw std::runtime_error("Failed to invalidate mapped memory. Reason: " + std::to_string(mapResult));
         }
+        
+        _subAllocations++;
 
         return Utilities::Misc::Span<const uint8_t>(reinterpret_cast<const uint8_t*>(data), rangeLength);
     }
 
     void VulkanGraphicsBuffer::UnmapBytes()
     {
+        if (_subAllocations == 0)
+        {
+            throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
+        }
+
+        _subAllocations--;
+
         vmaUnmapMemory(GetAllocator()->GetVmaAllocator(), GetAllocation());
     }
 
     void VulkanGraphicsBuffer::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
     {
+        if (_subAllocations == 0)
+        {
+            throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
+        }
+
         size_t sizeOfBuffer = GetAllocationInfo().size;
         size_t rangeValidationValue = sizeOfBuffer - writtenRangeOffset;
 
@@ -131,6 +140,8 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to write VkBuffer subrange to GPU memory. Reason: " +
                                      std::to_string(result));
         }
+
+        _subAllocations--;
 
         vmaUnmapMemory(allocator, allocation);
     }

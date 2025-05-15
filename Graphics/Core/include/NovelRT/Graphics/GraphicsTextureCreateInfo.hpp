@@ -14,14 +14,14 @@ namespace NovelRT::Graphics
 {
     struct GraphicsTextureCreateInfo
     {
-        GraphicsTextureAddressMode addressMode;
-        GraphicsTextureKind textureKind;
-        GraphicsResourceAccess cpuAccessKind;
-        GraphicsResourceAccess gpuAccessKind;
-        uint32_t width;
-        uint32_t height;
-        uint32_t depth;
-        GraphicsMemoryRegionAllocationFlags allocationFlags;
-        TexelFormat texelFormat;
+        GraphicsTextureAddressMode addressMode = GraphicsTextureAddressMode::Repeat;
+        GraphicsTextureKind textureKind = GraphicsTextureKind::TwoDimensional;
+        GraphicsResourceAccess cpuAccessKind = GraphicsResourceAccess::None;
+        GraphicsResourceAccess gpuAccessKind = GraphicsResourceAccess::None;
+        uint32_t width = 0;
+        uint32_t height = 0;
+        uint32_t depth = 0;
+        GraphicsMemoryRegionAllocationFlags allocationFlags = GraphicsMemoryRegionAllocationFlags::None;
+        TexelFormat texelFormat = TexelFormat::R8G8B8A8_UNORM;
     };
 }

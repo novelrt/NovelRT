@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -36,6 +37,11 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsPipeline() override = default;
 
+        [[nodiscard]] std::shared_ptr<BackendPipelineType> GetImplementation() const noexcept
+        {
+            return _implementation;
+        }
+
         bool HasVertexShader() const noexcept
         {
             return _vertexShader != nullptr;
@@ -46,19 +52,24 @@ namespace NovelRT::Graphics
             return _pixelShader != nullptr;
         }
 
-        std::shared_ptr<ShaderProgram<TBackend>> GetVertexShader() const noexcept
+        [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> GetVertexShader() const noexcept
         {
             return _vertexShader;
         }
 
-        std::shared_ptr<ShaderProgram<TBackend>> GetPixelShader() const noexcept
+        [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> GetPixelShader() const noexcept
         {
             return _pixelShader;
         }
 
-        std::shared_ptr<GraphicsPipelineSignature<TBackend>> GetSignature() const noexcept
+        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> GetSignature() const noexcept
         {
             return _signature;
+        }
+
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet()
+        {
+            return std::make_shared<GraphicsDescriptorSet<TBackend>>(_implementation->CreateDescriptorSet(), std::static_pointer_cast<GraphicsPipeline<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this()));
         }
     };
 }

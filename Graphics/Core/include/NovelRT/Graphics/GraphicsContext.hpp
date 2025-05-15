@@ -5,6 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
+#include <NovelRT/Graphics/GraphicsCmdList.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -20,6 +21,7 @@ namespace NovelRT::Graphics
         size_t _index;
 
     public:
+
         GraphicsContext(std::shared_ptr<BackendContextType> implemenetation,
                         std::shared_ptr<GraphicsDevice<TBackend>> device,
                         size_t index) noexcept
@@ -39,14 +41,9 @@ namespace NovelRT::Graphics
             return _index;
         }
 
-        void BeginDrawing(RGBAColour backgroundColour)
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame()
         {
-            _implementation->BeginDrawing(backgroundColour);
-        }
-
-        void BeginFrame()
-        {
-            _implementation->BeginFrame();
+            return std::make_shared<GraphicsCmdList<TBackend>>(_implementation->BeginFrame(), std::static_pointer_cast<GraphicsContext<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this()));
         }
 
         void EndDrawing()

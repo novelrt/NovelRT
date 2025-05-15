@@ -33,7 +33,7 @@ namespace NovelRT::Graphics::Vulkan
     protected:
         [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(
             VmaVirtualAllocation allocation,
-            VkDeviceSize offset) final;
+            VmaVirtualAllocationInfo info) final;
 
     public:
         using std::enable_shared_from_this<VulkanGraphicsTexture>::shared_from_this;
@@ -48,7 +48,6 @@ namespace NovelRT::Graphics::Vulkan
                               uint16_t depth,
                               VmaAllocation allocation,
                               VmaAllocationInfo allocationInfo,
-                              size_t subAllocations,
                               VkImage vulkanImage);
 
         virtual ~VulkanGraphicsTexture() noexcept;
