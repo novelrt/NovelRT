@@ -133,7 +133,7 @@ namespace NovelRT::Graphics::Vulkan
                                                // fairly sure we need it. Lol.
 
         VmaAllocationCreateInfo allocationCreateInfo{};
-        allocationCreateInfo.flags = Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind);
+        allocationCreateInfo.flags = Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind) | VMA_ALLOCATION_CREATE_DONT_BIND_BIT;
         allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
         // allocationCreateInfo.priority = 1; //TODO: do I need this?
 
