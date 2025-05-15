@@ -33,7 +33,7 @@ namespace NovelRT::Graphics::Vulkan
         ~VulkanShaderProgram();
         
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
-        [[nodiscard]] std::string GetEntryPointName() const noexcept;
+        [[nodiscard]] const std::string& GetEntryPointName() const noexcept;
         [[nodiscard]] ShaderProgramKind GetKind() const noexcept;
         [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept;
         [[nodiscard]] VkShaderModule GetShaderModule();

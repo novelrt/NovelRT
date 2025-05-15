@@ -125,8 +125,8 @@ int main()
 
     auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-    auto vertShaderData = LoadSpv("vert.spv");
-    auto pixelShaderData = LoadSpv("frag.spv");
+    auto vertShaderData = LoadSpv("vulkanrendervert.spv");
+    auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
 
     std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
 

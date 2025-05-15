@@ -52,7 +52,7 @@ namespace NovelRT::Graphics::Vulkan
         return _device;
     }
 
-    std::string VulkanShaderProgram::GetEntryPointName() const noexcept
+    const std::string& VulkanShaderProgram::GetEntryPointName() const noexcept
     {
         return _entryPointName;
     }
