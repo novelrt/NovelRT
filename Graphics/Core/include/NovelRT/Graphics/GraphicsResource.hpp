@@ -48,7 +48,6 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsResource() noexcept override = default;
 
-        //[[nodiscard]] virtual size_t GetAlignment() const noexcept = 0; //TODO: Do we still need this?
         [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<TBackend>> GetAllocator() const noexcept
         {
             return _implementation->GetAllocator();

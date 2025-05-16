@@ -2,17 +2,17 @@
 // for more information.
 
 // TODO: clean this up good grief
-#include <vector>
+#include <NovelRT/EngineConfig.h>
+#include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
+#include <NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <set>
 #include <string>
-#include <NovelRT/EngineConfig.h>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
-#include <NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp>
-#include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
-#include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
+#include <vector>
 
 namespace NovelRT::Graphics::Vulkan
 {

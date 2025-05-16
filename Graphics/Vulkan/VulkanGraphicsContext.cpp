@@ -179,46 +179,6 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    // void VulkanGraphicsContext::BeginCopy(VkImage vulkanImage) noexcept
-    //{
-    // VkImageSubresourceRange subresourceRange{};
-    // subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    // subresourceRange.levelCount = 1;
-    // subresourceRange.layerCount = 1;
-
-    // VkImageMemoryBarrier vulkanImageMemoryBarrier{};
-    // vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    // vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    // vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    // vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    // vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
-    // vulkanImageMemoryBarrier.image = vulkanImage;
-
-    // vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
-    // nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
-    //}
-
-    // void VulkanGraphicsContext::EndCopy(VkImage vulkanImage) noexcept
-    //{
-    // VkImageSubresourceRange subresourceRange{};
-    // subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    // subresourceRange.levelCount = 1;
-    // subresourceRange.layerCount = 1;
-
-    // VkImageMemoryBarrier vulkanImageMemoryBarrier{};
-    // vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    // vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    // vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-    // vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    // vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    // vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
-    // vulkanImageMemoryBarrier.image = vulkanImage;
-
-    // vkCmdPipelineBarrier(GetVulkanCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT,
-    // VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
-    //&vulkanImageMemoryBarrier);
-    //}
-
     VulkanGraphicsContext::VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : _device(device),
           _index(index),
@@ -231,55 +191,6 @@ namespace NovelRT::Graphics::Vulkan
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
-
-//    void VulkanGraphicsContext::BeginDrawing(NovelRT::Graphics::RGBAColour backgroundColour)
-//    {
-//        DestroyDescriptorSets();
-//        VkClearValue clearValue{};
-//        clearValue.color.float32[0] = backgroundColour.getRScalar();
-//        clearValue.color.float32[1] = backgroundColour.getGScalar();
-//        clearValue.color.float32[2] = backgroundColour.getBScalar();
-//        clearValue.color.float32[3] = backgroundColour.getAScalar();
-// 
-//        std::shared_ptr<VulkanGraphicsDevice> device = GetDevice();
-//        std::shared_ptr<IGraphicsSurface> surface = device->GetSurface();
-// 
-//        float surfaceWidth = surface->GetWidth();
-//        float surfaceHeight = surface->GetHeight();
-// 
-//        VkExtent2D extent2D{};
-//        extent2D.width = static_cast<uint32_t>(surfaceWidth);
-//        extent2D.height = static_cast<uint32_t>(surfaceHeight);
-// 
-//        VkRect2D renderArea{};
-//        renderArea.extent = extent2D;
-// 
-//        VkRenderPassBeginInfo renderPassBeginInfo{};
-//        renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-//        renderPassBeginInfo.renderPass = device->GetVulkanRenderPass();
-//        renderPassBeginInfo.framebuffer = GetVulkanFramebuffer();
-//        renderPassBeginInfo.renderArea = renderArea;
-//        renderPassBeginInfo.clearValueCount = 1;
-//        renderPassBeginInfo.pClearValues = &clearValue;
-// 
-//        VkCommandBuffer commandBuffer = GetVulkanCommandBuffer();
-//        vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-// 
-//        VkViewport viewport{};
-//        viewport.x = 0;
-//        viewport.y = surfaceHeight;
-//        viewport.width = surfaceWidth;
-//        viewport.height = -surfaceHeight;
-//        viewport.minDepth = 0.0f;
-//        viewport.maxDepth = 1.0f;
-// 
-//        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-// 
-//        VkRect2D scissorRect{};
-//        scissorRect.extent = extent2D;
-// 
-//        vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
-//    }
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
     {
