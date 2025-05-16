@@ -4,30 +4,35 @@
 #ifndef NOVELRT_GRAPHICS_IGRAPHICSPLUGINPROVIDER_H
 #define NOVELRT_GRAPHICS_IGRAPHICSPLUGINPROVIDER_H
 
-#ifndef NOVELRT_PLUGINMANAGEMENT_H
-#error NovelRT does not support including types explicitly by default. Please include PluginManagement.h instead for the PluginManagement namespace subset.
-#endif
+#include <NovelRT/Utilities/Lazy.h>
+
+namespace NovelRT::Graphics
+{
+    template<typename TBackend> struct GraphicsBackendTraits;
+}
 
 namespace NovelRT::PluginManagement
 {
-    class IGraphicsPluginProvider : public std::enable_shared_from_this<IGraphicsPluginProvider>
+    template<typename TBackend>
+    class IGraphicsPluginProvider : public std::enable_shared_from_this<IGraphicsPluginProvider<TBackend>>
     {
-    protected:
-        [[nodiscard]] virtual Graphics::GraphicsProvider* GetGraphicsProviderInternal() = 0;
+    public:
+        using BackendGraphicsProvider = typename Graphics::GraphicsBackendTraits<TBackend>::ProviderType;
+
+    private:
+        Utilities::Lazy<std::shared_ptr<BackendGraphicsProvider>> _graphicsProvider;
 
     public:
-        [[nodiscard]] inline std::shared_ptr<Graphics::GraphicsProvider> GetGraphicsProvider()
-        {
-            return GetGraphicsProviderInternal()->shared_from_this();
-        }
-
-        [[nodiscard]] virtual std::shared_ptr<Graphics::GraphicsAdapter> GetDefaultSelectedGraphicsAdapterForContext(
-            std::shared_ptr<Graphics::GraphicsSurfaceContext> context) = 0;
-
-        [[nodiscard]] virtual std::shared_ptr<Graphics::GraphicsSurfaceContext> CreateSurfaceContext(
-            std::shared_ptr<Graphics::IGraphicsSurface> windowingDevice) = 0;
-
+        IGraphicsPluginProvider() noexcept;
         virtual ~IGraphicsPluginProvider() = default;
+
+        [[nodiscard]] std::shared_ptr<Graphics::GraphicsProvider<TBackend>> GetGraphicsProvider();
+
+        [[nodiscard]] std::shared_ptr<Graphics::GraphicsAdapter<TBackend>> GetDefaultSelectedGraphicsAdapterForContext(
+            std::shared_ptr<Graphics::GraphicsSurfaceContext<TBackend>> context);
+
+        [[nodiscard]] std::shared_ptr<Graphics::GraphicsSurfaceContext<TBackend>> CreateSurfaceContext(
+            std::shared_ptr<Graphics::IGraphicsSurface> windowingDevice);
     };
 }
 

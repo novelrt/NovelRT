@@ -19,6 +19,8 @@ set(RESOURCES_FILES
   Shaders/TexturedVertexShader.glsl
   Shaders/frag.spv
   Shaders/vert.spv
+  Shaders/vulkanrenderfrag.spv
+  Shaders/vulkanrendervert.spv
 
   Sounds/goat.wav
   Sounds/uwu.ogg

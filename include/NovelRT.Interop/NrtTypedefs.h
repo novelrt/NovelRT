@@ -75,7 +75,6 @@ extern "C"
 #include "Input/NrtInputTypedefs.h"
 #include "PluginManagement/NrtPluginManagementTypedefs.h"
 #include "ResourceManagement/NrtResourceManagementTypedefs.h"
-#include "SceneGraph/NrtSceneGraphTypedefs.h"
 #include "Windowing/NrtWindowingTypedefs.h"
 
     // clang-format on

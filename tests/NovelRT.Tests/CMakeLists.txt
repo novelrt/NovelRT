@@ -7,7 +7,6 @@ set(SOURCES
   Ecs/ComponentBufferTest.cpp
   Ecs/ComponentCacheTest.cpp
   Ecs/ComponentViewTest.cpp
-  Ecs/ConfiguratorTest.cpp
   Ecs/EntityCacheTest.cpp
   Ecs/EntityGraphViewTest.cpp
   Ecs/LinkedEntityListViewTest.cpp
@@ -30,7 +29,6 @@ set(SOURCES
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/QuadTreePointTest.cpp>
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Maths/QuadTreeTest.cpp>
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/ResourceManagement/BinaryMemberMetadataTest.cpp>
-  $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/SceneGraph/NovelRTSceneNodeTest.cpp>
   $<$<BOOL:${NOVELRT_BUILD_INTEROP}>:Interop/Timing/NovelRTTimestampTest.cpp>
 
   Maths/GeoBoundsTest.cpp
@@ -43,7 +41,6 @@ set(SOURCES
 
   Persistence/ChapterTest.cpp
 
-  SceneGraph/SceneNodeTest.cpp
 
   Timing/TimestampTest.cpp
 

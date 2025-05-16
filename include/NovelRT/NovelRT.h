@@ -103,14 +103,6 @@
   // Exception types
   #include <NovelRT/Exceptions/Exceptions.h>
 
-  #include <NovelRT/Graphics/Graphics.hpp>
-  #include <NovelRT/Graphics/Vulkan/Graphics.Vulkan.hpp>
-#ifdef WIN32
-  #include <NovelRT/Graphics/D3D12/Graphics.D3D12.hpp>
-#endif
-#ifdef TARGET_OS_MAC
-  #include <NovelRT/Graphics/Metal/Graphics.Metal.hpp>
-#endif
   #include <NovelRT/Threading/Threading.h>
   #include <NovelRT/Windowing/Windowing.h>
   #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
@@ -122,8 +114,6 @@
   #include <NovelRT/ResourceManagement/ResourceManagement.h>
   #include <NovelRT/ResourceManagement/Desktop/ResourceManagement.Desktop.h>
 
-  // Scene Graph types
-  #include <NovelRT/SceneGraph/SceneGraph.h>
 #endif // __cplusplus
 
 #if defined(NOVELRT_C_API)
@@ -158,14 +148,6 @@
 
   // Resource Management
   #include <NovelRT.Interop/ResourceManagement/NrtResourceManagement.h>
-
-  // SceneGraph
-  #include <NovelRT.Interop/SceneGraph/NrtQuadTreeNode.h>
-  #include <NovelRT.Interop/SceneGraph/NrtQuadTreeScenePoint.h>
-  #include <NovelRT.Interop/SceneGraph/NrtScene.h>
-  #include <NovelRT.Interop/SceneGraph/NrtSceneNode.h>
-  #include <NovelRT.Interop/SceneGraph/NrtSceneNodeBreadthFirstIterator.h>
-  #include <NovelRT.Interop/SceneGraph/NrtSceneNodeDepthFirstIterator.h>
 
   // Timing
   #include <NovelRT.Interop/Timing/NrtStepTimer.h>

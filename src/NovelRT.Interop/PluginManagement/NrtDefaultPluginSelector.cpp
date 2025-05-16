@@ -44,25 +44,28 @@ NrtResult Nrt_DefaultPluginSelector_GetDefaultGraphicsPluginForCurrentPlatform(
     NrtDefaultPluginSelectorHandle pluginSelector,
     NrtIGraphicsPluginProviderHandle* outputGraphicsPlugin)
 {
-    if (pluginSelector == nullptr)
-    {
-        Nrt_setErrMsgIsNullInstanceProvidedInternal();
-        return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
-    }
+    unused(pluginSelector);
+    unused(outputGraphicsPlugin);
+    return NRT_FAILURE_UNKNOWN;
+    // if (pluginSelector == nullptr)
+    //{
+    //    Nrt_setErrMsgIsNullInstanceProvidedInternal();
+    //    return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
+    //}
 
-    if (outputGraphicsPlugin == nullptr)
-    {
-        Nrt_setErrMsgIsNullArgumentProvidedInternal();
-        return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
-    }
+    // if (outputGraphicsPlugin == nullptr)
+    //{
+    //    Nrt_setErrMsgIsNullArgumentProvidedInternal();
+    //    return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
+    //}
 
-    auto&& graphicsPlugin = reinterpret_cast<DefaultPluginSelector*>(pluginSelector)
-                                ->GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>();
-    *outputGraphicsPlugin = reinterpret_cast<NrtIGraphicsPluginProviderHandle>(graphicsPlugin.get());
+    // auto&& graphicsPlugin = reinterpret_cast<DefaultPluginSelector*>(pluginSelector)
+    //                            ->GetDefaultPluginTypeOnCurrentPlatformFor<IGraphicsPluginProvider>();
+    //*outputGraphicsPlugin = reinterpret_cast<NrtIGraphicsPluginProviderHandle>(graphicsPlugin.get());
 
-    Lifetime::KeepAlive(std::move(graphicsPlugin));
+    // Lifetime::KeepAlive(std::move(graphicsPlugin));
 
-    return NRT_SUCCESS;
+    // return NRT_SUCCESS;
 }
 
 NrtResult Nrt_DefaultPluginSelector_GetDefaultInputPluginForCurrentPlatform(

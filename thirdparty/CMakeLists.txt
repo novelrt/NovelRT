@@ -31,12 +31,12 @@ thirdparty_module(fmt
   URL_HASH SHA512=1cf0e3dd09c7d87e0890b8743559159d3be2a8f33c135516962d17c4eeb7b00659e6acd74518bd5566ee4e83ddaba155fecb4c229f90cd258b3b832e72ad82cd
 )
 thirdparty_module(glfw3
-  URL https://github.com/glfw/glfw/archive/refs/tags/3.3.7.zip
-  URL_HASH SHA512=0ee020ddbbed783b5f0d271ee0a98b37fe489b633e0a8407821f12b2bcfc3b80645751076192b5224bfe1d26d6092c27af9a9bcd7953a419dcec0182e3716341
+  URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
+  URL_HASH SHA512=03de56a0599275ff57759ca19e8f69176058252b5e9976193cc3d9bb7b7b78b6a8dac6ed91de483d03c1b4807d21e1302e5e47c2f0c21e63becb4aba9d5affdc
 )
 thirdparty_module(glm
-  URL https://github.com/novelrt/glm/archive/refs/heads/master.zip
-  URL_HASH SHA512=c87d14dfd240633227bdf5e4b43dd5567e522a72a09cd888a34c8fa3d696ffac91d8d7f16abb5f3a4326d69bca69c4f33e8f9be54a32aedf3ffb32d14a6bf322
+  URL https://github.com/g-truc/glm/archive/2d4c4b4dd31fde06cfffad7915c2b3006402322f.zip
+  URL_HASH SHA512=770cb1ab820f8b32e6abc650c254364ae9bf820fe278ad0b082ee4aadcaf084d66da700ee6d18202fc99fe360fc8756ed837e3d9c71dba9ebd6f502bd8011561
 )
 thirdparty_module(GSL
   URL https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.zip
@@ -53,8 +53,8 @@ thirdparty_module(nlohmann_json
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Ogg
-  URL https://github.com/xiph/ogg/releases/download/v1.3.5/libogg-1.3.5.tar.gz
-  URL_HASH SHA256=0eb4b4b9420a0f51db142ba3f9c64b333f826532dc0f48c6410ae51f4799b664
+  URL https://github.com/xiph/ogg/archive/fa80aae9d50096160f2b56ada35527d7aee3f746.zip
+  URL_HASH SHA512=48eb2dd03c6368ba6067bcb1339023e258edaad2669de7095fc93ab6b0ae5f10a19c0727695aca2c9091ebe2f2e18585aea9989f71f0d356152dd1fc1f715971
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(OpenAL
@@ -63,8 +63,8 @@ thirdparty_module(OpenAL
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Opus
-  URL https://github.com/xiph/opus/archive/refs/tags/v1.3.1.zip
-  URL_HASH SHA512=574382c898fcc644d6cfd061841b4e9fb24162ff680ec82620a9bd29d7ac3c3fcefac25bd45fa7f7310b7461bafeda9ca05f473c791fdbb4ee446e50a7a889a0
+  URL https://github.com/xiph/opus/archive/refs/tags/v1.5.2.zip
+  URL_HASH SHA512=67b6830903a82017825848384e5b2e3b70b834507d818f0dfa06a4a48766f38151927e875745e2f254b3aad4222deea3549c1e6c981427f8284b2a28a9c036cd
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(PNG
@@ -74,8 +74,8 @@ thirdparty_module(PNG
 )
 
 thirdparty_module(samplerate
-  URL https://github.com/libsndfile/libsamplerate/archive/refs/tags/0.2.2.zip
-  URL_HASH SHA512=dedd072bc83ccebfe1a33e8a3fb3f72559bfd36282b958b1d5463b786f2325f684137580db38d91f0f4f5345a1da3e9e1c4a1695e303182e57d542c085db829f
+  URL https://github.com/libsndfile/libsamplerate/archive/15c392d47e71b9395a759544b3818a1235fe1a1d.zip
+  URL_HASH SHA512=496600418b2058b7fa7611208e7c5eb8996b294bf96ce7d3e9107a99803583e593518b0d7a29534ffb4f6d4201efe56aff25386e7262dd211471054641f573e9
 )
 
 thirdparty_module(SndFile
@@ -83,8 +83,8 @@ thirdparty_module(SndFile
   URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
 )
 thirdparty_module(spdlog
-  URL https://github.com/gabime/spdlog/archive/refs/tags/v1.13.0.zip
-  URL_HASH SHA512=851febf19949006a17ead8b6392f12ae81e626926268829478d4d0d28a1dfe7682ef57a6c4f151031cf4cc60f1486cf8453999ee7ce40a1f0d3f545c4d7f8555
+  URL https://github.com/gabime/spdlog/archive/refs/tags/v1.15.1.zip
+  URL_HASH SHA512=67b82452e046cb8d77082edeaf163460f2b171b3555c7feb32f5e0296921de2f3ebf279224509a8f0821947b274dd0b7f40ef01f1b8f612c80ba93cbc3e156cc
 )
 thirdparty_module(stduuid
   URL https://github.com/mariusbancila/stduuid/archive/3afe7193facd5d674de709fccc44d5055e144d7a.zip
@@ -100,8 +100,8 @@ thirdparty_module(Vorbis
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(VulkanMemoryAllocator
-  URL https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/0aa3989b8f382f185fdf646cc83a1d16fa31d6ab.zip
-  URL_HASH SHA512=e9eeed2f5cc1130613b9440bf375e5574b58e800f4615cc771176644951eadc9e49cff91c5d303e63831fbdc76f354d2ad9a9da11826588ede76a7252c7a636a
+  URL https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/refs/tags/v3.3.0.zip
+  URL_HASH SHA512=1d3aa42a788e40666e7078f0141d02728a3a6696ffe65de6da4638f3d06a28ea6673ac45f4aa9cfdb283831f8888f61f53b292b71e3292d8c43ba634d0f3274b
 )
 thirdparty_module(ZLIB
   URL https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.0.6.tar.gz

@@ -51,6 +51,8 @@ target_compile_options(NovelRT-Input
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 )
 
+target_compile_definitions(NovelRT-Input PUBLIC GLM_ENABLE_EXPERIMENTAL=1)
+
 target_include_directories(NovelRT-Input PRIVATE "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
 target_link_libraries(NovelRT-Input
   PUBLIC

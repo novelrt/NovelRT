@@ -4,6 +4,7 @@
 #include "../LifetimeExtender.h"
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/PluginManagement/NrtIGraphicsPluginProvider.h>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/PluginManagement/PluginManagement.h>
 
 using namespace NovelRT::PluginManagement;
@@ -17,7 +18,8 @@ NrtResult Nrt_IGraphicsPluginProvider_Destroy(NrtIGraphicsPluginProviderHandle p
         return NRT_FAILURE_NULL_INSTANCE_PROVIDED;
     }
 
-    if (!Lifetime::Release(reinterpret_cast<IGraphicsPluginProvider*>(plugin)))
+    if (!Lifetime::Release(
+            reinterpret_cast<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(plugin)))
     {
         Nrt_setErrMsgIsAlreadyDeletedOrRemovedInternal();
         return NRT_FAILURE_ALREADY_DELETED_OR_REMOVED;
@@ -41,7 +43,9 @@ NrtResult Nrt_IGraphicsPluginProvider_GetGraphicsProvider(NrtIGraphicsPluginProv
         return NRT_FAILURE_NULL_ARGUMENT_PROVIDED;
     }
 
-    auto&& graphicsProvider = reinterpret_cast<IGraphicsPluginProvider*>(plugin)->GetGraphicsProvider();
+    auto&& graphicsProvider =
+        reinterpret_cast<IGraphicsPluginProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>*>(plugin)
+            ->GetGraphicsProvider();
     *outputProvider = reinterpret_cast<NrtGraphicsProviderHandle>(graphicsProvider.get());
 
     Lifetime::KeepAlive(std::move(graphicsProvider));

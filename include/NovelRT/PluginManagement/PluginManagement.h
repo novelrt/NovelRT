@@ -7,7 +7,8 @@
 // PluginManagement Dependencies
 #include "../ResourceManagement/ResourceManagement.h"
 #include "../Windowing/Windowing.h"
-#include <NovelRT/Graphics/Graphics.hpp>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Input/IInputDevice.hpp>
 
 /**
@@ -17,7 +18,7 @@ namespace NovelRT::PluginManagement
 {
     class DefaultPluginSelector;
     class IResourceManagementPluginProvider;
-    class IGraphicsPluginProvider;
+    template<typename TBackend> class IGraphicsPluginProvider;
     class IWindowingPluginProvider;
     class IInputPluginProvider;
 }

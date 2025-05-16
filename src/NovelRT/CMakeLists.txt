@@ -14,7 +14,6 @@ set(CORE_SOURCES
   Ecs/SparseSetMemoryContainer.cpp
   Ecs/SystemScheduler.cpp
   Ecs/UnsafeComponentView.cpp
-  Ecs/Graphics/DefaultRenderingSystem.cpp
   Ecs/Audio/AudioSystem.cpp
   Ecs/Input/InputSystem.cpp
   Ecs/Narrative/NarrativePlayerSystem.cpp
@@ -24,7 +23,6 @@ set(CORE_SOURCES
 
   Persistence/Chapter.cpp
   Persistence/Persistable.cpp
-  Persistence/Graphics/RenderingComponentPersistenceRule.cpp
 
   PluginManagement/TemporaryFnPtrs.cpp
 
@@ -49,7 +47,8 @@ set_target_properties(Engine
     OUTPUT_NAME "$<IF:$<CONFIG:Release>,NovelRT,NovelRT-$<CONFIG>>"
     SOVERSION "${PROJECT_VERSION}"
     VERSION "${PROJECT_VERSION}"
-    WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
+    POSITION_INDEPENDENT_CODE ON)
 
 target_compile_features(Engine PUBLIC cxx_std_17)
 target_include_directories(Engine
@@ -103,4 +102,3 @@ if(NOVELRT_INSTALL)
     FRAMEWORK DESTINATION lib
   )
 endif()
-

@@ -5,6 +5,7 @@
 #include <NovelRT.Interop/NrtErrorHandling.h>
 #include <NovelRT.Interop/Windowing/NrtIWindowingDevice.h>
 #include <NovelRT/Windowing/Windowing.h>
+#include <string.h>
 
 using namespace NovelRT::Interop;
 using namespace NovelRT::Windowing;
