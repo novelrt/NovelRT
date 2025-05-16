@@ -83,6 +83,7 @@ target_link_libraries(Engine
   NovelRT-Graphics
   NovelRT-Audio
   NovelRT-Input
+  NovelRT-UI
 )
 
 if(${NOVELRT_TARGET} STREQUAL "macOS")

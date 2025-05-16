@@ -1,5 +1,6 @@
 add_library(NovelRT-UI STATIC
-    ImGui/ImGuiUIProvider.cpp
+    ${imgui_SOURCES}
+    # ImGui/ImGuiUIProvider.cpp
 )
 
 target_sources(NovelRT-UI
@@ -15,6 +16,11 @@ set_target_properties(NovelRT-UI
   PROPERTIES
     EXPORT_NAME UI
     POSITION_INDEPENDENT_CODE ON
+)
+
+target_compile_definitions(NovelRT-UI
+  PUBLIC
+    GLM_ENABLE_EXPERIMENTAL=1
 )
 
 target_compile_features(NovelRT-UI
@@ -50,7 +56,6 @@ $<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
 target_link_libraries(NovelRT-UI
   PUBLIC
     spdlog
-    imgui
     NovelRT-Graphics-Core
 )
 
