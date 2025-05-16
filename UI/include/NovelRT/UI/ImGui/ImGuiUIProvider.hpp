@@ -3,13 +3,12 @@
 // for more information.
 
 #include <NovelRT/UI/UIProvider.hpp>
-#include <NovelRT/Threading/Threading.h>
 #include <imgui.h>
 
 using namespace NovelRT::Graphics;
 
 
-namespace NovelRT::UI::ImGui
+namespace NovelRT::UI::DearImGui
 {
     template<typename TBackend> class ImGuiUIProvider final : public UIProvider<TBackend>
     {

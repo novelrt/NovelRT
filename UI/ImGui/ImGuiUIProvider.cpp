@@ -1,9 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/UI/UIProvider.hpp>
+#include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
+#include <imgui.h>
 
-namespace NovelRT::UI::ImGui
+namespace NovelRT::UI::DearImGui
 {
     static const char* ImGui_GetClipboardText(void* user_data)
     {
@@ -63,14 +64,11 @@ namespace NovelRT::UI::ImGui
         size_t upload_size = (width * height) * sizeof(uint32_t);
         unused(upload_size);
 
-        /**
-         *
-        auto future = new FutureResult<TextureInfo>(nullptr, TextureInfo{});
-        *future = defaultRenderingSystem->LoadTextureDataRaw("ImguiAtlas", gsl::span<unsigned char>(pixels, width * height), width, height, gen());
-        io.Fonts->SetTexID(static_cast<void*>(future));
-        defaultRenderingSystem->ForceVertexTextureFutureResolution(); // force the atlas to be on the GPU before game launch
-         */
-
+        
+        // auto future = new FutureResult<TextureInfo>(nullptr, TextureInfo{});
+        // future = defaultRenderingSystem->LoadTextureDataRaw("ImguiAtlas", gsl::span<unsigned char>(pixels, width * height), width, height, gen());
+        // io.Fonts->SetTexID(static_cast<void*>(future));
+        // defaultRenderingSystem->ForceVertexTextureFutureResolution(); // force the atlas to be on the GPU before game launch
          
         auto graphicsContext = graphicsDevice->GetCurrentContext();
         
@@ -91,14 +89,14 @@ namespace NovelRT::UI::ImGui
 
 
         // graphicsContext->Copy(_texture2D, textureStagingBuffer);
-        // graphicsContext->EndFrame();
-        // graphicsDevice->Signal(graphicsContext->GetFence());
-        // graphicsDevice->WaitForIdle();
+        graphicsContext->EndFrame();
+        graphicsDevice->Signal(graphicsContext->GetFence());
+        graphicsDevice->WaitForIdle();
 
-        // auto ptr = new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource>();
+        //auto ptr = //new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource<TBackend>>();
         // *ptr = texture2DRegion;
 
-        // io.Fonts->SetTexID(ptr);
+        //io.Fonts->SetTexID(ptr);
     }
 
     template<typename TBackend>

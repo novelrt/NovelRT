@@ -5,8 +5,11 @@
 #include <NovelRT/Exceptions/Exceptions.h>
 #include <NovelRT/Windowing/Windowing.h>
 #include <NovelRT/Input/IInputDevice.hpp>
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
+#include <NovelRT/Graphics/GraphicsBackendTraits.hpp>
+#include <NovelRT/Threading/Threading.h>
 #include <memory>
 
 namespace NovelRT::UI
