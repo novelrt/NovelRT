@@ -35,8 +35,8 @@ thirdparty_module(glfw3
   URL_HASH SHA512=03de56a0599275ff57759ca19e8f69176058252b5e9976193cc3d9bb7b7b78b6a8dac6ed91de483d03c1b4807d21e1302e5e47c2f0c21e63becb4aba9d5affdc
 )
 thirdparty_module(glm
-  URL https://github.com/novelrt/glm/archive/refs/heads/master.zip
-  URL_HASH SHA512=c87d14dfd240633227bdf5e4b43dd5567e522a72a09cd888a34c8fa3d696ffac91d8d7f16abb5f3a4326d69bca69c4f33e8f9be54a32aedf3ffb32d14a6bf322
+  URL https://github.com/g-truc/glm/archive/2d4c4b4dd31fde06cfffad7915c2b3006402322f.zip
+  URL_HASH SHA512=770cb1ab820f8b32e6abc650c254364ae9bf820fe278ad0b082ee4aadcaf084d66da700ee6d18202fc99fe360fc8756ed837e3d9c71dba9ebd6f502bd8011561
 )
 thirdparty_module(GSL
   URL https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.zip

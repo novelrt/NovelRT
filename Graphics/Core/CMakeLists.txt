@@ -83,6 +83,11 @@ target_compile_options(NovelRT-Graphics-Core
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->
 )
 
+target_compile_definitions(NovelRT-Graphics-Core
+  PUBLIC
+    GLM_ENABLE_EXPERIMENTAL=1
+)
+
 target_include_directories(NovelRT-Graphics-Core PRIVATE "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
 target_link_libraries(NovelRT-Graphics-Core
   PUBLIC
