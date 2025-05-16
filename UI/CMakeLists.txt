@@ -1,6 +1,5 @@
 add_library(NovelRT-UI STATIC
     ${imgui_SOURCES}
-    ImGui/ImGuiUIProvider.cpp
 )
 
 target_sources(NovelRT-UI
