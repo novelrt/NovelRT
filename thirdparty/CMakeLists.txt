@@ -47,6 +47,10 @@ thirdparty_module(GTest
   URL_HASH SHA512=16cc8f5b03b862e2937d1b926ca6dc291234ac5670050dc4fc2752ec98497330ebcd46f292317cd2bbb111ce33bbdcfd088ddf6a7fe273e2442963908732d589
   OVERRIDE_FIND_PACKAGE
 )
+thirdparty_module(imgui
+  URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9b.zip
+  URL_HASH SHA512=d99bc25165f814dda952e0f4a4cd6c028c1217c1b482e089c3ab04fa460d6fb1062beff7561c8d75998be63c1b514fa25b2ac514881f240d5e62f67f1b097b5e
+)
 thirdparty_module(nlohmann_json
   URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
   URL_HASH SHA512=1aa94cdc3378a1fe0e3048ee73293e34bfa5ed9b46c6db0993e58e289ef818f7b7a472c0dc9c920114312e2e3ae1ff346ca797407ff48143744592adfd0a41ad
@@ -77,7 +81,6 @@ thirdparty_module(samplerate
   URL https://github.com/libsndfile/libsamplerate/archive/15c392d47e71b9395a759544b3818a1235fe1a1d.zip
   URL_HASH SHA512=496600418b2058b7fa7611208e7c5eb8996b294bf96ce7d3e9107a99803583e593518b0d7a29534ffb4f6d4201efe56aff25386e7262dd211471054641f573e9
 )
-
 thirdparty_module(SndFile
   URL https://github.com/novelrt/libsndfile/archive/f76d63813c810c2ed09bdb3821bb807498a7558e.zip
   URL_HASH SHA512=7e650af94068277246e4ccaf3b5dc20d0f93d2a2e0ecdf0f24f0be79196f879c21ec692ad48d39454f22dd01d9a4864d21458daa8d7b8f5ea4568c9551b345c1
@@ -117,6 +120,7 @@ foreach(module
   glm
   GSL
   GTest
+  imgui
   Opus Ogg FLAC Vorbis SndFile samplerate
   OpenAL
   ZLIB PNG
