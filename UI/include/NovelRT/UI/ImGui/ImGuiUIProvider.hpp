@@ -32,7 +32,9 @@ namespace NovelRT::UI::DearImGui
 
         void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
                         std::shared_ptr<Input::IInputDevice> inputDevice,
-                        std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice) final;
+                        std::shared_ptr<Graphics::GraphicsProvider<TBackend>> graphicsProvider,
+                        std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice,
+                        std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator) final;
 
         void BeginFrame(double deltaTime) final;
 

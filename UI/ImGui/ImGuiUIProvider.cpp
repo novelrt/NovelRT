@@ -2,10 +2,21 @@
 // for more information.
 
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
+#include <NovelRT/Graphics/GraphicsCmdList.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
+#include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
+#include <NovelRT/Maths/Maths.h>
 #include <imgui.h>
 
 namespace NovelRT::UI::DearImGui
 {
+    struct TexturedVertex
+    {
+        NovelRT::Maths::GeoVector3F Position;
+        NovelRT::Maths::GeoVector2F UV;
+    };
+
     static const char* ImGui_GetClipboardText(void* user_data)
     {
         unused(user_data);
@@ -34,7 +45,9 @@ namespace NovelRT::UI::DearImGui
     template<typename TBackend>
     void ImGuiUIProvider<TBackend>::Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
                                      std::shared_ptr<Input::IInputDevice> inputDevice,
-                                     std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice)
+                                     std::shared_ptr<Graphics::GraphicsProvider<TBackend>> graphicsProvider,
+                                     std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice,
+                                    std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator)
     {
         _windowingDevice = windowingDevice;
         _inputDevice = inputDevice;
@@ -64,17 +77,60 @@ namespace NovelRT::UI::DearImGui
         size_t upload_size = (width * height) * sizeof(uint32_t);
         unused(upload_size);
 
+        //Getting Jiggy Wit It - GFX-style
+        auto graphicsContext = graphicsDevice->GetCurrentContext();
+
+        GraphicsBufferCreateInfo bufferCreateInfo{};
+        bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+        bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+        bufferCreateInfo.size = 64 * 1024;
+
+        auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+        bufferCreateInfo.size = 64 * 1024 * 4;
+
+        auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+        
+        auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+        std::shared_ptr<GraphicsCmdList<TBackend>> cmdList = graphicsContext->BeginFrame();
+
+        std::vector<GraphicsPipelineInputElement> elements{
+            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
+                                        12),
+            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                        GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
+
+        std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+        std::vector<GraphicsPipelineResource> resources{
+            GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+
+        auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+        auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+
+        auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
+
+        pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+        pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+        pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+
+        vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+        cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
         
         // auto future = new FutureResult<TextureInfo>(nullptr, TextureInfo{});
         // future = defaultRenderingSystem->LoadTextureDataRaw("ImguiAtlas", gsl::span<unsigned char>(pixels, width * height), width, height, gen());
-        // io.Fonts->SetTexID(static_cast<void*>(future));
+        
         // defaultRenderingSystem->ForceVertexTextureFutureResolution(); // force the atlas to be on the GPU before game launch
-         
-        auto graphicsContext = graphicsDevice->GetCurrentContext();
+        // io.Fonts->SetTexID(static_cast<void*>(texture2d));
         
         graphicsContext->BeginFrame();
         // auto textureStagingBuffer = graphicsDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
         //     Graphics::GraphicsBufferKind::Default, Graphics::GraphicsResourceAccess::Write, Graphics::GraphicsResourceAccess::Read, 64 * 1024 * 4);
+        
+        _texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(width, height);
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
+        auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+
 
         // _texture2D = graphicsContext->GetDevice()->GetMemoryAllocator()->CreateTextureWithDefaultArguments(
         //     Graphics::GraphicsTextureAddressMode::Repeat, Graphics::GraphicsTextureKind::TwoDimensional,
@@ -83,20 +139,19 @@ namespace NovelRT::UI::DearImGui
         // texture2DRegion = _texture2D->Allocate(_texture2D->GetSize(), 4);
         // auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
-        // memcpy(pTextureData.data(), pixels, width * height);
+        memcpy(pTextureData.data(), pixels, width * height);
         
-        // textureStagingBuffer->UnmapAndWrite(0, textureStagingBuffer->GetSize());
+        textureStagingBuffer->UnmapAndWrite(0, textureStagingBuffer->GetSize());
 
 
-        // graphicsContext->Copy(_texture2D, textureStagingBuffer);
+        graphicsContext->Copy(_texture2D, textureStagingBuffer);
         graphicsContext->EndFrame();
         graphicsDevice->Signal(graphicsContext->GetFence());
         graphicsDevice->WaitForIdle();
 
         //auto ptr = //new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource<TBackend>>();
-        // *ptr = texture2DRegion;
 
-        //io.Fonts->SetTexID(ptr);
+        io.Fonts->SetTexID(texture2DRegion);
     }
 
     template<typename TBackend>
@@ -117,6 +172,9 @@ namespace NovelRT::UI::DearImGui
         // TODO: Update input data
 
         ImGui::NewFrame();
+        ImGui::Begin("Hello, World!");
+        ImGui::Text("I'm cooked broski");
+        ImGui::End();
     }
 
     template<typename TBackend>

@@ -7,6 +7,7 @@
 #include <NovelRT/Input/IInputDevice.hpp>
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/GraphicsBackendTraits.hpp>
 #include <NovelRT/Threading/Threading.h>
@@ -23,7 +24,9 @@ namespace NovelRT::UI
 
         virtual void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
                                 std::shared_ptr<Input::IInputDevice> inputDevice,
-                                std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice) = 0;
+                                std::shared_ptr<Graphics::GraphicsProvider<TBackend>> graphicsProvider,
+                                std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice,
+                                std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator) = 0;
 
         virtual void BeginFrame(double deltaTime) = 0;
 

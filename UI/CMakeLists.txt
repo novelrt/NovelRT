@@ -57,7 +57,7 @@ $<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
 target_link_libraries(NovelRT-UI
   PUBLIC
     spdlog
-    NovelRT-Graphics-Core
+    NovelRT-Graphics
 )
 
 install(
