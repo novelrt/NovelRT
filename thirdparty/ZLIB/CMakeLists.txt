@@ -23,6 +23,7 @@ install(
 
 if(NOT TARGET ZLIB::zlib)
   add_library(ZLIB::zlib ALIAS zlib)
+  add_library(ZLIB::ZLIB ALIAS zlib)
 endif()
 
 #install(EXPORT ZLIBConfig

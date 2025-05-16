@@ -53,8 +53,8 @@ thirdparty_module(nlohmann_json
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Ogg
-  URL https://github.com/xiph/ogg/releases/download/v1.3.5/libogg-1.3.5.tar.gz
-  URL_HASH SHA256=0eb4b4b9420a0f51db142ba3f9c64b333f826532dc0f48c6410ae51f4799b664
+  URL https://github.com/xiph/ogg/archive/fa80aae9d50096160f2b56ada35527d7aee3f746.zip
+  URL_HASH SHA512=48eb2dd03c6368ba6067bcb1339023e258edaad2669de7095fc93ab6b0ae5f10a19c0727695aca2c9091ebe2f2e18585aea9989f71f0d356152dd1fc1f715971
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(OpenAL
@@ -63,8 +63,8 @@ thirdparty_module(OpenAL
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Opus
-  URL https://github.com/xiph/opus/archive/refs/tags/v1.3.1.zip
-  URL_HASH SHA512=574382c898fcc644d6cfd061841b4e9fb24162ff680ec82620a9bd29d7ac3c3fcefac25bd45fa7f7310b7461bafeda9ca05f473c791fdbb4ee446e50a7a889a0
+  URL https://github.com/xiph/opus/archive/refs/tags/v1.5.2.zip
+  URL_HASH SHA512=67b6830903a82017825848384e5b2e3b70b834507d818f0dfa06a4a48766f38151927e875745e2f254b3aad4222deea3549c1e6c981427f8284b2a28a9c036cd
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(PNG
@@ -74,8 +74,8 @@ thirdparty_module(PNG
 )
 
 thirdparty_module(samplerate
-  URL https://github.com/libsndfile/libsamplerate/archive/refs/tags/0.2.2.zip
-  URL_HASH SHA512=dedd072bc83ccebfe1a33e8a3fb3f72559bfd36282b958b1d5463b786f2325f684137580db38d91f0f4f5345a1da3e9e1c4a1695e303182e57d542c085db829f
+  URL https://github.com/libsndfile/libsamplerate/archive/15c392d47e71b9395a759544b3818a1235fe1a1d.zip
+  URL_HASH SHA512=496600418b2058b7fa7611208e7c5eb8996b294bf96ce7d3e9107a99803583e593518b0d7a29534ffb4f6d4201efe56aff25386e7262dd211471054641f573e9
 )
 
 thirdparty_module(SndFile
