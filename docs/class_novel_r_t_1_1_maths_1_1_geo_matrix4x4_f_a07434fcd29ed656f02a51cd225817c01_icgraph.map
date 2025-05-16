@@ -1,0 +1,10 @@
+<map id="NovelRT::Maths::GeoMatrix4x4F::GeoMatrix4x4F" name="NovelRT::Maths::GeoMatrix4x4F::GeoMatrix4x4F">
+<area shape="rect" id="node1" title="Constructs a 4x4 Matrix with all components being set to zero." alt="" coords="276,201,499,243"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a36a2471b9fb0c54636d54b87f45d38f5" title="Creates a matrix for observing a point in space from a given location." alt="" coords="5,5,228,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a7255d4250ec77a577b445b4ba4f4e76f" title="Creates a matrix with the given scale components." alt="" coords="5,71,228,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#abf954afe18cd8cb537eb884df416ea5f" title="Creates a matrix for projecting a three&#45;dimensional space onto a plane." alt="" coords="5,136,228,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a497d8311b049369a34367bdc7cc96306" title="Get an identity matrix, with it´s descending diagonals set to 1." alt="" coords="5,201,228,243"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a5a7c3583aa943a0f82c82626c0a1bd73" title="Calculates the product of this GeoMatrix4x4F and another GeoMatrix4x4F." alt="" coords="5,267,228,308"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#aa1e11b920228cd0908d19ee7fd58d2b3" title="Calculates the entrywise sum of this GeoMatrix4x4F and another GeoMatrix4x4F." alt="" coords="5,332,228,373"/>
+<area shape="rect" id="node8" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a624bdede73f32d83326fec7806ef1099" title="Calculates the entrywise difference of this GeoMatrix4x4F and another GeoMatrix4x4F." alt="" coords="5,397,228,439"/>
+</map>

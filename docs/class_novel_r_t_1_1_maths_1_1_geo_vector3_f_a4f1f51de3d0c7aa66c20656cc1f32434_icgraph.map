@@ -1,0 +1,12 @@
+<map id="NovelRT::Maths::GeoVector3F::GeoVector3F" name="NovelRT::Maths::GeoVector3F::GeoVector3F">
+<area shape="rect" id="node1" title="Creates a GeoVector3F with all components set to zero." alt="" coords="515,201,721,243"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a487a2c617beabcc14929fe6dae8b1de3" title="Calculates the cross product of this GeoVector3F with another GeoVector3F." alt="" coords="260,5,467,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a934d1dddc560cfb4b2456960909fd149" title="Constructs a unit GeoVector3F with a magnitude of one by normalising this vector." alt="" coords="260,71,467,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#ae61e6bd4bebd66cb20bddc73487e1f1f" title="Calculates the Hadamard product of this GeoVector3F and another GeoVector3F." alt="" coords="260,136,467,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#abd847ae78bd337d962508f576e5fd620" title="Calculates the entrywise sum of this GeoVector3F and another GeoVector3F." alt="" coords="260,201,467,243"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a8994382abd8d778856c868ab161bd054" title="Calculates the entrywise difference of this GeoVector3F and another GeoVector3F." alt="" coords="260,267,467,308"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a514cc3296323195cd9eb009bac271e4a" title="Calculates the quotients of a Hadamard division using this GeoVector3F and another GeoVector3F." alt="" coords="260,332,467,373"/>
+<area shape="rect" id="node8" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a055cb5044ca9bd24a1efed8a53d0a6b6" title="Creates a new uniform GeoVector3F based on the specified value." alt="" coords="260,397,467,439"/>
+<area shape="rect" id="node9" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a95783a34300b846cf00e27776852fb9f" title="Creates a new GeoVector3F instance with a uniform value of one." alt="" coords="5,364,212,405"/>
+<area shape="rect" id="node10" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#ac6af9b4e7813e2dedcdbf97906306da4" title="Creates a new GeoVector3F instance with a uniform value of zero." alt="" coords="5,429,212,471"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::ComponentView::GetComponent" name="NovelRT::Ecs::ComponentView::GetComponent">
+<area shape="rect" id="node1" title="Gets a copy of the component instance attached to this entity." alt="" coords="5,5,225,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a692c364f2f9fccd89365c60a19ee7295" title="Gets a copy of the component instance attached to this entity." alt="" coords="273,5,500,47"/>
+</map>
