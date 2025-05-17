@@ -57,10 +57,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
     PUBLIC
       GLM_ENABLE_EXPERIMENTAL=1
 
-  INCLUDE_DIRECTORIES
-    PRIVATE
-      "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>"
-
   LINK_LIBRARIES
     PUBLIC
       spdlog
