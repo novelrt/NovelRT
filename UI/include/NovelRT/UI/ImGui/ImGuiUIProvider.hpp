@@ -194,7 +194,7 @@ namespace NovelRT::UI::DearImGui
 
             // auto ptr = //new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource<TBackend>>();
 
-            io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture2D));
+            io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&texture2DRegion));
         }
 
         void BeginFrame(double deltaTime) final
@@ -229,7 +229,7 @@ namespace NovelRT::UI::DearImGui
             //Trying to do this how imgui does it cuz it kinda matches up?
             ImGui::Render();
             ImDrawData* drawData = ImGui::GetDrawData();
-            
+            auto io = ImGui::GetIO();
             //Early escape
             if(drawData->TotalVtxCount <= 0) return;
             
@@ -332,21 +332,6 @@ namespace NovelRT::UI::DearImGui
             cmdList->CmdBindPipeline(pipeline);
 
 
-            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-            inputResourceRegions{
-                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                    vertexBufferRegion)};
-            
-            //Specify the descriptor set - dunno what that means but I think it's right?
-            auto descriptorSetData = pipeline->CreateDescriptorSet();
-            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            descriptorSetData->UpdateDescriptorSetData();
-
-            //Bind the descriptor set
-            std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
-                descriptorSetData};
-            cmdList->CmdBindDescriptorSets(descriptorData);
-
             //Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
@@ -360,6 +345,27 @@ namespace NovelRT::UI::DearImGui
                     }
                     else
                     {
+                        
+                        auto texture2DRegion = reinterpret_cast<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>*>(drawCommand->GetTexID());
+                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                        inputResourceRegions{
+                            std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                vertexBufferRegion),
+                            std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(texture2DRegion))};
+                        
+                        //Specify the descriptor set - dunno what that means but I think it's right?
+                        auto descriptorSetData = pipeline->CreateDescriptorSet();
+                        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+                        descriptorSetData->UpdateDescriptorSetData();
+
+                        //Bind the descriptor set
+                        std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
+                            descriptorSetData};
+                        cmdList->CmdBindDescriptorSets(descriptorData);
+                        
+                        
+                        
                         // Project scissor/clipping rectangles into framebuffer space
                         ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x, (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
                         ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * clippingScale.x, (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
