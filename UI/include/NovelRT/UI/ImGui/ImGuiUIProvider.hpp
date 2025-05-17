@@ -216,6 +216,7 @@ namespace NovelRT::UI::DearImGui
 
         void Render(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList, std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) final
         {
+            //Trying to do this how imgui does it cuz it kinda matches up?
             ImGui::Render();
             ImDrawData* drawData = ImGui::GetDrawData();
             
@@ -238,6 +239,7 @@ namespace NovelRT::UI::DearImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto vertexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
 
+            //Create index buffer + staging
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
@@ -249,6 +251,7 @@ namespace NovelRT::UI::DearImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto indexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
 
+            //Allocate buffers
             auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 64);
             auto vertexStageBufferRegion = vertexStagingBuffer->Allocate(vertexSize, 64);
             auto indexBufferRegion = indexBuffer->Allocate(indexSize, 64);
@@ -262,6 +265,7 @@ namespace NovelRT::UI::DearImGui
             int32_t vertInitial = 0;
             int32_t indexInitial = 0;
 
+            //Slamjam the vertex buffer and index buffer data into their regions :|
             for(int i = 0; i < drawData->CmdListsCount; i++)
             {
                 ImDrawList* list = drawData->CmdLists[i];
@@ -274,34 +278,66 @@ namespace NovelRT::UI::DearImGui
                 indexInitial += list->IdxBuffer.Size;
             }
 
-
+            //Unmap the buffers and copy them into their regions for GPU-ity
             vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
             indexStagingBuffer->UnmapAndWrite(indexBufferRegion);
             cmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
             cmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
             
+            //This seems terrible but I want it working before I refactor it
             int32_t globalVertexOffset = 0;
             int32_t globalIndexOffset = 0;
+
             ImVec2 clippingOffset = drawData->DisplayPos;
             ImVec2 clippingScale = drawData->FramebufferScale;
 
+            //Bind the Vertex Buffers and the index buffer(s)?
             std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{vertexBuffer};
             std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
 
             cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-            cmdList->CmdBindIndexBuffer(indexBufferRegion, Graphics::IndexType::UInt16);
+            cmdList->CmdBindIndexBuffer(indexBufferRegion, Graphics::IndexType::UInt16);    //ImGui provides Uint16, but this could work with uint32 too
+            
+            auto renderPass = _graphicsDevice->GetRenderPass();
+
+            NovelRT::Graphics::ClearValue colourDataStruct{};
+            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+            colourDataStruct.depth = 0;
+            colourDataStruct.stencil = 0;
+
+            std::vector<ClearValue> colourData{colourDataStruct};
+            cmdList->CmdBeginRenderPass(renderPass, colourData);
+
+            ViewportInfo viewportInfoStruct{};
+            viewportInfoStruct.x = 0;
+            viewportInfoStruct.y = drawData->DisplaySize.y;
+            viewportInfoStruct.width = drawData->DisplaySize.x;
+            viewportInfoStruct.height = -drawData->DisplaySize.y;
+            viewportInfoStruct.minDepth = 0.0f;
+            viewportInfoStruct.maxDepth = 1.0f;
+
+            cmdList->CmdSetViewport(viewportInfoStruct);
+            cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                          NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            cmdList->CmdBindPipeline(pipeline);
+
+
             std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
             inputResourceRegions{
                 std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
                     vertexBufferRegion)};
-
+            
+            //Specify the descriptor set - dunno what that means but I think it's right?
             auto descriptorSetData = pipeline->CreateDescriptorSet();
             descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
             descriptorSetData->UpdateDescriptorSetData();
 
+            //Bind the descriptor set
             std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
                 descriptorSetData};
             cmdList->CmdBindDescriptorSets(descriptorData);
+
+            //Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
                 const ImDrawList* list = drawData->CmdLists[n];
@@ -350,6 +386,7 @@ namespace NovelRT::UI::DearImGui
             //Reset clipping rect
             cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                           NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            cmdList->CmdEndRenderPass();
         }
 
         ~ImGuiUIProvider() final

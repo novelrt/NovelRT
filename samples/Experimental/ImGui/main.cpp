@@ -267,14 +267,11 @@ int main()
 
             currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
 
+            currentCmdList->CmdEndRenderPass();
+
             //More imgui shit
             imGuiProvider->Render(currentCmdList, pipeline);
-
-            // auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex),
-            //                                             dummyRegion, 0, inputResourceRegions);
-            // context->Draw(primitive);
-
-            currentCmdList->CmdEndRenderPass();
+            
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
