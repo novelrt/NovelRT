@@ -47,7 +47,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
 
   foreach(kind SOURCES HEADERS RESOURCES)
-    cmake_parse_arguments(declareModule_${kind} "" "BASE_DIR" "INTERFACE;PUBLIC;PRIVATE" ${declareModule_${kind}})
+    cmake_parse_arguments(declareModule_${kind} "" "" "BASE_DIRS;INTERFACE;PUBLIC;PRIVATE" ${declareModule_${kind}})
   endforeach()
 
   if(moduleKind STREQUAL "LIBRARY")
@@ -91,21 +91,27 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       PRIVATE ${declareModule_SOURCES_PRIVATE}
       INTERFACE FILE_SET interface_headers
       TYPE HEADERS
+      BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
       FILES ${declareModule_HEADERS_INTERFACE}
       PUBLIC FILE_SET public_headers
       TYPE HEADERS
+      BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
       FILES ${declareModule_HEADERS_PUBLIC}
       PRIVATE FILE_SET private_headers
       TYPE HEADERS
+      BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
       FILES ${declareModule_HEADERS_PRIVATE}
       INTERFACE FILE_SET interface_resources
       TYPE HEADERS
+      BASE_DIRS ${declareModule_RESOURCES_BASE_DIRS}
       FILES ${declareModule_RESOURCES_INTERFACE}
       PUBLIC FILE_SET public_resources
       TYPE HEADERS
+      BASE_DIRS ${declareModule_RESOURCES_BASE_DIRS}
       FILES ${declareModule_RESOURCES_PUBLIC}
       PRIVATE FILE_SET private_resources
       TYPE HEADERS
+      BASE_DIRS ${declareModule_RESOURCES_BASE_DIRS}
       FILES ${declareModule_RESOURCES_PRIVATE})
 
     target_link_libraries(${safeName} PUBLIC ${declareModule_DEPENDS})
@@ -114,7 +120,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       target_compile_features(${safeName} ${declareModule_COMPILE_FEATURES})
     endif()
     if(declareModule_COMPILE_DEFINITIONS)
-      target_compile_options(${safeName} ${declareModule_COMPILE_DEFINITIONS})
+      target_compile_definitions(${safeName} ${declareModule_COMPILE_DEFINITIONS})
     endif()
     if(declareModule_COMPILE_OPTIONS)
       target_compile_options(${safeName} ${declareModule_COMPILE_OPTIONS})
