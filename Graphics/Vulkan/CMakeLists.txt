@@ -4,36 +4,35 @@ if(APPLE AND NOT Vulkan_MoltenVK_FOUND)
   message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
 endif()
 
-add_library(NovelRT-Graphics-Vulkan OBJECT
-  VulkanGraphicsAdapter.cpp
-  VulkanGraphicsAdapterSelector.cpp
-  VulkanGraphicsBuffer.cpp
-  VulkanGraphicsCmdList.cpp
-  VulkanGraphicsContext.cpp
-  VulkanGraphicsDescriptorSet.cpp
-  VulkanGraphicsDevice.cpp
-  VulkanGraphicsFence.cpp
-  VulkanGraphicsMemoryAllocator.cpp
-  VulkanGraphicsPipeline.cpp
-  VulkanGraphicsPipelineSignature.cpp
-  VulkanGraphicsPluginProvider.cpp
-  VulkanGraphicsResource.cpp
-  VulkanGraphicsResourceMemoryRegion.cpp
-  VulkanGraphicsProvider.cpp
-  VulkanGraphicsRenderPass.cpp
-  VulkanGraphicsSurfaceContext.cpp
-  VulkanGraphicsTexture.cpp
-  VulkanShaderProgram.cpp
+NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
+  DEPENDS
+    NovelRT::Graphics::Core
 
-  VulkanGraphicsBackendTraits.cpp
-)
+  SOURCES
+    PRIVATE
+      VulkanGraphicsAdapter.cpp
+      VulkanGraphicsAdapterSelector.cpp
+      VulkanGraphicsBuffer.cpp
+      VulkanGraphicsCmdList.cpp
+      VulkanGraphicsContext.cpp
+      VulkanGraphicsDescriptorSet.cpp
+      VulkanGraphicsDevice.cpp
+      VulkanGraphicsFence.cpp
+      VulkanGraphicsMemoryAllocator.cpp
+      VulkanGraphicsPipeline.cpp
+      VulkanGraphicsPipelineSignature.cpp
+      VulkanGraphicsPluginProvider.cpp
+      VulkanGraphicsResource.cpp
+      VulkanGraphicsResourceMemoryRegion.cpp
+      VulkanGraphicsProvider.cpp
+      VulkanGraphicsRenderPass.cpp
+      VulkanGraphicsSurfaceContext.cpp
+      VulkanGraphicsTexture.cpp
+      VulkanShaderProgram.cpp
+      VulkanGraphicsBackendTraits.cpp
 
-target_sources(NovelRT-Graphics-Vulkan
-  PUBLIC
-    FILE_SET public_headers
-    TYPE HEADERS
-    BASE_DIRS include
-    FILES
+  HEADERS
+    PUBLIC
       include/NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp
       include/NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp
@@ -62,52 +61,13 @@ target_sources(NovelRT-Graphics-Vulkan
       include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp
-)
 
-set_target_properties(NovelRT-Graphics-Vulkan
-  PROPERTIES
-    EXPORT_NAME Graphics-Core
-    POSITION_INDEPENDENT_CODE ON
-)
+  INCLUDE_DIRECTORIES
+    PRIVATE
+      "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>"
 
-target_compile_features(NovelRT-Graphics-Vulkan
-  PUBLIC
-    cxx_std_17
-)
-
-target_compile_options(NovelRT-Graphics-Vulkan
-  PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:-Wall>
-    $<$<CXX_COMPILER_ID:GNU>:-Wabi>
-    $<$<CXX_COMPILER_ID:GNU>:-Werror>
-    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
-    $<$<CXX_COMPILER_ID:GNU>:-Wpedantic>
-    $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
-
-    $<$<CXX_COMPILER_ID:Clang>:-Wall>
-    $<$<CXX_COMPILER_ID:Clang>:-Werror>
-    $<$<CXX_COMPILER_ID:Clang>:-Wextra>
-    $<$<CXX_COMPILER_ID:Clang>:-Wpedantic>
-    $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
-
-    $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
-    $<$<CXX_COMPILER_ID:MSVC>:/permissive->
-)
-
-target_include_directories(NovelRT-Graphics-Vulkan
-  PRIVATE
-    "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
-target_link_libraries(NovelRT-Graphics-Vulkan
-  PUBLIC
-    NovelRT-Graphics-Core
-    Vulkan::Vulkan
-    GPUOpen::VulkanMemoryAllocator
-)
-
-install(
-  TARGETS NovelRT-Graphics-Vulkan
-  EXPORT NovelRTConfig
-  LIBRARY DESTINATION lib
-  FILE_SET public_headers DESTINATION include
+  LINK_LIBRARIES
+    PUBLIC
+      Vulkan::Vulkan
+      GPUOpen::VulkanMemoryAllocator
 )
