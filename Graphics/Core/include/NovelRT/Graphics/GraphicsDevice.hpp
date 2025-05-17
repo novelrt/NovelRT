@@ -3,13 +3,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/Exceptions.h>
 #include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
 #include <NovelRT/Graphics/GraphicsPushConstantRange.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Graphics/ShaderProgramKind.hpp>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Utilities/Span.hpp>
+
 #include <memory>
 #include <stdexcept>
 
@@ -197,7 +197,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Misc::Span<uint8_t> byteData)
+            NovelRT::Utilities::Span<uint8_t> byteData)
         {
             return std::make_shared<ShaderProgram<TBackend>>(
                 _implementation->CreateShaderProgram(entryPointName, kind, byteData), this->shared_from_this(),

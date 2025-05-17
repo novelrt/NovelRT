@@ -1,6 +1,9 @@
 include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
+  DEPENDS
+    NovelRT::Base
+
   SOURCES
     PRIVATE
       GraphicsPipelineInput.cpp

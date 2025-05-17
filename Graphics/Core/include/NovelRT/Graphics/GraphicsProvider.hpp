@@ -3,7 +3,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/EngineConfig.h>
 #include <memory>
 #include <vector>
 
@@ -87,7 +86,8 @@ namespace NovelRT::Graphics
             "NovelRT::Graphics::GraphicsProvider::EnableDebugMode";
 
         GraphicsProvider(std::shared_ptr<BackendProviderType> implementation) noexcept
-            : _implementation(implementation), _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
+            // TODO: EngineConfig removed here
+            : _implementation(implementation), _debugModeEnabled(false)
         {
         }
 
