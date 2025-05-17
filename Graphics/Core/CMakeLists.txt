@@ -1,15 +1,14 @@
-add_library(NovelRT-Graphics-Core OBJECT
-  GraphicsPipelineInput.cpp
-  GraphicsPipelineInputElement.cpp
-  GraphicsPipelineResource.cpp
-)
+include(NovelRTBuildSystem)
 
-target_sources(NovelRT-Graphics-Core
-  PUBLIC
-    FILE_SET public_headers
-    TYPE HEADERS
-    BASE_DIRS include
-    FILES
+NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
+  SOURCES
+    PRIVATE
+      GraphicsPipelineInput.cpp
+      GraphicsPipelineInputElement.cpp
+      GraphicsPipelineResource.cpp
+
+  HEADERS
+    PUBLIC
       include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBackendTraits.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
@@ -53,54 +52,17 @@ target_sources(NovelRT-Graphics-Core
       include/NovelRT/Graphics/ShaderProgramKind.hpp
       include/NovelRT/Graphics/ShaderProgramVisibility.hpp
       include/NovelRT/Graphics/TexelFormat.hpp
-)
 
-set_target_properties(NovelRT-Graphics-Core
-  PROPERTIES
-    EXPORT_NAME Graphics-Core
-    POSITION_INDEPENDENT_CODE ON
-)
+  COMPILE_DEFINITIONS
+    PUBLIC
+      GLM_ENABLE_EXPERIMENTAL=1
 
-target_compile_features(NovelRT-Graphics-Core
-  PUBLIC
-    cxx_std_17
-)
+  INCLUDE_DIRECTORIES
+    PRIVATE
+      "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>"
 
-target_compile_options(NovelRT-Graphics-Core
-  PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:-Wall>
-    $<$<CXX_COMPILER_ID:GNU>:-Wabi>
-    $<$<CXX_COMPILER_ID:GNU>:-Werror>
-    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
-    $<$<CXX_COMPILER_ID:GNU>:-Wpedantic>
-    $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
-
-    $<$<CXX_COMPILER_ID:Clang>:-Wall>
-    $<$<CXX_COMPILER_ID:Clang>:-Werror>
-    $<$<CXX_COMPILER_ID:Clang>:-Wextra>
-    $<$<CXX_COMPILER_ID:Clang>:-Wpedantic>
-    $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
-
-    $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
-    $<$<CXX_COMPILER_ID:MSVC>:/permissive->
-)
-
-target_compile_definitions(NovelRT-Graphics-Core
-  PUBLIC
-    GLM_ENABLE_EXPERIMENTAL=1
-)
-
-target_include_directories(NovelRT-Graphics-Core PRIVATE "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>")
-target_link_libraries(NovelRT-Graphics-Core
-  PUBLIC
-    spdlog
-    tbb
-)
-
-install(
-  TARGETS NovelRT-Graphics-Core
-  EXPORT NovelRTConfig
-  LIBRARY DESTINATION lib
-  FILE_SET public_headers DESTINATION include
+  LINK_LIBRARIES
+    PUBLIC
+      spdlog
+      tbb
 )
