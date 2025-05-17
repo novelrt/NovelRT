@@ -25,6 +25,8 @@ check_pie_supported()
 
 list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 option(NOVELRT_FETCH_DEPENDENCIES "Fetch and build NovelRT dependencies instead of providing system-based ones" ON)
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" OFF)
