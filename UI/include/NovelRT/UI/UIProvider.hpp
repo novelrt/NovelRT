@@ -5,11 +5,13 @@
 #include <NovelRT/Exceptions/Exceptions.h>
 #include <NovelRT/Windowing/Windowing.h>
 #include <NovelRT/Input/IInputDevice.hpp>
+#include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/GraphicsBackendTraits.hpp>
+#include <NovelRT/Graphics/GraphicsPipeline.hpp>
 #include <NovelRT/Threading/Threading.h>
 #include <memory>
 
@@ -31,6 +33,8 @@ namespace NovelRT::UI
         virtual void BeginFrame(double deltaTime) = 0;
 
         virtual void EndFrame() = 0;
+
+        virtual void Render(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> cmdList, std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) = 0;
 
         virtual ~UIProvider() = default;
     };

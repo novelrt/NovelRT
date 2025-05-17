@@ -212,12 +212,16 @@ int main()
     imGuiProvider->Initialise(device, inputDevice, gfxProvider, gfxDevice, memoryAllocator);
 
     auto surface = gfxDevice->GetSurface();
-
     while (!device->GetShouldClose())
     {
         device->ProcessAllMessages();
         if (device->GetIsVisible())
         {
+            //ImGuiiiiiiiiiiiiiiiiiiiiii
+
+            imGuiProvider->BeginFrame(1.0f/60.0f);
+            imGuiProvider->EndFrame();
+
             auto context = gfxDevice->GetCurrentContext();
             auto currentCmdList = context->BeginFrame();
             // context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
@@ -264,21 +268,13 @@ int main()
             currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
 
             //More imgui shit
-            ImGui::Render();
-            ImDrawData* drawData = ImGui::GetDrawData();
-
-
-
-            
-            currentCmdList->CmdEndRenderPass();
+            imGuiProvider->Render(currentCmdList, pipeline);
 
             // auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex),
             //                                             dummyRegion, 0, inputResourceRegions);
             // context->Draw(primitive);
 
-
-
-
+            currentCmdList->CmdEndRenderPass();
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
