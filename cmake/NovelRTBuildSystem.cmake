@@ -44,7 +44,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   if(moduleKind STREQUAL "LIBRARY")
     string(REGEX REPLACE "::" "-" safeName ${moduleName})
-    add_library(${safeName} OBJECT)
+    add_library(${safeName} ${libraryType})
     add_library(${moduleName} ALIAS ${safeName})
 
     set_target_properties(${safeName} PROPERTIES

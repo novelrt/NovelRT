@@ -51,7 +51,8 @@ endif()
 #endif()
 
 add_subdirectory(ThirdParty)
-#add_subdirectory(Resources)
+
+add_subdirectory(Base)
 add_subdirectory(Graphics)
 #add_subdirectory(Audio)
 #add_subdirectory(Input)

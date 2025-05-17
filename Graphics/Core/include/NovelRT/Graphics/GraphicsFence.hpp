@@ -5,6 +5,9 @@
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 
+#include <chrono>
+#include <cstdint>
+
 namespace NovelRT::Graphics
 {
     template<typename TBackend> struct GraphicsBackendTraits;
