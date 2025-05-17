@@ -134,6 +134,5 @@ foreach(module
   VulkanMemoryAllocator
   # freetype
   imgui)
-  message(STATUS "Fetching ${module}...")
   add_subdirectory(${module})
 endforeach()
