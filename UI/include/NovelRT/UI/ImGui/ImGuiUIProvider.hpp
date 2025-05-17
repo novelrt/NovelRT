@@ -123,6 +123,12 @@ namespace NovelRT::UI::DearImGui
 
             //Create Texture Staging Buffer
             auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+            
+            bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
+            bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
+            bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
+            bufferCreateInfo.size = 64 * 1024;
+            
             //Create Vertex Buffer
             auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
             //Create Command List
@@ -160,7 +166,11 @@ namespace NovelRT::UI::DearImGui
             cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
             //Create Graphics Texture 
-            _texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(width, height);
+            auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
+                GraphicsResourceAccess::None, GraphicsResourceAccess::ReadWrite, static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1,
+                GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM};
+            _texture2D = memoryAllocator->CreateTexture(textureCreateInfo);
+            //_texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(width, height);
             //Allocate region based on size of texture
             std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> texture2DRegion =
                 _texture2D->Allocate(_texture2D->GetSize(), 4);
