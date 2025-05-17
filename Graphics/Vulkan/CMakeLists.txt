@@ -62,10 +62,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp
 
-  INCLUDE_DIRECTORIES
-    PRIVATE
-      "$<TARGET_PROPERTY:Engine,INCLUDE_DIRECTORIES>"
-
   LINK_LIBRARIES
     PUBLIC
       Vulkan::Vulkan

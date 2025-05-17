@@ -41,35 +41,32 @@ if(NOVELRT_USE_STD_SPAN)
   add_compile_definitions(NOVELRT_USE_STD_SPAN=true)
 endif()
 
-#
-# Documentation Generation target
-#
-if(NOVELRT_BUILD_DOCUMENTATION)
-  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
-    COMPONENTS dot
-  )
-  if(DOXYGEN_FOUND)
-    add_subdirectory(doxygen)
-  endif()
-endif()
+#if(NOVELRT_BUILD_DOCUMENTATION)
+#  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
+#    COMPONENTS dot
+#  )
+#  if(DOXYGEN_FOUND)
+#    add_subdirectory(doxygen)
+#  endif()
+#endif()
 
 add_subdirectory(ThirdParty)
-add_subdirectory(Resources)
+#add_subdirectory(Resources)
 add_subdirectory(Graphics)
-add_subdirectory(Audio)
-add_subdirectory(Input)
+#add_subdirectory(Audio)
+#add_subdirectory(Input)
 add_subdirectory(UI)
 
-add_subdirectory(src)
+#add_subdirectory(src)
 
-if(NOVELRT_BUILD_SAMPLES)
-  add_subdirectory(samples)
-endif()
+#if(NOVELRT_BUILD_SAMPLES)
+#  add_subdirectory(samples)
+#endif()
 
-if(NOVELRT_BUILD_TESTS)
-  enable_testing()
-  add_subdirectory(tests)
-endif()
+#if(NOVELRT_BUILD_TESTS)
+#  enable_testing()
+#  add_subdirectory(tests)
+#endif()
 
 
 #
@@ -83,38 +80,4 @@ if(NOVELRT_INSTALL)
     NAMESPACE NovelRT::
     DESTINATION lib
   )
-
-  #Moved to main CMakeLists as headers should always be distributed for now
-  install(
-    DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT/
-    DESTINATION include/NovelRT
-    FILES_MATCHING PATTERN "*.h"
-  )
-
-  if(NOVELRT_BUILD_INTEROP)
-    install(
-      DIRECTORY ${PROJECT_SOURCE_DIR}/include/NovelRT.Interop/
-      DESTINATION include/NovelRT.Interop
-      FILES_MATCHING PATTERN "*.h"
-    )
-  endif()
-
-  if(NOVELRT_DEPS_INSTALLED)
-    install(
-      DIRECTORY ${NOVELRT_DEPS_PATH}/lib/
-      DESTINATION lib
-      PATTERN "*gtest*" EXCLUDE
-    )
-    install(
-      DIRECTORY ${NOVELRT_DEPS_PATH}/include/
-      DESTINATION include
-      PATTERN "gtest" EXCLUDE
-    )
-    install(
-      DIRECTORY ${NOVELRT_DEPS_PATH}/share/
-      DESTINATION share
-      PATTERN "doc" EXCLUDE
-      PATTERN "man" EXCLUDE
-    )
-  endif()
 endif()
