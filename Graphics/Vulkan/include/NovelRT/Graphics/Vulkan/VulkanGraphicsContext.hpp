@@ -3,13 +3,15 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
-#include <unordered_map>
-#include <vulkan/vulkan.h>
 #include <NovelRT/Graphics/GraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
-#include <NovelRT/Threading/Threading.h>
-#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Threading/VolatileState.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
+
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {

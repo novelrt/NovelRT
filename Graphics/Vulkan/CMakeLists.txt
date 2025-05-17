@@ -1,3 +1,5 @@
+include(NovelRTBuildSystem)
+
 find_package(Vulkan "1.2" REQUIRED
   OPTIONAL_COMPONENTS MoltenVK)
 if(APPLE AND NOT Vulkan_MoltenVK_FOUND)

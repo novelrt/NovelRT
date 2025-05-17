@@ -4,9 +4,11 @@
 // for more information.
 
 #include <NovelRT/Graphics/RGBAColour.hpp>
-#include <NovelRT/Maths/GeoVector2F.h>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
 #include <memory>
+#include <cstdint>
 
 namespace NovelRT::Graphics
 {
@@ -73,7 +75,7 @@ namespace NovelRT::Graphics
         }
 
         void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass,
-                                Utilities::Misc::Span<const ClearValue> clearValues)
+                                Utilities::Span<const ClearValue> clearValues)
         {
             _implementation->CmdBeginRenderPass(targetPass->GetImplementation(), clearValues);
         }
@@ -84,7 +86,7 @@ namespace NovelRT::Graphics
         }
 
         void CmdBindDescriptorSets(
-            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
+            NovelRT::Utilities::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
         {
             std::vector<std::shared_ptr<BackendDescriptorType>> transformedArgs{};
             transformedArgs.resize(sets.size());
@@ -96,8 +98,8 @@ namespace NovelRT::Graphics
         void CmdBindVertexBuffers(
             uint32_t firstBinding,
             uint32_t bindingCount,
-            NovelRT::Utilities::Misc::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers,
-            NovelRT::Utilities::Misc::Span<const size_t> offsets)
+            NovelRT::Utilities::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers,
+            NovelRT::Utilities::Span<const size_t> offsets)
         {
             std::vector<std::shared_ptr<BackendBufferType>> transformedArgs{};
             transformedArgs.resize(buffers.size());

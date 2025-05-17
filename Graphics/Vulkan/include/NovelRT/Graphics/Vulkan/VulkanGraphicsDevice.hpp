@@ -3,16 +3,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
+
 #include <cstdint>
 #include <memory>
+
 #include <vulkan/vulkan.h>
-#include <NovelRT/Utilities/Lazy.h>
-#include <NovelRT/Graphics/GraphicsDevice.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
-#include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {

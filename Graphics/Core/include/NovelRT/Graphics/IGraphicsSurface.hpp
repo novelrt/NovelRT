@@ -4,8 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsSurfaceKind.hpp>
-#include <NovelRT/Maths/Maths.h>
-#include <NovelRT/Utilities/Event.h>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
 namespace NovelRT::Graphics
 {

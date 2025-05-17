@@ -4,7 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Utilities/Span.hpp>
 #include <vector>
 
 namespace NovelRT::Graphics
@@ -16,8 +16,8 @@ namespace NovelRT::Graphics
 
     public:
         explicit GraphicsPipelineInput(
-            NovelRT::Utilities::Misc::Span<const GraphicsPipelineInputElement> elements) noexcept;
+            NovelRT::Utilities::Span<const GraphicsPipelineInputElement> elements) noexcept;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInputElement> GetElements() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineInputElement> GetElements() const noexcept;
     };
 }
