@@ -30,14 +30,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_DEPENDS ${dependsClosure})
   set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_OPTIONAL_DEPENDS ${declareModule_OPTIONAL_DEPENDS})
 
-  foreach(dependency IN LISTS dependsClosure)
-    string(TOLOWER "${dependency}" dependencyLower)
-    get_property(dependants GLOBAL PROPERTY "_NovelRTBuildSystem_declaredModules_${dependencyLower}_DEPENDANTS")
-    list(APPEND dependants ${moduleName})
-    list(REMOVE_DUPLICATES dependants)
-    set_property(GLOBAL PROPERTY "_NovelRTBuildSystem_declaredModules_${dependencyLower}_DEPENDANTS" ${dependants})
-  endforeach()
-
   set(validKinds "LIBRARY;EXECUTABLE")
   if(NOT (moduleKind IN_LIST validKinds))
     message(SEND_ERROR
@@ -82,7 +74,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       target_sources(${safeName} PRIVATE $<TARGET_OBJECTS:${depends}>)
     endforeach()
     foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
-      target_sources(${safeName} PRIVATE $<TARGET_OBJECTS:${depends}>)
+      target_sources(${safeName} PRIVATE $<$<TARGET_EXISTS:${depends}>:$<TARGET_OBJECTS:${depends}>>)
     endforeach()
 
     target_sources(${safeName}
@@ -115,6 +107,9 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       FILES ${declareModule_RESOURCES_PRIVATE})
 
     target_link_libraries(${safeName} PUBLIC ${declareModule_DEPENDS})
+    foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
+      target_link_libraries(${safeName} PUBLIC $<$<TARGET_EXISTS:${depends}>:${depends}>)
+    endforeach()
 
     if(declareModule_COMPILE_FEATURES)
       target_compile_features(${safeName} ${declareModule_COMPILE_FEATURES})
