@@ -124,6 +124,5 @@ foreach(module
   stduuid
   TBB
   VulkanMemoryAllocator)
-  message(STATUS "Fetching ${module}...")
   add_subdirectory(${module})
 endforeach()
