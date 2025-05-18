@@ -12,11 +12,32 @@
 #include <NovelRT/Maths/Maths.h>
 #include <NovelRT/UI/UIProvider.hpp>
 #include <imgui.h>
+#include <fstream>
 
 using namespace NovelRT::Graphics;
 
 namespace NovelRT::UI::DearImGui
 {
+    std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
+    {
+        std::filesystem::path finalPath =
+            NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
+        std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(finalPath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
+        file.close();
+
+        return buffer;
+    }
+
     struct TexturedVertex
     {
         NovelRT::Maths::GeoVector3F Position;
@@ -52,6 +73,7 @@ namespace NovelRT::UI::DearImGui
         std::shared_ptr<Graphics::GraphicsDevice<TBackend>> _graphicsDevice;
         std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> _memoryAllocator;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> _texture2DRegion;
+        std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
 
     public:
         ImGuiUIProvider()
@@ -203,6 +225,33 @@ namespace NovelRT::UI::DearImGui
             _texture2DRegion = texture2DRegion;
 
             io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture2DRegion));
+
+            auto vertShaderData = LoadSpv("imgui_vert.spv");
+            auto pixelShaderData = LoadSpv("imgui_frag.spv");
+
+            std::vector<GraphicsPipelineInputElement> elem{
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F), GraphicsPipelineInputElementKind::Position,
+                                             8),
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                             GraphicsPipelineInputElementKind::Normal, 8),
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector4F),
+                                             GraphicsPipelineInputElementKind::Colour, 16)};
+            std::vector<GraphicsPipelineInputElement> pushConstant{
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F), GraphicsPipelineInputElementKind::Unknown,
+                                                8),
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                                GraphicsPipelineInputElementKind::Unknown, 8)};
+        
+            std::vector<GraphicsPipelineInput> in{GraphicsPipelineInput(elem), GraphicsPipelineInput(pushConstant)};
+            std::vector<GraphicsPipelineResource> res{
+                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+        
+            auto signature = graphicsDevice->CreatePipelineSignature(
+                GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, in, res);
+            auto vertShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
+            auto pixelShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
+            auto pipeline = graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
+            _pipeline = pipeline;
         }
 
         void BeginFrame(double deltaTime) final
@@ -343,7 +392,7 @@ namespace NovelRT::UI::DearImGui
             cmdList->CmdSetViewport(viewportInfoStruct);
             cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                    NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-            cmdList->CmdBindPipeline(pipeline);
+            cmdList->CmdBindPipeline(_pipeline);
 
             // Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
@@ -365,10 +414,10 @@ namespace NovelRT::UI::DearImGui
                         std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
                             inputResourceRegions{
                                 std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                                    vertexBufferRegion),
-                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
                                     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                                        texture2DRegion))};
+                                        texture2DRegion)),
+                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                        vertexBufferRegion)};
 
                         // Specify the descriptor set - dunno what that means but I think it's right?
                         auto descriptorSetData = pipeline->CreateDescriptorSet();
