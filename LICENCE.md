@@ -1,6 +1,6 @@
 MIT Licence
 
-Copyright (c) 2022 Matt Jones and Contributors
+Copyright (c) 2025 Matt Jones and Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
