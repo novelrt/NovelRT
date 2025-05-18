@@ -5,6 +5,7 @@
 
 #include <vulkan/vulkan.h>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
+#include <NovelRT/Utilities/Misc.h>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
