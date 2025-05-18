@@ -33,6 +33,7 @@ target_sources(NovelRT-Graphics-Core
       include/NovelRT/Graphics/GraphicsPipelineResourceKind.hpp
       include/NovelRT/Graphics/GraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/GraphicsProvider.hpp
+      include/NovelRT/Graphics/GraphicsPushConstantRange.hpp
       include/NovelRT/Graphics/GraphicsRenderPass.hpp
       include/NovelRT/Graphics/GraphicsResource.hpp
       include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
