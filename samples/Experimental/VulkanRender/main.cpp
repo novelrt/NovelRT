@@ -137,10 +137,11 @@ int main()
     std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
     std::vector<GraphicsPipelineResource> resources{
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-
+    
+    std::vector<GraphicsPushConstantRange> dummyData{};
     auto signature = gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
                                                         GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs,
-                                                        resources, std::vector<GraphicsPushConstantRange>{});
+                                                        resources, NovelRT::Utilities::Misc::Span<GraphicsPushConstantRange>(dummyData));
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
