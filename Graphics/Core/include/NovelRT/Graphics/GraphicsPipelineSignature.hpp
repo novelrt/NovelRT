@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
+#include <NovelRT/Graphics/GraphicsPushConstantRange.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -24,6 +25,7 @@ namespace NovelRT::Graphics
         GraphicsPipelineBlendFactor _dstBlendFactor;
         std::vector<GraphicsPipelineInput> _inputs;
         std::vector<GraphicsPipelineResource> _resources;
+        std::vector<GraphicsPushConstantRange> _pushConstantRanges;
 
     public:
         GraphicsPipelineSignature(std::shared_ptr<BackendPipelineSignatureType> implementation,
@@ -31,13 +33,15 @@ namespace NovelRT::Graphics
                                   GraphicsPipelineBlendFactor srcBlendFactor,
                                   GraphicsPipelineBlendFactor dstBlendFactor,
                                   NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
+                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources,
+                                  NovelRT::Utilities::Misc::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept
             : GraphicsDeviceObject<TBackend>(device),
               _implementation(implementation),
               _srcBlendFactor(srcBlendFactor),
               _dstBlendFactor(dstBlendFactor),
               _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
-              _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end()))
+              _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end())),
+              _pushConstantRanges(std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end()))
         {
         }
 

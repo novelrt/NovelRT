@@ -22,6 +22,7 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsPipelineBlendFactor _dstBlendFactor;
         std::vector<GraphicsPipelineInput> _inputs;
         std::vector<GraphicsPipelineResource> _resources;
+        std::vector<GraphicsPushConstantRange> _pushConstantRanges;
         NovelRT::Utilities::Lazy<VkDescriptorPool> _vulkanDescriptorPool;
         NovelRT::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
         NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
@@ -35,16 +36,14 @@ namespace NovelRT::Graphics::Vulkan
         void DestroyDescriptorSetLayout();
         void DestroyPipelineLayout();
 
-        [[nodiscard]] VkShaderStageFlags GetVulkanShaderStageFlags(
-            ShaderProgramVisibility shaderVisibility) const noexcept;
-
     public:
         VulkanGraphicsPipelineSignature(
             std::shared_ptr<VulkanGraphicsDevice> device,
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept;
+            NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources,
+            NovelRT::Utilities::Misc::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept;
 
         ~VulkanGraphicsPipelineSignature();
 

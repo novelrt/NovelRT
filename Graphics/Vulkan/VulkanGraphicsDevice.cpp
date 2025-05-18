@@ -404,10 +404,11 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
         NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-        NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources)
+        NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources,
+        NovelRT::Utilities::Misc::Span<GraphicsPushConstantRange> pushConstantRanges)
     {
         return std::make_shared<VulkanGraphicsPipelineSignature>(shared_from_this(), srcBlendFactor, dstBlendFactor,
-                                                                 inputs, resources);
+                                                                 inputs, resources, pushConstantRanges);
     }
 
     VkRenderPass VulkanGraphicsDevice::CreateRenderPass()

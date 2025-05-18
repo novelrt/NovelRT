@@ -5,6 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
+#include<NovelRT/Utilities/Misc.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -14,6 +15,7 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsBuffer;
     class VulkanGraphicsTexture;
     class VulkanGraphicsPipeline;
+    class VulkanGraphicsPipelineSignature;
 
     class VulkanGraphicsCmdList final
     {
@@ -28,7 +30,7 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetContext() const noexcept;
 
-        void CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass, Utilities::Misc::Span<const ClearValue> clearValues);
+        void CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass, NovelRT::Utilities::Misc::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();
 
@@ -59,5 +61,7 @@ namespace NovelRT::Graphics::Vulkan
         void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture);
 
         void CmdBindPipeline(std::shared_ptr<VulkanGraphicsPipeline> pipeline);
+        
+        void CmdPushConstants(std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Misc::Span<uint8_t> values);
     };
 }

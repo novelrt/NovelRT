@@ -4,6 +4,7 @@
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -161,7 +162,7 @@ namespace NovelRT::Graphics::Vulkan
                 {
                     case GraphicsPipelineResourceKind::ConstantBuffer:
                     {
-                        auto stageFlags = GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
+                        auto stageFlags = Utilities::GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
 
                         VkDescriptorSetLayoutBinding descriptorSetLayoutBinding{};
                         descriptorSetLayoutBinding.binding = static_cast<uint32_t>(descriptorSetLayoutBindingsIndex);
@@ -175,7 +176,7 @@ namespace NovelRT::Graphics::Vulkan
                     }
                     case GraphicsPipelineResourceKind::Texture:
                     {
-                        auto stageFlags = GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
+                        auto stageFlags = Utilities::GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
 
                         VkDescriptorSetLayoutBinding descriptorSetLayoutBinding{};
                         descriptorSetLayoutBinding.binding = static_cast<uint32_t>(descriptorSetLayoutBindingsIndex);
@@ -225,6 +226,26 @@ namespace NovelRT::Graphics::Vulkan
         {
             pipelineLayoutCreateInfo.setLayoutCount = 1;
             pipelineLayoutCreateInfo.pSetLayouts = &descriptorSetLayout;
+        }
+
+        std::vector<VkPushConstantRange> finalPushConstantRangeData{};
+
+        if (_pushConstantRanges.size() != 0)
+        {
+            finalPushConstantRangeData.resize(_pushConstantRanges.size());
+
+            std::transform(_pushConstantRanges.begin(), _pushConstantRanges.end(), finalPushConstantRangeData.begin(),
+                           [&](const GraphicsPushConstantRange& rangeData) {
+                            VkPushConstantRange returnData{};
+                            returnData.stageFlags = Utilities::GetVulkanShaderStageFlags(rangeData.visibilityFlags);
+                            returnData.size = static_cast<uint32_t>(rangeData.size);
+                            returnData.offset = static_cast<uint32_t>(rangeData.offset);
+                            
+                            return returnData;
+                           });
+
+            pipelineLayoutCreateInfo.pushConstantRangeCount = static_cast<uint32_t>(finalPushConstantRangeData.size());
+            pipelineLayoutCreateInfo.pPushConstantRanges = finalPushConstantRangeData.data();
         }
 
         VkResult pipelineLayoutResult =
@@ -283,34 +304,19 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
         NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources) noexcept
+        NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources,
+        NovelRT::Utilities::Misc::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept
         : _device(device),
           _srcBlendFactor(srcBlendFactor),
           _dstBlendFactor(dstBlendFactor),
           _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
           _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end())),
+          _pushConstantRanges(
+              std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end())),
           _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); }),
           _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); }),
           _vulkanPipelineLayout([&]() { return CreatePipelineLayout(); })
     {
-    }
-
-    VkShaderStageFlags VulkanGraphicsPipelineSignature::GetVulkanShaderStageFlags(
-        ShaderProgramVisibility shaderVisibility) const noexcept
-    {
-        VkShaderStageFlags stageFlags = 0;
-
-        if ((shaderVisibility & ShaderProgramVisibility::Vertex) == ShaderProgramVisibility::Vertex)
-        {
-            stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
-        }
-
-        if ((shaderVisibility & ShaderProgramVisibility::Pixel) == ShaderProgramVisibility::Pixel)
-        {
-            stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
-        }
-
-        return stageFlags;
     }
 
     VulkanGraphicsPipelineSignature::~VulkanGraphicsPipelineSignature()

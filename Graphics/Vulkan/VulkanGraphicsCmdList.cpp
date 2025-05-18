@@ -8,6 +8,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -22,7 +24,7 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     void VulkanGraphicsCmdList::CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass,
-                                                   Utilities::Misc::Span<const ClearValue> clearValues)
+                                                   NovelRT::Utilities::Misc::Span<const ClearValue> clearValues)
     {
         auto device = _context->GetDevice();
         auto surface = device->GetSurface();
@@ -240,5 +242,11 @@ namespace NovelRT::Graphics::Vulkan
     void VulkanGraphicsCmdList::CmdBindPipeline(std::shared_ptr<VulkanGraphicsPipeline> pipeline)
     {
         vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetVulkanPipeline());
+    }
+
+
+    void VulkanGraphicsCmdList::CmdPushConstants(std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Misc::Span<uint8_t> values)
+    {
+        vkCmdPushConstants(_commandBuffer, pipelineSignature->GetVulkanPipelineLayout(), Utilities::GetVulkanShaderStageFlags(visibility), static_cast<uint32_t>(offset), static_cast<uint32_t>(values.size()), values.data());
     }
 }
