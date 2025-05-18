@@ -138,8 +138,9 @@ int main()
     std::vector<GraphicsPipelineResource> resources{
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
-    auto signature = gfxDevice->CreatePipelineSignature(
-        GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources);
+    auto signature = gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+                                                        GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs,
+                                                        resources, std::vector<GraphicsPushConstantRange>{});
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);

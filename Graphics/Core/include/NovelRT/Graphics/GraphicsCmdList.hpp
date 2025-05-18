@@ -162,5 +162,10 @@ namespace NovelRT::Graphics
         {
             _implementation->CmdBindPipeline(pipeline->GetImplementation());
         }
+
+        void CmdPushConstants(std::shared_ptr<GraphicsPipelineSignature<TBackend>> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, Utilities::Misc::Span<uint8_t> values)
+        {
+            _implementation->CmdPushConstants(pipelineSignature->GetImplementation(), visibility, offset, values);
+        }
     };
 }
