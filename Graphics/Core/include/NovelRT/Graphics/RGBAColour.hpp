@@ -20,22 +20,22 @@ namespace NovelRT::Graphics
         {
         }
 
-        [[nodiscard]] inline float getRScalar() const noexcept
+        [[nodiscard]] float getRScalar() const noexcept
         {
             return r / 255.0f;
         }
 
-        [[nodiscard]] inline float getGScalar() const noexcept
+        [[nodiscard]] float getGScalar() const noexcept
         {
             return g / 255.0f;
         }
 
-        [[nodiscard]] inline float getBScalar() const noexcept
+        [[nodiscard]] float getBScalar() const noexcept
         {
             return b / 255.0f;
         }
 
-        [[nodiscard]] inline float getAScalar() const noexcept
+        [[nodiscard]] float getAScalar() const noexcept
         {
             return a / 255.0f;
         }

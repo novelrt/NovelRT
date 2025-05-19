@@ -23,7 +23,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       VulkanGraphicsMemoryAllocator.cpp
       VulkanGraphicsPipeline.cpp
       VulkanGraphicsPipelineSignature.cpp
-      VulkanGraphicsPluginProvider.cpp
+#      VulkanGraphicsPluginProvider.cpp
       VulkanGraphicsResource.cpp
       VulkanGraphicsResourceMemoryRegion.cpp
       VulkanGraphicsProvider.cpp

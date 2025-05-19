@@ -18,6 +18,7 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsAdapter;
     template<typename TBackend> class GraphicsDevice;
+    template<typename TBackend> class GraphicsDeviceObject;
     template<typename TBackend> class GraphicsProvider;
     template<typename TBackend> class GraphicsBuffer;
     template<typename TBackend> class GraphicsTexture;
@@ -30,32 +31,40 @@ namespace NovelRT::Graphics
         using BackendMemoryAllocatorType = typename GraphicsBackendTraits<TBackend>::MemoryAllocatorType;
 
     private:
-        std::shared_ptr<BackendMemoryAllocatorType> _implementation;
+        std::unique_ptr<BackendMemoryAllocatorType> _implementation;
         std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsMemoryAllocator<TBackend>> shared_from_this()
         {
             return std::static_pointer_cast<GraphicsMemoryAllocator<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
         }
 
-        GraphicsMemoryAllocator(std::shared_ptr<BackendMemoryAllocatorType> implementation,
-                                std::shared_ptr<GraphicsDevice<TBackend>> device,
+        GraphicsMemoryAllocator(std::unique_ptr<BackendMemoryAllocatorType> implementation,
+                                std::weak_ptr<GraphicsDevice<TBackend>> device,
                                 std::shared_ptr<GraphicsProvider<TBackend>> provider)
-            : GraphicsDeviceObject<TBackend>(device), _implementation(implementation), _provider(provider)
+            : GraphicsDeviceObject<TBackend>(std::move(device))
+            , _implementation(std::move(implementation))
+            , _provider(std::move(provider))
         {
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept
+        [[nodiscard]] BackendMemoryAllocatorType* GetImplementation() const noexcept
         {
-            return _provider;
+            return _implementation.get();
+        }
+
+        [[nodiscard]] GraphicsProvider<TBackend>* GetProvider() const noexcept
+        {
+            return _provider.get();
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo)
         {
             return std::make_shared<GraphicsBuffer<TBackend>>(
                 _implementation->CreateBuffer(createInfo),
-                shared_from_this(),
+                this->shared_from_this(),
                 createInfo);
         }
 

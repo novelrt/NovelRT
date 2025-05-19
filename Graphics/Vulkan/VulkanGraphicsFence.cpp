@@ -1,13 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
+#include <NovelRT/Graphics/GraphicsFence.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
 
-    VkFence VulkanGraphicsFence::CreateVulkanFence(VkFenceCreateFlagBits flags)
+    VkFence VulkanGraphicsFence::CreateVulkanFence(VkFenceCreateFlagBits flags) const
     {
         VkFence vulkanFence = VK_NULL_HANDLE;
 
@@ -26,7 +31,7 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanFence;
     }
 
-    void VulkanGraphicsFence::DisposeVulkanFence(VkFence vulkanFence) noexcept
+    void VulkanGraphicsFence::DisposeVulkanFence(VkFence vulkanFence) const noexcept
     {
         if (vulkanFence != VK_NULL_HANDLE)
         {
@@ -59,12 +64,20 @@ namespace NovelRT::Graphics::Vulkan
         return fenceSignalled;
     }
 
-    VulkanGraphicsFence::VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept
-        : _device(device),
-          _vulkanFence([=]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); }),
-          _state()
+    VulkanGraphicsFence::VulkanGraphicsFence(VulkanGraphicsDevice* device, bool isSignaled) noexcept
+        : _device(device)
+        ,  _vulkanFence([isSignaled,this]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
+    }
+
+    VulkanGraphicsFence::~VulkanGraphicsFence()
+    {
+        if (_vulkanFence.HasValue())
+        {
+            DisposeVulkanFence(_vulkanFence.Get());
+            _vulkanFence.Reset();
+        }
     }
 
     bool VulkanGraphicsFence::GetIsSignalled()
@@ -95,13 +108,6 @@ namespace NovelRT::Graphics::Vulkan
         uint64_t millisecondsTimeout = timeout.count();
         return TryWaitInternal(millisecondsTimeout);
     }
-
-    VulkanGraphicsFence::~VulkanGraphicsFence()
-    {
-        if (_vulkanFence.isCreated())
-        {
-            DisposeVulkanFence(_vulkanFence.getActual());
-            _vulkanFence.reset();
-        }
-    }
 } // namespace NovelRT::Graphics::Vulkan
+
+template class NovelRT::Graphics::GraphicsFence<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

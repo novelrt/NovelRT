@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsPipelineInputElementKind : uint32_t
+    enum class GraphicsPipelineInputElementKind
     {
         Unknown = 0,
         Position = 1,

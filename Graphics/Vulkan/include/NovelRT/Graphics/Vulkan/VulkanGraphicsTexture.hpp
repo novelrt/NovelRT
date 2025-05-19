@@ -7,8 +7,9 @@
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
-#include <NovelRT/Utilities/Lazy.h>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Span.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -31,18 +32,13 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VkSampler CreateVulkanSampler();
 
     protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(
+        [[nodiscard]] std::unique_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(
             VmaVirtualAllocation allocation,
             VmaVirtualAllocationInfo info) final;
 
     public:
-        std::shared_ptr<VulkanGraphicsTexture> shared_from_this()
-        {
-            return std::static_pointer_cast<VulkanGraphicsTexture>(VulkanGraphicsResource::shared_from_this());
-        }
-
-        VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
-                              std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+        VulkanGraphicsTexture(VulkanGraphicsDevice* device,
+                              VulkanGraphicsMemoryAllocator* allocator,
                               GraphicsResourceAccess cpuAccess,
                               GraphicsTextureAddressMode addressMode,
                               GraphicsTextureKind kind,
@@ -58,9 +54,9 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
+        [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
                                                                            size_t rangeLength) override;
 
         void UnmapBytes() final;

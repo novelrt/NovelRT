@@ -5,16 +5,18 @@
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
 #include <cstdint>
 #include <memory>
-#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 
 namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsMemoryAllocator;
 
-    template<template <typename TBackend> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template <typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
@@ -22,40 +24,53 @@ namespace NovelRT::Graphics
     {
     public:
         using BackendResourceType = typename GraphicsBackendTraits<TBackend>::ResourceType;
-
-    protected:
-        std::shared_ptr<BackendResourceType> _implementation;
+        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<BackendResourceType>;
 
     private:
+        std::unique_ptr<BackendResourceType> _implementation;
         std::shared_ptr<GraphicsMemoryAllocator<TBackend>> _allocator;
         GraphicsResourceAccess _cpuAccess;
 
+    protected:
+        [[nodiscard]] std::unique_ptr<BackendResourceMemoryRegionType> AllocateInternal(
+            size_t size,
+            size_t alignment)
+        {
+            return _implementation->Allocate(size, alignment);
+        }
+
     public:
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsResource<TBackend>> shared_from_this()
         {
             return std::static_pointer_cast<GraphicsResource<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
         }
 
-        explicit GraphicsResource(std::shared_ptr<BackendResourceType> implementation,
+        explicit GraphicsResource(std::unique_ptr<BackendResourceType> implementation,
                                   std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
                                   GraphicsResourceAccess cpuAccess) noexcept
-            : GraphicsDeviceObject<TBackend>(allocator->GetDevice()),
-              _implementation(implementation),
-              _allocator(allocator),
-              _cpuAccess(cpuAccess)
+            : GraphicsDeviceObject<TBackend>(allocator->GetDevice())
+            , _implementation(std::move(implementation))
+            , _allocator(std::move(allocator))
+            , _cpuAccess(cpuAccess)
         {
         }
 
         virtual ~GraphicsResource() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<TBackend>> GetAllocator() const noexcept
+        [[nodiscard]] BackendResourceType* GetImplementation() const noexcept
         {
-            return _implementation->GetAllocator();
+            return _implementation.get();
+        }
+
+        [[nodiscard]] GraphicsMemoryAllocator<TBackend>* GetAllocator() const noexcept
+        {
+            return _allocator.get();
         }
 
         [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept
         {
-            return _implementation->GetCpuAccess();
+            return _cpuAccess;
         }
 
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept
@@ -72,25 +87,27 @@ namespace NovelRT::Graphics
             size_t size,
             size_t alignment)
         {
-            return _implementation->Allocate(size, alignment);
+            return std::make_shared<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                std::move(AllocateInternal(size, alignment)),
+                this->shared_from_this());
         }
 
-        [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes()
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes()
         {
             return MapBytes(0, GetSize());
         }
 
-        [[nodiscard]] virtual Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength)
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength)
         {
             return _implementation->MapBytes(rangeOffset, rangeLength);
         }
 
-        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead()
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead()
         {
             return MapBytesForRead(0, GetSize());
         }
 
-        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength)
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength)
         {
             return _implementation->MapBytesForRead(rangeOffset, rangeLength);
         }
@@ -110,33 +127,33 @@ namespace NovelRT::Graphics
             return _implementation->UnmapBytesAndWrite(writtenRangeOffset, writtenRangeLength);
         }
 
-        template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map()
+        template<typename T> [[nodiscard]] Utilities::Span<T> Map()
         {
-            return Utilities::Misc::SpanCast<T>(MapBytes());
+            return Utilities::SpanCast<T>(MapBytes());
         }
 
-        template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map(size_t rangeOffset, size_t rangeLength)
+        template<typename T> [[nodiscard]] Utilities::Span<T> Map(size_t rangeOffset, size_t rangeLength)
         {
-            return Utilities::Misc::SpanCast<T>(MapBytes(rangeOffset, rangeLength));
+            return Utilities::SpanCast<T>(MapBytes(rangeOffset, rangeLength));
         }
 
-        template <typename T, template <typename> typename TResource> [[nodiscard]] Utilities::Misc::Span<T> Map(std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> memoryRegion)
+        template <typename T> [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* memoryRegion)
         {
-            return Utilities::Misc::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
+            return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }
 
-        template<typename T> [[nodiscard]] Utilities::Misc::Span<const T> MapForRead()
+        template<typename T> [[nodiscard]] Utilities::Span<const T> MapForRead()
         {
-            return Utilities::Misc::SpanCast<const T>(MapBytesForRead());
+            return Utilities::SpanCast<const T>(MapBytesForRead());
         }
 
         template<typename T>
-        [[nodiscard]] Utilities::Misc::Span<const T> MapForRead(size_t rangeOffset, size_t rangeLength)
+        [[nodiscard]] Utilities::Span<const T> MapForRead(size_t rangeOffset, size_t rangeLength)
         {
-            return Utilities::Misc::SpanCast<const T>(MapBytesForRead(rangeOffset, rangeLength));
+            return Utilities::SpanCast<const T>(MapBytesForRead(rangeOffset, rangeLength));
         }
 
-        template <template <typename> typename TResource> void UnmapAndWrite(std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> memoryRegion)
+        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* memoryRegion)
         {
             UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
         }

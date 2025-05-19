@@ -15,17 +15,18 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsAdapterSelector
     {
     private:
-        [[nodiscard]] int32_t GetPhysicalDeviceOptionalExtensionSupportScore(
-            VkPhysicalDevice physicalDevice) const noexcept;
+        [[nodiscard]] static int32_t GetPhysicalDeviceOptionalExtensionSupportScore(
+            VkPhysicalDevice physicalDevice) noexcept;
 
-        [[nodiscard]] int32_t RateDeviceSuitability(VkPhysicalDevice physicalDevice,
-                                                    VkSurfaceKHR surfaceContext) const noexcept;
+        [[nodiscard]] static int32_t RateDeviceSuitability(VkPhysicalDevice physicalDevice,
+                                                    VkSurfaceKHR surfaceContext) noexcept;
 
-        [[nodiscard]] bool CheckPhysicalDeviceRequiredExtensionSupport(VkPhysicalDevice physicalDevice) const noexcept;
+        [[nodiscard]] static bool CheckPhysicalDeviceRequiredExtensionSupport(VkPhysicalDevice physicalDevice) noexcept;
 
     public:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetDefaultRecommendedAdapter(
-            std::shared_ptr<VulkanGraphicsProvider> provider,
-            std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext) const;
+        //NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this is intentionally non-static
+        [[nodiscard]] VulkanGraphicsAdapter* GetDefaultRecommendedAdapter(
+            VulkanGraphicsProvider* provider,
+            VulkanGraphicsSurfaceContext* surfaceContext) const;
     };
 }

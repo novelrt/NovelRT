@@ -16,21 +16,21 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsProvider;
     class VulkanGraphicsSurfaceContext;
 
-    class VulkanGraphicsAdapter : public std::enable_shared_from_this<VulkanGraphicsAdapter>
+    class VulkanGraphicsAdapter
     {
     private:
-        std::weak_ptr<VulkanGraphicsProvider> _provider;
+        VulkanGraphicsProvider* _provider;
         VkPhysicalDevice _vulkanPhysicalDevice;
         NovelRT::Utilities::Lazy<VkPhysicalDeviceProperties> _vulkanPhysicalDeviceProperties;
         NovelRT::Utilities::Lazy<VkPhysicalDeviceMemoryProperties> _vulkanPhysicalDeviceMemoryProperties;
         NovelRT::Utilities::Lazy<std::string> _name;
 
         [[nodiscard]] std::string GetNameInternal();
-        [[nodiscard]] VkPhysicalDeviceProperties GetVulkanPhysicalDevicePropertiesInternal();
-        [[nodiscard]] VkPhysicalDeviceMemoryProperties GetVulkanPhysicalDeviceMemoryPropertiesInternal();
+        [[nodiscard]] VkPhysicalDeviceProperties GetVulkanPhysicalDevicePropertiesInternal() const;
+        [[nodiscard]] VkPhysicalDeviceMemoryProperties GetVulkanPhysicalDeviceMemoryPropertiesInternal() const;
 
     public:
-        VulkanGraphicsAdapter(std::shared_ptr<VulkanGraphicsProvider> provider, VkPhysicalDevice physicalDevice);
+        VulkanGraphicsAdapter(VulkanGraphicsProvider* provider, VkPhysicalDevice physicalDevice);
 
         ~VulkanGraphicsAdapter() = default;
 
@@ -41,12 +41,12 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] inline const VkPhysicalDeviceProperties& GetVulkanPhysicalDeviceProperties()
         {
-            return _vulkanPhysicalDeviceProperties.getActual();
+            return _vulkanPhysicalDeviceProperties.Get();
         }
 
         [[nodiscard]] inline const VkPhysicalDeviceMemoryProperties& GetVulkanPhysicalDeviceMemoryProperties()
         {
-            return _vulkanPhysicalDeviceMemoryProperties.getActual();
+            return _vulkanPhysicalDeviceMemoryProperties.Get();
         }
 
         [[nodiscard]] uint32_t GetDeviceId()
@@ -56,7 +56,7 @@ namespace NovelRT::Graphics::Vulkan
 
         [[nodiscard]] const std::string& GetName()
         {
-            return _name.getActual();
+            return _name.Get();
         }
 
         [[nodiscard]] inline uint32_t GetVendorId()
@@ -64,18 +64,13 @@ namespace NovelRT::Graphics::Vulkan
             return GetVulkanPhysicalDeviceProperties().vendorID;
         }
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> CreateDevice(
-            std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
+        [[nodiscard]] std::unique_ptr<VulkanGraphicsDevice> CreateDevice(
+            VulkanGraphicsSurfaceContext* surfaceContext,
             int32_t contextCount);
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const
+        [[nodiscard]] inline VulkanGraphicsProvider* GetProvider() const
         {
-            if (_provider.expired())
-            {
-                throw std::runtime_error("Provider has expired.");
-            }
-
-            return _provider.lock();
+            return _provider;
         }
     };
 }

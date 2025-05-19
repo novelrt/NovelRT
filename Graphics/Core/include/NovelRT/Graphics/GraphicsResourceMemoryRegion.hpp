@@ -4,64 +4,55 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Utilities/Span.hpp>
+#include <NovelRT/Utilities/Pointers.hpp>
+
 #include <memory>
 #include <type_traits>
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsResource;
+    template<typename TBackend>
+    class GraphicsResource;
 
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<template <typename TBackend> typename TResource, typename TBackend>
-    class GraphicsResourceMemoryRegion
-        : public std::conditional_t<
-            std::is_same_v<TResource<TBackend>, GraphicsResource<TBackend>>,
-            GraphicsDeviceObject<TBackend>,
-            GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>
-    {
-        static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource<TBackend>>,
-                      "Incompatible type specified as the resource type.");
-    public:
-        using BackendResourceType = typename TResource<TBackend>::BackendResourceType;
-        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<BackendResourceType>;
+    template<template <typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-        using Super = std::conditional_t<std::is_same_v<TResource<TBackend>, GraphicsResource<TBackend>>, GraphicsDeviceObject<TBackend>, GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>;
+    template <typename TBackend>
+    class GraphicsResourceMemoryRegion<GraphicsResource, TBackend> : public GraphicsDeviceObject<TBackend>
+    {
+    public:
+        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<typename GraphicsResource<TBackend>::BackendResourceType>;
 
     private:
-        std::shared_ptr<BackendResourceMemoryRegionType> _implementation;
-        std::shared_ptr<TResource<TBackend>> _owningResource;
+        std::unique_ptr<BackendResourceMemoryRegionType> _implementation;
+        std::shared_ptr<GraphicsResource<TBackend>> _owningResource;
 
     public:
-        template <typename S = Super, std::enable_if_t<std::is_same_v<S, GraphicsDeviceObject<TBackend>>, bool> = true>
-        GraphicsResourceMemoryRegion(std::shared_ptr<BackendResourceMemoryRegionType> implementation,
-                                     std::shared_ptr<TResource<TBackend>> owningResource)
-            : Super(owningResource->GetDevice()),
-                _implementation(implementation),
-                _owningResource(owningResource)
-            {
-            }
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
+        }
 
-        template <typename S = Super, std::enable_if_t<std::is_same_v<S, GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>, bool> = true>
-        GraphicsResourceMemoryRegion(std::shared_ptr<BackendResourceMemoryRegionType> implementation,
-                                     std::shared_ptr<TResource<TBackend>> owningResource)
-            : Super(implementation, owningResource),
-                _implementation(implementation),
-                _owningResource(owningResource)
-            {
-            }
+        GraphicsResourceMemoryRegion(std::unique_ptr<BackendResourceMemoryRegionType> implementation,
+                                     std::shared_ptr<GraphicsResource<TBackend>> owningResource)
+            : GraphicsDeviceObject<TBackend>(owningResource->GetDevice())
+            , _implementation(std::move(implementation))
+            , _owningResource(std::move(owningResource))
+        { }
 
         virtual ~GraphicsResourceMemoryRegion() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<BackendResourceMemoryRegionType> GetImplementation() const noexcept
+        [[nodiscard]] BackendResourceMemoryRegionType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
-        [[nodiscard]] std::shared_ptr<TResource<TBackend>> GetOwningResource() const noexcept
+        [[nodiscard]] GraphicsResource<TBackend>* GetOwningResource() const noexcept
         {
-            return _owningResource;
+            return _owningResource.get();
         }
 
         [[nodiscard]] size_t GetOffset() const noexcept
@@ -74,34 +65,72 @@ namespace NovelRT::Graphics
             return _implementation->GetSize();
         }
 
-        [[nodiscard]] Utilities::Misc::Span<uint8_t> MapBytes()
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes()
         {
-            return _implementation->MapBytes(GetOffset(), GetSize());
+            return _owningResource->MapBytes(GetOffset(), GetSize());
         }
 
-        [[nodiscard]] Utilities::Misc::Span<const uint8_t> MapBytesForRead()
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead()
         {
-            return _implementation->MapBytesForRead(GetOffset(), GetSize());
+            return _owningResource->MapBytesForRead(GetOffset(), GetSize());
         }
 
         void UnmapBytes()
         {
-            _implementation->UnmapBytes();
+            _owningResource->UnmapBytes();
         }
 
         void UnmapBytesAndWrite()
         {
-            _implementation->UnmapBytesAndWrite(GetOffset(), GetSize());
+            _owningResource->UnmapBytesAndWrite(GetOffset(), GetSize());
         }
 
-        template<typename T> [[nodiscard]] Utilities::Misc::Span<T> Map()
+        template<typename T> [[nodiscard]] Utilities::Span<T> Map()
         {
-            return Utilities::Misc::SpanCast<T>(MapBytes());
+            return Utilities::SpanCast<T>(MapBytes());
         }
 
-        template<typename T> [[nodiscard]] Utilities::Misc::Span<const T> MapForRead()
+        template<typename T> [[nodiscard]] Utilities::Span<const T> MapForRead()
         {
-            return Utilities::Misc::SpanCast<const T>(MapBytesForRead());
+            return Utilities::SpanCast<const T>(MapBytesForRead());
+        }
+    };
+
+    template<template <typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion : public GraphicsResourceMemoryRegion<GraphicsResource, TBackend>
+    {
+        static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource<TBackend>>, "TResource must inherit GraphicsResource");
+
+    private:
+        using SuperBackendResourceMemoryRegionType = typename GraphicsResourceMemoryRegion<GraphicsResource, TBackend>::BackendResourceMemoryRegionType;
+
+    public:
+        using BackendResourceMemoryRegionType = typename TResource<TBackend>::BackendResourceMemoryRegionType;
+
+        std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsResourceMemoryRegion<TResource, TBackend>>(
+                GraphicsResourceMemoryRegion<GraphicsResource, TBackend>::shared_from_this());
+        }
+
+        GraphicsResourceMemoryRegion(
+            std::unique_ptr<BackendResourceMemoryRegionType> implementation,
+            std::shared_ptr<GraphicsResource<TBackend>> owningResource)
+            : GraphicsResourceMemoryRegion<GraphicsResource, TBackend>(
+                NovelRT::Utilities::StaticPointerCast<SuperBackendResourceMemoryRegionType>(std::move(implementation)),
+                owningResource)
+        { }
+
+        [[nodiscard]] BackendResourceMemoryRegionType* GetImplementation() const noexcept
+        {
+            return static_cast<BackendResourceMemoryRegionType*>(
+                GraphicsResourceMemoryRegion<GraphicsResource, TBackend>::GetImplementation());
+        }
+
+        [[nodiscard]] TResource<TBackend>* GetOwningResource() const noexcept
+        {
+            return static_cast<BackendResourceMemoryRegionType*>(
+                GraphicsResourceMemoryRegion<GraphicsResource, TBackend>::GetOwningResource());
         }
     };
 }

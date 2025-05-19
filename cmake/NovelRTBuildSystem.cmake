@@ -47,9 +47,17 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     add_library(${safeName} ${libraryType})
     add_library(${moduleName} ALIAS ${safeName})
 
+    if(PROJECT_IS_TOP_LEVEL)
+      find_program(NovelRTBuildSystem_clangTidy NAMES clang-tidy DOC "Location of clang-tidy used in debug builds.")
+      if(NovelRTBuildSystem_clangTidy)
+        set(clangTidyCommandLine ${NovelRTBuildSystem_clangTidy} --config-file=${PROJECT_SOURCE_DIR}/.clang-tidy)
+      endif()
+    endif()
+
     set_target_properties(${safeName} PROPERTIES
       EXPORT_NAME ${safeName}
-      POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+      POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
+      CXX_CLANG_TIDY "$<$<CONFIG:Debug>:${clangTidyCommandLine}>")
 
     target_compile_features(${safeName} PUBLIC cxx_std_17)
     target_compile_options(${safeName} PRIVATE

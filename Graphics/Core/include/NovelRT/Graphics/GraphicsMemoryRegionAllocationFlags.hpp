@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsMemoryRegionAllocationFlags : uint32_t
+    enum class GraphicsMemoryRegionAllocationFlags
     {
         None = 0,
         DedicatedCollection = 1 << 0,

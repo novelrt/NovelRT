@@ -16,12 +16,12 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] virtual Maths::GeoVector2F GetSize() const noexcept = 0;
 
-        [[nodiscard]] inline float GetWidth() const noexcept
+        [[nodiscard]] float GetWidth() const noexcept
         {
             return GetSize().x;
         }
 
-        [[nodiscard]] inline float GetHeight() const noexcept
+        [[nodiscard]] float GetHeight() const noexcept
         {
             return GetSize().y;
         }

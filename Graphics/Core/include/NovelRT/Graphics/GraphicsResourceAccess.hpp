@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsResourceAccess : uint32_t
+    enum class GraphicsResourceAccess
     {
         None = 1 << 0,
         Read = 1 << 1,

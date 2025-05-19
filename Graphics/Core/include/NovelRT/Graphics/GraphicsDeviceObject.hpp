@@ -18,21 +18,15 @@ namespace NovelRT::Graphics
         std::weak_ptr<GraphicsDevice<TBackend>> _graphicsDevice;
 
     public:
-
-        explicit GraphicsDeviceObject(std::shared_ptr<GraphicsDevice<TBackend>> graphicsDevice) noexcept
-            : _graphicsDevice(graphicsDevice)
+        explicit GraphicsDeviceObject(std::weak_ptr<GraphicsDevice<TBackend>> graphicsDevice) noexcept
+            : _graphicsDevice(std::move(graphicsDevice))
         {
         }
 
         virtual ~GraphicsDeviceObject() noexcept = default;
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const
         {
-            if (_graphicsDevice.expired())
-            {
-                throw std::runtime_error("The graphics device has expired!");
-            }
-
             return _graphicsDevice.lock();
         }
     };

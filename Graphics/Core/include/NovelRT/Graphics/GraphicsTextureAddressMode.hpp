@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsTextureAddressMode : uint32_t
+    enum class GraphicsTextureAddressMode
     {
         Wrap = 0,
         Repeat = Wrap,

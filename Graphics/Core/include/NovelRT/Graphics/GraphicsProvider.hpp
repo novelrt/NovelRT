@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <string>
 #include <memory>
-#include <vector>
 
 namespace NovelRT::Graphics
 {
@@ -26,7 +26,7 @@ namespace NovelRT::Graphics::Details
 
         public:
             GraphicsAdapterIterator(BackendIteratorType const& it, std::shared_ptr<GraphicsProvider<TBackend>> provider)
-                : _iterator(it), _provider(provider)
+                : _iterator(it), _provider(std::move(provider))
             { }
 
             using difference_type = typename std::iterator_traits<BackendIteratorType>::difference_type;
@@ -35,30 +35,30 @@ namespace NovelRT::Graphics::Details
             using reference = void;
             using iterator_category = std::input_iterator_tag;
 
-            inline bool operator==(GraphicsAdapterIterator<TBackend> const& other)
+            bool operator==(GraphicsAdapterIterator<TBackend> const& other)
             {
                 return _provider == other._provider
                     && _iterator == other._iterator;
             }
 
-            inline bool operator!=(GraphicsAdapterIterator<TBackend> const& other)
+            bool operator!=(GraphicsAdapterIterator<TBackend> const& other)
             {
                 return _provider != other._provider
                     || _iterator != other._iterator;
             }
 
-            inline auto operator*() const
+            auto operator*() const
             {
                 return std::make_shared<GraphicsAdapter<TBackend>>(*_iterator, _provider);
             }
 
-            inline auto operator++()
+            auto operator++()
             {
                 ++_iterator;
                 return *this;
             }
 
-            inline auto operator++(int)
+            auto operator++(int)
             {
                 auto prev = *this;
                 ++_iterator;
@@ -78,24 +78,25 @@ namespace NovelRT::Graphics
         using iterator = typename Details::GraphicsAdapterIterator<TBackend>;
 
     private:
-        std::shared_ptr<BackendProviderType> _implementation;
+        std::unique_ptr<BackendProviderType> _implementation;
         bool _debugModeEnabled;
 
     public:
         static inline const std::string EnableDebugModeSwitchName =
             "NovelRT::Graphics::GraphicsProvider::EnableDebugMode";
 
-        GraphicsProvider(std::shared_ptr<BackendProviderType> implementation) noexcept
+        GraphicsProvider(std::unique_ptr<BackendProviderType> implementation) noexcept
             // TODO: EngineConfig removed here
-            : _implementation(implementation), _debugModeEnabled(false)
+            : _implementation(std::move(implementation))
+            , _debugModeEnabled(false)
         {
         }
 
         virtual ~GraphicsProvider() = default;
 
-        [[nodiscard]] std::shared_ptr<BackendProviderType> GetImplementation() const noexcept
+        [[nodiscard]] BackendProviderType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept
@@ -103,11 +104,13 @@ namespace NovelRT::Graphics
             return _debugModeEnabled;
         }
 
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() noexcept
         {
             return iterator{_implementation->begin(), this->shared_from_this()};
         }
 
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() noexcept
         {
             return iterator{_implementation->end(), this->shared_from_this()};

@@ -5,10 +5,12 @@
 
 #include <NovelRT/Graphics/GraphicsBufferKind.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
-
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
-#include <memory>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <memory>
+
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -25,16 +27,11 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsBufferKind _kind;
 
     protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) final;
+        [[nodiscard]] std::unique_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) final;
 
     public:
-        std::shared_ptr<VulkanGraphicsBuffer> shared_from_this()
-        {
-            return std::static_pointer_cast<VulkanGraphicsBuffer>(VulkanGraphicsResource::shared_from_this());
-        }
-
-        VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                             std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+        VulkanGraphicsBuffer(VulkanGraphicsDevice* graphicsDevice,
+                             VulkanGraphicsMemoryAllocator* allocator,
                              GraphicsResourceAccess cpuAccess,
                              GraphicsBufferKind kind,
                              VmaAllocation allocation,
@@ -53,9 +50,9 @@ namespace NovelRT::Graphics::Vulkan
             return _kind;
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
+        [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
                                                                                     size_t rangeLength) final;
 
         void UnmapBytes() final;

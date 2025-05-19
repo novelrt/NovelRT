@@ -13,9 +13,9 @@ namespace NovelRT::Utilities
 {
 
 #ifdef NOVELRT_USE_STD_SPAN
-    static const size_t DynamicExtent = std::dynamic_extent;
+    const size_t DynamicExtent = std::dynamic_extent;
 #else
-    static const size_t DynamicExtent = gsl::dynamic_extent;
+    const size_t DynamicExtent = gsl::dynamic_extent;
 #endif
 
     template<class T, std::size_t Extent = DynamicExtent>
@@ -26,13 +26,13 @@ namespace NovelRT::Utilities
 #endif
 
     template<typename TTo, typename TFrom, std::size_t NFrom>
-    static auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
+    auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
     {
         return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
     }
 
     template<typename TTo, typename TFrom>
-    static auto SpanCast(Span<TFrom, DynamicExtent> s) noexcept -> Span<TTo, DynamicExtent>
+    auto SpanCast(Span<TFrom, DynamicExtent> s) noexcept -> Span<TTo, DynamicExtent>
     {
         return {reinterpret_cast<TTo*>(s.data()), s.size_bytes() / sizeof(TTo)};
     }

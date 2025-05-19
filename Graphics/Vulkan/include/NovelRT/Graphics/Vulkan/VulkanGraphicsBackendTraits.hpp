@@ -48,7 +48,6 @@ namespace NovelRT::Graphics
         using ProviderType = Vulkan::VulkanGraphicsProvider;
         using RenderPassType = Vulkan::VulkanGraphicsRenderPass;
         using ResourceType = Vulkan::VulkanGraphicsResource;
-        using ResourceMemoryRegionBaseType = Vulkan::VulkanGraphicsResourceMemoryRegionBase;
         template<typename TResource>
         using ResourceMemoryRegionType = Vulkan::VulkanGraphicsResourceMemoryRegion<TResource>;
         using ShaderProgramType = Vulkan::VulkanShaderProgram;

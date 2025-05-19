@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsBufferKind : uint32_t
+    enum class GraphicsBufferKind
     {
         Default = 0,
         Vertex = 1,

@@ -19,9 +19,10 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsFence
     {
     private:
-        std::shared_ptr<VulkanGraphicsDevice> _device;
-        NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
-        Threading::VolatileState _state;
+        VulkanGraphicsDevice* _device;
+
+        mutable NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
+        mutable Threading::VolatileState _state;
 
         [[nodiscard]] VkFence CreateVulkanFenceSignaled()
         {
@@ -29,24 +30,25 @@ namespace NovelRT::Graphics::Vulkan
         }
         [[nodiscard]] VkFence CreateVulkanFenceUnsignaled()
         {
+            // NOLINTNEXTLINE(EnumCastOutOfRange): zero-init is the default
             return CreateVulkanFence(static_cast<VkFenceCreateFlagBits>(0));
         }
-        [[nodiscard]] VkFence CreateVulkanFence(VkFenceCreateFlagBits flags);
-        void DisposeVulkanFence(VkFence vulkanFence) noexcept;
+        [[nodiscard]] VkFence CreateVulkanFence(VkFenceCreateFlagBits flags) const;
+        void DisposeVulkanFence(VkFence vulkanFence) const noexcept;
         [[nodiscard]] bool TryWaitInternal(uint64_t millisecondsTimeout);
 
     public:
-        VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept;
+        VulkanGraphicsFence(VulkanGraphicsDevice* device, bool isSignaled) noexcept;
         ~VulkanGraphicsFence();
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
+        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
         {
             return _device;
         }
 
-        [[nodiscard]] inline VkFence GetVulkanFence()
+        [[nodiscard]] VkFence GetVulkanFence()
         {
-            return _vulkanFence.getActual();
+            return _vulkanFence.Get();
         }
 
         [[nodiscard]] bool GetIsSignalled();
@@ -56,7 +58,7 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
         [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
 
-        inline void Wait(uint64_t millisecondsTimeout)
+        void Wait(uint64_t millisecondsTimeout)
         {
             if (!TryWait(millisecondsTimeout))
             {
@@ -64,7 +66,7 @@ namespace NovelRT::Graphics::Vulkan
             }
         }
 
-        inline void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
+        void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
         {
             if (!TryWait(timeout))
             {
@@ -72,7 +74,7 @@ namespace NovelRT::Graphics::Vulkan
             }
         }
 
-        inline void Wait()
+        void Wait()
         {
             Wait(std::numeric_limits<uint64_t>::max());
         }

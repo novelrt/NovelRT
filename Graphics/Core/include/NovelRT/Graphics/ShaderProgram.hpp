@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
 #include <memory>
 
 namespace NovelRT::Graphics
@@ -16,27 +18,33 @@ namespace NovelRT::Graphics
         using BackendShaderProgramType = typename GraphicsBackendTraits<TBackend>::ShaderProgramType;
 
     private:
-        std::shared_ptr<BackendShaderProgramType> _implementation;
+        std::unique_ptr<BackendShaderProgramType> _implementation;
         std::string _entryPointName;
         ShaderProgramKind _kind;
 
     public:
-        ShaderProgram(std::shared_ptr<BackendShaderProgramType> implementation,
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<ShaderProgram<TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<ShaderProgram<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
+        }
+
+        ShaderProgram(std::unique_ptr<BackendShaderProgramType> implementation,
                       std::shared_ptr<GraphicsDevice<TBackend>> device,
                       std::string entryPointName,
                       ShaderProgramKind kind) noexcept
-            : GraphicsDeviceObject<TBackend>(std::move(device)),
-              _implementation(implementation),
-              _entryPointName(entryPointName),
-              _kind(kind)
+            : GraphicsDeviceObject<TBackend>(std::move(device))
+            , _implementation(std::move(implementation))
+            , _entryPointName(std::move(entryPointName))
+            , _kind(kind)
         {
         }
 
         virtual ~ShaderProgram() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<BackendShaderProgramType> GetImplementation() const noexcept
+        [[nodiscard]] BackendShaderProgramType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
         [[nodiscard]] const std::string& GetEntryPointName() const noexcept
@@ -49,7 +57,7 @@ namespace NovelRT::Graphics
             return _kind;
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept
         {
             return _implementation->GetBytecode();
         }

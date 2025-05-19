@@ -5,7 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <NovelRT/LoggingService.h>
+#include <NovelRT/Logging/LoggingService.hpp>
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
@@ -13,14 +13,14 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsSurfaceContext
     {
     private:
-        std::shared_ptr<IGraphicsSurface> _surface;
-        std::shared_ptr<VulkanGraphicsProvider> _provider;
+        IGraphicsSurface* _surface;
+        VulkanGraphicsProvider* _provider;
         LoggingService _logger;
         VkSurfaceKHR _vulkanSurface;
 
     public:
-        VulkanGraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
-                                     std::shared_ptr<VulkanGraphicsProvider> provider);
+        VulkanGraphicsSurfaceContext(IGraphicsSurface* surface,
+                                     VulkanGraphicsProvider* provider);
 
         ~VulkanGraphicsSurfaceContext();
 
@@ -33,13 +33,13 @@ namespace NovelRT::Graphics::Vulkan
         {
             return _vulkanSurface;
         }
-        
-        [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
+
+        [[nodiscard]] inline IGraphicsSurface* GetSurface() const noexcept
         {
             return _surface;
         }
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const noexcept
+        [[nodiscard]] inline VulkanGraphicsProvider* GetProvider() const noexcept
         {
             return _provider;
         }
