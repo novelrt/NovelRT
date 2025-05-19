@@ -5,6 +5,8 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::Vulk
     NovelRT::Graphics
     NovelRT::Graphics::Vulkan
 
+    NovelRT::Windowing
+
   SOURCES
     PRIVATE
       main.cpp

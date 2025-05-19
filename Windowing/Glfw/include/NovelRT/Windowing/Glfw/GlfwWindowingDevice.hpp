@@ -1,16 +1,19 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_WINDOWING_GLFW_GLFWWINDOWINGDEVICE_H
-#define NOVELRT_WINDOWING_GLFW_GLFWWINDOWINGDEVICE_H
+#include <NovelRT/Graphics/GraphicsSurfaceKind.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Utilities/Event.hpp>
+#include <NovelRT/Windowing/WindowMode.hpp>
 
-#ifndef NOVELRT_WINDOWING_GLFW_H
-#error NovelRT does not support including types explicitly by default. Please include Windowing.Glfw.h instead for the Windowing::Glfw namespace subset.
-#endif
+#include <memory>
+#include <string>
 
 namespace NovelRT::Windowing::Glfw
 {
-    class GlfwWindowingDevice final : public IWindowingDevice
+    class GlfwWindowingDevice
     {
     public:
         struct CursorPositionEventArgs
