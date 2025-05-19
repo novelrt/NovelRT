@@ -19,7 +19,7 @@ namespace NovelRT::Graphics
         using BackendAdapterSelectorType = typename GraphicsBackendTraits<TBackend>::AdapterSelectorType;
 
     private:
-        std::shared_ptr<BackendAdapterSelectorType> _implementation;
+        std::unique_ptr<BackendAdapterSelectorType> _implementation;
 
 
     public:
@@ -27,7 +27,9 @@ namespace NovelRT::Graphics
             std::shared_ptr<GraphicsProvider<TBackend>> provider,
             std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext) const
         {
-            return _implementation->GetDefaultRecommendedAdapter(provider, surfaceContext);
+            return std::make_shared<GraphicsAdapter<TBackend>>(
+                _implementation->GetDefaultRecommendedAdapter(provider->GetImplementation(), surfaceContext->GetImplementation()),
+                provider->GetImplementation());
         }
     };
 }

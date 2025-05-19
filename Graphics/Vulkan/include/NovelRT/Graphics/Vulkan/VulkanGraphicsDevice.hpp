@@ -23,15 +23,15 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsPipeline;
     class VulkanGraphicsPipelineSignature;
 
-    class VulkanGraphicsDevice : public std::enable_shared_from_this<VulkanGraphicsDevice>
+    class VulkanGraphicsDevice
     {
     private:
-        std::shared_ptr<VulkanGraphicsAdapter> _adapter;
-        std::shared_ptr<VulkanGraphicsSurfaceContext> _surfaceContext;
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsFence>> _presentCompletionFence;
+        VulkanGraphicsAdapter* _adapter;
+        VulkanGraphicsSurfaceContext* _surfaceContext;
+
+        NovelRT::Utilities::Lazy<VulkanGraphicsFence*> _presentCompletionFence;
         uint32_t _contextCount;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contexts;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsContext>>> _contextPtrs;
+        NovelRT::Utilities::Lazy<std::vector<VulkanGraphicsContext*>> _contexts;
 
         LoggingService _logger;
 
@@ -50,13 +50,13 @@ namespace NovelRT::Graphics::Vulkan
 
         NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
         NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
-        NovelRT::Utilities::Lazy<std::shared_ptr<VulkanGraphicsRenderPass>> _renderPass;
+        NovelRT::Utilities::Lazy<VulkanGraphicsRenderPass*> _renderPass;
 
         QueueFamilyIndices _indicesData;
 
         Threading::VolatileState _state;
 
-        [[nodiscard]] std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContexts(uint32_t contextCount);
+        [[nodiscard]] std::vector<VulkanGraphicsContext*> CreateInitialGraphicsContexts(uint32_t contextCount);
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
         [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet() const;
@@ -76,75 +76,85 @@ namespace NovelRT::Graphics::Vulkan
         VkRenderPass CreateRenderPass();
 
     public:
-        VulkanGraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
-                             std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
+        VulkanGraphicsDevice(VulkanGraphicsAdapter* adapter,
+                             VulkanGraphicsSurfaceContext* surfaceContext,
                              int32_t contextCount);
+
+        ~VulkanGraphicsDevice();
 
         void TearDown();
         size_t GetContextIndex() const noexcept;
 
         void PresentFrame();
 
-        void Signal(std::shared_ptr<VulkanGraphicsFence> fence) const;
+        void Signal(VulkanGraphicsFence* fence) const;
 
         void WaitForIdle();
 
-        std::vector<std::shared_ptr<VulkanGraphicsContext>>::iterator begin() noexcept;
-        std::vector<std::shared_ptr<VulkanGraphicsContext>>::iterator end() noexcept;
+        //NOLINTBEGIN(readability-identifier-naming) - stdlib compatibility
+        std::vector<VulkanGraphicsContext*>::iterator begin() noexcept;
+        std::vector<VulkanGraphicsContext*>::iterator end() noexcept;
+        //NOLINTEND(readability-identifier-naming)
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsContext> GetCurrentContext();
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsSurfaceContext> GetSurfaceContext() const noexcept;
+        [[nodiscard]] VulkanGraphicsContext* GetCurrentContext();
 
-        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
+        [[nodiscard]] VulkanGraphicsSurfaceContext* GetSurfaceContext() const noexcept
+        {
+            return _surfaceContext;
+        }
+        [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> GetAdapter() const noexcept;
+        [[nodiscard]] VulkanGraphicsAdapter* GetAdapter() const noexcept
+        {
+            return _adapter;
+        }
 
-        [[nodiscard]] std::shared_ptr<VulkanShaderProgram> CreateShaderProgram(
+        [[nodiscard]] std::unique_ptr<VulkanShaderProgram> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Misc::Span<uint8_t> byteData);
+            NovelRT::Utilities::Span<uint8_t> byteData);
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsPipeline> CreatePipeline(
-            std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
-            std::shared_ptr<VulkanShaderProgram> vertexShader,
-            std::shared_ptr<VulkanShaderProgram> pixelShader,
+        [[nodiscard]] std::unique_ptr<VulkanGraphicsPipeline> CreatePipeline(
+            VulkanGraphicsPipelineSignature* signature,
+            VulkanShaderProgram* vertexShader,
+            VulkanShaderProgram* pixelShader,
             bool imguiRenderMode);
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsPipelineSignature> CreatePipelineSignature(
+        [[nodiscard]] std::unique_ptr<VulkanGraphicsPipelineSignature> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources,
-            NovelRT::Utilities::Misc::Span<GraphicsPushConstantRange> pushConstantRanges);
+            NovelRT::Utilities::Span<GraphicsPipelineInput> inputs,
+            NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
+            NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges);
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsRenderPass> GetRenderPass()
+        [[nodiscard]] VulkanGraphicsRenderPass* GetRenderPass()
         {
-            return _renderPass.getActual();
+            return _renderPass.Get();
         }
 
-        [[nodiscard]] inline VkSwapchainKHR GetVulkanSwapchain()
+        [[nodiscard]] VkSwapchainKHR GetVulkanSwapchain()
         {
-            return _vulkanSwapchain.getActual();
+            return _vulkanSwapchain.Get();
         }
 
-        [[nodiscard]] inline VkQueue GetVulkanPresentQueue() const noexcept
+        [[nodiscard]] VkQueue GetVulkanPresentQueue() const noexcept
         {
             return _presentQueue;
         }
 
-        [[nodiscard]] inline VkQueue GetVulkanGraphicsQueue() const noexcept
+        [[nodiscard]] VkQueue GetVulkanGraphicsQueue() const noexcept
         {
             return _graphicsQueue;
         }
 
-        [[nodiscard]] inline VkDevice GetVulkanDevice()
+        [[nodiscard]] VkDevice GetVulkanDevice()
         {
-            return _device.getActual();
+            return _device.Get();
         }
 
-        [[nodiscard]] inline VkRenderPass GetVulkanRenderPass()
+        [[nodiscard]] VkRenderPass GetVulkanRenderPass()
         {
-            return _renderPass.getActual()->GetVulkanRenderPass();
+            return _renderPass.Get()->GetVulkanRenderPass();
         }
 
         [[nodiscard]] VkExtent2D GetSwapChainExtent() const noexcept
@@ -152,29 +162,26 @@ namespace NovelRT::Graphics::Vulkan
             return _swapChainExtent;
         }
 
-        [[nodiscard]] inline const QueueFamilyIndices& GetIndicesData() const noexcept
+        [[nodiscard]] const QueueFamilyIndices& GetIndicesData() const noexcept
         {
             return _indicesData;
         }
 
-        [[nodiscard]] inline const std::vector<VkImage>& GetVulkanSwapChainImages()
+        [[nodiscard]] const std::vector<VkImage>& GetVulkanSwapChainImages()
         {
-            return _swapChainImages.getActual();
+            return _swapChainImages.Get();
         }
 
-        [[nodiscard]] inline VkFormat GetVulkanSwapChainFormat() const noexcept
+        [[nodiscard]] VkFormat GetVulkanSwapChainFormat() const noexcept
         {
             return _vulkanSwapChainFormat;
         }
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsFence> GetPresentCompletionFence()
+        [[nodiscard]] VulkanGraphicsFence* GetPresentCompletionFence()
         {
-            return _presentCompletionFence.getActual();
+            return _presentCompletionFence.Get();
         }
 
-        std::vector<std::shared_ptr<VulkanGraphicsContext>> CreateGraphicsContextPointers();
         void ResizeGraphicsContexts(uint32_t newContextCount);
-
-        ~VulkanGraphicsDevice();
     };
 }

@@ -1,9 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
+#include <NovelRT/Exceptions/OutOfMemoryException.hpp>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <iostream>
+#include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/Utilities/Strings.hpp>
+
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -32,7 +39,8 @@ namespace NovelRT::Graphics::Vulkan
                 throw Exceptions::NotSupportedException("A Vk debug utils message cannot be all the types at once.");
         }
 
-        if (logLevel != LogLevel::Off && logLevel >= EngineConfig::MinimumInternalLoggingLevel())
+        // TODO: EngineConfig was here
+        if (logLevel != LogLevel::Off && logLevel >= LogLevel::Debug) //EngineConfig::MinimumInternalLoggingLevel())
         {
             reinterpret_cast<VulkanGraphicsProvider*>(pUserData)->_logger.log(std::string(pCallbackData->pMessage),
                                                                               logLevel);
@@ -84,7 +92,8 @@ namespace NovelRT::Graphics::Vulkan
                                 "  Spec Version: " + std::to_string(extensionProperty.specVersion));
         }
 
-        for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanInstanceExtensions())
+        // TODO: EngineConfig was here
+        for (auto&& requestedRequiredExt : std::initializer_list<std::string>{})//EngineConfig::RequiredVulkanInstanceExtensions())
         {
             auto result =
                 std::find_if(extensionProperties.begin(), extensionProperties.end(),
@@ -99,7 +108,8 @@ namespace NovelRT::Graphics::Vulkan
 
         std::vector<std::string> finalOptionalExtensions{};
 
-        for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanInstanceExtensions())
+        // TODO: EngineConfig was here
+        for (auto&& requestedOptionalExt : std::initializer_list<std::string>{})//: EngineConfig::OptionalVulkanInstanceExtensions())
         {
             auto result =
                 std::find_if(extensionProperties.begin(), extensionProperties.end(),
@@ -115,7 +125,8 @@ namespace NovelRT::Graphics::Vulkan
             finalOptionalExtensions.emplace_back(requestedOptionalExt);
         }
 
-        std::vector<std::string> allExtensions = EngineConfig::RequiredVulkanInstanceExtensions();
+        // TODO: EngineConfig was here
+        std::vector<std::string> allExtensions{};// = EngineConfig::RequiredVulkanInstanceExtensions();
         allExtensions.insert(allExtensions.end(), finalOptionalExtensions.begin(), finalOptionalExtensions.end());
         return allExtensions;
     }
@@ -141,7 +152,8 @@ namespace NovelRT::Graphics::Vulkan
                                 "  Description:  " + std::string(layerProperty.description));
         }
 
-        for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
+        // TODO: EngineConfig was here
+        for (auto&& requestedRequiredLayer : std::initializer_list<std::string>{}) //: EngineConfig::RequiredVulkanLayers())
         {
             auto result =
                 std::find_if(layerProperties.begin(), layerProperties.end(),
@@ -156,7 +168,8 @@ namespace NovelRT::Graphics::Vulkan
 
         std::vector<std::string> finalOptionalLayers{};
 
-        for (auto&& requestedOptionalLayer : EngineConfig::OptionalVulkanLayers())
+        // TODO: EngineConfig was here
+        for (auto&& requestedOptionalLayer : std::initializer_list<std::string>{})//: EngineConfig::OptionalVulkanLayers())
         {
             auto result = std::find_if(layerProperties.begin(), layerProperties.end(),
                                        [&](auto& x) { return strcmp(requestedOptionalLayer.c_str(), x.layerName); });
@@ -171,7 +184,8 @@ namespace NovelRT::Graphics::Vulkan
             finalOptionalLayers.emplace_back(requestedOptionalLayer);
         }
 
-        std::vector<std::string> allValidationLayers = EngineConfig::RequiredVulkanLayers();
+        // TODO: EngineConfig was here
+        std::vector<std::string> allValidationLayers{}; //= EngineConfig::RequiredVulkanLayers();
         allValidationLayers.insert(allValidationLayers.end(), finalOptionalLayers.begin(), finalOptionalLayers.end());
         return allValidationLayers;
     }
@@ -205,7 +219,8 @@ namespace NovelRT::Graphics::Vulkan
                 _defaultFailureMessage +
                 "The host ran out of memory before the VkDebugUtilsMessengerEXT could be created.");
         }
-        else if (debuggerResult == VK_ERROR_EXTENSION_NOT_PRESENT)
+
+        if (debuggerResult == VK_ERROR_EXTENSION_NOT_PRESENT)
         {
             _logger.logErrorLine("The VkDebugUtils could not be located and/or loaded on this device. Vulkan logging "
                                  "and validation output will not be displayed.");
@@ -219,20 +234,22 @@ namespace NovelRT::Graphics::Vulkan
     {
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = EngineConfig::ApplicationName().c_str();
+        // TODO: EngineConfig was here
+        appInfo.pApplicationName = "NovelRT"; //EngineConfig::ApplicationName().c_str();
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = EngineConfig::EngineName().c_str();
+        // TODO: EngineConfig was here
+        appInfo.pEngineName = "NovelRT Engine"; //EngineConfig::EngineName().c_str();
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = GetApiVersion();
 
         _finalExtensionSet = GetFinalInstanceExtensionSet();
         std::vector<const char*> allExtensionullptrs =
-            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalExtensionSet);
+            NovelRT::Utilities::GetStringSpanAsCharPtrVector(_finalExtensionSet);
         size_t extensionLength = allExtensionullptrs.size();
 
         _finalValidationLayerSet = GetFinalValidationLayerSet();
         std::vector<const char*> allValidationLayerPtrs =
-            NovelRT::Utilities::Misc::GetStringSpanAsCharPtrVector(_finalValidationLayerSet);
+            NovelRT::Utilities::GetStringSpanAsCharPtrVector(_finalValidationLayerSet);
         size_t validationLayerLength = allValidationLayerPtrs.size();
 
         VkInstanceCreateInfo createInfo{};
@@ -252,7 +269,8 @@ namespace NovelRT::Graphics::Vulkan
 
         VkValidationFeatureEnableEXT enables[] = {
         VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT};
-        if (EngineConfig::EnableDebugOutputFromEngineInternals())
+        // TODO: EngineConfig was here
+        if (true)//EngineConfig::EnableDebugOutputFromEngineInternals())
         {
             validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
             validationFeatures.enabledValidationFeatureCount = 1;
@@ -278,7 +296,7 @@ namespace NovelRT::Graphics::Vulkan
         return returnInstance;
     }
 
-    std::vector<std::shared_ptr<VulkanGraphicsAdapter>> VulkanGraphicsProvider::GetGraphicsAdapters()
+    std::vector<VulkanGraphicsAdapter*> VulkanGraphicsProvider::GetGraphicsAdapters()
     {
         VkInstance instance = GetVulkanInstance();
 
@@ -292,38 +310,39 @@ namespace NovelRT::Graphics::Vulkan
                                                     "to your GPU manufacturer's documentation for more information.");
         }
 
-        EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(
-            std::string(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
+        // TODO: EngineConfig was here
+        //EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(
+        //    std::string(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-        std::vector<std::shared_ptr<VulkanGraphicsAdapter>> adapters{};
+        std::vector<VulkanGraphicsAdapter*> adapters{};
         adapters.reserve(devices.size());
 
         for (auto&& physicalDevice : devices)
         {
-            adapters.emplace_back(std::make_shared<VulkanGraphicsAdapter>(shared_from_this(), physicalDevice));
+            adapters.emplace_back(new VulkanGraphicsAdapter(this, physicalDevice));
         }
 
         return adapters;
     }
 
     VulkanGraphicsProvider::VulkanGraphicsProvider()
-        : _vulkanInstance(VK_NULL_HANDLE),
-          _finalExtensionSet{},
-          _finalValidationLayerSet{},
-          _adapters([&]() { return GetGraphicsAdapters(); }),
-          _engineName(EngineConfig::EngineName()),
-          _state(Threading::VolatileState()),
-          _debugLogger(VK_NULL_HANDLE),
-          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
-          _debugModeEnabled(EngineConfig::EnableDebugOutputFromEngineInternals())
+        : _vulkanInstance(VK_NULL_HANDLE)
+        , _adapters([&]() { return GetGraphicsAdapters(); })
+        // TODO: EngineConfig was here
+        , _engineName("NovelRT Engine") //EngineConfig::EngineName())
+        , _debugLogger(VK_NULL_HANDLE)
+        , _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
+        // TODO: EngineConfig was here
+        , _debugModeEnabled(true) //EngineConfig::EnableDebugOutputFromEngineInternals())
     {
         if (GetDebugModeEnabled())
         {
-            EngineConfig::OptionalVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
-            EngineConfig::OptionalVulkanInstanceExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+            // TODO: EngineConfig was here
+            //EngineConfig::OptionalVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
+            //EngineConfig::OptionalVulkanInstanceExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
         _vulkanInstance = CreateInstance();
@@ -356,13 +375,15 @@ namespace NovelRT::Graphics::Vulkan
         return _debugModeEnabled;
     }
 
-    std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator VulkanGraphicsProvider::begin() noexcept
+    std::vector<VulkanGraphicsAdapter*>::iterator VulkanGraphicsProvider::begin() noexcept
     {
-        return _adapters.getActual().begin();
+        return _adapters.Get().begin();;
     }
 
-    std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator VulkanGraphicsProvider::end() noexcept
+    std::vector<VulkanGraphicsAdapter*>::iterator VulkanGraphicsProvider::end() noexcept
     {
-        return _adapters.getActual().end();
+        return _adapters.Get().end();
     }
 } // namespace NovelRT::Graphics::Vulkan
+
+template class NovelRT::Graphics::GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

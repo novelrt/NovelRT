@@ -13,114 +13,73 @@ namespace NovelRT::Utilities
     {
     private:
         std::function<T()> _delegate;
-        std::optional<T> _actual;
+        mutable std::optional<T> _actual;
 
     public:
-        Lazy(std::function<T()> delegate) : _delegate(delegate), _actual()
-        {
-        }
-        Lazy(T eagerStartValue, std::function<T()> delegate) : _delegate(delegate), _actual(eagerStartValue)
-        {
-        }
+        Lazy(std::function<T()> delegate)
+            : _delegate(std::move(delegate))
+            , _actual()
+        { }
 
-        T& getActual()
+        template <typename U = std::remove_cv_t<T>>
+        Lazy(U&& eagerStartValue, std::function<T()> delegate)
+            : _delegate(std::move(delegate))
+            , _actual(std::forward(eagerStartValue))
+        { }
+
+        constexpr T& Get()&
         {
-            if (!isCreated())
+            if (!HasValue())
             {
-                _actual.emplace(_delegate());
+                std::optional<T>(std::move(_delegate())).swap(_actual);
             }
 
             return _actual.value();
         }
 
-        void reset() noexcept
+        constexpr const T& Get() const&
+        {
+            if (!HasValue())
+            {
+                std::optional<T>(std::move(_delegate())).swap(_actual);
+            }
+
+            return _actual.value();
+        }
+
+        constexpr T&& Get()&&
+        {
+            if (!HasValue())
+            {
+                std::optional<T>(std::move(_delegate())).swap(_actual);
+            }
+
+            return std::move(_actual.value());
+        }
+
+        constexpr const T&& Get() const&&
+        {
+            if (!HasValue())
+            {
+                std::optional<T>(std::move(_delegate())).swap(_actual);
+            }
+
+            return std::move(_actual.value());
+        }
+
+        void Reset() noexcept
         {
             _actual.reset();
         }
 
-        void reset(T newExplicitValue) noexcept
+        void Reset(T newExplicitValue) noexcept
         {
             _actual = newExplicitValue;
         }
 
-        [[nodiscard]] bool isCreated() const noexcept
+        [[nodiscard]] bool HasValue() const noexcept
         {
             return _actual.has_value();
-        }
-    };
-
-    template<typename T> class Lazy<std::unique_ptr<T>>
-    {
-    private:
-        std::function<T*()> _delegate;
-        std::unique_ptr<T> _actual;
-
-    public:
-        explicit Lazy(std::function<T*()> delegate) : _delegate(delegate), _actual(std::unique_ptr<T>(nullptr))
-        {
-        }
-
-        T* getActual()
-        {
-            if (!isCreated())
-            {
-                _actual = std::unique_ptr<T>(_delegate());
-            }
-
-            return _actual.get();
-        }
-
-        void reset() noexcept
-        {
-            _actual = nullptr;
-        }
-
-        void reset(T* newExplicitValue) noexcept
-        {
-            _actual.reset(newExplicitValue);
-        }
-
-        bool isCreated() const noexcept
-        {
-            return _actual != nullptr;
-        }
-    };
-
-    template<typename T, typename Deleter> class Lazy<std::unique_ptr<T, Deleter>>
-    {
-    private:
-        std::function<T*()> _delegate;
-        std::unique_ptr<T, Deleter> _actual;
-
-    public:
-        Lazy(std::function<T*()> delegate, Deleter deleter)
-            : _delegate(delegate), _actual(std::unique_ptr<T, Deleter>(nullptr, deleter))
-        {
-        }
-
-        T* getActual()
-        {
-            if (!isCreated())
-            {
-                _actual = std::unique_ptr<T, Deleter>(_delegate(), _actual.get_deleter());
-            }
-
-            return _actual.get();
-        }
-
-        void reset() noexcept
-        {
-            _actual = nullptr;
-        }
-
-        void reset(T* newExplicitValue) noexcept
-        {
-            _actual.reset(newExplicitValue);
-        }
-
-        bool isCreated() const noexcept
-        {
-            return _actual != nullptr;
         }
     };
 }

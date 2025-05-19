@@ -13,25 +13,36 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsResource;
 
-    class VulkanGraphicsResourceMemoryRegionBase : public std::enable_shared_from_this<VulkanGraphicsResourceMemoryRegionBase>
+    template<typename TResource>
+    class VulkanGraphicsResourceMemoryRegion;
+
+    template<>
+    class VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>
     {
     private:
-        std::shared_ptr<VulkanGraphicsDevice> _device;
+        VulkanGraphicsDevice* _device;
+        VulkanGraphicsResource* _owningResource;
         VmaVirtualAllocation _virtualAllocation;
         VmaVirtualAllocationInfo _virtualAllocationInfo;
 
-    protected:
-        std::shared_ptr<VulkanGraphicsResource> _owningResource;
-
-        VulkanGraphicsResourceMemoryRegionBase(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                                           std::shared_ptr<VulkanGraphicsResource> owningResource,
+    public:
+        VulkanGraphicsResourceMemoryRegion(VulkanGraphicsDevice* graphicsDevice,
+                                           VulkanGraphicsResource* owningResource,
                                            VmaVirtualAllocation virtualAllocation,
                                            VmaVirtualAllocationInfo virtualAllocationInfo);
 
-    public:
-        ~VulkanGraphicsResourceMemoryRegionBase();
+        virtual ~VulkanGraphicsResourceMemoryRegion();
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
+        [[nodiscard]] VulkanGraphicsResource* GetOwningResource() const noexcept
+        {
+            return _owningResource;
+        }
+
+
+        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
+        {
+            return _device;
+        }
 
         [[nodiscard]] size_t GetOffset() const noexcept;
 
@@ -43,25 +54,23 @@ namespace NovelRT::Graphics::Vulkan
     };
 
     template<typename TResource>
-    class VulkanGraphicsResourceMemoryRegion
-        : public std::conditional_t<std::is_same_v<TResource, VulkanGraphicsResource>, VulkanGraphicsResourceMemoryRegionBase, VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>
+    class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>
     {
-    private:
-        using Super = std::conditional_t<std::is_same_v<TResource, VulkanGraphicsResource>, VulkanGraphicsResourceMemoryRegionBase, VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>;
+        static_assert(std::is_base_of_v<VulkanGraphicsResource, TResource>, "TResource must inherit VulkanGraphicsResource");
+
     public:
-        VulkanGraphicsResourceMemoryRegion(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                                         std::shared_ptr<TResource> owningResource,
-                                         VmaVirtualAllocation virtualAllocation,
+        VulkanGraphicsResourceMemoryRegion(VulkanGraphicsDevice* graphicsDevice,
+                                           TResource* owningResource,
+                                           VmaVirtualAllocation virtualAllocation,
                                            VmaVirtualAllocationInfo virtualAllocationInfo)
-            : Super(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
+            : VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
+        { }
+
+        [[nodiscard]] TResource* GetOwningResource() const noexcept
         {
+            return static_cast<TResource*>(VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>::GetOwningResource());
         }
 
-        [[nodiscard]] std::shared_ptr<TResource> GetOwningResource() const noexcept
-        {
-            return std::static_pointer_cast<TResource>(VulkanGraphicsResourceMemoryRegionBase::_owningResource);
-        }
-
-        ~VulkanGraphicsResourceMemoryRegion() = default;
+        virtual ~VulkanGraphicsResourceMemoryRegion() override = default;
     };
 }

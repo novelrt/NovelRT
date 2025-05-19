@@ -18,19 +18,20 @@ namespace NovelRT::Graphics
         using BackendFenceType = typename GraphicsBackendTraits<TBackend>::FenceType;
 
     private:
-        std::shared_ptr<BackendFenceType> _implementation;
+        std::unique_ptr<BackendFenceType> _implementation;
 
     public:
-        GraphicsFence(std::shared_ptr<BackendFenceType> implementation, std::shared_ptr<GraphicsDevice<TBackend>> device) noexcept
-            : GraphicsDeviceObject<TBackend>(device), _implementation(implementation)
+        GraphicsFence(std::unique_ptr<BackendFenceType> implementation, std::weak_ptr<GraphicsDevice<TBackend>> device) noexcept
+            : GraphicsDeviceObject<TBackend>(std::move(device))
+            , _implementation(std::move(implementation))
         {
         }
 
         virtual ~GraphicsFence() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<BackendFenceType> GetImplementation() const noexcept
+        [[nodiscard]] BackendFenceType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
         [[nodiscard]] bool GetIsSignalled()
@@ -43,7 +44,7 @@ namespace NovelRT::Graphics
             _implementation->Reset();
         }
 
-        [[nodiscard]] inline bool TryWait()
+        [[nodiscard]] bool TryWait()
         {
             return TryWait(std::numeric_limits<uint64_t>::max());
         }
@@ -58,7 +59,7 @@ namespace NovelRT::Graphics
             return _implementation->TryWait(timeout);
         }
 
-        inline void Wait()
+        void Wait()
         {
             _implementation->Wait();
         }

@@ -16,10 +16,11 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsContext;
     template<typename TBackend> class GraphicsBuffer;
+    template<typename TBackend> class GraphicsPipeline;
     template<typename TBackend> class GraphicsTexture;
     template<typename TBackend> class GraphicsDescriptorSet;
     template<typename TBackend> class GraphicsRenderPass;
-    template<template<typename TBackend> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template<typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
     // TODO: MOVE THIS
     struct ViewportInfo
@@ -48,35 +49,41 @@ namespace NovelRT::Graphics
         uint32_t stencil;
     };
 
-    template<typename TBackend> class GraphicsCmdList
+    template<typename TBackend> class GraphicsCmdList : std::enable_shared_from_this<GraphicsCmdList<TBackend>>
     {
     public:
         using BackendCmdListType = typename GraphicsBackendTraits<TBackend>::CmdListType;
-        using BackendDescriptorType = typename GraphicsBackendTraits<TBackend>::DescriptorSetType;
+        using BackendDescriptorSetType = typename GraphicsBackendTraits<TBackend>::DescriptorSetType;
         using BackendBufferType = typename GraphicsBackendTraits<TBackend>::BufferType;
         template<typename TResource>
         using BackendResourceMemoryRegionType =
             typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<TResource>;
 
-    public:
-        std::shared_ptr<BackendCmdListType> _implementation;
+    private:
+        std::unique_ptr<BackendCmdListType> _implementation;
         std::shared_ptr<GraphicsContext<TBackend>> _context;
 
     public:
-        GraphicsCmdList(std::shared_ptr<BackendCmdListType> implementation,
+        GraphicsCmdList(std::unique_ptr<BackendCmdListType> implementation,
                         std::shared_ptr<GraphicsContext<TBackend>> context) noexcept
-            : _implementation(implementation), _context(context)
+            : _implementation(std::move(implementation))
+            , _context(std::move(context))
         {
         }
 
         ~GraphicsCmdList() = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept
+        [[nodiscard]] BackendCmdListType* GetImplementation() const noexcept
         {
-            return _context;
+            return _implementation.get();
         }
 
-        void CmdBeginRenderPass(std::shared_ptr<GraphicsRenderPass<TBackend>> targetPass,
+        [[nodiscard]] GraphicsContext<TBackend>* GetContext() const noexcept
+        {
+            return _context.get();
+        }
+
+        void CmdBeginRenderPass(const GraphicsRenderPass<TBackend>* targetPass,
                                 Utilities::Span<const ClearValue> clearValues)
         {
             _implementation->CmdBeginRenderPass(targetPass->GetImplementation(), clearValues);
@@ -88,9 +95,9 @@ namespace NovelRT::Graphics
         }
 
         void CmdBindDescriptorSets(
-            NovelRT::Utilities::Span<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>> sets)
+            NovelRT::Utilities::Span<const GraphicsDescriptorSet<TBackend>*> sets)
         {
-            std::vector<std::shared_ptr<BackendDescriptorType>> transformedArgs{};
+            std::vector<const BackendDescriptorSetType*> transformedArgs{};
             transformedArgs.resize(sets.size());
             std::transform(sets.begin(), sets.end(), transformedArgs.begin(),
                            [&](auto x) { return x->GetImplementation(); });
@@ -100,30 +107,30 @@ namespace NovelRT::Graphics
         void CmdBindVertexBuffers(
             uint32_t firstBinding,
             uint32_t bindingCount,
-            NovelRT::Utilities::Span<const std::shared_ptr<GraphicsBuffer<TBackend>>> buffers,
+            NovelRT::Utilities::Span<const GraphicsBuffer<TBackend>*> buffers,
             NovelRT::Utilities::Span<const size_t> offsets)
         {
-            std::vector<std::shared_ptr<BackendBufferType>> transformedArgs{};
+            std::vector<const BackendBufferType*> transformedArgs{};
             transformedArgs.resize(buffers.size());
             std::transform(buffers.begin(), buffers.end(), transformedArgs.begin(),
                            [&](auto x) { return x->GetImplementation(); });
             _implementation->CmdBindVertexBuffers(firstBinding, bindingCount, transformedArgs, offsets);
         }
 
-        void CmdBindIndexBuffer(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> buffer,
+        void CmdBindIndexBuffer(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* buffer,
                                 IndexType indexType)
         {
             _implementation->CmdBindIndexBuffer(buffer->GetImplementation(), indexType);
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> destination,
-                     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> source)
+        void CmdCopy(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* destination,
+                     const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
 
-        void CmdCopy(std::shared_ptr<GraphicsTexture<TBackend>> destination,
-                     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> source)
+        void CmdCopy(const GraphicsTexture<TBackend>* destination,
+                     const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* source)
         {
             _implementation->CmdCopy(destination->GetImplementation(), source->GetImplementation());
         }
@@ -152,30 +159,30 @@ namespace NovelRT::Graphics
             _implementation->CmdSetViewport(viewportInfo);
         }
 
-        void CmdBeginTexturePipelineBarrierLegacyVersion(std::shared_ptr<GraphicsTexture<TBackend>> texture)
+        void CmdBeginTexturePipelineBarrierLegacyVersion(const GraphicsTexture<TBackend>* texture)
         {
             _implementation->CmdBeginTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
         }
 
-        void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<GraphicsTexture<TBackend>> texture)
+        void CmdEndTexturePipelineBarrierLegacyVersion(const GraphicsTexture<TBackend>* texture)
         {
             _implementation->CmdEndTexturePipelineBarrierLegacyVersion(texture->GetImplementation());
         }
 
-        void CmdBindPipeline(std::shared_ptr<GraphicsPipeline<TBackend>> pipeline)
+        void CmdBindPipeline(const GraphicsPipeline<TBackend>* pipeline)
         {
             _implementation->CmdBindPipeline(pipeline->GetImplementation());
         }
 
-        void CmdPushConstants(std::shared_ptr<GraphicsPipelineSignature<TBackend>> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, Utilities::Misc::Span<uint8_t> values)
+        void CmdPushConstants(std::shared_ptr<GraphicsPipelineSignature<TBackend>> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, Utilities::Span<uint8_t> values)
         {
             _implementation->CmdPushConstants(pipelineSignature->GetImplementation(), visibility, offset, values);
         }
 
-        void CmdPipelineBufferBarrier(std::shared_ptr<GraphicsBuffer<TBackend>> buffer, 
-            GraphicsMemoryAccessMode sourceAccessFlag, 
-            GraphicsMemoryAccessMode destinationAccessFlag, 
-            GraphicsPipelineVisibility sourceStageFlag, 
+        void CmdPipelineBufferBarrier(std::shared_ptr<GraphicsBuffer<TBackend>> buffer,
+            GraphicsMemoryAccessMode sourceAccessFlag,
+            GraphicsMemoryAccessMode destinationAccessFlag,
+            GraphicsPipelineVisibility sourceStageFlag,
             GraphicsPipelineVisibility destinationStageFlag)
         {
             _implementation->CmdPipelineBufferBarrier(buffer->GetImplementation(), sourceAccessFlag, destinationAccessFlag, sourceStageFlag, destinationStageFlag);

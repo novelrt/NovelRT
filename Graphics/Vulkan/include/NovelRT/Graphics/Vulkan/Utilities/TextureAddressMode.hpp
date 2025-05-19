@@ -3,9 +3,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <vulkan/vulkan.h>
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
 #include <NovelRT/Graphics/GraphicsTextureAddressMode.hpp>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {

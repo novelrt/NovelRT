@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsSurfaceKind : uint32_t
+    enum class GraphicsSurfaceKind
     {
         Unknown = 0,
         Android = 1,

@@ -6,6 +6,8 @@
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
 #include <tuple>
 
 namespace NovelRT::Graphics::Vulkan
@@ -13,44 +15,52 @@ namespace NovelRT::Graphics::Vulkan
     class VulkanGraphicsDevice;
     class VulkanGraphicsMemoryAllocator;
 
-    class VulkanGraphicsResource : public std::enable_shared_from_this<VulkanGraphicsResource>
+    class VulkanGraphicsResource
     {
     private:
-        std::shared_ptr<VulkanGraphicsMemoryAllocator> _allocator;
-        std::shared_ptr<VulkanGraphicsDevice> _graphicsDevice;
+        VulkanGraphicsMemoryAllocator* _allocator;
+        VulkanGraphicsDevice* _device;
+
         VmaAllocation _allocation;
         VmaAllocationInfo _allocationInfo;
         VmaVirtualBlock _virtualBlock;
+
         [[nodiscard]] std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> GetVirtualAllocation(size_t size, size_t alignment);
 
     protected:
-        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) = 0;
-        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region) = 0;
+        [[nodiscard]] virtual std::unique_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) = 0;
+        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>& region) = 0;
 
     public:
-        VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                               std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+        VulkanGraphicsResource(VulkanGraphicsDevice* graphicsDevice,
+                               VulkanGraphicsMemoryAllocator* allocator,
                                GraphicsResourceAccess cpuAccess,
                                VmaAllocation allocation,
                                VmaAllocationInfo allocationInfo);
 
         virtual ~VulkanGraphicsResource() noexcept = default;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept;
+        [[nodiscard]] VulkanGraphicsMemoryAllocator* GetAllocator() const noexcept
+        {
+            return _allocator;
+        }
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
+        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
+        {
+            return _device;
+        }
 
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept;
 
         [[nodiscard]] size_t GetSize() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::unique_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> Allocate(size_t size, size_t alignment);
 
-        void Free(VulkanGraphicsResourceMemoryRegionBase& region);
+        void Free(VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>& region);
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] virtual NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] virtual NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) = 0;
 
         virtual void UnmapBytes() = 0;
 
