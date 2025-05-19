@@ -236,13 +236,13 @@ namespace NovelRT::UI::DearImGui
                 GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
                                              GraphicsPipelineInputElementKind::Normal, 8),
                 GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector4F),
-                                             GraphicsPipelineInputElementKind::Colour, 16)};
+                                             GraphicsPipelineInputElementKind::TextureCoordinate, 16)};
             
             std::vector<GraphicsPushConstantRange> pushConstants{
-                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float)},
-                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, sizeof(float) * 2, sizeof(float)}
+                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4},
+                //GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, sizeof(float) * 2, sizeof(float)}
             };
-            pushConstants.emplace_back();
+            
         
             std::vector<GraphicsPipelineInput> in{GraphicsPipelineInput(elem)};
             std::vector<GraphicsPipelineResource> res{
@@ -405,6 +405,7 @@ namespace NovelRT::UI::DearImGui
             Utilities::Misc::Span<float> scaleSpan(scale);
             Utilities::Misc::Span<float> translateSpan(translate);
 
+            cmdList->CmdBindPipeline(_pipeline);
             cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0, Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
             cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2, Utilities::Misc::SpanCast<uint8_t>(translateSpan));
             // vkCmdPushConstants(command_buffer, bd->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
@@ -413,8 +414,15 @@ namespace NovelRT::UI::DearImGui
 
             cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                    NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-            cmdList->CmdBindPipeline(_pipeline);
+            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                inputResourceRegions{
+                        std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                                _texture2DRegion))}; 
 
+            auto descriptorSetData = _pipeline->CreateDescriptorSet();
+            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            descriptorSetData->UpdateDescriptorSetData();
             // Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
@@ -434,16 +442,16 @@ namespace NovelRT::UI::DearImGui
                                 drawCommand->GetTexID());
                         std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
                             inputResourceRegions{
-                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                                        texture2DRegion)),
-                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                                        vertexBufferRegion)};
+                                 std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                 std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                                         texture2DRegion))};
+                                //std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                 //       vertexBufferRegion)};
 
                         // Specify the descriptor set - dunno what that means but I think it's right?
-                        auto descriptorSetData = pipeline->CreateDescriptorSet();
-                        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-                        descriptorSetData->UpdateDescriptorSetData();
+                        // auto descriptorSetData = _pipeline->CreateDescriptorSet();
+                        // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+                        // descriptorSetData->UpdateDescriptorSetData();
 
                         // Bind the descriptor set
                         std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
