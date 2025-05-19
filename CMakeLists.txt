@@ -58,11 +58,9 @@ add_subdirectory(Graphics)
 #add_subdirectory(Input)
 add_subdirectory(UI)
 
-#add_subdirectory(src)
+add_subdirectory(Samples)
 
-#if(NOVELRT_BUILD_SAMPLES)
-#  add_subdirectory(samples)
-#endif()
+#add_subdirectory(src)
 
 #if(NOVELRT_BUILD_TESTS)
 #  enable_testing()
