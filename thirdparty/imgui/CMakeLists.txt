@@ -8,6 +8,7 @@ set(imgui_SOURCES
   "${imgui_SOURCE_DIR}/imgui_draw.cpp"
   "${imgui_SOURCE_DIR}/imgui_tables.cpp"
   "${imgui_SOURCE_DIR}/imgui_widgets.cpp"
+  "${imgui_SOURCE_DIR}/imgui_demo.cpp"
   CACHE INTERNAL "Set imgui source files"
 )
 

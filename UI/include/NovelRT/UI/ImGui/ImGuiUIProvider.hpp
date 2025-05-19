@@ -66,6 +66,7 @@ namespace NovelRT::UI::DearImGui
         ImGuiContext* _imguiContext;
         Threading::VolatileState _state;
         LoggingService _logger;
+        bool _showDemo = true;
 
         std::shared_ptr<Windowing::IWindowingDevice> _windowingDevice;
         std::shared_ptr<Input::IInputDevice> _inputDevice;
@@ -75,6 +76,7 @@ namespace NovelRT::UI::DearImGui
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> _texture2DRegion;
         std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
         std::shared_ptr<GraphicsPipelineSignature<TBackend>> _pipelineSignature;
+        std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> _descriptorSet;
 
     public:
         ImGuiUIProvider()
@@ -255,6 +257,19 @@ namespace NovelRT::UI::DearImGui
             auto pipeline = graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
             _pipeline = pipeline;
             _pipelineSignature = signature;
+
+            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+            inputResourceRegions{
+                    std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                            _texture2DRegion))}; 
+
+            auto descriptorSetData = pipeline->CreateDescriptorSet();
+            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            descriptorSetData->UpdateDescriptorSetData();
+            std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
+                descriptorSetData};
+            _descriptorSet = descriptorData;
         }
 
         void BeginFrame(double deltaTime) final
@@ -274,9 +289,11 @@ namespace NovelRT::UI::DearImGui
             // TODO: Update input data
 
             ImGui::NewFrame();
-            ImGui::Begin("Hello, World!");
-            ImGui::Text("I'm cooked broski");
-            ImGui::End();
+
+            ImGui::ShowDemoWindow(&_showDemo);
+            // ImGui::Begin("Hello, World!");
+            // ImGui::Text("I'm cooked broski");
+            // ImGui::End();
         }
 
         void EndFrame() final
@@ -414,15 +431,15 @@ namespace NovelRT::UI::DearImGui
 
             cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                    NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-                inputResourceRegions{
-                        std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                                _texture2DRegion))}; 
-
-            auto descriptorSetData = _pipeline->CreateDescriptorSet();
-            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            descriptorSetData->UpdateDescriptorSetData();
+            // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+            //     inputResourceRegions{
+            //             std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+            //             std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+            //                     _texture2DRegion))}; 
+            cmdList->CmdBindDescriptorSets(_descriptorSet);
+            // auto descriptorSetData = _pipeline->CreateDescriptorSet();
+            // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            // descriptorSetData->UpdateDescriptorSetData();
             // Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
@@ -437,14 +454,14 @@ namespace NovelRT::UI::DearImGui
                     else
                     {
 
-                        auto texture2DRegion =
-                            *reinterpret_cast<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
-                                drawCommand->GetTexID());
-                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-                            inputResourceRegions{
-                                 std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                                 std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                                         texture2DRegion))};
+                        // auto texture2DRegion =
+                        //     *reinterpret_cast<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
+                        //         drawCommand->GetTexID());
+                        // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                        //     inputResourceRegions{
+                        //          std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                        //          std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                        //                  texture2DRegion))};
                                 //std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
                                  //       vertexBufferRegion)};
 
@@ -454,9 +471,9 @@ namespace NovelRT::UI::DearImGui
                         // descriptorSetData->UpdateDescriptorSetData();
 
                         // Bind the descriptor set
-                        std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
-                            descriptorSetData};
-                        cmdList->CmdBindDescriptorSets(descriptorData);
+                        // std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
+                        //     descriptorSetData};
+                        
 
                         // Project scissor/clipping rectangles into framebuffer space
                         ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
