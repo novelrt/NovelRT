@@ -56,13 +56,9 @@ add_subdirectory(Base)
 add_subdirectory(Graphics)
 #add_subdirectory(Audio)
 #add_subdirectory(Input)
-
+add_subdirectory(Samples)
 
 #add_subdirectory(src)
-
-#if(NOVELRT_BUILD_SAMPLES)
-#  add_subdirectory(samples)
-#endif()
 
 #if(NOVELRT_BUILD_TESTS)
 #  enable_testing()
