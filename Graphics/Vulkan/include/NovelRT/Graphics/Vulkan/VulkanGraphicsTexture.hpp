@@ -16,7 +16,7 @@ namespace NovelRT::Graphics::Vulkan
     {
     private:
         VkImage _vulkanImage;
-        size_t _subAllocations;
+        size_t _mappedMemoryRegions;
         GraphicsTextureAddressMode _addressMode;
         GraphicsTextureKind _kind;
 

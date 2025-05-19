@@ -25,7 +25,7 @@ namespace NovelRT::Graphics::Vulkan
                                                VkBuffer vulkanBuffer)
         : VulkanGraphicsResource(graphicsDevice, allocator, cpuAccess, allocation, allocationInfo),
           _vulkanBuffer(vulkanBuffer),
-          _subAllocations(0),
+          _mappedMemoryRegions(0),
           _cpuAccess(cpuAccess),
           _kind(kind)
     {}
@@ -34,8 +34,8 @@ namespace NovelRT::Graphics::Vulkan
     {
         auto allocator = GetAllocator()->GetVmaAllocator();
         auto allocation = GetAllocation();
-
-        assert_message("Attempted to destroy a VkBuffer containing mapped regions.", _subAllocations != 0);
+        
+        assert_message(_mappedMemoryRegions == 0, "Attempted to destroy a VkBuffer containing mapped regions.");
 
         vmaDestroyBuffer(allocator, GetVulkanBuffer(), allocation);
     }
@@ -61,7 +61,7 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to map Vulkan memory to the CPU. Reason: " + std::to_string(result));
         }
 
-        _subAllocations++;
+        _mappedMemoryRegions++;
 
         return Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(data) + rangeOffset, rangeLength);
     }
@@ -97,26 +97,26 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to invalidate mapped memory. Reason: " + std::to_string(mapResult));
         }
         
-        _subAllocations++;
+        _mappedMemoryRegions++;
 
         return Utilities::Misc::Span<const uint8_t>(reinterpret_cast<const uint8_t*>(data), rangeLength);
     }
 
     void VulkanGraphicsBuffer::UnmapBytes()
     {
-        if (_subAllocations == 0)
+        if (_mappedMemoryRegions == 0)
         {
             throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
         }
 
-        _subAllocations--;
+        _mappedMemoryRegions--;
 
         vmaUnmapMemory(GetAllocator()->GetVmaAllocator(), GetAllocation());
     }
 
     void VulkanGraphicsBuffer::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
     {
-        if (_subAllocations == 0)
+        if (_mappedMemoryRegions == 0)
         {
             throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
         }
@@ -141,7 +141,7 @@ namespace NovelRT::Graphics::Vulkan
                                      std::to_string(result));
         }
 
-        _subAllocations--;
+        _mappedMemoryRegions--;
 
         vmaUnmapMemory(allocator, allocation);
     }

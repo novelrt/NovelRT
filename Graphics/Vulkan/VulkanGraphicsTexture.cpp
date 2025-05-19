@@ -119,7 +119,7 @@ namespace NovelRT::Graphics::Vulkan
         : VulkanGraphicsResource(device, allocator, cpuAccess, allocation, allocationInfo),
           // GraphicsTexture(device, allocator, cpuAccess, addressMode, kind, width, height, depth),
           _vulkanImage(vulkanImage),
-          _subAllocations(0),
+          _mappedMemoryRegions(0),
           _addressMode(addressMode),
           _kind(kind),
           _vulkanImageView([&]() { return CreateVulkanImageView(); }),
@@ -144,7 +144,7 @@ namespace NovelRT::Graphics::Vulkan
         auto allocator = VulkanGraphicsResource::GetAllocator()->GetVmaAllocator();
         auto allocation = GetAllocation();
 
-        assert_message(_subAllocations != 0, "Attempted to destroy a VkImage containing mapped regions.");
+        assert_message(_mappedMemoryRegions == 0, "Attempted to destroy a VkImage containing mapped regions.");
 
         if (_vulkanImageView.isCreated())
         {
@@ -192,7 +192,7 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to map Vulkan memory to the CPU. Reason: " + std::to_string(result));
         }
 
-        _subAllocations++;
+        _mappedMemoryRegions++;
 
         return NovelRT::Utilities::Misc::Span<uint8_t>(reinterpret_cast<uint8_t*>(data) + rangeOffset, rangeLength);
     }
@@ -229,26 +229,26 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to invalidate mapped memory. Reason: " + std::to_string(mapResult));
         }
 
-        _subAllocations++;
+        _mappedMemoryRegions++;
 
         return NovelRT::Utilities::Misc::Span<const uint8_t>(reinterpret_cast<const uint8_t*>(data), rangeLength);
     }
 
     void VulkanGraphicsTexture::UnmapBytes()
     {
-        if (_subAllocations == 0)
+        if (_mappedMemoryRegions == 0)
         {
             throw Exceptions::InvalidOperationException("Attempted to unmap region of texture when no memory map was created.");
         }
 
-        _subAllocations--;
+        _mappedMemoryRegions--;
 
         vmaUnmapMemory(VulkanGraphicsResource::GetAllocator()->GetVmaAllocator(), GetAllocation());
     }
 
     void VulkanGraphicsTexture::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
     {
-        if (_subAllocations == 0)
+        if (_mappedMemoryRegions == 0)
         {
             throw Exceptions::InvalidOperationException("Attempted to unmap region of texture when no memory map was created.");
         }
@@ -273,7 +273,7 @@ namespace NovelRT::Graphics::Vulkan
                                      std::to_string(result));
         }
 
-        _subAllocations--;
+        _mappedMemoryRegions--;
 
         vmaUnmapMemory(allocator, allocation);
     }
