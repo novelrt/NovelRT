@@ -24,17 +24,19 @@ namespace NovelRT::Graphics
         using BackendSurfaceContextType = typename GraphicsBackendTraits<TBackend>::SurfaceContextType;
 
     private:
-        std::shared_ptr<BackendSurfaceContextType> _implementation;
+        std::unique_ptr<BackendSurfaceContextType> _implementation;
         std::shared_ptr<IGraphicsSurface> _surface;
         std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
         friend class NovelRT::PluginManagement::IGraphicsPluginProvider<TBackend>;
 
     public:
-        GraphicsSurfaceContext(std::shared_ptr<BackendSurfaceContextType> implementation,
+        GraphicsSurfaceContext(std::unique_ptr<BackendSurfaceContextType> implementation,
                                std::shared_ptr<IGraphicsSurface> surface,
                                std::shared_ptr<GraphicsProvider<TBackend>> provider)
-            : _implementation(implementation), _surface(surface), _provider(provider)
+            : _implementation(std::move(implementation))
+            , _surface(std::move(surface))
+            , _provider(std::move(provider))
         {
             if (_surface == nullptr)
             {
@@ -47,18 +49,18 @@ namespace NovelRT::Graphics
             }
         }
 
-        [[nodiscard]] std::shared_ptr<BackendSurfaceContextType> GetImplementation() const noexcept
+        [[nodiscard]] BackendSurfaceContextType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
-        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
+        [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept
         {
-            return _surface;
+            return _surface.get();
         }
-        [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept
+        [[nodiscard]] GraphicsProvider<TBackend>* GetProvider() const noexcept
         {
-            return _provider;
+            return _provider.get();
         }
 
         [[nodiscard]] void* GetSurfaceContextHandleUntyped()

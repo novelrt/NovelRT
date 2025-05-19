@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class TexelFormat : uint32_t
+    enum class TexelFormat
     {
         R8G8B8A8_UNORM,
         R16_SINT,

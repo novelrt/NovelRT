@@ -3,10 +3,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
-#include <vulkan/vulkan.h>
+
 #include <NovelRT/Graphics/ShaderProgram.hpp>
-#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <memory>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -25,17 +29,17 @@ namespace NovelRT::Graphics::Vulkan
         VkShaderModule CreateShaderModule();
 
     public:
-        VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
+        VulkanShaderProgram(VulkanGraphicsDevice* device,
                             std::string entryPointName,
                             ShaderProgramKind kind,
-                            NovelRT::Utilities::Misc::Span<uint8_t> bytecode) noexcept;
-        
+                            NovelRT::Utilities::Span<uint8_t> bytecode) noexcept;
+
         ~VulkanShaderProgram();
-        
+
         [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
         [[nodiscard]] const std::string& GetEntryPointName() const noexcept;
         [[nodiscard]] ShaderProgramKind GetKind() const noexcept;
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept;
         [[nodiscard]] VkShaderModule GetShaderModule();
 
     };

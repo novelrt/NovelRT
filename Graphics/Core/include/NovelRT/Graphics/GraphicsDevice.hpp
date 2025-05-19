@@ -8,6 +8,7 @@
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Graphics/ShaderProgramKind.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
@@ -43,9 +44,9 @@ namespace NovelRT::Graphics::Details
 
     public:
         GraphicsContextIterator(BackendIteratorType const& it, std::shared_ptr<GraphicsDevice<TBackend>> provider)
-            : _iterator(it), _provider(provider)
-        {
-        }
+            : _iterator(it)
+            , _provider(std::move(provider))
+        { }
 
         using difference_type = typename std::iterator_traits<BackendIteratorType>::difference_type;
         using value_type = std::shared_ptr<GraphicsContext<TBackend>>;
@@ -53,28 +54,30 @@ namespace NovelRT::Graphics::Details
         using reference = void;
         using iterator_category = std::input_iterator_tag;
 
-        inline bool operator==(GraphicsContextIterator<TBackend> const& other)
+        bool operator==(GraphicsContextIterator<TBackend> const& other)
         {
-            return _provider == other._provider && _iterator == other._iterator;
+            return _provider == other._provider
+                && _iterator == other._iterator;
         }
 
-        inline bool operator!=(GraphicsContextIterator<TBackend> const& other)
+        bool operator!=(GraphicsContextIterator<TBackend> const& other)
         {
-            return _provider != other._provider || _iterator != other._iterator;
+            return _provider != other._provider
+                || _iterator != other._iterator;
         }
 
-        inline auto operator*() const
+        auto operator*() const
         {
             return std::make_shared<GraphicsContext<TBackend>>(*_iterator, _provider, _iterator->GetIndex());
         }
 
-        inline auto operator++()
+        auto operator++()
         {
             ++_iterator;
             return *this;
         }
 
-        inline auto operator++(int)
+        auto operator++(int)
         {
             auto prev = *this;
             ++_iterator;
@@ -88,20 +91,33 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
     {
     public:
+        using BackendContextType = typename GraphicsBackendTraits<TBackend>::ContextType;
         using BackendDeviceType = typename GraphicsBackendTraits<TBackend>::DeviceType;
+        using BackendRenderPassType = typename GraphicsBackendTraits<TBackend>::RenderPassType;
 
         using iterator = typename Details::GraphicsContextIterator<TBackend>;
 
     private:
-        std::shared_ptr<BackendDeviceType> _implementation;
+        std::unique_ptr<BackendDeviceType> _implementation;
         std::weak_ptr<GraphicsAdapter<TBackend>> _adapter;
         std::shared_ptr<GraphicsSurfaceContext<TBackend>> _surfaceContext;
 
+        mutable Utilities::Lazy<std::shared_ptr<GraphicsContext<TBackend>>> _currentContext;
+        mutable Utilities::Lazy<std::shared_ptr<GraphicsRenderPass<TBackend>>> _renderPass;
+
     public:
-        GraphicsDevice(std::shared_ptr<BackendDeviceType> implementation,
+        GraphicsDevice(std::unique_ptr<BackendDeviceType> implementation,
                        std::weak_ptr<GraphicsAdapter<TBackend>> adapter,
                        std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext)
-            : _implementation(implementation), _adapter(adapter), _surfaceContext(surfaceContext)
+            : _implementation(std::move(implementation))
+            , _adapter(std::move(adapter))
+            , _surfaceContext(std::move(surfaceContext))
+            , _currentContext([this](){
+                return std::make_shared<GraphicsContext<TBackend>>(std::unique_ptr<BackendContextType>{_implementation->GetCurrentContext()}, this->shared_from_this(), GetContextIndex());
+            })
+            , _renderPass([this](){
+                return std::make_shared<GraphicsRenderPass<TBackend>>(std::unique_ptr<BackendRenderPassType>{_implementation->GetRenderPass()});
+            })
         {
             if (_adapter.expired())
             {
@@ -114,9 +130,9 @@ namespace NovelRT::Graphics
             }
         }
 
-        [[nodiscard]] std::shared_ptr<BackendDeviceType> GetImplementation() const noexcept
+        [[nodiscard]] BackendDeviceType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
         void TearDown()
@@ -126,11 +142,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<TBackend>> GetAdapter() const
         {
-            if (_adapter.expired())
-            {
-                throw std::runtime_error("Adapter has expired!");
-            }
-
             return _adapter.lock();
         }
 
@@ -139,30 +150,31 @@ namespace NovelRT::Graphics
             return _implementation->GetContextIndex();
         }
 
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() noexcept
         {
             return iterator{_implementation->begin(), this->shared_from_this()};
         }
 
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() noexcept
         {
             return iterator{_implementation->end(), this->shared_from_this()};
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext()
+        [[nodiscard]] GraphicsContext<TBackend>* GetCurrentContext() const
         {
-            return std::make_shared<GraphicsContext<TBackend>>(_implementation->GetCurrentContext(),
-                                                               this->shared_from_this(), GetContextIndex());
+            return _currentContext.Get().get();
         }
 
-        [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
+        [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept
         {
             return _surfaceContext->GetSurface();
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept
+        [[nodiscard]] GraphicsSurfaceContext<TBackend>* GetSurfaceContext() const noexcept
         {
-            return _surfaceContext;
+            return _surfaceContext.get();
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> CreatePipeline(
@@ -172,26 +184,32 @@ namespace NovelRT::Graphics
             bool imguiRenderMode = false)
         {
             return std::make_shared<GraphicsPipeline<TBackend>>(
-                _implementation->CreatePipeline(signature->GetImplementation(), vertexShader->GetImplementation(),
-                                                pixelShader->GetImplementation(), imguiRenderMode),
-                this->shared_from_this(), signature, vertexShader, pixelShader);
+                _implementation->CreatePipeline(
+                    signature->GetImplementation(),
+                    vertexShader->GetImplementation(),
+                    pixelShader->GetImplementation(),
+                    imguiRenderMode),
+                this->shared_from_this(),
+                std::move(signature),
+                std::move(vertexShader),
+                std::move(pixelShader));
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineInput> inputs,
-            NovelRT::Utilities::Misc::Span<GraphicsPipelineResource> resources,
-            NovelRT::Utilities::Misc::Span<GraphicsPushConstantRange> pushConstantRanges)
+            NovelRT::Utilities::Span<GraphicsPipelineInput> inputs,
+            NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
+            NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges)
         {
             return std::make_shared<GraphicsPipelineSignature<TBackend>>(
                 _implementation->CreatePipelineSignature(srcBlendFactor, dstBlendFactor, inputs, resources, pushConstantRanges),
                 this->shared_from_this(), srcBlendFactor, dstBlendFactor, inputs, resources, pushConstantRanges);
         }
 
-        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> GetRenderPass()
+        [[nodiscard]] GraphicsRenderPass<TBackend>* GetRenderPass()
         {
-            return std::make_shared<GraphicsRenderPass<TBackend>>(_implementation->GetRenderPass());
+            return _renderPass.Get().get();
         }
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(
@@ -209,7 +227,7 @@ namespace NovelRT::Graphics
             _implementation->PresentFrame();
         }
 
-        void Signal(std::shared_ptr<GraphicsFence<TBackend>> fence)
+        void Signal(const GraphicsFence<TBackend>* fence)
         {
             _implementation->Signal(fence->GetImplementation());
         }

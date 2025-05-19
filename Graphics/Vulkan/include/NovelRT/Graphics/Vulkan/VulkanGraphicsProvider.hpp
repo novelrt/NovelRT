@@ -4,8 +4,10 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Span.hpp>
 
 #include <vulkan/vulkan.h>
 
@@ -13,7 +15,7 @@ namespace NovelRT::Graphics::Vulkan
 {
     class VulkanGraphicsAdapter;
 
-    class VulkanGraphicsProvider : public std::enable_shared_from_this<VulkanGraphicsProvider>
+    class VulkanGraphicsProvider
     {
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
@@ -21,7 +23,7 @@ namespace NovelRT::Graphics::Vulkan
         VkInstance _vulkanInstance;
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<VulkanGraphicsAdapter>>> _adapters;
+        NovelRT::Utilities::Lazy<std::vector<VulkanGraphicsAdapter*>> _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
@@ -49,29 +51,29 @@ namespace NovelRT::Graphics::Vulkan
         void ConfigureDebugLogger();
         VkInstance CreateInstance();
 
-        std::vector<std::shared_ptr<VulkanGraphicsAdapter>> GetGraphicsAdapters();
+        std::vector<VulkanGraphicsAdapter*> GetGraphicsAdapters();
 
     public:
         VulkanGraphicsProvider();
+        ~VulkanGraphicsProvider();
 
-        [[nodiscard]] inline VkInstance GetVulkanInstance() const noexcept
+        [[nodiscard]] VkInstance GetVulkanInstance() const noexcept
         {
             return _vulkanInstance;
         }
 
-        [[nodiscard]] inline NovelRT::Utilities::Misc::Span<const std::string> GetValidationLayers() const noexcept
+        [[nodiscard]] NovelRT::Utilities::Span<const std::string> GetValidationLayers() const noexcept
         {
-            return NovelRT::Utilities::Misc::Span<const std::string>(&(*_finalValidationLayerSet.begin()),
-                                                                     _finalValidationLayerSet.size());
+            return { _finalValidationLayerSet };
         }
 
         [[nodiscard]] uint32_t GetApiVersion() const noexcept;
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
 
-        std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator begin() noexcept;
-        std::vector<std::shared_ptr<VulkanGraphicsAdapter>>::iterator end() noexcept;
+        std::vector<VulkanGraphicsAdapter*>::iterator begin() noexcept;
+        std::vector<VulkanGraphicsAdapter*>::iterator end() noexcept;
 
-        ~VulkanGraphicsProvider();
+
     };
 }

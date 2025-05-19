@@ -7,6 +7,7 @@
 #include <NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 
+#include <cstddef>
 #include <cstdint>
 
 

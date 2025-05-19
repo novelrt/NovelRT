@@ -2,7 +2,8 @@
 // for more information.
 
 // TODO: clean this up good grief
-#include <NovelRT/EngineConfig.h>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
+
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
 #include <NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
@@ -10,6 +11,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+
 #include <set>
 #include <string>
 #include <vector>
@@ -17,7 +19,7 @@
 namespace NovelRT::Graphics::Vulkan
 {
     int32_t VulkanGraphicsAdapterSelector::GetPhysicalDeviceOptionalExtensionSupportScore(
-        VkPhysicalDevice physicalDevice) const noexcept
+        VkPhysicalDevice physicalDevice) noexcept
     {
         float currentPercentageValue = 0;
 
@@ -27,10 +29,11 @@ namespace NovelRT::Graphics::Vulkan
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
 
-        std::set<std::string> optionalExtensionSet(EngineConfig::OptionalVulkanPhysicalDeviceExtensions().begin(),
-                                                   EngineConfig::OptionalVulkanPhysicalDeviceExtensions().end());
+        // TODO: EngineConfig was here
+        std::set<std::string> optionalExtensionSet{};//EngineConfig::OptionalVulkanPhysicalDeviceExtensions().begin(),
+                                                     //EngineConfig::OptionalVulkanPhysicalDeviceExtensions().end());
 
-        float percentageStep = (1.0f / static_cast<float>(optionalExtensionSet.size())) * 100;
+        const float percentageStep = (1.0f / static_cast<float>(optionalExtensionSet.size())) * 100;
 
         for (const auto& extension : availableExtensions)
         {
@@ -47,7 +50,7 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     int32_t VulkanGraphicsAdapterSelector::RateDeviceSuitability(VkPhysicalDevice physicalDevice,
-                                                                 VkSurfaceKHR surfaceContext) const noexcept
+                                                                 VkSurfaceKHR surfaceContext) noexcept
     {
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
@@ -64,8 +67,8 @@ namespace NovelRT::Graphics::Vulkan
         score += static_cast<int32_t>(deviceProperties.limits.maxImageDimension2D);
         score += GetPhysicalDeviceOptionalExtensionSupportScore(physicalDevice);
 
-        SwapChainSupportDetails supportDetails = Utilities::QuerySwapChainSupport(physicalDevice, surfaceContext);
-        QueueFamilyIndices indices = Utilities::FindQueueFamilies(physicalDevice, surfaceContext);
+        const SwapChainSupportDetails supportDetails = Utilities::QuerySwapChainSupport(physicalDevice, surfaceContext);
+        const QueueFamilyIndices indices = Utilities::FindQueueFamilies(physicalDevice, surfaceContext);
 
         if (!indices.IsComplete() || !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) ||
             supportDetails.formats.empty() || supportDetails.presentModes.empty())
@@ -77,7 +80,7 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     bool VulkanGraphicsAdapterSelector::CheckPhysicalDeviceRequiredExtensionSupport(
-        VkPhysicalDevice physicalDevice) const noexcept
+        VkPhysicalDevice physicalDevice) noexcept
     {
         uint32_t extensionCount = 0;
         vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
@@ -85,8 +88,9 @@ namespace NovelRT::Graphics::Vulkan
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
 
-        std::set<std::string> requiredExtensionSet(EngineConfig::RequiredVulkanPhysicalDeviceExtensions().begin(),
-                                                   EngineConfig::RequiredVulkanPhysicalDeviceExtensions().end());
+        // TODO: EngineConfig was here
+        std::set<std::string> requiredExtensionSet{};//EngineConfig::RequiredVulkanPhysicalDeviceExtensions().begin(),
+                                                     //EngineConfig::RequiredVulkanPhysicalDeviceExtensions().end());
 
         for (const auto& extension : availableExtensions)
         {
@@ -96,31 +100,22 @@ namespace NovelRT::Graphics::Vulkan
         return requiredExtensionSet.empty();
     }
 
-    std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
-        std::shared_ptr<VulkanGraphicsProvider> provider,
-        std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext) const
+    VulkanGraphicsAdapter* VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
+        VulkanGraphicsProvider* provider,
+        VulkanGraphicsSurfaceContext* surfaceContext) const
     {
-        std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContextVulkan =
-            std::dynamic_pointer_cast<VulkanGraphicsSurfaceContext>(surfaceContext);
-
-        if (surfaceContextVulkan == nullptr)
-        {
-            throw Exceptions::NotSupportedException(
-                "The type of surface context that has been provided is not supported by this graphics implementation.");
-        }
-
-        std::shared_ptr<VulkanGraphicsAdapter> adapter = nullptr;
+        VulkanGraphicsAdapter* adapter = nullptr;
         int32_t highestScore = 0;
 
         for (auto&& currentAdapter : *provider)
         {
-            int32_t score = RateDeviceSuitability(
-                std::dynamic_pointer_cast<VulkanGraphicsAdapter>(currentAdapter)->GetVulkanPhysicalDevice(),
-                surfaceContextVulkan->GetVulkanSurfaceContextHandle());
+            const int32_t score = RateDeviceSuitability(
+                currentAdapter->GetVulkanPhysicalDevice(),
+                surfaceContext->GetVulkanSurfaceContextHandle());
 
             if (score > highestScore)
             {
-                adapter = std::dynamic_pointer_cast<VulkanGraphicsAdapter>(currentAdapter);
+                adapter = currentAdapter;
                 highestScore = score;
             }
         }

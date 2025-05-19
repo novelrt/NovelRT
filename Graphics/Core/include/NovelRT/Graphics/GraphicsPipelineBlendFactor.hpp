@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsPipelineBlendFactor : uint32_t
+    enum class GraphicsPipelineBlendFactor
     {
         Zero = 0,
         One = 1,

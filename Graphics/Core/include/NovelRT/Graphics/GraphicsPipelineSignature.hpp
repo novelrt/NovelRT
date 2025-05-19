@@ -8,6 +8,8 @@
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 #include <NovelRT/Graphics/GraphicsPushConstantRange.hpp>
 
+#include <NovelRT/Utilities/Span.hpp>
+
 namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsDescriptorSet;
@@ -20,7 +22,7 @@ namespace NovelRT::Graphics
         using BackendPipelineSignatureType = typename GraphicsBackendTraits<TBackend>::PipelineSignatureType;
 
     private:
-        std::shared_ptr<BackendPipelineSignatureType> _implementation;
+        std::unique_ptr<BackendPipelineSignatureType> _implementation;
         GraphicsPipelineBlendFactor _srcBlendFactor;
         GraphicsPipelineBlendFactor _dstBlendFactor;
         std::vector<GraphicsPipelineInput> _inputs;
@@ -28,28 +30,34 @@ namespace NovelRT::Graphics
         std::vector<GraphicsPushConstantRange> _pushConstantRanges;
 
     public:
-        GraphicsPipelineSignature(std::shared_ptr<BackendPipelineSignatureType> implementation,
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsPipelineSignature<TBackend>> shared_from_this()
+        {
+            return std::static_pointer_cast<GraphicsPipelineSignature<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
+        }
+
+        GraphicsPipelineSignature(std::unique_ptr<BackendPipelineSignatureType> implementation,
                                   std::shared_ptr<GraphicsDevice<TBackend>> device,
                                   GraphicsPipelineBlendFactor srcBlendFactor,
                                   GraphicsPipelineBlendFactor dstBlendFactor,
-                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs,
-                                  NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> resources,
-                                  NovelRT::Utilities::Misc::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept
-            : GraphicsDeviceObject<TBackend>(device),
-              _implementation(implementation),
-              _srcBlendFactor(srcBlendFactor),
-              _dstBlendFactor(dstBlendFactor),
-              _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end())),
-              _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end())),
-              _pushConstantRanges(std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end()))
+                                  NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
+                                  NovelRT::Utilities::Span<const GraphicsPipelineResource> resources,
+                                  NovelRT::Utilities::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept
+            : GraphicsDeviceObject<TBackend>(std::move(device))
+            , _implementation(std::move(implementation))
+            , _srcBlendFactor(srcBlendFactor)
+            , _dstBlendFactor(dstBlendFactor)
+            , _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end()))
+            , _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end()))
+            , _pushConstantRanges(std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end()))
         {
         }
 
         virtual ~GraphicsPipelineSignature() noexcept override = default;
 
-        [[nodiscard]] std::shared_ptr<BackendPipelineSignatureType> GetImplementation() const noexcept
+        [[nodiscard]] BackendPipelineSignatureType* GetImplementation() const noexcept
         {
-            return _implementation;
+            return _implementation.get();
         }
 
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
@@ -66,20 +74,19 @@ namespace NovelRT::Graphics
         {
             return std::make_shared<GraphicsDescriptorSet<TBackend>>(
                 _implementation->CreateDescriptorSet(),
-                pipeline);
+                std::move(pipeline));
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> GetInputs()
+        [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineInput> GetInputs()
             const noexcept
         {
-            return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput>(&(*_inputs.begin()), _inputs.size());
+            return _inputs;
         }
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource> GetResources()
+        [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources()
             const noexcept
         {
-            return NovelRT::Utilities::Misc::Span<const GraphicsPipelineResource>(&(*_resources.begin()),
-                                                                                  _resources.size());
+            return _resources;
         }
     };
 }

@@ -1,19 +1,22 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Utilities/Span.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
     using namespace NovelRT::Utilities;
 
-    VulkanGraphicsDescriptorSet::VulkanGraphicsDescriptorSet(
-        std::shared_ptr<VulkanGraphicsPipeline> targetPipeline) noexcept
-        :  _descriptorSetHandle(VK_NULL_HANDLE), _pipeline(targetPipeline), _inputResourceRegions{}
+    VulkanGraphicsDescriptorSet::VulkanGraphicsDescriptorSet(VulkanGraphicsPipeline* targetPipeline) noexcept
+        :  _descriptorSetHandle(VK_NULL_HANDLE)
+        , _pipeline(targetPipeline)
+        , _inputResourceRegions{}
     {
         _descriptorSetHandle = _pipeline->GetSignature()->GetDescriptorSetHandle();
     }
@@ -24,24 +27,12 @@ namespace NovelRT::Graphics::Vulkan
         _pipeline->GetSignature()->DestroyDescriptorSets(fuck);
     }
 
-    VkDescriptorSet* VulkanGraphicsDescriptorSet::GetVulkanDescriptorSet() noexcept
-    {
-        return &_descriptorSetHandle;
-    }
-
-    std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDescriptorSet::GetPipeline() const noexcept
-    {
-        return _pipeline;
-    }
-
-    void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(
-        std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> region)
+    void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>* region)
     {
         _inputResourceRegions.emplace_back(region);
     }
 
-    void VulkanGraphicsDescriptorSet::AddMemoryRegionsToInputs(
-        Misc::Span<const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>> regions)
+    void VulkanGraphicsDescriptorSet::AddMemoryRegionsToInputs(Span<const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>*> regions)
     {
         _inputResourceRegions.insert(_inputResourceRegions.end(), regions.begin(), regions.end());
     }
@@ -54,16 +45,12 @@ namespace NovelRT::Graphics::Vulkan
 
             for (size_t index = 0; index < inputResourcesLength; index++)
             {
-                const auto inputResourceRegion = _inputResourceRegions[index];
+                const auto* inputResourceRegion = _inputResourceRegions[index];
 
                 VkWriteDescriptorSet writeDescriptorSet{};
 
-                std::shared_ptr<VulkanGraphicsBuffer> buffer =
-                    std::dynamic_pointer_cast<VulkanGraphicsBuffer>(inputResourceRegion->GetOwningResource());
-                std::shared_ptr<VulkanGraphicsTexture> texture =
-                    std::dynamic_pointer_cast<VulkanGraphicsTexture>(inputResourceRegion->GetOwningResource());
-
-                if (buffer != nullptr)
+                auto* resource = inputResourceRegion->GetOwningResource();
+                if (auto* buffer = dynamic_cast<VulkanGraphicsBuffer*>(resource))
                 {
                     VkDescriptorBufferInfo descriptorBufferInfo{};
                     descriptorBufferInfo.buffer = buffer->GetVulkanBuffer();
@@ -80,7 +67,7 @@ namespace NovelRT::Graphics::Vulkan
                     vkUpdateDescriptorSets(_pipeline->GetDevice()->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
                                            nullptr);
                 }
-                else if (texture != nullptr)
+                else if (auto* texture = dynamic_cast<VulkanGraphicsTexture*>(resource))
                 {
                     VkDescriptorImageInfo descriptorImageInfo{};
                     descriptorImageInfo.sampler = texture->GetOrCreateVulkanSampler();
@@ -105,3 +92,5 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 }
+
+template class NovelRT::Graphics::GraphicsDescriptorSet<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

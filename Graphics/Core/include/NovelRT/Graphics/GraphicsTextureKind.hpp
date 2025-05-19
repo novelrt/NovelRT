@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsTextureKind : uint32_t
+    enum class GraphicsTextureKind
     {
         Unknown = 0,
         OneDimensional = 1,

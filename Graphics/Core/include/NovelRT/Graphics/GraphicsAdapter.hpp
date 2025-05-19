@@ -3,9 +3,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Exceptions/NullPointerException.hpp>
+
 #include <memory>
-#include <stdexcept>
 #include <string>
 
 namespace NovelRT::Graphics
@@ -22,13 +22,13 @@ namespace NovelRT::Graphics
         using BackendAdapterType = typename GraphicsBackendTraits<TBackend>::AdapterType;
 
     private:
-        std::shared_ptr<BackendAdapterType> _implementation;
+        std::unique_ptr<BackendAdapterType> _implementation;
         std::shared_ptr<GraphicsProvider<TBackend>> _provider;
 
     public:
-        GraphicsAdapter(std::shared_ptr<BackendAdapterType> implementation,
+        GraphicsAdapter(std::unique_ptr<BackendAdapterType> implementation,
                         std::shared_ptr<GraphicsProvider<TBackend>> provider)
-            : _implementation(implementation), _provider(provider)
+            : _implementation(std::move(implementation)), _provider(std::move(provider))
         {
             if (!_provider)
             {
@@ -38,6 +38,11 @@ namespace NovelRT::Graphics
         }
 
         ~GraphicsAdapter() noexcept = default;
+
+        [[nodiscard]] BackendAdapterType* GetImplementation() const noexcept
+        {
+            return _implementation.get();
+        }
 
         [[nodiscard]] uint32_t GetDeviceId()
         {
@@ -49,9 +54,9 @@ namespace NovelRT::Graphics
             return _implementation->GetName();
         }
 
-        [[nodiscard]] inline std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const
+        [[nodiscard]] GraphicsProvider<TBackend>* GetProvider() const
         {
-            return _provider;
+            return _provider.get();
         }
 
         [[nodiscard]] uint32_t GetVendorId()
@@ -60,13 +65,13 @@ namespace NovelRT::Graphics
         }
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> CreateDevice(
-            std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext,
+            const std::shared_ptr<GraphicsSurfaceContext<TBackend>>& surfaceContext,
             int32_t contextCount)
         {
             return std::make_shared<GraphicsDevice<TBackend>>(
                 _implementation->CreateDevice(surfaceContext->GetImplementation(), contextCount),
                 this->shared_from_this(),
-                surfaceContext);
+                std::move(surfaceContext));
         }
     };
 }
