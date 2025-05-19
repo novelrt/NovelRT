@@ -20,7 +20,7 @@ namespace NovelRT::Graphics::Vulkan
     {
     private:
         VkBuffer _vulkanBuffer;
-        size_t _subAllocations;
+        size_t _mappedMemoryRegions;
         GraphicsResourceAccess _cpuAccess;
         GraphicsBufferKind _kind;
 
