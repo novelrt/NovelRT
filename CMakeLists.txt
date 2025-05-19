@@ -41,37 +41,15 @@ if(NOVELRT_USE_STD_SPAN)
   add_compile_definitions(NOVELRT_USE_STD_SPAN=true)
 endif()
 
-#if(NOVELRT_BUILD_DOCUMENTATION)
-#  find_package(Doxygen ${NOVELRT_DOXYGEN_VERSION}
-#    COMPONENTS dot
-#  )
-#  if(DOXYGEN_FOUND)
-#    add_subdirectory(doxygen)
-#  endif()
-#endif()
-
 add_subdirectory(ThirdParty)
 
 add_subdirectory(Base)
 add_subdirectory(Graphics)
-#add_subdirectory(Audio)
-#add_subdirectory(Input)
 add_subdirectory(UI)
+add_subdirectory(Windowing)
 
 add_subdirectory(Samples)
 
-#add_subdirectory(src)
-
-#if(NOVELRT_BUILD_TESTS)
-#  enable_testing()
-#  add_subdirectory(tests)
-#endif()
-
-
-#
-# Install files other than the libraries themselves
-# Targets' CMakeLists contains respective installations
-#
 if(NOVELRT_INSTALL)
   install(
     EXPORT NovelRTConfig

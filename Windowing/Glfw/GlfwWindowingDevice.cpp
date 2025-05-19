@@ -1,7 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/Windowing/Glfw/Windowing.Glfw.h"
+#include <NovelRT/Windowing/Glfw/GlfwWindowingDevice.hpp>
+
+// TODO: Figure out if this is required
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 
 namespace NovelRT::Windowing::Glfw
 {
