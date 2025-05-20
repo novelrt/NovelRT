@@ -77,6 +77,7 @@ namespace NovelRT::UI::DearImGui
         std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
         std::shared_ptr<GraphicsPipelineSignature<TBackend>> _pipelineSignature;
         std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> _descriptorSet;
+        std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>> _vectoryArray{};
 
     public:
         ImGuiUIProvider()
@@ -304,6 +305,8 @@ namespace NovelRT::UI::DearImGui
         void Render(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList,
                     std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) final
         {
+            _vectoryArray.clear();
+
             // Trying to do this how imgui does it cuz it kinda matches up?
             ImGui::Render();
             ImDrawData* drawData = ImGui::GetDrawData();
@@ -385,6 +388,8 @@ namespace NovelRT::UI::DearImGui
             // Bind the Vertex Buffers and the index buffer(s)?
             std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{vertexBuffer};
             std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
+            _vectoryArray.emplace_back(vertexBuffer);
+            _vectoryArray.emplace_back(indexBuffer);
 
             cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
             cmdList->CmdBindIndexBuffer(
