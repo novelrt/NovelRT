@@ -77,7 +77,7 @@ namespace NovelRT::UI::DearImGui
         std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
         std::shared_ptr<GraphicsPipelineSignature<TBackend>> _pipelineSignature;
         std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> _descriptorSet;
-        std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>> _vectoryArray{};
+        std::vector<std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>>> _vertexBuffers{};
         size_t _currentOffset;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> _currentIndexBufferRegion;
 
@@ -92,6 +92,13 @@ namespace NovelRT::UI::DearImGui
             _imguiContext = ImGui::CreateContext();
 
             static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+
+            _vertexBuffers = std::vector<std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>>>
+            {
+                std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>>{},
+                std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>>{},
+                std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>>{},
+            };
         }
 
         [[nodiscard]] inline ImGuiContext* GetImGuiContext() const noexcept
@@ -214,7 +221,7 @@ namespace NovelRT::UI::DearImGui
             auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
             // copy the data from Imgui's "pixels" to the memory of the texture staging buffer
-            memcpy(pTextureData.data(), pixels, (width * height) * sizeof(char) * 4);
+            memcpy(pTextureData.data(), pixels, (width * height) * sizeof(char));
             // Unmap the staging buffer and write
             textureStagingBuffer->UnmapBytesAndWrite(0, textureStagingBuffer->GetSize());
             // Copy the texture to the GPU
@@ -303,9 +310,10 @@ namespace NovelRT::UI::DearImGui
             ImGui::EndFrame();
         }
 
-        void UploadImguiGpuData(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList)
+        void UploadImguiGpuData(std::shared_ptr<GraphicsContext<TBackend>> context,
+                                std::shared_ptr<GraphicsCmdList<TBackend>> cmdList)
         {
-            _vectoryArray.clear();
+            _vertexBuffers[context->GetIndex()].clear();
 
             // Trying to do this how imgui does it cuz it kinda matches up?
             ImGui::Render();
@@ -389,8 +397,9 @@ namespace NovelRT::UI::DearImGui
             std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{vertexBuffer};
             _currentOffset = vertexBufferRegion->GetOffset();
             _currentIndexBufferRegion = indexBufferRegion;
-            _vectoryArray.emplace_back(vertexBuffer);
-            _vectoryArray.emplace_back(indexBuffer);
+
+            _vertexBuffers[context->GetIndex()].emplace_back(vertexBuffer);
+            _vertexBuffers[context->GetIndex()].emplace_back(indexBuffer);
         }
 
         void Render(std::shared_ptr<GraphicsContext<TBackend>> context,
@@ -404,7 +413,8 @@ namespace NovelRT::UI::DearImGui
             ImVec2 clippingScale = drawData->FramebufferScale;
             int32_t globalVertexOffset = 0;
             int32_t globalIndexOffset = 0;
-            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{_vectoryArray[_vectoryArray.size() - 2]};
+            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{
+                _vertexBuffers[context->GetIndex()][_vertexBuffers[context->GetIndex()].size() - 2]};
             std::array<size_t, 1> offsets{_currentOffset};
 
             cmdList->CmdBindPipeline(_pipeline);
@@ -432,18 +442,18 @@ namespace NovelRT::UI::DearImGui
             // sizeof(float) * 2, scale); vkCmdPushConstants(command_buffer, bd->PipelineLayout,
             // VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
 
-            //cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-            //                       NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-            // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-            //     inputResourceRegions{
-            //             std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-            //             std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-            //                     _texture2DRegion))};
-            //cmdList->CmdBindDescriptorSets(_descriptorSet);
-            // auto descriptorSetData = _pipeline->CreateDescriptorSet();
-            // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            // descriptorSetData->UpdateDescriptorSetData();
-            // Start doing the draw commands
+            // cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+            //                        NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            //  std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+            //      inputResourceRegions{
+            //              std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+            //              std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+            //                      _texture2DRegion))};
+            // cmdList->CmdBindDescriptorSets(_descriptorSet);
+            //  auto descriptorSetData = _pipeline->CreateDescriptorSet();
+            //  descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            //  descriptorSetData->UpdateDescriptorSetData();
+            //  Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
                 const ImDrawList* list = drawData->CmdLists[n];
@@ -464,23 +474,23 @@ namespace NovelRT::UI::DearImGui
                                            (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
 
                         // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
-                        //if (clippingMin.x < 0.0f)
+                        // if (clippingMin.x < 0.0f)
                         //{
                         //    clippingMin.x = 0.0f;
                         //}
-                        //if (clippingMin.y < 0.0f)
+                        // if (clippingMin.y < 0.0f)
                         //{
                         //    clippingMin.y = 0.0f;
                         //}
-                        //if (clippingMax.x >)
+                        // if (clippingMax.x >)
                         //{
                         //    clippingMax.x = (float)fb_width;
                         //}
-                        //if (clippingMax.y > fb_height)
+                        // if (clippingMax.y > fb_height)
                         //{
                         //    clippingMax.y = (float)fb_height;
                         //}
-                        //if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
+                        // if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
                         //    continue;
 
                         // Apply scissor/clipping rectangle
@@ -518,11 +528,10 @@ namespace NovelRT::UI::DearImGui
                         cmdList->CmdBindDescriptorSets(descriptorData);
 
                         // Draw
-                        //CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
+                        // CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
                         //               size_t vertexOffset, uint32_t firstInstance)
-                            cmdList->CmdDrawIndexed(drawCommand->ElemCount, 1,
-                                                    drawCommand->IdxOffset + globalIndexOffset,
-                                                    drawCommand->VtxOffset + globalVertexOffset, 0);
+                        cmdList->CmdDrawIndexed(drawCommand->ElemCount, 1, drawCommand->IdxOffset + globalIndexOffset,
+                                                drawCommand->VtxOffset + globalVertexOffset, 0);
                     }
                 }
                 globalIndexOffset += list->IdxBuffer.Size;

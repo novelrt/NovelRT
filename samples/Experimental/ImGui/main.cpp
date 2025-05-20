@@ -73,7 +73,7 @@ struct TexturedVertex
 int main()
 {
     NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+    NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
 
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
@@ -232,7 +232,7 @@ int main()
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
 
-            imGuiProvider->UploadImguiGpuData(currentCmdList);
+            imGuiProvider->UploadImguiGpuData(context, currentCmdList);
 
             auto renderPass = gfxDevice->GetRenderPass();
 
