@@ -232,6 +232,8 @@ int main()
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
 
+            imGuiProvider->UploadImguiGpuData(currentCmdList);
+
             auto renderPass = gfxDevice->GetRenderPass();
 
             NovelRT::Graphics::ClearValue colourDataStruct{};
@@ -251,9 +253,9 @@ int main()
             viewportInfoStruct.maxDepth = 1.0f;
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
+            currentCmdList->CmdBindPipeline(pipeline);
             currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                           NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-            currentCmdList->CmdBindPipeline(pipeline);
 
             std::array<std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>, 1> buffers{vertexBuffer};
             std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
@@ -270,11 +272,11 @@ int main()
 
             currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
 
-            currentCmdList->CmdEndRenderPass();
 
             //More imgui shit
-            imGuiProvider->Render(currentCmdList, pipeline);
+            imGuiProvider->Render(context, currentCmdList, pipeline);
             
+            currentCmdList->CmdEndRenderPass();
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();

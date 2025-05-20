@@ -12,6 +12,7 @@
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/GraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
+#include <NovelRT/Graphics/GraphicsContext.hpp>
 #include <NovelRT/Threading/Threading.h>
 #include <memory>
 
@@ -34,7 +35,7 @@ namespace NovelRT::UI
 
         virtual void EndFrame() = 0;
 
-        virtual void Render(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> cmdList, std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) = 0;
+        virtual void Render(std::shared_ptr<Graphics::GraphicsContext<TBackend>> context, std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> cmdList, std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) = 0;
 
         virtual ~UIProvider() = default;
     };

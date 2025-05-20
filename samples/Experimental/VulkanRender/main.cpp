@@ -208,8 +208,8 @@ int main()
         if (device->GetIsVisible())
         {
             auto context = gfxDevice->GetCurrentContext();
+            logger.logWarningLine("Context index: " + std::to_string(context->GetIndex()));
             auto currentCmdList = context->BeginFrame();
-            // context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
 
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
@@ -254,12 +254,9 @@ int main()
 
             currentCmdList->CmdEndRenderPass();
 
-            // auto primitive = gfxDevice->CreatePrimitive(pipeline, vertexBufferRegion, sizeof(TexturedVertex),
-            //                                             dummyRegion, 0, inputResourceRegions);
-            // context->Draw(primitive);
             context->EndFrame();
+            context->RegisterDescriptorSetForFrame(signature, descriptorSetData);
             gfxDevice->PresentFrame();
-            gfxDevice->WaitForIdle();
         }
     }
 

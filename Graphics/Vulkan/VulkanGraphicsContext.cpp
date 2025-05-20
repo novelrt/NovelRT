@@ -294,14 +294,14 @@ namespace NovelRT::Graphics::Vulkan
 
     void VulkanGraphicsContext::DestroyDescriptorSets()
     {
-        for (auto&& pair : _vulkanDescriptorSets)
-        {
-            std::vector<VkDescriptorSet> sets(pair.second.size());
+        //for (auto&& pair : _vulkanDescriptorSets)
+        //{
+        //    std::vector<VkDescriptorSet> sets(pair.second.size());
 
-            std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](std::shared_ptr<VulkanGraphicsDescriptorSet> set){ return *set->GetVulkanDescriptorSet(); });
+        //    std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](std::shared_ptr<VulkanGraphicsDescriptorSet> set){ return *set->GetVulkanDescriptorSet(); });
 
-            pair.first->DestroyDescriptorSets(sets);
-        }
+        //    pair.first->DestroyDescriptorSets(sets);
+        //}
 
         _vulkanDescriptorSets.clear();
     }

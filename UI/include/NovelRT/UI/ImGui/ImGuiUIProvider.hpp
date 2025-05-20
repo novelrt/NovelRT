@@ -11,8 +11,8 @@
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
 #include <NovelRT/Maths/Maths.h>
 #include <NovelRT/UI/UIProvider.hpp>
-#include <imgui.h>
 #include <fstream>
+#include <imgui.h>
 
 using namespace NovelRT::Graphics;
 
@@ -78,6 +78,8 @@ namespace NovelRT::UI::DearImGui
         std::shared_ptr<GraphicsPipelineSignature<TBackend>> _pipelineSignature;
         std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> _descriptorSet;
         std::vector<std::shared_ptr<GraphicsBuffer<TBackend>>> _vectoryArray{};
+        size_t _currentOffset;
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> _currentIndexBufferRegion;
 
     public:
         ImGuiUIProvider()
@@ -234,43 +236,42 @@ namespace NovelRT::UI::DearImGui
             auto pixelShaderData = LoadSpv("imgui_frag.spv");
 
             std::vector<GraphicsPipelineInputElement> elem{
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F), GraphicsPipelineInputElementKind::Position,
-                                             8),
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                             GraphicsPipelineInputElementKind::Position, 8),
                 GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
                                              GraphicsPipelineInputElementKind::Normal, 8),
                 GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector4F),
                                              GraphicsPipelineInputElementKind::TextureCoordinate, 16)};
-            
+
             std::vector<GraphicsPushConstantRange> pushConstants{
                 GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4},
-                //GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, sizeof(float) * 2, sizeof(float)}
+                // GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, sizeof(float) * 2, sizeof(float)}
             };
-            
-        
+
             std::vector<GraphicsPipelineInput> in{GraphicsPipelineInput(elem)};
             std::vector<GraphicsPipelineResource> res{
                 GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-        
-            auto signature = graphicsDevice->CreatePipelineSignature(
-                GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, in, res, pushConstants);
-            auto vertShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
-            auto pixelShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
+
+            auto signature = graphicsDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+                                                                     GraphicsPipelineBlendFactor::OneMinusSrcAlpha, in,
+                                                                     res, pushConstants);
+            auto vertShaderProg =
+                graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
+            auto pixelShaderProg =
+                graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
             auto pipeline = graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
             _pipeline = pipeline;
             _pipelineSignature = signature;
 
-            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-            inputResourceRegions{
-                    std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                            _texture2DRegion))}; 
+            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions{
+                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(_texture2DRegion))};
 
-            auto descriptorSetData = pipeline->CreateDescriptorSet();
-            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            descriptorSetData->UpdateDescriptorSetData();
-            std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
-                descriptorSetData};
-            _descriptorSet = descriptorData;
+            // auto descriptorSetData = pipeline->CreateDescriptorSet();
+            // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            // descriptorSetData->UpdateDescriptorSetData();
+            // std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{descriptorSetData};
+            //_descriptorSet = descriptorData;
         }
 
         void BeginFrame(double deltaTime) final
@@ -302,8 +303,7 @@ namespace NovelRT::UI::DearImGui
             ImGui::EndFrame();
         }
 
-        void Render(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList,
-                    std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) final
+        void UploadImguiGpuData(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList)
         {
             _vectoryArray.clear();
 
@@ -387,36 +387,32 @@ namespace NovelRT::UI::DearImGui
 
             // Bind the Vertex Buffers and the index buffer(s)?
             std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{vertexBuffer};
-            std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
+            _currentOffset = vertexBufferRegion->GetOffset();
+            _currentIndexBufferRegion = indexBufferRegion;
             _vectoryArray.emplace_back(vertexBuffer);
             _vectoryArray.emplace_back(indexBuffer);
+        }
+
+        void Render(std::shared_ptr<GraphicsContext<TBackend>> context,
+                    std::shared_ptr<GraphicsCmdList<TBackend>> cmdList,
+                    std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) final
+        {
+            ImDrawData* drawData = ImGui::GetDrawData();
+            if (drawData->TotalVtxCount <= 0)
+                return;
+            ImVec2 clippingOffset = drawData->DisplayPos;
+            ImVec2 clippingScale = drawData->FramebufferScale;
+            int32_t globalVertexOffset = 0;
+            int32_t globalIndexOffset = 0;
+            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{_vectoryArray[_vectoryArray.size() - 2]};
+            std::array<size_t, 1> offsets{_currentOffset};
 
             cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
             cmdList->CmdBindIndexBuffer(
-                indexBufferRegion,
+                _currentIndexBufferRegion,
                 Graphics::IndexType::UInt16); // ImGui provides Uint16, but this could work with uint32 too
 
-            auto renderPass = _graphicsDevice->GetRenderPass();
-
-            NovelRT::Graphics::ClearValue colourDataStruct{};
-            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-            colourDataStruct.depth = 0;
-            colourDataStruct.stencil = 0;
-
-            std::vector<ClearValue> colourData{colourDataStruct};
-            cmdList->CmdBeginRenderPass(renderPass, colourData);
-
-            ViewportInfo viewportInfoStruct{};
-            viewportInfoStruct.x = 0;
-            viewportInfoStruct.y = drawData->DisplaySize.y;
-            viewportInfoStruct.width = drawData->DisplaySize.x;
-            viewportInfoStruct.height = -drawData->DisplaySize.y;
-            viewportInfoStruct.minDepth = 0.0f;
-            viewportInfoStruct.maxDepth = 1.0f;
-
-            cmdList->CmdSetViewport(viewportInfoStruct);
-
-            //Setup PushConstants
+            // Setup PushConstants
             float scale[2];
             scale[0] = 2.0f / drawData->DisplaySize.x;
             scale[1] = 2.0f / drawData->DisplaySize.y;
@@ -428,11 +424,13 @@ namespace NovelRT::UI::DearImGui
             Utilities::Misc::Span<float> translateSpan(translate);
 
             cmdList->CmdBindPipeline(_pipeline);
-            cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0, Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
-            cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2, Utilities::Misc::SpanCast<uint8_t>(translateSpan));
-            // vkCmdPushConstants(command_buffer, bd->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0, sizeof(float) * 2, scale);
-            // vkCmdPushConstants(command_buffer, bd->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
-            
+            cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0,
+                                      Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
+            cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
+                                      Utilities::Misc::SpanCast<uint8_t>(translateSpan));
+            // vkCmdPushConstants(command_buffer, bd->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0,
+            // sizeof(float) * 2, scale); vkCmdPushConstants(command_buffer, bd->PipelineLayout,
+            // VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
 
             cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                    NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
@@ -440,8 +438,8 @@ namespace NovelRT::UI::DearImGui
             //     inputResourceRegions{
             //             std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
             //             std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-            //                     _texture2DRegion))}; 
-            cmdList->CmdBindDescriptorSets(_descriptorSet);
+            //                     _texture2DRegion))};
+            //cmdList->CmdBindDescriptorSets(_descriptorSet);
             // auto descriptorSetData = _pipeline->CreateDescriptorSet();
             // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
             // descriptorSetData->UpdateDescriptorSetData();
@@ -459,27 +457,6 @@ namespace NovelRT::UI::DearImGui
                     else
                     {
 
-                        // auto texture2DRegion =
-                        //     *reinterpret_cast<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
-                        //         drawCommand->GetTexID());
-                        // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-                        //     inputResourceRegions{
-                        //          std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                        //          std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                        //                  texture2DRegion))};
-                                //std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                                 //       vertexBufferRegion)};
-
-                        // Specify the descriptor set - dunno what that means but I think it's right?
-                        // auto descriptorSetData = _pipeline->CreateDescriptorSet();
-                        // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-                        // descriptorSetData->UpdateDescriptorSetData();
-
-                        // Bind the descriptor set
-                        // std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
-                        //     descriptorSetData};
-                        
-
                         // Project scissor/clipping rectangles into framebuffer space
                         ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
                                            (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
@@ -487,12 +464,24 @@ namespace NovelRT::UI::DearImGui
                                            (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
 
                         // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
-                        // if (clippingMin.x < 0.0f) { clippingMin.x = 0.0f; }
-                        // if (clippingMin.y < 0.0f) { clippingMin.y = 0.0f; }
-                        // if (clippingMax.x > ) { clippingMax.x = (float)fb_width; }
-                        // if (clippingMax.y > fb_height) { clippingMax.y = (float)fb_height; }
-                        // if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
-                        //     continue;
+                        //if (clippingMin.x < 0.0f)
+                        //{
+                        //    clippingMin.x = 0.0f;
+                        //}
+                        //if (clippingMin.y < 0.0f)
+                        //{
+                        //    clippingMin.y = 0.0f;
+                        //}
+                        //if (clippingMax.x >)
+                        //{
+                        //    clippingMax.x = (float)fb_width;
+                        //}
+                        //if (clippingMax.y > fb_height)
+                        //{
+                        //    clippingMax.y = (float)fb_height;
+                        //}
+                        //if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
+                        //    continue;
 
                         // Apply scissor/clipping rectangle
                         cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::GeoVector2F(clippingMin.x, clippingMin.y),
@@ -504,14 +493,36 @@ namespace NovelRT::UI::DearImGui
                         // vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, bd->PipelineLayout,
                         // 0, 1, &desc_set, 0, nullptr);
 
+                        auto texture2DRegion = *reinterpret_cast<
+                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
+                            drawCommand->GetTexID());
+                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                            inputResourceRegions{
+                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                                        texture2DRegion))};
+                        // std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                        //     vertexBufferRegion)
+                        //};
+
+                        // Specify the descriptor set - dunno what that means but I think it's right?
+                        auto descriptorSetData = _pipeline->CreateDescriptorSet();
+                        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+                        descriptorSetData->UpdateDescriptorSetData();
+                        context->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
+
+                        // Bind the descriptor set
+                        std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
+                            descriptorSetData};
+
+                        cmdList->CmdBindDescriptorSets(descriptorData);
+
                         // Draw
-                        // CmdDrawIndexed(uint32_t indexCount,
-                        //     uint32_t instanceCount,
-                        //     uint32_t firstIndex,
-                        //     size_t vertexOffset,
-                        //     uint32_t firstInstance)
-                        cmdList->CmdDrawIndexed(drawCommand->ElemCount, 1, drawCommand->IdxOffset + globalIndexOffset,
-                                                drawCommand->VtxOffset + globalVertexOffset, 0);
+                        //CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
+                        //               size_t vertexOffset, uint32_t firstInstance)
+                            cmdList->CmdDrawIndexed(drawCommand->ElemCount, 1,
+                                                    drawCommand->IdxOffset + globalIndexOffset,
+                                                    drawCommand->VtxOffset + globalVertexOffset, 0);
                     }
                 }
                 globalIndexOffset += list->IdxBuffer.Size;
@@ -519,9 +530,8 @@ namespace NovelRT::UI::DearImGui
             }
 
             // Reset clipping rect
-            cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                   NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-            cmdList->CmdEndRenderPass();
+            // cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+            //                       NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
         }
 
         ~ImGuiUIProvider() final
