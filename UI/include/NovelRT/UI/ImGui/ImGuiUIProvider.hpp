@@ -113,12 +113,14 @@ namespace NovelRT::UI::DearImGui
                         std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator) final
 
         {
+            //return;
             _windowingDevice = windowingDevice;
             _inputDevice = inputDevice;
             _graphicsDevice = graphicsDevice;
             _memoryAllocator = memoryAllocator;
 
             ImGuiIO& io = ImGui::GetIO();
+            io.Fonts->AddFontDefault();
             ImGui::StyleColorsDark();
 
             io.BackendPlatformUserData = (void*)this;
@@ -229,6 +231,7 @@ namespace NovelRT::UI::DearImGui
 
         void BeginFrame(double deltaTime) final
         {
+            //return;
             ImGuiIO& io = ImGui::GetIO();
 
             auto windowSize = _windowingDevice->GetSize();
@@ -253,12 +256,14 @@ namespace NovelRT::UI::DearImGui
 
         void EndFrame() final
         {
+            //return;
             ImGui::EndFrame();
         }
 
         void UploadImguiGpuData(std::shared_ptr<GraphicsContext<TBackend>> context,
                                 std::shared_ptr<GraphicsCmdList<TBackend>> cmdList)
         {
+            return;
             _vertexBuffers[context->GetIndex()].clear();
 
             ImGui::Render();
@@ -351,6 +356,7 @@ namespace NovelRT::UI::DearImGui
                     std::shared_ptr<GraphicsCmdList<TBackend>> cmdList,
                     std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) final
         {
+            return;
             ImDrawData* drawData = ImGui::GetDrawData();
             if (drawData->TotalVtxCount <= 0)
                 return;
@@ -472,6 +478,7 @@ namespace NovelRT::UI::DearImGui
 
         ~ImGuiUIProvider() final
         {
+            return;
             ImGui::DestroyContext(_imguiContext);
         }
     };
