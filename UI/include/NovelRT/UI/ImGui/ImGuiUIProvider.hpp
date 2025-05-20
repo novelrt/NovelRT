@@ -214,7 +214,7 @@ namespace NovelRT::UI::DearImGui
             auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
             // copy the data from Imgui's "pixels" to the memory of the texture staging buffer
-            memcpy(pTextureData.data(), pixels, width * height);
+            memcpy(pTextureData.data(), pixels, (width * height) * sizeof(char) * 4);
             // Unmap the staging buffer and write
             textureStagingBuffer->UnmapBytesAndWrite(0, textureStagingBuffer->GetSize());
             // Copy the texture to the GPU
@@ -407,6 +407,7 @@ namespace NovelRT::UI::DearImGui
             std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{_vectoryArray[_vectoryArray.size() - 2]};
             std::array<size_t, 1> offsets{_currentOffset};
 
+            cmdList->CmdBindPipeline(_pipeline);
             cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
             cmdList->CmdBindIndexBuffer(
                 _currentIndexBufferRegion,
@@ -423,7 +424,6 @@ namespace NovelRT::UI::DearImGui
             Utilities::Misc::Span<float> scaleSpan(scale);
             Utilities::Misc::Span<float> translateSpan(translate);
 
-            cmdList->CmdBindPipeline(_pipeline);
             cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0,
                                       Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
             cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
@@ -432,8 +432,8 @@ namespace NovelRT::UI::DearImGui
             // sizeof(float) * 2, scale); vkCmdPushConstants(command_buffer, bd->PipelineLayout,
             // VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
 
-            cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                   NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            //cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+            //                       NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
             // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
             //     inputResourceRegions{
             //             std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
