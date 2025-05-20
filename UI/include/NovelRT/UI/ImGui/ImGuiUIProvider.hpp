@@ -140,65 +140,20 @@ namespace NovelRT::UI::DearImGui
 
             io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
-            size_t upload_size = (width * height) * sizeof(uint32_t);
-            unused(upload_size);
-
             // Getting Jiggy Wit It - GFX-style
             auto graphicsContext = graphicsDevice->GetCurrentContext();
 
-            // Create Vertex Staging Buffer
+            
             GraphicsBufferCreateInfo bufferCreateInfo{};
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-            bufferCreateInfo.size = 64 * 1024;
-
-            auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
             bufferCreateInfo.size = 64 * 1024 * 4;
 
             // Create Texture Staging Buffer
             auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-            bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
-            bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
-            bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
-            bufferCreateInfo.size = 64 * 1024;
-
-            // Create Vertex Buffer
-            auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
             // Create Command List
             std::shared_ptr<GraphicsCmdList<TBackend>> cmdList = graphicsContext->BeginFrame();
-
-            // Define Pipeline inputs and resources
-            std::vector<GraphicsPipelineInputElement> elements{
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F),
-                                             GraphicsPipelineInputElementKind::Position, 12),
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                             GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
-
-            std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-            std::vector<GraphicsPipelineResource> resources{
-                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-
-            // Allocate memory for vertex and staging buffers
-            auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-            auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-
-            // Map vertex buffer to region
-            auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
-
-            // Define vertices
-            pVertexBuffer[0] =
-                TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-            pVertexBuffer[1] =
-                TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-            pVertexBuffer[2] =
-                TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
-
-            // Write region to staging buffer
-            vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-            // Copy Command from staging -> vertex buffer
-            cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
             // Create Graphics Texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
@@ -211,17 +166,19 @@ namespace NovelRT::UI::DearImGui
                                                                GraphicsMemoryRegionAllocationFlags::None,
                                                                TexelFormat::R8G8B8A8_UNORM};
             _texture2D = memoryAllocator->CreateTexture(textureCreateInfo);
-            //_texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(width, height);
+            
             // Allocate region based on size of texture
             std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> texture2DRegion =
                 _texture2D->Allocate(_texture2D->GetSize(), 4);
+
             // Create a staging buffer region for texture
             auto textureStagingBufferRegion = textureStagingBuffer->Allocate(_texture2D->GetSize(), 4);
+
             // Map the texture staging buffer to the texture region
             auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
 
             // copy the data from Imgui's "pixels" to the memory of the texture staging buffer
-            memcpy(pTextureData.data(), pixels, (width * height) * sizeof(char));
+            memcpy(pTextureData.data(), pixels, (width * height) * sizeof(char) * 4);
             // Unmap the staging buffer and write
             textureStagingBuffer->UnmapBytesAndWrite(0, textureStagingBuffer->GetSize());
             // Copy the texture to the GPU
@@ -233,10 +190,7 @@ namespace NovelRT::UI::DearImGui
             graphicsDevice->Signal(graphicsContext->GetFence());
             graphicsDevice->WaitForIdle();
 
-            // auto ptr = //new Graphics::GraphicsMemoryRegion<Graphics::GraphicsResource<TBackend>>();
-
-            _texture2DRegion = texture2DRegion;
-
+            //Stash the texture 2d region for retrieval later
             io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture2DRegion));
 
             auto vertShaderData = LoadSpv("imgui_vert.spv");
@@ -252,7 +206,6 @@ namespace NovelRT::UI::DearImGui
 
             std::vector<GraphicsPushConstantRange> pushConstants{
                 GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4},
-                // GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, sizeof(float) * 2, sizeof(float)}
             };
 
             std::vector<GraphicsPipelineInput> in{GraphicsPipelineInput(elem)};
@@ -267,18 +220,11 @@ namespace NovelRT::UI::DearImGui
             auto pixelShaderProg =
                 graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
             auto pipeline = graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
+            
+            //Cache what needs caching
             _pipeline = pipeline;
             _pipelineSignature = signature;
-
-            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions{
-                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(_texture2DRegion))};
-
-            // auto descriptorSetData = pipeline->CreateDescriptorSet();
-            // descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            // descriptorSetData->UpdateDescriptorSetData();
-            // std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{descriptorSetData};
-            //_descriptorSet = descriptorData;
+            _texture2DRegion = texture2DRegion;
         }
 
         void BeginFrame(double deltaTime) final
