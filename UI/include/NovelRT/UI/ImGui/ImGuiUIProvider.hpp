@@ -354,6 +354,13 @@ namespace NovelRT::UI::DearImGui
             ImDrawData* drawData = ImGui::GetDrawData();
             if (drawData->TotalVtxCount <= 0)
                 return;
+
+            // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
+            int32_t fb_width = (int32_t)(drawData->DisplaySize.x * drawData->FramebufferScale.x);
+            int32_t fb_height = (int32_t)(drawData->DisplaySize.y * drawData->FramebufferScale.y);
+            if (fb_width <= 0 || fb_height <= 0)
+                return;
+
             ImVec2 clippingOffset = drawData->DisplayPos;
             ImVec2 clippingScale = drawData->FramebufferScale;
             int32_t globalVertexOffset = 0;
