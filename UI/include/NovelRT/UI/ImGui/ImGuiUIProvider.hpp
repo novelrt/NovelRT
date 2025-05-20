@@ -180,7 +180,7 @@ namespace NovelRT::UI::DearImGui
             // copy the data from Imgui's "pixels" to the memory of the texture staging buffer
             memcpy(pTextureData.data(), pixels, (width * height) * sizeof(char) * 4);
             // Unmap the staging buffer and write
-            textureStagingBuffer->UnmapBytesAndWrite(0, textureStagingBuffer->GetSize());
+            textureStagingBuffer->UnmapAndWrite(texture2DRegion);
             // Copy the texture to the GPU
             cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(_texture2D);
             cmdList->CmdCopy(_texture2D, textureStagingBufferRegion);
