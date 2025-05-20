@@ -261,17 +261,16 @@ namespace NovelRT::UI::DearImGui
         {
             _vertexBuffers[context->GetIndex()].clear();
 
-            // Trying to do this how imgui does it cuz it kinda matches up?
             ImGui::Render();
             ImDrawData* drawData = ImGui::GetDrawData();
             auto io = ImGui::GetIO();
+
             // Early escape
             if (drawData->TotalVtxCount <= 0)
                 return;
 
-            /* Magic number for now - TODO: figure out proper alignment value*/
-            size_t vertexSize = AlignBufferSize(drawData->TotalVtxCount * sizeof(ImDrawVert), 64);
-            size_t indexSize = AlignBufferSize(drawData->TotalIdxCount * sizeof(ImDrawIdx), 64);
+            size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
+            size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
 
             // Create buffers
             GraphicsBufferCreateInfo bufferCreateInfo{};
@@ -384,21 +383,7 @@ namespace NovelRT::UI::DearImGui
                                       Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
             cmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
                                       Utilities::Misc::SpanCast<uint8_t>(translateSpan));
-            // vkCmdPushConstants(command_buffer, bd->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 0,
-            // sizeof(float) * 2, scale); vkCmdPushConstants(command_buffer, bd->PipelineLayout,
-            // VK_SHADER_STAGE_VERTEX_BIT, sizeof(float) * 2, sizeof(float) * 2, translate);
-
-            // cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-            //                        NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-            //  std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
-            //      inputResourceRegions{
-            //              std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-            //              std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-            //                      _texture2DRegion))};
-            // cmdList->CmdBindDescriptorSets(_descriptorSet);
-            //  auto descriptorSetData = _pipeline->CreateDescriptorSet();
-            //  descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            //  descriptorSetData->UpdateDescriptorSetData();
+            
             //  Start doing the draw commands
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
@@ -420,24 +405,24 @@ namespace NovelRT::UI::DearImGui
                                            (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
 
                         // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
-                        // if (clippingMin.x < 0.0f)
-                        //{
-                        //    clippingMin.x = 0.0f;
-                        //}
-                        // if (clippingMin.y < 0.0f)
-                        //{
-                        //    clippingMin.y = 0.0f;
-                        //}
-                        // if (clippingMax.x >)
-                        //{
-                        //    clippingMax.x = (float)fb_width;
-                        //}
-                        // if (clippingMax.y > fb_height)
-                        //{
-                        //    clippingMax.y = (float)fb_height;
-                        //}
-                        // if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
-                        //    continue;
+                        if (clippingMin.x < 0.0f)
+                        {
+                           clippingMin.x = 0.0f;
+                        }
+                        if (clippingMin.y < 0.0f)
+                        {
+                           clippingMin.y = 0.0f;
+                        }
+                        if (clippingMax.x > fb_width)
+                        {
+                           clippingMax.x = (float)fb_width;
+                        }
+                        if (clippingMax.y > fb_height)
+                        {
+                           clippingMax.y = (float)fb_height;
+                        }
+                        if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
+                           continue;
 
                         // Apply scissor/clipping rectangle
                         cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::GeoVector2F(clippingMin.x, clippingMin.y),
@@ -445,23 +430,15 @@ namespace NovelRT::UI::DearImGui
                                                                            (clippingMax.y - clippingMin.y)));
 
                         // Bind DescriptorSet with font or user texture
-                        // VkDescriptorSet desc_set = (VkDescriptorSet)drawCommand->GetTexID();
-                        // vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, bd->PipelineLayout,
-                        // 0, 1, &desc_set, 0, nullptr);
-
-                        auto texture2DRegion = *reinterpret_cast<
-                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
+                        auto texture2DRegion = *reinterpret_cast<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
                             drawCommand->GetTexID());
                         std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
                             inputResourceRegions{
                                 std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
                                     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
                                         texture2DRegion))};
-                        // std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                        //     vertexBufferRegion)
-                        //};
 
-                        // Specify the descriptor set - dunno what that means but I think it's right?
+                        // Specify the descriptor set data
                         auto descriptorSetData = _pipeline->CreateDescriptorSet();
                         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
                         descriptorSetData->UpdateDescriptorSetData();
@@ -473,9 +450,6 @@ namespace NovelRT::UI::DearImGui
 
                         cmdList->CmdBindDescriptorSets(descriptorData);
 
-                        // Draw
-                        // CmdDrawIndexed(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
-                        //               size_t vertexOffset, uint32_t firstInstance)
                         cmdList->CmdDrawIndexed(drawCommand->ElemCount, 1, drawCommand->IdxOffset + globalIndexOffset,
                                                 drawCommand->VtxOffset + globalVertexOffset, 0);
                     }
@@ -484,9 +458,9 @@ namespace NovelRT::UI::DearImGui
                 globalVertexOffset += list->VtxBuffer.Size;
             }
 
-            // Reset clipping rect
-            // cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-            //                       NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            // Reset clipping rect as per imgui
+            cmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                   NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
         }
 
         ~ImGuiUIProvider() final
