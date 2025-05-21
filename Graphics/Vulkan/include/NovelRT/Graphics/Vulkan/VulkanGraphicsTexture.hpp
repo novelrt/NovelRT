@@ -5,6 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
+#include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
@@ -13,7 +14,16 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsTexture : public VulkanGraphicsResource
+    struct VulkanGraphicsBackend;
+}
+
+namespace NovelRT::Graphics
+{
+    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+
+    template <>
+    class GraphicsTexture<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
     {
     private:
         VkImage _vulkanImage;
@@ -21,8 +31,8 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsTextureAddressMode _addressMode;
         GraphicsTextureKind _kind;
 
-        NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
-        NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
+        mutable NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
+        mutable NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
 
         uint32_t _width;
         uint32_t _height;
@@ -31,48 +41,42 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] VkImageView CreateVulkanImageView();
         [[nodiscard]] VkSampler CreateVulkanSampler();
 
-    protected:
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(
-            VmaVirtualAllocation allocation,
-            VmaVirtualAllocationInfo info) final;
-
     public:
-        VulkanGraphicsTexture(VulkanGraphicsDevice* device,
-                              VulkanGraphicsMemoryAllocator* allocator,
-                              GraphicsResourceAccess cpuAccess,
-                              GraphicsTextureAddressMode addressMode,
-                              GraphicsTextureKind kind,
-                              uint32_t width,
-                              uint32_t height,
-                              uint16_t depth,
-                              VmaAllocation allocation,
-                              VmaAllocationInfo allocationInfo,
-                              VkImage vulkanImage);
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
-        virtual ~VulkanGraphicsTexture() noexcept;
+        GraphicsTexture(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+            std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
+            const GraphicsTextureCreateInfo& createInfo,
+            VmaAllocation allocation,
+            VmaAllocationInfo allocationInfo,
+            VkImage vulkanImage);
+
+        ~GraphicsTexture() noexcept final;
 
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
+        [[nodiscard]] uint32_t GetWidth() const noexcept;
+        [[nodiscard]] uint32_t GetHeight() const noexcept;
+        [[nodiscard]] uint32_t GetDepth() const noexcept;
+
         [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
 
-        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                           size_t rangeLength) override;
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) override;
 
         void UnmapBytes() final;
-
+        void UnmapBytesAndWrite() final;
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
+
+        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion);
 
         [[nodiscard]] VkImage GetVulkanImage() const noexcept;
 
-        [[nodiscard]] VkImageView GetOrCreateVulkanImageView();
+        [[nodiscard]] VkImageView GetVulkanImageView() const;
+        [[nodiscard]] VkSampler GetVulkanSampler() const;
 
-        [[nodiscard]] VkSampler GetOrCreateVulkanSampler();
 
-        [[nodiscard]] uint32_t GetWidth() const noexcept;
-
-        [[nodiscard]] uint32_t GetHeight() const noexcept;
-
-        [[nodiscard]] uint32_t GetDepth() const noexcept;
     };
 }

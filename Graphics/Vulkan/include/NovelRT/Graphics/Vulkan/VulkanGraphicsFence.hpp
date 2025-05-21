@@ -10,73 +10,42 @@
 
 #include <chrono>
 #include <cstdint>
+
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsFence
+namespace NovelRT::Graphics
+{
+    template <>
+    class GraphicsFence<Vulkan::VulkanGraphicsBackend>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        VulkanGraphicsDevice* _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
         mutable NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
         mutable Threading::VolatileState _state;
 
-        [[nodiscard]] VkFence CreateVulkanFenceSignaled()
-        {
-            return CreateVulkanFence(VK_FENCE_CREATE_SIGNALED_BIT);
-        }
-        [[nodiscard]] VkFence CreateVulkanFenceUnsignaled()
-        {
-            // NOLINTNEXTLINE(EnumCastOutOfRange): zero-init is the default
-            return CreateVulkanFence(static_cast<VkFenceCreateFlagBits>(0));
-        }
-        [[nodiscard]] VkFence CreateVulkanFence(VkFenceCreateFlagBits flags) const;
-        void DisposeVulkanFence(VkFence vulkanFence) const noexcept;
-        [[nodiscard]] bool TryWaitInternal(uint64_t millisecondsTimeout);
-
     public:
-        VulkanGraphicsFence(VulkanGraphicsDevice* device, bool isSignaled) noexcept;
-        ~VulkanGraphicsFence();
+        GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept;
+        ~GraphicsFence() noexcept override;
 
-        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
-        {
-            return _device;
-        }
-
-        [[nodiscard]] VkFence GetVulkanFence()
-        {
-            return _vulkanFence.Get();
-        }
-
-        [[nodiscard]] bool GetIsSignalled();
+        [[nodiscard]] bool GetIsSignalled() const;
 
         void Reset();
 
+        [[nodiscard]] bool TryWait();
         [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
         [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
 
-        void Wait(uint64_t millisecondsTimeout)
-        {
-            if (!TryWait(millisecondsTimeout))
-            {
-                throw Exceptions::TimeoutException(millisecondsTimeout);
-            }
-        }
+        void Wait();
+        void Wait(uint64_t millisecondsTimeout);
+        void Wait(std::chrono::duration<uint64_t, std::milli> timeout);
 
-        void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
-        {
-            if (!TryWait(timeout))
-            {
-                throw Exceptions::TimeoutException(timeout.count());
-            }
-        }
-
-        void Wait()
-        {
-            Wait(std::numeric_limits<uint64_t>::max());
-        }
+        [[nodiscard]] VkFence GetVulkanFence() const;
     };
 }

@@ -14,12 +14,17 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanShaderProgram
+namespace NovelRT::Graphics
+{
+    template <>
+    class ShaderProgram<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<VulkanGraphicsDevice> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::string _entryPointName;
         ShaderProgramKind _kind;
         NovelRT::Utilities::Lazy<VkShaderModule> _shaderModule;
@@ -29,14 +34,17 @@ namespace NovelRT::Graphics::Vulkan
         VkShaderModule CreateShaderModule();
 
     public:
-        VulkanShaderProgram(VulkanGraphicsDevice* device,
-                            std::string entryPointName,
-                            ShaderProgramKind kind,
-                            NovelRT::Utilities::Span<uint8_t> bytecode) noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
-        ~VulkanShaderProgram();
+        ShaderProgram(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            std::string entryPointName,
+            ShaderProgramKind kind,
+            NovelRT::Utilities::Span<uint8_t> bytecode) noexcept;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
+        ~ShaderProgram() noexcept final = default;
+
         [[nodiscard]] const std::string& GetEntryPointName() const noexcept;
         [[nodiscard]] ShaderProgramKind GetKind() const noexcept;
         [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept;

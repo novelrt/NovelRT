@@ -10,67 +10,74 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
-    class VulkanGraphicsResource;
+    struct VulkanGraphicsBackend;
+}
 
-    template<typename TResource>
-    class VulkanGraphicsResourceMemoryRegion;
-
+namespace NovelRT::Graphics
+{
     template<>
-    class VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>
+    class GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        VulkanGraphicsDevice* _device;
-        VulkanGraphicsResource* _owningResource;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> _owningResource;
         VmaVirtualAllocation _virtualAllocation;
         VmaVirtualAllocationInfo _virtualAllocationInfo;
 
     public:
-        VulkanGraphicsResourceMemoryRegion(VulkanGraphicsDevice* graphicsDevice,
-                                           VulkanGraphicsResource* owningResource,
-                                           VmaVirtualAllocation virtualAllocation,
-                                           VmaVirtualAllocationInfo virtualAllocationInfo);
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
-        virtual ~VulkanGraphicsResourceMemoryRegion() = default;
+        GraphicsResourceMemoryRegion(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+                                     std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> owningResource,
+                                     VmaVirtualAllocation virtualAllocation,
+                                     VmaVirtualAllocationInfo virtualAllocationInfo);
 
-        [[nodiscard]] VulkanGraphicsResource* GetOwningResource() const noexcept
-        {
-            return _owningResource;
-        }
+        virtual ~GraphicsResourceMemoryRegion() = default;
 
-
-        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
-        {
-            return _device;
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> GetOwningResource() const noexcept;
 
         [[nodiscard]] size_t GetOffset() const noexcept;
-
         [[nodiscard]] size_t GetSize() const noexcept;
 
-        [[nodiscard]] VmaVirtualAllocation GetVirtualAllocation() const noexcept;
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes();
 
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead();
+
+        void UnmapBytes();
+
+        void UnmapBytesAndWrite();
+
+        template<typename T> [[nodiscard]] Utilities::Span<T> Map();
+
+        template<typename T> [[nodiscard]] Utilities::Span<const T> MapForRead();
+
+        [[nodiscard]] VmaVirtualAllocation GetVirtualAllocation() const noexcept;
         [[nodiscard]] VmaVirtualAllocationInfo GetVirtualAllocationInfo() const noexcept;
     };
 
-    template<typename TResource>
-    class VulkanGraphicsResourceMemoryRegion : public VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>
+    template<template <typename> typename TResource>
+    class GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>
+        : public GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>
     {
-        static_assert(std::is_base_of_v<VulkanGraphicsResource, TResource>, "TResource must inherit VulkanGraphicsResource");
+        static_assert(std::is_base_of_v<GraphicsResource<Vulkan::VulkanGraphicsBackend>, TResource<Vulkan::VulkanGraphicsBackend>>, "TResource must inherit VulkanGraphicsResource");
 
     public:
-        VulkanGraphicsResourceMemoryRegion(VulkanGraphicsDevice* graphicsDevice,
-                                           TResource* owningResource,
-                                           VmaVirtualAllocation virtualAllocation,
-                                           VmaVirtualAllocationInfo virtualAllocationInfo)
-            : VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>(graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
+        GraphicsResourceMemoryRegion(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+            std::shared_ptr<TResource<Vulkan::VulkanGraphicsBackend>> owningResource,
+            VmaVirtualAllocation virtualAllocation,
+            VmaVirtualAllocationInfo virtualAllocationInfo)
+            : GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>(
+                graphicsDevice, owningResource, virtualAllocation, virtualAllocationInfo)
         { }
 
-        [[nodiscard]] TResource* GetOwningResource() const noexcept
-        {
-            return static_cast<TResource*>(VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>::GetOwningResource());
-        }
+        virtual ~GraphicsResourceMemoryRegion() override = default;
 
-        virtual ~VulkanGraphicsResourceMemoryRegion() override = default;
+        [[nodiscard]] std::weak_ptr<TResource<Vulkan::VulkanGraphicsBackend>> GetOwningResource() const noexcept
+        {
+            auto original = GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>::GetOwningResource();
+            return std::static_pointer_cast<TResource<Vulkan::VulkanGraphicsBackend>>(std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>>(original));
+        }
     };
 }

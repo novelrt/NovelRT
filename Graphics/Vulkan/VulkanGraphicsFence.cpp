@@ -4,13 +4,14 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 #include <NovelRT/Graphics/GraphicsFence.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
+    using VulkanGraphicsFence = GraphicsFence<Vulkan::VulkanGraphicsBackend>;
 
     VkFence VulkanGraphicsFence::CreateVulkanFence(VkFenceCreateFlagBits flags) const
     {
@@ -64,7 +65,7 @@ namespace NovelRT::Graphics::Vulkan
         return fenceSignalled;
     }
 
-    VulkanGraphicsFence::VulkanGraphicsFence(VulkanGraphicsDevice* device, bool isSignaled) noexcept
+    VulkanGraphicsFence::GraphicsFence(VulkanGraphicsDevice* device, bool isSignaled) noexcept
         : _device(device)
         ,  _vulkanFence([isSignaled,this]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); })
     {

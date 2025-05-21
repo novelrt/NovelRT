@@ -13,17 +13,24 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsAdapter;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsProvider
+namespace NovelRT::Graphics
+{
+    template<>
+    class GraphicsProvider<Vulkan::VulkanGraphicsBackend> : public std::enable_shared_from_this<GraphicsProvider<Vulkan::VulkanGraphicsBackend>>
     {
+    public:
+        using iterator = typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::iterator;
+
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
 
         VkInstance _vulkanInstance;
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
-        NovelRT::Utilities::Lazy<std::vector<VulkanGraphicsAdapter*>> _adapters;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>> _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
@@ -51,29 +58,24 @@ namespace NovelRT::Graphics::Vulkan
         void ConfigureDebugLogger();
         VkInstance CreateInstance();
 
-        std::vector<VulkanGraphicsAdapter*> GetGraphicsAdapters();
+        std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>> GetGraphicsAdapters();
 
     public:
-        VulkanGraphicsProvider();
-        ~VulkanGraphicsProvider();
-
-        [[nodiscard]] VkInstance GetVulkanInstance() const noexcept
-        {
-            return _vulkanInstance;
-        }
-
-        [[nodiscard]] NovelRT::Utilities::Span<const std::string> GetValidationLayers() const noexcept
-        {
-            return { _finalValidationLayerSet };
-        }
-
-        [[nodiscard]] uint32_t GetApiVersion() const noexcept;
+        GraphicsProvider();
+        ~GraphicsProvider();
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
 
-        std::vector<VulkanGraphicsAdapter*>::iterator begin() noexcept;
-        std::vector<VulkanGraphicsAdapter*>::iterator end() noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] iterator begin() const noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] iterator end() const noexcept;
 
+        [[nodiscard]] uint32_t GetApiVersion() const noexcept;
+
+        [[nodiscard]] VkInstance GetVulkanInstance() const noexcept;
+
+        [[nodiscard]] NovelRT::Utilities::Span<const std::string> GetValidationLayers() const noexcept;
 
     };
 }

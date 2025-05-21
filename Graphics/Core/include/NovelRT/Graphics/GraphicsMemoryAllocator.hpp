@@ -11,6 +11,7 @@
 #include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
 #include <NovelRT/Graphics/TexelFormat.hpp>
+
 #include <cstdint>
 #include <memory>
 
@@ -28,63 +29,23 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsMemoryAllocator : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendMemoryAllocatorType = typename GraphicsBackendTraits<TBackend>::MemoryAllocatorType;
-
-    private:
-        std::unique_ptr<BackendMemoryAllocatorType> _implementation;
-        std::shared_ptr<GraphicsProvider<TBackend>> _provider;
-
-    public:
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> shared_from_this()
-        {
-            return std::static_pointer_cast<GraphicsMemoryAllocator<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
-        }
+        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> shared_from_this();
 
-        GraphicsMemoryAllocator(std::unique_ptr<BackendMemoryAllocatorType> implementation,
-                                std::weak_ptr<GraphicsDevice<TBackend>> device,
-                                std::shared_ptr<GraphicsProvider<TBackend>> provider)
-            : GraphicsDeviceObject<TBackend>(std::move(device))
-            , _implementation(std::move(implementation))
-            , _provider(std::move(provider))
-        {
-        }
+        GraphicsMemoryAllocator() = delete;
+        ~GraphicsMemoryAllocator();
 
-        [[nodiscard]] BackendMemoryAllocatorType* GetImplementation() const noexcept
-        {
-            return _implementation.get();
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
 
-        [[nodiscard]] GraphicsProvider<TBackend>* GetProvider() const noexcept
-        {
-            return _provider.get();
-        }
-
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo)
-        {
-            return std::make_shared<GraphicsBuffer<TBackend>>(
-                _implementation->CreateBuffer(createInfo),
-                this->shared_from_this(),
-                createInfo);
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(GraphicsBufferKind bufferKind,
                                                                              GraphicsResourceAccess cpuAccessKind,
                                                                              GraphicsResourceAccess gpuAccessKind,
-                                                                             size_t size)
-        {
-            return CreateBuffer(GraphicsBufferCreateInfo{bufferKind, cpuAccessKind, gpuAccessKind, size,
-                                                         GraphicsMemoryRegionAllocationFlags::None});
-        }
+                                                                             size_t size);
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture(
-            const GraphicsTextureCreateInfo& createInfo)
-        {
-            return std::make_shared<GraphicsTexture<TBackend>>(
-                _implementation->CreateTexture(createInfo),
-                this->shared_from_this(),
-                createInfo);
-        }
+            const GraphicsTextureCreateInfo& createInfo);
 
         [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture2DRepeatGpuWriteOnly(uint32_t width,
                                                                                                    uint32_t height = 1)

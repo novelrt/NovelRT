@@ -3,41 +3,38 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
-#include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 
 #include <memory>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsBuffer;
-    class VulkanGraphicsDevice;
-    class VulkanGraphicsProvider;
-    class VulkanGraphicsTexture;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsMemoryAllocator
+namespace NovelRT::Graphics
+{
+    template<>
+    class GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
+        std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
+
         VmaAllocator _allocator;
-        VulkanGraphicsDevice* _device;
-        VulkanGraphicsProvider* _provider;
 
     public:
-        VulkanGraphicsMemoryAllocator(VulkanGraphicsDevice* device, VulkanGraphicsProvider* provider);
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
-        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
-        {
-            return _device;
-        }
+        GraphicsMemoryAllocator(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
 
-        [[nodiscard]] VulkanGraphicsProvider* GetProvider() const noexcept
-        {
-            return _provider;
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
 
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsBuffer> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsTexture> CreateTexture(const GraphicsTextureCreateInfo& createInfo);
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
+        [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture(const GraphicsTextureCreateInfo& createInfo);
 
         [[nodiscard]] VmaAllocator GetVmaAllocator() const noexcept;
     };

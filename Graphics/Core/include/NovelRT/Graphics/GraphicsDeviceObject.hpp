@@ -14,20 +14,9 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class GraphicsDeviceObject : public std::enable_shared_from_this<GraphicsDeviceObject<TBackend>>
     {
-    private:
-        std::weak_ptr<GraphicsDevice<TBackend>> _graphicsDevice;
-
     public:
-        explicit GraphicsDeviceObject(std::weak_ptr<GraphicsDevice<TBackend>> graphicsDevice) noexcept
-            : _graphicsDevice(std::move(graphicsDevice))
-        {
-        }
-
         virtual ~GraphicsDeviceObject() noexcept = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const
-        {
-            return _graphicsDevice.lock();
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsDevice<TBackend>> GetDevice() const;
     };
 }

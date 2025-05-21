@@ -10,58 +10,21 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> struct GraphicsBackendTraits;
-
     template<typename TBackend> class GraphicsFence : public GraphicsDeviceObject<TBackend>
     {
-    public:
-        using BackendFenceType = typename GraphicsBackendTraits<TBackend>::FenceType;
-
-    private:
-        std::unique_ptr<BackendFenceType> _implementation;
-
-    public:
-        GraphicsFence(std::unique_ptr<BackendFenceType> implementation, std::weak_ptr<GraphicsDevice<TBackend>> device) noexcept
-            : GraphicsDeviceObject<TBackend>(std::move(device))
-            , _implementation(std::move(implementation))
-        {
-        }
-
+        GraphicsFence() = delete;
         virtual ~GraphicsFence() noexcept override = default;
 
-        [[nodiscard]] BackendFenceType* GetImplementation() const noexcept
-        {
-            return _implementation.get();
-        }
+        [[nodiscard]] bool GetIsSignalled() const;
 
-        [[nodiscard]] bool GetIsSignalled()
-        {
-            return _implementation->GetIsSignalled();
-        }
+        void Reset();
 
-        void Reset()
-        {
-            _implementation->Reset();
-        }
+        [[nodiscard]] bool TryWait();
+        [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
+        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
 
-        [[nodiscard]] bool TryWait()
-        {
-            return TryWait(std::numeric_limits<uint64_t>::max());
-        }
-
-        [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout)
-        {
-            return _implementation->TryWait(millisecondsTimeout);
-        }
-
-        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout)
-        {
-            return _implementation->TryWait(timeout);
-        }
-
-        void Wait()
-        {
-            _implementation->Wait();
-        }
+        void Wait();
+        void Wait(uint64_t millisecondsTimeout);
+        void Wait(std::chrono::duration<uint64_t, std::milli> timeout);
     };
 }

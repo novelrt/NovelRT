@@ -12,54 +12,20 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> struct GraphicsBackendTraits;
 
-    template<typename TBackend> class ShaderProgram : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class ShaderProgram final
+        : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendShaderProgramType = typename GraphicsBackendTraits<TBackend>::ShaderProgramType;
-
-    private:
-        std::unique_ptr<BackendShaderProgramType> _implementation;
-        std::string _entryPointName;
-        ShaderProgramKind _kind;
-
-    public:
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        std::shared_ptr<ShaderProgram<TBackend>> shared_from_this()
-        {
-            return std::static_pointer_cast<ShaderProgram<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this());
-        }
+        std::shared_ptr<ShaderProgram<TBackend>> shared_from_this();
 
-        ShaderProgram(std::unique_ptr<BackendShaderProgramType> implementation,
-                      std::shared_ptr<GraphicsDevice<TBackend>> device,
-                      std::string entryPointName,
-                      ShaderProgramKind kind) noexcept
-            : GraphicsDeviceObject<TBackend>(std::move(device))
-            , _implementation(std::move(implementation))
-            , _entryPointName(std::move(entryPointName))
-            , _kind(kind)
-        {
-        }
+        ~ShaderProgram() noexcept final = default;
 
-        virtual ~ShaderProgram() noexcept override = default;
+        [[nodiscard]] const std::string& GetEntryPointName() const noexcept;
 
-        [[nodiscard]] BackendShaderProgramType* GetImplementation() const noexcept
-        {
-            return _implementation.get();
-        }
+        [[nodiscard]] ShaderProgramKind GetKind() const noexcept;
 
-        [[nodiscard]] const std::string& GetEntryPointName() const noexcept
-        {
-            return _entryPointName;
-        }
-
-        [[nodiscard]] ShaderProgramKind GetKind() const noexcept
-        {
-            return _kind;
-        }
-
-        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept
-        {
-            return _implementation->GetBytecode();
-        }
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept;
     };
 }
