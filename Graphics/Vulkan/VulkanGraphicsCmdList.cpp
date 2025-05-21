@@ -2,19 +2,13 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
-#include <NovelRT/Graphics/GraphicsBuffer.hpp>
-#include <NovelRT/Graphics/GraphicsCmdList.hpp>
-#include <NovelRT/Graphics/GraphicsContext.hpp>
-#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
-#include <NovelRT/Graphics/GraphicsPipeline.hpp>
-#include <NovelRT/Graphics/GraphicsRenderPass.hpp>
-#include <NovelRT/Graphics/GraphicsTexture.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
@@ -26,9 +20,22 @@
 
 #include <vulkan/vulkan.h>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
-    VulkanGraphicsCmdList::VulkanGraphicsCmdList(VulkanGraphicsContext* context, VkCommandBuffer commandBuffer) noexcept
+    using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsCmdList = GraphicsCmdList<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsContext = GraphicsContext<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
+    template <template <typename> typename TResource>
+    using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
+
+    VulkanGraphicsCmdList::GraphicsCmdList(
+        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+        VkCommandBuffer commandBuffer) noexcept
         : _context(context)
         , _commandBuffer(commandBuffer)
     {
@@ -37,8 +44,8 @@ namespace NovelRT::Graphics::Vulkan
     void VulkanGraphicsCmdList::CmdBeginRenderPass(const VulkanGraphicsRenderPass* targetPass,
                                                    Utilities::Span<const ClearValue> clearValues)
     {
-        auto* device = _context->GetDevice();
-        auto* surface = device->GetSurface();
+        auto device = _context->GetDevice().lock();
+        auto surface = device->GetSurface();
 
         VkExtent2D extent2D{};
         extent2D.width = static_cast<uint32_t>(surface->GetWidth());
@@ -85,9 +92,11 @@ namespace NovelRT::Graphics::Vulkan
     {
         for (const auto& set : sets)
         {
-            auto* handle = set->GetVulkanDescriptorSet();
+            VkDescriptorSet handle = set->GetVulkanDescriptorSet();
+            auto pipeline = set->GetPipeline().lock();
+            auto signature = pipeline->GetSignature().lock();
             vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    set->GetPipeline()->GetSignature()->GetVulkanPipelineLayout(), 0, 1,
+                                    signature->GetVulkanPipelineLayout(), 0, 1,
                                     &handle, 0, nullptr);
         }
     }
@@ -108,7 +117,7 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     void VulkanGraphicsCmdList::CmdBindIndexBuffer(
-        const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>* buffer,
+        const VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>* buffer,
         IndexType indexType)
     {
         VkIndexType type = VK_INDEX_TYPE_NONE_KHR;
@@ -128,21 +137,24 @@ namespace NovelRT::Graphics::Vulkan
                 break;
         }
 
-        vkCmdBindIndexBuffer(_commandBuffer, buffer->GetOwningResource()->GetVulkanBuffer(),
+        auto bufferResource = buffer->GetOwningResource().lock();
+        vkCmdBindIndexBuffer(_commandBuffer, bufferResource->GetVulkanBuffer(),
                              buffer->GetOffset(), type);
     }
 
-    void VulkanGraphicsCmdList::CmdCopy(const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>* destination, const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>* source)
+    void VulkanGraphicsCmdList::CmdCopy(const VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>* destination, const VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>* source)
     {
         VkBufferCopy vulkanBufferCopy{};
         vulkanBufferCopy.srcOffset = source->GetOffset();
         vulkanBufferCopy.dstOffset = destination->GetOffset();
         vulkanBufferCopy.size = std::min(destination->GetSize(), source->GetSize());
 
-        vkCmdCopyBuffer(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), destination->GetOwningResource()->GetVulkanBuffer(), 1, &vulkanBufferCopy);
+        auto sourceResource = source->GetOwningResource().lock();
+        auto destinationResource = destination->GetOwningResource().lock();
+        vkCmdCopyBuffer(_commandBuffer, sourceResource->GetVulkanBuffer(), destinationResource->GetVulkanBuffer(), 1, &vulkanBufferCopy);
     }
 
-    void VulkanGraphicsCmdList::CmdCopy(const VulkanGraphicsTexture* destination, const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>* source)
+    void VulkanGraphicsCmdList::CmdCopy(const VulkanGraphicsTexture* destination, const VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>* source)
     {
         if (destination->GetSize() > source->GetSize())
         {
@@ -165,7 +177,8 @@ namespace NovelRT::Graphics::Vulkan
         vulkanBufferImageCopy.imageExtent = imageExtent;
         vulkanBufferImageCopy.bufferOffset = source->GetOffset();
 
-        vkCmdCopyBufferToImage(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), vulkanImage,
+        auto sourceResource = source->GetOwningResource().lock();
+        vkCmdCopyBufferToImage(_commandBuffer, sourceResource->GetVulkanBuffer(), vulkanImage,
                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
     }
 
@@ -281,5 +294,3 @@ namespace NovelRT::Graphics::Vulkan
                          &barrierInfo, 0, 0);
     }
 }
-
-template class NovelRT::Graphics::GraphicsCmdList<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

@@ -19,59 +19,16 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter<TBackend>>
     {
     public:
-        using BackendAdapterType = typename GraphicsBackendTraits<TBackend>::AdapterType;
-
-    private:
-        std::unique_ptr<BackendAdapterType> _implementation;
-        std::shared_ptr<GraphicsProvider<TBackend>> _provider;
-
-    public:
-        GraphicsAdapter(std::unique_ptr<BackendAdapterType> implementation,
-                        std::shared_ptr<GraphicsProvider<TBackend>> provider)
-            : _implementation(std::move(implementation)), _provider(std::move(provider))
-        {
-            if (!_provider)
-            {
-                throw Exceptions::NullPointerException(
-                    "The provided GraphicsProvider pointer is nullptr or an invalid pointer.");
-            }
-        }
-
+        GraphicsAdapter() = delete;
         ~GraphicsAdapter() noexcept = default;
 
-        [[nodiscard]] BackendAdapterType* GetImplementation() const noexcept
-        {
-            return _implementation.get();
-        }
-
-        [[nodiscard]] uint32_t GetDeviceId()
-        {
-            return _implementation->GetDeviceId();
-        }
-
-        [[nodiscard]] const std::string& GetName()
-        {
-            return _implementation->GetName();
-        }
-
-        [[nodiscard]] GraphicsProvider<TBackend>* GetProvider() const
-        {
-            return _provider.get();
-        }
-
-        [[nodiscard]] uint32_t GetVendorId()
-        {
-            return _implementation->GetVendorId();
-        }
+        [[nodiscard]] uint32_t GetDeviceId() const;
+        [[nodiscard]] const std::string& GetName() const;
+        [[nodiscard]] GraphicsProvider<TBackend>* GetProvider() const;
+        [[nodiscard]] uint32_t GetVendorId() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> CreateDevice(
             const std::shared_ptr<GraphicsSurfaceContext<TBackend>>& surfaceContext,
-            int32_t contextCount)
-        {
-            return std::make_shared<GraphicsDevice<TBackend>>(
-                _implementation->CreateDevice(surfaceContext->GetImplementation(), contextCount),
-                this->shared_from_this(),
-                std::move(surfaceContext));
-        }
+            int32_t contextCount);
     };
 }

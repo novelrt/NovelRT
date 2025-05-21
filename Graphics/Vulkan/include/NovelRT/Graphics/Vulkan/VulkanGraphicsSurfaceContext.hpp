@@ -4,49 +4,36 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
+
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsSurfaceContext
+    struct VulkanGraphicsBackend;
+}
+
+namespace NovelRT::Graphics
+{
+    template <>
+    class GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>
+        : public std::enable_shared_from_this<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>
     {
     private:
         IGraphicsSurface* _surface;
-        VulkanGraphicsProvider* _provider;
+        std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
         LoggingService _logger;
         VkSurfaceKHR _vulkanSurface;
 
     public:
-        VulkanGraphicsSurfaceContext(IGraphicsSurface* surface,
-                                     VulkanGraphicsProvider* provider);
+        GraphicsSurfaceContext(IGraphicsSurface* surface,
+                               std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
 
-        ~VulkanGraphicsSurfaceContext();
+        ~GraphicsSurfaceContext();
 
-        [[nodiscard]] inline void* GetSurfaceContextHandleUntyped()
-        {
-            return &_vulkanSurface;
-        }
+        [[nodiscard]] VkSurfaceKHR GetSurfaceContextHandle() const noexcept;
 
-        [[nodiscard]] inline VkSurfaceKHR GetVulkanSurfaceContextHandle() const noexcept
-        {
-            return _vulkanSurface;
-        }
-
-        [[nodiscard]] inline IGraphicsSurface* GetSurface() const noexcept
-        {
-            return _surface;
-        }
-
-        [[nodiscard]] inline VulkanGraphicsProvider* GetProvider() const noexcept
-        {
-            return _provider;
-        }
-
-        template<typename THandleType>[[nodiscard]] THandleType GetSurfaceContextHandleAs()
-        {
-            return *reinterpret_cast<THandleType*>(GetSurfaceContextHandleUntyped());
-        }
+        [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept;
+        [[nodiscard]] std::weak_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
     };
 }

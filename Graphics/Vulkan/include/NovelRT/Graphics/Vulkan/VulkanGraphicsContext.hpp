@@ -4,7 +4,6 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
@@ -15,20 +14,22 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsPipelineSignature;
-    class VulkanGraphicsDevice;
-    class VulkanGraphicsCmdList;
-    class VulkanGraphicsDescriptorSet;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsContext
+namespace NovelRT::Graphics
+{
+    template <>
+    class GraphicsContext<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        VulkanGraphicsDevice* _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         size_t _index;
 
-        std::unordered_map<VulkanGraphicsPipelineSignature*, std::vector<VulkanGraphicsDescriptorSet*>> _vulkanDescriptorSets;
-        VulkanGraphicsFence* _fence;
-        VulkanGraphicsFence* _waitForExecuteCompletionFence;
+        std::unordered_map<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>*, std::vector<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>*>> _vulkanDescriptorSets;
+        std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
+        std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _waitForExecuteCompletionFence;
 
         mutable NovelRT::Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
@@ -50,57 +51,33 @@ namespace NovelRT::Graphics::Vulkan
         void DestroyDescriptorSets();
 
     public:
-        VulkanGraphicsContext(VulkanGraphicsDevice* device, size_t index) noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+
+        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
+        ~GraphicsContext() final;
 
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
-        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
-        {
-            return _device;
-        }
+        [[nodiscard]] size_t GetIndex() const noexcept;
 
-        [[nodiscard]] size_t GetIndex() const noexcept
-        {
-            return _index;
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
-        [[nodiscard]] VulkanGraphicsFence* GetFence() const noexcept
-        {
-            return _fence;
-        }
+        [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const;
 
-        [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const
-        {
-            return _vulkanCommandBuffer.Get();
-        }
+        [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
 
-        [[nodiscard]] VkCommandPool GetVulkanCommandPool() const
-        {
-            return _vulkanCommandPool.Get();
-        }
+        [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
 
-        [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const
-        {
-            return _vulkanFramebuffer.Get();
-        }
+        [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
 
-        [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const
-        {
-            return _vulkanSwapChainImageView.Get();
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
 
-        [[nodiscard]] VulkanGraphicsFence* GetWaitForExecuteCompletionFence() const noexcept
-        {
-            return _waitForExecuteCompletionFence;
-        }
-
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsCmdList> BeginFrame();
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame() const;
 
-        void RegisterDescriptorSetForFrame(VulkanGraphicsPipelineSignature* signature, VulkanGraphicsDescriptorSet* set);
+        void RegisterDescriptorSetForFrame(GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>* signature, GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>* set);
 
         void ResetContext();
-
-        ~VulkanGraphicsContext();
     };
 }

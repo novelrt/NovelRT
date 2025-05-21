@@ -5,75 +5,56 @@
 
 
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
+
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
-#include <typeindex>
 
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsPipeline
+    struct VulkanGraphicsBackend;
+}
+
+namespace NovelRT::Graphics
+{
+    template <>
+    class GraphicsPipeline<Vulkan::VulkanGraphicsBackend>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        VulkanGraphicsDevice* _device;
-        VulkanShaderProgram* _vertexShader;
-        VulkanShaderProgram* _pixelShader;
-        VulkanGraphicsPipelineSignature* _signature;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _vertexShader;
+        std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _pixelShader;
+        std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> _signature;
 
         mutable NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
         [[nodiscard]] VkPipeline CreateVulkanPipeline(bool imguiRenderMode);
         [[nodiscard]] size_t GetInputElementsCount(
             NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs) const noexcept;
-        [[nodiscard]] VkFormat GetInputElementFormat(std::type_index type) const noexcept;
 
     public:
-        VulkanGraphicsPipeline(VulkanGraphicsDevice* device,
-                               VulkanGraphicsPipelineSignature* signature,
-                               VulkanShaderProgram* vertexShader,
-                               VulkanShaderProgram* pixelShader,
+        GraphicsPipeline(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                               std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
+                               std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
+                               std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
                                bool imguiRenderMode) noexcept;
+        virtual ~GraphicsPipeline() override = default;
 
-        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const noexcept
-        {
-            return _device;
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
 
-        [[nodiscard]] VulkanShaderProgram* GetPixelShader() const noexcept
-        {
-            return _pixelShader;
-        }
+        [[nodiscard]] bool HasVertexShader() const noexcept;
+        [[nodiscard]] bool HasPixelShader() const noexcept;
 
-        [[nodiscard]] VulkanShaderProgram* GetVertexShader() const noexcept
-        {
-            return _vertexShader;
-        }
+        [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
+        [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetVertexShader() const noexcept;
 
-        [[nodiscard]] VulkanGraphicsPipelineSignature* GetSignature() const noexcept
-        {
-            return _signature;
-        }
+        [[nodiscard]] std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature() const noexcept;
 
-        [[nodiscard]] VkPipeline GetVulkanPipeline() const
-        {
-            return _vulkanPipeline.Get();
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
 
-        [[nodiscard]] bool HasVertexShader() const noexcept
-        {
-            return _vertexShader != nullptr;
-        }
-
-        [[nodiscard]] bool HasPixelShader() const noexcept
-        {
-            return _pixelShader != nullptr;
-        }
-
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsDescriptorSet> CreateDescriptorSet();
+        [[nodiscard]] VkPipeline GetVulkanPipeline() const;
     };
 }

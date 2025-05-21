@@ -14,65 +14,30 @@ namespace NovelRT::Graphics
     template<typename TBackend> struct GraphicsBackendTraits;
 
     template<typename TBackend>
-    class GraphicsBuffer : public GraphicsResource<TBackend>
+    class GraphicsBuffer final : public GraphicsResource<TBackend>
     {
-    private:
-        using SuperBackendResourceType = typename GraphicsBackendTraits<TBackend>::ResourceType;
-    public:
-        using BackendResourceType = typename GraphicsBackendTraits<TBackend>::BufferType;
-        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<BackendResourceType>;
-
-    private:
-        GraphicsBufferKind _kind;
-
     public:
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        std::shared_ptr<GraphicsBuffer<TBackend>> shared_from_this()
-        {
-            return std::static_pointer_cast<GraphicsBuffer<TBackend>>(GraphicsResource<TBackend>::shared_from_this());
-        }
+        std::shared_ptr<GraphicsBuffer<TBackend>> shared_from_this();
 
-        GraphicsBuffer(std::unique_ptr<BackendResourceType> implementation,
-                       std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
-                       const GraphicsBufferCreateInfo& createInfo) noexcept
-            : GraphicsResource<TBackend>(
-                NovelRT::Utilities::StaticPointerCast<SuperBackendResourceType>(std::move(implementation)),
-                std::move(allocator),
-                createInfo.cpuAccessKind)
-            , _kind(createInfo.bufferKind)
-        {
-        }
+        GraphicsBuffer() noexcept = delete;
+        ~GraphicsBuffer() noexcept final;
 
-        virtual ~GraphicsBuffer() noexcept override = default;
+        [[nodiscard]] GraphicsResourceAccess GetAccess() const noexcept;
+        [[nodiscard]] GraphicsBufferKind GetKind();
 
-        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept
-        {
-            return _kind;
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> Allocate(size_t size, size_t alignment);
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> Allocate(
-            size_t size,
-            size_t alignment)
-        {
-            return std::make_shared<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>(
-                NovelRT::Utilities::StaticPointerCast<BackendResourceMemoryRegionType>(
-                    std::move(GraphicsResource<TBackend>::AllocateInternal(size, alignment))),
-                this->shared_from_this());
-        }
+        void UnmapBytes() final;
 
-        [[nodiscard]] BackendResourceType* GetImplementation() const noexcept
-        {
-            return static_cast<BackendResourceType*>(GraphicsResource<TBackend>::GetImplementation());
-        }
+        void UnmapBytesAndWrite() final;
+        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
+
+        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* memoryRegion);
 
         template <typename T> [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
-        }
-
-        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* memoryRegion)
-        {
-            GraphicsResource<TBackend>::UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
         }
     };
 }
