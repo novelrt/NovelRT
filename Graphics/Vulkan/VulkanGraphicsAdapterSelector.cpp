@@ -18,6 +18,11 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
+    using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
+
     int32_t VulkanGraphicsAdapterSelector::GetPhysicalDeviceOptionalExtensionSupportScore(
         VkPhysicalDevice physicalDevice) noexcept
     {
@@ -100,18 +105,18 @@ namespace NovelRT::Graphics::Vulkan
         return requiredExtensionSet.empty();
     }
 
-    VulkanGraphicsAdapter* VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
-        VulkanGraphicsProvider* provider,
-        VulkanGraphicsSurfaceContext* surfaceContext) const
+    std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
+        const VulkanGraphicsProvider* provider,
+        const VulkanGraphicsSurfaceContext* surfaceContext) const
     {
-        VulkanGraphicsAdapter* adapter = nullptr;
+        std::weak_ptr<VulkanGraphicsAdapter> adapter;
         int32_t highestScore = 0;
 
         for (auto&& currentAdapter : *provider)
         {
             const int32_t score = RateDeviceSuitability(
-                currentAdapter->GetVulkanPhysicalDevice(),
-                surfaceContext->GetVulkanSurfaceContextHandle());
+                currentAdapter->GetPhysicalDevice(),
+                surfaceContext->GetSurfaceContextHandle());
 
             if (score > highestScore)
             {
@@ -120,6 +125,6 @@ namespace NovelRT::Graphics::Vulkan
             }
         }
 
-        return adapter;
+        return adapter.lock();
     }
 } // namespace NovelRT::Graphics::Vulkan

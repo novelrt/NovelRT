@@ -8,10 +8,6 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsAdapter;
-    class VulkanGraphicsProvider;
-    class VulkanGraphicsSurfaceContext;
-
     class VulkanGraphicsAdapterSelector
     {
     private:
@@ -25,8 +21,8 @@ namespace NovelRT::Graphics::Vulkan
 
     public:
         //NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this is intentionally non-static
-        [[nodiscard]] VulkanGraphicsAdapter* GetDefaultRecommendedAdapter(
-            VulkanGraphicsProvider* provider,
-            VulkanGraphicsSurfaceContext* surfaceContext) const;
+        [[nodiscard]] std::shared_ptr<GraphicsAdapter<VulkanGraphicsBackend>> GetDefaultRecommendedAdapter(
+            const GraphicsProvider<VulkanGraphicsBackend>* provider,
+            const GraphicsSurfaceContext<VulkanGraphicsBackend>* surfaceContext) const;
     };
 }

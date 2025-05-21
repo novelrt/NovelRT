@@ -5,6 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
+
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
@@ -14,13 +15,17 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDescriptorSet;
-    class VulkanGraphicsDescriptorSet;
-    class VulkanGraphicsDevice;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsPipelineSignature
+namespace NovelRT::Graphics
+{
+    template <>
+    class GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
-        VulkanGraphicsDevice* _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+
         GraphicsPipelineBlendFactor _srcBlendFactor;
         GraphicsPipelineBlendFactor _dstBlendFactor;
         std::vector<GraphicsPipelineInput> _inputs;
@@ -41,68 +46,33 @@ namespace NovelRT::Graphics::Vulkan
         void DestroyPipelineLayout();
 
     public:
-        VulkanGraphicsPipelineSignature(
-            VulkanGraphicsDevice* device,
+        GraphicsPipelineSignature(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Span<const GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept;
 
-        ~VulkanGraphicsPipelineSignature();
+        ~GraphicsPipelineSignature() = default;
 
-        [[nodiscard]] VulkanGraphicsDevice* GetDevice() const
-        {
-            return _device;
-        }
+        [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
+        [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
 
-        [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept
-        {
-            return _srcBlendFactor;
-        }
+        [[nodiscard]] std::vector<GraphicsPipelineInput> GetInputs() const noexcept;
 
-        [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept
-        {
-            return _dstBlendFactor;
-        }
+        [[nodiscard]] VkDescriptorPool GetVulkanDescriptorPool() const;
 
-        [[nodiscard]] std::vector<GraphicsPipelineInput> GetInputs() const noexcept
-        {
-            return _inputs;
-        }
+        [[nodiscard]] VkDescriptorSet GetDescriptorSetHandle();
 
-        [[nodiscard]] VkDescriptorPool GetVulkanDescriptorPool() const
-        {
-            return _vulkanDescriptorPool.Get();
-        }
-
-        [[nodiscard]] VkDescriptorSet GetDescriptorSetHandle()
-        {
-            return CreateDescriptorSetImpl();
-        }
-
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsDescriptorSet> CreateDescriptorSet()
-        {
-            // TODO: this
-            return nullptr;
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
 
 
-        [[nodiscard]] VkDescriptorSetLayout GetVulkanDescriptorSetLayout() const
-        {
-            return _vulkanDescriptorSetLayout.Get();
-        }
+        [[nodiscard]] VkDescriptorSetLayout GetVulkanDescriptorSetLayout() const;
 
-        [[nodiscard]] VkPipelineLayout GetVulkanPipelineLayout() const
-        {
-            return _vulkanPipelineLayout.Get();
-        }
+        [[nodiscard]] VkPipelineLayout GetVulkanPipelineLayout() const;
 
-        NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources()
-            const noexcept
-        {
-            return { _resources };
-        }
+        NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources() const noexcept;
 
         void DestroyDescriptorSets(NovelRT::Utilities::Span<VkDescriptorSet> vulkanDescriptorSets);
     };

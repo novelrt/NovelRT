@@ -1,38 +1,45 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
-    using namespace NovelRT::Utilities;
+    using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
+    template <template <typename> typename TResource>
+    using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsDescriptorSet::VulkanGraphicsDescriptorSet(VulkanGraphicsPipeline* targetPipeline) noexcept
+    VulkanGraphicsDescriptorSet::GraphicsDescriptorSet(std::shared_ptr<VulkanGraphicsPipeline> targetPipeline) noexcept
         :  _descriptorSetHandle(VK_NULL_HANDLE)
         , _pipeline(targetPipeline)
         , _inputResourceRegions{}
     {
-        _descriptorSetHandle = _pipeline->GetSignature()->GetDescriptorSetHandle();
+        _descriptorSetHandle = targetPipeline->GetSignature().lock()->GetDescriptorSetHandle();
     }
 
-    VulkanGraphicsDescriptorSet::~VulkanGraphicsDescriptorSet()
+    VulkanGraphicsDescriptorSet::~GraphicsDescriptorSet()
     {
         std::array<VkDescriptorSet, 1> fuck = {_descriptorSetHandle};
-        _pipeline->GetSignature()->DestroyDescriptorSets(fuck);
+        auto signature = _pipeline->GetSignature().lock();
+        signature->DestroyDescriptorSets(fuck);
     }
 
-    void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>* region)
+    void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>& region)
     {
         _inputResourceRegions.emplace_back(region);
     }
 
-    void VulkanGraphicsDescriptorSet::AddMemoryRegionsToInputs(Span<const VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>*> regions)
+    void VulkanGraphicsDescriptorSet::AddMemoryRegionsToInputs(Utilities::Span<std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>> regions)
     {
         _inputResourceRegions.insert(_inputResourceRegions.end(), regions.begin(), regions.end());
     }
@@ -45,12 +52,13 @@ namespace NovelRT::Graphics::Vulkan
 
             for (size_t index = 0; index < inputResourcesLength; index++)
             {
-                const auto* inputResourceRegion = _inputResourceRegions[index];
+                auto inputResourceRegion = _inputResourceRegions[index];
 
                 VkWriteDescriptorSet writeDescriptorSet{};
 
-                auto* resource = inputResourceRegion->GetOwningResource();
-                if (auto* buffer = dynamic_cast<VulkanGraphicsBuffer*>(resource))
+                auto resource = inputResourceRegion->GetOwningResource().lock();
+                auto device = _pipeline->GetDevice().lock();
+                if (auto buffer = std::dynamic_pointer_cast<VulkanGraphicsBuffer>(resource))
                 {
                     VkDescriptorBufferInfo descriptorBufferInfo{};
                     descriptorBufferInfo.buffer = buffer->GetVulkanBuffer();
@@ -64,14 +72,14 @@ namespace NovelRT::Graphics::Vulkan
                     writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                     writeDescriptorSet.pBufferInfo = &descriptorBufferInfo;
 
-                    vkUpdateDescriptorSets(_pipeline->GetDevice()->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
+                    vkUpdateDescriptorSets(device->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
                                            nullptr);
                 }
-                else if (auto* texture = dynamic_cast<VulkanGraphicsTexture*>(resource))
+                else if (auto texture = std::dynamic_pointer_cast<VulkanGraphicsTexture>(resource))
                 {
                     VkDescriptorImageInfo descriptorImageInfo{};
-                    descriptorImageInfo.sampler = texture->GetOrCreateVulkanSampler();
-                    descriptorImageInfo.imageView = texture->GetOrCreateVulkanImageView();
+                    descriptorImageInfo.sampler = texture->GetVulkanSampler();
+                    descriptorImageInfo.imageView = texture->GetVulkanImageView();
                     descriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
                     writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -81,7 +89,7 @@ namespace NovelRT::Graphics::Vulkan
                     writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
                     writeDescriptorSet.pImageInfo = &descriptorImageInfo;
 
-                    vkUpdateDescriptorSets(_pipeline->GetDevice()->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
+                    vkUpdateDescriptorSets(device->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
                                            nullptr);
                 }
                 else
@@ -92,5 +100,3 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 }
-
-template class NovelRT::Graphics::GraphicsDescriptorSet<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

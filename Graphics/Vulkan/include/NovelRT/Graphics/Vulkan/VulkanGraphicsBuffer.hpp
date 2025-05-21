@@ -11,14 +11,20 @@
 
 #include <memory>
 
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
-    class VulkanGraphicsMemoryAllocator;
-    template<typename TResource> class VulkanGraphicsResourceMemoryRegion;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsBuffer final : public VulkanGraphicsResource
+namespace NovelRT::Graphics
+{
+    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+
+    template <>
+    class GraphicsBuffer<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
     {
     private:
         VkBuffer _vulkanBuffer;
@@ -26,40 +32,33 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsResourceAccess _cpuAccess;
         GraphicsBufferKind _kind;
 
-    protected:
-        [[nodiscard]] std::unique_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) final;
-
-        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>& region) final;
-
     public:
-        VulkanGraphicsBuffer(VulkanGraphicsDevice* graphicsDevice,
-                             VulkanGraphicsMemoryAllocator* allocator,
-                             GraphicsResourceAccess cpuAccess,
-                             GraphicsBufferKind kind,
-                             VmaAllocation allocation,
-                             VmaAllocationInfo allocationInfo,
-                             VkBuffer vulkanBuffer);
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
-        ~VulkanGraphicsBuffer() noexcept;
+        GraphicsBuffer(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+            std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
+            const GraphicsBufferCreateInfo& createInfo,
+            VmaAllocation allocation,
+            VmaAllocationInfo allocationInfo,
+            VkBuffer vulkanBuffer);
 
-        [[nodiscard]] GraphicsResourceAccess GetAccess() const noexcept
-        {
-            return _cpuAccess;
-        }
+        ~GraphicsBuffer() noexcept final;
 
-        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept
-        {
-            return _kind;
-        }
+        [[nodiscard]] GraphicsResourceAccess GetAccess() const noexcept;
+        [[nodiscard]] GraphicsBufferKind GetKind() const noexcept;
 
         [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
-        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                                    size_t rangeLength) final;
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) final;
 
         void UnmapBytes() final;
 
+        void UnmapBytesAndWrite() final;
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
+
+        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion);
 
         [[nodiscard]] VkBuffer GetVulkanBuffer() const noexcept;
     };
