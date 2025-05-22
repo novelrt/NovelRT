@@ -42,7 +42,7 @@ using namespace NovelRT::Windowing;
 using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Graphics;
 
-std::vector<void*> shittyBuffer{};
+std::vector<GraphicsBuffer<VulkanGraphicsBackend>> shittyBuffer{};
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
@@ -107,13 +107,13 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
     bufferCreateInfo.size = vertexSize;
     auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(reinterpret_cast<void*>(vertexStagingBuffer.get()));
+    shittyBuffer.emplace_back(*vertexStagingBuffer.get());
 
     bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
     auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(reinterpret_cast<void*>(vertexBuffer.get()));
+    shittyBuffer.emplace_back(*vertexBuffer.get());
     
     // Create index buffer + staging
     bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
@@ -121,24 +121,26 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
     bufferCreateInfo.size = indexSize;
     auto indexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(reinterpret_cast<void*>(indexStagingBuffer.get()));
+    shittyBuffer.emplace_back(*indexStagingBuffer.get());
 
     bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
     auto indexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(reinterpret_cast<void*>(indexBuffer.get()));
+    shittyBuffer.emplace_back(*indexBuffer.get());
 
     // Allocate buffers
-    auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 64);
-    auto vertexStageBufferRegion = vertexStagingBuffer->Allocate(vertexSize, 64);
-    auto indexBufferRegion = indexBuffer->Allocate(indexSize, 64);
-    auto indexStageBufferRegion = indexStagingBuffer->Allocate(indexSize, 64);
+    auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 4);
+    auto vertexStageBufferRegion = vertexStagingBuffer->Allocate(vertexSize, 4);
+    auto indexBufferRegion = indexBuffer->Allocate(indexSize, 4);
+    auto indexStageBufferRegion = indexStagingBuffer->Allocate(indexSize, 4);
 
     // Map vertex buffer to region
     auto pVertexBuffer = vertexStagingBuffer->Map<ImDrawVert>(vertexBufferRegion);
+    auto pVertPtr = pVertexBuffer.data();
     // Map index buffer to region
     auto pIndexbuffer = indexStagingBuffer->Map<ImDrawIdx>(indexBufferRegion);
+    auto pIdxPtr = pIndexbuffer.data();
 
     int32_t vertInitial = 0;
     int32_t indexInitial = 0;
@@ -149,13 +151,13 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
         ImDrawList* list = drawData->CmdLists[i];
 
         // Copy vertex and index data
-        memcpy(pVertexBuffer.data() + vertInitial, list->VtxBuffer.Data,
+        memcpy(pVertPtr, list->VtxBuffer.Data,
                list->VtxBuffer.Size * sizeof(ImDrawVert));
-        memcpy(pIndexbuffer.data() + indexInitial, list->IdxBuffer.Data,
+        memcpy(pIdxPtr, list->IdxBuffer.Data,
                list->IdxBuffer.Size * sizeof(ImDrawIdx));
 
-        vertInitial += list->VtxBuffer.Size;
-        indexInitial += list->IdxBuffer.Size;
+        pVertPtr += list->VtxBuffer.Size;
+        pIdxPtr += list->IdxBuffer.Size;
     }
 
     // Unmap the buffers and copy them into their regions for GPU-ity
