@@ -42,6 +42,8 @@ using namespace NovelRT::Windowing;
 using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Graphics;
 
+std::vector<void*> shittyBuffer{};
+
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
     std::filesystem::path finalPath =
@@ -105,23 +107,27 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
     bufferCreateInfo.size = vertexSize;
     auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+    shittyBuffer.emplace_back(reinterpret_cast<void*>(vertexStagingBuffer.get()));
 
     bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
     auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
+    shittyBuffer.emplace_back(reinterpret_cast<void*>(vertexBuffer.get()));
+    
     // Create index buffer + staging
     bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
     bufferCreateInfo.size = indexSize;
     auto indexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+    shittyBuffer.emplace_back(reinterpret_cast<void*>(indexStagingBuffer.get()));
 
     bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
     auto indexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+    shittyBuffer.emplace_back(reinterpret_cast<void*>(indexBuffer.get()));
 
     // Allocate buffers
     auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 64);
@@ -490,7 +496,7 @@ auto imTexD = imTSB->Map<uint32_t>(im2dRegion);
 memcpy(imTexD.data(), pixels, (width * height) * sizeof(char) * 4);
 
 imTSB->UnmapAndWrite(im2dRegion);
-
+io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&im2dRegion));
     ///imgui
 
     uint32_t textureWidth = 256;
@@ -541,6 +547,7 @@ imTSB->UnmapAndWrite(im2dRegion);
     bool demo = true;
 
     io = ImGui::GetIO();
+    
 
     auto windowSize = device->GetSize();
     io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
@@ -552,22 +559,21 @@ imTSB->UnmapAndWrite(im2dRegion);
 
     io.DeltaTime = (float)(1.0f/60.0f);
 
-    
-    ImGui::NewFrame();
-    ImGui::ShowDemoWindow(&demo);
-    ImGui::EndFrame();
-    ImGui::Render();
-    ImDrawData* drawData = ImGui::GetDrawData();
     ///imgui
 
     auto surface = gfxDevice->GetSurface();
-    // while (!device->GetShouldClose())
-    // {
+    int i = 0;
+    while (i < 3)
+    {
         device->ProcessAllMessages();
         if (device->GetIsVisible())
         {
             //ImGuiiiiiiiiiiiiiiiiiiiiii
-
+            ImGui::NewFrame();
+            ImGui::ShowDemoWindow(&demo);
+            ImGui::EndFrame();
+            ImGui::Render();
+            ImDrawData* drawData = ImGui::GetDrawData();
             // imGuiProvider->BeginFrame(1.0f/60.0f);
             // imGuiProvider->EndFrame();
 
@@ -628,7 +634,8 @@ imTSB->UnmapAndWrite(im2dRegion);
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
         }
-    //}
+        i++;
+    }
 
     while(true)
     {}
