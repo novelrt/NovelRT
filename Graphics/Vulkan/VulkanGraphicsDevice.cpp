@@ -435,12 +435,22 @@ namespace NovelRT::Graphics::Vulkan
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colourAttachmentReference;
 
+        VkSubpassDependency dependency = {};
+        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        dependency.dstSubpass = 0;
+        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.srcAccessMask = 0;
+        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassCreateInfo.attachmentCount = 1;
         renderPassCreateInfo.pAttachments = &attachmentDescription;
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &subpass;
+        renderPassCreateInfo.pDependencies = &dependency;
+        renderPassCreateInfo.dependencyCount = 1;
 
         VkResult renderPassResult =
             vkCreateRenderPass(GetVulkanDevice(), &renderPassCreateInfo, nullptr, &returnRenderPass);

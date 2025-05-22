@@ -181,8 +181,8 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
     std::array<size_t, 1> offsets{currentOffset};
 
     NovelRT::Graphics::ClearValue colourDataStruct{};
-            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
-            colourDataStruct.depth = 0;
+            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 100);
+            colourDataStruct.depth = 0.1;
             colourDataStruct.stencil = 0;
 
             std::vector<ClearValue> colourData{colourDataStruct};
@@ -249,7 +249,7 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
                                                       if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
                                                          continue;
                               
-                                                      // Apply scissor/clipping rectangle
+                                                      //Apply scissor/clipping rectangle
                                                       currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F(clippingMin.x, clippingMin.y),
                                                                              NovelRT::Maths::GeoVector2F((clippingMax.x - clippingMin.x),
                                                                                                          (clippingMax.y - clippingMin.y)));
@@ -283,7 +283,7 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
                                               globalVertexOffset += list->VtxBuffer.Size;
                                           }
                               
-                                          // Reset clipping rect as per imgui
+                                          //Reset clipping rect as per imgui
                                           currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                                                  NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
 
@@ -436,8 +436,8 @@ std::vector<GraphicsPipelineInputElement> elem{
                                  GraphicsPipelineInputElementKind::Position, 8),
     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
                                  GraphicsPipelineInputElementKind::Normal, 8),
-    GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector4F),
-                                 GraphicsPipelineInputElementKind::TextureCoordinate, 16)};
+    GraphicsPipelineInputElement(typeid(ImU32),
+                                 GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
 
 std::vector<GraphicsPushConstantRange> pushConstants{
     GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
