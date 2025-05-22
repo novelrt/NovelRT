@@ -19,19 +19,19 @@ namespace NovelRT::Graphics
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsDescriptorSet::GraphicsDescriptorSet(std::shared_ptr<VulkanGraphicsPipeline> targetPipeline) noexcept
-        :  _descriptorSetHandle(VK_NULL_HANDLE)
+    VulkanGraphicsDescriptorSet::GraphicsDescriptorSet(
+        std::shared_ptr<VulkanGraphicsPipeline> targetPipeline,
+        VkDescriptorSet descriptorSetHandle) noexcept
+        :  _descriptorSetHandle(descriptorSetHandle)
         , _pipeline(targetPipeline)
         , _inputResourceRegions{}
-    {
-        _descriptorSetHandle = targetPipeline->GetSignature().lock()->GetDescriptorSetHandle();
-    }
+    { }
 
     VulkanGraphicsDescriptorSet::~GraphicsDescriptorSet()
     {
-        std::array<VkDescriptorSet, 1> fuck = {_descriptorSetHandle};
+        auto device = _pipeline->GetDevice().lock();
         auto signature = _pipeline->GetSignature().lock();
-        signature->DestroyDescriptorSets(fuck);
+        vkFreeDescriptorSets(device->GetVulkanDevice(), signature->GetVulkanDescriptorPool(), 1, &_descriptorSetHandle);
     }
 
     void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>& region)

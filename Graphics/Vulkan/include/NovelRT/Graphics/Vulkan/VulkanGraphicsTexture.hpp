@@ -12,6 +12,10 @@
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
+#include <cstdint>
+
+#include <vulkan/vulkan.h>
+
 namespace NovelRT::Graphics::Vulkan
 {
     struct VulkanGraphicsBackend;
@@ -38,15 +42,14 @@ namespace NovelRT::Graphics
         uint32_t _height;
         uint32_t _depth;
 
-        [[nodiscard]] VkImageView CreateVulkanImageView();
-        [[nodiscard]] VkSampler CreateVulkanSampler();
-
     public:
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
         GraphicsTexture(
-            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
             std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
             const GraphicsTextureCreateInfo& createInfo,
             VmaAllocation allocation,

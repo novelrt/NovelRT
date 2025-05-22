@@ -24,10 +24,11 @@ namespace NovelRT::Graphics::Vulkan
 namespace NovelRT::Graphics
 {
     template <>
-    class GraphicsResource<Vulkan::VulkanGraphicsBackend> : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
+    class GraphicsResource<Vulkan::VulkanGraphicsBackend>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> _allocator;
 
         VmaAllocation _allocation;
@@ -40,7 +41,12 @@ namespace NovelRT::Graphics
         std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> GetVirtualAllocation(size_t size, size_t alignment);
 
     public:
-        GraphicsResource(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsResource<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
+
+        GraphicsResource(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
                          std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
                          GraphicsResourceAccess cpuAccess,
                          VmaAllocation allocation,

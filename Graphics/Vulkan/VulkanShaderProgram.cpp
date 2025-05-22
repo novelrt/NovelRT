@@ -3,35 +3,27 @@
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Graphics/ShaderProgram.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
-    VulkanShaderProgram::VulkanShaderProgram(VulkanGraphicsDevice* device,
-                                             std::string entryPointName,
-                                             ShaderProgramKind kind,
-                                             NovelRT::Utilities::Span<uint8_t> bytecode) noexcept
-        : _device(device)
-        , _entryPointName(std::move(entryPointName))
-        , _kind(kind)
-        , _shaderModule([this]() { return CreateShaderModule(); })
-        , _bytecode(std::vector<uint8_t>(bytecode.begin(), bytecode.end()))
-        , _shaderModuleCreateInfo(VkShaderModuleCreateInfo{})
-    {
-        const size_t length = _bytecode.size();
-        _shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        _shaderModuleCreateInfo.codeSize = length;
-        _shaderModuleCreateInfo.pCode = reinterpret_cast<uint32_t*>(&(*_bytecode.begin()));
-    }
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
+    using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
 
-    VkShaderModule VulkanShaderProgram::CreateShaderModule()
+    VkShaderModule CreateShaderModule(
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        NovelRT::Utilities::Span<uint8_t> bytecode)
     {
-        VkShaderModule returnShaderModule = VK_NULL_HANDLE;
+        VkShaderModuleCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        createInfo.codeSize = bytecode.size();
+        createInfo.pCode = reinterpret_cast<uint32_t*>(bytecode.data());
 
-        const VkResult moduleCreationResult = vkCreateShaderModule(GetDevice()->GetVulkanDevice(), &_shaderModuleCreateInfo, nullptr, &returnShaderModule);
+        VkShaderModule shaderModule = VK_NULL_HANDLE;
+        const VkResult moduleCreationResult = vkCreateShaderModule(device->GetVulkanDevice(), &createInfo, nullptr, &shaderModule);
 
         if (moduleCreationResult != VK_SUCCESS)
         {
@@ -39,17 +31,25 @@ namespace NovelRT::Graphics::Vulkan
                 "Failed to initialise the provided SPIR-V data into a VkShaderModule.", moduleCreationResult);
         }
 
-        return returnShaderModule;
+        return shaderModule;
     }
 
-    VulkanShaderProgram::~VulkanShaderProgram()
-    {
-        vkDestroyShaderModule(GetDevice()->GetVulkanDevice(), _shaderModule.Get(), nullptr);
-    }
+    VulkanShaderProgram::ShaderProgram(
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        std::string entryPointName,
+        ShaderProgramKind kind,
+        NovelRT::Utilities::Span<uint8_t> bytecode) noexcept
+        : _device(std::move(device))
+        , _entryPointName(std::move(entryPointName))
+        , _kind(kind)
+        , _shaderModule([device = std::weak_ptr(device), bytecode]() { return CreateShaderModule(device.lock(), bytecode); })
+        , _bytecode(bytecode.begin(), bytecode.end())
+    { }
 
-    std::shared_ptr<VulkanGraphicsDevice> VulkanShaderProgram::GetDevice() const noexcept
+    VulkanShaderProgram::~ShaderProgram() noexcept
     {
-        return _device;
+        auto device = _device.lock();
+        vkDestroyShaderModule(device->GetVulkanDevice(), _shaderModule.Get(), nullptr);
     }
 
     const std::string& VulkanShaderProgram::GetEntryPointName() const noexcept
@@ -72,5 +72,3 @@ namespace NovelRT::Graphics::Vulkan
         return _shaderModule.Get();
     }
 }
-
-template class NovelRT::Graphics::ShaderProgram<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

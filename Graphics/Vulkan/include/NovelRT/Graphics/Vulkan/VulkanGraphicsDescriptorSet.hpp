@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/GraphicsPipeline.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
@@ -28,7 +29,9 @@ namespace NovelRT::Graphics
 
 
     public:
-        explicit GraphicsDescriptorSet(std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> targetPipeline) noexcept;
+        explicit GraphicsDescriptorSet(
+            std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> targetPipeline,
+            VkDescriptorSet descriptorSet) noexcept;
         ~GraphicsDescriptorSet();
 
         [[nodiscard]] VkDescriptorSet GetVulkanDescriptorSet() const noexcept;

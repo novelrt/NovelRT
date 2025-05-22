@@ -26,9 +26,7 @@ namespace NovelRT::Graphics
         VkSurfaceKHR _vulkanSurface;
 
     public:
-        GraphicsSurfaceContext(IGraphicsSurface* surface,
-                               std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
-
+        GraphicsSurfaceContext(IGraphicsSurface* surface, std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
         ~GraphicsSurfaceContext();
 
         [[nodiscard]] VkSurfaceKHR GetSurfaceContextHandle() const noexcept;
