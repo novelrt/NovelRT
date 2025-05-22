@@ -23,6 +23,7 @@ namespace NovelRT::Graphics
     {
     public:
         using iterator = typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::iterator;
+        using const_iterator = typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::const_iterator;
 
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
@@ -67,9 +68,13 @@ namespace NovelRT::Graphics
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
 
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] iterator begin() const noexcept;
+        [[nodiscard]] iterator begin() noexcept;
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] iterator end() const noexcept;
+        [[nodiscard]] const_iterator begin() const noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] iterator end() noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] const_iterator end() const noexcept;
 
         [[nodiscard]] uint32_t GetApiVersion() const noexcept;
 

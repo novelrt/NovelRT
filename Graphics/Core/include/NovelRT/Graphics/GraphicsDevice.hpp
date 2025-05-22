@@ -38,7 +38,7 @@ namespace NovelRT::Graphics
 
         void TearDown();
 
-        [[nodiscard]] std::shared_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
+        [[nodiscard]] std::weak_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
 
         [[nodiscard]] size_t GetContextIndex() const noexcept;
 

@@ -2,11 +2,7 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
-#include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
-#include <NovelRT/Graphics/GraphicsDevice.hpp>
-#include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
-#include <NovelRT/Graphics/GraphicsPipelineSignature.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
@@ -14,219 +10,165 @@
 
 #include <NovelRT/Utilities/Operators.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+#include <algorithm>
+
+namespace NovelRT::Graphics
 {
-    VkDescriptorPool VulkanGraphicsPipelineSignature::CreateDescriptorPool() const
+    using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipelineSignature = GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>;
+    using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
+
+    VkDescriptorPool CreateDescriptorPool(VulkanGraphicsPipelineSignature* signature)
     {
-        VkDescriptorPool returnDescriptorPool = VK_NULL_HANDLE;
+        auto resources = signature->GetResources();
+        if (resources.size() == 0)
+            return VK_NULL_HANDLE;
+
+        auto constantBuffers = std::count_if(resources.begin(), resources.end(), [](const auto& resource) { return resource.GetKind() == GraphicsPipelineResourceKind::ConstantBuffer; });
+        auto textures = std::any_of(resources.begin(), resources.end(), [](const auto& resource) { return resource.GetKind() == GraphicsPipelineResourceKind::Texture; });
+
         std::vector<VkDescriptorPoolSize> vulkanDescriptorPoolSizes{};
+
+
+        if (constantBuffers > 0)
+        {
+            VkDescriptorPoolSize value{};
+            value.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            value.descriptorCount = static_cast<uint32_t>(constantBuffers);
+            vulkanDescriptorPoolSizes.push_back(value);
+        }
+
+        if (textures > 0)
+        {
+            VkDescriptorPoolSize value{};
+            value.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            value.descriptorCount = static_cast<uint32_t>(textures);
+            vulkanDescriptorPoolSizes.push_back(value);
+        }
+
+        size_t originalSize = vulkanDescriptorPoolSizes.size();
+        size_t finalSize = 100 * originalSize;
+        vulkanDescriptorPoolSizes.resize(finalSize);
+
+        for (size_t i = originalSize; i < finalSize; i += originalSize)
+        {
+            VkDescriptorPoolSize* locationToOverwrite = &vulkanDescriptorPoolSizes[i];
+            for (size_t j = 0; j < originalSize; j++)
+            {
+                locationToOverwrite[j] = vulkanDescriptorPoolSizes[j];
+            }
+        }
 
         VkDescriptorPoolCreateInfo descriptorPoolCreateInfo{};
         descriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         descriptorPoolCreateInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
         descriptorPoolCreateInfo.maxSets = 100;
 
-        auto resources = GetResources();
-        size_t resourcesLength = resources.size();
+        // TODO: These need to be multiplied by 100 I think. Oh no.
+        descriptorPoolCreateInfo.poolSizeCount = static_cast<uint32_t>(vulkanDescriptorPoolSizes.size());
+        descriptorPoolCreateInfo.pPoolSizes = vulkanDescriptorPoolSizes.data();
 
-        if (resourcesLength != 0)
+        auto device = signature->GetDevice().lock();
+        VkDescriptorPool returnDescriptorPool = VK_NULL_HANDLE;
+        VkResult descriptorPoolResult = vkCreateDescriptorPool(device->GetVulkanDevice(), &descriptorPoolCreateInfo, nullptr, &returnDescriptorPool);
+
+        if (descriptorPoolResult != VK_SUCCESS)
         {
-            size_t vulkanDescriptorPoolSizesCount = 0;
-            size_t constantBufferCount = 0;
-            size_t textureCount = 0;
-
-            for (auto&& resource : resources)
-            {
-                switch (resource.GetKind())
-                {
-                    case GraphicsPipelineResourceKind::ConstantBuffer:
-                    {
-                        if (constantBufferCount == 0)
-                        {
-                            vulkanDescriptorPoolSizesCount++;
-                        }
-                        constantBufferCount++;
-                        break;
-                    }
-
-                    case GraphicsPipelineResourceKind::Texture:
-                    {
-                        if (textureCount == 0)
-                        {
-                            vulkanDescriptorPoolSizesCount++;
-                        }
-                        textureCount++;
-                        break;
-                    }
-                    case GraphicsPipelineResourceKind::Unknown:
-                    default:
-                    {
-                        break;
-                    }
-                }
-            }
-
-            vulkanDescriptorPoolSizes.resize(vulkanDescriptorPoolSizesCount);
-            size_t vulkanDescriptorPoolSizesIndex = 0;
-
-            if (constantBufferCount != 0)
-            {
-                VkDescriptorPoolSize newDescriptor{};
-                newDescriptor.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                newDescriptor.descriptorCount = static_cast<uint32_t>(constantBufferCount);
-                vulkanDescriptorPoolSizes[vulkanDescriptorPoolSizesIndex] = newDescriptor;
-                vulkanDescriptorPoolSizesIndex++;
-            }
-
-            if (textureCount != 0)
-            {
-                VkDescriptorPoolSize newDescriptor{};
-                newDescriptor.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                newDescriptor.descriptorCount = static_cast<uint32_t>(textureCount);
-                vulkanDescriptorPoolSizes[vulkanDescriptorPoolSizesIndex] = newDescriptor;
-                vulkanDescriptorPoolSizesIndex++;
-            }
-
-            size_t originalSize = vulkanDescriptorPoolSizes.size();
-            size_t finalSize = 100 * originalSize;
-            vulkanDescriptorPoolSizes.resize(finalSize);
-
-            for (size_t i = originalSize; i < finalSize; i += originalSize)
-            {
-                VkDescriptorPoolSize* locationToOverwrite = &vulkanDescriptorPoolSizes[i];
-                for (size_t j = 0; j < originalSize; j++)
-                {
-                    locationToOverwrite[j] = vulkanDescriptorPoolSizes[j];
-                }
-            }
-
-            // TODO: These need to be multiplied by 100 I think. Oh no.
-            descriptorPoolCreateInfo.poolSizeCount = static_cast<uint32_t>(vulkanDescriptorPoolSizes.size());
-            descriptorPoolCreateInfo.pPoolSizes = vulkanDescriptorPoolSizes.data();
-
-            VkResult descriptorPoolResult =
-                vkCreateDescriptorPool(GetDevice()->GetVulkanDevice(), &descriptorPoolCreateInfo, nullptr, &returnDescriptorPool);
-
-            if (descriptorPoolResult != VK_SUCCESS)
-            {
-                throw Exceptions::InitialisationFailureException("Failed to create VkDescriptorPool.",
-                                                                 descriptorPoolResult);
-            }
+            throw Exceptions::InitialisationFailureException("Failed to create VkDescriptorPool.",
+                                                                descriptorPoolResult);
         }
 
         return returnDescriptorPool;
     }
 
-    VkDescriptorSet VulkanGraphicsPipelineSignature::CreateDescriptorSetImpl() const
+    VkShaderStageFlags GetVulkanShaderStageFlags(ShaderProgramVisibility shaderVisibility)
     {
-        VkDescriptorSet returnDescriptorSet = VK_NULL_HANDLE;
-        VkDescriptorPool vulkanDescriptorPool = GetVulkanDescriptorPool();
+        VkShaderStageFlags stageFlags = 0;
 
-        if (vulkanDescriptorPool != VK_NULL_HANDLE)
+        if ((shaderVisibility & ShaderProgramVisibility::Vertex) == ShaderProgramVisibility::Vertex)
         {
-            VkDescriptorSetLayout vulkanDescriptorSetLayout = GetVulkanDescriptorSetLayout();
+            stageFlags |= VK_SHADER_STAGE_VERTEX_BIT;
+        }
 
-            VkDescriptorSetAllocateInfo descriptorSetAllocateInfo{};
-            descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-            descriptorSetAllocateInfo.descriptorPool = vulkanDescriptorPool;
-            descriptorSetAllocateInfo.descriptorSetCount = 1;
-            descriptorSetAllocateInfo.pSetLayouts = &vulkanDescriptorSetLayout;
+        if ((shaderVisibility & ShaderProgramVisibility::Pixel) == ShaderProgramVisibility::Pixel)
+        {
+            stageFlags |= VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
 
-            VkResult allocatorDescriptorSetsResult =
-                vkAllocateDescriptorSets(GetDevice()->GetVulkanDevice(),
-                                         &descriptorSetAllocateInfo, &returnDescriptorSet);
+        return stageFlags;
+    }
 
-            if (allocatorDescriptorSetsResult != VK_SUCCESS)
+    VkDescriptorSetLayout CreateDescriptorSetLayout(VulkanGraphicsPipelineSignature* signature)
+    {
+        auto resources = signature->GetResources();
+        if (resources.size() == 0)
+            return VK_NULL_HANDLE;
+
+        std::vector<VkDescriptorSetLayoutBinding> descriptorSetLayoutBindings(resources.size());
+        uint32_t bindingIndex = 0;
+
+        for (auto&& resource : resources)
+        {
+            switch (resource.GetKind())
             {
-                throw Exceptions::InitialisationFailureException("Failed to create VkDescriptorSet.",
-                                                                 allocatorDescriptorSetsResult);
+                case GraphicsPipelineResourceKind::ConstantBuffer:
+                {
+                    auto stageFlags = GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
+
+                    VkDescriptorSetLayoutBinding value{};
+                    value.binding = bindingIndex++;
+                    value.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                    value.descriptorCount = 1;
+                    value.stageFlags = stageFlags;
+                    descriptorSetLayoutBindings.push_back(value);
+                    break;
+                }
+                case GraphicsPipelineResourceKind::Texture:
+                {
+                    auto stageFlags = GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
+
+                    VkDescriptorSetLayoutBinding value{};
+                    value.binding = bindingIndex++;
+                    value.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                    value.descriptorCount = 1;
+                    value.stageFlags = stageFlags;
+                    descriptorSetLayoutBindings.push_back(value);
+                    break;
+                }
+                case GraphicsPipelineResourceKind::Unknown:
+                default:
+                {
+                    break;
+                }
             }
         }
 
-        return returnDescriptorSet;
-    }
-
-    VkDescriptorSetLayout VulkanGraphicsPipelineSignature::CreateDescriptorSetLayout() const
-    {
-        VkDescriptorSetLayout vulkanDescriptorSetLayout = VK_NULL_HANDLE;
-
-        std::vector<VkDescriptorSetLayoutBinding> descriptorSetLayoutBindings{};
-
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
         descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        descriptorSetLayoutCreateInfo.bindingCount = static_cast<uint32_t>(descriptorSetLayoutBindings.size());
+        descriptorSetLayoutCreateInfo.pBindings = descriptorSetLayoutBindings.data();
 
-        auto resources = GetResources();
-        size_t resourcesLength = resources.size();
-        size_t descriptorSetLayoutBindingsIndex = 0;
+        auto device = signature->GetDevice().lock();
+        VkDescriptorSetLayout vulkanDescriptorSetLayout = VK_NULL_HANDLE;
+        VkResult descriptorSetLayoutResult = vkCreateDescriptorSetLayout(device->GetVulkanDevice(), &descriptorSetLayoutCreateInfo, nullptr, &vulkanDescriptorSetLayout);
 
-        if (resourcesLength != 0)
+        if (descriptorSetLayoutResult != VK_SUCCESS)
         {
-            descriptorSetLayoutBindings.resize(resources.size());
-
-            for (auto&& resource : resources)
-            {
-                switch (resource.GetKind())
-                {
-                    case GraphicsPipelineResourceKind::ConstantBuffer:
-                    {
-                        auto stageFlags = Utilities::GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
-
-                        VkDescriptorSetLayoutBinding descriptorSetLayoutBinding{};
-                        descriptorSetLayoutBinding.binding = static_cast<uint32_t>(descriptorSetLayoutBindingsIndex);
-                        descriptorSetLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                        descriptorSetLayoutBinding.descriptorCount = 1;
-                        descriptorSetLayoutBinding.stageFlags = stageFlags;
-
-                        descriptorSetLayoutBindings[descriptorSetLayoutBindingsIndex] = descriptorSetLayoutBinding;
-                        descriptorSetLayoutBindingsIndex++;
-                        break;
-                    }
-                    case GraphicsPipelineResourceKind::Texture:
-                    {
-                        auto stageFlags = Utilities::GetVulkanShaderStageFlags(resource.GetShaderProgramVisibility());
-
-                        VkDescriptorSetLayoutBinding descriptorSetLayoutBinding{};
-                        descriptorSetLayoutBinding.binding = static_cast<uint32_t>(descriptorSetLayoutBindingsIndex);
-                        descriptorSetLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                        descriptorSetLayoutBinding.descriptorCount = 1;
-                        descriptorSetLayoutBinding.stageFlags = stageFlags;
-
-                        descriptorSetLayoutBindings[descriptorSetLayoutBindingsIndex] = descriptorSetLayoutBinding;
-                        descriptorSetLayoutBindingsIndex++;
-                        break;
-                    }
-                    case GraphicsPipelineResourceKind::Unknown:
-                    default:
-                    {
-                        break;
-                    }
-                }
-            }
-
-            descriptorSetLayoutCreateInfo.bindingCount = static_cast<uint32_t>(descriptorSetLayoutBindings.size());
-            descriptorSetLayoutCreateInfo.pBindings = descriptorSetLayoutBindings.data();
-
-            VkResult descriptorSetLayoutResult = vkCreateDescriptorSetLayout(GetDevice()->GetVulkanDevice(),
-                &descriptorSetLayoutCreateInfo, nullptr, &vulkanDescriptorSetLayout);
-
-            if (descriptorSetLayoutResult != VK_SUCCESS)
-            {
-                throw Exceptions::InitialisationFailureException("Failed to create the VkDescriptorSetLayout.",
-                                                                 descriptorSetLayoutResult);
-            }
+            throw Exceptions::InitialisationFailureException("Failed to create the VkDescriptorSetLayout.",
+                                                                descriptorSetLayoutResult);
         }
 
         return vulkanDescriptorSetLayout;
     }
 
-    VkPipelineLayout VulkanGraphicsPipelineSignature::CreatePipelineLayout() const
+    VkPipelineLayout CreatePipelineLayout(VulkanGraphicsPipelineSignature* signature)
     {
-        VkPipelineLayout vulkanPipelineLayout = VK_NULL_HANDLE;
-
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
         pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
-        VkDescriptorSetLayout descriptorSetLayout = GetVulkanDescriptorSetLayout();
+        VkDescriptorSetLayout descriptorSetLayout = signature->GetVulkanDescriptorSetLayout();
 
         if (descriptorSetLayout != VK_NULL_HANDLE)
         {
@@ -234,28 +176,28 @@ namespace NovelRT::Graphics::Vulkan
             pipelineLayoutCreateInfo.pSetLayouts = &descriptorSetLayout;
         }
 
-        std::vector<VkPushConstantRange> finalPushConstantRangeData{};
         if (_pushConstantRanges.size() != 0)
         {
-            finalPushConstantRangeData.resize(_pushConstantRanges.size());
+            std::vector<VkPushConstantRange> finalPushConstantRangeData(_pushConstantRanges.size());
+            std::transform(
+                _pushConstantRanges.begin(), _pushConstantRanges.end(),
+                finalPushConstantRangeData.begin(),
+                [&](const GraphicsPushConstantRange& rangeData) {
+                    VkPushConstantRange returnData{};
+                    returnData.stageFlags = GetVulkanShaderStageFlags(rangeData.visibilityFlags);
+                    returnData.size = static_cast<uint32_t>(rangeData.size);
+                    returnData.offset = static_cast<uint32_t>(rangeData.offset);
 
-            std::transform(_pushConstantRanges.begin(), _pushConstantRanges.end(), finalPushConstantRangeData.begin(),
-                           [&](const GraphicsPushConstantRange& rangeData) {
-                            VkPushConstantRange returnData{};
-                            returnData.stageFlags = Utilities::GetVulkanShaderStageFlags(rangeData.visibilityFlags);
-                            returnData.size = static_cast<uint32_t>(rangeData.size);
-                            returnData.offset = static_cast<uint32_t>(rangeData.offset);
-
-                            return returnData;
-                           });
+                    return returnData;
+                });
 
             pipelineLayoutCreateInfo.pushConstantRangeCount = static_cast<uint32_t>(finalPushConstantRangeData.size());
             pipelineLayoutCreateInfo.pPushConstantRanges = finalPushConstantRangeData.data();
         }
 
-        VkResult pipelineLayoutResult =
-            vkCreatePipelineLayout(GetDevice()->GetVulkanDevice(),
-                                   &pipelineLayoutCreateInfo, nullptr, &vulkanPipelineLayout);
+        auto device = signature->GetDevice().lock();
+        VkPipelineLayout vulkanPipelineLayout = VK_NULL_HANDLE;
+        VkResult pipelineLayoutResult = vkCreatePipelineLayout(device->GetVulkanDevice(), &pipelineLayoutCreateInfo, nullptr, &vulkanPipelineLayout);
 
         if (pipelineLayoutResult != VK_SUCCESS)
         {
@@ -266,29 +208,124 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanPipelineLayout;
     }
 
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsPipelineSignature> VulkanGraphicsPipelineSignature::shared_from_this()
+    {
+        return std::static_pointer_cast<VulkanGraphicsPipelineSignature>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsPipelineSignature> VulkanGraphicsPipelineSignature::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsPipelineSignature>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    VulkanGraphicsPipelineSignature::GraphicsPipelineSignature(
+        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        GraphicsPipelineBlendFactor srcBlendFactor,
+        GraphicsPipelineBlendFactor dstBlendFactor,
+        NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
+        NovelRT::Utilities::Span<const GraphicsPipelineResource> resources,
+        NovelRT::Utilities::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept
+        : _device(std::move(device))
+        , _srcBlendFactor(srcBlendFactor)
+        , _dstBlendFactor(dstBlendFactor)
+        , _inputs(inputs.begin(), inputs.end())
+        , _resources(resources.begin(), resources.end())
+        , _pushConstantRanges(std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end()))
+        , _vulkanDescriptorPool([this]() { return CreateDescriptorPool(this); })
+        , _vulkanDescriptorSetLayout([this]() { return CreateDescriptorSetLayout(this); })
+        , _vulkanPipelineLayout([this]() { return CreatePipelineLayout(this); })
+    {
+    }
+
+    VulkanGraphicsPipelineSignature::~GraphicsPipelineSignature()
+    {
+        DestroyDescriptorSetLayout();
+        DestroyDescriptorPool();
+        DestroyPipelineLayout();
+    }
+
+    [[nodiscard]] GraphicsPipelineBlendFactor VulkanGraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
+    {
+        return _srcBlendFactor;
+    }
+
+    [[nodiscard]] GraphicsPipelineBlendFactor VulkanGraphicsPipelineSignature::GetDstBlendFactor() const noexcept
+    {
+        return _dstBlendFactor;
+    }
+
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsDescriptorSet> VulkanGraphicsPipelineSignature::CreateDescriptorSet(const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline)
+    {
+        VkDescriptorPool vulkanDescriptorPool = GetVulkanDescriptorPool();
+        if (vulkanDescriptorPool == VK_NULL_HANDLE)
+        {
+            return nullptr;
+        }
+
+        VkDescriptorSetLayout vulkanDescriptorSetLayout = GetVulkanDescriptorSetLayout();
+
+        VkDescriptorSetAllocateInfo descriptorSetAllocateInfo{};
+        descriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        descriptorSetAllocateInfo.descriptorPool = vulkanDescriptorPool;
+        descriptorSetAllocateInfo.descriptorSetCount = 1;
+        descriptorSetAllocateInfo.pSetLayouts = &vulkanDescriptorSetLayout;
+
+        auto device = _device.lock();
+        VkDescriptorSet returnDescriptorSet = VK_NULL_HANDLE;
+        VkResult allocatorDescriptorSetsResult = vkAllocateDescriptorSets(device->GetVulkanDevice(), &descriptorSetAllocateInfo, &returnDescriptorSet);
+
+        if (allocatorDescriptorSetsResult != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to create VkDescriptorSet.",
+                                                                allocatorDescriptorSetsResult);
+        }
+
+        return std::make_shared<VulkanGraphicsDescriptorSet>(pipeline, returnDescriptorSet);
+    }
+
+    [[nodiscard]] std::vector<GraphicsPipelineInput> VulkanGraphicsPipelineSignature::GetInputs() const noexcept
+    {
+        return _inputs;
+    }
+
+    [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineResource> VulkanGraphicsPipelineSignature::GetResources() const noexcept
+    {
+        return _resources;
+    }
+
+    [[nodiscard]] VkDescriptorPool VulkanGraphicsPipelineSignature::GetVulkanDescriptorPool() const
+    {
+        return _vulkanDescriptorPool.Get();
+    }
+
+    [[nodiscard]] VkDescriptorSetLayout VulkanGraphicsPipelineSignature::GetVulkanDescriptorSetLayout() const
+    {
+        return _vulkanDescriptorSetLayout.Get();
+    }
+
+    [[nodiscard]] VkPipelineLayout VulkanGraphicsPipelineSignature::GetVulkanPipelineLayout() const
+    {
+        return _vulkanPipelineLayout.Get();
+    }
+
     void VulkanGraphicsPipelineSignature::DestroyDescriptorPool()
     {
         if (_vulkanDescriptorPool.HasValue())
         {
-            vkDestroyDescriptorPool(GetDevice()->GetVulkanDevice(),
-                                    _vulkanDescriptorPool.Get(), nullptr);
+            auto device = _device.lock();
+            vkDestroyDescriptorPool(device->GetVulkanDevice(), _vulkanDescriptorPool.Get(), nullptr);
             _vulkanDescriptorPool.Reset();
         }
-    }
-
-    void VulkanGraphicsPipelineSignature::DestroyDescriptorSets(
-        NovelRT::Utilities::Span<VkDescriptorSet> vulkanDescriptorSets)
-    {
-        vkFreeDescriptorSets(GetDevice()->GetVulkanDevice(),
-                             _vulkanDescriptorPool.Get(), static_cast<int32_t>(vulkanDescriptorSets.size()),
-                             vulkanDescriptorSets.data());
     }
 
     void VulkanGraphicsPipelineSignature::DestroyDescriptorSetLayout()
     {
         if (_vulkanDescriptorSetLayout.HasValue())
         {
-            vkDestroyDescriptorSetLayout(GetDevice()->GetVulkanDevice(), _vulkanDescriptorSetLayout.Get(), nullptr);
+            auto device = _device.lock();
+            vkDestroyDescriptorSetLayout(device->GetVulkanDevice(), _vulkanDescriptorSetLayout.Get(), nullptr);
             _vulkanDescriptorSetLayout.Reset();
         }
     }
@@ -297,37 +334,9 @@ namespace NovelRT::Graphics::Vulkan
     {
         if (_vulkanPipelineLayout.HasValue())
         {
-            vkDestroyPipelineLayout(GetDevice()->GetVulkanDevice(),
-                                    _vulkanPipelineLayout.Get(), nullptr);
+            auto device = _device.lock();
+            vkDestroyPipelineLayout(device->GetVulkanDevice(), _vulkanPipelineLayout.Get(), nullptr);
             _vulkanPipelineLayout.Reset();
         }
     }
-
-    VulkanGraphicsPipelineSignature::VulkanGraphicsPipelineSignature(
-        VulkanGraphicsDevice* device,
-        GraphicsPipelineBlendFactor srcBlendFactor,
-        GraphicsPipelineBlendFactor dstBlendFactor,
-        NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
-        NovelRT::Utilities::Span<const GraphicsPipelineResource> resources,
-        NovelRT::Utilities::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept
-        : _device(device)
-        , _srcBlendFactor(srcBlendFactor)
-        , _dstBlendFactor(dstBlendFactor)
-        , _inputs(std::vector<GraphicsPipelineInput>(inputs.begin(), inputs.end()))
-        , _resources(std::vector<GraphicsPipelineResource>(resources.begin(), resources.end()))
-        , _pushConstantRanges(std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end()))
-        , _vulkanDescriptorPool([&]() { return CreateDescriptorPool(); })
-        , _vulkanDescriptorSetLayout([&]() { return CreateDescriptorSetLayout(); })
-        , _vulkanPipelineLayout([&]() { return CreatePipelineLayout(); })
-    {
-    }
-
-    VulkanGraphicsPipelineSignature::~VulkanGraphicsPipelineSignature()
-    {
-        DestroyDescriptorSetLayout();
-        DestroyDescriptorPool();
-        DestroyPipelineLayout();
-    }
 }
-
-template class NovelRT::Graphics::GraphicsPipelineSignature<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

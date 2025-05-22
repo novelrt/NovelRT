@@ -3,7 +3,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/TimeoutException.hpp>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 #include <NovelRT/Graphics/GraphicsFence.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
@@ -34,17 +34,41 @@ namespace NovelRT::Graphics
         GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept;
         ~GraphicsFence() noexcept override;
 
-        [[nodiscard]] bool GetIsSignalled() const;
+        [[nodiscard]] bool IsSignalled() const;
 
         void Reset();
 
         [[nodiscard]] bool TryWait();
         [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
-        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
+
+        template <typename Rep, typename Period>
+        [[nodiscard]] bool TryWait(std::chrono::duration<Rep, Period> timeout)
+        {
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout);
+
+            if (ms.count() < 0)
+            {
+                throw Exceptions::InvalidOperationException("Timeout must be positive");
+            }
+
+            return TryWait(ms.count());
+        }
 
         void Wait();
         void Wait(uint64_t millisecondsTimeout);
-        void Wait(std::chrono::duration<uint64_t, std::milli> timeout);
+
+        template <typename Rep, typename Period>
+        void Wait(std::chrono::duration<Rep, Period> timeout)
+        {
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout);
+
+            if (ms.count() < 0)
+            {
+                throw Exceptions::InvalidOperationException("Timeout must be positive");
+            }
+
+            Wait(ms.count());
+        }
 
         [[nodiscard]] VkFence GetVulkanFence() const;
     };

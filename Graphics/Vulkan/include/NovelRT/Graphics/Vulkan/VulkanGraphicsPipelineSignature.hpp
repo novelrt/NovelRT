@@ -24,7 +24,8 @@ namespace NovelRT::Graphics
     class GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+    private:
+        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
         GraphicsPipelineBlendFactor _srcBlendFactor;
         GraphicsPipelineBlendFactor _dstBlendFactor;
@@ -36,44 +37,37 @@ namespace NovelRT::Graphics
         mutable NovelRT::Utilities::Lazy<VkDescriptorSetLayout> _vulkanDescriptorSetLayout;
         mutable NovelRT::Utilities::Lazy<VkPipelineLayout> _vulkanPipelineLayout;
 
-        [[nodiscard]] VkDescriptorPool CreateDescriptorPool() const;
-        [[nodiscard]] VkDescriptorSet CreateDescriptorSetImpl() const;
-        [[nodiscard]] VkDescriptorSetLayout CreateDescriptorSetLayout() const;
-        [[nodiscard]] VkPipelineLayout CreatePipelineLayout() const;
-
         void DestroyDescriptorPool();
         void DestroyDescriptorSetLayout();
+        void DestroyDescriptorSets(NovelRT::Utilities::Span<VkDescriptorSet> vulkanDescriptorSets);
         void DestroyPipelineLayout();
 
     public:
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
+
         GraphicsPipelineSignature(
-            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
             NovelRT::Utilities::Span<const GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<const GraphicsPushConstantRange> pushConstantRanges) noexcept;
 
-        ~GraphicsPipelineSignature() = default;
+        ~GraphicsPipelineSignature();
 
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
         [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
 
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet(const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline);
+
         [[nodiscard]] std::vector<GraphicsPipelineInput> GetInputs() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources() const noexcept;
 
         [[nodiscard]] VkDescriptorPool GetVulkanDescriptorPool() const;
-
-        [[nodiscard]] VkDescriptorSet GetDescriptorSetHandle();
-
-        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
-
-
         [[nodiscard]] VkDescriptorSetLayout GetVulkanDescriptorSetLayout() const;
-
         [[nodiscard]] VkPipelineLayout GetVulkanPipelineLayout() const;
-
-        NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources() const noexcept;
-
-        void DestroyDescriptorSets(NovelRT::Utilities::Span<VkDescriptorSet> vulkanDescriptorSets);
     };
 }

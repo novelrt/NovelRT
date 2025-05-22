@@ -27,17 +27,29 @@ namespace NovelRT::Graphics
     template <template <typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsResource::GraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsResource> VulkanGraphicsResource::shared_from_this()
+    {
+        return std::static_pointer_cast<VulkanGraphicsResource>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsResource> VulkanGraphicsResource::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsResource>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    VulkanGraphicsResource::GraphicsResource(std::weak_ptr<VulkanGraphicsDevice> graphicsDevice,
         std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
         GraphicsResourceAccess cpuAccess,
         VmaAllocation allocation,
         VmaAllocationInfo allocationInfo)
-        : GraphicsDeviceObject(graphicsDevice),
-        _allocator(allocator),
-        _allocation(allocation),
-        _allocationInfo(allocationInfo),
-        _virtualBlock(VK_NULL_HANDLE),
-        _cpuAccess(cpuAccess)
+        : _device(graphicsDevice)
+        , _allocator(allocator)
+        , _allocation(allocation)
+        , _allocationInfo(allocationInfo)
+        , _virtualBlock(VK_NULL_HANDLE)
+        , _cpuAccess(cpuAccess)
     {
         VmaVirtualBlockCreateInfo createInfo{};
         createInfo.size = GetSize();
@@ -96,7 +108,7 @@ namespace NovelRT::Graphics
     std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
     {
         auto [allocation, info] = GetVirtualAllocation(size, alignment);
-        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>(GetDevice(), this, allocation, info);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>(GetDevice(), shared_from_this(), allocation, info);
     }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept
