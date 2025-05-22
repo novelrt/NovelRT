@@ -1,5 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+#include <NovelRT/NovelRT.h>
 
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
@@ -43,6 +44,7 @@ using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Graphics;
 
 std::vector<GraphicsBuffer<VulkanGraphicsBackend>> shittyBuffer{};
+NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
@@ -188,6 +190,16 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
             std::vector<ClearValue> colourData{colourDataStruct};
             currentCmdList->CmdBeginRenderPass(renderPass, colourData);
 
+                        ViewportInfo viewportInfoStruct{};
+            viewportInfoStruct.x = 0;
+            viewportInfoStruct.y = 0;
+            viewportInfoStruct.width = surfaceWidth;
+            viewportInfoStruct.height = surfaceHeight;
+            viewportInfoStruct.minDepth = 0.0f;
+            viewportInfoStruct.maxDepth = 1.0f;
+
+            currentCmdList->CmdSetViewport(viewportInfoStruct);
+
     currentCmdList->CmdBindPipeline(pipeline);
     currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
     currentCmdList->CmdBindIndexBuffer(
@@ -196,7 +208,7 @@ std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
 
 
                 float scale[2];
-                scale[0] = 2.0f / drawData->DisplaySize.x;
+                scale[0] = 2.0f /drawData->DisplaySize.x;
                 scale[1] = 2.0f / drawData->DisplaySize.y;
                 float translate[2];
                 translate[0] = -1.0f - drawData->DisplayPos.x * scale[0];
@@ -337,13 +349,14 @@ int main()
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
 
-    device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+    device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1024, 768));
 
     IMGUI_CHECKVERSION();
 
     auto imguiContext = ImGui::CreateContext();
 
     ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = NULL;
             io.Fonts->AddFontDefault();
             ImGui::StyleColorsDark();
 
@@ -549,8 +562,6 @@ io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&im2dRegion));
     bool demo = true;
 
     io = ImGui::GetIO();
-    
-
     auto windowSize = device->GetSize();
     io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
 
@@ -562,18 +573,31 @@ io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&im2dRegion));
     io.DeltaTime = (float)(1.0f/60.0f);
 
     ///imgui
+    ImGui::NewFrame();
+            ImGui::ShowDemoWindow(&demo);
+            //ImGui::EndFrame();
+            ImGui::Render();
 
     auto surface = gfxDevice->GetSurface();
-    int i = 0;
-    while (i < 3)
-    {
+    NovelRT::Timing::StepTimer timer(60.0f, 0.1f);
+    DummyUpdateStuff += [&](auto delta) { 
         device->ProcessAllMessages();
         if (device->GetIsVisible())
         {
+            io = ImGui::GetIO();
+            auto windowSize = device->GetSize();
+            io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
+
+            if ((windowSize.x > 0) && (windowSize.y > 0))
+            {
+                io.DisplayFramebufferScale = ImVec2(1, 1);
+            }
+
+            io.DeltaTime = delta.getSecondsFloat();
             //ImGuiiiiiiiiiiiiiiiiiiiiii
             ImGui::NewFrame();
             ImGui::ShowDemoWindow(&demo);
-            ImGui::EndFrame();
+            //ImGui::EndFrame();
             ImGui::Render();
             ImDrawData* drawData = ImGui::GetDrawData();
             // imGuiProvider->BeginFrame(1.0f/60.0f);
@@ -636,11 +660,11 @@ io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&im2dRegion));
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
         }
-        i++;
+    };
+    while (!device->GetShouldClose())
+    {
+        timer.tick(DummyUpdateStuff);
     }
-
-    while(true)
-    {}
 
     return 0;
 }
