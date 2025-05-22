@@ -1,5 +1,6 @@
 set(SOURCES
   main.cpp
+  ${imgui_SOURCES}
 )
 
 if(APPLE)

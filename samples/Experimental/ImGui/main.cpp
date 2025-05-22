@@ -29,9 +29,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
-#include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
-
-#include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
+// #include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
 
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 #include <NovelRT/Windowing/Windowing.h>
@@ -64,11 +62,260 @@ std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
     return buffer;
 }
 
+static const char* ImGui_GetClipboardText(void* user_data)
+{
+    unused(user_data);
+    return "placeholder text";
+}
+
+static void ImGui_SetClipboardText(void* user_data, const char* text)
+{
+    unused(user_data);
+    unused(text);
+}
+
 struct TexturedVertex
 {
     NovelRT::Maths::GeoVector3F Position;
     NovelRT::Maths::GeoVector2F UV;
 };
+
+void imguiDrawCommands(ImDrawData* drawData,
+    std::shared_ptr<GraphicsMemoryAllocator<VulkanGraphicsBackend>> memoryAllocator,
+    std::shared_ptr<GraphicsContext<VulkanGraphicsBackend>> context,
+    std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> currentCmdList,
+    std::shared_ptr<GraphicsRenderPass<VulkanGraphicsBackend>> renderPass,
+float surfaceWidth,
+float surfaceHeight,
+std::shared_ptr<GraphicsPipelineSignature<VulkanGraphicsBackend>> pipelineSignature,
+std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline
+)
+{
+    if(drawData->TotalVtxCount <=0)
+        return;
+
+    auto io = ImGui::GetIO();
+
+    size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
+    size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
+
+    // Create buffers
+    GraphicsBufferCreateInfo bufferCreateInfo{};
+    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+    bufferCreateInfo.size = vertexSize;
+    auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
+    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
+    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
+    auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    // Create index buffer + staging
+    bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
+    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+    bufferCreateInfo.size = indexSize;
+    auto indexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
+    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
+    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
+    auto indexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    // Allocate buffers
+    auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 64);
+    auto vertexStageBufferRegion = vertexStagingBuffer->Allocate(vertexSize, 64);
+    auto indexBufferRegion = indexBuffer->Allocate(indexSize, 64);
+    auto indexStageBufferRegion = indexStagingBuffer->Allocate(indexSize, 64);
+
+    // Map vertex buffer to region
+    auto pVertexBuffer = vertexStagingBuffer->Map<ImDrawVert>(vertexBufferRegion);
+    // Map index buffer to region
+    auto pIndexbuffer = indexStagingBuffer->Map<ImDrawIdx>(indexBufferRegion);
+
+    int32_t vertInitial = 0;
+    int32_t indexInitial = 0;
+
+    // Slamjam the vertex buffer and index buffer data into their regions :|
+    for (int i = 0; i < drawData->CmdListsCount; i++)
+    {
+        ImDrawList* list = drawData->CmdLists[i];
+
+        // Copy vertex and index data
+        memcpy(pVertexBuffer.data() + vertInitial, list->VtxBuffer.Data,
+               list->VtxBuffer.Size * sizeof(ImDrawVert));
+        memcpy(pIndexbuffer.data() + indexInitial, list->IdxBuffer.Data,
+               list->IdxBuffer.Size * sizeof(ImDrawIdx));
+
+        vertInitial += list->VtxBuffer.Size;
+        indexInitial += list->IdxBuffer.Size;
+    }
+
+    // Unmap the buffers and copy them into their regions for GPU-ity
+    vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+    indexStagingBuffer->UnmapAndWrite(indexBufferRegion);
+    currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
+    currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
+
+    // This seems terrible but I want it working before I refactor it
+    int32_t globalVertexOffset = 0;
+    int32_t globalIndexOffset = 0;
+
+    ImVec2 clippingOffset = drawData->DisplayPos;
+    ImVec2 clippingScale = drawData->FramebufferScale;
+
+    // Bind the Vertex Buffers and the index buffer(s)?
+    std::array<std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>, 1> buffers{vertexBuffer};
+    auto currentOffset = vertexBufferRegion->GetOffset();
+    auto currentIndexBufferRegion = indexBufferRegion;
+
+    std::array<size_t, 1> offsets{currentOffset};
+
+    NovelRT::Graphics::ClearValue colourDataStruct{};
+            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
+            colourDataStruct.depth = 0;
+            colourDataStruct.stencil = 0;
+
+            std::vector<ClearValue> colourData{colourDataStruct};
+            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
+
+    currentCmdList->CmdBindPipeline(pipeline);
+    currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+    currentCmdList->CmdBindIndexBuffer(
+                currentIndexBufferRegion,
+                IndexType::UInt16); 
+
+
+                float scale[2];
+                scale[0] = 2.0f / drawData->DisplaySize.x;
+                scale[1] = 2.0f / drawData->DisplaySize.y;
+                float translate[2];
+                translate[0] = -1.0f - drawData->DisplayPos.x * scale[0];
+                translate[1] = -1.0f - drawData->DisplayPos.y * scale[1];
+                size_t floatSize = sizeof(float) * 2;
+                NovelRT::Utilities::Misc::Span<float> scaleSpan(scale);
+                NovelRT::Utilities::Misc::Span<float> translateSpan(translate);
+    
+                currentCmdList->CmdPushConstants(pipelineSignature, ShaderProgramVisibility::Vertex, 0,
+                                          NovelRT::Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
+                currentCmdList->CmdPushConstants(pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
+                                          NovelRT::Utilities::Misc::SpanCast<uint8_t>(translateSpan));
+
+                                          for (int n = 0; n < drawData->CmdListsCount; n++)
+                                          {
+                                              const ImDrawList* list = drawData->CmdLists[n];
+                                              for (int cmdIndex = 0; cmdIndex < list->CmdBuffer.Size; cmdIndex++)
+                                              {
+                                                  const ImDrawCmd* drawCommand = &list->CmdBuffer[cmdIndex];
+                                                  if (drawCommand->UserCallback != nullptr)
+                                                  {
+                                                      drawCommand->UserCallback(list, drawCommand);
+                                                  }
+                                                  else
+                                                  {
+                              
+                                                      // Project scissor/clipping rectangles into framebuffer space
+                                                      ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
+                                                                         (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
+                                                      ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * clippingScale.x,
+                                                                         (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
+                              
+                                                      // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
+                                                      if (clippingMin.x < 0.0f)
+                                                      {
+                                                         clippingMin.x = 0.0f;
+                                                      }
+                                                      if (clippingMin.y < 0.0f)
+                                                      {
+                                                         clippingMin.y = 0.0f;
+                                                      }
+                                                      if (clippingMax.x > surfaceWidth)
+                                                      {
+                                                         clippingMax.x = surfaceWidth;
+                                                      }
+                                                      if (clippingMax.y > surfaceHeight)
+                                                      {
+                                                         clippingMax.y = (float)surfaceHeight;
+                                                      }
+                                                      if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
+                                                         continue;
+                              
+                                                      // Apply scissor/clipping rectangle
+                                                      currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F(clippingMin.x, clippingMin.y),
+                                                                             NovelRT::Maths::GeoVector2F((clippingMax.x - clippingMin.x),
+                                                                                                         (clippingMax.y - clippingMin.y)));
+                              
+                                                      // Bind DescriptorSet with font or user texture
+                                                      auto texture2DRegion = *reinterpret_cast<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, VulkanGraphicsBackend>>*>(
+                                                          drawCommand->GetTexID());
+                                                      std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
+                                                          inputResourceRegions{
+                                                              std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>(
+                                                                  std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, VulkanGraphicsBackend>>(
+                                                                      texture2DRegion))};
+                              
+                                                      // Specify the descriptor set data
+                                                      auto descriptorSetData = pipeline->CreateDescriptorSet();
+                                                      descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+                                                      descriptorSetData->UpdateDescriptorSetData();
+                                                      context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
+                              
+                                                      // Bind the descriptor set
+                                                      std::array<std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>, 1> descriptorData{
+                                                          descriptorSetData};
+                              
+                                                      currentCmdList->CmdBindDescriptorSets(descriptorData);
+                              
+                                                      currentCmdList->CmdDrawIndexed(drawCommand->ElemCount, 1, drawCommand->IdxOffset + globalIndexOffset,
+                                                                              drawCommand->VtxOffset + globalVertexOffset, 0);
+                                                  }
+                                              }
+                                              globalIndexOffset += list->IdxBuffer.Size;
+                                              globalVertexOffset += list->VtxBuffer.Size;
+                                          }
+                              
+                                          // Reset clipping rect as per imgui
+                                          currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                                                 NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+
+                                        currentCmdList->CmdEndRenderPass();
+}
+
+void regularDrawCmds(std::shared_ptr<GraphicsContext<VulkanGraphicsBackend>> context,
+    std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> currentCmdList,
+    std::shared_ptr<GraphicsRenderPass<VulkanGraphicsBackend>> renderPass,
+float surfaceWidth,
+float surfaceHeight,
+std::shared_ptr<GraphicsPipelineSignature<VulkanGraphicsBackend>> pipelineSignature,
+std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline,
+std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>> vertexBuffer,
+std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, VulkanGraphicsBackend>> vertexBufferRegion,
+std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>> inputResourceRegions
+)
+{
+    
+            currentCmdList->CmdBindPipeline(pipeline);
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+
+            std::array<std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>, 1> buffers{vertexBuffer};
+            std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
+
+            currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+
+            auto descriptorSetData = pipeline->CreateDescriptorSet();
+            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            descriptorSetData->UpdateDescriptorSetData();
+
+            std::array<std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>, 1> descriptorData{
+                descriptorSetData};
+            currentCmdList->CmdBindDescriptorSets(descriptorData);
+            context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
+            
+
+            currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
+}
 
 int main()
 {
@@ -77,14 +324,37 @@ int main()
 
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
+    
 
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
-    auto inputDevice = std::make_shared<NovelRT::Input::Glfw::GlfwInputDevice>();
-    inputDevice->Initialise(device);
+    IMGUI_CHECKVERSION();
+
+    auto imguiContext = ImGui::CreateContext();
+
+    ImGuiIO& io = ImGui::GetIO();
+            io.Fonts->AddFontDefault();
+            ImGui::StyleColorsDark();
+
+            io.BackendPlatformUserData = nullptr;
+            io.BackendPlatformName = "NovelRT";
+            io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+            io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+            io.ClipboardUserData = nullptr;
+            io.GetClipboardTextFn = &ImGui_GetClipboardText;
+            io.SetClipboardTextFn = &ImGui_SetClipboardText;
+
+            ImGui::GetMainViewport()->PlatformHandleRaw = (void*)device->GetHandle();
+
+            io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+
+            uint8_t* pixels;
+            int32_t width, height;
+
+            io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
     
     auto gfxProvider =
         std::make_shared<GraphicsProvider<VulkanGraphicsBackend>>(std::make_shared<VulkanGraphicsProvider>());
@@ -107,13 +377,6 @@ int main()
                                                         gfxProvider->GetImplementation()),
         gfxDevice, gfxProvider);
 
-    // auto vertexStagingBuffer = memoryAllocator->CreateBufferWithDefaultArguments(
-    //     GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024);
-    // auto textureStagingBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-    //     GraphicsBufferKind::Default, GraphicsResourceAccess::Write, GraphicsResourceAccess::Read, 64 * 1024 * 4);
-    // auto vertexBuffer = gfxDevice->GetMemoryAllocator()->CreateBufferWithDefaultArguments(
-    //     GraphicsBufferKind::Vertex, GraphicsResourceAccess::None, GraphicsResourceAccess::Write, 64 * 1024);
-
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
@@ -132,8 +395,20 @@ int main()
 
     auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
+    ///IMGUI
+    GraphicsBufferCreateInfo imbci{};
+    imbci.cpuAccessKind = GraphicsResourceAccess::Write;
+    imbci.gpuAccessKind = GraphicsResourceAccess::Read;
+    imbci.size = 64 * 1024 * 4;
+
+            // Create Texture Staging Buffer
+    auto imTSB = memoryAllocator->CreateBuffer(imbci);
+    ///IMGUI
+    
     auto vertShaderData = LoadSpv("vulkanrendervert.spv");
     auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
+    auto vertImguiShader = LoadSpv("imgui_vert.spv");
+    auto pixelImguiShader = LoadSpv("imgui_frag.spv");
 
     std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
 
@@ -147,7 +422,30 @@ int main()
     std::vector<GraphicsPipelineResource> resources{
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
+///IMGUI
+std::vector<GraphicsPipelineInputElement> elem{
+    GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                 GraphicsPipelineInputElementKind::Position, 8),
+    GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                 GraphicsPipelineInputElementKind::Normal, 8),
+    GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector4F),
+                                 GraphicsPipelineInputElementKind::TextureCoordinate, 16)};
 
+std::vector<GraphicsPushConstantRange> pushConstants{
+    GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
+
+    std::vector<GraphicsPipelineInput> in{GraphicsPipelineInput(elem)};
+            std::vector<GraphicsPipelineResource> res{
+                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+        auto sig = gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+            GraphicsPipelineBlendFactor::OneMinusSrcAlpha, in,
+            res, pushConstants);
+            auto imVertProg =
+                gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
+            auto imPixProg =
+                gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
+            auto pip = gfxDevice->CreatePipeline(sig, imVertProg, imPixProg);
+///IMGUI
     
     std::vector<GraphicsPushConstantRange> dummyData{};
     auto signature = gfxDevice->CreatePipelineSignature(
@@ -155,8 +453,7 @@ int main()
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
-    // auto dummyRegion = GraphicsResourceMemoryRegion<GraphicsBuffer, VulkanGraphicsBackend>(0, nullptr, gfxDevice,
-    // false, 0, 0);
+    
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
@@ -170,17 +467,41 @@ int main()
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
+    ///imgui
+    auto imtci = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
+        GraphicsTextureKind::TwoDimensional,
+        GraphicsResourceAccess::None,
+        GraphicsResourceAccess::ReadWrite,
+        static_cast<uint32_t>(width),
+        static_cast<uint32_t>(height),
+        1,
+        GraphicsMemoryRegionAllocationFlags::None,
+        TexelFormat::R8G8B8A8_UNORM};
+    auto im2D = memoryAllocator->CreateTexture(imtci);
+
+    // Allocate region based on size of texture
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, VulkanGraphicsBackend>> im2dRegion =
+    im2D->Allocate(im2D->GetSize(), 4);
+
+// Create a staging buffer region for texture
+auto imStageBufferRegion = imTSB->Allocate(im2D->GetSize(), 4);
+auto imTexD = imTSB->Map<uint32_t>(im2dRegion);
+
+memcpy(imTexD.data(), pixels, (width * height) * sizeof(char) * 4);
+
+imTSB->UnmapAndWrite(im2dRegion);
+
+    ///imgui
+
     uint32_t textureWidth = 256;
     uint32_t textureHeight = 256;
     uint32_t texturePixels = textureWidth * textureHeight;
     uint32_t cellWidth = textureWidth / 8;
     uint32_t cellHeight = textureHeight / 8;
 
-    // auto texture2D = memoryAllocator->CreateTextureWithDefaultArguments(
-    //     GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None,
-    //     GraphicsResourceAccess::Write, textureWidth, textureHeight);
-
     auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+
+
 
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto pTextureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
@@ -206,24 +527,49 @@ int main()
     cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
     cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
+    ///imgui
+    cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(im2D);
+            cmdList->CmdCopy(im2D, imStageBufferRegion);
+            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(im2D);
+    ///imgui
+
     gfxContext->EndFrame();
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
+    
+    ///imgui
+    bool demo = true;
 
-    //ImGui stuff before getting surface
-    auto imGuiProvider = new NovelRT::UI::DearImGui::ImGuiUIProvider<VulkanGraphicsBackend>();
-    imGuiProvider->Initialise(device, inputDevice, gfxProvider, gfxDevice, memoryAllocator);
+    io = ImGui::GetIO();
+
+    auto windowSize = device->GetSize();
+    io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
+
+    if ((windowSize.x > 0) && (windowSize.y > 0))
+    {
+        io.DisplayFramebufferScale = ImVec2(1, 1);
+    }
+
+    io.DeltaTime = (float)(1.0f/60.0f);
+
+    
+    ImGui::NewFrame();
+    ImGui::ShowDemoWindow(&demo);
+    ImGui::EndFrame();
+    ImGui::Render();
+    ImDrawData* drawData = ImGui::GetDrawData();
+    ///imgui
 
     auto surface = gfxDevice->GetSurface();
-    while (!device->GetShouldClose())
-    {
+    // while (!device->GetShouldClose())
+    // {
         device->ProcessAllMessages();
         if (device->GetIsVisible())
         {
             //ImGuiiiiiiiiiiiiiiiiiiiiii
 
-            imGuiProvider->BeginFrame(1.0f/60.0f);
-            imGuiProvider->EndFrame();
+            // imGuiProvider->BeginFrame(1.0f/60.0f);
+            // imGuiProvider->EndFrame();
 
             auto context = gfxDevice->GetCurrentContext();
             auto currentCmdList = context->BeginFrame();
@@ -232,10 +578,9 @@ int main()
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
 
-            imGuiProvider->UploadImguiGpuData(context, currentCmdList);
+            // imGuiProvider->UploadImguiGpuData(context, currentCmdList);
 
             auto renderPass = gfxDevice->GetRenderPass();
-
             NovelRT::Graphics::ClearValue colourDataStruct{};
             colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
             colourDataStruct.depth = 0;
@@ -253,35 +598,40 @@ int main()
             viewportInfoStruct.maxDepth = 1.0f;
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
-            currentCmdList->CmdBindPipeline(pipeline);
-            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
 
-            std::array<std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>, 1> buffers{vertexBuffer};
-            std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
+            regularDrawCmds(gfxContext,
+                currentCmdList, 
+                renderPass, 
+                surfaceWidth, 
+                surfaceHeight,
+                signature,
+                pipeline,
+            vertexBuffer, 
+        vertexBufferRegion,
+    inputResourceRegions);
 
-            currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-
-            auto descriptorSetData = pipeline->CreateDescriptorSet();
-            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            descriptorSetData->UpdateDescriptorSetData();
-
-            std::array<std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>, 1> descriptorData{
-                descriptorSetData};
-            currentCmdList->CmdBindDescriptorSets(descriptorData);
-
-            currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
+    currentCmdList->CmdEndRenderPass();
 
 
-            //More imgui shit
-            imGuiProvider->Render(context, currentCmdList, pipeline);
+            imguiDrawCommands(drawData,
+            memoryAllocator,
+            gfxContext,
+            currentCmdList,
+            renderPass,
+            surfaceWidth,
+            surfaceHeight,
+            sig,
+            pip
+        );
             
-            currentCmdList->CmdEndRenderPass();
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
         }
-    }
+    //}
+
+    while(true)
+    {}
 
     return 0;
 }
