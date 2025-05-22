@@ -2,12 +2,15 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
-    VulkanGraphicsRenderPass::VulkanGraphicsRenderPass(VkRenderPass renderPass) noexcept : _vulkanRenderPass(renderPass)
+    using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
+
+    VulkanGraphicsRenderPass::GraphicsRenderPass(VkRenderPass renderPass) noexcept
+        : _vulkanRenderPass(renderPass)
     {
     }
 
@@ -16,5 +19,3 @@ namespace NovelRT::Graphics::Vulkan
         return _vulkanRenderPass;
     }
 }
-
-template class NovelRT::Graphics::GraphicsRenderPass<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;

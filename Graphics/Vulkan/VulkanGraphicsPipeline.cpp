@@ -2,42 +2,62 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
-#include <NovelRT/Graphics/GraphicsPipeline.hpp>
+
 #include <NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
+
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Maths/GeoVector3F.hpp>
 #include <NovelRT/Maths/GeoVector4F.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
+    using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipelineSignature = GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>;
+    using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsPipeline::VulkanGraphicsPipeline(VulkanGraphicsDevice* device,
-                                                   VulkanGraphicsPipelineSignature* signature,
-                                                   //NOLINTBEGIN(bugprone-easily-swappable-parameters) - no sane way to handle this
-                                                   VulkanShaderProgram* vertexShader,
-                                                   VulkanShaderProgram* pixelShader,
-                                                   //NOLINTEND(bugprone-easily-swappable-parameters)
-                                                   bool imguiRenderMode) noexcept
-        : _device(device)
-        , _vertexShader(vertexShader)
-        , _pixelShader(pixelShader)
-        , _signature(signature)
-        , _vulkanPipeline([&]() { return CreateVulkanPipeline(imguiRenderMode); })
+    size_t GetInputElementsCount(NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs)
     {
+        size_t returnCount = 0;
+
+        for (auto&& input : inputs)
+        {
+            returnCount += input.GetElements().size();
+        }
+
+        return returnCount;
     }
 
-    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline(bool imguiRenderMode)
+    VkFormat GetInputElementFormat(std::type_index type)
+    {
+        VkFormat returnFormat = VK_FORMAT_UNDEFINED;
+
+        if (type == typeid(Maths::GeoVector2F))
+        {
+            returnFormat = VK_FORMAT_R32G32_SFLOAT;
+        }
+        else if (type == typeid(Maths::GeoVector3F))
+        {
+            returnFormat = VK_FORMAT_R32G32B32_SFLOAT;
+        }
+        else if (type == typeid(Maths::GeoVector4F))
+        {
+            returnFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
+        }
+
+        return returnFormat;
+    }
+
+    VkPipeline CreateVulkanPipeline(VulkanGraphicsPipeline* pipeline, bool imguiRenderMode)
     {
         std::array<VkPipelineShaderStageCreateInfo, 2> pipelineShaderStageCreateInfos{};
         uint32_t pipelineShaderStageCreateInfosCount = 0;
-
-        VkPipeline vulkanPipeline = VK_NULL_HANDLE;
-        VulkanGraphicsDevice* device = GetDevice();
-        //IGraphicsSurface* surface = device->GetSurface();
-        VulkanGraphicsPipelineSignature* signature = GetSignature();
 
         VkVertexInputBindingDescription vertexInputBindingDescription{};
         vertexInputBindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
@@ -84,8 +104,9 @@ namespace NovelRT::Graphics::Vulkan
         pipelineDepthStencilStateCreateInfo.front = frontState;
         pipelineDepthStencilStateCreateInfo.back = backState;
 
-        VkBlendFactor srcBlendFactor = Utilities::GetVulkanBlendFactor(signature->GetSrcBlendFactor());
-        VkBlendFactor dstBlendFactor = Utilities::GetVulkanBlendFactor(signature->GetDstBlendFactor());
+        auto signature = pipeline->GetSignature().lock();
+        VkBlendFactor srcBlendFactor = Vulkan::Utilities::GetVulkanBlendFactor(signature->GetSrcBlendFactor());
+        VkBlendFactor dstBlendFactor = Vulkan::Utilities::GetVulkanBlendFactor(signature->GetDstBlendFactor());
 
         VkPipelineColorBlendAttachmentState pipelineColorBlendAttachmentState{};
         pipelineColorBlendAttachmentState.blendEnable = true;
@@ -108,6 +129,7 @@ namespace NovelRT::Graphics::Vulkan
         pipelineDynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
         pipelineDynamicStateCreateInfo.pDynamicStates = dynamicStates.data();
 
+        auto device = pipeline->GetDevice().lock();
         VkGraphicsPipelineCreateInfo pipelineCreateInfo{};
         pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineCreateInfo.pViewportState = &pipelineViewportStateCreateInfo;
@@ -119,9 +141,9 @@ namespace NovelRT::Graphics::Vulkan
         pipelineCreateInfo.layout = signature->GetVulkanPipelineLayout();
         pipelineCreateInfo.renderPass = device->GetVulkanRenderPass();
 
-        if (HasVertexShader())
+        if (pipeline->HasVertexShader())
         {
-            VulkanShaderProgram* vertexShader = GetVertexShader();
+            auto vertexShader = pipeline->GetVertexShader().lock();
             const uint32_t shaderIndex = pipelineShaderStageCreateInfosCount++;
 
             VkPipelineShaderStageCreateInfo vertexShaderStageCreateInfo{};
@@ -156,7 +178,7 @@ namespace NovelRT::Graphics::Vulkan
                         VkVertexInputAttributeDescription insertValue{};
                         insertValue.location = static_cast<uint32_t>(inputElementIndex);
                         insertValue.binding = static_cast<uint32_t>(inputIndex);
-                        insertValue.format = GetInputElementFormat(inputElement.GetType(), inputElement.GetKind());
+                        insertValue.format = GetInputElementFormat(inputElement.GetType());
                         insertValue.offset = inputBindingStride;
 
                         vertexInputAttributeDescriptions[inputElementsIndex] = insertValue;
@@ -173,9 +195,9 @@ namespace NovelRT::Graphics::Vulkan
             pipelineCreateInfo.pInputAssemblyState = &pipelineInputAssemblyStateCreateInfo;
         }
 
-        if (HasPixelShader())
+        if (pipeline->HasPixelShader())
         {
-            VulkanShaderProgram* pixelShader = GetPixelShader();
+            auto pixelShader = pipeline->GetPixelShader().lock();
             const uint32_t shaderIndex = pipelineShaderStageCreateInfosCount++;
 
             VkPipelineShaderStageCreateInfo pixelShaderStageCreateInfo{};
@@ -197,8 +219,8 @@ namespace NovelRT::Graphics::Vulkan
             static_cast<uint32_t>(vertexInputAttributeDescriptions.size());
         pipelineVertexInputStateCreateInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
 
-        VkResult createGraphicsPipelineResult = vkCreateGraphicsPipelines(
-            device->GetVulkanDevice(), VK_NULL_HANDLE, 1, &pipelineCreateInfo, nullptr, &vulkanPipeline);
+        VkPipeline vulkanPipeline = VK_NULL_HANDLE;
+        VkResult createGraphicsPipelineResult = vkCreateGraphicsPipelines(device->GetVulkanDevice(), VK_NULL_HANDLE, 1, &pipelineCreateInfo, nullptr, &vulkanPipeline);
 
         if (createGraphicsPipelineResult != VK_SUCCESS)
         {
@@ -209,50 +231,65 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanPipeline;
     }
 
-    size_t VulkanGraphicsPipeline::GetInputElementsCount(
-        NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs) const noexcept
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsPipeline::shared_from_this()
     {
-        size_t returnCount = 0;
-
-        for (auto&& input : inputs)
-        {
-            returnCount += input.GetElements().size();
-        }
-
-        return returnCount;
+        return std::static_pointer_cast<VulkanGraphicsPipeline>(GraphicsDeviceObject::shared_from_this());
     }
 
-    VkFormat VulkanGraphicsPipeline::GetInputElementFormat(std::type_index type, GraphicsPipelineInputElementKind kind) const noexcept
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsPipeline> VulkanGraphicsPipeline::shared_from_this() const
     {
-        VkFormat returnFormat = VK_FORMAT_UNDEFINED;
-
-        if (type == typeid(Maths::GeoVector2F))
-        {
-            returnFormat = VK_FORMAT_R32G32_SFLOAT;
-        }
-        else if (type == typeid(Maths::GeoVector3F))
-        {
-            returnFormat = VK_FORMAT_R32G32B32_SFLOAT;
-        }
-        else if (type == typeid(Maths::GeoVector4F))
-        {
-            returnFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
-        }
-        else if(kind == GraphicsPipelineInputElementKind::Colour)
-        {
-            if (type == typeid(uint32_t))
-            {
-                returnFormat = VK_FORMAT_R8G8B8A8_UNORM;
-            }
-        }
-
-        return returnFormat;
+        return std::static_pointer_cast<const VulkanGraphicsPipeline>(GraphicsDeviceObject::shared_from_this());
     }
 
-    std::unique_ptr<VulkanGraphicsDescriptorSet> VulkanGraphicsPipeline::CreateDescriptorSet()
-    {
-        return std::make_unique<VulkanGraphicsDescriptorSet>(this);
-    }
-} // namespace NovelRT::Graphics::Vulkan
+    VulkanGraphicsPipeline::GraphicsPipeline(
+        std::weak_ptr<VulkanGraphicsDevice> device,
+        std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
+        //NOLINTBEGIN(bugprone-easily-swappable-parameters) - no sane way to handle this
+        std::shared_ptr<VulkanShaderProgram> vertexShader,
+        std::shared_ptr<VulkanShaderProgram> pixelShader,
+        bool imguiRenderMode) noexcept
+        //NOLINTEND(bugprone-easily-swappable-parameters)
+        : _device(std::move(device))
+        , _vertexShader(std::move(vertexShader))
+        , _pixelShader(std::move(pixelShader))
+        , _signature(std::move(signature))
+        , _vulkanPipeline([this, imguiRenderMode]() { return CreateVulkanPipeline(this, imguiRenderMode); })
+    { }
 
-template class NovelRT::Graphics::GraphicsPipeline<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
+    bool VulkanGraphicsPipeline::HasVertexShader() const noexcept
+    {
+        return _vertexShader != nullptr;
+    }
+
+    bool VulkanGraphicsPipeline::HasPixelShader() const noexcept
+    {
+        return _pixelShader != nullptr;
+    }
+
+    std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetVertexShader() const noexcept
+    {
+        return _vertexShader;
+    }
+
+    std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetPixelShader() const noexcept
+    {
+        return _pixelShader;
+    }
+
+    std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetSignature() const noexcept
+    {
+        return _signature;
+    }
+
+    std::shared_ptr<VulkanGraphicsDescriptorSet> VulkanGraphicsPipeline::CreateDescriptorSet()
+    {
+        return _signature->CreateDescriptorSet(shared_from_this());
+    }
+
+    VkPipeline VulkanGraphicsPipeline::GetVulkanPipeline() const
+    {
+        return _vulkanPipeline.Get();
+    }
+}

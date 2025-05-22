@@ -21,35 +21,36 @@ namespace NovelRT::Graphics::Vulkan
 namespace NovelRT::Graphics
 {
     template <>
-    class GraphicsPipeline<Vulkan::VulkanGraphicsBackend>
+    class GraphicsPipeline<Vulkan::VulkanGraphicsBackend> final
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _vertexShader;
         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _pixelShader;
         std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> _signature;
 
         mutable NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
-        [[nodiscard]] VkPipeline CreateVulkanPipeline(bool imguiRenderMode);
-        [[nodiscard]] size_t GetInputElementsCount(
-            NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs) const noexcept;
 
     public:
-        GraphicsPipeline(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-                               std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
-                               std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
-                               std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
-                               bool imguiRenderMode) noexcept;
-        virtual ~GraphicsPipeline() override = default;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
+        GraphicsPipeline(
+            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
+            std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
+            std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
+            bool imguiRenderMode) noexcept;
+        ~GraphicsPipeline() final = default;
 
         [[nodiscard]] bool HasVertexShader() const noexcept;
         [[nodiscard]] bool HasPixelShader() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
         [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetVertexShader() const noexcept;
+        [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
 
         [[nodiscard]] std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature() const noexcept;
 

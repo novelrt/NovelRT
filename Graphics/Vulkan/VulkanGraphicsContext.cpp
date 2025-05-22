@@ -319,7 +319,10 @@ namespace NovelRT::Graphics
 
         //    std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](const VulkanGraphicsDescriptorSet* set){ return set->GetVulkanDescriptorSet(); });
 
-        //    pair.first->DestroyDescriptorSets(sets);
+        //    auto pool = pair.first->GetVulkanDescriptorPool();
+
+            // TODO: this should likely check its result
+        //    vkFreeDescriptorSets(_device->GetVulkanDevice(), pool, static_cast<int32_t>(sets.size()), sets.data());
         //}
 
         _vulkanDescriptorSets.clear();

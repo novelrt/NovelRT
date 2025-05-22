@@ -4,16 +4,17 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/NotSupportedException.hpp>
 #include <NovelRT/Exceptions/OutOfMemoryException.hpp>
-#include <NovelRT/Graphics/GraphicsProvider.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBackendTraits.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <NovelRT/Utilities/Strings.hpp>
 
-
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
+    using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
+
     VKAPI_ATTR VkBool32 VKAPI_CALL
     VulkanGraphicsProvider::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
                                           VkDebugUtilsMessageTypeFlagsEXT /*messageType*/,
@@ -296,7 +297,7 @@ namespace NovelRT::Graphics::Vulkan
         return returnInstance;
     }
 
-    std::vector<VulkanGraphicsAdapter*> VulkanGraphicsProvider::GetGraphicsAdapters()
+    std::vector<std::shared_ptr<VulkanGraphicsAdapter>> VulkanGraphicsProvider::GetGraphicsAdapters()
     {
         VkInstance instance = GetVulkanInstance();
 
@@ -317,18 +318,15 @@ namespace NovelRT::Graphics::Vulkan
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
-        std::vector<VulkanGraphicsAdapter*> adapters{};
-        adapters.reserve(devices.size());
-
-        for (auto&& physicalDevice : devices)
-        {
-            adapters.emplace_back(new VulkanGraphicsAdapter(this, physicalDevice));
-        }
+        std::vector<std::shared_ptr<VulkanGraphicsAdapter>> adapters(devices.size());
+        std::transform(devices.begin(), devices.end(), adapters.begin(), [this](const auto& device){
+            return std::make_shared<VulkanGraphicsAdapter>(shared_from_this(), device);
+        });
 
         return adapters;
     }
 
-    VulkanGraphicsProvider::VulkanGraphicsProvider()
+    VulkanGraphicsProvider::GraphicsProvider()
         : _vulkanInstance(VK_NULL_HANDLE)
         , _adapters([&]() { return GetGraphicsAdapters(); })
         // TODO: EngineConfig was here
@@ -355,7 +353,7 @@ namespace NovelRT::Graphics::Vulkan
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
 
-    VulkanGraphicsProvider::~VulkanGraphicsProvider()
+    VulkanGraphicsProvider::~GraphicsProvider()
     {
         if (_debugLogger != VK_NULL_HANDLE)
         {
@@ -375,15 +373,23 @@ namespace NovelRT::Graphics::Vulkan
         return _debugModeEnabled;
     }
 
-    std::vector<VulkanGraphicsAdapter*>::iterator VulkanGraphicsProvider::begin() noexcept
+    auto VulkanGraphicsProvider::begin() noexcept -> iterator
     {
-        return _adapters.Get().begin();;
+        return _adapters.Get().begin();
     }
 
-    std::vector<VulkanGraphicsAdapter*>::iterator VulkanGraphicsProvider::end() noexcept
+    auto VulkanGraphicsProvider::begin() const noexcept -> const_iterator
+    {
+        return _adapters.Get().begin();
+    }
+
+    auto VulkanGraphicsProvider::end() noexcept -> iterator
     {
         return _adapters.Get().end();
     }
-} // namespace NovelRT::Graphics::Vulkan
 
-template class NovelRT::Graphics::GraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
+    auto VulkanGraphicsProvider::end() const noexcept -> const_iterator
+    {
+        return _adapters.Get().end();
+    }
+}

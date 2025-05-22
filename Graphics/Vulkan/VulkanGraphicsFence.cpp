@@ -3,26 +3,28 @@
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
-#include <NovelRT/Graphics/GraphicsFence.hpp>
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
     using VulkanGraphicsFence = GraphicsFence<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
 
-    VkFence VulkanGraphicsFence::CreateVulkanFence(VkFenceCreateFlagBits flags) const
+    VkFence CreateVulkanFence(std::weak_ptr<VulkanGraphicsDevice> device, bool isSignaled)
     {
         VkFence vulkanFence = VK_NULL_HANDLE;
 
         VkFenceCreateInfo fenceCreateInfo{};
         fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.pNext = nullptr;
-        fenceCreateInfo.flags = flags;
+        if (isSignaled)
+            fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-        VkResult result = vkCreateFence(GetDevice()->GetVulkanDevice(), &fenceCreateInfo, nullptr, &vulkanFence);
+        auto vkDevice = device.lock()->GetVulkanDevice();
+        VkResult result = vkCreateFence(vkDevice, &fenceCreateInfo, nullptr, &vulkanFence);
 
         if (result != VK_SUCCESS)
         {
@@ -32,23 +34,63 @@ namespace NovelRT::Graphics::Vulkan
         return vulkanFence;
     }
 
-    void VulkanGraphicsFence::DisposeVulkanFence(VkFence vulkanFence) const noexcept
+    VulkanGraphicsFence::GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept
+        : _device(std::move(device))
+        ,  _vulkanFence([device = std::weak_ptr(device), isSignaled]() { return CreateVulkanFence(device, isSignaled); })
     {
-        if (vulkanFence != VK_NULL_HANDLE)
+        unused(_state.Transition(Threading::VolatileState::Initialised));
+    }
+
+    void DisposeVulkanFence(VkDevice device, VkFence vulkanFence)
+    {
+        if (device != VK_NULL_HANDLE && vulkanFence != VK_NULL_HANDLE)
         {
-            vkDestroyFence(GetDevice()->GetVulkanDevice(), vulkanFence, nullptr);
+            vkDestroyFence(device, vulkanFence, nullptr);
         }
     }
 
-    bool VulkanGraphicsFence::TryWaitInternal(uint64_t millisecondsTimeout)
+    VulkanGraphicsFence::~GraphicsFence() noexcept
     {
-        bool fenceSignalled = GetIsSignalled();
+        if (_vulkanFence.HasValue())
+        {
+            DisposeVulkanFence(_device->GetVulkanDevice(), _vulkanFence.Get());
+            _vulkanFence.Reset();
+        }
+    }
+
+    bool VulkanGraphicsFence::IsSignalled() const
+    {
+        return vkGetFenceStatus(_device->GetVulkanDevice(), GetVulkanFence()) == VK_SUCCESS;
+    }
+
+    void VulkanGraphicsFence::Reset()
+    {
+        VkFence vulkanFence = GetVulkanFence();
+
+        VkResult result = vkResetFences(_device->GetVulkanDevice(), 1, &vulkanFence);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InvalidOperationException("VkFence instance failed to reset correctly. Reason: " +
+                                                        std::to_string(result));
+        }
+    }
+
+    bool VulkanGraphicsFence::TryWait()
+    {
+        return TryWait(std::numeric_limits<uint64_t>::max());
+    }
+
+    bool VulkanGraphicsFence::TryWait(uint64_t millisecondsTimeout)
+    {
+        // vkWaitForFences accepts its timeout in nanoseconds
+        auto nanosecondsTimeout = millisecondsTimeout * 1000;
+        bool fenceSignalled = IsSignalled();
 
         if (!fenceSignalled)
         {
             VkFence vulkanFence = GetVulkanFence();
-            VkResult result =
-                vkWaitForFences(GetDevice()->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, millisecondsTimeout);
+            VkResult result = vkWaitForFences(_device->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, nanosecondsTimeout);
 
             if (result == VK_SUCCESS)
             {
@@ -65,50 +107,37 @@ namespace NovelRT::Graphics::Vulkan
         return fenceSignalled;
     }
 
-    VulkanGraphicsFence::GraphicsFence(VulkanGraphicsDevice* device, bool isSignaled) noexcept
-        : _device(device)
-        ,  _vulkanFence([isSignaled,this]() { return isSignaled ? CreateVulkanFenceSignaled() : CreateVulkanFenceUnsignaled(); })
+    void VulkanGraphicsFence::Wait()
     {
-        unused(_state.Transition(Threading::VolatileState::Initialised));
+        return Wait(std::numeric_limits<uint64_t>::max());
     }
 
-    VulkanGraphicsFence::~VulkanGraphicsFence()
+    void VulkanGraphicsFence::Wait(uint64_t millisecondsTimeout)
     {
-        if (_vulkanFence.HasValue())
+        // vkWaitForFences accepts its timeout in nanoseconds
+        auto nanosecondsTimeout = millisecondsTimeout * 1000;
+        bool fenceSignalled = IsSignalled();
+
+        if (!fenceSignalled)
         {
-            DisposeVulkanFence(_vulkanFence.Get());
-            _vulkanFence.Reset();
+            VkFence vulkanFence = GetVulkanFence();
+            VkResult result = vkWaitForFences(_device->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, nanosecondsTimeout);
+
+            if (result == VK_SUCCESS)
+            {
+                fenceSignalled = true;
+            }
+            else if (result != VK_TIMEOUT)
+            {
+                throw Exceptions::InvalidOperationException(
+                    "VkFence instance failed to either succeed or time out correctly. Reason: " +
+                    std::to_string(result));
+            }
         }
     }
 
-    bool VulkanGraphicsFence::GetIsSignalled()
+    VkFence VulkanGraphicsFence::GetVulkanFence() const
     {
-        return vkGetFenceStatus(GetDevice()->GetVulkanDevice(), GetVulkanFence()) == VK_SUCCESS;
+        return _vulkanFence.Get();
     }
-
-    void VulkanGraphicsFence::Reset()
-    {
-        VkFence vulkanFence = GetVulkanFence();
-
-        VkResult result = vkResetFences(GetDevice()->GetVulkanDevice(), 1, &vulkanFence);
-
-        if (result != VK_SUCCESS)
-        {
-            throw Exceptions::InvalidOperationException("VkFence instance failed to reset correctly. Reason: " +
-                                                        std::to_string(result));
-        }
-    }
-
-    bool VulkanGraphicsFence::TryWait(uint64_t millisecondsTimeout)
-    {
-        return TryWaitInternal(millisecondsTimeout);
-    }
-
-    bool VulkanGraphicsFence::TryWait(std::chrono::duration<uint64_t, std::milli> timeout)
-    {
-        uint64_t millisecondsTimeout = timeout.count();
-        return TryWaitInternal(millisecondsTimeout);
-    }
-} // namespace NovelRT::Graphics::Vulkan
-
-template class NovelRT::Graphics::GraphicsFence<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>;
+}
