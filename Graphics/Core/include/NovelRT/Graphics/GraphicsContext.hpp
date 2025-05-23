@@ -26,7 +26,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] size_t GetIndex() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
-
         void EndFrame();
     };
 }

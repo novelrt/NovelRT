@@ -8,7 +8,7 @@
 #include <NovelRT/Utilities/Lazy.hpp>
 
 #include <memory>
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -27,7 +27,10 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         size_t _index;
 
-        std::unordered_map<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>*, std::vector<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>*>> _vulkanDescriptorSets;
+        std::map<
+            std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
+            std::vector<std::weak_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
+            std::owner_less<>> _vulkanDescriptorSets;
         std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
         std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _waitForExecuteCompletionFence;
 
@@ -38,46 +41,33 @@ namespace NovelRT::Graphics
 
         Threading::VolatileState _state;
 
-        VkCommandBuffer CreateVulkanCommandBuffer() const;
-        VkCommandPool CreateVulkanCommandPool() const;
-        VkFramebuffer CreateVulkanFramebuffer() const;
-        VkImageView CreateVulkanSwapChainImageView() const;
-        void DisposeVulkanCommandBuffer(VkCommandBuffer vulkanCommandBuffer) const noexcept;
-        void DisposeVulkanCommandPool(VkCommandPool vulkanCommandPool) const noexcept;
-        void DisposeVulkanFramebuffer(VkFramebuffer vulkanFramebuffer) const noexcept;
-        void DisposeVulkanSwapChainImageView(VkImageView vulkanSwapChainImageView) const noexcept;
-        //void BeginCopy(VkImage vulkanImage) noexcept;
-        //void EndCopy(VkImage vulkanImage) noexcept;
         void DestroyDescriptorSets();
 
     public:
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
         GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
         ~GraphicsContext() final;
 
-        void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
-
-        [[nodiscard]] size_t GetIndex() const noexcept;
-
         [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
-        [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const;
-
-        [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
-
-        [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
-
-        [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
-
-        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
+        [[nodiscard]] size_t GetIndex() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame() const;
 
-        void RegisterDescriptorSetForFrame(GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>* signature, GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>* set);
+        void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
-        void ResetContext();
+        [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const;
+        [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
+        [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
+        [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
+
+        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
+
+        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature, std::weak_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };
 }

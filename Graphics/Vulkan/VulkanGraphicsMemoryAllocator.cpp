@@ -23,9 +23,21 @@ namespace NovelRT::Graphics
     using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsMemoryAllocator::shared_from_this()
+    {
+        return std::static_pointer_cast<VulkanGraphicsMemoryAllocator>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsMemoryAllocator> VulkanGraphicsMemoryAllocator::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsMemoryAllocator>(GraphicsDeviceObject::shared_from_this());
+    }
+
     VulkanGraphicsMemoryAllocator::GraphicsMemoryAllocator(
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider)
+        std::weak_ptr<VulkanGraphicsDevice> device,
+        std::shared_ptr<VulkanGraphicsProvider> provider)
         : VulkanGraphicsDeviceObject()
         , _device(device)
         , _provider(provider)
@@ -47,6 +59,11 @@ namespace NovelRT::Graphics
         {
             Exceptions::InitialisationFailureException("Failed to create the VulkanMemoryAllocator.", result);
         }
+    }
+
+    [[nodiscard]] std::weak_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
+    {
+        return _provider;
     }
 
     std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
