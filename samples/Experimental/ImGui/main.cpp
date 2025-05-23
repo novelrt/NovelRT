@@ -205,17 +205,20 @@ void imguiDrawCommands(ImDrawData* drawData,
         VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
         VK_QUEUE_FAMILY_IGNORED,
         VK_QUEUE_FAMILY_IGNORED,
-        std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion->GetImplementation()->GetOwningResource())->GetVulkanBuffer(),
+        std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion->GetImplementation()->GetOwningResource())
+            ->GetVulkanBuffer(),
         0,
-        VK_WHOLE_SIZE
-    };
-    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
+        VK_WHOLE_SIZE};
+    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1,
+                         &barrierInfo, 0, 0);
 
     barrierInfo.dstAccessMask = VK_ACCESS_INDEX_READ_BIT;
-    barrierInfo.buffer = std::static_pointer_cast<VulkanGraphicsBuffer>(indexBufferRegion->GetImplementation()->GetOwningResource())->GetVulkanBuffer(),
+    barrierInfo.buffer =
+        std::static_pointer_cast<VulkanGraphicsBuffer>(indexBufferRegion->GetImplementation()->GetOwningResource())
+            ->GetVulkanBuffer(),
 
-    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
-
+    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1,
+                         &barrierInfo, 0, 0);
 
     // This seems terrible but I want it working before I refactor it
     int32_t globalVertexOffset = 0;
@@ -614,26 +617,18 @@ int main()
 
     io.DeltaTime = (float)(1.0f / 60.0f);
     int strIndex = 0;
-    std::vector<std::string> arr{
-        "Hello!",
-        "I'm going to get milk, now...",
-        "...",
-        "...",
-        "*30 years later*",
-        "..."
-    };
+    std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
 
     /// imgui
-    //ImGui::NewFrame();
-    //ImGui::ShowDemoWindow(&demo);
+    // ImGui::NewFrame();
+    // ImGui::ShowDemoWindow(&demo);
     //// ImGui::EndFrame();
-    //ImGui::Render();
+    // ImGui::Render();
 
     auto surface = gfxDevice->GetSurface();
     bool clicked = false;
     NovelRT::Timing::StepTimer timer(144.0f, 1.0f / 144.0f);
-    DummyUpdateStuff += [&](auto delta)
-    {
+    DummyUpdateStuff += [&](auto delta) {
         device->ProcessAllMessages();
         inputDevice->Update(delta);
         if (device->GetIsVisible())
@@ -651,7 +646,7 @@ int main()
             auto mousePos = inputDevice->GetRawMousePosition();
             io.AddMousePosEvent(mousePos.x, mousePos.y);
             auto state = inputDevice->GetKeyState(clickAction.actionName);
-            if(state == KeyState::KeyDown || state == KeyState::KeyDown)
+            if (state == KeyState::KeyDown || state == KeyState::KeyDown)
             {
                 io.AddMouseButtonEvent(0, true);
             }
@@ -659,8 +654,8 @@ int main()
                 io.AddMouseButtonEvent(0, false);
 
             auto cl = inputDevice->GetCurrentChangeLog(clickAction.actionName);
-            
-            if(cl.GetCurrentState() == KeyState::KeyDown && !clicked)
+
+            if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
             {
                 strIndex++;
                 clicked = true;
@@ -674,14 +669,14 @@ int main()
             ImGui::NewFrame();
             ImGui::SetNextWindowSize(ImVec2(612, 200));
             ImGui::SetNextWindowPos(ImVec2(100, 500));
-            ImGui::Begin("Test", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-            
-            if(strIndex < arr.size())
+            ImGui::Begin("Test", NULL,
+                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+            if (strIndex < arr.size())
             {
                 ImGui::Text(arr.at(strIndex).c_str());
             }
-            
-            
+
             ImGui::End();
 
             ImGui::Render();
@@ -705,7 +700,7 @@ int main()
             colourDataStruct.stencil = 0;
 
             std::vector<ClearValue> colourData{colourDataStruct};
-            //currentCmdList->CmdBeginRenderPass(renderPass, colourData);
+            // currentCmdList->CmdBeginRenderPass(renderPass, colourData);
 
             ViewportInfo viewportInfoStruct{};
             viewportInfoStruct.x = 0;
@@ -717,10 +712,10 @@ int main()
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
-            //regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
+            // regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
             //                vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
-            //currentCmdList->CmdEndRenderPass();
+            // currentCmdList->CmdEndRenderPass();
 
             imguiDrawCommands(drawData, memoryAllocator, gfxContext, currentCmdList, renderPass, surfaceWidth,
                               surfaceHeight, sig, pip);
