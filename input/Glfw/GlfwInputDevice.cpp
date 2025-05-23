@@ -376,7 +376,9 @@ namespace NovelRT::Input::Glfw
                 continue;
             }
 
-            return _keyStates.at(_currentBufferIndex).at(action.pairedKey.GetExternalKeyCode());
+            auto stateList = _keyStates.at(_currentBufferIndex);
+            if(stateList.size() > 0)
+                return stateList.at(action.pairedKey.GetExternalKeyCode());
         }
 
         return KeyStateFrameChangeLog();

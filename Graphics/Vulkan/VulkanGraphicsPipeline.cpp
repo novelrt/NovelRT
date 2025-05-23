@@ -19,7 +19,7 @@ namespace NovelRT::Graphics::Vulkan
     {
     }
 
-    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline()
+    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline(bool imguiRenderMode = false)
     {
         std::array<VkPipelineShaderStageCreateInfo, 2> pipelineShaderStageCreateInfos{};
         uint32_t pipelineShaderStageCreateInfosCount = 0;
@@ -50,10 +50,13 @@ namespace NovelRT::Graphics::Vulkan
 
         VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo{};
         pipelineRasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-        pipelineRasterizationStateCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-        pipelineRasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
-        pipelineRasterizationStateCreateInfo.cullMode = VK_CULL_MODE_NONE;
+        pipelineRasterizationStateCreateInfo.frontFace = imguiRenderMode ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
+        pipelineRasterizationStateCreateInfo.cullMode = imguiRenderMode ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT;
         pipelineRasterizationStateCreateInfo.lineWidth = 1.0f;
+        if(imguiRenderMode)
+        {
+            pipelineRasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+        }
 
         VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo{};
         pipelineMultisampleStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;

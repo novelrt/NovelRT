@@ -613,6 +613,15 @@ int main()
     }
 
     io.DeltaTime = (float)(1.0f / 60.0f);
+    int strIndex = 0;
+    std::vector<std::string> arr{
+        "Hello!",
+        "I'm going to get milk, now...",
+        "...",
+        "...",
+        "*30 years later*",
+        "..."
+    };
 
     /// imgui
     //ImGui::NewFrame();
@@ -621,6 +630,7 @@ int main()
     //ImGui::Render();
 
     auto surface = gfxDevice->GetSurface();
+    bool clicked = false;
     NovelRT::Timing::StepTimer timer(144.0f, 1.0f / 144.0f);
     DummyUpdateStuff += [&](auto delta)
     {
@@ -648,12 +658,32 @@ int main()
             else
                 io.AddMouseButtonEvent(0, false);
 
-
+            auto cl = inputDevice->GetCurrentChangeLog(clickAction.actionName);
+            
+            if(cl.GetCurrentState() == KeyState::KeyDown && !clicked)
+            {
+                strIndex++;
+                clicked = true;
+            }
+            else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
+            {
+                clicked = false;
+            }
 
             // ImGuiiiiiiiiiiiiiiiiiiiiii
             ImGui::NewFrame();
-            ImGui::ShowDemoWindow(&demo);
-            // ImGui::EndFrame();
+            ImGui::SetNextWindowSize(ImVec2(612, 200));
+            ImGui::SetNextWindowPos(ImVec2(100, 500));
+            ImGui::Begin("Test", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+            
+            if(strIndex < arr.size())
+            {
+                ImGui::Text(arr.at(strIndex).c_str());
+            }
+            
+            
+            ImGui::End();
+
             ImGui::Render();
             ImDrawData* drawData = ImGui::GetDrawData();
             // imGuiProvider->BeginFrame(1.0f/60.0f);
