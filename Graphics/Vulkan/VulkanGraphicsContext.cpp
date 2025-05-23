@@ -182,7 +182,7 @@ namespace NovelRT::Graphics::Vulkan
     VulkanGraphicsContext::VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : _device(device),
           _index(index),
-          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ true)),
+          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ false)),
           _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ false)),
           _vulkanCommandBuffer([&]() { return CreateVulkanCommandBuffer(); }),
           _vulkanCommandPool([&]() { return CreateVulkanCommandPool(); }),
@@ -194,10 +194,6 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
     {
-        std::shared_ptr<VulkanGraphicsFence> fence = GetFence();
-        fence->Wait();
-        fence->Reset();
-
         DestroyDescriptorSets();
 
         VkCommandBufferBeginInfo commandBufferBeginInfo{};

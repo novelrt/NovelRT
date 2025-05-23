@@ -484,6 +484,10 @@ namespace NovelRT::Graphics::Vulkan
         presentInfo.pSwapchains = &vulkanSwapchain;
         presentInfo.pImageIndices = &contextIndex;
         
+        std::shared_ptr<VulkanGraphicsFence> fence = GetCurrentContext()->GetFence();
+        Signal(fence);
+        fence->Wait();
+        fence->Reset();
 
         VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
 
@@ -492,7 +496,7 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to present the data within the present queue!");
         }
         
-        Signal(GetCurrentContext()->GetFence());
+        
 
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),

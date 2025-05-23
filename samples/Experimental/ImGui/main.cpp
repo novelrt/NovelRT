@@ -543,6 +543,7 @@ int main()
     gfxContext->EndFrame();
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
+    gfxContext->GetFence()->Reset();
 
     /// imgui
     bool demo = true;
@@ -628,7 +629,7 @@ int main()
 
             context->EndFrame();
             gfxDevice->PresentFrame();
-            //gfxDevice->WaitForIdle();
+            gfxDevice->WaitForIdle();
         }
     };
 
