@@ -33,10 +33,9 @@ namespace NovelRT::Graphics
     {
     public:
         using iterator = typename std::vector<std::shared_ptr<GraphicsContext<TBackend>>>::iterator;
+        using const_iterator = typename std::vector<std::shared_ptr<GraphicsContext<TBackend>>>::const_iterator;
 
         GraphicsDevice() = delete;
-
-        void TearDown();
 
         [[nodiscard]] std::weak_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
 
@@ -45,7 +44,11 @@ namespace NovelRT::Graphics
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() noexcept;
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] const_iterator begin() const noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() noexcept;
+        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] const_iterator end() const noexcept;
 
         [[nodiscard]] std::weak_ptr<GraphicsContext<TBackend>> GetCurrentContext() const;
 

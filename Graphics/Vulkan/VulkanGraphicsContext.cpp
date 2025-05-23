@@ -25,65 +25,11 @@ namespace NovelRT::Graphics
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
-    {
-        if (_vulkanFramebuffer.HasValue())
-        {
-            VkFramebuffer vulkanFramebuffer = _vulkanFramebuffer.Get();
-            DisposeVulkanFramebuffer(vulkanFramebuffer);
-            _vulkanFramebuffer.Reset();
-        }
-
-        if (_vulkanSwapChainImageView.HasValue())
-        {
-            VkImageView vulkanSwapChainImageView = _vulkanSwapChainImageView.Get();
-            DisposeVulkanSwapChainImageView(vulkanSwapChainImageView);
-            _vulkanSwapChainImageView.Reset();
-        }
-
-        if (_vulkanCommandBuffer.HasValue())
-        {
-            VkCommandBuffer commandBuffer = _vulkanCommandBuffer.Get();
-            DisposeVulkanCommandBuffer(commandBuffer);
-            _vulkanCommandBuffer.Reset();
-        }
-
-        if (_vulkanCommandPool.HasValue())
-        {
-            VkCommandPool pool = _vulkanCommandPool.Get();
-            DisposeVulkanCommandPool(pool);
-            _vulkanCommandPool.Reset();
-        }
-    }
-
-    VkCommandBuffer VulkanGraphicsContext::CreateVulkanCommandBuffer() const
-    {
-        VkCommandBuffer vulkanCommandBuffer = VK_NULL_HANDLE;
-
-        VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
-        commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferAllocateInfo.commandPool = GetVulkanCommandPool();
-        commandBufferAllocateInfo.commandBufferCount = 1;
-
-        auto device = GetDevice().lock();
-
-        VkResult result =
-            vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
-
-        if (result != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException(
-                "Failed to initialise the VkCommandBuffer instance with the given parameters and VkDevice.", result);
-        }
-
-        return vulkanCommandBuffer;
-    }
-
-    VkCommandPool VulkanGraphicsContext::CreateVulkanCommandPool() const
+    VkCommandPool CreateVulkanCommandPool(VulkanGraphicsContext* context)
     {
         VkCommandPool vulkanCommandPool = VK_NULL_HANDLE;
 
-        auto device = GetDevice().lock();
+        auto device = context->GetDevice().lock();
 
         VkCommandPoolCreateInfo commandPoolCreateInfo{};
         commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -102,12 +48,34 @@ namespace NovelRT::Graphics
         return vulkanCommandPool;
     }
 
-    VkFramebuffer VulkanGraphicsContext::CreateVulkanFramebuffer() const
+    VkCommandBuffer CreateVulkanCommandBuffer(VulkanGraphicsContext* context)
+    {
+        VkCommandBuffer vulkanCommandBuffer = VK_NULL_HANDLE;
+
+        VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
+        commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferAllocateInfo.commandPool = context->GetVulkanCommandPool();
+        commandBufferAllocateInfo.commandBufferCount = 1;
+
+        auto device = context->GetDevice().lock();
+
+        VkResult result = vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException(
+                "Failed to initialise the VkCommandBuffer instance with the given parameters and VkDevice.", result);
+        }
+
+        return vulkanCommandBuffer;
+    }
+
+    VkFramebuffer CreateVulkanFramebuffer(VulkanGraphicsContext* context)
     {
         VkFramebuffer vulkanFramebuffer = VK_NULL_HANDLE;
-        auto device = GetDevice().lock();
+        auto device = context->GetDevice().lock();
         IGraphicsSurface* surface = device->GetSurface();
-        VkImageView swapChainImageView = GetVulkanSwapChainImageView();
+        VkImageView swapChainImageView = context->GetVulkanSwapChainImageView();
 
         VkFramebufferCreateInfo framebufferCreateInfo{};
         framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -129,10 +97,10 @@ namespace NovelRT::Graphics
         return vulkanFramebuffer;
     }
 
-    VkImageView VulkanGraphicsContext::CreateVulkanSwapChainImageView() const
+    VkImageView CreateVulkanSwapChainImageView(VulkanGraphicsContext* context)
     {
         VkImageView swapChainImageView = VK_NULL_HANDLE;
-        auto device = GetDevice().lock();
+        auto device = context->GetDevice().lock();
 
         VkComponentMapping componentMapping{};
         componentMapping.r = VK_COMPONENT_SWIZZLE_R;
@@ -147,7 +115,7 @@ namespace NovelRT::Graphics
 
         VkImageViewCreateInfo swapChainImageViewCreateInfo{};
         swapChainImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-        swapChainImageViewCreateInfo.image = device->GetVulkanSwapChainImages()[GetIndex()];
+        swapChainImageViewCreateInfo.image = device->GetVulkanSwapChainImages()[context->GetIndex()];
         swapChainImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         swapChainImageViewCreateInfo.format = device->GetVulkanSwapChainFormat();
         swapChainImageViewCreateInfo.components = componentMapping;
@@ -165,53 +133,104 @@ namespace NovelRT::Graphics
         return swapChainImageView;
     }
 
-    void VulkanGraphicsContext::DisposeVulkanCommandBuffer(VkCommandBuffer vulkanCommandBuffer) const noexcept
+    void VulkanGraphicsContext::DestroyDescriptorSets()
     {
-        if (vulkanCommandBuffer != VK_NULL_HANDLE)
+        /*
+        for (const auto& pair : _vulkanDescriptorSets)
         {
-            auto device = GetDevice().lock();
-            vkFreeCommandBuffers(device->GetVulkanDevice(), GetVulkanCommandPool(), 1, &vulkanCommandBuffer);
+            // If the signature has already expired, assume all of its descriptor sets have too
+            if (auto signature = pair.first.lock())
+            {
+                std::vector<VkDescriptorSet> sets(pair.second.size());
+                for (const auto& setPtr : pair.second)
+                {
+                    // Ignore any sets which have expired
+                    if (auto set = setPtr.lock())
+                    {
+                        sets.push_back(set->GetVulkanDescriptorSet());
+                    }
+                }
+
+
+                auto pool = signature->GetVulkanDescriptorPool();
+
+                // TODO: this should likely check its result
+                vkFreeDescriptorSets(_device->GetVulkanDevice(), pool, static_cast<int32_t>(sets.size()), sets.data());
+            }
         }
+        */
+
+        _vulkanDescriptorSets.clear();
     }
 
-    void VulkanGraphicsContext::DisposeVulkanCommandPool(VkCommandPool vulkanCommandPool) const noexcept
-{
-        if (vulkanCommandPool != VK_NULL_HANDLE)
-        {
-            auto device = GetDevice().lock();
-            vkDestroyCommandPool(device->GetVulkanDevice(), vulkanCommandPool, nullptr);
-        }
-    }
-
-    void VulkanGraphicsContext::DisposeVulkanFramebuffer(VkFramebuffer vulkanFramebuffer) const noexcept
-{
-        if (vulkanFramebuffer != VK_NULL_HANDLE)
-        {
-            auto device = GetDevice().lock();
-            vkDestroyFramebuffer(device->GetVulkanDevice(), vulkanFramebuffer, nullptr);
-        }
-    }
-
-    void VulkanGraphicsContext::DisposeVulkanSwapChainImageView(VkImageView vulkanSwapChainImageView) const noexcept
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsContext::shared_from_this()
     {
-        if (vulkanSwapChainImageView != VK_NULL_HANDLE)
-        {
-            auto device = GetDevice().lock();
-            vkDestroyImageView(device->GetVulkanDevice(), vulkanSwapChainImageView, nullptr);
-        }
+        return std::static_pointer_cast<VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
+    }
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsContext> VulkanGraphicsContext::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
 
     VulkanGraphicsContext::GraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : _device(device)
         , _index(index)
+        , _vulkanDescriptorSets()
         , _fence(std::make_shared<VulkanGraphicsFence>(device, /* isSignaled*/ true))
         , _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(device, /* isSignaled*/ false))
-        , _vulkanCommandBuffer([&]() { return CreateVulkanCommandBuffer(); })
-        , _vulkanCommandPool([&]() { return CreateVulkanCommandPool(); })
-        , _vulkanFramebuffer([&]() { return CreateVulkanFramebuffer(); })
-        , _vulkanSwapChainImageView([&]() { return CreateVulkanSwapChainImageView(); })
+        , _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); })
+        , _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
+        , _vulkanFramebuffer([this]() { return CreateVulkanFramebuffer(this); })
+        , _vulkanSwapChainImageView([this]() { return CreateVulkanSwapChainImageView(this); })
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+    }
+
+    VulkanGraphicsContext::~GraphicsContext()
+    {
+        DestroyDescriptorSets();
+
+        VkDevice device = _device->GetVulkanDevice();
+        if (_vulkanFramebuffer.HasValue())
+        {
+            VkFramebuffer framebuffer = _vulkanFramebuffer.Get();
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+            _vulkanFramebuffer.Reset();
+        }
+
+        if (_vulkanSwapChainImageView.HasValue())
+        {
+            VkImageView imageView = _vulkanSwapChainImageView.Get();
+            vkDestroyImageView(device, imageView, nullptr);
+            _vulkanSwapChainImageView.Reset();
+        }
+
+        if (_vulkanCommandBuffer.HasValue() && _vulkanCommandPool.HasValue())
+        {
+            VkCommandBuffer commandBuffer = _vulkanCommandBuffer.Get();
+            VkCommandPool pool = _vulkanCommandPool.Get();
+            vkFreeCommandBuffers(device, pool, 1, &commandBuffer);
+            _vulkanCommandBuffer.Reset();
+        }
+
+        if (_vulkanCommandPool.HasValue())
+        {
+            VkCommandPool pool = _vulkanCommandPool.Get();
+            vkDestroyCommandPool(device, pool, nullptr);
+            _vulkanCommandPool.Reset();
+        }
+    }
+
+    std::weak_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetFence() const noexcept
+    {
+        return _fence;
+    }
+
+    size_t VulkanGraphicsContext::GetIndex() const noexcept
+    {
+        return _index;
     }
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
@@ -230,17 +249,6 @@ namespace NovelRT::Graphics
         }
 
         return std::make_shared<VulkanGraphicsCmdList>(shared_from_this(), GetVulkanCommandBuffer());
-    }
-
-    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(VulkanGraphicsPipelineSignature* signature, VulkanGraphicsDescriptorSet* set)
-    {
-        if (_vulkanDescriptorSets.find(signature) == _vulkanDescriptorSets.end())
-        {
-            _vulkanDescriptorSets.emplace(signature, std::vector<VulkanGraphicsDescriptorSet*>{set});
-            return;
-        }
-
-        _vulkanDescriptorSets[signature].emplace_back(set);
     }
 
     void VulkanGraphicsContext::EndFrame() const
@@ -277,54 +285,70 @@ namespace NovelRT::Graphics
         executeGraphicsFence->Reset();
     }
 
-    void VulkanGraphicsContext::ResetContext()
+    void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
     {
+        VkDevice device = _device->GetVulkanDevice();
         if (_vulkanFramebuffer.HasValue())
         {
-            DisposeVulkanFramebuffer(_vulkanFramebuffer.Get());
+            VkFramebuffer framebuffer = _vulkanFramebuffer.Get();
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
             _vulkanFramebuffer.Reset();
         }
 
         if (_vulkanSwapChainImageView.HasValue())
         {
-            DisposeVulkanSwapChainImageView(_vulkanSwapChainImageView.Get());
+            VkImageView imageView = _vulkanSwapChainImageView.Get();
+            vkDestroyImageView(device, imageView, nullptr);
             _vulkanSwapChainImageView.Reset();
         }
-    }
 
-    VulkanGraphicsContext::~GraphicsContext()
-    {
-        DestroyDescriptorSets();
-
-        if (_vulkanCommandBuffer.HasValue())
+        if (_vulkanCommandBuffer.HasValue() && _vulkanCommandPool.HasValue())
         {
-            DisposeVulkanCommandBuffer(_vulkanCommandBuffer.Get());
+            VkCommandBuffer commandBuffer = _vulkanCommandBuffer.Get();
+            VkCommandPool pool = _vulkanCommandPool.Get();
+            vkFreeCommandBuffers(device, pool, 1, &commandBuffer);
             _vulkanCommandBuffer.Reset();
         }
 
         if (_vulkanCommandPool.HasValue())
         {
-            DisposeVulkanCommandPool(_vulkanCommandPool.Get());
+            VkCommandPool pool = _vulkanCommandPool.Get();
+            vkDestroyCommandPool(device, pool, nullptr);
             _vulkanCommandPool.Reset();
         }
-
-        ResetContext();
     }
 
-    void VulkanGraphicsContext::DestroyDescriptorSets()
+    VkCommandBuffer VulkanGraphicsContext::GetVulkanCommandBuffer() const
     {
-        //for (auto&& pair : _vulkanDescriptorSets)
-        //{
-        //    std::vector<VkDescriptorSet> sets(pair.second.size());
+        return _vulkanCommandBuffer.Get();
+    }
+    VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
+    {
+        return _vulkanCommandPool.Get();
+    }
+    VkFramebuffer VulkanGraphicsContext::GetVulkanFramebuffer() const
+    {
+        return _vulkanFramebuffer.Get();
+    }
+    VkImageView VulkanGraphicsContext::GetVulkanSwapChainImageView() const
+    {
+        return _vulkanSwapChainImageView.Get();
+    }
 
-        //    std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](const VulkanGraphicsDescriptorSet* set){ return set->GetVulkanDescriptorSet(); });
+    std::weak_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetWaitForExecuteCompletionFence() const noexcept
+    {
+        return _waitForExecuteCompletionFence;
+    }
 
-        //    auto pool = pair.first->GetVulkanDescriptorPool();
+    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature, std::weak_ptr<VulkanGraphicsDescriptorSet> set)
+    {
+        auto it = _vulkanDescriptorSets.find(signature);
+        if (it == _vulkanDescriptorSets.end())
+        {
+            _vulkanDescriptorSets.emplace_hint(it, signature, std::vector{ set });
+            return;
+        }
 
-            // TODO: this should likely check its result
-        //    vkFreeDescriptorSets(_device->GetVulkanDevice(), pool, static_cast<int32_t>(sets.size()), sets.data());
-        //}
-
-        _vulkanDescriptorSets.clear();
+        it->second.emplace_back(set);
     }
 }

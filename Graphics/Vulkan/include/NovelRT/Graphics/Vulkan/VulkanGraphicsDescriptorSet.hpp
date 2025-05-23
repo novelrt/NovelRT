@@ -34,13 +34,13 @@ namespace NovelRT::Graphics
             VkDescriptorSet descriptorSet) noexcept;
         ~GraphicsDescriptorSet();
 
-        [[nodiscard]] VkDescriptorSet GetVulkanDescriptorSet() const noexcept;
-
-        [[nodiscard]] std::weak_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> GetPipeline() const noexcept;
-
         void AddMemoryRegionToInputs(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>>& region);
         void AddMemoryRegionsToInputs(Utilities::Span<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>>> regions);
 
         void UpdateDescriptorSetData();
+
+        [[nodiscard]] VkDescriptorSet GetVulkanDescriptorSet() const noexcept;
+
+        [[nodiscard]] std::weak_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> GetPipeline() const noexcept;
     };
 }
