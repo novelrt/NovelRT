@@ -395,9 +395,10 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
         std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
         std::shared_ptr<VulkanShaderProgram> vertexShader,
-        std::shared_ptr<VulkanShaderProgram> pixelShader)
+        std::shared_ptr<VulkanShaderProgram> pixelShader,
+        bool imguiRenderMode)
     {
-        return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader);
+        return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader, imguiRenderMode);
     }
 
     std::shared_ptr<VulkanGraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(

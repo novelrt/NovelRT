@@ -13,13 +13,14 @@ namespace NovelRT::Graphics::Vulkan
     VulkanGraphicsPipeline::VulkanGraphicsPipeline(std::shared_ptr<VulkanGraphicsDevice> device,
                                                    std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
                                                    std::shared_ptr<VulkanShaderProgram> vertexShader,
-                                                   std::shared_ptr<VulkanShaderProgram> pixelShader) noexcept
+                                                   std::shared_ptr<VulkanShaderProgram> pixelShader,
+                                                   bool imguiRenderMode) noexcept
         : _device(device), _vertexShader(vertexShader), _pixelShader(pixelShader), _signature(signature),
-          _vulkanPipeline([&]() { return CreateVulkanPipeline(); })
+          _vulkanPipeline([&]() { return CreateVulkanPipeline(imguiRenderMode); })
     {
     }
 
-    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline(bool imguiRenderMode = false)
+    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline(bool imguiRenderMode)
     {
         std::array<VkPipelineShaderStageCreateInfo, 2> pipelineShaderStageCreateInfos{};
         uint32_t pipelineShaderStageCreateInfosCount = 0;

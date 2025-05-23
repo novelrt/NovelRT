@@ -508,7 +508,7 @@ int main()
         GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, in, res, pushConstants);
     auto imVertProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
     auto imPixProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
-    auto pip = gfxDevice->CreatePipeline(sig, imVertProg, imPixProg);
+    auto pip = gfxDevice->CreatePipeline(sig, imVertProg, imPixProg, true);
     /// IMGUI
 
     std::vector<GraphicsPushConstantRange> dummyData{};
