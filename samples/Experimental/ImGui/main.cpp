@@ -165,6 +165,56 @@ void imguiDrawCommands(ImDrawData* drawData,
     currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
     currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
 
+    auto impl = currentCmdList->_implementation;
+    auto cmd = impl->_commandBuffer;
+
+    // Provided by VK_VERSION_1_0
+    //
+#if 0
+            .buffer = self.vertexBuffers[self.swapId].buffer,
+            .src_access_mask = .{
+                .transfer_read_bit = true,
+            },
+            .dst_access_mask = .{
+                // .transfer_write_bit = true,
+                .vertex_attribute_read_bit = true,
+            },
+            .src_queue_family_index = 0,
+            .dst_queue_family_index = 0,
+            .offset = 0,
+            .size = copy.size,
+    typedef struct VkBufferMemoryBarrier {
+        VkStructureType    sType;
+        const void*        pNext;
+        VkAccessFlags      srcAccessMask;
+        VkAccessFlags      dstAccessMask;
+        uint32_t           srcQueueFamilyIndex;
+        uint32_t           dstQueueFamilyIndex;
+        VkBuffer           buffer;
+        VkDeviceSize       offset;
+        VkDeviceSize       size;
+    } VkBufferMemoryBarrier;
+#endif
+
+    VkBufferMemoryBarrier barrierInfo = {
+        VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+        nullptr,
+        VK_ACCESS_TRANSFER_READ_BIT,
+        VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+        0,
+        0,
+        std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion->GetImplementation()->GetOwningResource())->GetVulkanBuffer(),
+        0,
+        VK_WHOLE_SIZE
+    };
+    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
+
+    barrierInfo.dstAccessMask = VK_ACCESS_INDEX_READ_BIT;
+    barrierInfo.buffer = std::static_pointer_cast<VulkanGraphicsBuffer>(indexBufferRegion->GetImplementation()->GetOwningResource())->GetVulkanBuffer(),
+
+    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
+
+
     // This seems terrible but I want it working before I refactor it
     int32_t globalVertexOffset = 0;
     int32_t globalIndexOffset = 0;
