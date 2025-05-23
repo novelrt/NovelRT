@@ -199,20 +199,20 @@ void imguiDrawCommands(ImDrawData* drawData,
     VkBufferMemoryBarrier barrierInfo = {
         VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
         nullptr,
-        VK_ACCESS_TRANSFER_READ_BIT,
+        VK_ACCESS_TRANSFER_WRITE_BIT,
         VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
-        0,
-        0,
+        VK_QUEUE_FAMILY_IGNORED,
+        VK_QUEUE_FAMILY_IGNORED,
         std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion->GetImplementation()->GetOwningResource())->GetVulkanBuffer(),
         0,
         VK_WHOLE_SIZE
     };
-    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
+    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
 
     barrierInfo.dstAccessMask = VK_ACCESS_INDEX_READ_BIT;
     barrierInfo.buffer = std::static_pointer_cast<VulkanGraphicsBuffer>(indexBufferRegion->GetImplementation()->GetOwningResource())->GetVulkanBuffer(),
 
-    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
+    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1, &barrierInfo, 0, 0);
 
 
     // This seems terrible but I want it working before I refactor it
