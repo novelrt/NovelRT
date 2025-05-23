@@ -472,7 +472,7 @@ namespace NovelRT::Graphics::Vulkan
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
-        presentCompletionGraphicsFence->Wait();
+        //presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
 
         uint32_t contextIndex = static_cast<uint32_t>(GetContextIndex());
