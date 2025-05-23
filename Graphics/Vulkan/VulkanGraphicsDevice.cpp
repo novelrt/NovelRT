@@ -508,9 +508,9 @@ namespace NovelRT::Graphics::Vulkan
                                      std::to_string(acquireNextImageResult));
         }
 
-
+        presentCompletionGraphicsFence->Wait();
         _contextIndex = contextIndex;
-    }
+    }   
 
     void VulkanGraphicsDevice::Signal(std::shared_ptr<VulkanGraphicsFence> fence) const
     {
