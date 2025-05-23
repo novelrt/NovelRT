@@ -182,7 +182,7 @@ namespace NovelRT::Graphics::Vulkan
     VulkanGraphicsContext::VulkanGraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : _device(device),
           _index(index),
-          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ true)),
+          _fence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ false)),
           _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(GetDevice(), /* isSignaled*/ false)),
           _vulkanCommandBuffer([&]() { return CreateVulkanCommandBuffer(); }),
           _vulkanCommandPool([&]() { return CreateVulkanCommandPool(); }),
@@ -194,10 +194,6 @@ namespace NovelRT::Graphics::Vulkan
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
     {
-        std::shared_ptr<VulkanGraphicsFence> fence = GetFence();
-        fence->Wait();
-        fence->Reset();
-
         DestroyDescriptorSets();
 
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
@@ -294,14 +290,14 @@ namespace NovelRT::Graphics::Vulkan
 
     void VulkanGraphicsContext::DestroyDescriptorSets()
     {
-        for (auto&& pair : _vulkanDescriptorSets)
-        {
-            std::vector<VkDescriptorSet> sets(pair.second.size());
+        //for (auto&& pair : _vulkanDescriptorSets)
+        //{
+        //    std::vector<VkDescriptorSet> sets(pair.second.size());
 
-            std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](std::shared_ptr<VulkanGraphicsDescriptorSet> set){ return *set->GetVulkanDescriptorSet(); });
+        //    std::transform(pair.second.begin(), pair.second.end(), sets.begin(), [](std::shared_ptr<VulkanGraphicsDescriptorSet> set){ return *set->GetVulkanDescriptorSet(); });
 
-            pair.first->DestroyDescriptorSets(sets);
-        }
+        //    pair.first->DestroyDescriptorSets(sets);
+        //}
 
         _vulkanDescriptorSets.clear();
     }

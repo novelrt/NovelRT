@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <iostream>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <iostream>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -86,9 +86,9 @@ namespace NovelRT::Graphics::Vulkan
 
         for (auto&& requestedRequiredExt : EngineConfig::RequiredVulkanInstanceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -101,9 +101,9 @@ namespace NovelRT::Graphics::Vulkan
 
         for (auto&& requestedOptionalExt : EngineConfig::OptionalVulkanInstanceExtensions())
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x) {
-                return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0;
-            });
+            auto result =
+                std::find_if(extensionProperties.begin(), extensionProperties.end(),
+                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -143,9 +143,9 @@ namespace NovelRT::Graphics::Vulkan
 
         for (auto&& requestedRequiredLayer : EngineConfig::RequiredVulkanLayers())
         {
-            auto result = std::find_if(layerProperties.begin(), layerProperties.end(), [&](auto& x) {
-                return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0;
-            });
+            auto result =
+                std::find_if(layerProperties.begin(), layerProperties.end(),
+                             [&](auto& x) { return strcmp(requestedRequiredLayer.c_str(), x.layerName) == 0; });
 
             if (result == layerProperties.end())
             {
@@ -248,11 +248,18 @@ namespace NovelRT::Graphics::Vulkan
 #endif
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+            VkValidationFeaturesEXT validationFeatures = {};
 
+        VkValidationFeatureEnableEXT enables[] = {
+        VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT};
         if (EngineConfig::EnableDebugOutputFromEngineInternals())
         {
+            validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+            validationFeatures.enabledValidationFeatureCount = 1;
+            validationFeatures.pEnabledValidationFeatures = enables;
             CreateDefaultDebugCreateInfoStruct(debugCreateInfo);
             createInfo.pNext = &debugCreateInfo;
+            debugCreateInfo.pNext = &validationFeatures;
         }
         else
         {
@@ -339,7 +346,6 @@ namespace NovelRT::Graphics::Vulkan
         vkDestroyInstance(_vulkanInstance, nullptr);
     }
 
-    
     uint32_t VulkanGraphicsProvider::GetApiVersion() const noexcept
     {
         return VK_API_VERSION_1_2;

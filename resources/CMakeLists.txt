@@ -21,6 +21,10 @@ set(RESOURCES_FILES
   Shaders/vert.spv
   Shaders/vulkanrenderfrag.spv
   Shaders/vulkanrendervert.spv
+  Shaders/imgui_frag.spv
+  Shaders/imgui_vert.spv
+  Shaders/imgui_shader.vert
+  Shaders/imgui_shader.frag
 
   Sounds/goat.wav
   Sounds/uwu.ogg

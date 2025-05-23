@@ -23,16 +23,17 @@ namespace NovelRT::Graphics::Vulkan
         std::shared_ptr<VulkanGraphicsPipelineSignature> _signature;
 
         NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
-        [[nodiscard]] VkPipeline CreateVulkanPipeline();
+        [[nodiscard]] VkPipeline CreateVulkanPipeline(bool imguiRenderMode);
         [[nodiscard]] size_t GetInputElementsCount(
             NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs) const noexcept;
-        [[nodiscard]] VkFormat GetInputElementFormat(std::type_index index) const noexcept;
+        [[nodiscard]] VkFormat GetInputElementFormat(std::type_index index, GraphicsPipelineInputElementKind kind) const noexcept;
 
     public:
         VulkanGraphicsPipeline(std::shared_ptr<VulkanGraphicsDevice> device,
                                std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
                                std::shared_ptr<VulkanShaderProgram> vertexShader,
-                               std::shared_ptr<VulkanShaderProgram> pixelShader) noexcept;
+                               std::shared_ptr<VulkanShaderProgram> pixelShader,
+                               bool imguiRenderMode) noexcept;
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
         {

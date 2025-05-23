@@ -168,11 +168,12 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
             std::shared_ptr<ShaderProgram<TBackend>> vertexShader,
-            std::shared_ptr<ShaderProgram<TBackend>> pixelShader)
+            std::shared_ptr<ShaderProgram<TBackend>> pixelShader,
+            bool imguiRenderMode = false)
         {
             return std::make_shared<GraphicsPipeline<TBackend>>(
                 _implementation->CreatePipeline(signature->GetImplementation(), vertexShader->GetImplementation(),
-                                                pixelShader->GetImplementation()),
+                                                pixelShader->GetImplementation(), imguiRenderMode),
                 this->shared_from_this(), signature, vertexShader, pixelShader);
         }
 

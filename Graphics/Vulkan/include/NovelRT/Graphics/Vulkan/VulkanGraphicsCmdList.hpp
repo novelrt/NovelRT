@@ -19,7 +19,7 @@ namespace NovelRT::Graphics::Vulkan
 
     class VulkanGraphicsCmdList final
     {
-    private:
+    public:
         std::shared_ptr<VulkanGraphicsContext> _context;
         VkCommandBuffer _commandBuffer;
 
@@ -61,7 +61,7 @@ namespace NovelRT::Graphics::Vulkan
         void CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture);
 
         void CmdBindPipeline(std::shared_ptr<VulkanGraphicsPipeline> pipeline);
-        
+
         void CmdPushConstants(std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Misc::Span<uint8_t> values);
     };
 }

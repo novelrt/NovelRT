@@ -395,9 +395,10 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
         std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
         std::shared_ptr<VulkanShaderProgram> vertexShader,
-        std::shared_ptr<VulkanShaderProgram> pixelShader)
+        std::shared_ptr<VulkanShaderProgram> pixelShader,
+        bool imguiRenderMode)
     {
-        return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader);
+        return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, vertexShader, pixelShader, imguiRenderMode);
     }
 
     std::shared_ptr<VulkanGraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
@@ -435,12 +436,22 @@ namespace NovelRT::Graphics::Vulkan
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colourAttachmentReference;
 
+        VkSubpassDependency dependency = {};
+        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        dependency.dstSubpass = 0;
+        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        dependency.srcAccessMask = 0;
+        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassCreateInfo.attachmentCount = 1;
         renderPassCreateInfo.pAttachments = &attachmentDescription;
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &subpass;
+        renderPassCreateInfo.pDependencies = &dependency;
+        renderPassCreateInfo.dependencyCount = 1;
 
         VkResult renderPassResult =
             vkCreateRenderPass(GetVulkanDevice(), &renderPassCreateInfo, nullptr, &returnRenderPass);
@@ -462,7 +473,7 @@ namespace NovelRT::Graphics::Vulkan
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
-        presentCompletionGraphicsFence->Wait();
+        //presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
 
         uint32_t contextIndex = static_cast<uint32_t>(GetContextIndex());
@@ -473,6 +484,11 @@ namespace NovelRT::Graphics::Vulkan
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = &vulkanSwapchain;
         presentInfo.pImageIndices = &contextIndex;
+        
+        std::shared_ptr<VulkanGraphicsFence> fence = GetCurrentContext()->GetFence();
+        Signal(fence);
+        fence->Wait();
+        fence->Reset();
 
         VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
 
@@ -480,8 +496,8 @@ namespace NovelRT::Graphics::Vulkan
         {
             throw std::runtime_error("Failed to present the data within the present queue!");
         }
-
-        Signal(GetCurrentContext()->GetFence());
+        
+        
 
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
@@ -492,10 +508,10 @@ namespace NovelRT::Graphics::Vulkan
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
-        presentCompletionGraphicsFence->Wait();
 
+        presentCompletionGraphicsFence->Wait();
         _contextIndex = contextIndex;
-    }
+    }   
 
     void VulkanGraphicsDevice::Signal(std::shared_ptr<VulkanGraphicsFence> fence) const
     {

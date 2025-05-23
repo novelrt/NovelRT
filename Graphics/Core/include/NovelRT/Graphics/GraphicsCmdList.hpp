@@ -54,7 +54,7 @@ namespace NovelRT::Graphics
         using BackendResourceMemoryRegionType =
             typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<TResource>;
 
-    private:
+    public:
         std::shared_ptr<BackendCmdListType> _implementation;
         std::shared_ptr<GraphicsContext<TBackend>> _context;
 

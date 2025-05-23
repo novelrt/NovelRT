@@ -46,6 +46,11 @@ namespace NovelRT::Graphics
             return std::make_shared<GraphicsCmdList<TBackend>>(_implementation->BeginFrame(), std::static_pointer_cast<GraphicsContext<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this()));
         }
 
+        void RegisterDescriptorSetForFrame(std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature, std::shared_ptr<GraphicsDescriptorSet<TBackend>> set)
+        {
+            _implementation->RegisterDescriptorSetForFrame(signature->GetImplementation(), set->GetImplementation());
+        }
+
         void EndFrame()
         {
             _implementation->EndFrame();

@@ -13,13 +13,14 @@ namespace NovelRT::Graphics::Vulkan
     VulkanGraphicsPipeline::VulkanGraphicsPipeline(std::shared_ptr<VulkanGraphicsDevice> device,
                                                    std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
                                                    std::shared_ptr<VulkanShaderProgram> vertexShader,
-                                                   std::shared_ptr<VulkanShaderProgram> pixelShader) noexcept
+                                                   std::shared_ptr<VulkanShaderProgram> pixelShader,
+                                                   bool imguiRenderMode) noexcept
         : _device(device), _vertexShader(vertexShader), _pixelShader(pixelShader), _signature(signature),
-          _vulkanPipeline([&]() { return CreateVulkanPipeline(); })
+          _vulkanPipeline([&]() { return CreateVulkanPipeline(imguiRenderMode); })
     {
     }
 
-    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline()
+    VkPipeline VulkanGraphicsPipeline::CreateVulkanPipeline(bool imguiRenderMode)
     {
         std::array<VkPipelineShaderStageCreateInfo, 2> pipelineShaderStageCreateInfos{};
         uint32_t pipelineShaderStageCreateInfosCount = 0;
@@ -50,9 +51,13 @@ namespace NovelRT::Graphics::Vulkan
 
         VkPipelineRasterizationStateCreateInfo pipelineRasterizationStateCreateInfo{};
         pipelineRasterizationStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-        pipelineRasterizationStateCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
-        pipelineRasterizationStateCreateInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+        pipelineRasterizationStateCreateInfo.frontFace = imguiRenderMode ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
+        pipelineRasterizationStateCreateInfo.cullMode = imguiRenderMode ? VK_CULL_MODE_NONE : VK_CULL_MODE_BACK_BIT;
         pipelineRasterizationStateCreateInfo.lineWidth = 1.0f;
+        if(imguiRenderMode)
+        {
+            pipelineRasterizationStateCreateInfo.polygonMode = VK_POLYGON_MODE_FILL;
+        }
 
         VkPipelineMultisampleStateCreateInfo pipelineMultisampleStateCreateInfo{};
         pipelineMultisampleStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -142,7 +147,7 @@ namespace NovelRT::Graphics::Vulkan
                         VkVertexInputAttributeDescription insertValue{};
                         insertValue.location = static_cast<uint32_t>(inputElementIndex);
                         insertValue.binding = static_cast<uint32_t>(inputIndex);
-                        insertValue.format = GetInputElementFormat(inputElement.GetType());
+                        insertValue.format = GetInputElementFormat(inputElement.GetType(), inputElement.GetKind());
                         insertValue.offset = inputBindingStride;
 
                         vertexInputAttributeDescriptions[inputElementsIndex] = insertValue;
@@ -208,7 +213,7 @@ namespace NovelRT::Graphics::Vulkan
         return returnCount;
     }
 
-    VkFormat VulkanGraphicsPipeline::GetInputElementFormat(std::type_index type) const noexcept
+    VkFormat VulkanGraphicsPipeline::GetInputElementFormat(std::type_index type, GraphicsPipelineInputElementKind kind) const noexcept
     {
         VkFormat returnFormat = VK_FORMAT_UNDEFINED;
 
@@ -223,6 +228,13 @@ namespace NovelRT::Graphics::Vulkan
         else if (type == typeid(Maths::GeoVector4F))
         {
             returnFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
+        }
+        else if(kind == GraphicsPipelineInputElementKind::Colour)
+        {
+            if (type == typeid(uint32_t))
+            {
+                returnFormat = VK_FORMAT_R8G8B8A8_UNORM;
+            }
         }
 
         return returnFormat;

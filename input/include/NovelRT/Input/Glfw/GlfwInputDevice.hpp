@@ -25,6 +25,7 @@ namespace NovelRT::Input::Glfw
         GLFWwindow* _window;
         std::vector<InputAction> _previousStates;
         NovelRT::Maths::GeoVector2F _mousePos;
+        NovelRT::Maths::GeoVector2F _rawMousePos;
         NovelRT::Maths::GeoVector2F _windowDimensions;
 
         void ProcessKeyInput(int32_t key, int32_t action);
@@ -46,6 +47,7 @@ namespace NovelRT::Input::Glfw
                                                   const std::string& keyIdentifier) final;
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested) final;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept final;
+        [[nodiscard]] NovelRT::Maths::GeoVector2F GetRawMousePosition() noexcept;
         [[nodiscard]] NovelRT::Utilities::Misc::Span<InputAction> GetAllMappings() noexcept final;
         [[nodiscard]] KeyStateFrameChangeLog GetCurrentChangeLog(const std::string& key) final;
         [[nodiscard]] KeyStateFrameChangeLog GetPreviousChangeLog(const std::string& key) final;
