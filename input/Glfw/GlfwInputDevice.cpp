@@ -250,6 +250,11 @@ namespace NovelRT::Input::Glfw
         return _mousePos;
     }
 
+    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetRawMousePosition() noexcept
+    {
+        return _rawMousePos;
+    }
+
     void GlfwInputDevice::ProcessKeyInput(int32_t key, int32_t state)
     {
         auto& map = _keyStates.at(_currentBufferIndex);
@@ -295,6 +300,7 @@ namespace NovelRT::Input::Glfw
 
     void GlfwInputDevice::ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos)
     {
+        _rawMousePos = pos;
         _mousePos = DetermineMouseScreenPosition(pos);
     }
 

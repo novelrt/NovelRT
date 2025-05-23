@@ -30,7 +30,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
-// #include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
+#include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
 
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 #include <NovelRT/Windowing/Windowing.h>
@@ -42,6 +42,8 @@ using namespace NovelRT::Windowing::Glfw;
 using namespace NovelRT::Windowing;
 using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Graphics;
+using namespace NovelRT::Input;
+using namespace NovelRT::Input::Glfw;
 
 std::vector<GraphicsBuffer<VulkanGraphicsBackend>> shittyBuffer{};
 NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
@@ -230,7 +232,7 @@ void imguiDrawCommands(ImDrawData* drawData,
     std::array<size_t, 1> offsets{currentOffset};
 
     NovelRT::Graphics::ClearValue colourDataStruct{};
-    colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 100);
+    colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 0);
     colourDataStruct.depth = 0.1;
     colourDataStruct.stencil = 0;
 
@@ -391,8 +393,11 @@ int main()
 
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
+    auto inputDevice = new GlfwInputDevice();
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1024, 768));
+    inputDevice->Initialise(device);
+    auto clickAction = inputDevice->AddInputAction("LeftClick", "LeftMouseButton");
 
     IMGUI_CHECKVERSION();
 
@@ -620,6 +625,7 @@ int main()
     DummyUpdateStuff += [&](auto delta)
     {
         device->ProcessAllMessages();
+        inputDevice->Update(delta);
         if (device->GetIsVisible())
         {
             io = ImGui::GetIO();
@@ -632,6 +638,18 @@ int main()
             }
 
             io.DeltaTime = delta.getSecondsFloat();
+            auto mousePos = inputDevice->GetRawMousePosition();
+            io.AddMousePosEvent(mousePos.x, mousePos.y);
+            auto state = inputDevice->GetKeyState(clickAction.actionName);
+            if(state == KeyState::KeyDown || state == KeyState::KeyDown)
+            {
+                io.AddMouseButtonEvent(0, true);
+            }
+            else
+                io.AddMouseButtonEvent(0, false);
+
+
+
             // ImGuiiiiiiiiiiiiiiiiiiiiii
             ImGui::NewFrame();
             ImGui::ShowDemoWindow(&demo);
