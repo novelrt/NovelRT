@@ -565,7 +565,7 @@ int main()
     //ImGui::Render();
 
     auto surface = gfxDevice->GetSurface();
-    NovelRT::Timing::StepTimer timer(60.0f, 1.0f / 60.0f);
+    NovelRT::Timing::StepTimer timer(144.0f, 1.0f / 144.0f);
     DummyUpdateStuff += [&](auto delta)
     {
         device->ProcessAllMessages();
@@ -628,7 +628,7 @@ int main()
 
             context->EndFrame();
             gfxDevice->PresentFrame();
-            gfxDevice->WaitForIdle();
+            //gfxDevice->WaitForIdle();
         }
     };
 
