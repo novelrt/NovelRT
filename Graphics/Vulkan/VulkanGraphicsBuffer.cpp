@@ -138,6 +138,12 @@ namespace NovelRT::Graphics
         vmaUnmapMemory(allocator->GetVmaAllocator(), GetAllocation());
     }
 
+    void VulkanGraphicsBuffer::UnmapBytesAndWrite()
+    {
+        auto allocationInfo = GetAllocationInfo();
+        UnmapBytesAndWrite(allocationInfo.offset, allocationInfo.size);
+    }
+
     void VulkanGraphicsBuffer::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
     {
         if (_mappedMemoryRegions == 0)

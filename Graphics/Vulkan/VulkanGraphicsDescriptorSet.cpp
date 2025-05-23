@@ -99,4 +99,14 @@ namespace NovelRT::Graphics
             }
         }
     }
+
+    VkDescriptorSet VulkanGraphicsDescriptorSet::GetVulkanDescriptorSet() const noexcept
+    {
+        return _descriptorSetHandle;
+    }
+
+    std::weak_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDescriptorSet::GetPipeline() const noexcept
+    {
+        return _pipeline;
+    }
 }
