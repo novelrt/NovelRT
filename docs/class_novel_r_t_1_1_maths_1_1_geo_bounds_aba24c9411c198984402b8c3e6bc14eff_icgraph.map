@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::GeoBounds::GetCornerInWorldSpace" name="NovelRT::Maths::GeoBounds::GetCornerInWorldSpace">
+<area shape="rect" id="node1" title="Gets the specified corner in world space, relative to the position, rotation and size of this GeoBoun..." alt="" coords="245,5,451,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#adf9924d7e60736a6537f314a10b593c5" title="Attempts to insert a bounding box into the QuadTree." alt="" coords="5,5,197,47"/>
+</map>
