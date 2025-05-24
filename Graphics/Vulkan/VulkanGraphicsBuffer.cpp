@@ -15,6 +15,12 @@ namespace NovelRT::Graphics::Vulkan
         return std::static_pointer_cast<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>>(
             std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, info));
     }
+    
+    void VulkanGraphicsBuffer::FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region)
+    {
+        unused(region);
+        // TODO: Not sure if we need to support this, but since we do so for allocation, at least having this for freeing makes sense.
+    }
 
     VulkanGraphicsBuffer::VulkanGraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
                                                std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,

@@ -29,7 +29,7 @@ namespace NovelRT::Graphics::Vulkan
                                            VmaVirtualAllocationInfo virtualAllocationInfo);
 
     public:
-        ~VulkanGraphicsResourceMemoryRegionBase() = default;
+        ~VulkanGraphicsResourceMemoryRegionBase();
 
         [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
 
