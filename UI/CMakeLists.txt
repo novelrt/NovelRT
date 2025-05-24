@@ -9,7 +9,7 @@ target_sources(NovelRT-UI
     BASE_DIRS include
     FILES
         include/NovelRT/UI/UIProvider.hpp
-        include/NovelRT/UI/ImGui/imconfig.h
+        #include/NovelRT/UI/ImGui/imconfig.hpp
         include/NovelRT/UI/ImGui/ImGuiUIProvider.hpp
 )
 
@@ -22,7 +22,7 @@ set_target_properties(NovelRT-UI
 target_compile_definitions(NovelRT-UI
   PUBLIC
     GLM_ENABLE_EXPERIMENTAL=1
-    IMGUI_USER_CONFIG="imconfig.hpp"
+    #IMGUI_USER_CONFIG="imconfig.hpp"
 )
 
 target_compile_features(NovelRT-UI

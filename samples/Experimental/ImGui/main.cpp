@@ -99,7 +99,6 @@ void imguiDrawCommands(ImDrawData* drawData,
     if (drawData->TotalVtxCount <= 0)
         return;
 
-    auto io = ImGui::GetIO();
 
     size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
     size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
@@ -537,26 +536,6 @@ int main()
         inputDevice->Update(delta);
         if (device->GetIsVisible())
         {
-            io = ImGui::GetIO();
-            auto windowSize = device->GetSize();
-            io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
-
-            if ((windowSize.x > 0) && (windowSize.y > 0))
-            {
-                io.DisplayFramebufferScale = ImVec2(1, 1);
-            }
-
-            io.DeltaTime = delta.getSecondsFloat();
-            auto mousePos = inputDevice->GetRawMousePosition();
-            io.AddMousePosEvent(mousePos.x, mousePos.y);
-            auto state = inputDevice->GetKeyState(clickAction.actionName);
-            if (state == KeyState::KeyDown || state == KeyState::KeyDown)
-            {
-                io.AddMouseButtonEvent(0, true);
-            }
-            else
-                io.AddMouseButtonEvent(0, false);
-
             auto cl = inputDevice->GetCurrentChangeLog(clickAction.actionName);
 
             if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
@@ -570,20 +549,20 @@ int main()
             }
 
             // ImGuiiiiiiiiiiiiiiiiiiiiii
-            ImGui::NewFrame();
-            ImGui::SetNextWindowSize(ImVec2(612, 200));
-            ImGui::SetNextWindowPos(ImVec2(100, 500));
-            ImGui::Begin("Test", NULL,
-                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+            // ImGui::NewFrame();
+            // ImGui::SetNextWindowSize(ImVec2(612, 200));
+            // ImGui::SetNextWindowPos(ImVec2(100, 500));
+            // ImGui::Begin("Test", NULL,
+            //              ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
-            if (strIndex < arr.size())
-            {
-                ImGui::Text(arr.at(strIndex).c_str());
-            }
+            // if (strIndex < arr.size())
+            // {
+            //     ImGui::Text(arr.at(strIndex).c_str());
+            // }
 
-            ImGui::End();
+            // ImGui::End();
 
-            ImGui::Render();
+            
             ImDrawData* drawData = ImGui::GetDrawData();
             // imGuiProvider->BeginFrame(1.0f/60.0f);
             // imGuiProvider->EndFrame();

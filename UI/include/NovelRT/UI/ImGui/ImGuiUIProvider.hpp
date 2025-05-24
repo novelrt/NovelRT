@@ -6,6 +6,8 @@
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineStageFlag.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAccessFlag.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
@@ -59,7 +61,13 @@ namespace NovelRT::UI::DearImGui
         struct CachedBufferObject
         {
             Graphics::GraphicsBuffer<TBackend> buffer;
-            uint32_t frameLifeTime;
+            uint32_t frameLifetime;
+        }
+
+        struct CachedDescriptorSetObject
+        {
+            Graphics::GraphicsDescriptorSet<TBackend> descriptorSet;
+            uint32_t frameLifetime;
         }
 
         ImGuiContext* _imguiContext;
@@ -78,6 +86,7 @@ namespace NovelRT::UI::DearImGui
         std::shared_ptr<GraphicsPipelineSignature<TBackend>> _pipelineSignature;
         std::map<std::string, ImFont*> _fontCache{};
         std::vector<CachedBufferObject> _bufferCache{};
+        std::vector<CachedDescriptorSetObject> _descriptorSetCache{};
 
         
         inline void LoadFontFile(std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
@@ -262,6 +271,32 @@ namespace NovelRT::UI::DearImGui
         void EndFrame() final
         {
             ImGui::Render();
+
+            for(auto it = _bufferCache.begin(); _bufferCache != _bufferCache.end();)
+            {
+                it->frameLifetime--;
+                if(it->frameLifetime <= 0)
+                {
+                    it = _bufferCache.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+            }
+
+            for(auto it = _descriptorSetCache.begin(); _descriptorSetCache != _descriptorSetCache.end();)
+            {
+                it->frameLifetime--;
+                if(it->frameLifetime <= 0)
+                {
+                    it = _descriptorSetCache.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+            }
         }
 
         void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) final
@@ -271,6 +306,12 @@ namespace NovelRT::UI::DearImGui
 
             if (drawData->TotalVtxCount <= 0)
                 return;
+
+            auto graphicsContext = _graphicsDevice->GetCurrentContext();
+            auto graphicsSurface = _graphicsDevice->GetSurface();
+            auto renderPass = graphicsContext->GetRenderPass();
+            float surfaceWidth = graphicsSurface->GetWidth();
+            float surfaceHeight = graphicsSurface->GetHeight();
 
             size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
             size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
@@ -338,7 +379,145 @@ namespace NovelRT::UI::DearImGui
             currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
             currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
 
-            
+            //Sync the commands so that we can prevent data issues
+            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer, GraphicsMemoryAccessFlag::TransferWrite, 
+                GraphicsMemoryAccessFlag::VertexAttributeRead, GraphicsPipelineStageFlag::Transfer, GraphicsPipelineStageFlag::VertexInput);
+            currentCmdList->CmdPipelineBufferBarrier(indexBuffer, GraphicsMemoryAccessFlag::TransferWrite, 
+                GraphicsMemoryAccessFlag::IndexRead, GraphicsPipelineStageFlag::Transfer, GraphicsPipelineStageFlag::VertexInput);
+
+            int32_t globalVertexOffset = 0;
+            int32_t globalIndexOffset = 0;
+
+            ImVec2 clippingOffset = drawData->DisplayPos;
+            ImVec2 clippingScale = drawData->FramebufferScale;
+
+            // Bind the Vertex Buffers and the index buffer region
+            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{vertexBuffer};
+            auto currentOffset = vertexBufferRegion->GetOffset();
+            auto currentIndexBufferRegion = indexBufferRegion;
+
+            std::array<size_t, 1> offsets{currentOffset};
+
+            NovelRT::Graphics::ClearValue colourDataStruct{};
+            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 0, 0);
+            colourDataStruct.depth = 0.1;
+            colourDataStruct.stencil = 0;
+
+            std::vector<ClearValue> colourData{colourDataStruct};
+            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
+
+            ViewportInfo viewportInfoStruct{};
+            viewportInfoStruct.x = 0;
+            viewportInfoStruct.y = 0;
+            viewportInfoStruct.width = surfaceWidth;
+            viewportInfoStruct.height = surfaceHeight;
+            viewportInfoStruct.minDepth = 0.0f;
+            viewportInfoStruct.maxDepth = 1.0f;
+
+            currentCmdList->CmdSetViewport(viewportInfoStruct);
+
+            currentCmdList->CmdBindPipeline(_pipeline);
+            currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+            currentCmdList->CmdBindIndexBuffer(currentIndexBufferRegion, IndexType::UInt16);
+
+            float scale[2];
+            scale[0] = 2.0f / drawData->DisplaySize.x;
+            scale[1] = 2.0f / drawData->DisplaySize.y;
+            float translate[2];
+            translate[0] = -1.0f - drawData->DisplayPos.x * scale[0];
+            translate[1] = -1.0f - drawData->DisplayPos.y * scale[1];
+            size_t floatSize = sizeof(float) * 2;
+            NovelRT::Utilities::Misc::Span<float> scaleSpan(scale);
+            NovelRT::Utilities::Misc::Span<float> translateSpan(translate);
+
+            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0,
+                                            NovelRT::Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
+            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
+                                            NovelRT::Utilities::Misc::SpanCast<uint8_t>(translateSpan));
+
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                        NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+
+            for (int n = 0; n < drawData->CmdListsCount; n++)
+            {
+                const ImDrawList* list = drawData->CmdLists[n];
+                for (int cmdIndex = 0; cmdIndex < list->CmdBuffer.Size; cmdIndex++)
+                {
+                    const ImDrawCmd* drawCommand = &list->CmdBuffer[cmdIndex];
+                    if (drawCommand->UserCallback != nullptr)
+                    {
+                        drawCommand->UserCallback(list, drawCommand);
+                    }
+                    else
+                    {
+
+                        // Project scissor/clipping rectangles into framebuffer space
+                        ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
+                                        (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
+                        ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * clippingScale.x,
+                                        (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
+
+                        // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
+                        if (clippingMin.x < 0.0f)
+                        {
+                            clippingMin.x = 0.0f;
+                        }
+                        if (clippingMin.y < 0.0f)
+                        {
+                            clippingMin.y = 0.0f;
+                        }
+                        if (clippingMax.x > surfaceWidth)
+                        {
+                            clippingMax.x = surfaceWidth;
+                        }
+                        if (clippingMax.y > surfaceHeight)
+                        {
+                            clippingMax.y = (float)surfaceHeight;
+                        }
+                        if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
+                            continue;
+
+                        // Apply scissor/clipping rectangle
+                        currentCmdList->CmdSetScissor(
+                            NovelRT::Maths::GeoVector2F(clippingMin.x, clippingMin.y),
+                            NovelRT::Maths::GeoVector2F((clippingMax.x - clippingMin.x), (clippingMax.y - clippingMin.y)));
+
+                        // Bind DescriptorSet with font or user texture
+                        auto texture2DRegion = *reinterpret_cast<
+                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
+                            drawCommand->GetTexID());
+                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                            inputResourceRegions{
+                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
+                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                                        texture2DRegion))};
+
+                        // Specify the descriptor set data
+                        auto descriptorSetData = pipeline->CreateDescriptorSet();
+                        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+                        descriptorSetData->UpdateDescriptorSetData();
+                        graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
+                        _descriptorSetCache.emplace_back(CachedDescriptorSetObject{*descriptorSetData.get(), 10});
+
+                        // Bind the descriptor set
+                        std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
+                            descriptorSetData};
+
+                        currentCmdList->CmdBindDescriptorSets(descriptorData);
+
+                        currentCmdList->CmdDrawIndexed(drawCommand->ElemCount, 1, drawCommand->IdxOffset + globalIndexOffset,
+                                                    drawCommand->VtxOffset + globalVertexOffset, 0);
+                    }
+                }
+                globalIndexOffset += list->IdxBuffer.Size;
+                globalVertexOffset += list->VtxBuffer.Size;
+            }
+
+            // Reset clipping rect as per imgui
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                        NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+
+            currentCmdList->CmdEndRenderPass();
         }
 
         ~ImGuiUIProvider() final

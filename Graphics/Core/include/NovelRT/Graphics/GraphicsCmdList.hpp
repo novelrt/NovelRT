@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsMemoryAccessFlag.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineStageFlag.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
 #include <NovelRT/Maths/GeoVector2F.h>
 #include <NovelRT/Utilities/Misc.h>
@@ -166,6 +168,15 @@ namespace NovelRT::Graphics
         void CmdPushConstants(std::shared_ptr<GraphicsPipelineSignature<TBackend>> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, Utilities::Misc::Span<uint8_t> values)
         {
             _implementation->CmdPushConstants(pipelineSignature->GetImplementation(), visibility, offset, values);
+        }
+
+        void CmdPipelineBufferBarrier(std::shared_ptr<GraphicsBuffer<TBackend>> buffer, 
+            GraphicsMemoryAccessFlag sourceAccessFlag, 
+            GraphicsMemoryAccessFlag destinationAccessFlag, 
+            GraphicsPipelineStageFlag sourceStageFlag, 
+            GraphicsPipelineStageFlag destinationStageFlag)
+        {
+            _implementation->CmdPipelineBufferBarrier(buffer->GetImplementation(), sourceAccessFlag, destinationAccessFlag, sourceStageFlag, destinationStageFlag);
         }
     };
 }
