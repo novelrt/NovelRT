@@ -199,6 +199,7 @@ int main()
     gfxContext->EndFrame();
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
+    gfxContext->GetFence()->Reset();
 
     auto surface = gfxDevice->GetSurface();
 
@@ -208,7 +209,6 @@ int main()
         if (device->GetIsVisible())
         {
             auto context = gfxDevice->GetCurrentContext();
-            logger.logWarningLine("Context index: " + std::to_string(context->GetIndex()));
             auto currentCmdList = context->BeginFrame();
 
             float surfaceWidth = surface->GetWidth();

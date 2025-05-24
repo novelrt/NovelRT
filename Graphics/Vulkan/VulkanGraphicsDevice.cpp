@@ -473,7 +473,6 @@ namespace NovelRT::Graphics::Vulkan
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
-        //presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
 
         uint32_t contextIndex = static_cast<uint32_t>(GetContextIndex());
@@ -496,8 +495,6 @@ namespace NovelRT::Graphics::Vulkan
         {
             throw std::runtime_error("Failed to present the data within the present queue!");
         }
-        
-        
 
         VkResult acquireNextImageResult =
             vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
