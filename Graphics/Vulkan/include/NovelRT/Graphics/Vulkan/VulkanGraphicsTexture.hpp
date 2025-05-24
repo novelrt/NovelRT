@@ -35,6 +35,8 @@ namespace NovelRT::Graphics::Vulkan
             VmaVirtualAllocation allocation,
             VmaVirtualAllocationInfo info) final;
 
+        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region) final;
+
     public:
         std::shared_ptr<VulkanGraphicsTexture> shared_from_this()
         {

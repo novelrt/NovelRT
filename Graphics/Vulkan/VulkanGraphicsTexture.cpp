@@ -104,6 +104,12 @@ namespace NovelRT::Graphics::Vulkan
             std::make_shared<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsTexture>>(
                 GetDevice(), shared_from_this(), allocation, info));
     }
+    
+    void VulkanGraphicsTexture::FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region)
+    {
+        unused(region);
+        // TODO: Not sure if we need to support this, but since we do so for allocation, at least having this for freeing makes sense.
+    }
 
     VulkanGraphicsTexture::VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
                                                  std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,

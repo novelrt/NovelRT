@@ -24,6 +24,11 @@ namespace NovelRT::Graphics::Vulkan
                 "An invalid memory region of a Vulkan graphics resource was created.");
         }
     }
+    
+    VulkanGraphicsResourceMemoryRegionBase::~VulkanGraphicsResourceMemoryRegionBase()
+    {
+        _owningResource->Free(*this);
+    }
 
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsResourceMemoryRegionBase::GetDevice() const noexcept
     {

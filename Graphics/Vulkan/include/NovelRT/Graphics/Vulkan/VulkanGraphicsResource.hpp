@@ -25,6 +25,7 @@ namespace NovelRT::Graphics::Vulkan
 
     protected:
         [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) = 0;
+        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region) = 0;
 
     public:
         VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
@@ -44,6 +45,8 @@ namespace NovelRT::Graphics::Vulkan
         [[nodiscard]] size_t GetSize() const noexcept;
 
         [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> Allocate(size_t size, size_t alignment);
+
+        void Free(VulkanGraphicsResourceMemoryRegionBase& region);
 
         [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
 
