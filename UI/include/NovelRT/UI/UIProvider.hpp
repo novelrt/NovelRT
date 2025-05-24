@@ -29,13 +29,14 @@ namespace NovelRT::UI
                                 std::shared_ptr<Input::IInputDevice> inputDevice,
                                 std::shared_ptr<Graphics::GraphicsProvider<TBackend>> graphicsProvider,
                                 std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice,
-                                std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator) = 0;
+                                std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator,
+                                bool debugMode) = 0;
 
-        virtual void BeginFrame(double deltaTime) = 0;
+        virtual void BeginFrame(float deltaTime) = 0;
 
         virtual void EndFrame() = 0;
 
-        virtual void Render(std::shared_ptr<Graphics::GraphicsContext<TBackend>> context, std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> cmdList, std::shared_ptr<Graphics::GraphicsPipeline<TBackend>> pipeline) = 0;
+        virtual void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) = 0;
 
         virtual ~UIProvider() = default;
     };

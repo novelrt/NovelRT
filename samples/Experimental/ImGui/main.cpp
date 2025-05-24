@@ -402,32 +402,6 @@ int main()
     inputDevice->Initialise(device);
     auto clickAction = inputDevice->AddInputAction("LeftClick", "LeftMouseButton");
 
-    IMGUI_CHECKVERSION();
-
-    auto imguiContext = ImGui::CreateContext();
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.IniFilename = NULL;
-    io.Fonts->AddFontDefault();
-    ImGui::StyleColorsDark();
-
-    io.BackendPlatformUserData = nullptr;
-    io.BackendPlatformName = "NovelRT";
-    io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
-    io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
-    io.ClipboardUserData = nullptr;
-    io.GetClipboardTextFn = &ImGui_GetClipboardText;
-    io.SetClipboardTextFn = &ImGui_SetClipboardText;
-
-    ImGui::GetMainViewport()->PlatformHandleRaw = (void*)device->GetHandle();
-
-    io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
-
-    uint8_t* pixels;
-    int32_t width, height;
-
-    io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-
     auto gfxProvider =
         std::make_shared<GraphicsProvider<VulkanGraphicsBackend>>(std::make_shared<VulkanGraphicsProvider>());
 
@@ -467,20 +441,8 @@ int main()
 
     auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-    /// IMGUI
-    GraphicsBufferCreateInfo imbci{};
-    imbci.cpuAccessKind = GraphicsResourceAccess::Write;
-    imbci.gpuAccessKind = GraphicsResourceAccess::Read;
-    imbci.size = 64 * 1024 * 4;
-
-    // Create Texture Staging Buffer
-    auto imTSB = memoryAllocator->CreateBuffer(imbci);
-    /// IMGUI
-
     auto vertShaderData = LoadSpv("vulkanrendervert.spv");
     auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
-    auto vertImguiShader = LoadSpv("imgui_vert.spv");
-    auto pixelImguiShader = LoadSpv("imgui_frag.spv");
 
     std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
 
@@ -493,26 +455,6 @@ int main()
     std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
     std::vector<GraphicsPipelineResource> resources{
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-
-    /// IMGUI
-    std::vector<GraphicsPipelineInputElement> elem{
-        GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F), GraphicsPipelineInputElementKind::Position,
-                                     8),
-        GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F), GraphicsPipelineInputElementKind::Normal, 8),
-        GraphicsPipelineInputElement(typeid(ImU32), GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
-
-    std::vector<GraphicsPushConstantRange> pushConstants{
-        GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
-
-    std::vector<GraphicsPipelineInput> in{GraphicsPipelineInput(elem)};
-    std::vector<GraphicsPipelineResource> res{
-        GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-    auto sig = gfxDevice->CreatePipelineSignature(
-        GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, in, res, pushConstants);
-    auto imVertProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
-    auto imPixProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
-    auto pip = gfxDevice->CreatePipeline(sig, imVertProg, imPixProg, true);
-    /// IMGUI
 
     std::vector<GraphicsPushConstantRange> dummyData{};
     auto signature =
@@ -533,32 +475,6 @@ int main()
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
     cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
-
-    /// imgui
-    auto imtci = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
-                                           GraphicsTextureKind::TwoDimensional,
-                                           GraphicsResourceAccess::None,
-                                           GraphicsResourceAccess::ReadWrite,
-                                           static_cast<uint32_t>(width),
-                                           static_cast<uint32_t>(height),
-                                           1,
-                                           GraphicsMemoryRegionAllocationFlags::None,
-                                           TexelFormat::R8G8B8A8_UNORM};
-    auto im2D = memoryAllocator->CreateTexture(imtci);
-
-    // Allocate region based on size of texture
-    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, VulkanGraphicsBackend>> im2dRegion =
-        im2D->Allocate(im2D->GetSize(), 4);
-
-    // Create a staging buffer region for texture
-    auto imStageBufferRegion = imTSB->Allocate(im2D->GetSize(), 4);
-    auto imTexD = imTSB->Map<uint32_t>(im2dRegion);
-
-    memcpy(imTexD.data(), pixels, (width * height) * sizeof(char) * 4);
-
-    imTSB->UnmapAndWrite(im2dRegion);
-    io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&im2dRegion));
-    /// imgui
 
     uint32_t textureWidth = 256;
     uint32_t textureHeight = 256;
@@ -592,12 +508,6 @@ int main()
     cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
     cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
-    /// imgui
-    cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(im2D);
-    cmdList->CmdCopy(im2D, imStageBufferRegion);
-    cmdList->CmdEndTexturePipelineBarrierLegacyVersion(im2D);
-    /// imgui
-
     gfxContext->EndFrame();
     gfxDevice->Signal(gfxContext->GetFence());
     gfxDevice->WaitForIdle();
@@ -618,12 +528,6 @@ int main()
     io.DeltaTime = (float)(1.0f / 60.0f);
     int strIndex = 0;
     std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
-
-    /// imgui
-    // ImGui::NewFrame();
-    // ImGui::ShowDemoWindow(&demo);
-    //// ImGui::EndFrame();
-    // ImGui::Render();
 
     auto surface = gfxDevice->GetSurface();
     bool clicked = false;
