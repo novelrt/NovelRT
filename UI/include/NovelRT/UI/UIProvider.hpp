@@ -27,7 +27,6 @@ namespace NovelRT::UI
 
         virtual void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
                                 std::shared_ptr<Input::IInputDevice> inputDevice,
-                                std::shared_ptr<Graphics::GraphicsProvider<TBackend>> graphicsProvider,
                                 std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice,
                                 std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator,
                                 bool debugMode) = 0;

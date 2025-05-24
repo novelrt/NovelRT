@@ -1,6 +1,5 @@
 set(SOURCES
   main.cpp
-  ${imgui_SOURCES}
 )
 
 if(APPLE)
@@ -24,7 +23,6 @@ target_link_libraries(ImGuiRender
 
 target_include_directories(ImGuiRender PRIVATE 
 $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
-$<BUILD_INTERFACE:${imgui_SOURCE_DIR}/backends>
 )
 
 copy_build_products(ImGuiRender

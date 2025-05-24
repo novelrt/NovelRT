@@ -31,6 +31,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
 #include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
+#include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 #include <NovelRT/Windowing/Windowing.h>
@@ -44,6 +45,7 @@ using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Input;
 using namespace NovelRT::Input::Glfw;
+using namespace NovelRT::UI::DearImGui;
 
 std::vector<GraphicsBuffer<VulkanGraphicsBackend>> shittyBuffer{};
 NovelRT::Utilities::Event<NovelRT::Timing::Timestamp> DummyUpdateStuff;
@@ -68,288 +70,11 @@ std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
     return buffer;
 }
 
-static const char* ImGui_GetClipboardText(void* user_data)
-{
-    unused(user_data);
-    return "placeholder text";
-}
-
-static void ImGui_SetClipboardText(void* user_data, const char* text)
-{
-    unused(user_data);
-    unused(text);
-}
-
 struct TexturedVertex
 {
     NovelRT::Maths::GeoVector3F Position;
     NovelRT::Maths::GeoVector2F UV;
 };
-
-void imguiDrawCommands(ImDrawData* drawData,
-                       std::shared_ptr<GraphicsMemoryAllocator<VulkanGraphicsBackend>> memoryAllocator,
-                       std::shared_ptr<GraphicsContext<VulkanGraphicsBackend>> context,
-                       std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> currentCmdList,
-                       std::shared_ptr<GraphicsRenderPass<VulkanGraphicsBackend>> renderPass,
-                       float surfaceWidth,
-                       float surfaceHeight,
-                       std::shared_ptr<GraphicsPipelineSignature<VulkanGraphicsBackend>> pipelineSignature,
-                       std::shared_ptr<GraphicsPipeline<VulkanGraphicsBackend>> pipeline)
-{
-    if (drawData->TotalVtxCount <= 0)
-        return;
-
-
-    size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
-    size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
-
-    // Create buffers
-    GraphicsBufferCreateInfo bufferCreateInfo{};
-    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-    bufferCreateInfo.size = vertexSize;
-    auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(*vertexStagingBuffer.get());
-
-    bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
-    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
-    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
-    auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(*vertexBuffer.get());
-
-    // Create index buffer + staging
-    bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
-    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-    bufferCreateInfo.size = indexSize;
-    auto indexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(*indexStagingBuffer.get());
-
-    bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
-    bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
-    bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
-    auto indexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-    shittyBuffer.emplace_back(*indexBuffer.get());
-
-    // Allocate buffers
-    auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 4);
-    auto vertexStageBufferRegion = vertexStagingBuffer->Allocate(vertexSize, 4);
-    auto indexBufferRegion = indexBuffer->Allocate(indexSize, 4);
-    auto indexStageBufferRegion = indexStagingBuffer->Allocate(indexSize, 4);
-
-    // Map vertex buffer to region
-    auto pVertexBuffer = vertexStagingBuffer->Map<ImDrawVert>(vertexBufferRegion);
-    auto pVertPtr = pVertexBuffer.data();
-    // Map index buffer to region
-    auto pIndexbuffer = indexStagingBuffer->Map<ImDrawIdx>(indexBufferRegion);
-    auto pIdxPtr = pIndexbuffer.data();
-
-    int32_t vertInitial = 0;
-    int32_t indexInitial = 0;
-
-    // Slamjam the vertex buffer and index buffer data into their regions :|
-    for (int i = 0; i < drawData->CmdListsCount; i++)
-    {
-        ImDrawList* list = drawData->CmdLists[i];
-
-        // Copy vertex and index data
-        memcpy(pVertPtr, list->VtxBuffer.Data, list->VtxBuffer.Size * sizeof(ImDrawVert));
-        memcpy(pIdxPtr, list->IdxBuffer.Data, list->IdxBuffer.Size * sizeof(ImDrawIdx));
-
-        pVertPtr += list->VtxBuffer.Size;
-        pIdxPtr += list->IdxBuffer.Size;
-    }
-
-    // Unmap the buffers and copy them into their regions for GPU-ity
-    vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-    indexStagingBuffer->UnmapAndWrite(indexBufferRegion);
-    currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
-    currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
-
-    auto impl = currentCmdList->_implementation;
-    auto cmd = impl->_commandBuffer;
-
-    // Provided by VK_VERSION_1_0
-    //
-#if 0
-            .buffer = self.vertexBuffers[self.swapId].buffer,
-            .src_access_mask = .{
-                .transfer_read_bit = true,
-            },
-            .dst_access_mask = .{
-                // .transfer_write_bit = true,
-                .vertex_attribute_read_bit = true,
-            },
-            .src_queue_family_index = 0,
-            .dst_queue_family_index = 0,
-            .offset = 0,
-            .size = copy.size,
-    typedef struct VkBufferMemoryBarrier {
-        VkStructureType    sType;
-        const void*        pNext;
-        VkAccessFlags      srcAccessMask;
-        VkAccessFlags      dstAccessMask;
-        uint32_t           srcQueueFamilyIndex;
-        uint32_t           dstQueueFamilyIndex;
-        VkBuffer           buffer;
-        VkDeviceSize       offset;
-        VkDeviceSize       size;
-    } VkBufferMemoryBarrier;
-#endif
-
-    VkBufferMemoryBarrier barrierInfo = {
-        VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
-        nullptr,
-        VK_ACCESS_TRANSFER_WRITE_BIT,
-        VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
-        VK_QUEUE_FAMILY_IGNORED,
-        VK_QUEUE_FAMILY_IGNORED,
-        std::static_pointer_cast<VulkanGraphicsBuffer>(vertexBufferRegion->GetImplementation()->GetOwningResource())
-            ->GetVulkanBuffer(),
-        0,
-        VK_WHOLE_SIZE};
-    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1,
-                         &barrierInfo, 0, 0);
-
-    barrierInfo.dstAccessMask = VK_ACCESS_INDEX_READ_BIT;
-    barrierInfo.buffer =
-        std::static_pointer_cast<VulkanGraphicsBuffer>(indexBufferRegion->GetImplementation()->GetOwningResource())
-            ->GetVulkanBuffer(),
-
-    vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, 0, 0, 0, 1,
-                         &barrierInfo, 0, 0);
-
-    // This seems terrible but I want it working before I refactor it
-    int32_t globalVertexOffset = 0;
-    int32_t globalIndexOffset = 0;
-
-    ImVec2 clippingOffset = drawData->DisplayPos;
-    ImVec2 clippingScale = drawData->FramebufferScale;
-
-    // Bind the Vertex Buffers and the index buffer(s)?
-    std::array<std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>, 1> buffers{vertexBuffer};
-    auto currentOffset = vertexBufferRegion->GetOffset();
-    auto currentIndexBufferRegion = indexBufferRegion;
-
-    std::array<size_t, 1> offsets{currentOffset};
-
-    NovelRT::Graphics::ClearValue colourDataStruct{};
-    colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 0);
-    colourDataStruct.depth = 0.1;
-    colourDataStruct.stencil = 0;
-
-    std::vector<ClearValue> colourData{colourDataStruct};
-    currentCmdList->CmdBeginRenderPass(renderPass, colourData);
-
-    ViewportInfo viewportInfoStruct{};
-    viewportInfoStruct.x = 0;
-    viewportInfoStruct.y = 0;
-    viewportInfoStruct.width = surfaceWidth;
-    viewportInfoStruct.height = surfaceHeight;
-    viewportInfoStruct.minDepth = 0.0f;
-    viewportInfoStruct.maxDepth = 1.0f;
-
-    currentCmdList->CmdSetViewport(viewportInfoStruct);
-
-    currentCmdList->CmdBindPipeline(pipeline);
-    currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-    currentCmdList->CmdBindIndexBuffer(currentIndexBufferRegion, IndexType::UInt16);
-
-    float scale[2];
-    scale[0] = 2.0f / drawData->DisplaySize.x;
-    scale[1] = 2.0f / drawData->DisplaySize.y;
-    float translate[2];
-    translate[0] = -1.0f - drawData->DisplayPos.x * scale[0];
-    translate[1] = -1.0f - drawData->DisplayPos.y * scale[1];
-    size_t floatSize = sizeof(float) * 2;
-    NovelRT::Utilities::Misc::Span<float> scaleSpan(scale);
-    NovelRT::Utilities::Misc::Span<float> translateSpan(translate);
-
-    currentCmdList->CmdPushConstants(pipelineSignature, ShaderProgramVisibility::Vertex, 0,
-                                     NovelRT::Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
-    currentCmdList->CmdPushConstants(pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
-                                     NovelRT::Utilities::Misc::SpanCast<uint8_t>(translateSpan));
-
-    for (int n = 0; n < drawData->CmdListsCount; n++)
-    {
-        const ImDrawList* list = drawData->CmdLists[n];
-        for (int cmdIndex = 0; cmdIndex < list->CmdBuffer.Size; cmdIndex++)
-        {
-            const ImDrawCmd* drawCommand = &list->CmdBuffer[cmdIndex];
-            if (drawCommand->UserCallback != nullptr)
-            {
-                drawCommand->UserCallback(list, drawCommand);
-            }
-            else
-            {
-
-                // Project scissor/clipping rectangles into framebuffer space
-                ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
-                                   (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
-                ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * clippingScale.x,
-                                   (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
-
-                // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
-                if (clippingMin.x < 0.0f)
-                {
-                    clippingMin.x = 0.0f;
-                }
-                if (clippingMin.y < 0.0f)
-                {
-                    clippingMin.y = 0.0f;
-                }
-                if (clippingMax.x > surfaceWidth)
-                {
-                    clippingMax.x = surfaceWidth;
-                }
-                if (clippingMax.y > surfaceHeight)
-                {
-                    clippingMax.y = (float)surfaceHeight;
-                }
-                if (clippingMax.x <= clippingMin.x || clippingMax.y <= clippingMin.y)
-                    continue;
-
-                // Apply scissor/clipping rectangle
-                currentCmdList->CmdSetScissor(
-                    NovelRT::Maths::GeoVector2F(clippingMin.x, clippingMin.y),
-                    NovelRT::Maths::GeoVector2F((clippingMax.x - clippingMin.x), (clippingMax.y - clippingMin.y)));
-
-                // Bind DescriptorSet with font or user texture
-                auto texture2DRegion = *reinterpret_cast<
-                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, VulkanGraphicsBackend>>*>(
-                    drawCommand->GetTexID());
-                std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-                    inputResourceRegions{
-                        std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>(
-                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, VulkanGraphicsBackend>>(
-                                texture2DRegion))};
-
-                // Specify the descriptor set data
-                auto descriptorSetData = pipeline->CreateDescriptorSet();
-                descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-                descriptorSetData->UpdateDescriptorSetData();
-                context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
-
-                // Bind the descriptor set
-                std::array<std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>, 1> descriptorData{
-                    descriptorSetData};
-
-                currentCmdList->CmdBindDescriptorSets(descriptorData);
-
-                currentCmdList->CmdDrawIndexed(drawCommand->ElemCount, 1, drawCommand->IdxOffset + globalIndexOffset,
-                                               drawCommand->VtxOffset + globalVertexOffset, 0);
-            }
-        }
-        globalIndexOffset += list->IdxBuffer.Size;
-        globalVertexOffset += list->VtxBuffer.Size;
-    }
-
-    // Reset clipping rect as per imgui
-    currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                  NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-
-    currentCmdList->CmdEndRenderPass();
-}
 
 void regularDrawCmds(
     std::shared_ptr<GraphicsContext<VulkanGraphicsBackend>> context,
@@ -396,6 +121,7 @@ int main()
     auto window = new GlfwWindowingDevice();
     auto device = std::shared_ptr<IWindowingDevice>(window);
     auto inputDevice = new GlfwInputDevice();
+    auto sharedInputDevice = std::shared_ptr<IInputDevice>(inputDevice);
 
     device->Initialise(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1024, 768));
     inputDevice->Initialise(device);
@@ -421,6 +147,11 @@ int main()
         std::make_shared<VulkanGraphicsMemoryAllocator>(gfxDevice->GetImplementation(),
                                                         gfxProvider->GetImplementation()),
         gfxDevice, gfxProvider);
+
+    ///IMGUI
+    auto uiProvider = new ImGuiUIProvider<VulkanGraphicsBackend>();
+    uiProvider->Initialise(device, sharedInputDevice, gfxDevice, memoryAllocator, true);
+    ///IMGUI
 
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
@@ -513,18 +244,6 @@ int main()
     gfxContext->GetFence()->Reset();
 
     /// imgui
-    bool demo = true;
-
-    io = ImGui::GetIO();
-    auto windowSize = device->GetSize();
-    io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
-
-    if ((windowSize.x > 0) && (windowSize.y > 0))
-    {
-        io.DisplayFramebufferScale = ImVec2(1, 1);
-    }
-
-    io.DeltaTime = (float)(1.0f / 60.0f);
     int strIndex = 0;
     std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
 
@@ -534,6 +253,7 @@ int main()
     DummyUpdateStuff += [&](auto delta) {
         device->ProcessAllMessages();
         inputDevice->Update(delta);
+
         if (device->GetIsVisible())
         {
             auto cl = inputDevice->GetCurrentChangeLog(clickAction.actionName);
@@ -549,32 +269,26 @@ int main()
             }
 
             // ImGuiiiiiiiiiiiiiiiiiiiiii
-            // ImGui::NewFrame();
-            // ImGui::SetNextWindowSize(ImVec2(612, 200));
-            // ImGui::SetNextWindowPos(ImVec2(100, 500));
-            // ImGui::Begin("Test", NULL,
-            //              ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-
-            // if (strIndex < arr.size())
-            // {
-            //     ImGui::Text(arr.at(strIndex).c_str());
-            // }
-
-            // ImGui::End();
-
+            uiProvider->BeginFrame(delta.getSecondsFloat());
             
-            ImDrawData* drawData = ImGui::GetDrawData();
-            // imGuiProvider->BeginFrame(1.0f/60.0f);
-            // imGuiProvider->EndFrame();
+            ImGui::SetNextWindowSize(ImVec2(612, 200));
+            ImGui::SetNextWindowPos(ImVec2(100, 500));
+            ImGui::Begin("Test", NULL,
+                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
+            if (strIndex < arr.size())
+            {
+                ImGui::Text(arr.at(strIndex).c_str());
+            }
+
+            ImGui::End();
+            uiProvider->EndFrame();
+            
             auto context = gfxDevice->GetCurrentContext();
             auto currentCmdList = context->BeginFrame();
-            // context->BeginDrawing(NovelRT::Graphics::RGBAColour(0, 0, 255, 255));
-
+            
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
-
-            // imGuiProvider->UploadImguiGpuData(context, currentCmdList);
 
             auto renderPass = gfxDevice->GetRenderPass();
             NovelRT::Graphics::ClearValue colourDataStruct{};
@@ -583,7 +297,7 @@ int main()
             colourDataStruct.stencil = 0;
 
             std::vector<ClearValue> colourData{colourDataStruct};
-            // currentCmdList->CmdBeginRenderPass(renderPass, colourData);
+            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
 
             ViewportInfo viewportInfoStruct{};
             viewportInfoStruct.x = 0;
@@ -595,13 +309,12 @@ int main()
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
-            // regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
-            //                vertexBuffer, vertexBufferRegion, inputResourceRegions);
+            regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
+                           vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
-            // currentCmdList->CmdEndRenderPass();
+            currentCmdList->CmdEndRenderPass();
 
-            imguiDrawCommands(drawData, memoryAllocator, gfxContext, currentCmdList, renderPass, surfaceWidth,
-                              surfaceHeight, sig, pip);
+            uiProvider->Draw(currentCmdList);
 
             context->EndFrame();
             gfxDevice->PresentFrame();
