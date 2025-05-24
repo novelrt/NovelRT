@@ -35,6 +35,8 @@ namespace NovelRT::UI
 
         virtual void EndFrame() = 0;
 
+        virtual void UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) = 0;
+
         virtual void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) = 0;
 
         virtual ~UIProvider() = default;

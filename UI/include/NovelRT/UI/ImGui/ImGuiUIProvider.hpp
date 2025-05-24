@@ -74,6 +74,8 @@ namespace NovelRT::UI::DearImGui
         ImGuiContext* _imguiContext;
         LoggingService _logger;
         bool _showMetricsWindow = false;
+        bool _drawEnabled = false;
+        ImDrawData* _cachedDrawData = nullptr;
 
         NovelRT::Input::InputAction mouseInputAction;
 
@@ -88,6 +90,9 @@ namespace NovelRT::UI::DearImGui
         std::map<std::string, ImFont*> _fontCache{};
         std::vector<CachedBufferObject> _bufferCache{};
         std::vector<CachedDescriptorSetObject> _descriptorSetCache{};
+        std::shared_ptr<GraphicsBuffer<TBackend>> _currentVertexBuffer;
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> _currentVertexBufferRegion;
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> _currentIndexBufferRegion;
 
         
         inline void LoadFontFile(std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
@@ -315,17 +320,20 @@ namespace NovelRT::UI::DearImGui
             }
         }
 
-        void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) final
+        void UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) final
         {
             auto& io = ImGui::GetIO();
             ImDrawData* drawData = ImGui::GetDrawData();
 
             if (drawData->TotalVtxCount <= 0)
+            {
+                _drawEnabled = false;
                 return;
+            }
+            _drawEnabled = true;
 
             auto graphicsContext = _graphicsDevice->GetCurrentContext();
             auto graphicsSurface = _graphicsDevice->GetSurface();
-            auto renderPass = _graphicsDevice->GetRenderPass();
             float surfaceWidth = graphicsSurface->GetWidth();
             float surfaceHeight = graphicsSurface->GetHeight();
 
@@ -401,6 +409,23 @@ namespace NovelRT::UI::DearImGui
             currentCmdList->CmdPipelineBufferBarrier(indexBuffer, GraphicsMemoryAccessFlag::TransferWrite, 
                 GraphicsMemoryAccessFlag::IndexRead, GraphicsPipelineStageFlag::Transfer, GraphicsPipelineStageFlag::VertexInput);
 
+            _currentIndexBufferRegion = indexBufferRegion;
+            _currentVertexBuffer = vertexBuffer;
+            _currentVertexBufferRegion = vertexBufferRegion;
+            _cachedDrawData = drawData;
+        }
+
+        void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) final
+        {
+            if(!_drawEnabled)
+                return;
+            auto drawData = _cachedDrawData;
+
+            auto graphicsContext = _graphicsDevice->GetCurrentContext();
+            auto graphicsSurface = _graphicsDevice->GetSurface();
+            float surfaceWidth = graphicsSurface->GetWidth();
+            float surfaceHeight = graphicsSurface->GetHeight();
+
             int32_t globalVertexOffset = 0;
             int32_t globalIndexOffset = 0;
 
@@ -408,19 +433,10 @@ namespace NovelRT::UI::DearImGui
             ImVec2 clippingScale = drawData->FramebufferScale;
 
             // Bind the Vertex Buffers and the index buffer region
-            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{vertexBuffer};
-            auto currentOffset = vertexBufferRegion->GetOffset();
-            auto currentIndexBufferRegion = indexBufferRegion;
-
+            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{_currentVertexBuffer};
+            auto currentOffset = _currentVertexBufferRegion->GetOffset();
+            auto currentIndexBufferRegion = _currentIndexBufferRegion;
             std::array<size_t, 1> offsets{currentOffset};
-
-            NovelRT::Graphics::ClearValue colourDataStruct{};
-            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 0, 0);
-            colourDataStruct.depth = 0.1;
-            colourDataStruct.stencil = 0;
-
-            std::vector<ClearValue> colourData{colourDataStruct};
-            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
 
             ViewportInfo viewportInfoStruct{};
             viewportInfoStruct.x = 0;
@@ -434,7 +450,7 @@ namespace NovelRT::UI::DearImGui
 
             currentCmdList->CmdBindPipeline(_pipeline);
             currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-            currentCmdList->CmdBindIndexBuffer(currentIndexBufferRegion, IndexType::UInt16);
+            currentCmdList->CmdBindIndexBuffer(_currentIndexBufferRegion, IndexType::UInt16);
 
             float scale[2];
             scale[0] = 2.0f / drawData->DisplaySize.x;
@@ -532,8 +548,6 @@ namespace NovelRT::UI::DearImGui
             // Reset clipping rect as per imgui
             currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                         NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-
-            currentCmdList->CmdEndRenderPass();
         }
 
         ~ImGuiUIProvider() final

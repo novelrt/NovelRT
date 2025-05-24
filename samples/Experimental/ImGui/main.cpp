@@ -290,6 +290,8 @@ int main()
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
 
+            uiProvider->UploadToGPU(currentCmdList);
+
             auto renderPass = gfxDevice->GetRenderPass();
             NovelRT::Graphics::ClearValue colourDataStruct{};
             colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
@@ -312,10 +314,9 @@ int main()
             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
                            vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
-            currentCmdList->CmdEndRenderPass();
-
             uiProvider->Draw(currentCmdList);
 
+            currentCmdList->CmdEndRenderPass();
             context->EndFrame();
             gfxDevice->PresentFrame();
             gfxDevice->WaitForIdle();
