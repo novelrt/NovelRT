@@ -6,7 +6,6 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <string>
-#include <iostream>
 
 namespace NovelRT::Graphics::Vulkan
 {
