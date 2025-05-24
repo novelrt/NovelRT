@@ -30,8 +30,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
-#include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
+#include <NovelRT/input/Glfw/GlfwInputDevice.hpp>
 
 #include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
 #include <NovelRT/Windowing/Windowing.h>
@@ -148,10 +148,10 @@ int main()
                                                         gfxProvider->GetImplementation()),
         gfxDevice, gfxProvider);
 
-    ///IMGUI
+    /// IMGUI
     auto uiProvider = new ImGuiUIProvider<VulkanGraphicsBackend>();
     uiProvider->Initialise(device, sharedInputDevice, gfxDevice, memoryAllocator, true);
-    ///IMGUI
+    /// IMGUI
 
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
@@ -270,7 +270,7 @@ int main()
 
             // ImGuiiiiiiiiiiiiiiiiiiiiii
             uiProvider->BeginFrame(delta.getSecondsFloat());
-            
+
             ImGui::SetNextWindowSize(ImVec2(612, 200));
             ImGui::SetNextWindowPos(ImVec2(100, 500));
             ImGui::Begin("Test", NULL,
@@ -283,10 +283,10 @@ int main()
 
             ImGui::End();
             uiProvider->EndFrame();
-            
+
             auto context = gfxDevice->GetCurrentContext();
             auto currentCmdList = context->BeginFrame();
-            
+
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
 
@@ -312,7 +312,7 @@ int main()
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
-                           vertexBuffer, vertexBufferRegion, inputResourceRegions);
+                            vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
             uiProvider->Draw(currentCmdList);
 
