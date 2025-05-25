@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::ComponentView::GetImmutableDataLength" name="NovelRT::Ecs::ComponentView::GetImmutableDataLength">
+<area shape="rect" id="node1" title="Gets the length of the current immutable data snapshot within the buffer." alt="" coords="5,5,225,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#aba5001cab249a11a167017e6fe3a4b82" title="Gets the length of the current immutable data snapshot within the buffer." alt="" coords="273,5,500,47"/>
+</map>

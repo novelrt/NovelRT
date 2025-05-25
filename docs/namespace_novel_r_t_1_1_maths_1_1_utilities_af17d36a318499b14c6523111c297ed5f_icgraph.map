@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::Utilities::LeadingZeroCount32" name="NovelRT::Maths::Utilities::LeadingZeroCount32">
+<area shape="rect" id="node1" title="Computes the amount of leading zeros for the given 32&#45;bit integer." alt="" coords="236,5,419,47"/>
+<area shape="rect" id="node2" href="$namespace_novel_r_t_1_1_maths_1_1_utilities.html#a6d11166dc85b04ef14a46efdf99cc5b7" title="Computes the amount of leading zeros for the given 64&#45;bit integer." alt="" coords="5,5,188,47"/>
+</map>
