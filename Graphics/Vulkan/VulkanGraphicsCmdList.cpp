@@ -10,6 +10,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -244,9 +246,30 @@ namespace NovelRT::Graphics::Vulkan
         vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetVulkanPipeline());
     }
 
-
     void VulkanGraphicsCmdList::CmdPushConstants(std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Misc::Span<uint8_t> values)
     {
         vkCmdPushConstants(_commandBuffer, pipelineSignature->GetVulkanPipelineLayout(), Utilities::GetVulkanShaderStageFlags(visibility), static_cast<uint32_t>(offset), static_cast<uint32_t>(values.size()), values.data());
+    }
+
+    void VulkanGraphicsCmdList::CmdPipelineBufferBarrier(std::shared_ptr<VulkanGraphicsBuffer> buffer, 
+        GraphicsMemoryAccessMode sourceAccessFlag, 
+        GraphicsMemoryAccessMode destinationAccessFlag, 
+        GraphicsPipelineVisibility sourceStageFlag, 
+        GraphicsPipelineVisibility destinationStageFlag)
+    {
+        VkBufferMemoryBarrier barrierInfo = {
+            VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+            nullptr,
+            Utilities::GetVulkanAccessFlags(sourceAccessFlag),
+            Utilities::GetVulkanAccessFlags(destinationAccessFlag),
+            VK_QUEUE_FAMILY_IGNORED,
+            VK_QUEUE_FAMILY_IGNORED,
+            buffer->GetVulkanBuffer(),
+            0,
+            VK_WHOLE_SIZE
+        };
+
+        vkCmdPipelineBarrier(_commandBuffer, Utilities::GetVulkanPipelineStageFlags(sourceStageFlag), Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, 0, 1,
+                         &barrierInfo, 0, 0);
     }
 }

@@ -47,6 +47,11 @@ thirdparty_module(GTest
   URL_HASH SHA512=16cc8f5b03b862e2937d1b926ca6dc291234ac5670050dc4fc2752ec98497330ebcd46f292317cd2bbb111ce33bbdcfd088ddf6a7fe273e2442963908732d589
   OVERRIDE_FIND_PACKAGE
 )
+# thirdparty_module(freetype
+#   URL https://github.com/freetype/freetype/archive/refs/tags/VER-2-12-1.zip
+#   URL_HASH SHA512=3ef3e47752b7c3cd158c738d7e0194f1c9f97ac85c754b02be6ee0f7999c3c19050f713d1e975f5310a4689337463e7b54450ef62e02c3f09864f4c6b13740d9
+#   OVERRIDE_FIND_PACKAGE
+# )
 thirdparty_module(imgui
   URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9b.zip
   URL_HASH SHA512=d99bc25165f814dda952e0f4a4cd6c028c1217c1b482e089c3ab04fa460d6fb1062beff7561c8d75998be63c1b514fa25b2ac514881f240d5e62f67f1b097b5e
@@ -120,14 +125,15 @@ foreach(module
   glm
   GSL
   GTest
-  imgui
   Opus Ogg FLAC Vorbis SndFile samplerate
   OpenAL
   ZLIB PNG
   fmt spdlog
   stduuid
   TBB
-  VulkanMemoryAllocator)
+  VulkanMemoryAllocator
+  # freetype
+  imgui)
   message(STATUS "Fetching ${module}...")
   add_subdirectory(${module})
 endforeach()

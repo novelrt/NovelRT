@@ -22,6 +22,7 @@ target_sources(NovelRT-Graphics-Core
       include/NovelRT/Graphics/GraphicsDevice.hpp
       include/NovelRT/Graphics/GraphicsDeviceObject.hpp
       include/NovelRT/Graphics/GraphicsFence.hpp
+      include/NovelRT/Graphics/GraphicsMemoryAccessMode.hpp
       include/NovelRT/Graphics/GraphicsMemoryAllocator.hpp
       include/NovelRT/Graphics/GraphicsMemoryRegionAllocationFlags.hpp
       include/NovelRT/Graphics/GraphicsPipeline.hpp
@@ -31,6 +32,7 @@ target_sources(NovelRT-Graphics-Core
       include/NovelRT/Graphics/GraphicsPipelineInputElementKind.hpp
       include/NovelRT/Graphics/GraphicsPipelineResource.hpp
       include/NovelRT/Graphics/GraphicsPipelineResourceKind.hpp
+      include/NovelRT/Graphics/GraphicsPipelineVisibility.hpp
       include/NovelRT/Graphics/GraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/GraphicsProvider.hpp
       include/NovelRT/Graphics/GraphicsPushConstantRange.hpp
