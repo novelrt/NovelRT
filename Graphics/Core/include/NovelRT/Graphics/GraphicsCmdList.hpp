@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsMemoryAccessFlag.hpp>
-#include <NovelRT/Graphics/GraphicsPipelineStageFlag.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAccessMode.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineVisibility.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
 #include <NovelRT/Maths/GeoVector2F.h>
 #include <NovelRT/Utilities/Misc.h>
@@ -171,10 +171,10 @@ namespace NovelRT::Graphics
         }
 
         void CmdPipelineBufferBarrier(std::shared_ptr<GraphicsBuffer<TBackend>> buffer, 
-            GraphicsMemoryAccessFlag sourceAccessFlag, 
-            GraphicsMemoryAccessFlag destinationAccessFlag, 
-            GraphicsPipelineStageFlag sourceStageFlag, 
-            GraphicsPipelineStageFlag destinationStageFlag)
+            GraphicsMemoryAccessMode sourceAccessFlag, 
+            GraphicsMemoryAccessMode destinationAccessFlag, 
+            GraphicsPipelineVisibility sourceStageFlag, 
+            GraphicsPipelineVisibility destinationStageFlag)
         {
             _implementation->CmdPipelineBufferBarrier(buffer->GetImplementation(), sourceAccessFlag, destinationAccessFlag, sourceStageFlag, destinationStageFlag);
         }

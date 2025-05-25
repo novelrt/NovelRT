@@ -6,8 +6,8 @@
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
-#include <NovelRT/Graphics/GraphicsPipelineStageFlag.hpp>
-#include <NovelRT/Graphics/GraphicsMemoryAccessFlag.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineVisibility.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAccessMode.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
@@ -404,10 +404,10 @@ namespace NovelRT::UI::DearImGui
             currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
 
             //Sync the commands so that we can prevent data issues
-            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer, GraphicsMemoryAccessFlag::TransferWrite, 
-                GraphicsMemoryAccessFlag::VertexAttributeRead, GraphicsPipelineStageFlag::Transfer, GraphicsPipelineStageFlag::VertexInput);
-            currentCmdList->CmdPipelineBufferBarrier(indexBuffer, GraphicsMemoryAccessFlag::TransferWrite, 
-                GraphicsMemoryAccessFlag::IndexRead, GraphicsPipelineStageFlag::Transfer, GraphicsPipelineStageFlag::VertexInput);
+            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer, GraphicsMemoryAccessMode::TransferWrite, 
+                GraphicsMemoryAccessMode::VertexAttributeRead, GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
+            currentCmdList->CmdPipelineBufferBarrier(indexBuffer, GraphicsMemoryAccessMode::TransferWrite, 
+                GraphicsMemoryAccessMode::IndexRead, GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
 
             _currentIndexBufferRegion = indexBufferRegion;
             _currentVertexBuffer = vertexBuffer;

@@ -65,9 +65,9 @@ namespace NovelRT::Graphics::Vulkan
         void CmdPushConstants(std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Misc::Span<uint8_t> values);
 
         void CmdPipelineBufferBarrier(std::shared_ptr<VulkanGraphicsBuffer> buffer, 
-            GraphicsMemoryAccessFlag sourceAccessFlag, 
-            GraphicsMemoryAccessFlag destinationAccessFlag, 
-            GraphicsPipelineStageFlag sourceStageFlag, 
-            GraphicsPipelineStageFlag destinationStageFlag);
+            GraphicsMemoryAccessMode sourceAccessFlag, 
+            GraphicsMemoryAccessMode destinationAccessFlag, 
+            GraphicsPipelineVisibility sourceStageFlag, 
+            GraphicsPipelineVisibility destinationStageFlag);
     };
 }

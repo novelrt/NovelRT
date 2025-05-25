@@ -10,8 +10,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
-#include <NovelRT/Graphics/Vulkan/Utilities/PipelineStageFlag.hpp>
-#include <NovelRT/Graphics/Vulkan/Utilities/MemoryAccessFlag.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -252,16 +252,16 @@ namespace NovelRT::Graphics::Vulkan
     }
 
     void VulkanGraphicsCmdList::CmdPipelineBufferBarrier(std::shared_ptr<VulkanGraphicsBuffer> buffer, 
-        GraphicsMemoryAccessFlag sourceAccessFlag, 
-        GraphicsMemoryAccessFlag destinationAccessFlag, 
-        GraphicsPipelineStageFlag sourceStageFlag, 
-        GraphicsPipelineStageFlag destinationStageFlag)
+        GraphicsMemoryAccessMode sourceAccessFlag, 
+        GraphicsMemoryAccessMode destinationAccessFlag, 
+        GraphicsPipelineVisibility sourceStageFlag, 
+        GraphicsPipelineVisibility destinationStageFlag)
     {
         VkBufferMemoryBarrier barrierInfo = {
             VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
             nullptr,
-            Utilities::GetVulkanMemoryAccessFlags(sourceAccessFlag),
-            Utilities::GetVulkanMemoryAccessFlags(destinationAccessFlag),
+            Utilities::GetVulkanAccessFlags(sourceAccessFlag),
+            Utilities::GetVulkanAccessFlags(destinationAccessFlag),
             VK_QUEUE_FAMILY_IGNORED,
             VK_QUEUE_FAMILY_IGNORED,
             buffer->GetVulkanBuffer(),
