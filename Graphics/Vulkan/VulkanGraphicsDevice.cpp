@@ -241,7 +241,8 @@ namespace NovelRT::Graphics
             return capabilities.currentExtent;
         }
 
-        auto localSize = GetSurface()->GetSize();
+        auto surface = GetSurface().lock();
+        auto localSize = surface->GetSize();
 
         VkExtent2D actualExtent = {static_cast<uint32_t>(localSize.x), static_cast<uint32_t>(localSize.y)};
 
@@ -367,7 +368,8 @@ namespace NovelRT::Graphics
         if (!_isAttachedToResizeEvent)
         {
             _isAttachedToResizeEvent = true;
-            GetSurface()->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
+            auto surface = GetSurface().lock();
+            surface->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
         }
 
         _contextIndex = contextIndex;
@@ -471,8 +473,6 @@ namespace NovelRT::Graphics
     {
         _logger.logInfoLine("Provided GPU device: " + adapter->GetName());
         unused(_state.Transition(Threading::VolatileState::Initialised));
-        auto countFfs = GetSurface()->SizeChanged.getHandlerCount();
-        unused(countFfs);
     }
 
     VulkanGraphicsDevice::~GraphicsDevice()
@@ -527,7 +527,7 @@ namespace NovelRT::Graphics
         return _contexts.Get()[GetContextIndex()];
     }
 
-    IGraphicsSurface* VulkanGraphicsDevice::GetSurface() const noexcept
+    std::weak_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
     {
         return _surfaceContext->GetSurface();
     }

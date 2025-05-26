@@ -63,6 +63,11 @@ namespace NovelRT::Graphics
         }
     }
 
+    std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetDevice() const noexcept
+    {
+        return _device;
+    }
+
     std::weak_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetAllocator() const noexcept
     {
         return _allocator;

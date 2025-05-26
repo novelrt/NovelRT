@@ -47,6 +47,11 @@ namespace NovelRT::Graphics
         }
     }
 
+    std::weak_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetOwningResource() const noexcept
+    {
+        return _owningResource;
+    }
+
     size_t VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetOffset() const noexcept
     {
         return _virtualAllocationInfo.offset;

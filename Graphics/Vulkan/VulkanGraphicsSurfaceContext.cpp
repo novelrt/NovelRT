@@ -15,14 +15,14 @@ namespace NovelRT::Graphics
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
 
     VulkanGraphicsSurfaceContext::GraphicsSurfaceContext(
-        IGraphicsSurface* surface,
+        std::weak_ptr<IGraphicsSurface> surface,
         std::shared_ptr<VulkanGraphicsProvider> provider)
         : _surface(surface)
         ,  _provider(provider)
         ,  _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
         ,  _vulkanSurface(VK_NULL_HANDLE)
     {
-        if (_surface == nullptr)
+        if (_surface.expired())
         {
             throw Exceptions::NullPointerException("The supplied IGraphicsSurface is nullptr.");
         }
@@ -32,16 +32,17 @@ namespace NovelRT::Graphics
             throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
         }
 
-        switch (surface->GetKind())
+        auto surfacePtr = surface.lock();
+        switch (surfacePtr->GetKind())
         {
             case GraphicsSurfaceKind::Glfw:
             {
                 auto func =
                     reinterpret_cast<VkResult (*)(VkInstance, void*, const VkAllocationCallbacks*, VkSurfaceKHR*)>(
-                        surface->GetContextHandle());
+                        surfacePtr->GetContextHandle());
 
                 VkResult funcResult =
-                    func(_provider->GetVulkanInstance(), surface->GetHandle(), nullptr, &_vulkanSurface);
+                    func(_provider->GetVulkanInstance(), surfacePtr->GetHandle(), nullptr, &_vulkanSurface);
                 if (funcResult != VK_SUCCESS)
                 {
                     throw Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
@@ -67,5 +68,20 @@ namespace NovelRT::Graphics
     {
         vkDestroySurfaceKHR(_provider->GetVulkanInstance(), _vulkanSurface, nullptr);
         _logger.logInfoLine("VkSurface successfully destroyed.");
+    }
+
+    VkSurfaceKHR VulkanGraphicsSurfaceContext::GetSurfaceContextHandle() const noexcept
+    {
+        return _vulkanSurface;
+    }
+
+    std::weak_ptr<IGraphicsSurface> VulkanGraphicsSurfaceContext::GetSurface() const noexcept
+    {
+        return _surface;
+    }
+
+    std::weak_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsSurfaceContext::GetProvider() const noexcept
+    {
+        return _provider;
     }
 }

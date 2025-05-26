@@ -58,6 +58,8 @@ namespace NovelRT::Graphics
 
         ~GraphicsPipelineSignature();
 
+        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
+
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
         [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
 

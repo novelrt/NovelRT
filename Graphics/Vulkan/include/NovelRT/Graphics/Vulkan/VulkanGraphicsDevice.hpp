@@ -105,7 +105,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext();
 
-        [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept;
+        [[nodiscard]] std::weak_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
         [[nodiscard]] std::weak_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext() const noexcept;
 

@@ -258,6 +258,11 @@ namespace NovelRT::Graphics
         , _vulkanPipeline([this, imguiRenderMode]() { return CreateVulkanPipeline(this, imguiRenderMode); })
     { }
 
+    [[nodiscard]] std::weak_ptr<VulkanGraphicsDevice> VulkanGraphicsPipeline::GetDevice() const
+    {
+        return _device;
+    }
+
     bool VulkanGraphicsPipeline::HasVertexShader() const noexcept
     {
         return _vertexShader != nullptr;

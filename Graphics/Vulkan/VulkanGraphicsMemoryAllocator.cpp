@@ -43,9 +43,9 @@ namespace NovelRT::Graphics
         , _provider(provider)
         , _allocator(VK_NULL_HANDLE)
     {
-        auto vulkanDevice = GetDevice().lock();
+        auto vulkanDevice = device.lock();
         auto vulkanAdapter = vulkanDevice->GetAdapter().lock();
-        auto vulkanProvider = GetProvider().lock();
+        auto vulkanProvider = provider;
 
         VmaAllocatorCreateInfo createInfo{};
         createInfo.vulkanApiVersion = vulkanProvider->GetApiVersion();

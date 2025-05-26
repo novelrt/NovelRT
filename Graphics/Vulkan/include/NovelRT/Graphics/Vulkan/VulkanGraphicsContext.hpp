@@ -52,6 +52,8 @@ namespace NovelRT::Graphics
         GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
         ~GraphicsContext() final;
 
+        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
+
         [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
         [[nodiscard]] size_t GetIndex() const noexcept;

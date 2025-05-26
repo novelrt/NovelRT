@@ -392,4 +392,14 @@ namespace NovelRT::Graphics
     {
         return _adapters.Get().end();
     }
+
+    VkInstance VulkanGraphicsProvider::GetVulkanInstance() const noexcept
+    {
+        return _vulkanInstance;
+    }
+
+    NovelRT::Utilities::Span<const std::string> VulkanGraphicsProvider::GetValidationLayers() const noexcept
+    {
+        return _finalValidationLayerSet;
+    }
 }
