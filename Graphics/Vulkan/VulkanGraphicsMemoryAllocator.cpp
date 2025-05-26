@@ -39,13 +39,13 @@ namespace NovelRT::Graphics
         std::weak_ptr<VulkanGraphicsDevice> device,
         std::shared_ptr<VulkanGraphicsProvider> provider)
         : VulkanGraphicsDeviceObject()
-        , _device(device)
-        , _provider(provider)
+        , _device(std::move(device))
+        , _provider(std::move(provider))
         , _allocator(VK_NULL_HANDLE)
     {
-        auto vulkanDevice = device.lock();
+        auto vulkanDevice = _device.lock();
         auto vulkanAdapter = vulkanDevice->GetAdapter().lock();
-        auto vulkanProvider = provider;
+        auto vulkanProvider = _provider;
 
         VmaAllocatorCreateInfo createInfo{};
         createInfo.vulkanApiVersion = vulkanProvider->GetApiVersion();
@@ -155,6 +155,14 @@ namespace NovelRT::Graphics
 
         return std::make_shared<VulkanGraphicsTexture>(_device, shared_from_this(), createInfo, outAllocation, outAllocationInfo, vulkanImage);
     }
+
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture2DRepeatGpuWriteOnly(uint32_t width, uint32_t height)
+        {
+            return CreateTexture(
+                GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
+                GraphicsResourceAccess::None, GraphicsResourceAccess::Write, width, height, 1,
+                GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});
+        }
 
     VmaAllocator VulkanGraphicsMemoryAllocator::GetVmaAllocator() const noexcept
     {

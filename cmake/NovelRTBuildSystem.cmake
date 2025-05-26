@@ -44,7 +44,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   string(REGEX REPLACE "::" "-" cmakeSafeName ${moduleName})
   if(moduleKind STREQUAL "LIBRARY")
-    add_library(${cmakeSafeName} OBJECT)
+    # N.B. Static is important here so that target_link_libraries works as expected
+    add_library(${cmakeSafeName} STATIC)
     add_library(${moduleName} ALIAS ${cmakeSafeName})
   elseif(moduleKind STREQUAL "EXECUTABLE")
     add_executable(${cmakeSafeName})
@@ -82,6 +83,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 
+  # CMake doesn't like static libraries with no sources, so we add the dependencies as private sources to silence it.
+  # This PROBABLY leads to some duplication but fortunately the linker is really good at de-duplicating code
   foreach(depends IN LISTS declareModule_DEPENDS)
     target_sources(${cmakeSafeName} PRIVATE $<TARGET_OBJECTS:${depends}>)
   endforeach()
@@ -89,10 +92,19 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_sources(${cmakeSafeName} PRIVATE $<$<TARGET_EXISTS:${depends}>:$<TARGET_OBJECTS:${depends}>>)
   endforeach()
 
+  set(resx ${declareModule_RESOURCES_INTERFACE} ${declareModule_RESOURCES_PUBLIC} ${declareModule_RESOURCES_PRIVATE})
+  foreach(file IN LISTS resx)
+    configure_file(${file} ${file} COPYONLY)
+  endforeach()
+
+  list(TRANSFORM declareModule_RESOURCES_INTERFACE REPLACE "^(.+)$" "$<BUILD_INTERFACE:\\1>")
+  list(TRANSFORM declareModule_RESOURCES_PUBLIC REPLACE "^(.+)$" "$<BUILD_INTERFACE:\\1>")
+
   target_sources(${cmakeSafeName}
-    INTERFACE ${declareModule_SOURCES_INTERFACE}
-    PUBLIC ${declareModule_SOURCES_PUBLIC}
-    PRIVATE ${declareModule_SOURCES_PRIVATE}
+    INTERFACE ${declareModule_SOURCES_INTERFACE} ${declareModule_RESOURCES_INTERFACE}
+    PUBLIC ${declareModule_SOURCES_PUBLIC} ${declareModule_RESOURCES_PUBLIC}
+    PRIVATE ${declareModule_SOURCES_PRIVATE} ${declareModule_RESOURCES_PRIVATE}
+
     INTERFACE FILE_SET interface_headers
     TYPE HEADERS
     BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
@@ -104,19 +116,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     PRIVATE FILE_SET private_headers
     TYPE HEADERS
     BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
-    FILES ${declareModule_HEADERS_PRIVATE}
-    INTERFACE FILE_SET interface_resources
-    TYPE HEADERS
-    BASE_DIRS ${declareModule_RESOURCES_BASE_DIRS}
-    FILES ${declareModule_RESOURCES_INTERFACE}
-    PUBLIC FILE_SET public_resources
-    TYPE HEADERS
-    BASE_DIRS ${declareModule_RESOURCES_BASE_DIRS}
-    FILES ${declareModule_RESOURCES_PUBLIC}
-    PRIVATE FILE_SET private_resources
-    TYPE HEADERS
-    BASE_DIRS ${declareModule_RESOURCES_BASE_DIRS}
-    FILES ${declareModule_RESOURCES_PRIVATE})
+    FILES ${declareModule_HEADERS_PRIVATE})
 
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
@@ -146,10 +146,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     FILE_SET interface_headers DESTINATION include
-    FILE_SET public_headers DESTINATION include
-    FILE_SET interface_resources DESTINATION var
-    FILE_SET public_resources DESTINATION var
-    FILE_SET private_resources DESTINATION share)
+    FILE_SET public_headers DESTINATION include)
 endfunction()
 
 endblock()

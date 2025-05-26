@@ -18,9 +18,9 @@ namespace NovelRT::Graphics
     public:
         GraphicsDescriptorSet() = delete;
 
-        void AddMemoryRegionToInputs(const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* region);
+        void AddMemoryRegionToInputs(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>& region);
 
-        void AddMemoryRegionsToInputs(NovelRT::Utilities::Span<const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>*> regions);
+        void AddMemoryRegionsToInputs(NovelRT::Utilities::Span<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> regions);
 
         void UpdateDescriptorSetData();
     };

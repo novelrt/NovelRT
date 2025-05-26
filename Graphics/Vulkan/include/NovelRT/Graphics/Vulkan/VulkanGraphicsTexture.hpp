@@ -58,6 +58,10 @@ namespace NovelRT::Graphics
 
         ~GraphicsTexture() noexcept final;
 
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>> Allocate(size_t size, size_t alignment);
+
+        void Free(GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>& region);
+
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 

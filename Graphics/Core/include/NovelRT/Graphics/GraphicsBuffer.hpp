@@ -30,6 +30,9 @@ namespace NovelRT::Graphics
 
         void Free(GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>& region);
 
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes() final;
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
+
         void UnmapBytes() final;
 
         void UnmapBytesAndWrite() final;

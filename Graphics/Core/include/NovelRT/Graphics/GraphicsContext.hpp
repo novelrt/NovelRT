@@ -10,7 +10,8 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend> class GraphicsDescriptorSet;
+    template<typename TBackend> class GraphicsPipelineSignature;
 
     template<typename TBackend> class GraphicsContext : public GraphicsDeviceObject<TBackend>
     {
@@ -27,5 +28,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
         void EndFrame();
+
+        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature, std::weak_ptr<GraphicsDescriptorSet<TBackend>> set);
     };
 }

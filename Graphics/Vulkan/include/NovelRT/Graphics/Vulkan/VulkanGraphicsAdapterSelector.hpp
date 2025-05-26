@@ -8,6 +8,8 @@
 
 namespace NovelRT::Graphics::Vulkan
 {
+    struct VulkanGraphicsBackend;
+
     class VulkanGraphicsAdapterSelector
     {
     private:

@@ -23,7 +23,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<VulkanGraphicsPipeline> targetPipeline,
         VkDescriptorSet descriptorSetHandle) noexcept
         :  _descriptorSetHandle(descriptorSetHandle)
-        , _pipeline(targetPipeline)
+        , _pipeline(std::move(targetPipeline))
         , _inputResourceRegions{}
     { }
 

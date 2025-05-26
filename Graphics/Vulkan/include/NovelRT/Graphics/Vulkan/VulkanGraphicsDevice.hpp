@@ -65,9 +65,8 @@ namespace NovelRT::Graphics
 
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
-        [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet() const;
-
-        VkDevice CreateLogicalDevice();
+        [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions) const;
+        VkDevice CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions);
 
         [[nodiscard]] VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
             const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept;
@@ -86,7 +85,8 @@ namespace NovelRT::Graphics
     public:
         GraphicsDevice(std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> adapter,
                        std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> surfaceContext,
-                       int32_t contextCount);
+                       int32_t contextCount,
+                       std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions);
 
         ~GraphicsDevice();
 
@@ -103,7 +103,7 @@ namespace NovelRT::Graphics
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator end() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext();
+        [[nodiscard]] std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext() const;
 
         [[nodiscard]] std::weak_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
@@ -122,6 +122,7 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges);
 
+        [[nodiscard]] std::weak_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass();
         [[nodiscard]] std::weak_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass() const;
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> CreateShaderProgram(
@@ -131,7 +132,7 @@ namespace NovelRT::Graphics
 
         void PresentFrame();
 
-        void Signal(const GraphicsFence<Vulkan::VulkanGraphicsBackend>* fence) const;
+        void Signal(const GraphicsFence<Vulkan::VulkanGraphicsBackend>* fence);
 
         void WaitForIdle();
 

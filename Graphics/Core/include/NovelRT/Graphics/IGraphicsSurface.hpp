@@ -14,6 +14,8 @@ namespace NovelRT::Graphics
     public:
         Utilities::Event<Maths::GeoVector2F> SizeChanged;
 
+        virtual ~IGraphicsSurface() = default;
+
         [[nodiscard]] virtual Maths::GeoVector2F GetSize() const noexcept = 0;
 
         [[nodiscard]] float GetWidth() const noexcept

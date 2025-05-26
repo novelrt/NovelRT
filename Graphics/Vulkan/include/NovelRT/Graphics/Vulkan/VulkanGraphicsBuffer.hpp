@@ -48,6 +48,10 @@ namespace NovelRT::Graphics
 
         ~GraphicsBuffer() noexcept final;
 
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>> Allocate(size_t size, size_t alignment);
+
+        void Free(GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>& region);
+
         [[nodiscard]] GraphicsResourceAccess GetAccess() const noexcept;
         [[nodiscard]] GraphicsBufferKind GetKind() const noexcept;
 

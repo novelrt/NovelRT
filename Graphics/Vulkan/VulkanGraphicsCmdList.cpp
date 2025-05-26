@@ -36,7 +36,7 @@ namespace NovelRT::Graphics
     VulkanGraphicsCmdList::GraphicsCmdList(
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
         VkCommandBuffer commandBuffer) noexcept
-        : _context(context)
+        : _context(std::move(context))
         , _commandBuffer(commandBuffer)
     {
     }
@@ -45,7 +45,7 @@ namespace NovelRT::Graphics
                                                    Utilities::Span<const ClearValue> clearValues)
     {
         auto device = _context->GetDevice().lock();
-        auto surface = device->GetSurface();
+        auto surface = device->GetSurface().lock();
 
         VkExtent2D extent2D{};
         extent2D.width = static_cast<uint32_t>(surface->GetWidth());

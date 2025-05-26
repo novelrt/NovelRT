@@ -18,7 +18,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> struct GraphicsBackendTraits;
 
     template<typename TBackend>
-    class GraphicsTexture : public GraphicsResource<TBackend>
+    class GraphicsTexture final : public GraphicsResource<TBackend>
     {
     public:
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
@@ -37,6 +37,9 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> Allocate(size_t size, size_t alignment);
 
         void Free(GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>& region);
+
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes() final;
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
         void UnmapBytes() final;
 

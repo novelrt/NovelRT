@@ -37,7 +37,11 @@ namespace NovelRT::Graphics
         VmaAllocation allocation,
         VmaAllocationInfo allocationInfo,
         VkBuffer vulkanBuffer)
-        : VulkanGraphicsResource(graphicsDevice, allocator, createInfo.cpuAccessKind, allocation, allocationInfo)
+        : VulkanGraphicsResource(
+            std::move(graphicsDevice),
+            std::move(allocator),
+            createInfo.cpuAccessKind,
+            allocation, allocationInfo)
         , _vulkanBuffer(vulkanBuffer)
         , _mappedMemoryRegions(0)
         , _cpuAccess(createInfo.cpuAccessKind)
@@ -52,6 +56,17 @@ namespace NovelRT::Graphics
         auto vmaAllocator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
         vmaDestroyBuffer(vmaAllocator, _vulkanBuffer, allocation);
+    }
+
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>> VulkanGraphicsBuffer::Allocate(size_t size, size_t alignment)
+    {
+        auto [allocation, info] = GetVirtualAllocation(size, alignment);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, info);
+    }
+
+    void VulkanGraphicsBuffer::Free(VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>& region)
+    {
+        VulkanGraphicsResource::Free(region);
     }
 
     GraphicsResourceAccess VulkanGraphicsBuffer::GetAccess() const noexcept
@@ -175,6 +190,11 @@ namespace NovelRT::Graphics
         _mappedMemoryRegions--;
 
         vmaUnmapMemory(vmaAllcoator, allocation);
+    }
+
+    void VulkanGraphicsBuffer::UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion)
+    {
+        return UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
     }
 
     VkBuffer VulkanGraphicsBuffer::GetVulkanBuffer() const noexcept

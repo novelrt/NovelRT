@@ -8,6 +8,7 @@ endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
   DEPENDS
+    NovelRT::Base
     NovelRT::Graphics::Core
 
   SOURCES
