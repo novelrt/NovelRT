@@ -125,19 +125,19 @@ namespace NovelRT::Graphics
         VmaAllocation allocation,
         VmaAllocationInfo allocationInfo,
         VkImage vulkanImage)
-        : VulkanGraphicsResource(graphicsDevice, allocator, createInfo.cpuAccessKind, allocation, allocationInfo)
+        : VulkanGraphicsResource(std::move(graphicsDevice), std::move(allocator), createInfo.cpuAccessKind, allocation, allocationInfo)
         , _vulkanImage(vulkanImage)
         , _mappedMemoryRegions(0)
         , _addressMode(createInfo.addressMode)
         , _kind(createInfo.textureKind)
-        , _vulkanImageView([graphicsDevice, textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(graphicsDevice, textureKind, vulkanImage); })
-        , _vulkanSampler([graphicsDevice, addressMode = createInfo.addressMode]() { return CreateVulkanSampler(graphicsDevice, addressMode); })
+        , _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(device, textureKind, vulkanImage); })
+        , _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]() { return CreateVulkanSampler(device, addressMode); })
         , _width(createInfo.width)
         , _height(createInfo.height)
         , _depth(createInfo.depth)
     {
 
-        auto device = graphicsDevice.lock();
+        auto device = GetDevice().lock();
         VkResult result = vkBindImageMemory(device->GetVulkanDevice(), vulkanImage, allocationInfo.deviceMemory, allocationInfo.offset);
 
         if (result != VK_SUCCESS)
@@ -170,6 +170,12 @@ namespace NovelRT::Graphics
         auto vmaAllocator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
         vmaDestroyImage(vmaAllocator, _vulkanImage, allocation);
+    }
+
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsTexture>> VulkanGraphicsTexture::Allocate(size_t size, size_t alignment)
+    {
+        auto [allocation, info] = GetVirtualAllocation(size, alignment);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsTexture>>(GetDevice(), shared_from_this(), allocation, info);
     }
 
     GraphicsTextureAddressMode VulkanGraphicsTexture::GetAddressMode() const noexcept
@@ -309,6 +315,11 @@ namespace NovelRT::Graphics
         _mappedMemoryRegions--;
 
         vmaUnmapMemory(vmaAllcoator, allocation);
+    }
+
+    void VulkanGraphicsTexture::UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion)
+    {
+        return UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
     }
 
     VkImage VulkanGraphicsTexture::GetVulkanImage() const noexcept

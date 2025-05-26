@@ -39,6 +39,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
         [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture(const GraphicsTextureCreateInfo& createInfo);
 
+        [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture2DRepeatGpuWriteOnly(uint32_t width, uint32_t height = 1);
+
         [[nodiscard]] VmaAllocator GetVmaAllocator() const noexcept;
     };
 }

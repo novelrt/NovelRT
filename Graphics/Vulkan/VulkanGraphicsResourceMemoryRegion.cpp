@@ -35,8 +35,8 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> owningResource,
         VmaVirtualAllocation virtualAllocation,
         VmaVirtualAllocationInfo virtualAllocationInfo)
-        : _device(graphicsDevice)
-        ,  _owningResource(owningResource)
+        : _device(std::move(graphicsDevice))
+        ,  _owningResource(std::move(owningResource))
         ,  _virtualAllocation(virtualAllocation)
         ,  _virtualAllocationInfo(virtualAllocationInfo)
     {

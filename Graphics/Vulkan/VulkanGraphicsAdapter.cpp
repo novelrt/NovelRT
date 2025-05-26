@@ -9,6 +9,7 @@
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
 
 #include <string>
+#include <vector>
 
 namespace NovelRT::Graphics
 {
@@ -86,6 +87,10 @@ namespace NovelRT::Graphics
         const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
         int32_t contextCount)
     {
-        return std::make_shared<VulkanGraphicsDevice>(this->shared_from_this(), surfaceContext, contextCount);
+        return std::make_shared<VulkanGraphicsDevice>(
+            this->shared_from_this(),
+            surfaceContext, contextCount,
+            std::vector<std::string>{ VK_KHR_SWAPCHAIN_EXTENSION_NAME },
+            std::vector<std::string>{});
     }
 }

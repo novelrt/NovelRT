@@ -47,6 +47,7 @@ namespace NovelRT
         LoggingService() noexcept;
         LoggingService(const std::string& core) noexcept;
         LoggingService(const std::string& core, LogLevel level) noexcept;
+
         void log(const std::string& message, LogLevel level);
         void logInfoLine(const std::string& message) const;
         void logErrorLine(const std::string& message) const;

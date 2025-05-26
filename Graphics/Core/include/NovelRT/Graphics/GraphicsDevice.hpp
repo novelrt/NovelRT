@@ -52,7 +52,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::weak_ptr<GraphicsContext<TBackend>> GetCurrentContext() const;
 
-        [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept;
+        [[nodiscard]] std::weak_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
         [[nodiscard]] std::weak_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
 

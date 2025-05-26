@@ -28,6 +28,9 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> Allocate(size_t size, size_t alignment);
 
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes() final;
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
+
         void UnmapBytes() final;
 
         void UnmapBytesAndWrite() final;

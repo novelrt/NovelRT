@@ -53,16 +53,19 @@ namespace NovelRT::Graphics
                                                   VkDebugUtilsMessengerEXT debugMessenger,
                                                   const VkAllocationCallbacks* pAllocator) noexcept;
 
-        [[nodiscard]] std::vector<std::string> GetFinalInstanceExtensionSet() const;
-        [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet() const;
+        [[nodiscard]] std::vector<std::string> GetFinalInstanceExtensionSet(std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions) const;
+        [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet(std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers) const;
         void CreateDefaultDebugCreateInfoStruct(VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept;
         void ConfigureDebugLogger();
-        VkInstance CreateInstance();
+        VkInstance CreateInstance(std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions,
+                                  std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers);
 
         std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>> GetGraphicsAdapters();
 
     public:
-        GraphicsProvider();
+        GraphicsProvider(
+            std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions,
+            std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers);
         ~GraphicsProvider();
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;

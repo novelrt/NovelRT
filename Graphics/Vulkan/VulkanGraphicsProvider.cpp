@@ -78,7 +78,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    std::vector<std::string> VulkanGraphicsProvider::GetFinalInstanceExtensionSet() const
+    std::vector<std::string> VulkanGraphicsProvider::GetFinalInstanceExtensionSet(std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions) const
     {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -89,12 +89,11 @@ namespace NovelRT::Graphics
 
         for (auto&& extensionProperty : extensionProperties)
         {
-            _logger.logInfoLine("  Extension Name: " + std::string(extensionProperty.extensionName) +
-                                "  Spec Version: " + std::to_string(extensionProperty.specVersion));
+            _logger.logInfoLine("  Extension Name: '" + std::string(extensionProperty.extensionName) +
+                                "' Spec Version: " + std::to_string(extensionProperty.specVersion));
         }
 
-        // TODO: EngineConfig was here
-        for (auto&& requestedRequiredExt : std::initializer_list<std::string>{})//EngineConfig::RequiredVulkanInstanceExtensions())
+        for (auto&& requestedRequiredExt : requiredInstanceExtensions)
         {
             auto result =
                 std::find_if(extensionProperties.begin(), extensionProperties.end(),
@@ -109,8 +108,7 @@ namespace NovelRT::Graphics
 
         std::vector<std::string> finalOptionalExtensions{};
 
-        // TODO: EngineConfig was here
-        for (auto&& requestedOptionalExt : std::initializer_list<std::string>{})//: EngineConfig::OptionalVulkanInstanceExtensions())
+        for (auto&& requestedOptionalExt : optionalInstanceExtensions)
         {
             auto result =
                 std::find_if(extensionProperties.begin(), extensionProperties.end(),
@@ -126,13 +124,20 @@ namespace NovelRT::Graphics
             finalOptionalExtensions.emplace_back(requestedOptionalExt);
         }
 
-        // TODO: EngineConfig was here
-        std::vector<std::string> allExtensions{};// = EngineConfig::RequiredVulkanInstanceExtensions();
+        std::vector<std::string> allExtensions{requiredInstanceExtensions};
+        allExtensions.reserve(requiredInstanceExtensions.size() + finalOptionalExtensions.size());
         allExtensions.insert(allExtensions.end(), finalOptionalExtensions.begin(), finalOptionalExtensions.end());
+
+        _logger.logInfoLine("Enabled extensions:");
+        for (const auto& ext : allExtensions)
+        {
+            _logger.logInfoLine("  " + ext);
+        }
+
         return allExtensions;
     }
 
-    std::vector<std::string> VulkanGraphicsProvider::GetFinalValidationLayerSet() const
+    std::vector<std::string> VulkanGraphicsProvider::GetFinalValidationLayerSet(std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers) const
     {
         uint32_t layerCount = 0;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -148,13 +153,12 @@ namespace NovelRT::Graphics
                                       std::to_string(VK_VERSION_MINOR(layerProperty.specVersion)) + "." +
                                       std::to_string(VK_VERSION_PATCH(layerProperty.specVersion));
 
-            _logger.logInfoLine("  Layer Name: " + std::string(layerProperty.layerName) + "  Spec Version: " +
-                                specVersion + "  Impl Version: " + std::to_string(layerProperty.implementationVersion) +
-                                "  Description:  " + std::string(layerProperty.description));
+            _logger.logInfoLine("  Layer Name: '" + std::string(layerProperty.layerName) + "' Spec Version: " +
+                                specVersion + " Impl Version: " + std::to_string(layerProperty.implementationVersion) +
+                                " Description: " + std::string(layerProperty.description));
         }
 
-        // TODO: EngineConfig was here
-        for (auto&& requestedRequiredLayer : std::initializer_list<std::string>{}) //: EngineConfig::RequiredVulkanLayers())
+        for (auto&& requestedRequiredLayer : requiredInstanceLayers)
         {
             auto result =
                 std::find_if(layerProperties.begin(), layerProperties.end(),
@@ -169,8 +173,7 @@ namespace NovelRT::Graphics
 
         std::vector<std::string> finalOptionalLayers{};
 
-        // TODO: EngineConfig was here
-        for (auto&& requestedOptionalLayer : std::initializer_list<std::string>{})//: EngineConfig::OptionalVulkanLayers())
+        for (auto&& requestedOptionalLayer : optionalInstanceLayers)
         {
             auto result = std::find_if(layerProperties.begin(), layerProperties.end(),
                                        [&](auto& x) { return strcmp(requestedOptionalLayer.c_str(), x.layerName); });
@@ -186,9 +189,10 @@ namespace NovelRT::Graphics
         }
 
         // TODO: EngineConfig was here
-        std::vector<std::string> allValidationLayers{}; //= EngineConfig::RequiredVulkanLayers();
-        allValidationLayers.insert(allValidationLayers.end(), finalOptionalLayers.begin(), finalOptionalLayers.end());
-        return allValidationLayers;
+        std::vector<std::string> allLayers{requiredInstanceLayers};
+        allLayers.reserve(requiredInstanceLayers.size() + finalOptionalLayers.size());
+        allLayers.insert(allLayers.end(), finalOptionalLayers.begin(), finalOptionalLayers.end());
+        return allLayers;
     }
 
     void VulkanGraphicsProvider::CreateDefaultDebugCreateInfoStruct(
@@ -231,7 +235,9 @@ namespace NovelRT::Graphics
         _logger.logWarningLine("Vulkan debugger enabled! This may harm performance.");
     }
 
-    VkInstance VulkanGraphicsProvider::CreateInstance()
+    VkInstance VulkanGraphicsProvider::CreateInstance(
+        std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions,
+        std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers)
     {
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -243,12 +249,12 @@ namespace NovelRT::Graphics
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = GetApiVersion();
 
-        _finalExtensionSet = GetFinalInstanceExtensionSet();
+        _finalExtensionSet = GetFinalInstanceExtensionSet(requiredInstanceExtensions, optionalInstanceExtensions);
         std::vector<const char*> allExtensionullptrs =
             NovelRT::Utilities::GetStringSpanAsCharPtrVector(_finalExtensionSet);
         size_t extensionLength = allExtensionullptrs.size();
 
-        _finalValidationLayerSet = GetFinalValidationLayerSet();
+        _finalValidationLayerSet = GetFinalValidationLayerSet(requiredInstanceLayers, optionalInstanceLayers);
         std::vector<const char*> allValidationLayerPtrs =
             NovelRT::Utilities::GetStringSpanAsCharPtrVector(_finalValidationLayerSet);
         size_t validationLayerLength = allValidationLayerPtrs.size();
@@ -311,10 +317,6 @@ namespace NovelRT::Graphics
                                                     "to your GPU manufacturer's documentation for more information.");
         }
 
-        // TODO: EngineConfig was here
-        //EngineConfig::RequiredVulkanPhysicalDeviceExtensions().emplace_back(
-        //    std::string(VK_KHR_SWAPCHAIN_EXTENSION_NAME));
-
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
@@ -326,7 +328,9 @@ namespace NovelRT::Graphics
         return adapters;
     }
 
-    VulkanGraphicsProvider::GraphicsProvider()
+    VulkanGraphicsProvider::GraphicsProvider(
+        std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions,
+        std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers)
         : _vulkanInstance(VK_NULL_HANDLE)
         , _adapters([&]() { return GetGraphicsAdapters(); })
         // TODO: EngineConfig was here
@@ -336,14 +340,7 @@ namespace NovelRT::Graphics
         // TODO: EngineConfig was here
         , _debugModeEnabled(true) //EngineConfig::EnableDebugOutputFromEngineInternals())
     {
-        if (GetDebugModeEnabled())
-        {
-            // TODO: EngineConfig was here
-            //EngineConfig::OptionalVulkanLayers().emplace_back("VK_LAYER_KHRONOS_validation");
-            //EngineConfig::OptionalVulkanInstanceExtensions().emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-        }
-
-        _vulkanInstance = CreateInstance();
+        _vulkanInstance = CreateInstance(requiredInstanceExtensions, optionalInstanceExtensions, requiredInstanceLayers, optionalInstanceLayers);
 
         if (GetDebugModeEnabled())
         {

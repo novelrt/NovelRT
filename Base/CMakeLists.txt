@@ -3,7 +3,14 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Base
   SOURCES
     PRIVATE
-      empty.cpp
+      Atom.cpp
+
+      Logging/LoggingService.cpp
+
+      Threading/VolatileState.cpp
+
+      Utilities/Paths.cpp
+      Utilities/Strings.cpp
 
   HEADERS
     PUBLIC
@@ -14,5 +21,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Base
 
   LINK_LIBRARIES
     PUBLIC
+      glm::glm
       Microsoft.GSL::GSL
-      glm::glm)
+      spdlog::spdlog
+      TBB::tbb)

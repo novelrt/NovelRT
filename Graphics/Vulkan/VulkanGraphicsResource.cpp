@@ -44,8 +44,8 @@ namespace NovelRT::Graphics
         GraphicsResourceAccess cpuAccess,
         VmaAllocation allocation,
         VmaAllocationInfo allocationInfo)
-        : _device(graphicsDevice)
-        , _allocator(allocator)
+        : _device(std::move(graphicsDevice))
+        , _allocator(std::move(allocator))
         , _allocation(allocation)
         , _allocationInfo(allocationInfo)
         , _virtualBlock(VK_NULL_HANDLE)

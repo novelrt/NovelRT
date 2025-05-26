@@ -59,7 +59,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] size_t GetIndex() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> BeginFrame();
-        void EndFrame() const;
+        void EndFrame();
 
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 

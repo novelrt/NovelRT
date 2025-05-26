@@ -3,29 +3,29 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
+#include <NovelRT/Graphics/IGraphicsSurface.hpp>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
+
+#include <string>
 
 namespace NovelRT::Windowing
 {
-    template<typename TBackend> struct WindowingBackendTraits;
-
     template <typename TBackend>
-    class WindowProvider
+    class WindowProvider : public Graphics::IGraphicsSurface
     {
     public:
-        using BackendWindowProviderType = WindowingBackendTraits<TBackend>::WindowProviderType;
+        WindowProvider() = delete;
+        ~WindowProvider() = default;
 
-    private:
-        std::unique_ptr<BackendWindowProviderType> _implementation;
+        void ProcessAllMessages();
 
-    public:
-        WindowProvider(std::unique_ptr<BackendWindowProviderType> implementation)
-            : _implementation(std::move(implementation))
-        { }
+        [[nodiscard]] bool IsVisible() const noexcept;
+        [[nodiscard]] bool ShouldClose() const noexcept;
 
-        [[nodiscard]] BackendWindowProviderType* GetImplementation() const noexcept
-        {
-            return _implementation.get();
-        }
+        [[nodiscard]] std::string GetWindowTitle() const noexcept;
+        void SetWindowTitle(const std::string& newTitle);
+
+        template <typename TGraphicsBackend>
+        std::shared_ptr<Graphics::GraphicsProvider<TGraphicsBackend>> CreateGraphicsProvider();
     };
 }

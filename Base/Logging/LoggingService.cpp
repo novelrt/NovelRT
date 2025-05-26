@@ -1,7 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/LoggingService.h>
+#include <NovelRT/Exceptions/NullPointerException.hpp>
+#include <NovelRT/Logging/LoggingService.hpp>
+#include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <iostream>
 
 namespace NovelRT
@@ -17,10 +19,10 @@ namespace NovelRT
     {
         try
         {
-            _logger = spdlog::get(Utilities::Misc::CONSOLE_LOG_GENERIC);
+            _logger = spdlog::get(Logging::CONSOLE_LOG_GENERIC);
             if (_logger == nullptr)
             {
-                _logger = spdlog::stdout_color_mt<spdlog_factory>(Utilities::Misc::CONSOLE_LOG_GENERIC);
+                _logger = spdlog::stdout_color_mt<spdlog_factory>(Logging::CONSOLE_LOG_GENERIC);
             }
 
 #ifndef NDEBUG

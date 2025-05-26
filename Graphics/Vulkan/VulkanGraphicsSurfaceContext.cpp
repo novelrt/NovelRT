@@ -17,8 +17,8 @@ namespace NovelRT::Graphics
     VulkanGraphicsSurfaceContext::GraphicsSurfaceContext(
         std::weak_ptr<IGraphicsSurface> surface,
         std::shared_ptr<VulkanGraphicsProvider> provider)
-        : _surface(surface)
-        ,  _provider(provider)
+        : _surface(std::move(surface))
+        ,  _provider(std::move(provider))
         ,  _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
         ,  _vulkanSurface(VK_NULL_HANDLE)
     {
@@ -32,7 +32,7 @@ namespace NovelRT::Graphics
             throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
         }
 
-        auto surfacePtr = surface.lock();
+        auto surfacePtr = _surface.lock();
         switch (surfacePtr->GetKind())
         {
             case GraphicsSurfaceKind::Glfw:

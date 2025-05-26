@@ -1,20 +1,20 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Windowing/Glfw/GlfwWindowingDevice.hpp>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
 
-// TODO: Figure out if this is required
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
 
-namespace NovelRT::Windowing::Glfw
+#include <vector>
+
+namespace NovelRT::Windowing
 {
-    GlfwWindowingDevice::GlfwWindowingDevice() noexcept : _window(nullptr, nullptr)
-    {
-    }
+    using GlfwWindowProvider = WindowProvider<Glfw::GlfwWindowingBackend>;
 
-    void GlfwWindowingDevice::Initialise(NovelRT::Windowing::WindowMode windowMode,
-                                         Maths::GeoVector2F desiredWindowSize)
+    GlfwWindowProvider::WindowProvider(
+        NovelRT::Windowing::WindowMode windowMode,
+        Maths::GeoVector2F desiredWindowSize)
     {
         if (glfwInit() == GLFW_FALSE)
         {
@@ -44,7 +44,9 @@ namespace NovelRT::Windowing::Glfw
 
         auto window = glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
                                        static_cast<int32_t>(floor(desiredWindowSize.y)),
-                                       EngineConfig::ApplicationName().c_str(), monitor, nullptr);
+                                       "NovelRT", monitor, nullptr);
+                                       // TODO: EngineConfig was here
+                                       //EngineConfig::ApplicationName().c_str(), monitor, nullptr);
 
         if (window == nullptr)
         {
@@ -61,81 +63,66 @@ namespace NovelRT::Windowing::Glfw
         glfwSetWindowUserPointer(window, this);
 
         glfwSetWindowSizeCallback(window, [](auto window, auto width, auto height) {
-            auto thisDevice = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
-            auto countFfs = thisDevice->SizeChanged.getHandlerCount();
-            unused(countFfs);
+            auto thisDevice = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
             thisDevice->SizeChanged(Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height)));
         });
 
         glfwSetKeyCallback(window, [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
-            auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
             thisPtr->KeyboardButtonChanged(ButtonChangeEventArgs{key, action});
         });
 
         glfwSetMouseButtonCallback(window, [](auto window, auto mouseButton, auto action, auto /*mods*/) {
-            auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
             thisPtr->MouseButtonClicked(ButtonChangeEventArgs{mouseButton, action});
         });
 
         glfwSetCursorPosCallback(window, [](auto window, double x, double y) {
-            auto thisPtr = reinterpret_cast<GlfwWindowingDevice*>(glfwGetWindowUserPointer(window));
+            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
             thisPtr->CursorMoved(CursorPositionEventArgs{x, y});
         });
 
-        _window = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>(window, glfwDestroyWindow);
-
-        if (glfwVulkanSupported() == GLFW_FALSE)
-        {
-            return;
-        }
-
-        uint32_t extensionCount = 0;
-        auto extensions = glfwGetRequiredInstanceExtensions(&extensionCount);
-        if (extensionCount == 0)
-        {
-            const char* output = nullptr;
-            glfwGetError(&output);
-            if (output != nullptr)
-            {
-                throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
-            }
-            else
-            {
-                throw Exceptions::InitialisationFailureException(
-                    "GLFW3 failed to initialise.",
-                    "Attempting to fetch the required Vulkan extensions failed with a count of zero.");
-            }
-        }
-
-        auto& requiredExtensions = EngineConfig::RequiredVulkanInstanceExtensions();
-
-        for (size_t i = 0; i < extensionCount; i++)
-        {
-            requiredExtensions.emplace_back(extensions[i]);
-        }
-
-#ifdef __APPLE__
-        requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-#endif
+        _window = window;
     }
 
-    void GlfwWindowingDevice::TearDown() noexcept
+    GlfwWindowProvider::~WindowProvider() noexcept
     {
-        _window.reset();
-    }
-
-    GlfwWindowingDevice::~GlfwWindowingDevice()
-    {
-        TearDown();
+        if (_window) glfwDestroyWindow(_window);
         glfwTerminate();
     }
 
-    Maths::GeoVector2F GlfwWindowingDevice::GetSize() const noexcept
+    void GlfwWindowProvider::ProcessAllMessages()
+    {
+        glfwPollEvents();
+    }
+
+    bool GlfwWindowProvider::IsVisible() const noexcept
+    {
+        return glfwGetWindowAttrib(_window, GLFW_VISIBLE) != 0;
+    }
+
+    bool GlfwWindowProvider::ShouldClose() const noexcept
+    {
+        return glfwWindowShouldClose(_window);
+    }
+
+    std::string GlfwWindowProvider::GetWindowTitle() const noexcept
+    {
+        return _currentTitle;
+    }
+
+    inline void GlfwWindowProvider::SetWindowTitle(const std::string& newTitle)
+    {
+        _currentTitle = newTitle;
+        glfwSetWindowTitle(_window, _currentTitle.c_str());
+    }
+
+    Maths::GeoVector2F GlfwWindowProvider::GetSize() const noexcept
     {
         int32_t width = 0;
         int32_t height = 0;
 
-        glfwGetFramebufferSize(GetRawGLFWwindowHandle(), &width, &height);
+        glfwGetFramebufferSize(_window, &width, &height);
 
         if (width == 0 || height == 0)
         {
@@ -145,23 +132,18 @@ namespace NovelRT::Windowing::Glfw
         return Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
     }
 
-    void* GlfwWindowingDevice::GetHandle() const noexcept
+    void* GlfwWindowProvider::GetHandle() const noexcept
     {
-        return GetRawGLFWwindowHandle();
+        return _window;
     }
 
-    void* GlfwWindowingDevice::GetContextHandle() const noexcept
+    void* GlfwWindowProvider::GetContextHandle() const noexcept
     {
         return reinterpret_cast<void*>(&glfwCreateWindowSurface);
     }
 
-    Graphics::GraphicsSurfaceKind GlfwWindowingDevice::GetKind() const noexcept
+    Graphics::GraphicsSurfaceKind GlfwWindowProvider::GetKind() const noexcept
     {
         return Graphics::GraphicsSurfaceKind::Glfw;
     }
-
-    void GlfwWindowingDevice::ProcessAllMessages()
-    {
-        glfwPollEvents();
-    }
-} // namespace NovelRT::Windowing::Glfw
+}

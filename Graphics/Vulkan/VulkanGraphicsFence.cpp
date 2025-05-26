@@ -36,7 +36,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsFence::GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept
         : _device(std::move(device))
-        ,  _vulkanFence([device = std::weak_ptr(device), isSignaled]() { return CreateVulkanFence(device, isSignaled); })
+        ,  _vulkanFence([device = std::weak_ptr(_device), isSignaled]() { return CreateVulkanFence(device, isSignaled); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
     }

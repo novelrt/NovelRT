@@ -42,7 +42,7 @@ namespace NovelRT::Graphics
         : _device(std::move(device))
         , _entryPointName(std::move(entryPointName))
         , _kind(kind)
-        , _shaderModule([device = std::weak_ptr(device), bytecode]() { return CreateShaderModule(device.lock(), bytecode); })
+        , _shaderModule([device = std::weak_ptr(_device), bytecode]() { return CreateShaderModule(device.lock(), bytecode); })
         , _bytecode(bytecode.begin(), bytecode.end())
     { }
 
