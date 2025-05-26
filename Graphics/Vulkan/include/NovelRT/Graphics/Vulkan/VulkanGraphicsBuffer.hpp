@@ -5,7 +5,6 @@
 
 #include <NovelRT/Graphics/GraphicsBufferKind.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
-
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <memory>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
@@ -26,6 +25,8 @@ namespace NovelRT::Graphics::Vulkan
 
     protected:
         [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) final;
+        
+        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region) final;
 
     public:
         std::shared_ptr<VulkanGraphicsBuffer> shared_from_this()

@@ -30,7 +30,7 @@
 #include <gsl/span>
 #endif // NOVELRT_USE_STD_SPAN
 
-#define unused(x) (void)(x)
+#define unused(x) static_cast<void>(x)
 
 #define assert_message(exp, msg) assert((static_cast<void>(msg), exp));
 
