@@ -246,6 +246,11 @@ namespace NovelRT::Graphics
         DestroyPipelineLayout();
     }
 
+    [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipelineSignature::GetDevice() const
+    {
+        return _device;
+    }
+
     [[nodiscard]] GraphicsPipelineBlendFactor VulkanGraphicsPipelineSignature::GetSrcBlendFactor() const noexcept
     {
         return _srcBlendFactor;

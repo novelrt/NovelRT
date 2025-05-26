@@ -46,6 +46,8 @@ namespace NovelRT::Graphics
             bool imguiRenderMode) noexcept;
         ~GraphicsPipeline() final = default;
 
+        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
+
         [[nodiscard]] bool HasVertexShader() const noexcept;
         [[nodiscard]] bool HasPixelShader() const noexcept;
 

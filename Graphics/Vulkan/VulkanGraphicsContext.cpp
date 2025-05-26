@@ -74,7 +74,7 @@ namespace NovelRT::Graphics
     {
         VkFramebuffer vulkanFramebuffer = VK_NULL_HANDLE;
         auto device = context->GetDevice().lock();
-        IGraphicsSurface* surface = device->GetSurface();
+        auto surface = device->GetSurface().lock();
         VkImageView swapChainImageView = context->GetVulkanSwapChainImageView();
 
         VkFramebufferCreateInfo framebufferCreateInfo{};
@@ -221,6 +221,11 @@ namespace NovelRT::Graphics
             vkDestroyCommandPool(device, pool, nullptr);
             _vulkanCommandPool.Reset();
         }
+    }
+
+    std::weak_ptr<VulkanGraphicsDevice> VulkanGraphicsContext::GetDevice() const
+    {
+        return _device;
     }
 
     std::weak_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetFence() const noexcept
