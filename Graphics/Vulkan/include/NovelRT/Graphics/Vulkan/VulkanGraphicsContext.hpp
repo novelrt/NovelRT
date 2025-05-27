@@ -29,7 +29,7 @@ namespace NovelRT::Graphics
 
         std::map<
             std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
-            std::vector<std::weak_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
+            std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
             std::owner_less<>> _vulkanDescriptorSets;
         std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
         std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _waitForExecuteCompletionFence;
@@ -70,6 +70,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
 
-        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature, std::weak_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
+        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature, std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };
 }

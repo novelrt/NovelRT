@@ -129,8 +129,6 @@ int main()
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
-    // auto dummyRegion = GraphicsResourceMemoryRegion<GraphicsBuffer, VulkanGraphicsBackend>(0, nullptr, gfxDevice,
-    // false, 0, 0);
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
@@ -149,10 +147,6 @@ int main()
     uint32_t texturePixels = textureWidth * textureHeight;
     uint32_t cellWidth = textureWidth / 8;
     uint32_t cellHeight = textureHeight / 8;
-
-    // auto texture2D = memoryAllocator->CreateTextureWithDefaultArguments(
-    //     GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional, GraphicsResourceAccess::None,
-    //     GraphicsResourceAccess::Write, textureWidth, textureHeight);
 
     auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
@@ -235,7 +229,7 @@ int main()
             currentCmdList->CmdEndRenderPass();
 
             context->EndFrame();
-            context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), std::weak_ptr(descriptorSetData));
+            context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), descriptorSetData);
             gfxDevice->PresentFrame();
         }
     }

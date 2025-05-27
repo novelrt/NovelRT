@@ -34,7 +34,7 @@ namespace NovelRT::Graphics
         return returnCount;
     }
 
-    VkFormat GetInputElementFormat(std::type_index type)
+    VkFormat GetInputElementFormat(std::type_index type, GraphicsPipelineInputElementKind kind)
     {
         VkFormat returnFormat = VK_FORMAT_UNDEFINED;
 
@@ -49,6 +49,13 @@ namespace NovelRT::Graphics
         else if (type == typeid(Maths::GeoVector4F))
         {
             returnFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
+        }
+        else if(kind == GraphicsPipelineInputElementKind::Colour)
+        {
+            if (type == typeid(uint32_t))
+            {
+                returnFormat = VK_FORMAT_R8G8B8A8_UNORM;
+            }
         }
 
         return returnFormat;
@@ -178,7 +185,7 @@ namespace NovelRT::Graphics
                         VkVertexInputAttributeDescription insertValue{};
                         insertValue.location = static_cast<uint32_t>(inputElementIndex);
                         insertValue.binding = static_cast<uint32_t>(inputIndex);
-                        insertValue.format = GetInputElementFormat(inputElement.GetType());
+                        insertValue.format = GetInputElementFormat(inputElement.GetType(), inputElement.GetKind());
                         insertValue.offset = inputBindingStride;
 
                         vertexInputAttributeDescriptions[inputElementsIndex] = insertValue;

@@ -29,6 +29,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
         void EndFrame();
 
-        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature, std::weak_ptr<GraphicsDescriptorSet<TBackend>> set);
+        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature, std::shared_ptr<GraphicsDescriptorSet<TBackend>> set);
     };
 }
