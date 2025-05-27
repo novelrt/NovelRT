@@ -340,6 +340,12 @@ namespace NovelRT::Graphics
         // TODO: EngineConfig was here
         , _debugModeEnabled(true) //EngineConfig::EnableDebugOutputFromEngineInternals())
     {
+        if (GetDebugModeEnabled())
+        {
+            optionalInstanceLayers.emplace_back("VK_LAYER_KHRONOS_validation");
+            optionalInstanceExtensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        }
+
         _vulkanInstance = CreateInstance(requiredInstanceExtensions, optionalInstanceExtensions, requiredInstanceLayers, optionalInstanceLayers);
 
         if (GetDebugModeEnabled())
