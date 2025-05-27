@@ -9,6 +9,7 @@
 #include <NovelRT/Graphics/GraphicsContext.hpp>
 #include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/GraphicsFence.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
@@ -125,7 +126,7 @@ int main()
     std::vector<GraphicsPushConstantRange> dummyData{};
     auto signature = gfxDevice->CreatePipelineSignature(
         GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
-        NovelRT::Utilities::Misc::Span<GraphicsPushConstantRange>(dummyData));
+        NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
@@ -179,7 +180,7 @@ int main()
     auto fence = gfxContext->GetFence().lock();
     gfxDevice->Signal(fence.get());
     gfxDevice->WaitForIdle();
-    gfxContext->GetFence()->Reset();
+    fence->Reset();
 
     while (!wndProvider->ShouldClose())
     {

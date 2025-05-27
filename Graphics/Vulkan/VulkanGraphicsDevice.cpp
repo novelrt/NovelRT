@@ -589,18 +589,6 @@ namespace NovelRT::Graphics
         return _renderPass.Get();
     }
 
-    std::shared_ptr<VulkanShaderProgram> VulkanGraphicsDevice::CreateShaderProgram(
-        std::string entryPointName,
-        ShaderProgramKind kind,
-        NovelRT::Utilities::Span<uint8_t> byteData)
-    {
-        return std::make_shared<VulkanShaderProgram>(
-            shared_from_this(),
-            std::move(entryPointName),
-            kind,
-            byteData);
-    }
-
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = _presentCompletionFence.Get();

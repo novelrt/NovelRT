@@ -66,7 +66,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet(const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline);
 
         [[nodiscard]] std::vector<GraphicsPipelineInput> GetInputs() const noexcept;
-        [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources() const noexcept;
+        [[nodiscard]] std::vector<GraphicsPipelineResource> GetResources() const noexcept;
+        [[nodiscard]] std::vector<GraphicsPushConstantRange> GetPushConstantRanges() const noexcept;
 
         [[nodiscard]] VkDescriptorPool GetVulkanDescriptorPool() const;
         [[nodiscard]] VkDescriptorSetLayout GetVulkanDescriptorSetLayout() const;
