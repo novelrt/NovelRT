@@ -86,7 +86,7 @@ int main()
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider.get(), gfxSurfaceContext.get());
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext, 2);
 
-    auto gfxContext = gfxDevice->GetCurrentContext().lock();
+    auto gfxContext = gfxDevice->GetCurrentContext();
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     GraphicsBufferCreateInfo bufferCreateInfo{};
@@ -171,7 +171,7 @@ int main()
     cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D.get());
 
     gfxContext->EndFrame();
-    auto fence = gfxContext->GetFence().lock();
+    auto fence = gfxContext->GetFence();
     gfxDevice->Signal(fence.get());
     gfxDevice->WaitForIdle();
     fence->Reset();
@@ -181,14 +181,14 @@ int main()
         wndProvider->ProcessAllMessages();
         if (wndProvider->IsVisible())
         {
-            auto surface = gfxDevice->GetSurface().lock();
-            auto context = gfxDevice->GetCurrentContext().lock();
+            auto surface = gfxDevice->GetSurface();
+            auto context = gfxDevice->GetCurrentContext();
             auto currentCmdList = context->BeginFrame();
 
             float surfaceWidth = surface->GetWidth();
             float surfaceHeight = surface->GetHeight();
 
-            auto renderPass = gfxDevice->GetRenderPass().lock();
+            auto renderPass = gfxDevice->GetRenderPass();
 
             NovelRT::Graphics::ClearValue colourDataStruct{};
             colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);

@@ -78,7 +78,7 @@ namespace NovelRT::Graphics
         return _name.Get();
     }
 
-    std::weak_ptr<VulkanGraphicsProvider> VulkanGraphicsAdapter::GetProvider() const
+    std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsAdapter::GetProvider() const
     {
         return _provider;
     }

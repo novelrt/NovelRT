@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<const ShaderProgram<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
         ShaderProgram(
-            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
             std::string entryPointName,
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> bytecode) noexcept;

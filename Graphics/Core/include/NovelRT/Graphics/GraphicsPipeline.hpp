@@ -20,10 +20,9 @@ namespace NovelRT::Graphics
         bool HasVertexShader() const noexcept;
         bool HasPixelShader() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<ShaderProgram<TBackend>> GetVertexShader() const noexcept;
-        [[nodiscard]] std::weak_ptr<ShaderProgram<TBackend>> GetPixelShader() const noexcept;
-
-        [[nodiscard]] std::weak_ptr<GraphicsPipelineSignature<TBackend>> GetSignature() const noexcept;
+        [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> GetVertexShader() const noexcept;
+        [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> GetPixelShader() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> GetSignature() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet();
     };

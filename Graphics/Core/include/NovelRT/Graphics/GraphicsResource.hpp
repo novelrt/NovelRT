@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
         GraphicsResource() = delete;
         virtual ~GraphicsResource() noexcept override = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsMemoryAllocator<TBackend>> GetAllocator() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<TBackend>> GetAllocator() const noexcept;
         [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept;
         [[nodiscard]] size_t GetSize() const noexcept;

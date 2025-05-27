@@ -35,10 +35,9 @@ namespace NovelRT::Graphics
         GraphicsMemoryAllocator() = delete;
         ~GraphicsMemoryAllocator();
 
-        [[nodiscard]] std::weak_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
-
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<TBackend>> CreateBuffer(GraphicsBufferKind bufferKind,
                                                                              GraphicsResourceAccess cpuAccessKind,
                                                                              GraphicsResourceAccess gpuAccessKind,

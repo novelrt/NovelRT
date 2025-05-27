@@ -22,7 +22,7 @@ namespace NovelRT::Graphics
         GraphicsContext() = delete;
         virtual ~GraphicsContext() override = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsFence<TBackend>> GetFence() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept;
 
         [[nodiscard]] size_t GetIndex() const noexcept;
 

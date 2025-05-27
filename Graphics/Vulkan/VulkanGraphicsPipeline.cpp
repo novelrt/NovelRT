@@ -111,7 +111,7 @@ namespace NovelRT::Graphics
         pipelineDepthStencilStateCreateInfo.front = frontState;
         pipelineDepthStencilStateCreateInfo.back = backState;
 
-        auto signature = pipeline->GetSignature().lock();
+        auto signature = pipeline->GetSignature();
         VkBlendFactor srcBlendFactor = Vulkan::Utilities::GetVulkanBlendFactor(signature->GetSrcBlendFactor());
         VkBlendFactor dstBlendFactor = Vulkan::Utilities::GetVulkanBlendFactor(signature->GetDstBlendFactor());
 
@@ -150,7 +150,7 @@ namespace NovelRT::Graphics
 
         if (pipeline->HasVertexShader())
         {
-            auto vertexShader = pipeline->GetVertexShader().lock();
+            auto vertexShader = pipeline->GetVertexShader();
             const uint32_t shaderIndex = pipelineShaderStageCreateInfosCount++;
 
             VkPipelineShaderStageCreateInfo vertexShaderStageCreateInfo{};
@@ -204,7 +204,7 @@ namespace NovelRT::Graphics
 
         if (pipeline->HasPixelShader())
         {
-            auto pixelShader = pipeline->GetPixelShader().lock();
+            auto pixelShader = pipeline->GetPixelShader();
             const uint32_t shaderIndex = pipelineShaderStageCreateInfosCount++;
 
             VkPipelineShaderStageCreateInfo pixelShaderStageCreateInfo{};
@@ -280,17 +280,17 @@ namespace NovelRT::Graphics
         return _pixelShader != nullptr;
     }
 
-    std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetVertexShader() const noexcept
+    std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetVertexShader() const noexcept
     {
         return _vertexShader;
     }
 
-    std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetPixelShader() const noexcept
+    std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetPixelShader() const noexcept
     {
         return _pixelShader;
     }
 
-    std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetSignature() const noexcept
+    std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipeline::GetSignature() const noexcept
     {
         return _signature;
     }

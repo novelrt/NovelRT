@@ -47,7 +47,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    std::weak_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetOwningResource() const noexcept
+    std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetOwningResource() const noexcept
     {
         return _owningResource;
     }

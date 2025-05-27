@@ -55,7 +55,7 @@ namespace NovelRT::Graphics
         GraphicsCmdList() = delete;
         ~GraphicsCmdList() = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsContext<TBackend>> GetContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept;
 
         void CmdBeginRenderPass(const GraphicsRenderPass<TBackend>* targetPass,
                                 Utilities::Span<const ClearValue> clearValues);

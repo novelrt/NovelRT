@@ -54,7 +54,7 @@ namespace NovelRT::Graphics
         virtual ~GraphicsResource() noexcept = default;
 
         [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
-        [[nodiscard]] std::weak_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> GetAllocator() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> GetAllocator() const noexcept;
 
         [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept;

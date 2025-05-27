@@ -44,7 +44,7 @@ namespace NovelRT::Graphics
         , _allocator(VK_NULL_HANDLE)
     {
         auto vulkanDevice = _device.lock();
-        auto vulkanAdapter = vulkanDevice->GetAdapter().lock();
+        auto vulkanAdapter = vulkanDevice->GetAdapter();
         auto vulkanProvider = _provider;
 
         VmaAllocatorCreateInfo createInfo{};
@@ -61,7 +61,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    [[nodiscard]] std::weak_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
     {
         return _provider;
     }
