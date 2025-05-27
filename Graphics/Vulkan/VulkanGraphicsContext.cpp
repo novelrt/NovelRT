@@ -178,7 +178,7 @@ namespace NovelRT::Graphics
         : _device(std::move(device))
         , _index(index)
         , _vulkanDescriptorSets()
-        , _fence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ true))
+        , _fence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ false))
         , _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ false))
         , _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); })
         , _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })

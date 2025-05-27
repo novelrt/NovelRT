@@ -371,8 +371,6 @@ namespace NovelRT::Graphics
             surface->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
         }
 
-        _logger.logInfoLine("GetSwapChainImages contextIndex pre: " + std::to_string(_contextIndex) + " post: " + std::to_string(contextIndex));
-
         _contextIndex = contextIndex;
 
         _logger.logInfoLine("VkImages successfully retrieved.");
@@ -526,7 +524,6 @@ namespace NovelRT::Graphics
 
     std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext() const
     {
-        _logger.logInfoLine("GetCurrentContext index: " + std::to_string(_contextIndex));
         return _contexts.Get()[GetContextIndex()];
     }
 
@@ -614,7 +611,7 @@ namespace NovelRT::Graphics
 
         const VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
 
-        if (presentResult != VK_SUCCESS)
+        if (presentResult != VK_SUCCESS && presentResult != VK_SUBOPTIMAL_KHR)
         {
             throw std::runtime_error("Failed to present the data within the present queue!");
         }
@@ -630,7 +627,6 @@ namespace NovelRT::Graphics
 
         presentCompletionGraphicsFence->Wait();
 
-        _logger.logInfoLine("PresentFrame contextIndex pre: " + std::to_string(_contextIndex) + " post: " + std::to_string(contextIndex));
         _contextIndex = contextIndex;
     }
 
