@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
             return VK_NULL_HANDLE;
 
         auto constantBuffers = std::count_if(resources.begin(), resources.end(), [](const auto& resource) { return resource.GetKind() == GraphicsPipelineResourceKind::ConstantBuffer; });
-        auto textures = std::any_of(resources.begin(), resources.end(), [](const auto& resource) { return resource.GetKind() == GraphicsPipelineResourceKind::Texture; });
+        auto textures = std::count_if(resources.begin(), resources.end(), [](const auto& resource) { return resource.GetKind() == GraphicsPipelineResourceKind::Texture; });
 
         std::vector<VkDescriptorPoolSize> vulkanDescriptorPoolSizes{};
 
