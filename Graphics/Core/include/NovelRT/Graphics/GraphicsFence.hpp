@@ -12,6 +12,7 @@ namespace NovelRT::Graphics
 {
     template<typename TBackend> class GraphicsFence : public GraphicsDeviceObject<TBackend>
     {
+    public:
         GraphicsFence() = delete;
         virtual ~GraphicsFence() noexcept override = default;
 
