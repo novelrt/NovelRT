@@ -9,7 +9,7 @@ This module defines the core interface for the NovelRT build system.
 #]=======================================================================]
 
 block(SCOPE_FOR POLICIES)
-cmake_policy(VERSION 3.31)
+cmake_policy(VERSION 3.29..3.31)
 
 #[=======================================================================[.rst:
 .. command:: NovelRTBuildSystem_DeclareModule
@@ -50,6 +50,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   elseif(moduleKind STREQUAL "EXECUTABLE")
     add_executable(${cmakeSafeName})
     add_executable(${moduleName} ALIAS ${cmakeSafeName})
+
+    # N.B. This is needed so that Windows gets the correct DLLs in dev.
+    add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${cmakeSafeName}> $<TARGET_RUNTIME_DLLS:${cmakeSafeName}>
+      COMMAND_EXPAND_LISTS)
   endif()
 
   if(PROJECT_IS_TOP_LEVEL)
