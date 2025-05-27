@@ -25,13 +25,13 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
         mutable NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
         mutable Threading::VolatileState _state;
 
     public:
-        GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept;
+        GraphicsFence(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept;
         ~GraphicsFence() noexcept override;
 
         [[nodiscard]] bool IsSignalled() const;

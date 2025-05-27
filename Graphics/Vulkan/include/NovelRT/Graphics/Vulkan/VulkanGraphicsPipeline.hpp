@@ -51,10 +51,10 @@ namespace NovelRT::Graphics
         [[nodiscard]] bool HasVertexShader() const noexcept;
         [[nodiscard]] bool HasPixelShader() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetVertexShader() const noexcept;
-        [[nodiscard]] std::weak_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
+        [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetVertexShader() const noexcept;
+        [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
 

@@ -29,7 +29,7 @@ namespace NovelRT::Graphics
         GraphicsResourceMemoryRegion() = delete;
         virtual ~GraphicsResourceMemoryRegion() noexcept override = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsResource<TBackend>> GetOwningResource() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsResource<TBackend>> GetOwningResource() const noexcept;
 
         [[nodiscard]] size_t GetOffset() const noexcept;
         [[nodiscard]] size_t GetSize() const noexcept;

@@ -52,7 +52,7 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)
     {
-        auto presentCompletionGraphicsFence = GetPresentCompletionFence().lock();
+        auto presentCompletionGraphicsFence = GetPresentCompletionFence();
         presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
 
@@ -76,7 +76,7 @@ namespace NovelRT::Graphics
     std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions) const
     {
         uint32_t extensionCount = 0;
-        auto adapter = GetAdapter().lock();
+        auto adapter = GetAdapter();
         vkEnumerateDeviceExtensionProperties(adapter->GetPhysicalDevice(), nullptr, &extensionCount,
                                              nullptr);
         std::vector<VkExtensionProperties> extensionProperties(extensionCount);
@@ -164,7 +164,7 @@ namespace NovelRT::Graphics
 
         std::vector<const char*> allValidationLayerPtrs{};
 
-        auto provider = _adapter->GetProvider().lock();
+        auto provider = _adapter->GetProvider();
         if (provider->GetDebugModeEnabled())
         {
             auto validationLayers = provider->GetValidationLayers();
@@ -241,7 +241,7 @@ namespace NovelRT::Graphics
             return capabilities.currentExtent;
         }
 
-        auto surface = GetSurface().lock();
+        auto surface = GetSurface();
         auto localSize = surface->GetSize();
 
         VkExtent2D actualExtent = {static_cast<uint32_t>(localSize.x), static_cast<uint32_t>(localSize.y)};
@@ -367,9 +367,11 @@ namespace NovelRT::Graphics
         if (!_isAttachedToResizeEvent)
         {
             _isAttachedToResizeEvent = true;
-            auto surface = GetSurface().lock();
+            auto surface = GetSurface();
             surface->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
         }
+
+        _logger.logInfoLine("GetSwapChainImages contextIndex pre: " + std::to_string(_contextIndex) + " post: " + std::to_string(contextIndex));
 
         _contextIndex = contextIndex;
 
@@ -492,7 +494,7 @@ namespace NovelRT::Graphics
         _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
     }
 
-    [[nodiscard]] std::weak_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const
     {
         return _adapter;
     }
@@ -522,17 +524,18 @@ namespace NovelRT::Graphics
         return _contexts.Get().end();
     }
 
-    std::weak_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext() const
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext() const
     {
+        _logger.logInfoLine("GetCurrentContext index: " + std::to_string(_contextIndex));
         return _contexts.Get()[GetContextIndex()];
     }
 
-    std::weak_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
+    std::shared_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
     {
         return _surfaceContext->GetSurface();
     }
 
-    std::weak_ptr<VulkanGraphicsSurfaceContext> VulkanGraphicsDevice::GetSurfaceContext() const noexcept
+    std::shared_ptr<VulkanGraphicsSurfaceContext> VulkanGraphicsDevice::GetSurfaceContext() const noexcept
     {
         return _surfaceContext;
     }
@@ -579,12 +582,12 @@ namespace NovelRT::Graphics
             pushConstantRanges);
     }
 
-    std::weak_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass()
+    std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass()
     {
         return _renderPass.Get();
     }
 
-    std::weak_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass() const
+    std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass() const
     {
         return _renderPass.Get();
     }
@@ -604,7 +607,7 @@ namespace NovelRT::Graphics
         presentInfo.pImageIndices = &contextIndex;
 
         auto context = _contexts.Get()[_contextIndex];
-        auto fence = context->GetFence().lock();
+        auto fence = context->GetFence();
         Signal(fence.get());
         fence->Wait();
         fence->Reset();
@@ -626,6 +629,8 @@ namespace NovelRT::Graphics
         }
 
         presentCompletionGraphicsFence->Wait();
+
+        _logger.logInfoLine("PresentFrame contextIndex pre: " + std::to_string(_contextIndex) + " post: " + std::to_string(contextIndex));
         _contextIndex = contextIndex;
     }
 
@@ -695,7 +700,7 @@ namespace NovelRT::Graphics
         return _indicesData;
     }
 
-    std::weak_ptr<VulkanGraphicsFence> VulkanGraphicsDevice::GetPresentCompletionFence() const
+    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsDevice::GetPresentCompletionFence() const
     {
         return _presentCompletionFence.Get();
     }

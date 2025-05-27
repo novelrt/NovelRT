@@ -24,7 +24,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         size_t _index;
 
         std::map<
@@ -49,12 +49,11 @@ namespace NovelRT::Graphics
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
+        GraphicsContext(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
         ~GraphicsContext() final;
 
         [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
-
-        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
         [[nodiscard]] size_t GetIndex() const noexcept;
 
@@ -68,7 +67,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
         [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
 
-        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
 
         void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature, std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };

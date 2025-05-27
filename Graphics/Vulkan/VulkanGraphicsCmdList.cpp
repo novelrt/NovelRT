@@ -46,7 +46,7 @@ namespace NovelRT::Graphics
                                                    Utilities::Span<const ClearValue> clearValues)
     {
         auto device = _context->GetDevice().lock();
-        auto surface = device->GetSurface().lock();
+        auto surface = device->GetSurface();
 
         VkExtent2D extent2D{};
         extent2D.width = static_cast<uint32_t>(surface->GetWidth());
@@ -94,8 +94,8 @@ namespace NovelRT::Graphics
         for (const auto& set : sets)
         {
             VkDescriptorSet handle = set->GetVulkanDescriptorSet();
-            auto pipeline = set->GetPipeline().lock();
-            auto signature = pipeline->GetSignature().lock();
+            auto pipeline = set->GetPipeline();
+            auto signature = pipeline->GetSignature();
             vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     signature->GetVulkanPipelineLayout(), 0, 1,
                                     &handle, 0, nullptr);
@@ -138,7 +138,7 @@ namespace NovelRT::Graphics
                 break;
         }
 
-        auto bufferResource = buffer->GetOwningResource().lock();
+        auto bufferResource = buffer->GetOwningResource();
         vkCmdBindIndexBuffer(_commandBuffer, bufferResource->GetVulkanBuffer(),
                              buffer->GetOffset(), type);
     }
@@ -150,8 +150,8 @@ namespace NovelRT::Graphics
         vulkanBufferCopy.dstOffset = destination->GetOffset();
         vulkanBufferCopy.size = std::min(destination->GetSize(), source->GetSize());
 
-        auto sourceResource = source->GetOwningResource().lock();
-        auto destinationResource = destination->GetOwningResource().lock();
+        auto sourceResource = source->GetOwningResource();
+        auto destinationResource = destination->GetOwningResource();
         vkCmdCopyBuffer(_commandBuffer, sourceResource->GetVulkanBuffer(), destinationResource->GetVulkanBuffer(), 1, &vulkanBufferCopy);
     }
 
@@ -178,7 +178,7 @@ namespace NovelRT::Graphics
         vulkanBufferImageCopy.imageExtent = imageExtent;
         vulkanBufferImageCopy.bufferOffset = source->GetOffset();
 
-        auto sourceResource = source->GetOwningResource().lock();
+        auto sourceResource = source->GetOwningResource();
         vkCmdCopyBufferToImage(_commandBuffer, sourceResource->GetVulkanBuffer(), vulkanImage,
                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
     }

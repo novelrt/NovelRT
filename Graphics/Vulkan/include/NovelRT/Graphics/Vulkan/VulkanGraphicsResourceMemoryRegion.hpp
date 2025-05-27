@@ -39,7 +39,7 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsResourceMemoryRegion();
 
-        [[nodiscard]] std::weak_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> GetOwningResource() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> GetOwningResource() const noexcept;
 
         [[nodiscard]] size_t GetOffset() const noexcept;
         [[nodiscard]] size_t GetSize() const noexcept;
@@ -90,7 +90,7 @@ namespace NovelRT::Graphics
 
         virtual ~GraphicsResourceMemoryRegion() override = default;
 
-        [[nodiscard]] std::weak_ptr<TResource<Vulkan::VulkanGraphicsBackend>> GetOwningResource() const noexcept
+        [[nodiscard]] std::shared_ptr<TResource<Vulkan::VulkanGraphicsBackend>> GetOwningResource() const noexcept
         {
             auto original = GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>::GetOwningResource();
             return std::static_pointer_cast<TResource<Vulkan::VulkanGraphicsBackend>>(std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>>(original));

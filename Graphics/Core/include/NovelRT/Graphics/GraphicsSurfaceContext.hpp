@@ -23,6 +23,6 @@ namespace NovelRT::Graphics
         GraphicsSurfaceContext() = delete;
 
         [[nodiscard]] IGraphicsSurface* GetSurface() const noexcept;
-        [[nodiscard]] std::weak_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsProvider<TBackend>> GetProvider() const noexcept;
     };
 }

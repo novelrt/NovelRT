@@ -28,7 +28,7 @@ namespace NovelRT::Graphics
 
         ~GraphicsCmdList() = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetContext() const noexcept;
 
         void CmdBeginRenderPass(const GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>* targetPass,
             Utilities::Span<const ClearValue> clearValues);

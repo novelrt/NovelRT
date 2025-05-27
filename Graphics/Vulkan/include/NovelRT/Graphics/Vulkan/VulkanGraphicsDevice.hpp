@@ -90,7 +90,7 @@ namespace NovelRT::Graphics
 
         ~GraphicsDevice();
 
-        [[nodiscard]] std::weak_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> GetAdapter() const;
+        [[nodiscard]] std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> GetAdapter() const;
 
         size_t GetContextIndex() const noexcept;
 
@@ -103,11 +103,11 @@ namespace NovelRT::Graphics
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator end() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext() const;
+        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext() const;
 
-        [[nodiscard]] std::weak_ptr<IGraphicsSurface> GetSurface() const noexcept;
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
@@ -122,8 +122,8 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges);
 
-        [[nodiscard]] std::weak_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass();
-        [[nodiscard]] std::weak_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass() const;
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass();
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass() const;
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> CreateShaderProgram(
             std::string entryPointName,
@@ -148,6 +148,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetPresentCompletionFence() const;
+        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetPresentCompletionFence() const;
     };
 }

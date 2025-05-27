@@ -37,7 +37,7 @@ namespace NovelRT::Graphics
 
         GraphicsDevice() = delete;
 
-        [[nodiscard]] std::weak_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
+        [[nodiscard]] std::shared_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
 
         [[nodiscard]] size_t GetContextIndex() const noexcept;
 
@@ -50,11 +50,9 @@ namespace NovelRT::Graphics
         //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator end() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<GraphicsContext<TBackend>> GetCurrentContext() const;
-
-        [[nodiscard]] std::weak_ptr<IGraphicsSurface> GetSurface() const noexcept;
-
-        [[nodiscard]] std::weak_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext() const;
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
@@ -69,7 +67,7 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges);
 
-        [[nodiscard]] std::weak_ptr<GraphicsRenderPass<TBackend>> GetRenderPass();
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> GetRenderPass();
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(
             std::string entryPointName,

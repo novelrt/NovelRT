@@ -22,18 +22,18 @@ namespace NovelRT::Graphics
         : public std::enable_shared_from_this<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>
     {
     private:
-        std::weak_ptr<IGraphicsSurface> _surface;
+        std::shared_ptr<IGraphicsSurface> _surface;
         std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
         LoggingService _logger;
         VkSurfaceKHR _vulkanSurface;
 
     public:
-        GraphicsSurfaceContext(std::weak_ptr<IGraphicsSurface> surface, std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
+        GraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface, std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
         ~GraphicsSurfaceContext();
 
         [[nodiscard]] VkSurfaceKHR GetSurfaceContextHandle() const noexcept;
 
-        [[nodiscard]] std::weak_ptr<IGraphicsSurface> GetSurface() const noexcept;
-        [[nodiscard]] std::weak_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
     };
 }

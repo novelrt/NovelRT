@@ -39,7 +39,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] uint32_t GetDeviceId() const;
         [[nodiscard]] std::string GetName() const;
-        [[nodiscard]] std::weak_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const;
+        [[nodiscard]] std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const;
         [[nodiscard]] uint32_t GetVendorId() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> CreateDevice(

@@ -74,7 +74,7 @@ namespace NovelRT::Graphics
     {
         VkFramebuffer vulkanFramebuffer = VK_NULL_HANDLE;
         auto device = context->GetDevice().lock();
-        auto surface = device->GetSurface().lock();
+        auto surface = device->GetSurface();
         VkImageView swapChainImageView = context->GetVulkanSwapChainImageView();
 
         VkFramebufferCreateInfo framebufferCreateInfo{};
@@ -174,7 +174,7 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<const VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
 
-    VulkanGraphicsContext::GraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
+    VulkanGraphicsContext::GraphicsContext(std::weak_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : _device(std::move(device))
         , _index(index)
         , _vulkanDescriptorSets()
@@ -192,7 +192,8 @@ namespace NovelRT::Graphics
     {
         DestroyDescriptorSets();
 
-        VkDevice device = _device->GetVulkanDevice();
+        auto devicePtr = _device.lock();
+        VkDevice device = devicePtr->GetVulkanDevice();
         if (_vulkanFramebuffer.HasValue())
         {
             VkFramebuffer framebuffer = _vulkanFramebuffer.Get();
@@ -228,7 +229,7 @@ namespace NovelRT::Graphics
         return _device;
     }
 
-    std::weak_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetFence() const noexcept
+    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetFence() const noexcept
     {
         return _fence;
     }
@@ -275,7 +276,7 @@ namespace NovelRT::Graphics
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
 
-        auto executeGraphicsFence = GetWaitForExecuteCompletionFence().lock();
+        auto executeGraphicsFence = GetWaitForExecuteCompletionFence();
         auto device = GetDevice().lock();
 
         const VkResult queueSubmitResult = vkQueueSubmit(device->GetVulkanGraphicsQueue(), 1, &submitInfo,
@@ -292,7 +293,8 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
     {
-        VkDevice device = _device->GetVulkanDevice();
+        auto devicePtr = _device.lock();
+        VkDevice device = devicePtr->GetVulkanDevice();
         if (_vulkanFramebuffer.HasValue())
         {
             VkFramebuffer framebuffer = _vulkanFramebuffer.Get();
@@ -340,7 +342,7 @@ namespace NovelRT::Graphics
         return _vulkanSwapChainImageView.Get();
     }
 
-    std::weak_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetWaitForExecuteCompletionFence() const noexcept
+    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetWaitForExecuteCompletionFence() const noexcept
     {
         return _waitForExecuteCompletionFence;
     }

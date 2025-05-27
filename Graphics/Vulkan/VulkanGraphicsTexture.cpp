@@ -23,7 +23,7 @@ namespace NovelRT::Graphics
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
     VkImageView CreateVulkanImageView(
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         GraphicsTextureKind kind,
         VkImage image)
     {
@@ -65,7 +65,7 @@ namespace NovelRT::Graphics
         imageViewCreateInfo.subresourceRange = subresourceRange;
 
         VkImageView vulkanImageView = VK_NULL_HANDLE;
-        VkDevice vulkanDevice = device.lock()->GetVulkanDevice();
+        VkDevice vulkanDevice = device->GetVulkanDevice();
         VkResult imageViewResult = vkCreateImageView(vulkanDevice, &imageViewCreateInfo, nullptr, &vulkanImageView);
 
         if (imageViewResult != VK_SUCCESS)
@@ -78,7 +78,7 @@ namespace NovelRT::Graphics
     }
 
     VkSampler CreateVulkanSampler(
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         GraphicsTextureAddressMode addressMode)
     {
         VkSamplerCreateInfo samplerCreateInfo{};
@@ -95,7 +95,7 @@ namespace NovelRT::Graphics
         samplerCreateInfo.addressModeW = vkAddressMode;
 
         VkSampler vulkanSampler = VK_NULL_HANDLE;
-        VkDevice vulkanDevice = device.lock()->GetVulkanDevice();
+        VkDevice vulkanDevice = device->GetVulkanDevice();
         VkResult result = vkCreateSampler(vulkanDevice, &samplerCreateInfo, nullptr, &vulkanSampler);
 
         if (result != VK_SUCCESS)
@@ -130,8 +130,8 @@ namespace NovelRT::Graphics
         , _mappedMemoryRegions(0)
         , _addressMode(createInfo.addressMode)
         , _kind(createInfo.textureKind)
-        , _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(device, textureKind, vulkanImage); })
-        , _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]() { return CreateVulkanSampler(device, addressMode); })
+        , _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(device.lock(), textureKind, vulkanImage); })
+        , _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]() { return CreateVulkanSampler(device.lock(), addressMode); })
         , _width(createInfo.width)
         , _height(createInfo.height)
         , _depth(createInfo.depth)
@@ -166,7 +166,7 @@ namespace NovelRT::Graphics
             _vulkanSampler.Reset();
         }
 
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         auto vmaAllocator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
         vmaDestroyImage(vmaAllocator, _vulkanImage, allocation);
@@ -220,7 +220,7 @@ namespace NovelRT::Graphics
         }
 
         void* data = nullptr;
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         VkResult result = vmaMapMemory(allocator->GetVmaAllocator(), GetAllocation(), &data);
 
         if (result != VK_SUCCESS)
@@ -246,7 +246,7 @@ namespace NovelRT::Graphics
         }
 
         void* data = nullptr;
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         auto vmaAllocator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
         VkResult mapResult = vmaMapMemory(vmaAllocator, allocation, &data);
@@ -279,7 +279,7 @@ namespace NovelRT::Graphics
 
         _mappedMemoryRegions--;
 
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         vmaUnmapMemory(allocator->GetVmaAllocator(), GetAllocation());
     }
 
@@ -305,7 +305,7 @@ namespace NovelRT::Graphics
                 "Attempted to write a subrange of a VkImage that exceeded the VkBuffer's size.");
         }
 
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         auto vmaAllcoator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
 

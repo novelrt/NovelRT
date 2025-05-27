@@ -52,7 +52,7 @@ namespace NovelRT::Graphics
     {
         assert_message(_mappedMemoryRegions == 0, "Attempted to destroy a VkBuffer containing mapped regions.");
 
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         auto vmaAllocator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
         vmaDestroyBuffer(vmaAllocator, _vulkanBuffer, allocation);
@@ -91,7 +91,7 @@ namespace NovelRT::Graphics
         }
 
         void* data = nullptr;
-        const VkResult result = vmaMapMemory(GetAllocator().lock()->GetVmaAllocator(), GetAllocation(), &data);
+        const VkResult result = vmaMapMemory(GetAllocator()->GetVmaAllocator(), GetAllocation(), &data);
 
         if (result != VK_SUCCESS)
         {
@@ -115,7 +115,7 @@ namespace NovelRT::Graphics
                 "Attempted to map a subrange of a VkBuffer that exceeded the VkBuffer's size.");
         }
 
-        VmaAllocator allocator = GetAllocator().lock()->GetVmaAllocator();
+        VmaAllocator allocator = GetAllocator()->GetVmaAllocator();
         VmaAllocation allocation = GetAllocation();
 
         void* data = nullptr;
@@ -149,7 +149,7 @@ namespace NovelRT::Graphics
 
         _mappedMemoryRegions--;
 
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         vmaUnmapMemory(allocator->GetVmaAllocator(), GetAllocation());
     }
 
@@ -175,7 +175,7 @@ namespace NovelRT::Graphics
                 "Attempted to write a subrange of a VkBuffer that exceeded the VkBuffer's size.");
         }
 
-        auto allocator = GetAllocator().lock();
+        auto allocator = GetAllocator();
         auto vmaAllcoator = allocator->GetVmaAllocator();
         auto allocation = GetAllocation();
 
