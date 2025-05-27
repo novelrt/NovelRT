@@ -126,7 +126,7 @@ foreach(module
   GSL
   GTest
   Opus Ogg FLAC Vorbis SndFile samplerate
-  OpenAL
+  #OpenAL
   ZLIB PNG
   fmt spdlog
   stduuid
