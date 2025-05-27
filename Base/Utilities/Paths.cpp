@@ -1,6 +1,8 @@
 #include <NovelRT/Utilities/Paths.hpp>
 
-#if defined(WIN32)
+#if defined(_WIN32) || defined(_WIN64)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <shellapi.h>
 #elif defined(__APPLE__)
 #include <CoreFoundation/CoreFoundation.h>
@@ -8,7 +10,6 @@
 #include <limits.h>
 #include <unistd.h>
 #endif
-
 
 namespace NovelRT::Utilities
 {

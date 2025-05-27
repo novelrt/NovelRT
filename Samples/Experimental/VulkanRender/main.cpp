@@ -21,9 +21,9 @@
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Windowing/WindowProvider.hpp>
 
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
@@ -70,15 +70,14 @@ struct TexturedVertex
 int main()
 {
     // TODO: EngineConfig was here
-    //NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    //NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+    // NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    // NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
 
     NovelRT::LoggingService logger = NovelRT::LoggingService();
     logger.setLogLevel(NovelRT::LogLevel::Info);
 
     auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed,
-        NovelRT::Maths::GeoVector2F(400, 400));
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>();
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
@@ -170,7 +169,8 @@ int main()
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion.get());
 
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>> inputResourceRegions{texture2DRegion};
+    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
+        inputResourceRegions{texture2DRegion};
 
     cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D.get());
     cmdList->CmdCopy(texture2D.get(), textureStagingBufferRegion.get());
@@ -226,11 +226,11 @@ int main()
             descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
             descriptorSetData->UpdateDescriptorSetData();
 
-            std::array<const GraphicsDescriptorSet<VulkanGraphicsBackend>*, 1> descriptorData{
-                descriptorSetData.get()};
+            std::array<const GraphicsDescriptorSet<VulkanGraphicsBackend>*, 1> descriptorData{descriptorSetData.get()};
             currentCmdList->CmdBindDescriptorSets(descriptorData);
 
-            currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
+            currentCmdList->CmdDraw(static_cast<uint32_t>(vertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,
+                                    0);
 
             currentCmdList->CmdEndRenderPass();
 
