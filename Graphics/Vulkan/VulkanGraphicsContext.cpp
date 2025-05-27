@@ -345,7 +345,7 @@ namespace NovelRT::Graphics
         return _waitForExecuteCompletionFence;
     }
 
-    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature, std::weak_ptr<VulkanGraphicsDescriptorSet> set)
+    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature, std::shared_ptr<VulkanGraphicsDescriptorSet> set)
     {
         auto it = _vulkanDescriptorSets.find(signature);
         if (it == _vulkanDescriptorSets.end())
