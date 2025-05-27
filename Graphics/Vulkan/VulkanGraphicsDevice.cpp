@@ -44,7 +44,7 @@ namespace NovelRT::Graphics
     {
         std::vector<std::shared_ptr<VulkanGraphicsContext>> contexts(contextCount);
         std::generate(contexts.begin(), contexts.end(), [this, i = 0]() mutable {
-            return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i);
+            return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i++);
         });
 
         return contexts;

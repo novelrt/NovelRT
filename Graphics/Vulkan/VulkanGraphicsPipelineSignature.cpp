@@ -31,7 +31,6 @@ namespace NovelRT::Graphics
 
         std::vector<VkDescriptorPoolSize> vulkanDescriptorPoolSizes{};
 
-
         if (constantBuffers > 0)
         {
             VkDescriptorPoolSize value{};
@@ -89,7 +88,8 @@ namespace NovelRT::Graphics
         if (resources.size() == 0)
             return VK_NULL_HANDLE;
 
-        std::vector<VkDescriptorSetLayoutBinding> descriptorSetLayoutBindings(resources.size());
+        std::vector<VkDescriptorSetLayoutBinding> descriptorSetLayoutBindings{};
+        descriptorSetLayoutBindings.reserve(resources.size());
         uint32_t bindingIndex = 0;
 
         for (auto&& resource : resources)
