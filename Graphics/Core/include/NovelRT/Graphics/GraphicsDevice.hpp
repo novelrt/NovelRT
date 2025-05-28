@@ -28,8 +28,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsPipelineSignature;
     template<typename TBackend> class ShaderProgram;
 
-    template<typename TBackend>
-    class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
+    template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
     {
     public:
         using iterator = typename std::vector<std::shared_ptr<GraphicsContext<TBackend>>>::iterator;
@@ -41,13 +40,13 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] size_t GetContextIndex() const noexcept;
 
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator begin() const noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator end() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext() const;
@@ -76,7 +75,7 @@ namespace NovelRT::Graphics
 
         void PresentFrame();
 
-        void Signal(const GraphicsFence<TBackend>* fence);
+        void Signal(const GraphicsContext<TBackend>* context);
 
         void WaitForIdle();
     };

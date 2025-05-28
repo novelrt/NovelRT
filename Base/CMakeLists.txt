@@ -21,7 +21,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Base
 
   LINK_LIBRARIES
     PUBLIC
-      glm::glm
+      glm::glm-header-only
       Microsoft.GSL::GSL
       spdlog::spdlog
       TBB::tbb)

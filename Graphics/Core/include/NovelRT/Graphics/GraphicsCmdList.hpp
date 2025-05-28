@@ -6,11 +6,12 @@
 #include <NovelRT/Graphics/GraphicsMemoryAccessMode.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineVisibility.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
+#include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
-#include <memory>
 #include <cstdint>
+#include <memory>
 
 namespace NovelRT::Graphics
 {
@@ -20,6 +21,7 @@ namespace NovelRT::Graphics
     template<typename TBackend> class GraphicsTexture;
     template<typename TBackend> class GraphicsDescriptorSet;
     template<typename TBackend> class GraphicsRenderPass;
+    template<typename TBackend> class GraphicsPipelineSignature;
     template<template<typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
 
     // TODO: MOVE THIS
@@ -62,14 +64,12 @@ namespace NovelRT::Graphics
 
         void CmdEndRenderPass();
 
-        void CmdBindDescriptorSets(
-            NovelRT::Utilities::Span<const GraphicsDescriptorSet<TBackend>*> sets);
+        void CmdBindDescriptorSets(NovelRT::Utilities::Span<const GraphicsDescriptorSet<TBackend>*> sets);
 
-        void CmdBindVertexBuffers(
-            uint32_t firstBinding,
-            uint32_t bindingCount,
-            NovelRT::Utilities::Span<const GraphicsBuffer<TBackend>*> buffers,
-            NovelRT::Utilities::Span<const size_t> offsets);
+        void CmdBindVertexBuffers(uint32_t firstBinding,
+                                  uint32_t bindingCount,
+                                  NovelRT::Utilities::Span<const GraphicsBuffer<TBackend>*> buffers,
+                                  NovelRT::Utilities::Span<const size_t> offsets);
 
         void CmdBindIndexBuffer(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* buffer,
                                 IndexType indexType);
@@ -97,12 +97,15 @@ namespace NovelRT::Graphics
 
         void CmdBindPipeline(const GraphicsPipeline<TBackend>* pipeline);
 
-        void CmdPushConstants(const GraphicsPipelineSignature<TBackend>* pipelineSignature, ShaderProgramVisibility visibility, size_t offset, Utilities::Span<uint8_t> values);
+        void CmdPushConstants(const GraphicsPipelineSignature<TBackend>* pipelineSignature,
+                              ShaderProgramVisibility visibility,
+                              size_t offset,
+                              Utilities::Span<uint8_t> values);
 
         void CmdPipelineBufferBarrier(const GraphicsBuffer<TBackend>* buffer,
-            GraphicsMemoryAccessMode sourceAccessFlag,
-            GraphicsMemoryAccessMode destinationAccessFlag,
-            GraphicsPipelineVisibility sourceStageFlag,
-            GraphicsPipelineVisibility destinationStageFlag);
+                                      GraphicsMemoryAccessMode sourceAccessFlag,
+                                      GraphicsMemoryAccessMode destinationAccessFlag,
+                                      GraphicsPipelineVisibility sourceStageFlag,
+                                      GraphicsPipelineVisibility destinationStageFlag);
     };
 }
