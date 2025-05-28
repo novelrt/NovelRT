@@ -17,11 +17,12 @@
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
-#include <NovelRT/Utilities/Strings.hpp>
 #include <NovelRT/Utilities/Span.hpp>
+#include <NovelRT/Utilities/Strings.hpp>
 
 #include <algorithm>
 #include <set>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics
 {
@@ -34,18 +35,18 @@ namespace NovelRT::Graphics
     using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsPipelineSignature = GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
-    template <template <typename> typename TResource>
+    template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
     using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
 
-    std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateInitialGraphicsContexts(uint32_t contextCount)
+    std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateInitialGraphicsContexts(
+        uint32_t contextCount)
     {
         std::vector<std::shared_ptr<VulkanGraphicsContext>> contexts(contextCount);
-        std::generate(contexts.begin(), contexts.end(), [this, i = 0]() mutable {
-            return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i++);
-        });
+        std::generate(contexts.begin(), contexts.end(), [this, i = 0]() mutable
+                      { return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i++); });
 
         return contexts;
     }
@@ -73,12 +74,13 @@ namespace NovelRT::Graphics
         }
     }
 
-    std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions) const
+    std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet(
+        std::vector<std::string> requiredDeviceExtensions,
+        std::vector<std::string> optionalDeviceExtensions) const
     {
         uint32_t extensionCount = 0;
         auto adapter = GetAdapter();
-        vkEnumerateDeviceExtensionProperties(adapter->GetPhysicalDevice(), nullptr, &extensionCount,
-                                             nullptr);
+        vkEnumerateDeviceExtensionProperties(adapter->GetPhysicalDevice(), nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensionProperties(extensionCount);
         vkEnumerateDeviceExtensionProperties(adapter->GetPhysicalDevice(), nullptr, &extensionCount,
                                              extensionProperties.data());
@@ -94,9 +96,8 @@ namespace NovelRT::Graphics
         // TODO: EngineConfig was here
         for (auto&& requestedRequiredExt : requiredDeviceExtensions)
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x)
+                                       { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -110,9 +111,8 @@ namespace NovelRT::Graphics
         // TODO: EngineConfig was here
         for (auto&& requestedOptionalExt : optionalDeviceExtensions)
         {
-            auto result =
-                std::find_if(extensionProperties.begin(), extensionProperties.end(),
-                             [&](auto& x) { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
+            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x)
+                                       { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
             if (result == extensionProperties.end())
             {
@@ -130,7 +130,8 @@ namespace NovelRT::Graphics
         return allExtensions;
     }
 
-    VkDevice VulkanGraphicsDevice::CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions)
+    VkDevice VulkanGraphicsDevice::CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions,
+                                                       std::vector<std::string> optionalDeviceExtensions)
     {
         _indicesData = Vulkan::Utilities::FindQueueFamilies(_adapter->GetPhysicalDevice(), _surface);
 
@@ -148,9 +149,9 @@ namespace NovelRT::Graphics
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
-        auto physicalDeviceExtensions = GetFinalPhysicalDeviceExtensionSet(requiredDeviceExtensions, optionalDeviceExtensions);
-        auto physicalDeviceExtensionPtrs =
-            NovelRT::Utilities::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
+        auto physicalDeviceExtensions =
+            GetFinalPhysicalDeviceExtensionSet(requiredDeviceExtensions, optionalDeviceExtensions);
+        auto physicalDeviceExtensionPtrs = NovelRT::Utilities::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
 
@@ -177,7 +178,7 @@ namespace NovelRT::Graphics
             createInfo.enabledLayerCount = 0;
         }
 
-        VkDevice device;
+        VkDevice device = VK_NULL_HANDLE;
         VkResult deviceResult = vkCreateDevice(_adapter->GetPhysicalDevice(), &createInfo, nullptr, &device);
 
         if (deviceResult != VK_SUCCESS)
@@ -227,7 +228,7 @@ namespace NovelRT::Graphics
     }
 
     // TODO: freesync and gsync support will go here in a later PR.
-    //NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this will likely need extra data in the future
+    // NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this will likely need extra data in the future
     VkPresentModeKHR VulkanGraphicsDevice::ChooseSwapPresentMode(
         const std::vector<VkPresentModeKHR>& /*availablePresentModes*/) const noexcept
     {
@@ -256,9 +257,8 @@ namespace NovelRT::Graphics
 
     VkSwapchainKHR VulkanGraphicsDevice::CreateSwapChain(VkSwapchainKHR oldSwapchain)
     {
-        auto swapChainSupport = Vulkan::Utilities::QuerySwapChainSupport(
-            _adapter->GetPhysicalDevice(),
-            _surfaceContext->GetSurfaceContextHandle());
+        auto swapChainSupport = Vulkan::Utilities::QuerySwapChainSupport(_adapter->GetPhysicalDevice(),
+                                                                         _surfaceContext->GetSurfaceContextHandle());
 
         VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
@@ -282,10 +282,7 @@ namespace NovelRT::Graphics
         createInfo.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         auto indices = Vulkan::Utilities::FindQueueFamilies(_adapter->GetPhysicalDevice(), _surface);
-        std::array<uint32_t, 2> queueFamilyIndices{
-            indices.graphicsFamily.value(),
-            indices.presentFamily.value()
-        };
+        std::array<uint32_t, 2> queueFamilyIndices{indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily)
         {
@@ -442,34 +439,35 @@ namespace NovelRT::Graphics
         const size_t oldSize = contexts.size();
         contexts.resize(newContextCount);
 
-        std::generate(contexts.begin() + oldSize, contexts.end(), [this, i = oldSize]() mutable {
-            return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i);
-        });
+        std::generate(contexts.begin() + oldSize, contexts.end(), [this, i = oldSize]() mutable
+                      { return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i); });
     }
 
-    VulkanGraphicsDevice::GraphicsDevice(
-        std::shared_ptr<VulkanGraphicsAdapter> adapter,
-        std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
-        int32_t contextCount,
-        std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions)
-        : _adapter(std::move(adapter))
-        , _surfaceContext(std::move(surfaceContext))
-        , _presentCompletionFence([this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); })
-        , _contextCount(contextCount)
-        , _contexts([this]() { return CreateInitialGraphicsContexts(_contextCount); })
-        , _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
-        , _surface(_surfaceContext->GetSurfaceContextHandle())
-        , _device([this, requiredDeviceExtensions, optionalDeviceExtensions]() { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); })
-        , _graphicsQueue(VK_NULL_HANDLE)
-        , _presentQueue(VK_NULL_HANDLE)
-        , _contextIndex(0)
-        , _vulkanSwapChainFormat(VkFormat{})
-        , _swapChainExtent(VkExtent2D{})
-        , _isAttachedToResizeEvent(false)
-        , _vulkanSwapchain([this]() { return CreateSwapChain(); })
-        , _swapChainImages([this]() { return GetSwapChainImages(); })
-        , _renderPass([this]() { return std::make_shared<VulkanGraphicsRenderPass>(CreateRenderPass()); })
-        , _indicesData{}
+    VulkanGraphicsDevice::GraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
+                                         std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
+                                         int32_t contextCount,
+                                         std::vector<std::string> requiredDeviceExtensions,
+                                         std::vector<std::string> optionalDeviceExtensions)
+        : _adapter(std::move(adapter)),
+          _surfaceContext(std::move(surfaceContext)),
+          _presentCompletionFence(
+              [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
+          _contextCount(contextCount),
+          _contexts([this]() { return CreateInitialGraphicsContexts(_contextCount); }),
+          _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX)),
+          _surface(_surfaceContext->GetSurfaceContextHandle()),
+          _device([this, requiredDeviceExtensions, optionalDeviceExtensions]()
+                  { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); }),
+          _graphicsQueue(VK_NULL_HANDLE),
+          _presentQueue(VK_NULL_HANDLE),
+          _contextIndex(0),
+          _vulkanSwapChainFormat(VkFormat{}),
+          _swapChainExtent(VkExtent2D{}),
+          _isAttachedToResizeEvent(false),
+          _vulkanSwapchain([this]() { return CreateSwapChain(); }),
+          _swapChainImages([this]() { return GetSwapChainImages(); }),
+          _renderPass([this]() { return std::make_shared<VulkanGraphicsRenderPass>(CreateRenderPass()); }),
+          _indicesData{}
     {
         _logger.logInfoLine("Provided GPU device: " + _adapter->GetName());
         unused(_state.Transition(Threading::VolatileState::Initialised));
@@ -542,11 +540,7 @@ namespace NovelRT::Graphics
         ShaderProgramKind kind,
         NovelRT::Utilities::Span<uint8_t> byteData)
     {
-        return std::make_shared<VulkanShaderProgram>(
-            shared_from_this(),
-            std::move(entryPointName),
-            kind,
-            byteData);
+        return std::make_shared<VulkanShaderProgram>(shared_from_this(), std::move(entryPointName), kind, byteData);
     }
 
     std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
@@ -555,12 +549,8 @@ namespace NovelRT::Graphics
         std::shared_ptr<VulkanShaderProgram> pixelShader,
         bool imguiRenderMode)
     {
-        return std::make_shared<VulkanGraphicsPipeline>(
-            shared_from_this(),
-            signature,
-            std::move(vertexShader),
-            std::move(pixelShader),
-            imguiRenderMode);
+        return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, std::move(vertexShader),
+                                                        std::move(pixelShader), imguiRenderMode);
     }
 
     std::shared_ptr<VulkanGraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
@@ -570,13 +560,8 @@ namespace NovelRT::Graphics
         NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
         NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges)
     {
-        return std::make_shared<VulkanGraphicsPipelineSignature>(
-            shared_from_this(),
-            srcBlendFactor,
-            dstBlendFactor,
-            inputs,
-            resources,
-            pushConstantRanges);
+        return std::make_shared<VulkanGraphicsPipelineSignature>(shared_from_this(), srcBlendFactor, dstBlendFactor,
+                                                                 inputs, resources, pushConstantRanges);
     }
 
     std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass()
@@ -592,6 +577,7 @@ namespace NovelRT::Graphics
     void VulkanGraphicsDevice::PresentFrame()
     {
         auto presentCompletionGraphicsFence = _presentCompletionFence.Get();
+        presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
 
         auto contextIndex = static_cast<uint32_t>(GetContextIndex());
@@ -605,7 +591,7 @@ namespace NovelRT::Graphics
 
         auto context = _contexts.Get()[_contextIndex];
         auto fence = context->GetFence();
-        Signal(fence.get());
+        Signal(context.get());
         fence->Wait();
         fence->Reset();
 
@@ -616,7 +602,8 @@ namespace NovelRT::Graphics
             throw std::runtime_error("Failed to present the data within the present queue!");
         }
 
-        const VkResult acquireNextImageResult = vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
+        const VkResult acquireNextImageResult =
+            vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
                                   VK_NULL_HANDLE, presentCompletionGraphicsFence->GetVulkanFence(), &contextIndex);
 
         if (acquireNextImageResult != VK_SUCCESS)
@@ -625,18 +612,26 @@ namespace NovelRT::Graphics
                                      std::to_string(acquireNextImageResult));
         }
 
-        presentCompletionGraphicsFence->Wait();
-
         _contextIndex = contextIndex;
     }
 
-    void VulkanGraphicsDevice::Signal(const VulkanGraphicsFence* fence)
+    void VulkanGraphicsDevice::Signal(const VulkanGraphicsContext* context)
     {
-        const VkResult result = vkQueueSubmit(GetVulkanGraphicsQueue(), 0, nullptr, fence->GetVulkanFence());
+        VkCommandBuffer commandBuffer = context->GetVulkanCommandBuffer();
 
-        if (result != VK_SUCCESS)
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &commandBuffer;
+
+        // auto executeGraphicsFence = GetWaitForExecuteCompletionFence();
+
+        const VkResult queueSubmitResult =
+            vkQueueSubmit(GetVulkanGraphicsQueue(), 1, &submitInfo, context->GetFence()->GetVulkanFence());
+
+        if (queueSubmitResult != VK_SUCCESS)
         {
-            throw std::runtime_error("Failed to signal VkQueue PresentQueue! Reason: " + std::to_string(result));
+            throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
         }
     }
 

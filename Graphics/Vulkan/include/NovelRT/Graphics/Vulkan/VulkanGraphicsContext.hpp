@@ -7,8 +7,8 @@
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
-#include <memory>
 #include <map>
+#include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -19,7 +19,7 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template <>
+    template<>
     class GraphicsContext<Vulkan::VulkanGraphicsBackend> final
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
@@ -27,12 +27,11 @@ namespace NovelRT::Graphics
         std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         size_t _index;
 
-        std::map<
-            std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
-            std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
-            std::owner_less<>> _vulkanDescriptorSets;
+        std::map<std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
+                 std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
+                 std::owner_less<>>
+            _vulkanDescriptorSets;
         std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
-        std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _waitForExecuteCompletionFence;
 
         mutable NovelRT::Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
@@ -44,9 +43,9 @@ namespace NovelRT::Graphics
         void DestroyDescriptorSets();
 
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this();
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
         GraphicsContext(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
@@ -67,8 +66,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
         [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
 
-        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetWaitForExecuteCompletionFence() const noexcept;
-
-        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature, std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
+        void RegisterDescriptorSetForFrame(
+            std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
+            std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };
 }
