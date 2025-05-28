@@ -26,8 +26,10 @@ namespace NovelRT::Graphics
         : public std::enable_shared_from_this<GraphicsDevice<Vulkan::VulkanGraphicsBackend>>
     {
     public:
-        using iterator = typename std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>::iterator;
-        using const_iterator = typename std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>::const_iterator;
+        using iterator =
+            typename std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>::iterator;
+        using const_iterator =
+            typename std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>::const_iterator;
 
     private:
         std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> _adapter;
@@ -36,7 +38,8 @@ namespace NovelRT::Graphics
         NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>>> _presentCompletionFence;
 
         uint32_t _contextCount;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>> _contexts;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>>
+            _contexts;
 
         LoggingService _logger;
 
@@ -61,12 +64,16 @@ namespace NovelRT::Graphics
 
         Threading::VolatileState _state;
 
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>> CreateInitialGraphicsContexts(uint32_t contextCount);
+        [[nodiscard]] std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>
+        CreateInitialGraphicsContexts(uint32_t contextCount);
 
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
-        [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions) const;
-        VkDevice CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions);
+        [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet(
+            std::vector<std::string> requiredDeviceExtensions,
+            std::vector<std::string> optionalDeviceExtensions) const;
+        VkDevice CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions,
+                                     std::vector<std::string> optionalDeviceExtensions);
 
         [[nodiscard]] VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
             const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept;
@@ -86,7 +93,8 @@ namespace NovelRT::Graphics
         GraphicsDevice(std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> adapter,
                        std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> surfaceContext,
                        int32_t contextCount,
-                       std::vector<std::string> requiredDeviceExtensions, std::vector<std::string> optionalDeviceExtensions);
+                       std::vector<std::string> requiredDeviceExtensions,
+                       std::vector<std::string> optionalDeviceExtensions);
 
         ~GraphicsDevice();
 
@@ -94,20 +102,21 @@ namespace NovelRT::Graphics
 
         size_t GetContextIndex() const noexcept;
 
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator begin() const noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator end() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext() const;
 
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext()
+            const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
@@ -132,7 +141,7 @@ namespace NovelRT::Graphics
 
         void PresentFrame();
 
-        void Signal(const GraphicsFence<Vulkan::VulkanGraphicsBackend>* fence);
+        void Signal(const GraphicsContext<Vulkan::VulkanGraphicsBackend>* context);
 
         void WaitForIdle();
 

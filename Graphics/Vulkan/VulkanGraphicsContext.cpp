@@ -3,13 +3,12 @@
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -21,7 +20,7 @@ namespace NovelRT::Graphics
     using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsPipelineSignature = GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
-    template <template <typename> typename TResource>
+    template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
@@ -59,7 +58,8 @@ namespace NovelRT::Graphics
 
         auto device = context->GetDevice().lock();
 
-        VkResult result = vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
+        VkResult result =
+            vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
 
         if (result != VK_SUCCESS)
         {
@@ -86,7 +86,8 @@ namespace NovelRT::Graphics
         framebufferCreateInfo.height = static_cast<uint32_t>(surface->GetHeight());
         framebufferCreateInfo.layers = 1;
 
-        const VkResult result = vkCreateFramebuffer(device->GetVulkanDevice(), &framebufferCreateInfo, nullptr, &vulkanFramebuffer);
+        const VkResult result =
+            vkCreateFramebuffer(device->GetVulkanDevice(), &framebufferCreateInfo, nullptr, &vulkanFramebuffer);
 
         if (result != VK_SUCCESS)
         {
@@ -163,27 +164,26 @@ namespace NovelRT::Graphics
         _vulkanDescriptorSets.clear();
     }
 
-    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsContext::shared_from_this()
     {
         return std::static_pointer_cast<VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
-    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<const VulkanGraphicsContext> VulkanGraphicsContext::shared_from_this() const
     {
         return std::static_pointer_cast<const VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
 
     VulkanGraphicsContext::GraphicsContext(std::weak_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
-        : _device(std::move(device))
-        , _index(index)
-        , _vulkanDescriptorSets()
-        , _fence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ false))
-        , _waitForExecuteCompletionFence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ false))
-        , _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); })
-        , _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
-        , _vulkanFramebuffer([this]() { return CreateVulkanFramebuffer(this); })
-        , _vulkanSwapChainImageView([this]() { return CreateVulkanSwapChainImageView(this); })
+        : _device(std::move(device)),
+          _index(index),
+          _vulkanDescriptorSets(),
+          _fence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ false)),
+          _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); }),
+          _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); }),
+          _vulkanFramebuffer([this]() { return CreateVulkanFramebuffer(this); }),
+          _vulkanSwapChainImageView([this]() { return CreateVulkanSwapChainImageView(this); })
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
@@ -270,25 +270,6 @@ namespace NovelRT::Graphics
                 "submitted.",
                 endCommandBufferResult);
         }
-
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandBuffer;
-
-        auto executeGraphicsFence = GetWaitForExecuteCompletionFence();
-        auto device = GetDevice().lock();
-
-        const VkResult queueSubmitResult = vkQueueSubmit(device->GetVulkanGraphicsQueue(), 1, &submitInfo,
-                                                   executeGraphicsFence->GetVulkanFence());
-
-        if (queueSubmitResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
-        }
-
-        executeGraphicsFence->Wait();
-        executeGraphicsFence->Reset();
     }
 
     void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
@@ -342,17 +323,13 @@ namespace NovelRT::Graphics
         return _vulkanSwapChainImageView.Get();
     }
 
-    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetWaitForExecuteCompletionFence() const noexcept
-    {
-        return _waitForExecuteCompletionFence;
-    }
-
-    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature, std::shared_ptr<VulkanGraphicsDescriptorSet> set)
+    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature,
+                                                              std::shared_ptr<VulkanGraphicsDescriptorSet> set)
     {
         auto it = _vulkanDescriptorSets.find(signature);
         if (it == _vulkanDescriptorSets.end())
         {
-            _vulkanDescriptorSets.emplace_hint(it, signature, std::vector{ set });
+            _vulkanDescriptorSets.emplace_hint(it, signature, std::vector{set});
             return;
         }
 

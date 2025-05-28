@@ -172,7 +172,7 @@ int main()
 
     gfxContext->EndFrame();
     auto fence = gfxContext->GetFence();
-    gfxDevice->Signal(fence.get());
+    gfxDevice->Signal(gfxContext.get());
     gfxDevice->WaitForIdle();
     fence->Reset();
 
