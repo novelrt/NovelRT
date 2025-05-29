@@ -1,30 +1,29 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
 // This is based on the StepTimer provided in the DirectX ToolKit
 // Original code is available under the MIT Licence
 
-#include "../Utilities/Event.h"
-#include "Timestamp.h"
+#include <NovelRT/Timing/Timestamp.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
-#ifndef NOVELRT_TIMING_STEPTIMER_H
-#define NOVELRT_TIMING_STEPTIMER_H
 
 namespace NovelRT::Timing
 {
     class StepTimer
     {
     private:
-        const uint64_t _frequency;
-        const uint64_t _maxCounterDelta;
+        const GameClock::duration _maxCounterDelta;
+        const GameClock::duration _targetFrequency;
 
-        uint64_t _lastCounter;
+        Timestamp _lastCounter;
         uint64_t _secondCounter;
         uint64_t _remainingTicks;
 
         uint64_t _elapsedTicks;
         uint64_t _totalTicks;
-        uint64_t _targetElapsedTicks;
 
         uint32_t _frameCount;
         uint32_t _framesPerSecond;
@@ -47,32 +46,17 @@ namespace NovelRT::Timing
         inline Timestamp getElapsedTime() const noexcept
         {
             auto elapsedTicks = getElapsedTicks();
-            return Timestamp(elapsedTicks);
+            return TimeFromTicks(elapsedTicks);
         }
         inline Timestamp getTotalTime() const noexcept
         {
             auto totalTicks = getTotalTicks();
-            return Timestamp(totalTicks);
+            return TimeFromTicks(totalTicks);
         }
 
-        inline const uint64_t& targetElapsedTicks() const noexcept
+        inline Timestamp::duration GetTargetElapsedTime() const noexcept
         {
-            return _targetElapsedTicks;
-        }
-
-        inline uint64_t& targetElapsedTicks() noexcept
-        {
-            return _targetElapsedTicks;
-        }
-
-        inline Timestamp getTargetElapsedTime() const noexcept
-        {
-            auto ticks = targetElapsedTicks();
-            return Timestamp(ticks);
-        }
-        inline void setTargetElapsedTime(Timestamp value) noexcept
-        {
-            targetElapsedTicks() = value.ticks;
+            return _targetFrequency;
         }
 
         inline uint32_t getFrameCount() const noexcept
@@ -95,8 +79,6 @@ namespace NovelRT::Timing
         }
 
         void resetElapsedTime() noexcept;
-        void tick(const Utilities::Event<Timestamp>& update);
+        void Tick(const Utilities::Event<Timestamp::duration>& update);
     };
 }
-
-#endif // NOVELRT_TIMING_STEPTIMER_H

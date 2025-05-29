@@ -1,75 +1,54 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Input/Glfw/GlfwInputDevice.hpp>
-#include <NovelRT/Windowing/Glfw/Windowing.Glfw.h>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
+#include <NovelRT/Exceptions/NullPointerException.hpp>
+#include <NovelRT/Input/Glfw/GlfwInputProvider.hpp>
+#include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
 
-namespace NovelRT::Input::Glfw
+namespace NovelRT::Input
 {
-    GlfwInputDevice::GlfwInputDevice() noexcept
-        : _isInitialised(false),
-          _previousStates(std::vector<InputAction>()),
-          _mousePos(NovelRT::Maths::GeoVector2F::Zero())
-    {
-        _logger = NovelRT::LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_INPUT);
-    }
+    using GlfwInputProvider = InputProvider<Glfw::GlfwInputBackend>;
 
-    void GlfwInputDevice::Initialise(std::shared_ptr<NovelRT::Windowing::IWindowingDevice> device)
+    GlfwInputProvider::InputProvider(std::shared_ptr<Windowing::WindowProvider<Windowing::Glfw::GlfwWindowingBackend>> windowProvider)
+        : _windowProvider(std::move(windowProvider)),
+          _previousStates({}),
+          _mappedActions({}),
+          _availableKeys({}),
+          _keyStates(DefaultBufferCount),
+          _mousePos(NovelRT::Maths::GeoVector2F::Zero()),
+          _rawMousePos(NovelRT::Maths::GeoVector2F::Zero()),
+          _windowDimensions(_windowProvider->GetWidth(), _windowProvider->GetHeight()),
+          _previousBufferIndex(0),
+          _currentBufferIndex(1),
+          _logger(NovelRT::Logging::CONSOLE_LOG_INPUT)
     {
-        if (!glfwInit())
-        {
-            const char* output = nullptr;
-            glfwGetError(&output);
-            throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
-        }
-
-        if (device == nullptr)
+        if (_windowProvider == nullptr)
         {
             throw Exceptions::NullPointerException(
                 "Could not initialise GLFW input service - null pointer was provided for windowing device.");
         }
 
         _logger.logInfoLine("Initialising GLFW input service.");
-        _availableKeys = std::map<std::string, NovelKey>();
-        _mappedActions = std::vector<InputAction>();
-        _inputBufferCount = DEFAULT_INPUT_BUFFER_COUNT;
-        _keyStates = std::vector<std::unordered_map<int32_t, KeyStateFrameChangeLog>>(_inputBufferCount);
-        _previousBufferIndex = 0;
-        _currentBufferIndex = 1;
-
-        auto properDevice = std::reinterpret_pointer_cast<NovelRT::Windowing::Glfw::GlfwWindowingDevice>(device);
-        _window = properDevice->GetRawGLFWwindowHandle();
-        properDevice->KeyboardButtonChanged +=
+        _windowProvider->KeyboardButtonChanged +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
-        properDevice->MouseButtonClicked +=
+        _windowProvider->MouseButtonClicked +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
-        properDevice->CursorMoved += [this](auto eventArgs) {
+        _windowProvider->CursorMoved += [this](auto eventArgs) {
             NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y));
             ProcessCursorMovement(nativePos);
         };
 
         MapAllGlfwKeysToNovelKeys();
-        _isInitialised = true;
 
-        int32_t width = 0;
-        int32_t height = 0;
-        glfwGetWindowSize(_window, &width, &height);
-        _windowDimensions = NovelRT::Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
-
-        _logger.logInfo("GLFW input system initialised: window at {} x {}", width, height);
+        _logger.logInfo("GLFW input system initialised: window at {} x {}", _windowDimensions.x, _windowDimensions.y);
     }
 
-    void GlfwInputDevice::Update(Timing::Timestamp /*delta*/)
+    void GlfwInputProvider::Update(Timing::Timestamp::duration /*delta*/)
     {
-        double x = 0;
-        double y = 0;
-        int32_t width = 0;
-        int32_t height = 0;
-        glfwGetWindowSize(_window, &width, &height);
-        glfwGetCursorPos(_window, &x, &y);
-        _windowDimensions.x = static_cast<float>(width);
-        _windowDimensions.y =static_cast<float>(height);
-
         auto& currentBuffer = _keyStates.at(_currentBufferIndex);
 
         for (const auto& [key, log] : _keyStates.at(_previousBufferIndex))
@@ -86,7 +65,7 @@ namespace NovelRT::Input::Glfw
         }
     }
 
-    KeyState GlfwInputDevice::GetKeyState(const std::string& key) noexcept
+    KeyState GlfwInputProvider::GetKeyState(const std::string& key) noexcept
     {
         for (auto& action : _mappedActions)
         {
@@ -110,7 +89,7 @@ namespace NovelRT::Input::Glfw
         return KeyState::Idle;
     }
 
-    bool GlfwInputDevice::IsKeyPressed(const std::string& input) noexcept
+    bool GlfwInputProvider::IsKeyPressed(const std::string& input) noexcept
     {
         for (auto& action : _mappedActions)
         {
@@ -136,7 +115,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputDevice::IsKeyHeld(const std::string& input) noexcept
+    bool GlfwInputProvider::IsKeyHeld(const std::string& input) noexcept
     {
         for (auto& action : _mappedActions)
         {
@@ -162,7 +141,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    bool GlfwInputDevice::IsKeyReleased(const std::string& input) noexcept
+    bool GlfwInputProvider::IsKeyReleased(const std::string& input) noexcept
     {
         for (auto& action : _mappedActions)
         {
@@ -188,7 +167,7 @@ namespace NovelRT::Input::Glfw
         return false;
     }
 
-    InputAction& GlfwInputDevice::AddInputAction(const std::string& actionName, const std::string& keyIdentifier)
+    InputAction& GlfwInputProvider::AddInputAction(const std::string& actionName, const std::string& keyIdentifier)
     {
         bool nameExists = false;
         bool keyBoundAlready = false;
@@ -221,7 +200,7 @@ namespace NovelRT::Input::Glfw
         }
     }
 
-    NovelKey& GlfwInputDevice::GetAvailableKey(const std::string& keyRequested)
+    NovelKey& GlfwInputProvider::GetAvailableKey(const std::string& keyRequested)
     {
         if (keyRequested == "")
         {
@@ -240,22 +219,22 @@ namespace NovelRT::Input::Glfw
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
-    NovelRT::Utilities::Misc::Span<InputAction> GlfwInputDevice::GetAllMappings() noexcept
+    NovelRT::Utilities::Span<InputAction> GlfwInputProvider::GetAllMappings() noexcept
     {
         return _mappedActions;
     }
 
-    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetMousePosition() noexcept
+    NovelRT::Maths::GeoVector2F GlfwInputProvider::GetMousePosition() noexcept
     {
         return _mousePos;
     }
 
-    NovelRT::Maths::GeoVector2F GlfwInputDevice::GetRawMousePosition() noexcept
+    NovelRT::Maths::GeoVector2F GlfwInputProvider::GetRawMousePosition() noexcept
     {
         return _rawMousePos;
     }
 
-    void GlfwInputDevice::ProcessKeyInput(int32_t key, int32_t state)
+    void GlfwInputProvider::ProcessKeyInput(int32_t key, int32_t state)
     {
         auto& map = _keyStates.at(_currentBufferIndex);
 
@@ -298,13 +277,13 @@ namespace NovelRT::Input::Glfw
         }
     }
 
-    void GlfwInputDevice::ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos)
+    void GlfwInputProvider::ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos)
     {
         _rawMousePos = pos;
         _mousePos = DetermineMouseScreenPosition(pos);
     }
 
-    void GlfwInputDevice::ProcessKeyState(int32_t key, KeyState state)
+    void GlfwInputProvider::ProcessKeyState(int32_t key, KeyState state)
     {
         auto& previousBuffer = _keyStates.at(_previousBufferIndex);
         auto& currentBuffer = _keyStates.at(_currentBufferIndex);
@@ -361,13 +340,13 @@ namespace NovelRT::Input::Glfw
         currentBuffer.insert_or_assign(key, changeLogObject);
     }
 
-    NovelRT::Maths::GeoVector2F GlfwInputDevice::DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos)
+    NovelRT::Maths::GeoVector2F GlfwInputProvider::DetermineMouseScreenPosition(NovelRT::Maths::GeoVector2F& pos)
     {
         return NovelRT::Maths::GeoVector2F(static_cast<float>(pos.x - (_windowDimensions.x / 2)),
                                            static_cast<float>(-pos.y + (_windowDimensions.y / 2)));
     }
 
-    KeyStateFrameChangeLog GlfwInputDevice::GetCurrentChangeLog(const std::string& key)
+    KeyStateFrameChangeLog GlfwInputProvider::GetCurrentChangeLog(const std::string& key)
     {
         for (auto& action : _mappedActions)
         {
@@ -384,7 +363,7 @@ namespace NovelRT::Input::Glfw
         return KeyStateFrameChangeLog();
     }
 
-    KeyStateFrameChangeLog GlfwInputDevice::GetPreviousChangeLog(const std::string& key)
+    KeyStateFrameChangeLog GlfwInputProvider::GetPreviousChangeLog(const std::string& key)
     {
         for (auto& action : _mappedActions)
         {
@@ -399,12 +378,12 @@ namespace NovelRT::Input::Glfw
         return KeyStateFrameChangeLog();
     }
 
-    NovelRT::Utilities::Misc::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputDevice::GetAllChangeLogs()
+    NovelRT::Utilities::Span<std::unordered_map<int32_t, KeyStateFrameChangeLog>> GlfwInputProvider::GetAllChangeLogs()
     {
         return _keyStates;
     }
 
-    void GlfwInputDevice::MapAllGlfwKeysToNovelKeys()
+    void GlfwInputProvider::MapAllGlfwKeysToNovelKeys()
     {
         _availableKeys.emplace("LeftMouseButton", NovelKey("LeftMouseButton", GLFW_MOUSE_BUTTON_LEFT));
         _availableKeys.emplace("RightMouseButton", NovelKey("RightMouseButton", GLFW_MOUSE_BUTTON_RIGHT));
@@ -535,9 +514,4 @@ namespace NovelRT::Input::Glfw
         _availableKeys.emplace("Underscore", NovelKey("Underscore", GLFW_KEY_MINUS, GLFW_MOD_SHIFT));
         _availableKeys.emplace("Tilde", NovelKey("Tilde", GLFW_KEY_GRAVE_ACCENT, GLFW_MOD_SHIFT));
     }
-
-    GlfwInputDevice::~GlfwInputDevice()
-    {
-    }
-
 }

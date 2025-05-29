@@ -4,8 +4,15 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::ImGu
   DEPENDS
     NovelRT::Graphics
     NovelRT::Graphics::Vulkan
+    NovelRT::Input
     NovelRT::UI
+    NovelRT::Windowing
 
   SOURCES
     PRIVATE
-      main.cpp)
+      main.cpp
+
+  RESOURCES
+    PUBLIC
+      Resources/Shaders/vulkanrenderfrag.spv
+      Resources/Shaders/vulkanrendervert.spv)

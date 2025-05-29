@@ -9,6 +9,9 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Base
 
       Threading/VolatileState.cpp
 
+      Timing/GameClock.cpp
+      Timing/StepTimer.cpp
+
       Utilities/Paths.cpp
       Utilities/Strings.cpp
 

@@ -45,6 +45,7 @@ add_subdirectory(ThirdParty)
 
 add_subdirectory(Base)
 add_subdirectory(Graphics)
+add_subdirectory(Input)
 add_subdirectory(UI)
 add_subdirectory(Windowing)
 
