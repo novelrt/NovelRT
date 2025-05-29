@@ -4,7 +4,6 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::Vulk
   DEPENDS
     NovelRT::Graphics
     NovelRT::Graphics::Vulkan
-
     NovelRT::Windowing
 
   SOURCES

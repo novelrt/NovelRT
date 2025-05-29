@@ -19,7 +19,6 @@
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
-#include <NovelRT/Windowing/WindowProvider.hpp>
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
@@ -171,10 +170,9 @@ int main()
     cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D.get());
 
     gfxContext->EndFrame();
-    auto fence = gfxContext->GetFence();
     gfxDevice->Signal(gfxContext.get());
     gfxDevice->WaitForIdle();
-    fence->Reset();
+    gfxContext->GetFence()->Reset();
 
     while (!wndProvider->ShouldClose())
     {
