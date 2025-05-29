@@ -47,9 +47,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     # N.B. Static is important here so that target_link_libraries works as expected
     add_library(${cmakeSafeName} STATIC)
     add_library(${moduleName} ALIAS ${cmakeSafeName})
+
+    set(moduleOutputName ${cmakeSafeName})
+
   elseif(moduleKind STREQUAL "EXECUTABLE")
     add_executable(${cmakeSafeName})
     add_executable(${moduleName} ALIAS ${cmakeSafeName})
+
+    string(REGEX REPLACE "^.+::(.*)$" "\\1" moduleOutputName ${moduleName})
 
     # N.B. This is needed so that Windows gets the correct DLLs in dev.
     add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
@@ -64,8 +69,9 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     endif()
   endif()
 
-  set_target_properties(${cmakecmakeSafeName} PROPERTIES
-    EXPORT_NAME ${cmakeSafeName}
+  set_target_properties(${cmakeSafeName} PROPERTIES
+    EXPORT_NAME ${moduleName}
+    OUTPUT_NAME ${moduleOutputName}
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     CXX_CLANG_TIDY "$<$<CONFIG:Debug>:${clangTidyCommandLine}>")
 
