@@ -27,6 +27,7 @@ list(PREPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
+option(NOVELRT_CLANG_TIDY "Perform additional checks with clang-tidy during compilation" OFF)
 option(NOVELRT_FETCH_DEPENDENCIES "Fetch and build NovelRT dependencies instead of providing system-based ones" ON)
 option(NOVELRT_BUILD_SAMPLES "Build NovelRT samples" ON)
 option(NOVELRT_BUILD_DOCUMENTATION "Build NovelRT documentation" OFF)
@@ -36,10 +37,6 @@ option(NOVELRT_VERBOSE_BUILD "Build NovelRT using verbose output" OFF)
 option(NOVELRT_INSTALL "Generate installation targets" ON)
 option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
 option(NOVELRT_BUILD_DEPS_WITH_MAX_CPU "Use all available CPU processing power when scaffolding/building the NovelRT internal dependences" OFF)
-
-if(NOVELRT_USE_STD_SPAN)
-  add_compile_definitions(NOVELRT_USE_STD_SPAN=true)
-endif()
 
 add_subdirectory(ThirdParty)
 

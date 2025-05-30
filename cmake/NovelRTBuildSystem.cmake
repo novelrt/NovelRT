@@ -62,7 +62,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       COMMAND_EXPAND_LISTS)
   endif()
 
-  if(PROJECT_IS_TOP_LEVEL)
+  if(NOVELRT_CLANG_TIDY)
     find_program(NovelRTBuildSystem_clangTidy NAMES clang-tidy DOC "Location of clang-tidy used in debug builds.")
     if(NovelRTBuildSystem_clangTidy)
       set(clangTidyCommandLine ${NovelRTBuildSystem_clangTidy} --config-file=${PROJECT_SOURCE_DIR}/.clang-tidy)
@@ -73,7 +73,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     EXPORT_NAME ${moduleName}
     OUTPUT_NAME ${moduleOutputName}
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
-    CXX_CLANG_TIDY "$<$<CONFIG:Debug>:${clangTidyCommandLine}>")
+    CXX_CLANG_TIDY "${clangTidyCommandLine}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_17)
   target_compile_options(${cmakeSafeName} PRIVATE
@@ -148,6 +148,10 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
   if(declareModule_LINK_LIBRARIES)
     target_link_libraries(${cmakeSafeName} ${declareModule_LINK_LIBRARIES})
+  endif()
+
+  if(NOVELRT_USE_STD_SPAN)
+    target_compile_definitions(${cmakeSafeName} NOVELRT_USE_STD_SPAN=true)
   endif()
 
   install(
