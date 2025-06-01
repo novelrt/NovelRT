@@ -15,12 +15,12 @@ namespace NovelRT::Graphics
 
     VkShaderModule CreateShaderModule(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        NovelRT::Utilities::Span<uint8_t> bytecode)
+        NovelRT::Utilities::Span<const uint8_t> bytecode)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = bytecode.size();
-        createInfo.pCode = reinterpret_cast<uint32_t*>(bytecode.data());
+        createInfo.pCode = reinterpret_cast<const uint32_t*>(bytecode.data());
 
         VkShaderModule shaderModule = VK_NULL_HANDLE;
         const VkResult moduleCreationResult = vkCreateShaderModule(device->GetVulkanDevice(), &createInfo, nullptr, &shaderModule);
@@ -38,11 +38,11 @@ namespace NovelRT::Graphics
         std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         std::string entryPointName,
         ShaderProgramKind kind,
-        NovelRT::Utilities::Span<uint8_t> bytecode) noexcept
+        NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept
         : _device(std::move(device))
         , _entryPointName(std::move(entryPointName))
         , _kind(kind)
-        , _shaderModule([device = _device, bytecode]() { return CreateShaderModule(device.lock(), bytecode); })
+        , _shaderModule([device = _device, &bytecode = _bytecode]() { return CreateShaderModule(device.lock(), bytecode); })
         , _bytecode(bytecode.begin(), bytecode.end())
     { }
 

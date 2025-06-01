@@ -20,9 +20,10 @@
 
 #include <array>
 #include <fstream>
+#include <map>
 #include <memory>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 #include <imgui.h>
 
@@ -109,6 +110,12 @@ namespace NovelRT::UI::ImGui
             uint32_t frameLifetime;
         };
 
+        struct TexInfo
+        {
+            std::shared_ptr<GraphicsTexture<TGraphicsBackend>> texture;
+            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>> region;
+        };
+
         std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>> _windowProvider;
         std::shared_ptr<Input::InputProvider<TInputBackend>> _inputProvider;
         std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
@@ -116,6 +123,7 @@ namespace NovelRT::UI::ImGui
         bool _showMetricsWindow;
 
         std::map<std::string, ImFont*> _fontCache;
+        std::unordered_map<ImTextureID, TexInfo> _textureMap;
         std::vector<CachedBufferObject> _bufferCache;
         std::vector<CachedDescriptorSetObject> _descriptorSetCache;
 
@@ -127,8 +135,6 @@ namespace NovelRT::UI::ImGui
 
         NovelRT::Input::InputAction _mouseInputAction;
 
-        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>> _texture2DRegion;
-        std::shared_ptr<GraphicsTexture<TGraphicsBackend>> _texture2D;
         std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> _pipeline;
         std::shared_ptr<GraphicsPipelineSignature<TGraphicsBackend>> _pipelineSignature;
 
@@ -169,22 +175,21 @@ namespace NovelRT::UI::ImGui
 
                 //Because we use push constants, define them here
             std::vector<GraphicsPushConstantRange> pushConstants{
-                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
+                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}
+            };
 
 
             std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
             std::vector<GraphicsPipelineResource> resources{
                 GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
             //Create pipeline signature
-            auto pipelineSignature = _graphicsDevice->CreatePipelineSignature(
+            _pipelineSignature = _graphicsDevice->CreatePipelineSignature(
                 GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources, pushConstants);
-            _pipelineSignature = pipelineSignature;
             auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
             auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
 
             //Create pipeline
-            auto pipeline = _graphicsDevice->CreatePipeline(pipelineSignature, imVertProg, imPixProg, true);
-            _pipeline = pipeline;
+            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, true);
 
             //Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
@@ -197,11 +202,9 @@ namespace NovelRT::UI::ImGui
                                            GraphicsMemoryRegionAllocationFlags::None,
                                            TexelFormat::R8G8B8A8_UNORM};
             auto texture2D = _memoryAllocator->CreateTexture(textureCreateInfo);
-            _texture2D = texture2D;
 
             // Allocate region based on size of texture
-            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>> texture2DRegion =
-                texture2D->Allocate(texture2D->GetSize(), 4);
+            auto texture2DRegion =texture2D->Allocate(texture2D->GetSize(), 4);
 
             // Create a staging buffer region for texture
             auto stagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
@@ -212,18 +215,19 @@ namespace NovelRT::UI::ImGui
             textureStagingBuffer->UnmapAndWrite(stagingBufferRegion.get());
 
             //Set texture ID so that ImGui can refer back to proper id during render
-            _texture2DRegion = texture2DRegion;
-            io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture2DRegion));
-
+            io.Fonts->SetTexID(0);
 
             //Send the data to GPU
             cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D.get());
             cmdList->CmdCopy(texture2D.get(), stagingBufferRegion.get());
             cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D.get());
+
             context->EndFrame();
             _graphicsDevice->Signal(context.get());
             _graphicsDevice->WaitForIdle();
             context->GetFence()->Reset();
+
+            _textureMap[0] = { std::move(texture2D), std::move(texture2DRegion) };
         }
 
     public:
@@ -533,14 +537,12 @@ namespace NovelRT::UI::ImGui
                             NovelRT::Maths::GeoVector2F((clippingMax.x - clippingMin.x), (clippingMax.y - clippingMin.y)));
 
                         // Bind DescriptorSet with font or user texture
-                        auto texture2DRegion = *reinterpret_cast<
-                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>>*>(
-                            drawCommand->GetTexID());
-                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>>
-                            inputResourceRegions{
-                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>(
-                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>>(
-                                        texture2DRegion))};
+
+                        auto it = _textureMap.find(drawCommand->GetTexID());
+                        if (it == _textureMap.end())
+                            continue; // TODO: this should probably warn
+
+                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>> inputResourceRegions{it->second.region};
 
                         // Specify the descriptor set data
                         auto descriptorSetData = _pipeline->CreateDescriptorSet();

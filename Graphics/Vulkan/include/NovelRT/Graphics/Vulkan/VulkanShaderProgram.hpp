@@ -40,7 +40,7 @@ namespace NovelRT::Graphics
             std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
             std::string entryPointName,
             ShaderProgramKind kind,
-            NovelRT::Utilities::Span<uint8_t> bytecode) noexcept;
+            NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept;
         ~ShaderProgram() noexcept final;
 
         [[nodiscard]] const std::string& GetEntryPointName() const noexcept;

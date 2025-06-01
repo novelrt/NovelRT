@@ -160,24 +160,21 @@ namespace NovelRT::Graphics
         }
 
         auto pushConstantRanges = signature->GetPushConstantRanges();
-        if (pushConstantRanges.size() != 0)
-        {
-            std::vector<VkPushConstantRange> finalPushConstantRangeData(pushConstantRanges.size());
-            std::transform(
-                pushConstantRanges.begin(), pushConstantRanges.end(),
-                finalPushConstantRangeData.begin(),
-                [&](const GraphicsPushConstantRange& rangeData) {
-                    VkPushConstantRange returnData{};
-                    returnData.stageFlags = Vulkan::Utilities::GetVulkanShaderStageFlags(rangeData.visibilityFlags);
-                    returnData.size = static_cast<uint32_t>(rangeData.size);
-                    returnData.offset = static_cast<uint32_t>(rangeData.offset);
+        std::vector<VkPushConstantRange> finalPushConstantRangeData(pushConstantRanges.size());
+        std::transform(
+            pushConstantRanges.begin(), pushConstantRanges.end(),
+            finalPushConstantRangeData.begin(),
+            [&](const GraphicsPushConstantRange& rangeData) {
+                VkPushConstantRange returnData{};
+                returnData.stageFlags = Vulkan::Utilities::GetVulkanShaderStageFlags(rangeData.visibilityFlags);
+                returnData.size = static_cast<uint32_t>(rangeData.size);
+                returnData.offset = static_cast<uint32_t>(rangeData.offset);
 
-                    return returnData;
-                });
+                return returnData;
+            });
 
-            pipelineLayoutCreateInfo.pushConstantRangeCount = static_cast<uint32_t>(finalPushConstantRangeData.size());
-            pipelineLayoutCreateInfo.pPushConstantRanges = finalPushConstantRangeData.data();
-        }
+        pipelineLayoutCreateInfo.pushConstantRangeCount = static_cast<uint32_t>(finalPushConstantRangeData.size());
+        pipelineLayoutCreateInfo.pPushConstantRanges = finalPushConstantRangeData.data();
 
         auto device = signature->GetDevice().lock();
         VkPipelineLayout vulkanPipelineLayout = VK_NULL_HANDLE;
@@ -216,7 +213,7 @@ namespace NovelRT::Graphics
         , _dstBlendFactor(dstBlendFactor)
         , _inputs(inputs.begin(), inputs.end())
         , _resources(resources.begin(), resources.end())
-        , _pushConstantRanges(std::vector<GraphicsPushConstantRange>(pushConstantRanges.begin(), pushConstantRanges.end()))
+        , _pushConstantRanges(pushConstantRanges.begin(), pushConstantRanges.end())
         , _vulkanDescriptorPool([this]() { return CreateDescriptorPool(this); })
         , _vulkanDescriptorSetLayout([this]() { return CreateDescriptorSetLayout(this); })
         , _vulkanPipelineLayout([this]() { return CreatePipelineLayout(this); })
