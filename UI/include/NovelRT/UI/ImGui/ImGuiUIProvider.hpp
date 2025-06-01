@@ -11,19 +11,27 @@
 #include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
-#include <NovelRT/Maths/Maths.h>
-#include <NovelRT/UI/UIProvider.hpp>
-#include <NovelRT/Input/IInputDevice.hpp>
-#include <NovelRT/Input/InputAction.hpp>
+#include <NovelRT/Input/InputProvider.hpp>
+#include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
+#include <NovelRT/Utilities/Paths.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+#include <NovelRT/Windowing/WindowProvider.hpp>
+
+#include <array>
 #include <fstream>
+#include <memory>
+#include <vector>
+#include <map>
+
 #include <imgui.h>
 
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Input;
 
-namespace NovelRT::UI::DearImGui
+namespace NovelRT::UI::ImGui
 {
-    
+
     static const char* ImGui_GetClipboardText(void* user_data)
     {
         unused(user_data);
@@ -36,13 +44,14 @@ namespace NovelRT::UI::DearImGui
         unused(text);
     }
 
-    template<typename TBackend> class ImGuiUIProvider final : public UIProvider<TBackend>
+    template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
+    class ImGuiUIProvider final : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
     {
     private:
         std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
         {
             std::filesystem::path finalPath =
-                NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
+                NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
             std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
 
             if (!file.is_open())
@@ -59,57 +68,79 @@ namespace NovelRT::UI::DearImGui
             return buffer;
         }
 
+        inline void LoadFontFile(const std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
+        {
+            std::filesystem::path finalPath =
+                NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "Fonts" / relativeFontTarget;
+            std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
+
+            if (!file.is_open())
+            {
+                throw NovelRT::Exceptions::FileNotFoundException(finalPath.string());
+            }
+
+            size_t fileSize = static_cast<size_t>(file.tellg());
+            std::vector<uint8_t> buffer(fileSize);
+            file.seekg(0);
+            file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
+            file.close();
+
+            ImFontConfig config{};
+            config.FontDataOwnedByAtlas = false;
+            config.FontData = buffer.data();
+            config.FontDataSize = fileSize;
+            config.SizePixels = pixelSize;
+            name.copy(config.Name, std::string::npos, 0);
+
+            ImGuiIO& io = ::ImGui::GetIO();
+            ImFont* font = io.Fonts->AddFont(&config);
+            _fontCache.emplace(std::make_pair(name, font));
+        }
+
         struct CachedBufferObject
         {
-            Graphics::GraphicsBuffer<TBackend> buffer;
+            std::shared_ptr<Graphics::GraphicsBuffer<TGraphicsBackend>> buffer;
             uint32_t frameLifetime;
         };
 
         struct CachedDescriptorSetObject
         {
-            Graphics::GraphicsDescriptorSet<TBackend> descriptorSet;
+            std::shared_ptr<Graphics::GraphicsDescriptorSet<TGraphicsBackend>> descriptorSet;
             uint32_t frameLifetime;
         };
 
-        ImGuiContext* _imguiContext;
+        std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>> _windowProvider;
+        std::shared_ptr<Input::InputProvider<TInputBackend>> _inputProvider;
+        std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
+        std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
+        bool _showMetricsWindow;
+
+        std::map<std::string, ImFont*> _fontCache;
+        std::vector<CachedBufferObject> _bufferCache;
+        std::vector<CachedDescriptorSetObject> _descriptorSetCache;
+
+        std::shared_ptr<ImGuiContext> _imguiContext;
         LoggingService _logger;
-        bool _showMetricsWindow = false;
+
         bool _drawEnabled = false;
         ImDrawData* _cachedDrawData = nullptr;
 
-        NovelRT::Input::InputAction mouseInputAction;
+        NovelRT::Input::InputAction _mouseInputAction;
 
-        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> _texture2DRegion;
-        std::shared_ptr<GraphicsTexture<TBackend>> _texture2D;
-        std::shared_ptr<Windowing::IWindowingDevice> _windowingDevice;
-        std::shared_ptr<Input::IInputDevice> _inputDevice;
-        std::shared_ptr<Graphics::GraphicsDevice<TBackend>> _graphicsDevice;
-        std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> _memoryAllocator;
-        std::shared_ptr<GraphicsPipeline<TBackend>> _pipeline;
-        std::shared_ptr<GraphicsPipelineSignature<TBackend>> _pipelineSignature;
-        std::map<std::string, ImFont*> _fontCache{};
-        std::vector<CachedBufferObject> _bufferCache{};
-        std::vector<CachedDescriptorSetObject> _descriptorSetCache{};
-        std::shared_ptr<GraphicsBuffer<TBackend>> _currentVertexBuffer;
-        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> _currentVertexBufferRegion;
-        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> _currentIndexBufferRegion;
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>> _texture2DRegion;
+        std::shared_ptr<GraphicsTexture<TGraphicsBackend>> _texture2D;
+        std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> _pipeline;
+        std::shared_ptr<GraphicsPipelineSignature<TGraphicsBackend>> _pipelineSignature;
 
-        
-        inline void LoadFontFile(std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
-        {
-            std::filesystem::path finalPath =
-                NovelRT::Utilities::Misc::getExecutableDirPath() / "Resources" / "Fonts" / relativeFontTarget;
-
-            ImGuiIO& io = ImGui::GetIO();
-            ImFont* font = io.Fonts->AddFontFromFileTTF(finalPath.string().c_str(), pixelSize);
-            _fontCache.emplace(std::make_pair(name, font));
-        }
+        std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
+        std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
 
         inline void UploadFontData()
         {
             uint8_t* pixels;
             int32_t width, height;
-            auto& io = ImGui::GetIO();
+            auto& io = ::ImGui::GetIO();
             io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
             GraphicsBufferCreateInfo bufferCreateInfo{};
@@ -127,7 +158,7 @@ namespace NovelRT::UI::DearImGui
             auto context = _graphicsDevice->GetCurrentContext();
 
             //Begin commands
-            std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> cmdList = context->BeginFrame();
+            std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList = context->BeginFrame();
 
             //Define elements that make up vertex shader
             std::vector<GraphicsPipelineInputElement> elements{
@@ -135,7 +166,7 @@ namespace NovelRT::UI::DearImGui
                                      8),
                 GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F), GraphicsPipelineInputElementKind::Normal, 8),
                 GraphicsPipelineInputElement(typeid(ImU32), GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
-            
+
                 //Because we use push constants, define them here
             std::vector<GraphicsPushConstantRange> pushConstants{
                 GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
@@ -169,73 +200,70 @@ namespace NovelRT::UI::DearImGui
             _texture2D = texture2D;
 
             // Allocate region based on size of texture
-            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> texture2DRegion =
+            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>> texture2DRegion =
                 texture2D->Allocate(texture2D->GetSize(), 4);
 
             // Create a staging buffer region for texture
             auto stagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-            auto textureData = textureStagingBuffer->Map<uint32_t>(texture2DRegion);
+            auto textureData = textureStagingBuffer->template Map<uint32_t>(stagingBufferRegion.get());
 
             //Write the data over before copying
             memcpy(textureData.data(), pixels, (width * height) * sizeof(char) * 4);
-            textureStagingBuffer->UnmapAndWrite(texture2DRegion);
-            
+            textureStagingBuffer->UnmapAndWrite(stagingBufferRegion.get());
+
             //Set texture ID so that ImGui can refer back to proper id during render
             _texture2DRegion = texture2DRegion;
             io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(&_texture2DRegion));
-            
+
 
             //Send the data to GPU
-            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-            cmdList->CmdCopy(texture2D, stagingBufferRegion);
-            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D.get());
+            cmdList->CmdCopy(texture2D.get(), stagingBufferRegion.get());
+            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D.get());
             context->EndFrame();
-            _graphicsDevice->Signal(context->GetFence());
+            _graphicsDevice->Signal(context.get());
             _graphicsDevice->WaitForIdle();
             context->GetFence()->Reset();
         }
 
     public:
-        ImGuiUIProvider()
-            : _imguiContext(nullptr),
-              _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX))
+        ImGuiUIProvider(
+            std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>> windowProvider,
+            std::shared_ptr<Input::InputProvider<TInputBackend>> inputProvider,
+            std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
+            std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator,
+            bool debugMode = false)
+            : _windowProvider(std::move(windowProvider)),
+              _inputProvider(std::move(inputProvider)),
+              _graphicsDevice(std::move(graphicsDevice)),
+              _memoryAllocator(std::move(memoryAllocator)),
+              _showMetricsWindow(debugMode),
+
+              _fontCache(),
+              _bufferCache(),
+              _descriptorSetCache(),
+
+              _imguiContext(nullptr),
+              _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
         {
-            IMGUI_CHECKVERSION();
-            
-            _imguiContext = ImGui::CreateContext();
-            auto& io = ImGui::GetIO();
-            ImGui::StyleColorsDark();
+            ::IMGUI_CHECKVERSION();
+
+            _imguiContext = std::shared_ptr<ImGuiContext>{::ImGui::CreateContext(), ::ImGui::DestroyContext};
+            auto& io = ::ImGui::GetIO();
+            ::ImGui::StyleColorsDark();
             LoadFontFile(std::string("default"), "Raleway-Regular.ttf", 20);
-            
+
             io.IniFilename = NULL;
-            io.BackendPlatformUserData = (void*)this;
             io.BackendPlatformName = "NovelRT";
             io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
             io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
             io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
-            io.ClipboardUserData = (void*)this;
             io.GetClipboardTextFn = &ImGui_GetClipboardText;
             io.SetClipboardTextFn = &ImGui_SetClipboardText;
-            io.BackendRendererUserData = (void*)this;
             io.BackendRendererName = "NovelRT";
-        }
 
-        void Initialise(std::shared_ptr<Windowing::IWindowingDevice> windowingDevice,
-                        std::shared_ptr<Input::IInputDevice> inputDevice,
-                        std::shared_ptr<Graphics::GraphicsDevice<TBackend>> graphicsDevice,
-                        std::shared_ptr<Graphics::GraphicsMemoryAllocator<TBackend>> memoryAllocator,
-                        bool debugMode = false) final
-        {
-            _windowingDevice = windowingDevice;
-            _inputDevice = inputDevice;
-            _graphicsDevice = graphicsDevice;
-            _memoryAllocator = memoryAllocator;
-
-            _showMetricsWindow = debugMode;
-            
-            ImGui::GetMainViewport()->PlatformHandleRaw = (void*)windowingDevice->GetHandle();
-            auto windowSize = _windowingDevice->GetSize();
-            auto& io = ImGui::GetIO();
+            ::ImGui::GetMainViewport()->PlatformHandleRaw = (void*)_windowProvider->GetHandle();
+            auto windowSize = _windowProvider->GetSize();
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
 
             if ((windowSize.x > 0) && (windowSize.y > 0))
@@ -245,22 +273,19 @@ namespace NovelRT::UI::DearImGui
 
             UploadFontData();
 
-            auto mappings = _inputDevice->GetAllMappings();
-            auto lmbKey = _inputDevice->GetAvailableKey("LeftMouseButton");
-            for(auto& mapping : mappings)
-            {
-                if(mapping.pairedKey == lmbKey)
-                {
-                    mouseInputAction = mapping;
-                    break;
-                }
-            }
+            auto* action = _inputProvider->FindInputActionForKey("LeftMouseButton");
+            if (!action)
+                throw std::runtime_error("Missing input action for LMB");
+
+            _mouseInputAction = *action;
         }
 
-        void BeginFrame(float deltaTime) final
+        ~ImGuiUIProvider() = default;
+
+        void BeginFrame(float deltaTime)
         {
-            auto& io = ImGui::GetIO();
-            auto windowSize = _windowingDevice->GetSize();
+            auto& io = ::ImGui::GetIO();
+            auto windowSize = _windowProvider->GetSize();
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
 
             if ((windowSize.x > 0) && (windowSize.y > 0))
@@ -270,9 +295,9 @@ namespace NovelRT::UI::DearImGui
 
             io.DeltaTime = deltaTime;
 
-            auto mousePos = _inputDevice->GetRawMousePosition();
+            auto mousePos = _inputProvider->GetRawMousePosition();
             io.AddMousePosEvent(mousePos.x, mousePos.y);
-            auto state = _inputDevice->GetKeyState(mouseInputAction.actionName);
+            auto state = _inputProvider->GetKeyState(_mouseInputAction.actionName);
             if (state == KeyState::KeyDown || state == KeyState::KeyDownHeld)
             {
                 io.AddMouseButtonEvent(0, true);
@@ -282,16 +307,16 @@ namespace NovelRT::UI::DearImGui
                 io.AddMouseButtonEvent(0, false);
             }
 
-            ImGui::NewFrame();
+            ::ImGui::NewFrame();
             if(_showMetricsWindow)
             {
-                ImGui::ShowMetricsWindow(&_showMetricsWindow);
+                ::ImGui::ShowMetricsWindow(&_showMetricsWindow);
             }
         }
 
-        void EndFrame() final
+        void EndFrame()
         {
-            ImGui::Render();
+            ::ImGui::Render();
 
             for(auto it = _bufferCache.begin(); it != _bufferCache.end();)
             {
@@ -320,10 +345,9 @@ namespace NovelRT::UI::DearImGui
             }
         }
 
-        void UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) final
+        void UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
         {
-            auto& io = ImGui::GetIO();
-            ImDrawData* drawData = ImGui::GetDrawData();
+            ImDrawData* drawData = ::ImGui::GetDrawData();
 
             if (drawData->TotalVtxCount <= 0)
             {
@@ -334,8 +358,6 @@ namespace NovelRT::UI::DearImGui
 
             auto graphicsContext = _graphicsDevice->GetCurrentContext();
             auto graphicsSurface = _graphicsDevice->GetSurface();
-            float surfaceWidth = graphicsSurface->GetWidth();
-            float surfaceHeight = graphicsSurface->GetHeight();
 
             size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
             size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
@@ -346,13 +368,13 @@ namespace NovelRT::UI::DearImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
             bufferCreateInfo.size = vertexSize;
             auto vertexStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{*vertexStagingBuffer.get(), 10});
+            _bufferCache.emplace_back(CachedBufferObject{vertexStagingBuffer, 10});
 
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto vertexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{*vertexBuffer.get(), 10});
+            _bufferCache.emplace_back(CachedBufferObject{vertexBuffer, 10});
 
             // Create index buffer + staging
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
@@ -360,13 +382,13 @@ namespace NovelRT::UI::DearImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
             bufferCreateInfo.size = indexSize;
             auto indexStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{*indexStagingBuffer.get(), 10});
+            _bufferCache.emplace_back(CachedBufferObject{indexStagingBuffer, 10});
 
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto indexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{*indexBuffer.get(), 10});
+            _bufferCache.emplace_back(CachedBufferObject{indexBuffer, 10});
 
             // Allocate buffers
             auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 4);
@@ -375,14 +397,11 @@ namespace NovelRT::UI::DearImGui
             auto indexStageBufferRegion = indexStagingBuffer->Allocate(indexSize, 4);
 
             // Map vertex buffer to region
-            auto pVertexBuffer = vertexStagingBuffer->Map<ImDrawVert>(vertexBufferRegion);
+            auto pVertexBuffer = vertexStagingBuffer->template Map<ImDrawVert>(vertexBufferRegion.get());
             auto pVertPtr = pVertexBuffer.data();
             // Map index buffer to region
-            auto pIndexbuffer = indexStagingBuffer->Map<ImDrawIdx>(indexBufferRegion);
+            auto pIndexbuffer = indexStagingBuffer->template Map<ImDrawIdx>(indexBufferRegion.get());
             auto pIdxPtr = pIndexbuffer.data();
-
-            int32_t vertInitial = 0;
-            int32_t indexInitial = 0;
 
             // Slamjam the vertex buffer and index buffer data into their regions
             for (int i = 0; i < drawData->CmdListsCount; i++)
@@ -398,15 +417,15 @@ namespace NovelRT::UI::DearImGui
             }
 
             // Unmap and copy to GPU
-            vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-            indexStagingBuffer->UnmapAndWrite(indexBufferRegion);
-            currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
-            currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
+            vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion.get());
+            indexStagingBuffer->UnmapAndWrite(indexBufferRegion.get());
+            currentCmdList->CmdCopy(vertexBufferRegion.get(), vertexStageBufferRegion.get());
+            currentCmdList->CmdCopy(indexBufferRegion.get(), indexStageBufferRegion.get());
 
             //Sync the commands so that we can prevent data issues
-            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer, GraphicsMemoryAccessMode::TransferWrite, 
+            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer.get(), GraphicsMemoryAccessMode::TransferWrite,
                 GraphicsMemoryAccessMode::VertexAttributeRead, GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
-            currentCmdList->CmdPipelineBufferBarrier(indexBuffer, GraphicsMemoryAccessMode::TransferWrite, 
+            currentCmdList->CmdPipelineBufferBarrier(indexBuffer.get(), GraphicsMemoryAccessMode::TransferWrite,
                 GraphicsMemoryAccessMode::IndexRead, GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
 
             _currentIndexBufferRegion = indexBufferRegion;
@@ -415,7 +434,7 @@ namespace NovelRT::UI::DearImGui
             _cachedDrawData = drawData;
         }
 
-        void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TBackend>> currentCmdList) final
+        void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
         {
             if(!_drawEnabled)
                 return;
@@ -433,7 +452,7 @@ namespace NovelRT::UI::DearImGui
             ImVec2 clippingScale = drawData->FramebufferScale;
 
             // Bind the Vertex Buffers and the index buffer region
-            std::array<std::shared_ptr<GraphicsBuffer<TBackend>>, 1> buffers{_currentVertexBuffer};
+            std::array<const GraphicsBuffer<TGraphicsBackend>*, 1> buffers{_currentVertexBuffer.get()};
             auto currentOffset = _currentVertexBufferRegion->GetOffset();
             auto currentIndexBufferRegion = _currentIndexBufferRegion;
             std::array<size_t, 1> offsets{currentOffset};
@@ -448,9 +467,9 @@ namespace NovelRT::UI::DearImGui
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
-            currentCmdList->CmdBindPipeline(_pipeline);
+            currentCmdList->CmdBindPipeline(_pipeline.get());
             currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-            currentCmdList->CmdBindIndexBuffer(_currentIndexBufferRegion, IndexType::UInt16);
+            currentCmdList->CmdBindIndexBuffer(_currentIndexBufferRegion.get(), IndexType::UInt16);
 
             float scale[2];
             scale[0] = 2.0f / drawData->DisplaySize.x;
@@ -458,14 +477,13 @@ namespace NovelRT::UI::DearImGui
             float translate[2];
             translate[0] = -1.0f - drawData->DisplayPos.x * scale[0];
             translate[1] = -1.0f - drawData->DisplayPos.y * scale[1];
-            size_t floatSize = sizeof(float) * 2;
-            NovelRT::Utilities::Misc::Span<float> scaleSpan(scale);
-            NovelRT::Utilities::Misc::Span<float> translateSpan(translate);
+            NovelRT::Utilities::Span<float> scaleSpan(scale);
+            NovelRT::Utilities::Span<float> translateSpan(translate);
 
-            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0,
-                                            NovelRT::Utilities::Misc::SpanCast<uint8_t>(scaleSpan));
-            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
-                                            NovelRT::Utilities::Misc::SpanCast<uint8_t>(translateSpan));
+            currentCmdList->CmdPushConstants(_pipelineSignature.get(), ShaderProgramVisibility::Vertex, 0,
+                                            NovelRT::Utilities::SpanCast<uint8_t>(scaleSpan));
+            currentCmdList->CmdPushConstants(_pipelineSignature.get(), ShaderProgramVisibility::Vertex, sizeof(float) * 2,
+                                            NovelRT::Utilities::SpanCast<uint8_t>(translateSpan));
 
             currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                         NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
@@ -516,12 +534,12 @@ namespace NovelRT::UI::DearImGui
 
                         // Bind DescriptorSet with font or user texture
                         auto texture2DRegion = *reinterpret_cast<
-                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>*>(
+                            std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>>*>(
                             drawCommand->GetTexID());
-                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                        std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>>
                             inputResourceRegions{
-                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>(
-                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
+                                std::static_pointer_cast<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>(
+                                    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TGraphicsBackend>>(
                                         texture2DRegion))};
 
                         // Specify the descriptor set data
@@ -529,11 +547,10 @@ namespace NovelRT::UI::DearImGui
                         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
                         descriptorSetData->UpdateDescriptorSetData();
                         graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
-                        _descriptorSetCache.emplace_back(CachedDescriptorSetObject{*descriptorSetData.get(), 10});
+                        _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 10});
 
                         // Bind the descriptor set
-                        std::array<std::shared_ptr<GraphicsDescriptorSet<TBackend>>, 1> descriptorData{
-                            descriptorSetData};
+                        std::array<const GraphicsDescriptorSet<TGraphicsBackend>*, 1> descriptorData{descriptorSetData.get()};
 
                         currentCmdList->CmdBindDescriptorSets(descriptorData);
 
@@ -548,11 +565,6 @@ namespace NovelRT::UI::DearImGui
             // Reset clipping rect as per imgui
             currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                         NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
-        }
-
-        ~ImGuiUIProvider() final
-        {
-            ImGui::DestroyContext(_imguiContext);
         }
     };
 }

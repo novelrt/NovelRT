@@ -32,6 +32,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] Utilities::Span<uint8_t> MapBytes() final;
         [[nodiscard]] Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) final;
 
         void UnmapBytes() final;
 

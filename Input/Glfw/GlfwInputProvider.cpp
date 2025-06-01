@@ -219,6 +219,25 @@ namespace NovelRT::Input
         throw NovelRT::Exceptions::KeyNotFoundException("Unavailable input key requested from input service.");
     }
 
+    InputAction* GlfwInputProvider::FindInputActionForKey(const std::string& keyRequested)
+    {
+        auto key = std::find_if(_availableKeys.begin(), _availableKeys.end(), [&keyRequested](const auto& it) {
+            return it.first == keyRequested;
+        });
+
+        if (key == _availableKeys.end())
+            return nullptr;
+
+        auto action = std::find_if(_mappedActions.begin(), _mappedActions.end(), [&key = key->second](const auto& it) {
+            return key == it.pairedKey;
+        });
+
+        if (action == _mappedActions.end())
+            return nullptr;
+
+        return &*action;
+    }
+
     NovelRT::Utilities::Span<InputAction> GlfwInputProvider::GetAllMappings() noexcept
     {
         return _mappedActions;

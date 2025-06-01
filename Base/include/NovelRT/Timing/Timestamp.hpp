@@ -53,6 +53,12 @@ namespace NovelRT::Timing
     template <typename T>
     constexpr T GetSeconds(const Timestamp& timestamp) noexcept
     {
-        return std::chrono::duration_cast<std::chrono::duration<T>>(timestamp.time_since_epoch());
+        return std::chrono::duration_cast<std::chrono::duration<T>>(timestamp.time_since_epoch()).count();
+    }
+
+    template <typename T>
+    constexpr T GetSeconds(const GameClock::duration& duration) noexcept
+    {
+        return std::chrono::duration_cast<std::chrono::duration<T>>(duration).count();
     }
 }

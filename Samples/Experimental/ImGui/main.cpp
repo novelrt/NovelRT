@@ -20,7 +20,6 @@
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 
-
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
@@ -28,7 +27,7 @@
 
 #include <NovelRT/Input/Glfw/GlfwInputProvider.hpp>
 
-//#include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
+#include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Maths/GeoVector3F.hpp>
@@ -51,7 +50,7 @@ using namespace NovelRT::Input;
 using namespace NovelRT::Windowing::Glfw;
 using namespace NovelRT::Windowing;
 
-//using namespace NovelRT::UI::DearImGui;
+using namespace NovelRT::UI::ImGui;
 
 std::vector<GraphicsBuffer<VulkanGraphicsBackend>> shittyBuffer{};
 NovelRT::Utilities::Event<NovelRT::Timing::Timestamp::duration> DummyUpdateStuff;
@@ -82,18 +81,18 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-template <typename TBackend>
-std::shared_ptr<GraphicsDescriptorSet<TBackend>> regularDrawCmds(
-    std::shared_ptr<GraphicsContext<TBackend>> context,
-    std::shared_ptr<GraphicsCmdList<TBackend>> currentCmdList,
-    std::shared_ptr<GraphicsRenderPass<TBackend>>,
+template <typename TGraphicsBackend>
+std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
+    std::shared_ptr<GraphicsContext<TGraphicsBackend>> context,
+    std::shared_ptr<GraphicsCmdList<TGraphicsBackend>> currentCmdList,
+    std::shared_ptr<GraphicsRenderPass<TGraphicsBackend>>,
     float surfaceWidth,
     float surfaceHeight,
-    std::shared_ptr<GraphicsPipelineSignature<TBackend>> pipelineSignature,
-    std::shared_ptr<GraphicsPipeline<TBackend>> pipeline,
-    std::shared_ptr<GraphicsBuffer<TBackend>> vertexBuffer,
-    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> vertexBufferRegion,
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+    std::shared_ptr<GraphicsPipelineSignature<TGraphicsBackend>> pipelineSignature,
+    std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> pipeline,
+    std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> vertexBuffer,
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> vertexBufferRegion,
+    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>>
         inputResourceRegions)
 {
 
@@ -101,7 +100,7 @@ std::shared_ptr<GraphicsDescriptorSet<TBackend>> regularDrawCmds(
     currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                   NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
 
-    std::array<const GraphicsBuffer<TBackend>*, 1> buffers{vertexBuffer.get()};
+    std::array<const GraphicsBuffer<TGraphicsBackend>*, 1> buffers{vertexBuffer.get()};
     std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
 
     currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
@@ -110,7 +109,7 @@ std::shared_ptr<GraphicsDescriptorSet<TBackend>> regularDrawCmds(
     descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
     descriptorSetData->UpdateDescriptorSetData();
 
-    std::array<const GraphicsDescriptorSet<TBackend>*, 1> descriptorData{descriptorSetData.get()};
+    std::array<const GraphicsDescriptorSet<TGraphicsBackend>*, 1> descriptorData{descriptorSetData.get()};
     currentCmdList->CmdBindDescriptorSets(descriptorData);
     context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
 
@@ -146,8 +145,10 @@ int main()
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     /// IMGUI
-    //auto uiProvider = new ImGuiUIProvider<VulkanGraphicsBackend>();
-    //uiProvider->Initialise(device, sharedInputDevice, gfxDevice, memoryAllocator, true);
+    auto uiProvider = std::make_shared<ImGuiUIProvider<
+        NovelRT::Graphics::Vulkan::VulkanGraphicsBackend,
+        NovelRT::Input::Glfw::GlfwInputBackend,
+        NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice, memoryAllocator, true);
     /// IMGUI
 
     GraphicsBufferCreateInfo bufferCreateInfo{};
@@ -237,7 +238,7 @@ int main()
     gfxContext->GetFence()->Reset();
 
     /// imgui
-    int strIndex = 0;
+    uint32_t strIndex = 0;
     std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
 
     auto surface = gfxDevice->GetSurface();
@@ -262,7 +263,7 @@ int main()
             }
 
             // ImGuiiiiiiiiiiiiiiiiiiiiii
-            /*uiProvider->BeginFrame(delta.getSecondsFloat());
+            uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
 
             ImGui::SetNextWindowSize(ImVec2(612, 200));
             ImGui::SetNextWindowPos(ImVec2(100, 500));
@@ -271,11 +272,11 @@ int main()
 
             if (strIndex < arr.size())
             {
-                ImGui::Text(arr.at(strIndex).c_str());
+                ImGui::Text("%s", arr.at(strIndex).c_str());
             }
 
             ImGui::End();
-            uiProvider->EndFrame();*/
+            uiProvider->EndFrame();
 
             auto surface = gfxDevice->GetSurface();
             auto context = gfxDevice->GetCurrentContext();
@@ -286,7 +287,7 @@ int main()
 
             auto renderPass = gfxDevice->GetRenderPass();
 
-            //uiProvider->UploadToGPU(currentCmdList);
+            uiProvider->UploadToGPU(currentCmdList);
 
             NovelRT::Graphics::ClearValue colourDataStruct{};
             colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
@@ -309,7 +310,7 @@ int main()
             auto descriptorSetData = regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
                             vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
-            //uiProvider->Draw(currentCmdList);
+            uiProvider->Draw(currentCmdList);
 
             currentCmdList->CmdEndRenderPass();
             context->EndFrame();

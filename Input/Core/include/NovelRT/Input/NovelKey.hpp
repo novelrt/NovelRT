@@ -21,7 +21,7 @@ namespace NovelRT::Input
         [[nodiscard]] int32_t GetExternalKeyCode() const noexcept;
         [[nodiscard]] int32_t GetExternalModifierCode() const noexcept;
 
-        [[nodiscard]] inline bool operator==(NovelKey& other) noexcept
+        [[nodiscard]] inline bool operator==(const NovelKey& other) const noexcept
         {
             return (_keyName == other.GetKeyName()) && (_pairedKey == other.GetExternalKeyCode());
         };

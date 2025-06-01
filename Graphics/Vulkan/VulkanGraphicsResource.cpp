@@ -121,6 +121,16 @@ namespace NovelRT::Graphics
         vmaVirtualFree(GetVirtualBlock(), region.GetVirtualAllocation());
     }
 
+    Utilities::Span<uint8_t> VulkanGraphicsResource::MapBytes()
+    {
+        return MapBytes(_allocationInfo.offset, _allocationInfo.size);
+    }
+
+    Utilities::Span<const uint8_t> VulkanGraphicsResource::MapBytesForRead()
+    {
+        return MapBytesForRead(_allocationInfo.offset, _allocationInfo.size);
+    }
+
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept
     {
         return _allocation;

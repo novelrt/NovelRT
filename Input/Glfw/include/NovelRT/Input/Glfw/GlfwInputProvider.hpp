@@ -66,6 +66,7 @@ namespace NovelRT::Input
         [[nodiscard]] InputAction& AddInputAction(const std::string& actionName,
                                                   const std::string& keyIdentifier);
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested);
+        [[nodiscard]] InputAction* FindInputActionForKey(const std::string& keyRequested);
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetRawMousePosition() noexcept;
         [[nodiscard]] NovelRT::Utilities::Span<InputAction> GetAllMappings() noexcept;

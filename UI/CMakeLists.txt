@@ -7,8 +7,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::UI
 
   HEADERS
     PUBLIC
-      include/NovelRT/UI/UIProvider.hpp
-      include/NovelRT/UI/ImGui/imconfig.hpp
       include/NovelRT/UI/ImGui/ImGuiUIProvider.hpp
 
   LINK_LIBRARIES

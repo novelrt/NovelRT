@@ -64,7 +64,10 @@ namespace NovelRT::Graphics
 
         void Free(GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>& region);
 
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes();
         [[nodiscard]] virtual NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead();
         [[nodiscard]] virtual NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) = 0;
 
         virtual void UnmapBytes() = 0;
