@@ -17,10 +17,9 @@ jobs:
         vulkan: [1.4.313.1, 1.3.296.0]
 
     steps:
-      - uses: humbletim/install-vulkan-sdk@v1.2
+      - uses: novelrt/setup-vulkan@v1
         with:
           version: ${{ matrix.vulkan }}
-          cache: true
 
       - uses: novelrt/setup-cpp@v1
       - uses: actions/checkout@v4
