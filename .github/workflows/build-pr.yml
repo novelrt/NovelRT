@@ -18,10 +18,10 @@ jobs:
       matrix:
         configuration: [Debug, RelWithDebInfo]
         os: [windows-2025, ubuntu-24.04, macos-15]
-        vulkan: [1.4.313.1]
+        vulkan: [1.4.313.0]
 
     steps:
-      - uses: novelrt/setup-vulkan@v1.2
+      - uses: novelrt/setup-vulkan@v1.3
         with:
           version: ${{ matrix.vulkan }}
 
