@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Debug, RelWithDebInfo]
-        os: [windows-2025, ubuntu-24.04, macos-15]
+        os: [windows-2025, ubuntu-24.04, macos-13]
         vulkan: [1.4.313.0]
 
     steps:
@@ -32,7 +32,7 @@ jobs:
         shell: bash
         run: |
           find \( -path './build' -o -path './LegacySrc' -o -path 'artefacts' \) -prune -o \
-            -name '*.cpp' -o -name '*.hpp' -execdir clang-format --style=file:$(pwd)/.clang-format --Werror '{}' \+
+            -name '*.cpp' -o -name '*.hpp' -execdir clang-format --dry-run --Werror --style=file '{}' \+
 
       - name: Restore incremental build artefacts
         id: cache
@@ -44,7 +44,7 @@ jobs:
       - name: Generate build system
         if: steps.cache.output.cache-hit != 'true'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} \
-            -DCMAKE_CXX_CLANG_TIDY="clang-tidy --fix --fix-notes --config-file=.clang-tidy -p build" \
+            -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build NovelRT
