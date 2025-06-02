@@ -21,7 +21,7 @@ jobs:
         vulkan: [1.4.313.0]
 
     steps:
-      - uses: novelrt/setup-vulkan@v1.4
+      - uses: novelrt/setup-vulkan@v1.5
         with:
           version: ${{ matrix.vulkan }}
 
