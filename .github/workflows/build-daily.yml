@@ -1,0 +1,47 @@
+name: Daily Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  Build:
+    name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, RelWithDebInfo]
+        os: [windows-2025, windows-2022, ubuntu-24.04, macos-15, macos-14, macos-13]
+        vulkan: [1.4.313.1, 1.3.296.0]
+
+    steps:
+      - uses: novelrt/setup-vulkan@v1
+        with:
+          version: ${{ matrix.vulkan }}
+
+      - uses: novelrt/setup-cpp@v1
+      - uses: actions/checkout@v4
+
+      - name: Restore incremental build artefacts
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ matrix.name }}-${{ matrix.configuration }}
+
+      - name: Generate build system
+        if: steps.cache.output.cache-hit != 'true'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+
+      - name: Build NovelRT
+        run: |
+          cmake --build build --config ${{ matrix.configuration }} --parallel
+          cmake --install build --config ${{ matrix.configuration }} --parallel --prefix artefacts
+
+      - name: Publish build artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-${{ matrix.configuration }}
+          path: artefacts

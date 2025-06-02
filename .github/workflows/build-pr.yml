@@ -1,0 +1,58 @@
+name: Build PR
+
+on:
+  pull_request:
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**/*.cmake'
+      - '**/CMakelists.txt'
+
+jobs:
+  Build:
+    name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, RelWithDebInfo]
+        os: [windows-2025, ubuntu-24.04, macos-15]
+        vulkan: [1.4.313.1]
+
+    steps:
+      - uses: novelrt/setup-vulkan@v1
+        with:
+          version: ${{ matrix.vulkan }}
+
+      - uses: novelrt/setup-cpp@v1
+      - uses: actions/checkout@v4
+
+      - name: Check formatting via clang-format
+        run: |
+          find \( -path './build' -o -path './LegacySrc' -o -path 'artefacts' \) -prune -o \
+            -name '*.cpp' -o -name '*.hpp' -execdir clang-format --style=file:$(pwd)/.clang-format --Werror '{}' \+
+
+      - name: Restore incremental build artefacts
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: pr${{ github.event.number }}-${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
+
+      - name: Generate build system
+        if: steps.cache.output.cache-hit != 'true'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} \
+            -DCMAKE_CXX_CLANG_TIDY="clang-tidy --fix --fix-notes --config-file=.clang-tidy -p build" \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build NovelRT
+        run: |
+          cmake --build build --config ${{ matrix.configuration }} --parallel
+          cmake --install build --config ${{ matrix.configuration }} --parallel --prefix artefacts
+
+      - name: Publish build artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
+          path: artefacts
