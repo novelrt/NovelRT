@@ -31,8 +31,11 @@ jobs:
       - name: Check formatting via clang-format
         shell: bash
         run: |
-          find \( -path './build' -o -path './LegacySrc' -o -path 'artefacts' \) -prune -o \
-            -name '*.cpp' -o -name '*.hpp' -execdir clang-format --dry-run --Werror --style=file '{}' \+
+          buildDir="$(pwd)/build"
+          legacySrcDir="$(pwd)/LegacySrc"
+          artefactsDir="$(pwd)/artefacts"
+          find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
+            -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
 
       - name: Restore incremental build artefacts
         id: cache
