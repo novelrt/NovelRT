@@ -30,6 +30,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Check formatting via clang-format
+        shell: bash
         run: |
           find \( -path './build' -o -path './LegacySrc' -o -path 'artefacts' \) -prune -o \
             -name '*.cpp' -o -name '*.hpp' -execdir clang-format --style=file:$(pwd)/.clang-format --Werror '{}' \+
