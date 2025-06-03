@@ -81,6 +81,12 @@ namespace NovelRT::Graphics::Vulkan
         auto [allocation, info] = GetVirtualAllocation(size, alignment);
         return AllocateInternal(allocation, info);
     }
+    
+    void VulkanGraphicsResource::Free(VulkanGraphicsResourceMemoryRegionBase& region)
+    {
+        vmaVirtualFree(GetVirtualBlock(), region.GetVirtualAllocation());
+        FreeInternal(region);
+    }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept
     {
