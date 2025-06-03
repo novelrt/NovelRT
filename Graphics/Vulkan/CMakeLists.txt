@@ -49,7 +49,9 @@ target_sources(NovelRT-Graphics-Vulkan
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp
+      include/NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp
+      include/NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
