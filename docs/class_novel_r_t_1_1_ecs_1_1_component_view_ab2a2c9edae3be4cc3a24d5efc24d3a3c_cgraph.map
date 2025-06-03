@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::ComponentView::HasComponent" name="NovelRT::Ecs::ComponentView::HasComponent">
+<area shape="rect" id="node1" title="Verifies if a given entity has a component." alt="" coords="5,5,225,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a5e0afee7bdd935cab3669c46ee65ea1a" title="Verifies if a given entity has a component." alt="" coords="273,5,500,47"/>
+</map>

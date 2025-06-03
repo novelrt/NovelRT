@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::Utilities::AlignUp" name="NovelRT::Maths::Utilities::AlignUp">
+<area shape="rect" id="node1" title="Rounds a given address up to the nearest alignment." alt="" coords="5,5,188,47"/>
+<area shape="rect" id="node2" href="$namespace_novel_r_t_1_1_maths_1_1_utilities.html#aa5514d04cc39f3d97c91af20a1eacfdb" title="Evaluates if the provided integer is a power of 2." alt="" coords="236,5,419,47"/>
+</map>

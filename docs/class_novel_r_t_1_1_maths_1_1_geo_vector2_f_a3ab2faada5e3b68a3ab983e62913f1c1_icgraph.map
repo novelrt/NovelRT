@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::GeoVector2F::GetSquaredMagnitude" name="NovelRT::Maths::GeoVector2F::GetSquaredMagnitude">
+<area shape="rect" id="node1" title="Calculates the squared magnitude of this GeoVector2F using its components." alt="" coords="260,5,467,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#ac8c2a01a009c877a63f723e8477ebd3c" title="Calculates the squared length of this GeoVector2F using its components." alt="" coords="5,5,212,47"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::ComponentBuffer::GetComponentUnsafe" name="NovelRT::Ecs::ComponentBuffer::GetComponentUnsafe">
+<area shape="rect" id="node1" title="Gets a copy of the component instance attached to this entity." alt="" coords="312,39,539,80"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a02faba45ddb1608481305cfcf6b3a8d6" title="Gets a copy of the component instance attached to this entity." alt="" coords="25,5,245,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#ad1ac5926fab49a4378f791825072e953" title="Attempts to get the component instance attached to this entity." alt="" coords="5,71,264,112"/>
+</map>

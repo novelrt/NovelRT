@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::TransformComponent" name="NovelRT::Ecs::TransformComponent">
+<area shape="rect" id="node1" title=" " alt="" coords="105,95,358,121"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html" title="Represents a vector with two components." alt="" coords="5,5,220,32"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html" title="Represents a vector with three components." alt="" coords="244,5,459,32"/>
+</map>

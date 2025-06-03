@@ -1,0 +1,6 @@
+<map id="NovelRT::Ecs::ComponentBuffer::GetDeleteInstructionState" name="NovelRT::Ecs::ComponentBuffer::GetDeleteInstructionState">
+<area shape="rect" id="node1" title="Gets the delete instruction state for type T." alt="" coords="541,39,768,80"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a1b57d235481d3bfbc0b8e832f101287e" title="Gets the immutable component state for a delete instruction." alt="" coords="273,5,493,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#affa086e04bd8bf538ab315b69b8818bb" title="Removes the specified component type from a given entity." alt="" coords="273,71,493,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a0230d7f5e387c84c77d58260280f3051" title="Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless ope..." alt="" coords="5,71,225,112"/>
+</map>

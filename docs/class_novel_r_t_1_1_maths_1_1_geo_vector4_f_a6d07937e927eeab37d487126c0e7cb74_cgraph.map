@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::GeoVector4F::RotateToAngleAroundPointDeg" name="NovelRT::Maths::GeoVector4F::RotateToAngleAroundPointDeg">
+<area shape="rect" id="node1" title="Rotates this vector around a given point by a given angle in degrees." alt="" coords="5,5,241,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a307775cb9d5d7f396b1c90dda0f02f69" title="Rotates this vector around a given point by a given angle in radians." alt="" coords="289,5,524,47"/>
+</map>

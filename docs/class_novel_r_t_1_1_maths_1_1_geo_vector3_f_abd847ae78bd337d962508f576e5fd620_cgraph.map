@@ -1,0 +1,4 @@
+<map id="NovelRT::Maths::GeoVector3F::operator+" name="NovelRT::Maths::GeoVector3F::operator+">
+<area shape="rect" id="node1" title="Calculates the entrywise sum of this GeoVector3F and another GeoVector3F." alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector3_f.html#a4f1f51de3d0c7aa66c20656cc1f32434" title="Creates a GeoVector3F with all components set to zero." alt="" coords="260,5,467,47"/>
+</map>

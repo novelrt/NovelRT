@@ -1,0 +1,4 @@
+<map id="NovelRT::Ecs::ComponentView::TryGetComponent" name="NovelRT::Ecs::ComponentView::TryGetComponent">
+<area shape="rect" id="node1" title="Attempts to get the component instance attached to this entity." alt="" coords="5,5,225,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#ad1ac5926fab49a4378f791825072e953" title="Attempts to get the component instance attached to this entity." alt="" coords="273,5,500,47"/>
+</map>

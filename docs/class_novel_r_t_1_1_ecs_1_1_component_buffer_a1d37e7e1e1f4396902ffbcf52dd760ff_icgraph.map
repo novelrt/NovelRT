@@ -1,0 +1,6 @@
+<map id="NovelRT::Ecs::ComponentBuffer::PushComponentUpdateInstruction" name="NovelRT::Ecs::ComponentBuffer::PushComponentUpdateInstruction">
+<area shape="rect" id="node1" title="Pushes in an update instruction for the given entity, component and thread pool ID." alt="" coords="841,5,1093,47"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a2fd2a2e8141357fd203f78c15a6b05f5" title="Pushes a new Component state as an update instruction into the ComponentBuffer with the current threa..." alt="" coords="541,5,793,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#affa086e04bd8bf538ab315b69b8818bb" title="Removes the specified component type from a given entity." alt="" coords="273,5,493,47"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a0230d7f5e387c84c77d58260280f3051" title="Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless ope..." alt="" coords="5,5,225,47"/>
+</map>

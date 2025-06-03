@@ -1,0 +1,11 @@
+<map id="NovelRT::Maths::GeoVector2F::GeoVector2F" name="NovelRT::Maths::GeoVector2F::GeoVector2F">
+<area shape="rect" id="node1" title="Creates a GeoVector2F with all components set to zero." alt="" coords="515,169,721,211"/>
+<area shape="rect" id="node2" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abc8b3cf36d2e3cb5291ce76668cef380" title="Constructs a unit GeoVector2F with a magnitude of one by normalising this vector." alt="" coords="260,5,467,47"/>
+<area shape="rect" id="node3" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abd69be91e2ab2f8abb246a088e5107bc" title="Calculates the Hadamard product of this GeoVector2F and another GeoVector2F." alt="" coords="260,71,467,112"/>
+<area shape="rect" id="node4" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a5ec66ddc983579f8b1b902ed7300895a" title="Calculates the entrywise sum of this GeoVector2F and another GeoVector2F." alt="" coords="260,136,467,177"/>
+<area shape="rect" id="node5" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#aea0753252c5e644b35298d904fbf5259" title="Calculates the entrywise difference of this GeoVector2F and another GeoVector2F." alt="" coords="260,201,467,243"/>
+<area shape="rect" id="node6" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a7fef303bbdcd24c7e3e770775c6c30d1" title="Calculates the quotients of a Hadamard division using this GeoVector2F and another GeoVector2F." alt="" coords="260,267,467,308"/>
+<area shape="rect" id="node7" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a427236c81f4d34a918b51f21627fc631" title="Creates a new uniform GeoVector2F based on the specified value." alt="" coords="260,332,467,373"/>
+<area shape="rect" id="node8" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abf898074f7af706bc34ed1fa6094cf56" title="Creates a new GeoVector2F instance with a uniform value of one." alt="" coords="5,299,212,340"/>
+<area shape="rect" id="node9" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a5540d825c67846782b34f1be08c98385" title="Creates a new GeoVector2F instance with a uniform value of zero." alt="" coords="5,364,212,405"/>
+</map>
