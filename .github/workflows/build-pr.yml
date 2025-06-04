@@ -54,6 +54,7 @@ jobs:
       - name: Vulkan Test
         run: |
           echo $Env:VULKAN_SDK
+          ls $Env:VULKAN_SDK
         shell: pwsh
         
       - name: Generate build system
