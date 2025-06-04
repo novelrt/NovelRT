@@ -22,7 +22,6 @@ jobs:
           artefactsDir="$(pwd)/artefacts"
           find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
             -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
-        if: ${{ matrix.os == 'linux' }}
 
   Build:
     name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
