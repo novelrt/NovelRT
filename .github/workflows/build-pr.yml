@@ -50,6 +50,12 @@ jobs:
           path: build
           key: pr${{ github.event.number }}-${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
 
+
+      - name: Vulkan Test
+        run: |
+          echo $Env:VULKAN_SDK
+        shell: pwsh
+        
       - name: Generate build system
         if: steps.cache.output.cache-hit != 'true'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} \
