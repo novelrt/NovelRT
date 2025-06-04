@@ -13,6 +13,7 @@ jobs:
     name: Check Formatting
     runs-on: ubuntu-24.04
     steps:
+      - uses: novelrt/setup-cpp@v1
       - uses: actions/checkout@v4
       - name: Check formatting via clang-format
         shell: bash
