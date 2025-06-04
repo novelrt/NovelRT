@@ -9,6 +9,21 @@ on:
       - '**/CMakelists.txt'
 
 jobs:
+  Formatting:
+    name: Check Formatting
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check formatting via clang-format
+        shell: bash
+        run: |
+          buildDir="$(pwd)/build"
+          legacySrcDir="$(pwd)/LegacySrc"
+          artefactsDir="$(pwd)/artefacts"
+          find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
+            -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
+        if: ${{ matrix.os == 'linux' }}
+
   Build:
     name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
     runs-on: ${{ matrix.os }}
@@ -17,7 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Debug, RelWithDebInfo]
-        os: [windows-2025, ubuntu-24.04, macos-13]
+        os: [windows-2025, ubuntu-24.04, macos-15]
         vulkan: [1.4.313.0]
 
     steps:
@@ -27,15 +42,6 @@ jobs:
 
       - uses: novelrt/setup-cpp@v1
       - uses: actions/checkout@v4
-
-      - name: Check formatting via clang-format
-        shell: bash
-        run: |
-          buildDir="$(pwd)/build"
-          legacySrcDir="$(pwd)/LegacySrc"
-          artefactsDir="$(pwd)/artefacts"
-          find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
-            -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
 
       - name: Restore incremental build artefacts
         id: cache
