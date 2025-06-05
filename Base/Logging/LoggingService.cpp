@@ -4,6 +4,7 @@
 #include <NovelRT/Exceptions/NullPointerException.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 #include <iostream>
 
 namespace NovelRT

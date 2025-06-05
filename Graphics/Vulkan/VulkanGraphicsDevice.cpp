@@ -379,7 +379,7 @@ namespace NovelRT::Graphics
         VkRenderPass returnRenderPass;
 
         // The swap chain needs to be created first to ensure we know the format
-        auto* vulkanSwapchain = GetVulkanSwapchain();
+        VkSwapchainKHR vulkanSwapchain = GetVulkanSwapchain();
         unused(vulkanSwapchain);
 
         VkAttachmentDescription attachmentDescription{};

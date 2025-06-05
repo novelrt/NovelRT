@@ -81,7 +81,7 @@ namespace NovelRT::Graphics
 
     Utilities::Span<uint8_t> VulkanGraphicsBuffer::MapBytes(size_t rangeOffset, size_t rangeLength)
     {
-        const size_t sizeOfBuffer = GetAllocationInfo().size;
+        const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
 
         if (rangeValidationValue < rangeLength)
@@ -106,7 +106,7 @@ namespace NovelRT::Graphics
 
     Utilities::Span<const uint8_t> VulkanGraphicsBuffer::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
     {
-        const size_t sizeOfBuffer = GetAllocationInfo().size;
+        const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
 
         if (rangeValidationValue < rangeLength)
@@ -156,7 +156,7 @@ namespace NovelRT::Graphics
     void VulkanGraphicsBuffer::UnmapBytesAndWrite()
     {
         auto allocationInfo = GetAllocationInfo();
-        UnmapBytesAndWrite(allocationInfo.offset, allocationInfo.size);
+        UnmapBytesAndWrite(static_cast<size_t>(allocationInfo.offset), static_cast<size_t>(allocationInfo.size));
     }
 
     void VulkanGraphicsBuffer::UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength)
@@ -166,7 +166,7 @@ namespace NovelRT::Graphics
             throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
         }
 
-        const size_t sizeOfBuffer = GetAllocationInfo().size;
+        const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - writtenRangeOffset;
 
         if (rangeValidationValue < writtenRangeLength)
