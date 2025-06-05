@@ -13,6 +13,19 @@ jobs:
     name: Check Formatting
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: novelrt/setup-cpp@v1
+
+      - name: Check formatting via clang-format
+        shell: bash
+        run: |
+          buildDir="$(pwd)/build"
+          legacySrcDir="$(pwd)/LegacySrc"
+          artefactsDir="$(pwd)/artefacts"
+          find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
+            -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
+
       - name: Preinstall dependencies
         if: ${{ runner.os == 'Linux' }}
         run: |
@@ -32,27 +45,15 @@ jobs:
           sudo update-alternatives --set cc /usr/bin/clang
           sudo update-alternatives --set c++ /usr/bin/clang++
 
-      - uses: actions/checkout@v4
-
-      - uses: novelrt/setup-cpp@v1
       - uses: novelrt/setup-vulkan@v2
         with:
           version: 1.4.313.0
 
-      - name: Check formatting via clang-format
-        shell: bash
-        run: |
-          buildDir="$(pwd)/build"
-          legacySrcDir="$(pwd)/LegacySrc"
-          artefactsDir="$(pwd)/artefacts"
-          find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
-            -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
-
       - name: Generate build system
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build NovelRT with Clang-Tidy
-        run: cmake --build build --config ${{ matrix.configuration }} --parallel
+        run: cmake --build build --config Debug --parallel
 
   Build:
     name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
