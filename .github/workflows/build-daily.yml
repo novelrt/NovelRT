@@ -57,7 +57,7 @@ jobs:
           $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
           $installationPath = & $vsWhere -prerelease -latest -property installationPath
           if ($installationPath -and (test-path "$installationPath\Common7\Tools\vsdevcmd.bat")) {
-            & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | foreach-object {
+            & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo -host_arch=amd64 && set" | foreach-object {
               $name, $value = $_ -split '=', 2
               $currentValue = if (Test-Path -Path "env:\$name") { (Get-Item -Path "env:\$name").Value } else { $null }
               if ($value -ne $currentValue) {
