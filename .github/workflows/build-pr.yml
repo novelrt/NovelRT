@@ -37,7 +37,7 @@ jobs:
             libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
             libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            clang-format qtbase5-dev qt6-base-dev
+            clang-format clang-tidy qtbase5-dev qt6-base-dev
 
           sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
@@ -50,7 +50,7 @@ jobs:
           version: 1.4.313.0
 
       - name: Generate build system
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build NovelRT with Clang-Tidy
         run: cmake --build build --config Debug --parallel
@@ -63,7 +63,7 @@ jobs:
       fail-fast: false
       matrix:
         configuration: [Debug, RelWithDebInfo]
-        os: [windows-2025, ubuntu-24.04, macos-15]
+        os: [windows-2025, ubuntu-24.04, macos-15, macos-13]
         vulkan: [1.4.313.0]
 
     steps:
