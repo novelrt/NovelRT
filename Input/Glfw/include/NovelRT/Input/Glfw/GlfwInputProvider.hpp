@@ -27,7 +27,7 @@ namespace NovelRT::Windowing::Glfw
 
 namespace NovelRT::Input
 {
-    template <>
+    template<>
     class InputProvider<Glfw::GlfwInputBackend>
     {
     private:
@@ -63,8 +63,7 @@ namespace NovelRT::Input
         [[nodiscard]] bool IsKeyHeld(const std::string& input) noexcept;
         [[nodiscard]] bool IsKeyReleased(const std::string& input) noexcept;
         [[nodiscard]] KeyState GetKeyState(const std::string& key) noexcept;
-        [[nodiscard]] InputAction& AddInputAction(const std::string& actionName,
-                                                  const std::string& keyIdentifier);
+        [[nodiscard]] InputAction& AddInputAction(const std::string& actionName, const std::string& keyIdentifier);
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested);
         [[nodiscard]] InputAction* FindInputActionForKey(const std::string& keyRequested);
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition() noexcept;

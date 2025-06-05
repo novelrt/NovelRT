@@ -10,13 +10,18 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsDevice;
-    template<typename TBackend> class GraphicsProvider;
-    template<typename TBackend> class GraphicsSurfaceContext;
+    template<typename TBackend>
+    class GraphicsDevice;
+    template<typename TBackend>
+    class GraphicsProvider;
+    template<typename TBackend>
+    class GraphicsSurfaceContext;
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter<TBackend>>
+    template<typename TBackend>
+    class GraphicsAdapter : public std::enable_shared_from_this<GraphicsAdapter<TBackend>>
     {
     public:
         GraphicsAdapter() = delete;

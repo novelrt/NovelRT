@@ -3,14 +3,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Graphics/IGraphicsSurface.hpp>
 
 #include <string>
 
 namespace NovelRT::Windowing
 {
-    template <typename TBackend>
+    template<typename TBackend>
     class WindowProvider : public Graphics::IGraphicsSurface
     {
     public:
@@ -25,7 +25,7 @@ namespace NovelRT::Windowing
         [[nodiscard]] std::string GetWindowTitle() const noexcept;
         void SetWindowTitle(const std::string& newTitle);
 
-        template <typename TGraphicsBackend>
+        template<typename TGraphicsBackend>
         std::shared_ptr<Graphics::GraphicsProvider<TGraphicsBackend>> CreateGraphicsProvider();
     };
 }

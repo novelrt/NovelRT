@@ -10,10 +10,13 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsDescriptorSet;
-    template<typename TBackend> class GraphicsPipelineSignature;
+    template<typename TBackend>
+    class GraphicsDescriptorSet;
+    template<typename TBackend>
+    class GraphicsPipelineSignature;
 
-    template<typename TBackend> class GraphicsContext : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class GraphicsContext : public GraphicsDeviceObject<TBackend>
     {
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility

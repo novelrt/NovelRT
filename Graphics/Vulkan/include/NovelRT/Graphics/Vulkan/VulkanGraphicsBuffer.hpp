@@ -5,8 +5,8 @@
 
 #include <NovelRT/Graphics/GraphicsBufferKind.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
@@ -20,11 +20,11 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-    template <>
-    class GraphicsBuffer<Vulkan::VulkanGraphicsBackend> final
-        : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
+    template<>
+    class GraphicsBuffer<Vulkan::VulkanGraphicsBackend> final : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
     {
     private:
         VkBuffer _vulkanBuffer;
@@ -33,22 +33,22 @@ namespace NovelRT::Graphics
         GraphicsBufferKind _kind;
 
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> shared_from_this();
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsBuffer(
-            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
-            std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
-            const GraphicsBufferCreateInfo& createInfo,
-            VmaAllocation allocation,
-            VmaAllocationInfo allocationInfo,
-            VkBuffer vulkanBuffer);
+        GraphicsBuffer(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+                       std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
+                       const GraphicsBufferCreateInfo& createInfo,
+                       VmaAllocation allocation,
+                       VmaAllocationInfo allocationInfo,
+                       VkBuffer vulkanBuffer);
 
         ~GraphicsBuffer() noexcept final;
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>
+        Allocate(size_t size, size_t alignment);
 
         void Free(GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>& region);
 
@@ -57,16 +57,20 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
 
-        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) final;
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+                                                                              size_t rangeLength) final;
 
         void UnmapBytes() final;
 
         void UnmapBytesAndWrite() final;
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
-        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion);
+        void UnmapAndWrite(
+            const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion);
 
-        template <typename T> [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion)
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map(
+            const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }

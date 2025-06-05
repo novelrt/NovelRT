@@ -17,8 +17,9 @@ namespace NovelRT::Graphics::Vulkan
 namespace NovelRT::Graphics
 {
 
-    template <>
-    class GraphicsRenderPass<Vulkan::VulkanGraphicsBackend> : public std::enable_shared_from_this<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>
+    template<>
+    class GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>
+        : public std::enable_shared_from_this<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>
     {
     private:
         VkRenderPass _vulkanRenderPass;

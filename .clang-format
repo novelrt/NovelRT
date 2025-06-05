@@ -8,6 +8,7 @@ AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: false
 BinPackParameters: false
 BreakBeforeBraces: Allman
+BreakTemplateDeclarations: Yes
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentCaseLabels: true
 IndentWidth: 4
@@ -20,4 +21,3 @@ SpaceBeforeAssignmentOperators: true
 Standard: c++17
 FixNamespaceComments: 'false'
 ...
-

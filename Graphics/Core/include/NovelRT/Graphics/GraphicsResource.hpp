@@ -12,16 +12,17 @@
 
 namespace NovelRT::Graphics
 {
-    template <typename TBackend>
+    template<typename TBackend>
     class GraphicsMemoryAllocator;
 
-    template<template <typename> typename TResource, typename TBackend>
+    template<template<typename> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion;
 
-    template<typename TBackend> class GraphicsResource : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class GraphicsResource : public GraphicsDeviceObject<TBackend>
     {
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsResource<TBackend>> shared_from_this();
 
         GraphicsResource() = delete;
@@ -32,7 +33,9 @@ namespace NovelRT::Graphics
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept;
         [[nodiscard]] size_t GetSize() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>> Allocate(
+            size_t size,
+            size_t alignment);
 
         void Free(GraphicsResourceMemoryRegion<GraphicsResource, TBackend>& region);
 
@@ -40,7 +43,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] virtual Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
 
         [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead();
-        [[nodiscard]] virtual Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] virtual Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+                                                                             size_t rangeLength) = 0;
 
         virtual void UnmapBytes() = 0;
 
@@ -59,8 +63,9 @@ namespace NovelRT::Graphics
         {
             return Utilities::SpanCast<T>(MapBytes(rangeOffset, rangeLength));
         }
-        template <typename T>
-        [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* memoryRegion)
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map(
+            const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }

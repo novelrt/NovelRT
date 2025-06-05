@@ -9,7 +9,6 @@
 #include <NovelRT/Timing/Timestamp.hpp>
 #include <NovelRT/Utilities/Event.hpp>
 
-
 namespace NovelRT::Timing
 {
     class StepTimer

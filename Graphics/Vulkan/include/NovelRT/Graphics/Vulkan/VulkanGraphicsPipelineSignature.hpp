@@ -20,7 +20,7 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template <>
+    template<>
     class GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
@@ -43,9 +43,9 @@ namespace NovelRT::Graphics
         void DestroyPipelineLayout();
 
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> shared_from_this();
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
         GraphicsPipelineSignature(
@@ -63,7 +63,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
         [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet(const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline);
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet(
+            const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline);
 
         [[nodiscard]] std::vector<GraphicsPipelineInput> GetInputs() const noexcept;
         [[nodiscard]] std::vector<GraphicsPipelineResource> GetResources() const noexcept;

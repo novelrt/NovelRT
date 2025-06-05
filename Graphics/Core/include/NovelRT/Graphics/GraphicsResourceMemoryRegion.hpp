@@ -4,8 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
-#include <NovelRT/Utilities/Span.hpp>
 #include <NovelRT/Utilities/Pointers.hpp>
+#include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
 #include <type_traits>
@@ -15,12 +15,13 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class GraphicsResource;
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
-    template<template <typename> typename TResource, typename TBackend>
+    template<template<typename> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion;
 
-    template <typename TBackend>
+    template<typename TBackend>
     class GraphicsResourceMemoryRegion<GraphicsResource, TBackend> : public GraphicsDeviceObject<TBackend>
     {
     public:
@@ -42,15 +43,18 @@ namespace NovelRT::Graphics
 
         void UnmapBytesAndWrite();
 
-        template<typename T> [[nodiscard]] Utilities::Span<T> Map();
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map();
 
-        template<typename T> [[nodiscard]] Utilities::Span<const T> MapForRead();
+        template<typename T>
+        [[nodiscard]] Utilities::Span<const T> MapForRead();
     };
 
-    template<template <typename> typename TResource, typename TBackend>
+    template<template<typename> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion : public GraphicsResourceMemoryRegion<GraphicsResource, TBackend>
     {
-        static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource<TBackend>>, "TResource must inherit GraphicsResource");
+        static_assert(std::is_base_of_v<GraphicsResource<TBackend>, TResource<TBackend>>,
+                      "TResource must inherit GraphicsResource");
 
     public:
         std::shared_ptr<GraphicsResourceMemoryRegion<TResource, TBackend>> shared_from_this();

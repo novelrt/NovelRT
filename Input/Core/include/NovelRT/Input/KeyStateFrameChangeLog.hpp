@@ -2,9 +2,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-
-#include <cstdint>
 #include <NovelRT/Input/KeyState.hpp>
+#include <cstdint>
 
 namespace NovelRT::Input
 {
@@ -21,4 +20,3 @@ namespace NovelRT::Input
         uint32_t GetChangeCount() const noexcept;
     };
 }
-

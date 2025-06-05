@@ -19,11 +19,14 @@ namespace NovelRT::Graphics::Vulkan
 namespace NovelRT::Graphics
 {
     template<>
-    class GraphicsProvider<Vulkan::VulkanGraphicsBackend> : public std::enable_shared_from_this<GraphicsProvider<Vulkan::VulkanGraphicsBackend>>
+    class GraphicsProvider<Vulkan::VulkanGraphicsBackend>
+        : public std::enable_shared_from_this<GraphicsProvider<Vulkan::VulkanGraphicsBackend>>
     {
     public:
-        using iterator = typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::iterator;
-        using const_iterator = typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::const_iterator;
+        using iterator =
+            typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::iterator;
+        using const_iterator =
+            typename std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>::const_iterator;
 
     private:
         static inline std::string _defaultFailureMessage = "Failed to initialise Vulkan version 1.2. Reason: ";
@@ -31,7 +34,8 @@ namespace NovelRT::Graphics
         VkInstance _vulkanInstance;
         std::vector<std::string> _finalExtensionSet;
         std::vector<std::string> _finalValidationLayerSet;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>> _adapters;
+        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>>
+            _adapters;
         std::string _engineName;
         Threading::VolatileState _state;
         VkDebugUtilsMessengerEXT _debugLogger;
@@ -53,30 +57,37 @@ namespace NovelRT::Graphics
                                                   VkDebugUtilsMessengerEXT debugMessenger,
                                                   const VkAllocationCallbacks* pAllocator) noexcept;
 
-        [[nodiscard]] std::vector<std::string> GetFinalInstanceExtensionSet(std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions) const;
-        [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet(std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers) const;
+        [[nodiscard]] std::vector<std::string> GetFinalInstanceExtensionSet(
+            std::vector<std::string> requiredInstanceExtensions,
+            std::vector<std::string> optionalInstanceExtensions) const;
+        [[nodiscard]] std::vector<std::string> GetFinalValidationLayerSet(
+            std::vector<std::string> requiredInstanceLayers,
+            std::vector<std::string> optionalInstanceLayers) const;
         void CreateDefaultDebugCreateInfoStruct(VkDebugUtilsMessengerCreateInfoEXT& outputResult) noexcept;
         void ConfigureDebugLogger();
-        VkInstance CreateInstance(std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions,
-                                  std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers);
+        VkInstance CreateInstance(std::vector<std::string> requiredInstanceExtensions,
+                                  std::vector<std::string> optionalInstanceExtensions,
+                                  std::vector<std::string> requiredInstanceLayers,
+                                  std::vector<std::string> optionalInstanceLayers);
 
         std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>> GetGraphicsAdapters();
 
     public:
-        GraphicsProvider(
-            std::vector<std::string> requiredInstanceExtensions, std::vector<std::string> optionalInstanceExtensions,
-            std::vector<std::string> requiredInstanceLayers, std::vector<std::string> optionalInstanceLayers);
+        GraphicsProvider(std::vector<std::string> requiredInstanceExtensions,
+                         std::vector<std::string> optionalInstanceExtensions,
+                         std::vector<std::string> requiredInstanceLayers,
+                         std::vector<std::string> optionalInstanceLayers);
         ~GraphicsProvider();
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
 
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator begin() const noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] const_iterator end() const noexcept;
 
         [[nodiscard]] uint32_t GetApiVersion() const noexcept;
@@ -84,6 +95,5 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkInstance GetVulkanInstance() const noexcept;
 
         [[nodiscard]] NovelRT::Utilities::Span<const std::string> GetValidationLayers() const noexcept;
-
     };
 }

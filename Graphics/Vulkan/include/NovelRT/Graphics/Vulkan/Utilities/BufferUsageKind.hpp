@@ -86,7 +86,8 @@ namespace NovelRT::Graphics::Vulkan::Utilities
         return static_cast<uint32_t>(cpuAccessBit);
     }
 
-    [[nodiscard]] inline VmaAllocationCreateFlagBits GetVmaAllocationKind(GraphicsResourceAccess resourceAccessType) noexcept
+    [[nodiscard]] inline VmaAllocationCreateFlagBits GetVmaAllocationKind(
+        GraphicsResourceAccess resourceAccessType) noexcept
     {
         switch (resourceAccessType)
         {

@@ -16,19 +16,29 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsAdapter;
-    template<typename TBackend> class GraphicsFence;
-    template<typename TBackend> class GraphicsSurfaceContext;
-    template<typename TBackend> class GraphicsContext;
-    template<typename TBackend> class GraphicsPipeline;
-    template<typename TBackend> class GraphicsDevice;
-    template<typename TBackend> class GraphicsRenderPass;
+    template<typename TBackend>
+    class GraphicsAdapter;
+    template<typename TBackend>
+    class GraphicsFence;
+    template<typename TBackend>
+    class GraphicsSurfaceContext;
+    template<typename TBackend>
+    class GraphicsContext;
+    template<typename TBackend>
+    class GraphicsPipeline;
+    template<typename TBackend>
+    class GraphicsDevice;
+    template<typename TBackend>
+    class GraphicsRenderPass;
     class GraphicsPipelineInput;
     class GraphicsPipelineResource;
-    template<typename TBackend> class GraphicsPipelineSignature;
-    template<typename TBackend> class ShaderProgram;
+    template<typename TBackend>
+    class GraphicsPipelineSignature;
+    template<typename TBackend>
+    class ShaderProgram;
 
-    template<typename TBackend> class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
+    template<typename TBackend>
+    class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
     {
     public:
         using iterator = typename std::vector<std::shared_ptr<GraphicsContext<TBackend>>>::iterator;

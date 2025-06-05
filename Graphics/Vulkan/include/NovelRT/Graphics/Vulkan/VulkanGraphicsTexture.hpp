@@ -7,8 +7,8 @@
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
@@ -23,11 +23,11 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-    template <>
-    class GraphicsTexture<Vulkan::VulkanGraphicsBackend> final
-        : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
+    template<>
+    class GraphicsTexture<Vulkan::VulkanGraphicsBackend> final : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
     {
     private:
         VkImage _vulkanImage;
@@ -43,22 +43,22 @@ namespace NovelRT::Graphics
         uint32_t _depth;
 
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this();
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsTexture(
-            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
-            std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
-            const GraphicsTextureCreateInfo& createInfo,
-            VmaAllocation allocation,
-            VmaAllocationInfo allocationInfo,
-            VkImage vulkanImage);
+        GraphicsTexture(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+                        std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
+                        const GraphicsTextureCreateInfo& createInfo,
+                        VmaAllocation allocation,
+                        VmaAllocationInfo allocationInfo,
+                        VkImage vulkanImage);
 
         ~GraphicsTexture() noexcept final;
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>>
+        Allocate(size_t size, size_t alignment);
 
         void Free(GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>& region);
 
@@ -71,19 +71,19 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
 
-        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) override;
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+                                                                              size_t rangeLength) override;
 
         void UnmapBytes() final;
         void UnmapBytesAndWrite() final;
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
-        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion);
+        void UnmapAndWrite(
+            const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion);
 
         [[nodiscard]] VkImage GetVulkanImage() const noexcept;
 
         [[nodiscard]] VkImageView GetVulkanImageView() const;
         [[nodiscard]] VkSampler GetVulkanSampler() const;
-
-
     };
 }

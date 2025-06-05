@@ -23,9 +23,8 @@ namespace NovelRT::Windowing::Glfw
 
 namespace NovelRT::Windowing
 {
-    template <>
-    class WindowProvider<Glfw::GlfwWindowingBackend> final
-        : public Graphics::IGraphicsSurface
+    template<>
+    class WindowProvider<Glfw::GlfwWindowingBackend> final : public Graphics::IGraphicsSurface
     {
     public:
         struct CursorPositionEventArgs
@@ -52,7 +51,7 @@ namespace NovelRT::Windowing
         WindowProvider(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize);
         ~WindowProvider() noexcept final;
 
-        template <typename TBackend>
+        template<typename TBackend>
         std::shared_ptr<Graphics::GraphicsProvider<TBackend>> CreateGraphicsProvider();
 
         void ProcessAllMessages();

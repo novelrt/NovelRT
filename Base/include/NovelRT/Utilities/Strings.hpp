@@ -13,6 +13,5 @@ namespace NovelRT::Utilities
     [[nodiscard]] std::vector<const char*> GetStringSpanAsCharPtrVector(
         const NovelRT::Utilities::Span<const std::string>& target) noexcept;
 
-    std::vector<std::string> SplitString(const std::string& targetString,
-                                         const std::string& delimiter) noexcept;
+    std::vector<std::string> SplitString(const std::string& targetString, const std::string& delimiter) noexcept;
 }

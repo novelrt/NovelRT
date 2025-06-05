@@ -11,7 +11,8 @@
 
 namespace NovelRT::PluginManagement
 {
-    template<typename TBackend> class IGraphicsPluginProvider;
+    template<typename TBackend>
+    class IGraphicsPluginProvider;
 }
 
 namespace NovelRT::Graphics

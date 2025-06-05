@@ -8,7 +8,8 @@
 
 namespace NovelRT::Graphics
 {
-    template <typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
     template<typename TBackend>
     class GraphicsRenderPass : public std::enable_shared_from_this<GraphicsRenderPass<TBackend>>

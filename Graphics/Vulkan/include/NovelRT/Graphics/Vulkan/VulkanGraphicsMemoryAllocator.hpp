@@ -27,19 +27,24 @@ namespace NovelRT::Graphics
         VmaAllocator _allocator;
 
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> shared_from_this();
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsMemoryAllocator(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
+        GraphicsMemoryAllocator(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
 
         [[nodiscard]] std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> CreateBuffer(const GraphicsBufferCreateInfo& createInfo);
-        [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture(const GraphicsTextureCreateInfo& createInfo);
+        [[nodiscard]] std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> CreateBuffer(
+            const GraphicsBufferCreateInfo& createInfo);
+        [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture(
+            const GraphicsTextureCreateInfo& createInfo);
 
-        [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture2DRepeatGpuWriteOnly(uint32_t width, uint32_t height = 1);
+        [[nodiscard]] std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> CreateTexture2DRepeatGpuWriteOnly(
+            uint32_t width,
+            uint32_t height = 1);
 
         [[nodiscard]] VmaAllocator GetVmaAllocator() const noexcept;
     };

@@ -15,14 +15,22 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsContext;
-    template<typename TBackend> class GraphicsBuffer;
-    template<typename TBackend> class GraphicsPipeline;
-    template<typename TBackend> class GraphicsTexture;
-    template<typename TBackend> class GraphicsDescriptorSet;
-    template<typename TBackend> class GraphicsRenderPass;
-    template<typename TBackend> class GraphicsPipelineSignature;
-    template<template<typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<typename TBackend>
+    class GraphicsContext;
+    template<typename TBackend>
+    class GraphicsBuffer;
+    template<typename TBackend>
+    class GraphicsPipeline;
+    template<typename TBackend>
+    class GraphicsTexture;
+    template<typename TBackend>
+    class GraphicsDescriptorSet;
+    template<typename TBackend>
+    class GraphicsRenderPass;
+    template<typename TBackend>
+    class GraphicsPipelineSignature;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
     // TODO: MOVE THIS
     struct ViewportInfo
@@ -35,7 +43,8 @@ namespace NovelRT::Graphics
         float maxDepth;
     };
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
     enum class IndexType
     {
@@ -51,7 +60,8 @@ namespace NovelRT::Graphics
         uint32_t stencil;
     };
 
-    template<typename TBackend> class GraphicsCmdList : std::enable_shared_from_this<GraphicsCmdList<TBackend>>
+    template<typename TBackend>
+    class GraphicsCmdList : std::enable_shared_from_this<GraphicsCmdList<TBackend>>
     {
     public:
         GraphicsCmdList() = delete;

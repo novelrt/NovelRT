@@ -10,7 +10,6 @@
 #include <cstddef>
 #include <cstdint>
 
-
 namespace NovelRT::Graphics
 {
     struct GraphicsBufferCreateInfo

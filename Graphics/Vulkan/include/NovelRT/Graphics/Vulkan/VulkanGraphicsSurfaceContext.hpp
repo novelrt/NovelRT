@@ -17,7 +17,7 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template <>
+    template<>
     class GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>
         : public std::enable_shared_from_this<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>
     {
@@ -28,7 +28,8 @@ namespace NovelRT::Graphics
         VkSurfaceKHR _vulkanSurface;
 
     public:
-        GraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface, std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
+        GraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
+                               std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
         ~GraphicsSurfaceContext();
 
         [[nodiscard]] VkSurfaceKHR GetSurfaceContextHandle() const noexcept;

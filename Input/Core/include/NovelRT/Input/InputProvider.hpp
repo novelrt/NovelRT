@@ -18,7 +18,7 @@
 
 namespace NovelRT::Input
 {
-    template <typename TBackend>
+    template<typename TBackend>
     class InputProvider
     {
     public:
@@ -29,8 +29,7 @@ namespace NovelRT::Input
         [[nodiscard]] bool IsKeyHeld(const std::string& key);
         [[nodiscard]] bool IsKeyReleased(const std::string& key);
         [[nodiscard]] KeyState GetKeyState(const std::string& key);
-        [[nodiscard]] InputAction& AddInputAction(const std::string& actionName,
-                                                          const std::string& keyIdentifier);
+        [[nodiscard]] InputAction& AddInputAction(const std::string& actionName, const std::string& keyIdentifier);
         [[nodiscard]] NovelKey& GetAvailableKey(const std::string& keyRequested);
         [[nodiscard]] InputAction* FindInputActionForKey(const std::string& keyRequested);
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetMousePosition();

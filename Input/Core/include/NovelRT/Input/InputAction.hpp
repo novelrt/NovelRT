@@ -2,10 +2,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-
-#include <string>
 #include <NovelRT/Input/KeyState.hpp>
 #include <NovelRT/Input/NovelKey.hpp>
+#include <string>
 
 namespace NovelRT::Input
 {
@@ -16,4 +15,3 @@ namespace NovelRT::Input
         KeyState state = KeyState::Idle;
     };
 }
-

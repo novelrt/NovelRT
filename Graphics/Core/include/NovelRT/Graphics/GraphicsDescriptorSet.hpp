@@ -10,17 +10,23 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsResource;
-    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<typename TBackend>
+    class GraphicsResource;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-    template<typename TBackend> class GraphicsDescriptorSet : std::enable_shared_from_this<GraphicsDescriptorSet<TBackend>>
+    template<typename TBackend>
+    class GraphicsDescriptorSet : std::enable_shared_from_this<GraphicsDescriptorSet<TBackend>>
     {
     public:
         GraphicsDescriptorSet() = delete;
 
-        void AddMemoryRegionToInputs(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>& region);
+        void AddMemoryRegionToInputs(
+            const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>& region);
 
-        void AddMemoryRegionsToInputs(NovelRT::Utilities::Span<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> regions);
+        void AddMemoryRegionsToInputs(
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>>
+                regions);
 
         void UpdateDescriptorSetData();
     };

@@ -13,15 +13,17 @@
 
 namespace NovelRT::Graphics
 {
-    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
     template<typename TBackend>
     class GraphicsTexture final : public GraphicsResource<TBackend>
     {
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsTexture<TBackend>> shared_from_this();
 
         GraphicsTexture() = delete;
@@ -34,7 +36,9 @@ namespace NovelRT::Graphics
         [[nodiscard]] uint32_t GetHeight() const noexcept;
         [[nodiscard]] uint32_t GetDepth() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> Allocate(
+            size_t size,
+            size_t alignment);
 
         void Free(GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>& region);
 
@@ -48,7 +52,9 @@ namespace NovelRT::Graphics
 
         void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>* memoryRegion);
 
-        template <typename T> [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>* memoryRegion)
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map(
+            const GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>* memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }

@@ -10,7 +10,8 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsFence : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class GraphicsFence : public GraphicsDeviceObject<TBackend>
     {
     public:
         GraphicsFence() = delete;

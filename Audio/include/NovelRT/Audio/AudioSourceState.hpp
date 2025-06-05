@@ -6,7 +6,7 @@
 
 namespace NovelRT::Audio
 {
-    enum class AudioSourceState: int32_t
+    enum class AudioSourceState : int32_t
     {
         SOURCE_STOPPED = 0,
         SOURCE_PAUSED = 1,

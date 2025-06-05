@@ -10,14 +10,14 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
     template<typename TBackend>
-    class ShaderProgram final
-        : public GraphicsDeviceObject<TBackend>
+    class ShaderProgram final : public GraphicsDeviceObject<TBackend>
     {
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<ShaderProgram<TBackend>> shared_from_this();
 
         ~ShaderProgram() noexcept final = default;

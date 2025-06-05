@@ -3,15 +3,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsPipeline : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class GraphicsPipeline : public GraphicsDeviceObject<TBackend>
     {
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsPipeline<TBackend>> shared_from_this();
 
         GraphicsPipeline() = delete;

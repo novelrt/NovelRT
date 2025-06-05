@@ -1125,8 +1125,7 @@ namespace NovelRT::Maths
          */
         [[nodiscard]] inline float Dot(GeoVector3F other) noexcept
         {
-            return glm::dot(*reinterpret_cast<const glm::vec3*>(this),
-                            NovelRT::Utilities::BitCast<glm::vec3>(other));
+            return glm::dot(*reinterpret_cast<const glm::vec3*>(this), NovelRT::Utilities::BitCast<glm::vec3>(other));
         }
 
         /**

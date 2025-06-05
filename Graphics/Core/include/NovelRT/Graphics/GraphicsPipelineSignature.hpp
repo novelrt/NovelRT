@@ -12,24 +12,27 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsDescriptorSet;
+    template<typename TBackend>
+    class GraphicsDescriptorSet;
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsPipelineSignature : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class GraphicsPipelineSignature : public GraphicsDeviceObject<TBackend>
     {
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsPipelineSignature<TBackend>> shared_from_this();
 
         GraphicsPipelineSignature() = delete;
         virtual ~GraphicsPipelineSignature() noexcept override = default;
 
-
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
         [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet(std::shared_ptr<GraphicsPipeline<TBackend>> pipeline);
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet(
+            std::shared_ptr<GraphicsPipeline<TBackend>> pipeline);
 
         [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineInput> GetInputs() const noexcept;
         [[nodiscard]] NovelRT::Utilities::Span<const GraphicsPipelineResource> GetResources() const noexcept;

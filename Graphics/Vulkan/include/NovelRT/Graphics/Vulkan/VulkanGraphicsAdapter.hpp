@@ -6,8 +6,8 @@
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include <vulkan/vulkan.h>
 
@@ -18,8 +18,9 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template <>
-    class GraphicsAdapter<Vulkan::VulkanGraphicsBackend> : public std::enable_shared_from_this<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>
+    template<>
+    class GraphicsAdapter<Vulkan::VulkanGraphicsBackend>
+        : public std::enable_shared_from_this<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>
     {
     private:
         std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
@@ -30,7 +31,8 @@ namespace NovelRT::Graphics
         mutable NovelRT::Utilities::Lazy<std::string> _name;
 
     public:
-        GraphicsAdapter(std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider, VkPhysicalDevice physicalDevice);
+        GraphicsAdapter(std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider,
+                        VkPhysicalDevice physicalDevice);
         ~GraphicsAdapter() noexcept = default;
 
         [[nodiscard]] VkPhysicalDevice GetPhysicalDevice() const noexcept;

@@ -2,27 +2,27 @@
 // for more information.
 #pragma once
 
-#include <NovelRT/Utilities/Misc.h>
 #include <NovelRT/Audio/AudioSourceContext.hpp>
 #include <NovelRT/Audio/AudioSourceState.hpp>
+#include <NovelRT/Utilities/Misc.h>
 
 namespace NovelRT::Audio
 {
     class IAudioProvider
     {
-        protected:
-            virtual void Dispose() = 0;
-            virtual uint32_t OpenSource(AudioSourceContext& context) = 0;
+    protected:
+        virtual void Dispose() = 0;
+        virtual uint32_t OpenSource(AudioSourceContext& context) = 0;
 
-        public:
-            virtual uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context) = 0;
-            virtual void PlaySource(uint32_t sourceId) = 0;
-            virtual void StopSource(uint32_t sourceId) = 0;
-            virtual void PauseSource(uint32_t sourceId) = 0;
-            virtual void SetSourceProperties(uint32_t sourceId, AudioSourceContext& context) = 0;
-            virtual AudioSourceState GetSourceState(uint32_t id) = 0;
+    public:
+        virtual uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer,
+                                           AudioSourceContext& context) = 0;
+        virtual void PlaySource(uint32_t sourceId) = 0;
+        virtual void StopSource(uint32_t sourceId) = 0;
+        virtual void PauseSource(uint32_t sourceId) = 0;
+        virtual void SetSourceProperties(uint32_t sourceId, AudioSourceContext& context) = 0;
+        virtual AudioSourceState GetSourceState(uint32_t id) = 0;
 
-            virtual ~IAudioProvider() = default;
-
+        virtual ~IAudioProvider() = default;
     };
 }

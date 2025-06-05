@@ -20,9 +20,8 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template <>
-    class GraphicsFence<Vulkan::VulkanGraphicsBackend>
-        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
+    template<>
+    class GraphicsFence<Vulkan::VulkanGraphicsBackend> : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
         std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
@@ -41,7 +40,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] bool TryWait();
         [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
 
-        template <typename Rep, typename Period>
+        template<typename Rep, typename Period>
         [[nodiscard]] bool TryWait(std::chrono::duration<Rep, Period> timeout)
         {
             auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout);
@@ -57,7 +56,7 @@ namespace NovelRT::Graphics
         void Wait();
         void Wait(uint64_t millisecondsTimeout);
 
-        template <typename Rep, typename Period>
+        template<typename Rep, typename Period>
         void Wait(std::chrono::duration<Rep, Period> timeout)
         {
             auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout);

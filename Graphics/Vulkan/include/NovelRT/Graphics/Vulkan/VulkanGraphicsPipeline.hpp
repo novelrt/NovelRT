@@ -3,7 +3,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
 
 #include <NovelRT/Utilities/Lazy.hpp>
@@ -20,7 +19,7 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template <>
+    template<>
     class GraphicsPipeline<Vulkan::VulkanGraphicsBackend> final
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
@@ -33,17 +32,16 @@ namespace NovelRT::Graphics
         mutable NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
 
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> shared_from_this();
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsPipeline(
-            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-            std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
-            std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
-            std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
-            bool imguiRenderMode) noexcept;
+        GraphicsPipeline(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                         std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
+                         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
+                         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
+                         bool imguiRenderMode) noexcept;
         ~GraphicsPipeline() final = default;
 
         [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
@@ -54,7 +52,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetVertexShader() const noexcept;
         [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature()
+            const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
 

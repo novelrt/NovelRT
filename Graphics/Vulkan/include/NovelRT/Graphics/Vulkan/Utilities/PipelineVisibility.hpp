@@ -10,16 +10,19 @@
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
-    [[nodiscard]] inline VkPipelineStageFlags GetVulkanPipelineStageFlags(Graphics::GraphicsPipelineVisibility stageFlag) noexcept
+    [[nodiscard]] inline VkPipelineStageFlags GetVulkanPipelineStageFlags(
+        Graphics::GraphicsPipelineVisibility stageFlag) noexcept
     {
         VkPipelineStageFlags stageFlags = VK_PIPELINE_STAGE_NONE;
 
-        if ((stageFlag & Graphics::GraphicsPipelineVisibility::VertexInput) == Graphics::GraphicsPipelineVisibility::VertexInput)
+        if ((stageFlag & Graphics::GraphicsPipelineVisibility::VertexInput) ==
+            Graphics::GraphicsPipelineVisibility::VertexInput)
         {
             stageFlags |= VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
         }
 
-        if ((stageFlag & Graphics::GraphicsPipelineVisibility::Transfer) == Graphics::GraphicsPipelineVisibility::Transfer)
+        if ((stageFlag & Graphics::GraphicsPipelineVisibility::Transfer) ==
+            Graphics::GraphicsPipelineVisibility::Transfer)
         {
             stageFlags |= VK_PIPELINE_STAGE_TRANSFER_BIT;
         }

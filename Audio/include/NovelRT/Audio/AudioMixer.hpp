@@ -2,36 +2,38 @@
 // for more information.
 #pragma once
 
-#include <cstdint>
-#include <memory>
-#include <map>
-#include <NovelRT/Audio/IAudioProvider.hpp>
 #include <NovelRT/Audio/AudioSourceContext.hpp>
 #include <NovelRT/Audio/AudioSourceState.hpp>
+#include <NovelRT/Audio/IAudioProvider.hpp>
 #include <NovelRT/Utilities/Misc.h>
+#include <cstdint>
+#include <map>
+#include <memory>
 
 namespace NovelRT::Audio
 {
     class AudioMixer
     {
-        private:
-            std::unique_ptr<IAudioProvider> _audioProvider;
-            std::map<uint32_t, AudioSourceContext> _sourceContextCache;
-            void TearDown();
+    private:
+        std::unique_ptr<IAudioProvider> _audioProvider;
+        std::map<uint32_t, AudioSourceContext> _sourceContextCache;
+        void TearDown();
 
-        public:
-            void Initialise();
-            uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, int32_t channelCount, int32_t originalSampleRate);
-            void PlaySource(uint32_t id);
-            void StopSource(uint32_t id);
-            void PauseSource(uint32_t id);
-            AudioSourceContext& GetSourceContext(uint32_t id);
-            void SetSourceContext(uint32_t id, AudioSourceContext& context);
-            void SetSourceVolume(uint32_t id, float volume);
-            void SetSourcePitch(uint32_t id, float pitch);
-            void SetSourceLoop(uint32_t id, bool isLooping);
-            AudioSourceState GetSourceState(uint32_t id);
+    public:
+        void Initialise();
+        uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer,
+                                   int32_t channelCount,
+                                   int32_t originalSampleRate);
+        void PlaySource(uint32_t id);
+        void StopSource(uint32_t id);
+        void PauseSource(uint32_t id);
+        AudioSourceContext& GetSourceContext(uint32_t id);
+        void SetSourceContext(uint32_t id, AudioSourceContext& context);
+        void SetSourceVolume(uint32_t id, float volume);
+        void SetSourcePitch(uint32_t id, float pitch);
+        void SetSourceLoop(uint32_t id, bool isLooping);
+        AudioSourceState GetSourceState(uint32_t id);
 
-            ~AudioMixer();
+        ~AudioMixer();
     };
 }

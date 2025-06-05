@@ -9,15 +9,17 @@
 
 namespace NovelRT::Graphics
 {
-    template<template <typename> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
     template<typename TBackend>
     class GraphicsBuffer final : public GraphicsResource<TBackend>
     {
     public:
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsBuffer<TBackend>> shared_from_this();
 
         GraphicsBuffer() noexcept = delete;
@@ -26,7 +28,9 @@ namespace NovelRT::Graphics
         [[nodiscard]] GraphicsResourceAccess GetAccess() const noexcept;
         [[nodiscard]] GraphicsBufferKind GetKind();
 
-        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> Allocate(
+            size_t size,
+            size_t alignment);
 
         void Free(GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>& region);
 
@@ -40,7 +44,8 @@ namespace NovelRT::Graphics
 
         void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* memoryRegion);
 
-        template <typename T> [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* memoryRegion)
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }

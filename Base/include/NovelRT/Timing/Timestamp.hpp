@@ -25,10 +25,10 @@ namespace NovelRT::Timing
 
     using Timestamp = GameClock::time_point;
 
-    template <typename Rep, typename Period>
+    template<typename Rep, typename Period>
     constexpr Timestamp TimeFrom(const std::chrono::duration<Rep, Period>& value) noexcept
     {
-        return Timestamp{ std::chrono::duration_cast<GameClock::duration>(value) };
+        return Timestamp{std::chrono::duration_cast<GameClock::duration>(value)};
     }
 
     constexpr Timestamp TimeFromTicks(uint64_t value) noexcept
@@ -36,13 +36,13 @@ namespace NovelRT::Timing
         return TimeFrom(GameClock::duration{value});
     }
 
-    template <typename T>
+    template<typename T>
     constexpr Timestamp TimeFromSeconds(T seconds) noexcept
     {
         return TimeFrom(std::chrono::duration<T>(seconds));
     }
 
-    template <typename T>
+    template<typename T>
     constexpr Timestamp TimeFromFrequency(T frequency) noexcept
     {
         static_assert(std::is_floating_point_v<T>, "T must be able to represent values between 0 and 1");
@@ -50,13 +50,13 @@ namespace NovelRT::Timing
         return TimeFrom(std::chrono::duration<T>(1) / frequency);
     }
 
-    template <typename T>
+    template<typename T>
     constexpr T GetSeconds(const Timestamp& timestamp) noexcept
     {
         return std::chrono::duration_cast<std::chrono::duration<T>>(timestamp.time_since_epoch()).count();
     }
 
-    template <typename T>
+    template<typename T>
     constexpr T GetSeconds(const GameClock::duration& duration) noexcept
     {
         return std::chrono::duration_cast<std::chrono::duration<T>>(duration).count();

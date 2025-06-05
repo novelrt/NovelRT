@@ -58,19 +58,23 @@ namespace NovelRT
         void throwIfNullPtr(const void* const object, const std::string& exceptionMessage);
         void throwIfNotZero(int32_t error, const std::string& exceptionMessage);
 
-        template<typename I, typename... IRest> void logInfo(I current, IRest... next) const
+        template<typename I, typename... IRest>
+        void logInfo(I current, IRest... next) const
         {
             _logger->info(fmt::runtime(current), std::forward<IRest>(next)...);
         }
-        template<typename E, typename... ERest> void logError(E current, ERest... next) const
+        template<typename E, typename... ERest>
+        void logError(E current, ERest... next) const
         {
             _logger->error(fmt::runtime(current), std::forward<ERest>(next)...);
         }
-        template<typename W, typename... WRest> void logWarning(W current, WRest... next) const
+        template<typename W, typename... WRest>
+        void logWarning(W current, WRest... next) const
         {
             _logger->warn(fmt::runtime(current), std::forward<WRest>(next)...);
         }
-        template<typename D, typename... DRest> void logDebug(D current, DRest... next) const
+        template<typename D, typename... DRest>
+        void logDebug(D current, DRest... next) const
         {
             _logger->debug(fmt::runtime(current), std::forward<DRest>(next)...);
         }

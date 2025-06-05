@@ -7,11 +7,15 @@
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsAdapter;
-    template<typename TBackend> class GraphicsProvider;
-    template<typename TBackend> class GraphicsSurfaceContext;
+    template<typename TBackend>
+    class GraphicsAdapter;
+    template<typename TBackend>
+    class GraphicsProvider;
+    template<typename TBackend>
+    class GraphicsSurfaceContext;
 
-    template<typename TBackend> class IGraphicsAdapterSelector
+    template<typename TBackend>
+    class IGraphicsAdapterSelector
     {
     public:
         [[nodiscard]] virtual std::shared_ptr<GraphicsAdapter<TBackend>> GetDefaultRecommendedAdapter(

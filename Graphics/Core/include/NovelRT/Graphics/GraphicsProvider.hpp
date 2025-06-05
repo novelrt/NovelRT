@@ -3,15 +3,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> class GraphicsAdapter;
-    template<typename TBackend> struct GraphicsBackendTraits;
-    template<typename TBackend> class GraphicsProvider;
+    template<typename TBackend>
+    class GraphicsAdapter;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
+    template<typename TBackend>
+    class GraphicsProvider;
 
     template<typename TBackend>
     class GraphicsProvider : public std::enable_shared_from_this<GraphicsProvider<TBackend>>
@@ -28,9 +31,9 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] bool GetDebugModeEnabled() const noexcept;
 
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator begin() const noexcept;
-        //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         [[nodiscard]] iterator end() const noexcept;
 
         [[nodiscard]] uint32_t GetApiVersion() const noexcept;
