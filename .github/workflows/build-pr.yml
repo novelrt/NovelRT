@@ -50,7 +50,7 @@ jobs:
           version: 1.4.313.0
 
       - name: Generate build system
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_CLANG_TIDY="clang-tidy;--config-file=.clang-tidy;-p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build NovelRT with Clang-Tidy
         run: cmake --build build --config Debug --parallel
