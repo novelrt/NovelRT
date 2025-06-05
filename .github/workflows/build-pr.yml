@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: novelrt/setup-vulkan@v1.13
+      - uses: novelrt/setup-vulkan@v1.14
         with:
           version: ${{ matrix.vulkan }}
 
