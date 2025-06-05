@@ -91,6 +91,7 @@ jobs:
               $name, $value = $_ -split '=', 2
               $currentValue = if (Test-Path -Path "env:\$name") { Get-Item -Path "env:\$name" } else { $null }
               if ($value -ne $currentValue) {
+                echo "$name not equal to current env: $currentValue - $value"
                 if ($name -eq 'PATH') {
                   echo "$value" >> "${Env:GITHUB_PATH}"
                 } else {
