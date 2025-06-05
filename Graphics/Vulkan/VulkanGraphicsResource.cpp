@@ -80,12 +80,12 @@ namespace NovelRT::Graphics
 
     size_t VulkanGraphicsResource::GetDeviceMemoryOffset() const noexcept
     {
-        return _allocationInfo.offset;
+        return static_cast<size_t>(_allocationInfo.offset);
     }
 
     size_t VulkanGraphicsResource::GetSize() const noexcept
     {
-        return _allocationInfo.size;
+        return static_cast<size_t>(_allocationInfo.size);
     }
 
     std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> VulkanGraphicsResource::GetVirtualAllocation(size_t size, size_t alignment)
@@ -123,12 +123,12 @@ namespace NovelRT::Graphics
 
     Utilities::Span<uint8_t> VulkanGraphicsResource::MapBytes()
     {
-        return MapBytes(_allocationInfo.offset, _allocationInfo.size);
+        return MapBytes(static_cast<size_t>(_allocationInfo.offset), static_cast<size_t>(_allocationInfo.size));
     }
 
     Utilities::Span<const uint8_t> VulkanGraphicsResource::MapBytesForRead()
     {
-        return MapBytesForRead(_allocationInfo.offset, _allocationInfo.size);
+        return MapBytesForRead(static_cast<size_t>(_allocationInfo.offset), static_cast<size_t>(_allocationInfo.size));
     }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept

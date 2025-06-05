@@ -60,12 +60,12 @@ namespace NovelRT::Graphics
 
     size_t VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetOffset() const noexcept
     {
-        return _virtualAllocationInfo.offset;
+        return static_cast<size_t>(_virtualAllocationInfo.offset);
     }
 
     size_t VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetSize() const noexcept
     {
-        return _virtualAllocationInfo.size;
+        return static_cast<size_t>(_virtualAllocationInfo.size);
     }
 
     VmaVirtualAllocation VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GetVirtualAllocation() const noexcept
