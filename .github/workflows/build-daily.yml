@@ -50,6 +50,23 @@ jobs:
           path: build
           key: ${{ matrix.name }}-${{ matrix.configuration }}
 
+      - name: Setup Visual Studio Developer Command Prompt
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $installationPath = & $vsWhere -prerelease -latest -property installationPath
+          if ($installationPath -and (test-path "$installationPath\Common7\Tools\vsdevcmd.bat")) {
+            & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | foreach-object {
+              $name, $value = $_ -split '=', 2
+              if ($name -eq 'PATH') {}
+                echo "$value" >> "${Env:GITHUB_PATH}"
+              } else {
+                echo "$name=$value" >> "${Env:GITHUB_ENV}"
+              }
+            }
+          }
+
       - name: Generate build system
         if: steps.cache.outputs.cache-hit != 'true'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
