@@ -13,8 +13,10 @@ jobs:
     name: Check Formatting
     runs-on: ubuntu-24.04
     steps:
-      - uses: novelrt/setup-cpp@v1
       - uses: actions/checkout@v4
+
+      - uses: novelrt/setup-cpp@v1
+
       - name: Check formatting via clang-format
         shell: bash
         run: |
@@ -37,12 +39,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: novelrt/setup-vulkan@v1.15
+
+      - uses: novelrt/setup-cpp@v1
+
+      - uses: novelrt/setup-vulkan@v2
         with:
           version: ${{ matrix.vulkan }}
 
-      - uses: novelrt/setup-cpp@v1
-      
       - name: Restore incremental build artefacts
         id: cache
         uses: actions/cache@v4
@@ -51,10 +54,8 @@ jobs:
           key: pr${{ github.event.number }}-${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
 
       - name: Generate build system
-        if: steps.cache.output.cache-hit != 'true'
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} \
-            -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_CXX_CLANG_TIDY="clang-tidy --config-file=.clang-tidy -p build" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build NovelRT
         run: |
