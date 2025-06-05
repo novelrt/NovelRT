@@ -89,7 +89,7 @@ jobs:
           if ($installationPath -and (test-path "$installationPath\Common7\Tools\vsdevcmd.bat")) {
             & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo && set" | foreach-object {
               $name, $value = $_ -split '=', 2
-              if ($name -eq 'PATH') {}
+              if ($name -eq 'PATH') {
                 echo "$value" >> "${Env:GITHUB_PATH}"
               } else {
                 echo "$name=$value" >> "${Env:GITHUB_ENV}"
