@@ -6,9 +6,9 @@ AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
 AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: false
+AlwaysBreakTemplateDeclarations: Yes
 BinPackParameters: false
 BreakBeforeBraces: Allman
-BreakTemplateDeclarations: Yes
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentCaseLabels: true
 IndentWidth: 4
