@@ -25,7 +25,6 @@ Checks: >
 FormatStyle: file
 
 HeaderFilterRegex: '^NovelRT/.*'
-ExcludeHeaderFilterRegex: '.*/ThirdParty/.*'
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
