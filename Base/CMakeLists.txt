@@ -27,4 +27,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Base
       glm::glm-header-only
       Microsoft.GSL::GSL
       spdlog::spdlog
-      TBB::tbb)
+      TBB::tbb
+    PRIVATE
+      "$<$<PLATFORM_ID:Darwin,iOS,tvOS,visionOS,watchOS>:$<LINK_LIBRARY:FRAMEWORK,CoreFoundation>>")
