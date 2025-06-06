@@ -45,7 +45,7 @@ namespace NovelRT::Graphics
     void VulkanGraphicsCmdList::CmdBeginRenderPass(const VulkanGraphicsRenderPass* targetPass,
                                                    Utilities::Span<const ClearValue> clearValues)
     {
-        auto device = _context->GetDevice().lock();
+        auto device = _context->GetDevice();
         auto surface = device->GetSurface();
 
         VkExtent2D extent2D{};

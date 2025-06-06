@@ -38,7 +38,7 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsBuffer(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+        GraphicsBuffer(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
                        std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
                        const GraphicsBufferCreateInfo& createInfo,
                        VmaAllocation allocation,

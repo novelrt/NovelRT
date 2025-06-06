@@ -35,21 +35,20 @@ namespace NovelRT::Graphics
     }
 
     VulkanShaderProgram::ShaderProgram(
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         std::string entryPointName,
         ShaderProgramKind kind,
         NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept
         : _device(std::move(device))
         , _entryPointName(std::move(entryPointName))
         , _kind(kind)
-        , _shaderModule([device = _device, &bytecode = _bytecode]() { return CreateShaderModule(device.lock(), bytecode); })
+        , _shaderModule([device = _device, &bytecode = _bytecode]() { return CreateShaderModule(device, bytecode); })
         , _bytecode(bytecode.begin(), bytecode.end())
     { }
 
     VulkanShaderProgram::~ShaderProgram() noexcept
     {
-        auto device = _device.lock();
-        vkDestroyShaderModule(device->GetVulkanDevice(), _shaderModule.Get(), nullptr);
+        vkDestroyShaderModule(_device->GetVulkanDevice(), _shaderModule.Get(), nullptr);
     }
 
     const std::string& VulkanShaderProgram::GetEntryPointName() const noexcept

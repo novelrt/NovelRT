@@ -39,7 +39,7 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<const VulkanGraphicsResource>(GraphicsDeviceObject::shared_from_this());
     }
 
-    VulkanGraphicsResource::GraphicsResource(std::weak_ptr<VulkanGraphicsDevice> graphicsDevice,
+    VulkanGraphicsResource::GraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
         std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
         GraphicsResourceAccess cpuAccess,
         VmaAllocation allocation,
@@ -63,7 +63,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetDevice() const noexcept
+    std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetDevice() const noexcept
     {
         return _device;
     }

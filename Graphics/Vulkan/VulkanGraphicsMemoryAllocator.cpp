@@ -36,21 +36,20 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsMemoryAllocator::GraphicsMemoryAllocator(
-        std::weak_ptr<VulkanGraphicsDevice> device,
+        std::shared_ptr<VulkanGraphicsDevice> device,
         std::shared_ptr<VulkanGraphicsProvider> provider)
         : VulkanGraphicsDeviceObject()
         , _device(std::move(device))
         , _provider(std::move(provider))
         , _allocator(VK_NULL_HANDLE)
     {
-        auto vulkanDevice = _device.lock();
-        auto vulkanAdapter = vulkanDevice->GetAdapter();
+        auto vulkanAdapter = _device->GetAdapter();
         auto vulkanProvider = _provider;
 
         VmaAllocatorCreateInfo createInfo{};
         createInfo.vulkanApiVersion = vulkanProvider->GetApiVersion();
         createInfo.physicalDevice = vulkanAdapter->GetPhysicalDevice();
-        createInfo.device = vulkanDevice->GetVulkanDevice();
+        createInfo.device = _device->GetVulkanDevice();
         createInfo.instance = vulkanProvider->GetVulkanInstance();
 
         VkResult result = vmaCreateAllocator(&createInfo, &_allocator);

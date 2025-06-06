@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
     class GraphicsResource<Vulkan::VulkanGraphicsBackend> : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> _allocator;
 
         VmaAllocation _allocation;
@@ -45,14 +45,14 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsResource<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsResource(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+        GraphicsResource(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
                          std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
                          GraphicsResourceAccess cpuAccess,
                          VmaAllocation allocation,
                          VmaAllocationInfo allocationInfo);
         virtual ~GraphicsResource() noexcept = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> GetAllocator()
             const noexcept;
 

@@ -18,6 +18,6 @@ namespace NovelRT::Graphics
     public:
         virtual ~GraphicsDeviceObject() noexcept = default;
 
-        [[nodiscard]] std::weak_ptr<GraphicsDevice<TBackend>> GetDevice() const;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const;
     };
 }

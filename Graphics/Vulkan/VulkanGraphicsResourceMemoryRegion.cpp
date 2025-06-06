@@ -31,7 +31,7 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsResourceMemoryRegion<GraphicsResource>::GraphicsResourceMemoryRegion(
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
         std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> owningResource,
         VmaVirtualAllocation virtualAllocation,
         VmaVirtualAllocationInfo virtualAllocationInfo)

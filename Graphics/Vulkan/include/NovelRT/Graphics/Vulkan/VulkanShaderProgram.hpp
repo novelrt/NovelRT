@@ -23,7 +23,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::string _entryPointName;
         ShaderProgramKind _kind;
         NovelRT::Utilities::Lazy<VkShaderModule> _shaderModule;
@@ -35,7 +35,7 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const ShaderProgram<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        ShaderProgram(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        ShaderProgram(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
                       std::string entryPointName,
                       ShaderProgramKind kind,
                       NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept;

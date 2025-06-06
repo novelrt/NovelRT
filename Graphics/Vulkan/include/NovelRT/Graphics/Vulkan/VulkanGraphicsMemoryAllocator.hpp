@@ -21,7 +21,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
 
         VmaAllocator _allocator;
@@ -32,7 +32,7 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsMemoryAllocator(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        GraphicsMemoryAllocator(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
                                 std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
 
         [[nodiscard]] std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;

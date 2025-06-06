@@ -25,7 +25,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
         GraphicsPipelineBlendFactor _srcBlendFactor;
         GraphicsPipelineBlendFactor _dstBlendFactor;
@@ -49,7 +49,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<const GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
         GraphicsPipelineSignature(
-            std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
             GraphicsPipelineBlendFactor srcBlendFactor,
             GraphicsPipelineBlendFactor dstBlendFactor,
             NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
@@ -58,7 +58,7 @@ namespace NovelRT::Graphics
 
         ~GraphicsPipelineSignature();
 
-        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
         [[nodiscard]] GraphicsPipelineBlendFactor GetSrcBlendFactor() const noexcept;
         [[nodiscard]] GraphicsPipelineBlendFactor GetDstBlendFactor() const noexcept;

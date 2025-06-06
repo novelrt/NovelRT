@@ -34,9 +34,9 @@ namespace NovelRT::Graphics
         return vulkanFence;
     }
 
-    VulkanGraphicsFence::GraphicsFence(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept
+    VulkanGraphicsFence::GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept
         : _device(std::move(device))
-        ,  _vulkanFence([device = _device, isSignaled]() { return CreateVulkanFence(device.lock(), isSignaled); })
+        ,  _vulkanFence([device = _device, isSignaled]() { return CreateVulkanFence(device, isSignaled); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
     }
@@ -53,24 +53,21 @@ namespace NovelRT::Graphics
     {
         if (_vulkanFence.HasValue())
         {
-            auto device = _device.lock();
-            DisposeVulkanFence(device->GetVulkanDevice(), _vulkanFence.Get());
+            DisposeVulkanFence(_device->GetVulkanDevice(), _vulkanFence.Get());
             _vulkanFence.Reset();
         }
     }
 
     bool VulkanGraphicsFence::IsSignalled() const
     {
-        auto device = _device.lock();
-        return vkGetFenceStatus(device->GetVulkanDevice(), GetVulkanFence()) == VK_SUCCESS;
+        return vkGetFenceStatus(_device->GetVulkanDevice(), GetVulkanFence()) == VK_SUCCESS;
     }
 
     void VulkanGraphicsFence::Reset()
     {
         VkFence vulkanFence = GetVulkanFence();
 
-        auto device = _device.lock();
-        VkResult result = vkResetFences(device->GetVulkanDevice(), 1, &vulkanFence);
+        VkResult result = vkResetFences(_device->GetVulkanDevice(), 1, &vulkanFence);
 
         if (result != VK_SUCCESS)
         {
@@ -93,8 +90,7 @@ namespace NovelRT::Graphics
         if (!fenceSignalled)
         {
             VkFence vulkanFence = GetVulkanFence();
-            auto device = _device.lock();
-            VkResult result = vkWaitForFences(device->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, nanosecondsTimeout);
+            VkResult result = vkWaitForFences(_device->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, nanosecondsTimeout);
 
             if (result == VK_SUCCESS)
             {
@@ -125,8 +121,7 @@ namespace NovelRT::Graphics
         if (!fenceSignalled)
         {
             VkFence vulkanFence = GetVulkanFence();
-            auto device = _device.lock();
-            VkResult result = vkWaitForFences(device->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, nanosecondsTimeout);
+            VkResult result = vkWaitForFences(_device->GetVulkanDevice(), 1, &vulkanFence, VK_TRUE, nanosecondsTimeout);
 
             if (result == VK_SUCCESS)
             {

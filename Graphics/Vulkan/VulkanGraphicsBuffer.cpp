@@ -31,7 +31,7 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<const VulkanGraphicsBuffer>(GraphicsResource::shared_from_this());
     }
 
-    VulkanGraphicsBuffer::GraphicsBuffer(std::weak_ptr<VulkanGraphicsDevice> graphicsDevice,
+    VulkanGraphicsBuffer::GraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
         std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
         const GraphicsBufferCreateInfo& createInfo,
         VmaAllocation allocation,

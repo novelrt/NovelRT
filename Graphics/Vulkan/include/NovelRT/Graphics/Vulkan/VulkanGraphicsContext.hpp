@@ -24,7 +24,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         size_t _index;
 
         std::map<std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
@@ -48,10 +48,10 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
+        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
         ~GraphicsContext() final;
 
-        [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
         [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
         [[nodiscard]] size_t GetIndex() const noexcept;

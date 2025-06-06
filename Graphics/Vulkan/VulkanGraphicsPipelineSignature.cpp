@@ -69,7 +69,7 @@ namespace NovelRT::Graphics
         descriptorPoolCreateInfo.poolSizeCount = static_cast<uint32_t>(vulkanDescriptorPoolSizes.size());
         descriptorPoolCreateInfo.pPoolSizes = vulkanDescriptorPoolSizes.data();
 
-        auto device = signature->GetDevice().lock();
+        auto device = signature->GetDevice();
         VkDescriptorPool returnDescriptorPool = VK_NULL_HANDLE;
         VkResult descriptorPoolResult = vkCreateDescriptorPool(device->GetVulkanDevice(), &descriptorPoolCreateInfo, nullptr, &returnDescriptorPool);
 
@@ -133,7 +133,7 @@ namespace NovelRT::Graphics
         descriptorSetLayoutCreateInfo.bindingCount = static_cast<uint32_t>(descriptorSetLayoutBindings.size());
         descriptorSetLayoutCreateInfo.pBindings = descriptorSetLayoutBindings.data();
 
-        auto device = signature->GetDevice().lock();
+        auto device = signature->GetDevice();
         VkDescriptorSetLayout vulkanDescriptorSetLayout = VK_NULL_HANDLE;
         VkResult descriptorSetLayoutResult = vkCreateDescriptorSetLayout(device->GetVulkanDevice(), &descriptorSetLayoutCreateInfo, nullptr, &vulkanDescriptorSetLayout);
 
@@ -176,7 +176,7 @@ namespace NovelRT::Graphics
         pipelineLayoutCreateInfo.pushConstantRangeCount = static_cast<uint32_t>(finalPushConstantRangeData.size());
         pipelineLayoutCreateInfo.pPushConstantRanges = finalPushConstantRangeData.data();
 
-        auto device = signature->GetDevice().lock();
+        auto device = signature->GetDevice();
         VkPipelineLayout vulkanPipelineLayout = VK_NULL_HANDLE;
         VkResult pipelineLayoutResult = vkCreatePipelineLayout(device->GetVulkanDevice(), &pipelineLayoutCreateInfo, nullptr, &vulkanPipelineLayout);
 
@@ -202,7 +202,7 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsPipelineSignature::GraphicsPipelineSignature(
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         GraphicsPipelineBlendFactor srcBlendFactor,
         GraphicsPipelineBlendFactor dstBlendFactor,
         NovelRT::Utilities::Span<const GraphicsPipelineInput> inputs,
@@ -227,7 +227,7 @@ namespace NovelRT::Graphics
         DestroyPipelineLayout();
     }
 
-    [[nodiscard]] std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipelineSignature::GetDevice() const
+    [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsPipelineSignature::GetDevice() const
     {
         return _device;
     }
@@ -258,9 +258,8 @@ namespace NovelRT::Graphics
         descriptorSetAllocateInfo.descriptorSetCount = 1;
         descriptorSetAllocateInfo.pSetLayouts = &vulkanDescriptorSetLayout;
 
-        auto device = _device.lock();
         VkDescriptorSet returnDescriptorSet = VK_NULL_HANDLE;
-        VkResult allocatorDescriptorSetsResult = vkAllocateDescriptorSets(device->GetVulkanDevice(), &descriptorSetAllocateInfo, &returnDescriptorSet);
+        VkResult allocatorDescriptorSetsResult = vkAllocateDescriptorSets(_device->GetVulkanDevice(), &descriptorSetAllocateInfo, &returnDescriptorSet);
 
         if (allocatorDescriptorSetsResult != VK_SUCCESS)
         {
@@ -305,8 +304,7 @@ namespace NovelRT::Graphics
     {
         if (_vulkanDescriptorPool.HasValue())
         {
-            auto device = _device.lock();
-            vkDestroyDescriptorPool(device->GetVulkanDevice(), _vulkanDescriptorPool.Get(), nullptr);
+            vkDestroyDescriptorPool(_device->GetVulkanDevice(), _vulkanDescriptorPool.Get(), nullptr);
             _vulkanDescriptorPool.Reset();
         }
     }
@@ -315,8 +313,7 @@ namespace NovelRT::Graphics
     {
         if (_vulkanDescriptorSetLayout.HasValue())
         {
-            auto device = _device.lock();
-            vkDestroyDescriptorSetLayout(device->GetVulkanDevice(), _vulkanDescriptorSetLayout.Get(), nullptr);
+            vkDestroyDescriptorSetLayout(_device->GetVulkanDevice(), _vulkanDescriptorSetLayout.Get(), nullptr);
             _vulkanDescriptorSetLayout.Reset();
         }
     }
@@ -325,8 +322,7 @@ namespace NovelRT::Graphics
     {
         if (_vulkanPipelineLayout.HasValue())
         {
-            auto device = _device.lock();
-            vkDestroyPipelineLayout(device->GetVulkanDevice(), _vulkanPipelineLayout.Get(), nullptr);
+            vkDestroyPipelineLayout(_device->GetVulkanDevice(), _vulkanPipelineLayout.Get(), nullptr);
             _vulkanPipelineLayout.Reset();
         }
     }

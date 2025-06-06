@@ -28,7 +28,7 @@ namespace NovelRT::Graphics
     {
         VkCommandPool vulkanCommandPool = VK_NULL_HANDLE;
 
-        auto device = context->GetDevice().lock();
+        auto device = context->GetDevice();
 
         VkCommandPoolCreateInfo commandPoolCreateInfo{};
         commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -56,7 +56,7 @@ namespace NovelRT::Graphics
         commandBufferAllocateInfo.commandPool = context->GetVulkanCommandPool();
         commandBufferAllocateInfo.commandBufferCount = 1;
 
-        auto device = context->GetDevice().lock();
+        auto device = context->GetDevice();
 
         VkResult result =
             vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
@@ -73,7 +73,7 @@ namespace NovelRT::Graphics
     VkFramebuffer CreateVulkanFramebuffer(VulkanGraphicsContext* context)
     {
         VkFramebuffer vulkanFramebuffer = VK_NULL_HANDLE;
-        auto device = context->GetDevice().lock();
+        auto device = context->GetDevice();
         auto surface = device->GetSurface();
         VkImageView swapChainImageView = context->GetVulkanSwapChainImageView();
 
@@ -101,7 +101,7 @@ namespace NovelRT::Graphics
     VkImageView CreateVulkanSwapChainImageView(VulkanGraphicsContext* context)
     {
         VkImageView swapChainImageView = VK_NULL_HANDLE;
-        auto device = context->GetDevice().lock();
+        auto device = context->GetDevice();
 
         VkComponentMapping componentMapping{};
         componentMapping.r = VK_COMPONENT_SWIZZLE_R;
@@ -175,7 +175,7 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<const VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
 
-    VulkanGraphicsContext::GraphicsContext(std::weak_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
+    VulkanGraphicsContext::GraphicsContext(std::shared_ptr<VulkanGraphicsDevice> device, size_t index) noexcept
         : _device(std::move(device)),
           _index(index),
           _vulkanDescriptorSets(),
@@ -192,8 +192,7 @@ namespace NovelRT::Graphics
     {
         DestroyDescriptorSets();
 
-        auto devicePtr = _device.lock();
-        VkDevice device = devicePtr->GetVulkanDevice();
+        VkDevice device = _device->GetVulkanDevice();
         if (_vulkanFramebuffer.HasValue())
         {
             VkFramebuffer framebuffer = _vulkanFramebuffer.Get();
@@ -224,7 +223,7 @@ namespace NovelRT::Graphics
         }
     }
 
-    std::weak_ptr<VulkanGraphicsDevice> VulkanGraphicsContext::GetDevice() const
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsContext::GetDevice() const
     {
         return _device;
     }
@@ -274,8 +273,7 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
     {
-        auto devicePtr = _device.lock();
-        VkDevice device = devicePtr->GetVulkanDevice();
+        VkDevice device = _device->GetVulkanDevice();
         if (_vulkanFramebuffer.HasValue())
         {
             VkFramebuffer framebuffer = _vulkanFramebuffer.Get();

@@ -20,7 +20,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> _owningResource;
         VmaVirtualAllocation _virtualAllocation;
         VmaVirtualAllocationInfo _virtualAllocationInfo;
@@ -33,7 +33,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<const GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>>
         shared_from_this() const;
 
-        GraphicsResourceMemoryRegion(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+        GraphicsResourceMemoryRegion(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
                                      std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> owningResource,
                                      VmaVirtualAllocation virtualAllocation,
                                      VmaVirtualAllocationInfo virtualAllocationInfo);
@@ -89,7 +89,7 @@ namespace NovelRT::Graphics
                 GraphicsDeviceObject::shared_from_this());
         }
 
-        GraphicsResourceMemoryRegion(std::weak_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+        GraphicsResourceMemoryRegion(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
                                      std::shared_ptr<TResource<Vulkan::VulkanGraphicsBackend>> owningResource,
                                      VmaVirtualAllocation virtualAllocation,
                                      VmaVirtualAllocationInfo virtualAllocationInfo)

@@ -119,7 +119,7 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsTexture::GraphicsTexture(
-        std::weak_ptr<VulkanGraphicsDevice> graphicsDevice,
+        std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
         std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
         const GraphicsTextureCreateInfo& createInfo,
         VmaAllocation allocation,
@@ -130,14 +130,14 @@ namespace NovelRT::Graphics
         , _mappedMemoryRegions(0)
         , _addressMode(createInfo.addressMode)
         , _kind(createInfo.textureKind)
-        , _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(device.lock(), textureKind, vulkanImage); })
-        , _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]() { return CreateVulkanSampler(device.lock(), addressMode); })
+        , _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(device, textureKind, vulkanImage); })
+        , _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]() { return CreateVulkanSampler(device, addressMode); })
         , _width(createInfo.width)
         , _height(createInfo.height)
         , _depth(createInfo.depth)
     {
 
-        auto device = GetDevice().lock();
+        auto device = GetDevice();
         VkResult result = vkBindImageMemory(device->GetVulkanDevice(), vulkanImage, allocationInfo.deviceMemory, allocationInfo.offset);
 
         if (result != VK_SUCCESS)
@@ -151,7 +151,7 @@ namespace NovelRT::Graphics
     {
         assert_message(_mappedMemoryRegions == 0, "Attempted to destroy a VkImage containing mapped regions.");
 
-        auto device = GetDevice().lock();
+        auto device = GetDevice();
         auto vulkanDevice = device->GetVulkanDevice();
 
         if (_vulkanImageView.HasValue())

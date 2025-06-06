@@ -29,7 +29,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsDescriptorSet::~GraphicsDescriptorSet()
     {
-        auto device = _pipeline->GetDevice().lock();
+        auto device = _pipeline->GetDevice();
         auto signature = _pipeline->GetSignature();
         vkFreeDescriptorSets(device->GetVulkanDevice(), signature->GetVulkanDescriptorPool(), 1, &_descriptorSetHandle);
     }
@@ -57,7 +57,7 @@ namespace NovelRT::Graphics
                 VkWriteDescriptorSet writeDescriptorSet{};
 
                 auto resource = inputResourceRegion->GetOwningResource();
-                auto device = _pipeline->GetDevice().lock();
+                auto device = _pipeline->GetDevice();
                 if (auto buffer = std::dynamic_pointer_cast<VulkanGraphicsBuffer>(resource))
                 {
                     VkDescriptorBufferInfo descriptorBufferInfo{};

@@ -136,7 +136,7 @@ namespace NovelRT::Graphics
         pipelineDynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
         pipelineDynamicStateCreateInfo.pDynamicStates = dynamicStates.data();
 
-        auto device = pipeline->GetDevice().lock();
+        auto device = pipeline->GetDevice();
         VkGraphicsPipelineCreateInfo pipelineCreateInfo{};
         pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineCreateInfo.pViewportState = &pipelineViewportStateCreateInfo;
@@ -251,7 +251,7 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsPipeline::GraphicsPipeline(
-        std::weak_ptr<VulkanGraphicsDevice> device,
+        std::shared_ptr<VulkanGraphicsDevice> device,
         std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
         //NOLINTBEGIN(bugprone-easily-swappable-parameters) - no sane way to handle this
         std::shared_ptr<VulkanShaderProgram> vertexShader,
@@ -265,7 +265,7 @@ namespace NovelRT::Graphics
         , _vulkanPipeline([this, imguiRenderMode]() { return CreateVulkanPipeline(this, imguiRenderMode); })
     { }
 
-    [[nodiscard]] std::weak_ptr<VulkanGraphicsDevice> VulkanGraphicsPipeline::GetDevice() const
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsPipeline::GetDevice() const
     {
         return _device;
     }
