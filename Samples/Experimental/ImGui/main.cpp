@@ -113,7 +113,7 @@ std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
     currentCmdList->CmdBindDescriptorSets(descriptorData);
     context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
 
-    currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / sizeof(TexturedVertex), 1, 0, 0);
+    currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / static_cast<uint32_t>(sizeof(TexturedVertex)), 1, 0, 0);
 
     return descriptorSetData;
 }
@@ -243,7 +243,7 @@ int main()
 
     auto surface = gfxDevice->GetSurface();
     bool clicked = false;
-    NovelRT::Timing::StepTimer timer(144.0f, 1.0f / 144.0f);
+    NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
     DummyUpdateStuff += [&](auto delta) {
         wndProvider->ProcessAllMessages();
         inputProvider->Update(delta);

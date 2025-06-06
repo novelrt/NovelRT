@@ -91,7 +91,7 @@ namespace NovelRT::UI::ImGui
             config.FontDataOwnedByAtlas = false;
             config.FontData = buffer.data();
             config.FontDataSize = fileSize;
-            config.SizePixels = pixelSize;
+            config.SizePixels = static_cast<float>(pixelSize);
             name.copy(config.Name, std::string::npos, 0);
 
             ImGuiIO& io = ::ImGui::GetIO();
