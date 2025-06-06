@@ -1,5 +1,8 @@
 include(FetchContent)
 
+# Forcibly disable clang-tidy warnings/errors for any third-party module
+configure_file(.clang-tidy .clang-tidy COPYONLY)
+
 macro(thirdparty_module name)
   FetchContent_Declare(${name}
     ${ARGN}
