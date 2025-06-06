@@ -113,7 +113,8 @@ std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
     currentCmdList->CmdBindDescriptorSets(descriptorData);
     context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
 
-    currentCmdList->CmdDraw(vertexBufferRegion->GetSize() / static_cast<uint32_t>(sizeof(TexturedVertex)), 1, 0, 0);
+    auto vertexCount = vertexBufferRegion->GetSize() / sizeof(TexturedVertex);
+    currentCmdList->CmdDraw(static_cast<uint32_t>(vertexCount), 1, 0, 0);
 
     return descriptorSetData;
 }
