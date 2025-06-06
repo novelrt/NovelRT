@@ -72,7 +72,7 @@ jobs:
 
       - name: Generate build system
         if: steps.cache.outputs.cache-hit != 'true'
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
 
       - name: Build NovelRT
         run: cmake --build build --config ${{ matrix.configuration }} --parallel
