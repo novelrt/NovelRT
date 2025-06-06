@@ -15,6 +15,12 @@ target_sources(imgui
     "${CMAKE_CURRENT_BINARY_DIR}/src/imgui.h"
     "${CMAKE_CURRENT_BINARY_DIR}/src/imgui_internal.h")
 
+set_target_properties(imgui
+  PROPERTIES
+    POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+
+target_compile_features(imgui PUBLIC cxx_std_11)
+
 add_library(imgui::imgui ALIAS imgui)
 
 install(
