@@ -80,8 +80,8 @@ thirdparty_module(Opus
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(PNG
-  URL https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.zip
-  URL_HASH SHA512=65df0c2befa06d0b9ec0c6395a73987fb071754610d328b94ce01a6b8f7161c71ce97ddf0e0a8e28c2e50019a103368c4b4f0b63bd8cd75e168b32f940922d96
+  URL https://download.sourceforge.net/libpng/libpng-1.6.48.tar.xz
+  URL_HASH SHA512=aae6cdd7d55d78aea820165493e31ea7c0de8b2272b709d334dfe7bac96e24099330f0e9049062fde34b6ea926af50987c390dab1b91bdfe3586b2ee4aed8b33
   OVERRIDE_FIND_PACKAGE
 )
 
