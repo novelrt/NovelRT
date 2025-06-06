@@ -22,6 +22,8 @@ Checks: >
   -cppcoreguidelines-pro-bounds-constant-array-index,
   -cppcoreguidelines-owning-memory,
 
+WarningsAsErrors: '*'
+
 FormatStyle: file
 
 HeaderFilterRegex: '^NovelRT/.*'
