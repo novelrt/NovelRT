@@ -210,6 +210,10 @@ namespace NovelRT::Graphics
 
     NovelRT::Utilities::Span<uint8_t> VulkanGraphicsTexture::MapBytes(size_t rangeOffset, size_t rangeLength)
     {
+        static_assert(
+            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
+            "uint8_t must be able to access the object representation of the byte buffer");
+
         size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
 
@@ -231,11 +235,15 @@ namespace NovelRT::Graphics
 
         _mappedMemoryRegions++;
 
-        return {reinterpret_cast<uint8_t*>(data) + rangeOffset, rangeLength};
+        return {static_cast<uint8_t*>(data) + rangeOffset, rangeLength};
     }
 
     NovelRT::Utilities::Span<const uint8_t> VulkanGraphicsTexture::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
     {
+        static_assert(
+            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
+            "uint8_t must be able to access the object representation of the byte buffer");
+
         size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
 
@@ -267,7 +275,7 @@ namespace NovelRT::Graphics
 
         _mappedMemoryRegions++;
 
-        return {reinterpret_cast<const uint8_t*>(data), rangeLength};
+        return {static_cast<const uint8_t*>(data), rangeLength};
     }
 
     void VulkanGraphicsTexture::UnmapBytes()

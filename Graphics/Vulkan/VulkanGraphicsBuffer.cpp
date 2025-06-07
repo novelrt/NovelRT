@@ -81,6 +81,10 @@ namespace NovelRT::Graphics
 
     Utilities::Span<uint8_t> VulkanGraphicsBuffer::MapBytes(size_t rangeOffset, size_t rangeLength)
     {
+        static_assert(
+            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
+            "uint8_t must be able to access the object representation of the byte buffer");
+
         const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
 
@@ -106,6 +110,10 @@ namespace NovelRT::Graphics
 
     Utilities::Span<const uint8_t> VulkanGraphicsBuffer::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
     {
+        static_assert(
+            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
+            "uint8_t must be able to access the object representation of the byte buffer");
+
         const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
 
