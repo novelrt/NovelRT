@@ -6,8 +6,8 @@
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
-#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
+#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Utilities/Span.hpp>
