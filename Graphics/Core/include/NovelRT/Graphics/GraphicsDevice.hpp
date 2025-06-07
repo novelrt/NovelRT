@@ -85,7 +85,7 @@ namespace NovelRT::Graphics
 
         void PresentFrame();
 
-        void Signal(const GraphicsContext<TBackend>* context);
+        void Signal(const std::shared_ptr<GraphicsContext<TBackend>>& context);
 
         void WaitForIdle();
     };

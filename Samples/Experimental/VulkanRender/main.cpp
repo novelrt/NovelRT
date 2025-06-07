@@ -132,14 +132,14 @@ int main()
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-    auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion.get());
+    auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
     pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
     pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
     pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
-    vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion.get());
-    cmdList->CmdCopy(vertexBufferRegion.get(), stagingBufferRegion.get());
+    vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+    cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
     uint32_t textureWidth = 256;
     uint32_t textureHeight = 256;
@@ -150,7 +150,7 @@ int main()
     auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-    auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion.get());
+    auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
 
     for (uint32_t n = 0; n < texturePixels; n++)
     {
@@ -160,17 +160,17 @@ int main()
         pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
     }
 
-    textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion.get());
+    textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
         inputResourceRegions{texture2DRegion};
 
-    cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D.get());
-    cmdList->CmdCopy(texture2D.get(), textureStagingBufferRegion.get());
-    cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D.get());
+    cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+    cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+    cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
     gfxContext->EndFrame();
-    gfxDevice->Signal(gfxContext.get());
+    gfxDevice->Signal(gfxContext);
     gfxDevice->WaitForIdle();
     gfxContext->GetFence()->Reset();
 
@@ -194,7 +194,7 @@ int main()
             colourDataStruct.stencil = 0;
 
             std::vector<ClearValue> colourData{colourDataStruct};
-            currentCmdList->CmdBeginRenderPass(renderPass.get(), colourData);
+            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
 
             ViewportInfo viewportInfoStruct{};
             viewportInfoStruct.x = 0;
@@ -207,9 +207,9 @@ int main()
             currentCmdList->CmdSetViewport(viewportInfoStruct);
             currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                           NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-            currentCmdList->CmdBindPipeline(pipeline.get());
+            currentCmdList->CmdBindPipeline(pipeline);
 
-            std::array<const GraphicsBuffer<VulkanGraphicsBackend>*, 1> buffers{vertexBuffer.get()};
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>>, 1> buffers{std::cref(vertexBuffer)};
             std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
 
             currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
@@ -218,7 +218,7 @@ int main()
             descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
             descriptorSetData->UpdateDescriptorSetData();
 
-            std::array<const GraphicsDescriptorSet<VulkanGraphicsBackend>*, 1> descriptorData{descriptorSetData.get()};
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
             currentCmdList->CmdBindDescriptorSets(descriptorData);
 
             currentCmdList->CmdDraw(static_cast<uint32_t>(vertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,

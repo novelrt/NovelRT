@@ -209,22 +209,22 @@ namespace NovelRT::UI::ImGui
 
             // Create a staging buffer region for texture
             auto stagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-            auto textureData = textureStagingBuffer->template Map<uint32_t>(stagingBufferRegion.get());
+            auto textureData = textureStagingBuffer->template Map<uint32_t>(stagingBufferRegion);
 
             // Write the data over before copying
             memcpy(textureData.data(), pixels, (width * height) * sizeof(char) * 4);
-            textureStagingBuffer->UnmapAndWrite(stagingBufferRegion.get());
+            textureStagingBuffer->UnmapAndWrite(stagingBufferRegion);
 
             // Set texture ID so that ImGui can refer back to proper id during render
             io.Fonts->SetTexID(0);
 
             // Send the data to GPU
-            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D.get());
-            cmdList->CmdCopy(texture2D.get(), stagingBufferRegion.get());
-            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D.get());
+            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->CmdCopy(texture2D, stagingBufferRegion);
+            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
             context->EndFrame();
-            _graphicsDevice->Signal(context.get());
+            _graphicsDevice->Signal(context);
             _graphicsDevice->WaitForIdle();
             context->GetFence()->Reset();
 
@@ -401,10 +401,10 @@ namespace NovelRT::UI::ImGui
             auto indexStageBufferRegion = indexStagingBuffer->Allocate(indexSize, 4);
 
             // Map vertex buffer to region
-            auto pVertexBuffer = vertexStagingBuffer->template Map<ImDrawVert>(vertexBufferRegion.get());
+            auto pVertexBuffer = vertexStagingBuffer->template Map<ImDrawVert>(vertexBufferRegion);
             auto pVertPtr = pVertexBuffer.data();
             // Map index buffer to region
-            auto pIndexbuffer = indexStagingBuffer->template Map<ImDrawIdx>(indexBufferRegion.get());
+            auto pIndexbuffer = indexStagingBuffer->template Map<ImDrawIdx>(indexBufferRegion);
             auto pIdxPtr = pIndexbuffer.data();
 
             // Slamjam the vertex buffer and index buffer data into their regions
@@ -421,18 +421,18 @@ namespace NovelRT::UI::ImGui
             }
 
             // Unmap and copy to GPU
-            vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion.get());
-            indexStagingBuffer->UnmapAndWrite(indexBufferRegion.get());
-            currentCmdList->CmdCopy(vertexBufferRegion.get(), vertexStageBufferRegion.get());
-            currentCmdList->CmdCopy(indexBufferRegion.get(), indexStageBufferRegion.get());
+            vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+            indexStagingBuffer->UnmapAndWrite(indexBufferRegion);
+            currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
+            currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
 
             // Sync the commands so that we can prevent data issues
-            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer.get(), GraphicsMemoryAccessMode::TransferWrite,
+            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer, GraphicsMemoryAccessMode::TransferWrite,
                                                      GraphicsMemoryAccessMode::VertexAttributeRead,
                                                      GraphicsPipelineVisibility::Transfer,
                                                      GraphicsPipelineVisibility::VertexInput);
             currentCmdList->CmdPipelineBufferBarrier(
-                indexBuffer.get(), GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::IndexRead,
+                indexBuffer, GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::IndexRead,
                 GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
 
             _currentIndexBufferRegion = indexBufferRegion;
@@ -459,7 +459,7 @@ namespace NovelRT::UI::ImGui
             ImVec2 clippingScale = drawData->FramebufferScale;
 
             // Bind the Vertex Buffers and the index buffer region
-            std::array<const GraphicsBuffer<TGraphicsBackend>*, 1> buffers{_currentVertexBuffer.get()};
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{std::cref(_currentVertexBuffer)};
             auto currentOffset = _currentVertexBufferRegion->GetOffset();
             auto currentIndexBufferRegion = _currentIndexBufferRegion;
             std::array<size_t, 1> offsets{currentOffset};
@@ -474,9 +474,9 @@ namespace NovelRT::UI::ImGui
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
-            currentCmdList->CmdBindPipeline(_pipeline.get());
+            currentCmdList->CmdBindPipeline(_pipeline);
             currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-            currentCmdList->CmdBindIndexBuffer(_currentIndexBufferRegion.get(), IndexType::UInt16);
+            currentCmdList->CmdBindIndexBuffer(_currentIndexBufferRegion, IndexType::UInt16);
 
             float scale[2];
             scale[0] = 2.0f / drawData->DisplaySize.x;
@@ -487,9 +487,9 @@ namespace NovelRT::UI::ImGui
             NovelRT::Utilities::Span<float> scaleSpan(scale);
             NovelRT::Utilities::Span<float> translateSpan(translate);
 
-            currentCmdList->CmdPushConstants(_pipelineSignature.get(), ShaderProgramVisibility::Vertex, 0,
+            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0,
                                              NovelRT::Utilities::SpanCast<uint8_t>(scaleSpan));
-            currentCmdList->CmdPushConstants(_pipelineSignature.get(), ShaderProgramVisibility::Vertex,
+            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex,
                                              sizeof(float) * 2, NovelRT::Utilities::SpanCast<uint8_t>(translateSpan));
 
             currentCmdList->CmdSetScissor(
@@ -557,8 +557,7 @@ namespace NovelRT::UI::ImGui
                         _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 10});
 
                         // Bind the descriptor set
-                        std::array<const GraphicsDescriptorSet<TGraphicsBackend>*, 1> descriptorData{
-                            descriptorSetData.get()};
+                        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
 
                         currentCmdList->CmdBindDescriptorSets(descriptorData);
 

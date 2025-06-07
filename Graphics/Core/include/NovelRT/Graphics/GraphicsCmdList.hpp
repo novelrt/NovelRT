@@ -11,6 +11,7 @@
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 
 namespace NovelRT::Graphics
@@ -69,26 +70,26 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept;
 
-        void CmdBeginRenderPass(const GraphicsRenderPass<TBackend>* targetPass,
+        void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<TBackend>>& targetPass,
                                 Utilities::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();
 
-        void CmdBindDescriptorSets(NovelRT::Utilities::Span<const GraphicsDescriptorSet<TBackend>*> sets);
+        void CmdBindDescriptorSets(NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>> sets);
 
         void CmdBindVertexBuffers(uint32_t firstBinding,
                                   uint32_t bindingCount,
-                                  NovelRT::Utilities::Span<const GraphicsBuffer<TBackend>*> buffers,
+                                  NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>> buffers,
                                   NovelRT::Utilities::Span<const size_t> offsets);
 
-        void CmdBindIndexBuffer(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* buffer,
+        void CmdBindIndexBuffer(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& buffer,
                                 IndexType indexType);
 
-        void CmdCopy(const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* destination,
-                     const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* source);
+        void CmdCopy(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& destination,
+                     const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& source);
 
-        void CmdCopy(const GraphicsTexture<TBackend>* destination,
-                     const GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>* source);
+        void CmdCopy(const std::shared_ptr<GraphicsTexture<TBackend>>& destination,
+                     const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& source);
 
         void CmdDrawIndexed(uint32_t indexCount,
                             uint32_t instanceCount,
@@ -102,17 +103,17 @@ namespace NovelRT::Graphics
 
         void CmdSetViewport(ViewportInfo viewportInfo);
 
-        void CmdBeginTexturePipelineBarrierLegacyVersion(const GraphicsTexture<TBackend>* texture);
-        void CmdEndTexturePipelineBarrierLegacyVersion(const GraphicsTexture<TBackend>* texture);
+        void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
+        void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
 
-        void CmdBindPipeline(const GraphicsPipeline<TBackend>* pipeline);
+        void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<TBackend>>& pipeline);
 
-        void CmdPushConstants(const GraphicsPipelineSignature<TBackend>* pipelineSignature,
+        void CmdPushConstants(const std::shared_ptr<GraphicsPipelineSignature<TBackend>>& pipelineSignature,
                               ShaderProgramVisibility visibility,
                               size_t offset,
                               Utilities::Span<uint8_t> values);
 
-        void CmdPipelineBufferBarrier(const GraphicsBuffer<TBackend>* buffer,
+        void CmdPipelineBufferBarrier(const std::shared_ptr<GraphicsBuffer<TBackend>>& buffer,
                                       GraphicsMemoryAccessMode sourceAccessFlag,
                                       GraphicsMemoryAccessMode destinationAccessFlag,
                                       GraphicsPipelineVisibility sourceStageFlag,

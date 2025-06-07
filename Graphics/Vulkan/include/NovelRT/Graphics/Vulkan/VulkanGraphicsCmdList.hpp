@@ -5,6 +5,9 @@
 
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Utilities/Span.hpp>
+
+#include <functional>
+
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
@@ -30,29 +33,29 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetContext() const noexcept;
 
-        void CmdBeginRenderPass(const GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>* targetPass,
+        void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
                                 Utilities::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();
 
         void CmdBindDescriptorSets(
-            NovelRT::Utilities::Span<const GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>*> sets);
+            NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>> sets);
 
         void CmdBindVertexBuffers(
             uint32_t firstBinding,
             uint32_t bindingCount,
-            NovelRT::Utilities::Span<const GraphicsBuffer<Vulkan::VulkanGraphicsBackend>*> buffers,
+            NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>>>> buffers,
             NovelRT::Utilities::Span<const size_t> offsets);
 
         void CmdBindIndexBuffer(
-            const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* buffer,
+            const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>& buffer,
             IndexType indexType);
 
-        void CmdCopy(const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* destination,
-                     const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* source);
+        void CmdCopy(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>& destination,
+                     const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>& source);
 
-        void CmdCopy(const GraphicsTexture<Vulkan::VulkanGraphicsBackend>* destination,
-                     const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* source);
+        void CmdCopy(const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& destination,
+                     const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>& source);
 
         void CmdDrawIndexed(uint32_t indexCount,
                             uint32_t instanceCount,
@@ -66,17 +69,17 @@ namespace NovelRT::Graphics
 
         void CmdSetViewport(ViewportInfo viewportInfo);
 
-        void CmdBeginTexturePipelineBarrierLegacyVersion(const GraphicsTexture<Vulkan::VulkanGraphicsBackend>* texture);
-        void CmdEndTexturePipelineBarrierLegacyVersion(const GraphicsTexture<Vulkan::VulkanGraphicsBackend>* texture);
+        void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture);
+        void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture);
 
-        void CmdBindPipeline(const GraphicsPipeline<Vulkan::VulkanGraphicsBackend>* pipeline);
+        void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline);
 
-        void CmdPushConstants(const GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>* pipelineSignature,
+        void CmdPushConstants(const std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>& pipelineSignature,
                               ShaderProgramVisibility visibility,
                               size_t offset,
                               NovelRT::Utilities::Span<uint8_t> values);
 
-        void CmdPipelineBufferBarrier(const GraphicsBuffer<Vulkan::VulkanGraphicsBackend>* buffer,
+        void CmdPipelineBufferBarrier(const std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>>& buffer,
                                       GraphicsMemoryAccessMode sourceAccessFlag,
                                       GraphicsMemoryAccessMode destinationAccessFlag,
                                       GraphicsPipelineVisibility sourceStageFlag,

@@ -200,7 +200,7 @@ namespace NovelRT::Graphics
         vmaUnmapMemory(vmaAllcoator, allocation);
     }
 
-    void VulkanGraphicsBuffer::UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>* memoryRegion)
+    void VulkanGraphicsBuffer::UnmapAndWrite(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>& memoryRegion)
     {
         return UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
     }

@@ -591,7 +591,7 @@ namespace NovelRT::Graphics
 
         auto context = _contexts.Get()[_contextIndex];
         auto fence = context->GetFence();
-        Signal(context.get());
+        Signal(context);
         fence->Wait();
         fence->Reset();
 
@@ -615,7 +615,7 @@ namespace NovelRT::Graphics
         _contextIndex = contextIndex;
     }
 
-    void VulkanGraphicsDevice::Signal(const VulkanGraphicsContext* context)
+    void VulkanGraphicsDevice::Signal(const std::shared_ptr<VulkanGraphicsContext>& context)
     {
         VkCommandBuffer commandBuffer = context->GetVulkanCommandBuffer();
 

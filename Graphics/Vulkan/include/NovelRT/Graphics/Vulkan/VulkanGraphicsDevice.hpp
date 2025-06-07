@@ -141,7 +141,7 @@ namespace NovelRT::Graphics
 
         void PresentFrame();
 
-        void Signal(const GraphicsContext<Vulkan::VulkanGraphicsBackend>* context);
+        void Signal(const std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>& context);
 
         void WaitForIdle();
 
