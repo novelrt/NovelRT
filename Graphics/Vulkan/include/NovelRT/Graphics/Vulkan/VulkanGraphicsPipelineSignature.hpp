@@ -5,7 +5,6 @@
 
 #include <NovelRT/Graphics/GraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
-
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 

@@ -7,7 +7,6 @@
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 #include <NovelRT/Graphics/GraphicsPushConstantRange.hpp>
-
 #include <NovelRT/Utilities/Span.hpp>
 
 namespace NovelRT::Graphics

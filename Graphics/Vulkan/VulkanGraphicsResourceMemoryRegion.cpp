@@ -4,7 +4,6 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Graphics/GraphicsResource.hpp>
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
-
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>

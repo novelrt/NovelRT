@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class ShaderProgramVisibility
+    enum class ShaderProgramVisibility : uint32_t
     {
         NoneOrUnknown = 0,
         Vertex = 1 << 0,

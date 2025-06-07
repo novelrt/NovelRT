@@ -4,7 +4,6 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
-
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 

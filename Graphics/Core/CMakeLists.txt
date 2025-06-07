@@ -14,7 +14,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
     PUBLIC
       include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
-      include/NovelRT/Graphics/GraphicsCmdList.hpp
       include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsBufferKind.hpp
       include/NovelRT/Graphics/GraphicsCmdList.hpp
@@ -33,19 +32,19 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/GraphicsPipelineInputElementKind.hpp
       include/NovelRT/Graphics/GraphicsPipelineResource.hpp
       include/NovelRT/Graphics/GraphicsPipelineResourceKind.hpp
-      include/NovelRT/Graphics/GraphicsPipelineVisibility.hpp
       include/NovelRT/Graphics/GraphicsPipelineSignature.hpp
+      include/NovelRT/Graphics/GraphicsPipelineVisibility.hpp
       include/NovelRT/Graphics/GraphicsProvider.hpp
       include/NovelRT/Graphics/GraphicsPushConstantRange.hpp
       include/NovelRT/Graphics/GraphicsRenderPass.hpp
       include/NovelRT/Graphics/GraphicsResource.hpp
-      include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/GraphicsResourceAccess.hpp
+      include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/GraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/GraphicsSurfaceKind.hpp
       include/NovelRT/Graphics/GraphicsTexture.hpp
       include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
-      include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
+      include/NovelRT/Graphics/GraphicsTextureCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsTextureKind.hpp
       include/NovelRT/Graphics/IGraphicsAdapterSelector.hpp
       include/NovelRT/Graphics/IGraphicsSurface.hpp

@@ -10,6 +10,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan

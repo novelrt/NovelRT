@@ -136,31 +136,6 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsContext::DestroyDescriptorSets()
     {
-        /*
-        for (const auto& pair : _vulkanDescriptorSets)
-        {
-            // If the signature has already expired, assume all of its descriptor sets have too
-            if (auto signature = pair.first.lock())
-            {
-                std::vector<VkDescriptorSet> sets(pair.second.size());
-                for (const auto& setPtr : pair.second)
-                {
-                    // Ignore any sets which have expired
-                    if (auto set = setPtr.lock())
-                    {
-                        sets.push_back(set->GetVulkanDescriptorSet());
-                    }
-                }
-
-
-                auto pool = signature->GetVulkanDescriptorPool();
-
-                // TODO: this should likely check its result
-                vkFreeDescriptorSets(_device->GetVulkanDevice(), pool, static_cast<int32_t>(sets.size()), sets.data());
-            }
-        }
-        */
-
         _vulkanDescriptorSets.clear();
     }
 

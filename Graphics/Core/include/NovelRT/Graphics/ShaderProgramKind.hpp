@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class ShaderProgramKind
+    enum class ShaderProgramKind : uint32_t
     {
         Unknown = 0,
         Vertex = 1,

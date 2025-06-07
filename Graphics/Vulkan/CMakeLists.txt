@@ -15,6 +15,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     PRIVATE
       VulkanGraphicsAdapter.cpp
       VulkanGraphicsAdapterSelector.cpp
+      VulkanGraphicsBackendTraits.cpp
       VulkanGraphicsBuffer.cpp
       VulkanGraphicsCmdList.cpp
       VulkanGraphicsContext.cpp
@@ -24,15 +25,13 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       VulkanGraphicsMemoryAllocator.cpp
       VulkanGraphicsPipeline.cpp
       VulkanGraphicsPipelineSignature.cpp
-#      VulkanGraphicsPluginProvider.cpp
-      VulkanGraphicsResource.cpp
-      VulkanGraphicsResourceMemoryRegion.cpp
       VulkanGraphicsProvider.cpp
       VulkanGraphicsRenderPass.cpp
+      VulkanGraphicsResource.cpp
+      VulkanGraphicsResourceMemoryRegion.cpp
       VulkanGraphicsSurfaceContext.cpp
       VulkanGraphicsTexture.cpp
       VulkanShaderProgram.cpp
-      VulkanGraphicsBackendTraits.cpp
 
   HEADERS
     PUBLIC

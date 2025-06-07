@@ -7,7 +7,7 @@
 
 namespace NovelRT::Graphics
 {
-    enum class GraphicsPipelineResourceKind
+    enum class GraphicsPipelineResourceKind : uint32_t
     {
         Unknown = 0,
         ConstantBuffer = 1,
