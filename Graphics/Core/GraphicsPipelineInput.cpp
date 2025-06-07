@@ -7,15 +7,14 @@
 namespace NovelRT::Graphics
 {
     GraphicsPipelineInput::GraphicsPipelineInput(
-        NovelRT::Utilities::Misc::Span<const GraphicsPipelineInputElement> elements) noexcept
+        NovelRT::Utilities::Span<const GraphicsPipelineInputElement> elements) noexcept
         : _elements(std::vector<GraphicsPipelineInputElement>(elements.begin(), elements.end()))
     {
     }
 
-    NovelRT::Utilities::Misc::Span<const GraphicsPipelineInputElement> GraphicsPipelineInput::GetElements()
+    NovelRT::Utilities::Span<const GraphicsPipelineInputElement> GraphicsPipelineInput::GetElements()
         const noexcept
     {
-        return NovelRT::Utilities::Misc::Span<const GraphicsPipelineInputElement>(&(*_elements.begin()),
-                                                                                  _elements.size());
+        return _elements;
     }
 } // namespace NovelRT::Graphics

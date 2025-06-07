@@ -13,81 +13,50 @@
 
 namespace NovelRT::Graphics
 {
-    template<template <typename TBackend> typename TResource, typename TBackend> class GraphicsResourceMemoryRegion;
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
 
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
-    template<typename TBackend> class GraphicsTexture : public GraphicsResource<TBackend>
+    template<typename TBackend>
+    class GraphicsTexture final : public GraphicsResource<TBackend>
     {
     public:
-        using BackendTextureType = typename GraphicsBackendTraits<TBackend>::TextureType;
-        using BackendResourceType = BackendTextureType;
-        using BackendResourceMemoryRegionType = typename GraphicsBackendTraits<TBackend>::template ResourceMemoryRegionType<BackendResourceType>;
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsTexture<TBackend>> shared_from_this();
 
-    private:
-        GraphicsTextureAddressMode _addressMode;
-        GraphicsTextureKind _kind;
-        uint32_t _width;
-        uint32_t _height;
-        uint16_t _depth;
+        GraphicsTexture() = delete;
+        ~GraphicsTexture() noexcept final;
 
-    public:
-        std::shared_ptr<GraphicsTexture<TBackend>> shared_from_this()
-        {
-            return std::static_pointer_cast<GraphicsTexture<TBackend>>(GraphicsResource<TBackend>::shared_from_this());
-        }
+        [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
+        [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
-        GraphicsTexture(std::shared_ptr<BackendTextureType> implementation,
-                        std::shared_ptr<GraphicsMemoryAllocator<TBackend>> allocator,
-                        const GraphicsTextureCreateInfo& createInfo) noexcept
-            : GraphicsResource<TBackend>(implementation, allocator, createInfo.cpuAccessKind),
-              _addressMode(createInfo.addressMode),
-              _kind(createInfo.textureKind),
-              _width(createInfo.width),
-              _height(createInfo.height),
-              _depth(static_cast<uint16_t>(createInfo.depth)) // TODO: Figure this out later, seems wrong
-        {
-        }
-
-        virtual ~GraphicsTexture() noexcept override = default;
-
-        [[nodiscard]] std::shared_ptr<BackendTextureType> GetImplementation() const noexcept
-        {
-            return std::static_pointer_cast<BackendTextureType>(GraphicsResource<TBackend>::_implementation);
-        }
+        [[nodiscard]] uint32_t GetWidth() const noexcept;
+        [[nodiscard]] uint32_t GetHeight() const noexcept;
+        [[nodiscard]] uint32_t GetDepth() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> Allocate(
             size_t size,
-            size_t alignment)
-        {
-            return std::make_shared<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>(
-                std::static_pointer_cast<BackendResourceMemoryRegionType>(GraphicsResource<TBackend>::_implementation->Allocate(size, alignment)),
-                this->shared_from_this());
-        }
+            size_t alignment);
 
-        [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept
-        {
-            return _addressMode;
-        }
+        void Free(GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>& region);
 
-        [[nodiscard]] GraphicsTextureKind GetKind() const noexcept
-        {
-            return _kind;
-        }
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) final;
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) final;
 
-        [[nodiscard]] uint32_t GetWidth() const noexcept
-        {
-            return _width;
-        }
+        void UnmapBytes() final;
 
-        [[nodiscard]] uint32_t GetHeight() const noexcept
-        {
-            return _height;
-        }
+        void UnmapBytesAndWrite() final;
+        void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
-        [[nodiscard]] uint16_t GetDepth() const noexcept
+        void UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>* memoryRegion);
+
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map(
+            const GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>* memoryRegion)
         {
-            return _depth;
+            return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }
     };
 }

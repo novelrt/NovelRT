@@ -3,13 +3,15 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <cstdint>
-#include <vulkan/vulkan.h>
 #include <NovelRT/Graphics/GraphicsBufferKind.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
-#include <NovelRT/Utilities/Misc.h> // we need this for the bitwise logic
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Utilities/Operators.hpp>
+
+#include <cstdint>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
@@ -84,7 +86,8 @@ namespace NovelRT::Graphics::Vulkan::Utilities
         return static_cast<uint32_t>(cpuAccessBit);
     }
 
-    [[nodiscard]] inline VmaAllocationCreateFlagBits GetVmaAllocationKind(GraphicsResourceAccess resourceAccessType) noexcept
+    [[nodiscard]] inline VmaAllocationCreateFlagBits GetVmaAllocationKind(
+        GraphicsResourceAccess resourceAccessType) noexcept
     {
         switch (resourceAccessType)
         {

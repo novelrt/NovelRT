@@ -4,49 +4,37 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <NovelRT/LoggingService.h>
+#include <NovelRT/Logging/LoggingService.hpp>
+
+#include <memory>
+
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsSurfaceContext
+    struct VulkanGraphicsBackend;
+}
+
+namespace NovelRT::Graphics
+{
+    template<>
+    class GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>
+        : public std::enable_shared_from_this<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>
     {
     private:
         std::shared_ptr<IGraphicsSurface> _surface;
-        std::shared_ptr<VulkanGraphicsProvider> _provider;
+        std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
         LoggingService _logger;
         VkSurfaceKHR _vulkanSurface;
 
     public:
-        VulkanGraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
-                                     std::shared_ptr<VulkanGraphicsProvider> provider);
+        GraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
+                               std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
+        ~GraphicsSurfaceContext();
 
-        ~VulkanGraphicsSurfaceContext();
+        [[nodiscard]] VkSurfaceKHR GetSurfaceContextHandle() const noexcept;
 
-        [[nodiscard]] inline void* GetSurfaceContextHandleUntyped()
-        {
-            return &_vulkanSurface;
-        }
-
-        [[nodiscard]] inline VkSurfaceKHR GetVulkanSurfaceContextHandle() const noexcept
-        {
-            return _vulkanSurface;
-        }
-        
-        [[nodiscard]] inline std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept
-        {
-            return _surface;
-        }
-
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsProvider> GetProvider() const noexcept
-        {
-            return _provider;
-        }
-
-        template<typename THandleType>[[nodiscard]] THandleType GetSurfaceContextHandleAs()
-        {
-            return *reinterpret_cast<THandleType*>(GetSurfaceContextHandleUntyped());
-        }
+        [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
     };
 }

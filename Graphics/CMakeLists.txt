@@ -1,23 +1,17 @@
+include(NovelRTBuildSystem)
+
+NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics
+  DEPENDS
+    NovelRT::Graphics::Core
+
+  OPTIONAL_DEPENDS
+    NovelRT::Graphics::Vulkan)
+
 add_subdirectory(Core)
-add_subdirectory(Vulkan)
 
-file(GENERATE OUTPUT empty.cpp CONTENT "")
-add_library(NovelRT-Graphics STATIC empty.cpp)
-
-set_target_properties(NovelRT-Graphics
-  PROPERTIES
-    EXPORT_NAME Graphics
-    POSITION_INDEPENDENT_CODE ON
-)
-
-target_link_libraries(NovelRT-Graphics
-  PUBLIC
-    NovelRT-Graphics-Core
-    NovelRT-Graphics-Vulkan
-)
-
-install(
-  TARGETS NovelRT-Graphics
-  EXPORT NovelRTConfig
-  LIBRARY DESTINATION lib
-)
+find_package(Vulkan "1.2" OPTIONAL_COMPONENTS MoltenVK)
+if(APPLE AND Vulkan_FOUND AND Vulkan_MoltenVK_FOUND)
+  add_subdirectory(Vulkan)
+elseif(Vulkan_FOUND)
+  add_subdirectory(Vulkan)
+endif()

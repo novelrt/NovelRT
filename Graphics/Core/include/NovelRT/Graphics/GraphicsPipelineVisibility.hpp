@@ -25,7 +25,9 @@ namespace NovelRT::Graphics
         Transfer = 1 << 12,
         BottomOfPipe = 1 << 13,
         Host = 1 << 14,
-        AllGraphics = DrawIndirect | VertexInput | VertexShader | TesselationControlShader | TesselationEvaluationShader | GeometryShader | FragmentShader | EarlyFragmentTests | LateFragmentTests | ColorAttachmentOutput,
+        AllGraphics = DrawIndirect | VertexInput | VertexShader | TesselationControlShader |
+                      TesselationEvaluationShader | GeometryShader | FragmentShader | EarlyFragmentTests |
+                      LateFragmentTests | ColorAttachmentOutput,
         AllCommands = AllGraphics | TopOfPipe | Transfer | BottomOfPipe | Host,
         All = AllCommands
     };

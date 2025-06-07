@@ -3,9 +3,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <d3d12.h>
-#include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
 #include <NovelRT/Exceptions/Exceptions.h>
+#include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
+#include <d3d12.h>
 
 namespace NovelRT::Graphics::D3D12::Utilities
 {

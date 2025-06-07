@@ -3,73 +3,59 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
-#include <typeindex>
-#include <vulkan/vulkan.h>
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
-#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <memory>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsPipeline : public std::enable_shared_from_this<VulkanGraphicsPipeline>
+    struct VulkanGraphicsBackend;
+}
+
+namespace NovelRT::Graphics
+{
+    template<>
+    class GraphicsPipeline<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<VulkanGraphicsDevice> _device;
-        std::shared_ptr<VulkanShaderProgram> _vertexShader;
-        std::shared_ptr<VulkanShaderProgram> _pixelShader;
-        std::shared_ptr<VulkanGraphicsPipelineSignature> _signature;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _vertexShader;
+        std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _pixelShader;
+        std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> _signature;
 
-        NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
-        [[nodiscard]] VkPipeline CreateVulkanPipeline(bool imguiRenderMode);
-        [[nodiscard]] size_t GetInputElementsCount(
-            NovelRT::Utilities::Misc::Span<const GraphicsPipelineInput> inputs) const noexcept;
-        [[nodiscard]] VkFormat GetInputElementFormat(std::type_index index, GraphicsPipelineInputElementKind kind) const noexcept;
+        mutable NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
 
     public:
-        VulkanGraphicsPipeline(std::shared_ptr<VulkanGraphicsDevice> device,
-                               std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
-                               std::shared_ptr<VulkanShaderProgram> vertexShader,
-                               std::shared_ptr<VulkanShaderProgram> pixelShader,
-                               bool imguiRenderMode) noexcept;
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
-        {
-            return _device;
-        }
+        GraphicsPipeline(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                         std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
+                         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
+                         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
+                         bool imguiRenderMode) noexcept;
+        ~GraphicsPipeline() final = default;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetPixelShader() const noexcept
-        {
-            return _pixelShader;
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanShaderProgram> GetVertexShader() const noexcept
-        {
-            return _vertexShader;
-        }
+        [[nodiscard]] bool HasVertexShader() const noexcept;
+        [[nodiscard]] bool HasPixelShader() const noexcept;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsPipelineSignature> GetSignature() const noexcept
-        {
-            return _signature;
-        }
+        [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetVertexShader() const noexcept;
+        [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> GetPixelShader() const noexcept;
 
-        [[nodiscard]] inline VkPipeline GetVulkanPipeline()
-        {
-            return _vulkanPipeline.getActual();
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> GetSignature()
+            const noexcept;
 
-        [[nodiscard]] bool HasVertexShader() const noexcept
-        {
-            return _vertexShader != nullptr;
-        }
+        [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
 
-        [[nodiscard]] bool HasPixelShader() const noexcept
-        {
-            return _pixelShader != nullptr;
-        }
-
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsDescriptorSet> CreateDescriptorSet();
+        [[nodiscard]] VkPipeline GetVulkanPipeline() const;
     };
 }

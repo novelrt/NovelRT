@@ -27,10 +27,9 @@ namespace NovelRT::Graphics
         HostWrite = 1 << 14,
         MemoryRead = 1 << 15,
         MemoryWrite = 1 << 16,
-        All = IndirectCommandRead | IndexRead | VertexAttributeRead 
-            | UniformRead | InputAttachmentRead | ShaderRead | ShaderWrite 
-            | ColorAttachmentRead | ColorAttachmentWrite | DepthStencilAttachmentRead 
-            | DepthStencilAttachmentWrite | TransferRead | TransferWrite 
-            | HostRead | HostWrite | MemoryRead | MemoryWrite
+        All = IndirectCommandRead | IndexRead | VertexAttributeRead | UniformRead | InputAttachmentRead | ShaderRead |
+              ShaderWrite | ColorAttachmentRead | ColorAttachmentWrite | DepthStencilAttachmentRead |
+              DepthStencilAttachmentWrite | TransferRead | TransferWrite | HostRead | HostWrite | MemoryRead |
+              MemoryWrite
     };
 }

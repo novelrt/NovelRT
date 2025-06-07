@@ -3,57 +3,36 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
-#include <NovelRT/Graphics/GraphicsCmdList.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    class GraphicsDescriptorSet;
+    template<typename TBackend>
+    class GraphicsPipelineSignature;
 
-    template<typename TBackend> class GraphicsContext : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class GraphicsContext : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendContextType = typename GraphicsBackendTraits<TBackend>::ContextType;
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsContext<TBackend>> shared_from_this();
 
-    private:
-        std::shared_ptr<BackendContextType> _implementation;
-        size_t _index;
+        GraphicsContext() = delete;
+        ~GraphicsContext() override = default;
 
-    public:
+        [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept;
 
-        GraphicsContext(std::shared_ptr<BackendContextType> implemenetation,
-                        std::shared_ptr<GraphicsDevice<TBackend>> device,
-                        size_t index) noexcept
-            : GraphicsDeviceObject<TBackend>(device), _implementation(implemenetation), _index(index)
-        {
-        }
+        [[nodiscard]] size_t GetIndex() const noexcept;
 
-        virtual ~GraphicsContext() override = default;
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
+        void EndFrame();
 
-        [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept
-        {
-            return std::make_shared<GraphicsFence<TBackend>>(_implementation->GetFence(), GraphicsDeviceObject<TBackend>::GetDevice());
-        }
-
-        [[nodiscard]] inline size_t GetIndex() const noexcept
-        {
-            return _index;
-        }
-
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame()
-        {
-            return std::make_shared<GraphicsCmdList<TBackend>>(_implementation->BeginFrame(), std::static_pointer_cast<GraphicsContext<TBackend>>(GraphicsDeviceObject<TBackend>::shared_from_this()));
-        }
-
-        void RegisterDescriptorSetForFrame(std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature, std::shared_ptr<GraphicsDescriptorSet<TBackend>> set)
-        {
-            _implementation->RegisterDescriptorSetForFrame(signature->GetImplementation(), set->GetImplementation());
-        }
-
-        void EndFrame()
-        {
-            _implementation->EndFrame();
-        }
+        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature,
+                                           std::shared_ptr<GraphicsDescriptorSet<TBackend>> set);
     };
 }

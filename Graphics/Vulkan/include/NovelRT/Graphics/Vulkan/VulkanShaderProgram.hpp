@@ -3,40 +3,47 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
-#include <vulkan/vulkan.h>
 #include <NovelRT/Graphics/ShaderProgram.hpp>
-#include <NovelRT/Utilities/Lazy.h>
+#include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <memory>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanShaderProgram
+namespace NovelRT::Graphics
+{
+    template<>
+    class ShaderProgram<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<VulkanGraphicsDevice> _device;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         std::string _entryPointName;
         ShaderProgramKind _kind;
         NovelRT::Utilities::Lazy<VkShaderModule> _shaderModule;
         std::vector<uint8_t> _bytecode;
-        VkShaderModuleCreateInfo _shaderModuleCreateInfo;
-
-        VkShaderModule CreateShaderModule();
 
     public:
-        VulkanShaderProgram(std::shared_ptr<VulkanGraphicsDevice> device,
-                            std::string entryPointName,
-                            ShaderProgramKind kind,
-                            NovelRT::Utilities::Misc::Span<uint8_t> bytecode) noexcept;
-        
-        ~VulkanShaderProgram();
-        
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const ShaderProgram<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
+
+        ShaderProgram(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                      std::string entryPointName,
+                      ShaderProgramKind kind,
+                      NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept;
+        ~ShaderProgram() noexcept final;
+
         [[nodiscard]] const std::string& GetEntryPointName() const noexcept;
         [[nodiscard]] ShaderProgramKind GetKind() const noexcept;
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept;
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept;
         [[nodiscard]] VkShaderModule GetShaderModule();
-
     };
 }

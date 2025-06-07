@@ -3,74 +3,72 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <vulkan/vulkan.h>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 #include <NovelRT/Graphics/GraphicsFence.hpp>
-#include <NovelRT/Utilities/Lazy.h>
-#include <NovelRT/Threading/Threading.h>
+#include <NovelRT/Threading/VolatileState.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
+
+#include <chrono>
+#include <cstdint>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsFence
+namespace NovelRT::Graphics
+{
+    template<>
+    class GraphicsFence<Vulkan::VulkanGraphicsBackend> : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<VulkanGraphicsDevice> _device;
-        NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
-        Threading::VolatileState _state;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
-        [[nodiscard]] VkFence CreateVulkanFenceSignaled()
-        {
-            return CreateVulkanFence(VK_FENCE_CREATE_SIGNALED_BIT);
-        }
-        [[nodiscard]] VkFence CreateVulkanFenceUnsignaled()
-        {
-            return CreateVulkanFence(static_cast<VkFenceCreateFlagBits>(0));
-        }
-        [[nodiscard]] VkFence CreateVulkanFence(VkFenceCreateFlagBits flags);
-        void DisposeVulkanFence(VkFence vulkanFence) noexcept;
-        [[nodiscard]] bool TryWaitInternal(uint64_t millisecondsTimeout);
+        mutable NovelRT::Utilities::Lazy<VkFence> _vulkanFence;
+        mutable Threading::VolatileState _state;
 
     public:
-        VulkanGraphicsFence(std::shared_ptr<VulkanGraphicsDevice> device, bool isSignaled) noexcept;
-        ~VulkanGraphicsFence();
+        GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept;
+        ~GraphicsFence() noexcept override;
 
-        [[nodiscard]] inline std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept
-        {
-            return _device;
-        }
-
-        [[nodiscard]] inline VkFence GetVulkanFence()
-        {
-            return _vulkanFence.getActual();
-        }
-
-        [[nodiscard]] bool GetIsSignalled();
+        [[nodiscard]] bool IsSignalled() const;
 
         void Reset();
 
+        [[nodiscard]] bool TryWait();
         [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
-        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
-        
-        inline void Wait(uint64_t millisecondsTimeout)
+
+        template<typename Rep, typename Period>
+        [[nodiscard]] bool TryWait(std::chrono::duration<Rep, Period> timeout)
         {
-            if (!TryWait(millisecondsTimeout))
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout);
+
+            if (ms.count() < 0)
             {
-                throw Exceptions::TimeoutException(millisecondsTimeout);
+                throw Exceptions::InvalidOperationException("Timeout must be positive");
             }
+
+            return TryWait(ms.count());
         }
 
-        inline void Wait(std::chrono::duration<uint64_t, std::milli> timeout)
+        void Wait();
+        void Wait(uint64_t millisecondsTimeout);
+
+        template<typename Rep, typename Period>
+        void Wait(std::chrono::duration<Rep, Period> timeout)
         {
-            if (!TryWait(timeout))
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(timeout);
+
+            if (ms.count() < 0)
             {
-                throw Exceptions::TimeoutException(timeout.count());
+                throw Exceptions::InvalidOperationException("Timeout must be positive");
             }
+
+            Wait(ms.count());
         }
 
-        inline void Wait()
-        {
-            Wait(std::numeric_limits<uint64_t>::max());
-        }
+        [[nodiscard]] VkFence GetVulkanFence() const;
     };
 }

@@ -1,14 +1,93 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/InitialisationFailureException.h>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/OutOfMemoryException.hpp>
+#include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/GraphicsResource.hpp>
+#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
-#include <string>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+#include <string>
+#include <memory>
+
+namespace NovelRT::Graphics
 {
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDeviceObject = GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsMemoryAllocator = GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsResource = GraphicsResource<Vulkan::VulkanGraphicsBackend>;
+    template <template <typename> typename TResource>
+    using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsResource> VulkanGraphicsResource::shared_from_this()
+    {
+        return std::static_pointer_cast<VulkanGraphicsResource>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsResource> VulkanGraphicsResource::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsResource>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    VulkanGraphicsResource::GraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
+        std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+        GraphicsResourceAccess cpuAccess,
+        VmaAllocation allocation,
+        VmaAllocationInfo allocationInfo)
+        : _device(std::move(graphicsDevice))
+        , _allocator(std::move(allocator))
+        , _allocation(allocation)
+        , _allocationInfo(allocationInfo)
+        , _virtualBlock(VK_NULL_HANDLE)
+        , _cpuAccess(cpuAccess)
+    {
+        VmaVirtualBlockCreateInfo createInfo{};
+        createInfo.size = GetSize();
+
+        const VkResult result = vmaCreateVirtualBlock(&createInfo, &_virtualBlock);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to create virtual memory block for VkBuffer",
+                            std::to_string(result));
+        }
+    }
+
+    std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetDevice() const noexcept
+    {
+        return _device;
+    }
+
+    std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetAllocator() const noexcept
+    {
+        return _allocator;
+    }
+
+    GraphicsResourceAccess VulkanGraphicsResource::GetCpuAccess() const noexcept
+    {
+        return _cpuAccess;
+    }
+
+    size_t VulkanGraphicsResource::GetDeviceMemoryOffset() const noexcept
+    {
+        return static_cast<size_t>(_allocationInfo.offset);
+    }
+
+    size_t VulkanGraphicsResource::GetSize() const noexcept
+    {
+        return static_cast<size_t>(_allocationInfo.size);
+    }
+
     std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> VulkanGraphicsResource::GetVirtualAllocation(size_t size, size_t alignment)
     {
         VmaVirtualAllocationCreateInfo allocInfo{};
@@ -18,74 +97,38 @@ namespace NovelRT::Graphics::Vulkan
         VmaVirtualAllocation allocHandle = VK_NULL_HANDLE;
         VkDeviceSize offset{};
 
-        VkResult allocResult = vmaVirtualAllocate(_virtualBlock, &allocInfo, &allocHandle, &offset);
+        const VkResult allocResult = vmaVirtualAllocate(_virtualBlock, &allocInfo, &allocHandle, &offset);
 
         if (allocResult != VK_SUCCESS)
         {
             throw Exceptions::OutOfMemoryException("Unable to allocate additional memory in the Vulkan graphics resource.");
         }
-        
+
         VmaVirtualAllocationInfo allocResultInfo{};
         vmaGetVirtualAllocationInfo(GetVirtualBlock(), allocHandle, &allocResultInfo);
 
         return std::make_tuple(allocHandle, allocResultInfo);
     }
 
-    VulkanGraphicsResource::VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                                                   std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
-                                                   GraphicsResourceAccess cpuAccess,
-                                                   VmaAllocation allocation,
-                                                   VmaAllocationInfo allocationInfo)
-        : _allocator(allocator),
-          _graphicsDevice(graphicsDevice),
-          _allocation(allocation),
-          _allocationInfo(allocationInfo),
-          _virtualBlock(VK_NULL_HANDLE)
-    {
-        unused(cpuAccess);
-
-        VmaVirtualBlockCreateInfo createInfo{};
-        createInfo.size = GetSize();
-
-        VkResult result = vmaCreateVirtualBlock(&createInfo, &_virtualBlock);
-
-        if (result != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to create virtual memory block for VkBuffer",
-                                                             std::to_string(result));
-        }
-    }
-
-    std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsResource::GetAllocator() const noexcept
-    {
-        return _allocator;
-    }
-
-    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsResource::GetDevice() const noexcept
-    {
-        return _graphicsDevice;
-    }
-
-    size_t VulkanGraphicsResource::GetDeviceMemoryOffset() const noexcept
-    {
-        return _allocationInfo.offset;
-    }
-
-    size_t VulkanGraphicsResource::GetSize() const noexcept
-    {
-        return _allocationInfo.size;
-    }
-
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>> VulkanGraphicsResource::Allocate(size_t size, size_t alignment)
     {
         auto [allocation, info] = GetVirtualAllocation(size, alignment);
-        return AllocateInternal(allocation, info);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>(GetDevice(), shared_from_this(), allocation, info);
     }
-    
-    void VulkanGraphicsResource::Free(VulkanGraphicsResourceMemoryRegionBase& region)
+
+    void VulkanGraphicsResource::Free(VulkanGraphicsResourceMemoryRegion<GraphicsResource>& region)
     {
         vmaVirtualFree(GetVirtualBlock(), region.GetVirtualAllocation());
-        FreeInternal(region);
+    }
+
+    Utilities::Span<uint8_t> VulkanGraphicsResource::MapBytes()
+    {
+        return MapBytes(static_cast<size_t>(_allocationInfo.offset), static_cast<size_t>(_allocationInfo.size));
+    }
+
+    Utilities::Span<const uint8_t> VulkanGraphicsResource::MapBytesForRead()
+    {
+        return MapBytesForRead(static_cast<size_t>(_allocationInfo.offset), static_cast<size_t>(_allocationInfo.size));
     }
 
     VmaAllocation VulkanGraphicsResource::GetAllocation() const noexcept

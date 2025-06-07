@@ -5,14 +5,29 @@
 
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
+#include <NovelRT/Graphics/GraphicsTextureCreateInfo.hpp>
 #include <NovelRT/Graphics/GraphicsTextureKind.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
-#include <NovelRT/Utilities/Lazy.h>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <cstdint>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsTexture : public VulkanGraphicsResource
+    struct VulkanGraphicsBackend;
+}
+
+namespace NovelRT::Graphics
+{
+    template<template<typename> typename TResource, typename TBackend>
+    class GraphicsResourceMemoryRegion;
+
+    template<>
+    class GraphicsTexture<Vulkan::VulkanGraphicsBackend> final : public GraphicsResource<Vulkan::VulkanGraphicsBackend>
     {
     private:
         VkImage _vulkanImage;
@@ -20,65 +35,55 @@ namespace NovelRT::Graphics::Vulkan
         GraphicsTextureAddressMode _addressMode;
         GraphicsTextureKind _kind;
 
-        NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
-        NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
+        mutable NovelRT::Utilities::Lazy<VkImageView> _vulkanImageView;
+        mutable NovelRT::Utilities::Lazy<VkSampler> _vulkanSampler;
 
         uint32_t _width;
         uint32_t _height;
         uint32_t _depth;
 
-        [[nodiscard]] VkImageView CreateVulkanImageView();
-        [[nodiscard]] VkSampler CreateVulkanSampler();
-
-    protected:
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(
-            VmaVirtualAllocation allocation,
-            VmaVirtualAllocationInfo info) final;
-
-        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region) final;
-
     public:
-        std::shared_ptr<VulkanGraphicsTexture> shared_from_this()
-        {
-            return std::static_pointer_cast<VulkanGraphicsTexture>(VulkanGraphicsResource::shared_from_this());
-        }
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsTexture<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        VulkanGraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> device,
-                              std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
-                              GraphicsResourceAccess cpuAccess,
-                              GraphicsTextureAddressMode addressMode,
-                              GraphicsTextureKind kind,
-                              uint32_t width,
-                              uint32_t height,
-                              uint16_t depth,
-                              VmaAllocation allocation,
-                              VmaAllocationInfo allocationInfo,
-                              VkImage vulkanImage);
+        GraphicsTexture(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+                        std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
+                        const GraphicsTextureCreateInfo& createInfo,
+                        VmaAllocation allocation,
+                        VmaAllocationInfo allocationInfo,
+                        VkImage vulkanImage);
 
-        virtual ~VulkanGraphicsTexture() noexcept;
+        ~GraphicsTexture() noexcept final;
+
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>>
+        Allocate(size_t size, size_t alignment);
+
+        void Free(GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>& region);
 
         [[nodiscard]] GraphicsTextureAddressMode GetAddressMode() const noexcept;
         [[nodiscard]] GraphicsTextureKind GetKind() const noexcept;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
+        [[nodiscard]] uint32_t GetWidth() const noexcept;
+        [[nodiscard]] uint32_t GetHeight() const noexcept;
+        [[nodiscard]] uint32_t GetDepth() const noexcept;
 
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
-                                                                           size_t rangeLength) override;
+        [[nodiscard]] NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) override;
+
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+                                                                              size_t rangeLength) override;
 
         void UnmapBytes() final;
-
+        void UnmapBytesAndWrite() final;
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
+
+        void UnmapAndWrite(
+            const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion);
 
         [[nodiscard]] VkImage GetVulkanImage() const noexcept;
 
-        [[nodiscard]] VkImageView GetOrCreateVulkanImageView();
-
-        [[nodiscard]] VkSampler GetOrCreateVulkanSampler();
-
-        [[nodiscard]] uint32_t GetWidth() const noexcept;
-
-        [[nodiscard]] uint32_t GetHeight() const noexcept;
-
-        [[nodiscard]] uint32_t GetDepth() const noexcept;
+        [[nodiscard]] VkImageView GetVulkanImageView() const;
+        [[nodiscard]] VkSampler GetVulkanSampler() const;
     };
 }

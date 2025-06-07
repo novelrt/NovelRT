@@ -5,6 +5,8 @@
 
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
 
+#include <cstddef>
+
 namespace NovelRT::Graphics
 {
     struct GraphicsPushConstantRange
