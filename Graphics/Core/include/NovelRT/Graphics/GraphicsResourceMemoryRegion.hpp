@@ -4,7 +4,6 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
-#include <NovelRT/Utilities/Pointers.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
