@@ -75,12 +75,15 @@ namespace NovelRT::Graphics
 
         void CmdEndRenderPass();
 
-        void CmdBindDescriptorSets(NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>> sets);
+        void CmdBindDescriptorSets(
+            NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>>
+                sets);
 
-        void CmdBindVertexBuffers(uint32_t firstBinding,
-                                  uint32_t bindingCount,
-                                  NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>> buffers,
-                                  NovelRT::Utilities::Span<const size_t> offsets);
+        void CmdBindVertexBuffers(
+            uint32_t firstBinding,
+            uint32_t bindingCount,
+            NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>> buffers,
+            NovelRT::Utilities::Span<const size_t> offsets);
 
         void CmdBindIndexBuffer(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& buffer,
                                 IndexType indexType);

@@ -45,7 +45,8 @@ namespace NovelRT::Graphics
         void UnmapAndWrite(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& memoryRegion);
 
         template<typename T>
-        [[nodiscard]] Utilities::Span<T> Map(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& memoryRegion)
+        [[nodiscard]] Utilities::Span<T> Map(
+            const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>>& memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }

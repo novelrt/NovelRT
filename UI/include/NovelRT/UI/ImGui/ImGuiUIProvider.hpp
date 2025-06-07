@@ -427,10 +427,9 @@ namespace NovelRT::UI::ImGui
             currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
 
             // Sync the commands so that we can prevent data issues
-            currentCmdList->CmdPipelineBufferBarrier(vertexBuffer, GraphicsMemoryAccessMode::TransferWrite,
-                                                     GraphicsMemoryAccessMode::VertexAttributeRead,
-                                                     GraphicsPipelineVisibility::Transfer,
-                                                     GraphicsPipelineVisibility::VertexInput);
+            currentCmdList->CmdPipelineBufferBarrier(
+                vertexBuffer, GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::VertexAttributeRead,
+                GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
             currentCmdList->CmdPipelineBufferBarrier(
                 indexBuffer, GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::IndexRead,
                 GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
@@ -459,7 +458,8 @@ namespace NovelRT::UI::ImGui
             ImVec2 clippingScale = drawData->FramebufferScale;
 
             // Bind the Vertex Buffers and the index buffer region
-            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{std::cref(_currentVertexBuffer)};
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{
+                std::cref(_currentVertexBuffer)};
             auto currentOffset = _currentVertexBufferRegion->GetOffset();
             auto currentIndexBufferRegion = _currentIndexBufferRegion;
             std::array<size_t, 1> offsets{currentOffset};
@@ -489,8 +489,8 @@ namespace NovelRT::UI::ImGui
 
             currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, 0,
                                              NovelRT::Utilities::SpanCast<uint8_t>(scaleSpan));
-            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex,
-                                             sizeof(float) * 2, NovelRT::Utilities::SpanCast<uint8_t>(translateSpan));
+            currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
+                                             NovelRT::Utilities::SpanCast<uint8_t>(translateSpan));
 
             currentCmdList->CmdSetScissor(
                 NovelRT::Maths::GeoVector2F::Zero(),
@@ -557,7 +557,9 @@ namespace NovelRT::UI::ImGui
                         _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 10});
 
                         // Bind the descriptor set
-                        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
+                        std::array<
+                            std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>>>, 1>
+                            descriptorData{std::cref(descriptorSetData)};
 
                         currentCmdList->CmdBindDescriptorSets(descriptorData);
 
