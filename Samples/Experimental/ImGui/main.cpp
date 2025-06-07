@@ -140,7 +140,7 @@ int main()
     auto clickAction = inputProvider->AddInputAction("LeftClick", "LeftMouseButton");
 
     VulkanGraphicsAdapterSelector selector{};
-    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider.get(), gfxSurfaceContext.get());
+    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext, 2);
 
     std::shared_ptr<GraphicsContext<VulkanGraphicsBackend>> gfxContext = gfxDevice->GetCurrentContext();

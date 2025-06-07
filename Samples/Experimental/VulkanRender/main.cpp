@@ -82,7 +82,7 @@ int main()
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
 
     VulkanGraphicsAdapterSelector selector{};
-    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider.get(), gfxSurfaceContext.get());
+    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext, 2);
 
     auto gfxContext = gfxDevice->GetCurrentContext();

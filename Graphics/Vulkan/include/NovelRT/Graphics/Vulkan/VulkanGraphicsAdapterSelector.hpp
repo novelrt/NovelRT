@@ -24,7 +24,7 @@ namespace NovelRT::Graphics::Vulkan
     public:
         // NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this is intentionally non-static
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<VulkanGraphicsBackend>> GetDefaultRecommendedAdapter(
-            const GraphicsProvider<VulkanGraphicsBackend>* provider,
-            const GraphicsSurfaceContext<VulkanGraphicsBackend>* surfaceContext) const;
+            const std::shared_ptr<GraphicsProvider<VulkanGraphicsBackend>>& provider,
+            const std::shared_ptr<GraphicsSurfaceContext<VulkanGraphicsBackend>>& surfaceContext) const;
     };
 }

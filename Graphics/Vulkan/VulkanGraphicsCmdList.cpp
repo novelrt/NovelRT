@@ -178,8 +178,7 @@ namespace NovelRT::Graphics
         vulkanBufferImageCopy.imageExtent = imageExtent;
         vulkanBufferImageCopy.bufferOffset = source->GetOffset();
 
-        auto sourceResource = source->GetOwningResource();
-        vkCmdCopyBufferToImage(_commandBuffer, sourceResource->GetVulkanBuffer(), vulkanImage,
+        vkCmdCopyBufferToImage(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), vulkanImage,
                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
     }
 
