@@ -34,17 +34,16 @@ namespace NovelRT::Graphics
 
     std::string ComputeName(VulkanGraphicsAdapter* adapter)
     {
-        return { adapter->GetPhysicalDeviceProperties().deviceName };
+        return {adapter->GetPhysicalDeviceProperties().deviceName};
     }
 
-    VulkanGraphicsAdapter::GraphicsAdapter(
-        std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider,
-        VkPhysicalDevice physicalDevice)
-        : _provider(std::move(provider))
-        , _physicalDevice(physicalDevice)
-        , _physicalDeviceProperties([this]() { return ComputeDeviceProperties(this); })
-        , _physicalDeviceMemoryProperties([this]() { return ComputeDeviceMemoryProperties(this); })
-        , _name([this]() { return ComputeName(this); })
+    VulkanGraphicsAdapter::GraphicsAdapter(std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider,
+                                           VkPhysicalDevice physicalDevice)
+        : _provider(std::move(provider)),
+          _physicalDevice(physicalDevice),
+          _physicalDeviceProperties([this]() { return ComputeDeviceProperties(this); }),
+          _physicalDeviceMemoryProperties([this]() { return ComputeDeviceMemoryProperties(this); }),
+          _name([this]() { return ComputeName(this); })
     {
         if (!_provider)
         {
@@ -87,10 +86,30 @@ namespace NovelRT::Graphics
         const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
         int32_t contextCount)
     {
-        return std::make_shared<VulkanGraphicsDevice>(
-            this->shared_from_this(),
-            surfaceContext, contextCount,
-            std::vector<std::string>{ VK_KHR_SWAPCHAIN_EXTENSION_NAME },
-            std::vector<std::string>{});
+        return CreateDevice(surfaceContext, contextCount, std::vector<std::string>{VK_KHR_SWAPCHAIN_EXTENSION_NAME},
+                            std::vector<std::string>{});
+    }
+
+    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsAdapter::CreateDevice(
+        const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
+        int32_t contextCount,
+        std::vector<std::string> requiredDeviceExtensions,
+        std::vector<std::string> optionalDeviceExtensions)
+    {
+        // Add VK_KHR_swapchain as a required extension if it's not already there
+        auto requiredSwapchainExtension = std::find(requiredDeviceExtensions.begin(), requiredDeviceExtensions.end(),
+                                                    VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+        if (requiredSwapchainExtension == requiredDeviceExtensions.end())
+        {
+            // To avoid weird behavior, make sure that optionalDeviceExtensions doesn't contain it
+            optionalDeviceExtensions.erase(std::remove(optionalDeviceExtensions.begin(), optionalDeviceExtensions.end(),
+                                                       VK_KHR_SWAPCHAIN_EXTENSION_NAME),
+                                           optionalDeviceExtensions.end());
+
+            requiredDeviceExtensions.emplace_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+        }
+
+        return std::make_shared<VulkanGraphicsDevice>(shared_from_this(), surfaceContext, contextCount,
+                                                      requiredDeviceExtensions, optionalDeviceExtensions);
     }
 }

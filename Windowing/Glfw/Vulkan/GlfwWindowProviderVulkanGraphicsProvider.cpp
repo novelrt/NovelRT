@@ -4,19 +4,20 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace NovelRT::Windowing
 {
     using GlfwWindowProvider = WindowProvider<Glfw::GlfwWindowingBackend>;
 
-    template <>
-    std::shared_ptr<Graphics::GraphicsProvider<Graphics::Vulkan::VulkanGraphicsBackend>> GlfwWindowProvider::CreateGraphicsProvider()
+    template<>
+    std::shared_ptr<Graphics::GraphicsProvider<Graphics::Vulkan::VulkanGraphicsBackend>> GlfwWindowProvider::
+        CreateGraphicsProvider()
     {
         if (glfwVulkanSupported() == GLFW_FALSE)
         {
-            //throw Exceptions::InvalidOperationException("Vulkan is not supported on this platform.");
+            // throw Exceptions::InvalidOperationException("Vulkan is not supported on this platform.");
             return nullptr;
         }
 
@@ -28,7 +29,8 @@ namespace NovelRT::Windowing
             glfwGetError(&output);
             if (output != nullptr)
             {
-                throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise Vulkan.", std::string(output));
+                throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise Vulkan.",
+                                                                 std::string(output));
             }
             else
             {
@@ -39,7 +41,7 @@ namespace NovelRT::Windowing
         }
 
         // TODO: EngineConfig was here
-        auto requiredExtensions = std::vector<std::string>(); //EngineConfig::RequiredVulkanInstanceExtensions();
+        auto requiredExtensions = std::vector<std::string>(); // EngineConfig::RequiredVulkanInstanceExtensions();
 
         for (size_t i = 0; i < extensionCount; i++)
         {
@@ -50,6 +52,8 @@ namespace NovelRT::Windowing
         requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 #endif
 
-        return std::make_shared<Graphics::GraphicsProvider<Graphics::Vulkan::VulkanGraphicsBackend>>(requiredExtensions, std::vector<std::string>{}, std::vector<std::string>{}, std::vector<std::string>{});
+        return std::make_shared<Graphics::GraphicsProvider<Graphics::Vulkan::VulkanGraphicsBackend>>(
+            true, requiredExtensions, std::vector<std::string>{}, std::vector<std::string>{},
+            std::vector<std::string>{});
     }
 }

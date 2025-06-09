@@ -12,7 +12,9 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 
-#include <set>
+#include <algorithm>
+#include <cmath>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -23,100 +25,92 @@ namespace NovelRT::Graphics::Vulkan
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
 
-    int32_t VulkanGraphicsAdapterSelector::GetPhysicalDeviceOptionalExtensionSupportScore(
-        VkPhysicalDevice physicalDevice) noexcept
+    static int32_t RateDeviceSuitability(const VulkanGraphicsAdapter& adapter,
+                                         const VulkanGraphicsSurfaceContext& surfaceContext,
+                                         const std::vector<std::string>& requiredDeviceExtensions,
+                                         const std::vector<std::string>& optionalDeviceExtensions)
     {
-        float currentPercentageValue = 0;
-
         uint32_t extensionCount = 0;
-        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+        vkEnumerateDeviceExtensionProperties(adapter.GetPhysicalDevice(), nullptr, &extensionCount, nullptr);
 
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+        std::vector<std::string> extensionNames(extensionCount);
+        vkEnumerateDeviceExtensionProperties(adapter.GetPhysicalDevice(), nullptr, &extensionCount,
+                                             availableExtensions.data());
+        std::transform(availableExtensions.begin(), availableExtensions.end(), extensionNames.begin(),
+                       [](const auto& extension) { return std::string{extension.extensionName}; });
 
-        // TODO: EngineConfig was here
-        std::set<std::string> optionalExtensionSet{};//EngineConfig::OptionalVulkanPhysicalDeviceExtensions().begin(),
-                                                     //EngineConfig::OptionalVulkanPhysicalDeviceExtensions().end());
+        auto isRequiredExtension = [begin = requiredDeviceExtensions.begin(), end = requiredDeviceExtensions.end()](
+                                       const auto& it) { return std::find(begin, end, it) != end; };
+        auto firstNonRequiredExtension =
+            std::partition(extensionNames.begin(), extensionNames.end(), isRequiredExtension);
+        auto numberOfRequiredExtensions = static_cast<std::vector<std::string>::size_type>(
+            std::abs(std::distance(extensionNames.begin(), firstNonRequiredExtension)));
 
-        const float percentageStep = (1.0f / static_cast<float>(optionalExtensionSet.size())) * 100;
-
-        for (const auto& extension : availableExtensions)
+        // If we don't have all the required extensions, the adapter is useless
+        if (numberOfRequiredExtensions < requiredDeviceExtensions.size())
         {
-
-            if (optionalExtensionSet.find(std::string(extension.extensionName)) == optionalExtensionSet.end())
-            {
-                continue;
-            }
-
-            currentPercentageValue += percentageStep;
+            return -1;
         }
 
-        return static_cast<int32_t>(currentPercentageValue);
-    }
+        const SwapChainSupportDetails supportDetails =
+            Utilities::QuerySwapChainSupport(adapter.GetPhysicalDevice(), surfaceContext.GetSurfaceContextHandle());
+        const QueueFamilyIndices indices =
+            Utilities::FindQueueFamilies(adapter.GetPhysicalDevice(), surfaceContext.GetSurfaceContextHandle());
 
-    int32_t VulkanGraphicsAdapterSelector::RateDeviceSuitability(VkPhysicalDevice physicalDevice,
-                                                                 VkSurfaceKHR surfaceContext) noexcept
-    {
+        // If we can't render graphics, present or create a swapchain, the adapter is useless.
+        if (!indices.IsComplete() || supportDetails.formats.empty() || supportDetails.presentModes.empty())
+        {
+            return -1;
+        }
+
+        auto isOptionalExtension = [begin = optionalDeviceExtensions.begin(), end = optionalDeviceExtensions.end()](
+                                       const auto& it) { return std::find(begin, end, it) != end; };
+        auto firstNonNecessaryExtension =
+            std::partition(firstNonRequiredExtension, extensionNames.end(), isOptionalExtension);
+        auto numberOfOptionalExtensions = static_cast<std::vector<std::string>::size_type>(
+            std::abs(std::distance(firstNonRequiredExtension, firstNonNecessaryExtension)));
+
+        // Our score starts at how many optional extensions we have,
+        int32_t score = numberOfOptionalExtensions;
+
         VkPhysicalDeviceProperties deviceProperties;
         VkPhysicalDeviceFeatures deviceFeatures;
-        vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
-        vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
+        vkGetPhysicalDeviceProperties(adapter.GetPhysicalDevice(), &deviceProperties);
+        vkGetPhysicalDeviceFeatures(adapter.GetPhysicalDevice(), &deviceFeatures);
 
-        int32_t score = 0;
+        // The bit position of the largest power-of-two sized texture that can be created on this device
+        // That is, 1 << maxPo2TextureSizeBitOffset will return the actual texture size.
+        int32_t maxPo2TextureSizeBitOffset =
+            std::log2(static_cast<int32_t>(deviceProperties.limits.maxImageDimension2D));
 
+        // If the device can create larger textures, it's usually more powerful.
+        score += maxPo2TextureSizeBitOffset * std::max(optionalDeviceExtensions.size(), 1ul);
+
+        // However, we want to prefer dedicated hardware even if software emulation an create something even larger.
         if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
         {
-            score += 1000;
-        }
-
-        score += static_cast<int32_t>(deviceProperties.limits.maxImageDimension2D);
-        score += GetPhysicalDeviceOptionalExtensionSupportScore(physicalDevice);
-
-        const SwapChainSupportDetails supportDetails = Utilities::QuerySwapChainSupport(physicalDevice, surfaceContext);
-        const QueueFamilyIndices indices = Utilities::FindQueueFamilies(physicalDevice, surfaceContext);
-
-        if (!indices.IsComplete() || !CheckPhysicalDeviceRequiredExtensionSupport(physicalDevice) ||
-            supportDetails.formats.empty() || supportDetails.presentModes.empty())
-        {
-            score = -1;
+            // N.B. There's a bunch of conflicting information, but it's rather unlikely that a device can create a
+            // texture that is 2^32 pixels large.
+            score += 32 * std::max(optionalDeviceExtensions.size(), 1ul);
         }
 
         return score;
     }
 
-    bool VulkanGraphicsAdapterSelector::CheckPhysicalDeviceRequiredExtensionSupport(
-        VkPhysicalDevice physicalDevice) noexcept
-    {
-        uint32_t extensionCount = 0;
-        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
-
-        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-        vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
-
-        // TODO: EngineConfig was here
-        std::set<std::string> requiredExtensionSet{};//EngineConfig::RequiredVulkanPhysicalDeviceExtensions().begin(),
-                                                     //EngineConfig::RequiredVulkanPhysicalDeviceExtensions().end());
-
-        for (const auto& extension : availableExtensions)
-        {
-            requiredExtensionSet.erase(std::string(extension.extensionName));
-        }
-
-        return requiredExtensionSet.empty();
-    }
-
     std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
         const std::shared_ptr<VulkanGraphicsProvider>& provider,
-        const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext) const
+        const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
+        const std::vector<std::string>& requiredDeviceExtensions,
+        const std::vector<std::string>& optionalDeviceExtensions) const
     {
         std::weak_ptr<VulkanGraphicsAdapter> adapter;
-        int32_t highestScore = 0;
+        int32_t highestScore = -1;
 
-        for (auto&& currentAdapter : *provider)
+        for (const auto& currentAdapter : *provider)
         {
-            const int32_t score = RateDeviceSuitability(
-                currentAdapter->GetPhysicalDevice(),
-                surfaceContext->GetSurfaceContextHandle());
+            const int32_t score = RateDeviceSuitability(*currentAdapter, *surfaceContext, requiredDeviceExtensions,
+                                                        optionalDeviceExtensions);
 
             if (score > highestScore)
             {
@@ -126,5 +120,14 @@ namespace NovelRT::Graphics::Vulkan
         }
 
         return adapter.lock();
+    }
+
+    std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
+        const std::shared_ptr<VulkanGraphicsProvider>& provider,
+        const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext) const
+    {
+        return GetDefaultRecommendedAdapter(provider, surfaceContext,
+                                            std::vector<std::string>{VK_KHR_SWAPCHAIN_EXTENSION_NAME},
+                                            std::vector<std::string>{});
     }
 } // namespace NovelRT::Graphics::Vulkan
