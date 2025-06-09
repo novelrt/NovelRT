@@ -1,18 +1,26 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Logging/BuiltInLogSections.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
+    using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsSurfaceContext::VulkanGraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
-                                                               std::shared_ptr<VulkanGraphicsProvider> provider)
-        : _surface(surface),
-          _provider(provider),
-          _logger(LoggingService(NovelRT::Utilities::Misc::CONSOLE_LOG_GFX)),
-          _vulkanSurface(VK_NULL_HANDLE)
+    VulkanGraphicsSurfaceContext::GraphicsSurfaceContext(
+        std::shared_ptr<IGraphicsSurface> surface,
+        std::shared_ptr<VulkanGraphicsProvider> provider)
+        : _surface(std::move(surface))
+        ,  _provider(std::move(provider))
+        ,  _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
+        ,  _vulkanSurface(VK_NULL_HANDLE)
     {
         if (_surface == nullptr)
         {
@@ -24,17 +32,17 @@ namespace NovelRT::Graphics::Vulkan
             throw Exceptions::NullPointerException("The supplied GraphicsProvider is nullptr.");
         }
 
-        std::shared_ptr<IGraphicsSurface> targetSurface = GetSurface();
-        switch (targetSurface->GetKind())
+        auto surfacePtr = _surface;
+        switch (surfacePtr->GetKind())
         {
             case GraphicsSurfaceKind::Glfw:
             {
                 auto func =
                     reinterpret_cast<VkResult (*)(VkInstance, void*, const VkAllocationCallbacks*, VkSurfaceKHR*)>(
-                        targetSurface->GetContextHandle());
+                        surfacePtr->GetContextHandle());
 
                 VkResult funcResult =
-                    func(GetProvider()->GetVulkanInstance(), targetSurface->GetHandle(), nullptr, &_vulkanSurface);
+                    func(_provider->GetVulkanInstance(), surfacePtr->GetHandle(), nullptr, &_vulkanSurface);
                 if (funcResult != VK_SUCCESS)
                 {
                     throw Exceptions::InitialisationFailureException("Failed to initialise the VkSurfaceKHR.",
@@ -56,9 +64,24 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    VulkanGraphicsSurfaceContext::~VulkanGraphicsSurfaceContext()
+    VulkanGraphicsSurfaceContext::~GraphicsSurfaceContext()
     {
-        vkDestroySurfaceKHR(GetProvider()->GetVulkanInstance(), _vulkanSurface, nullptr);
+        vkDestroySurfaceKHR(_provider->GetVulkanInstance(), _vulkanSurface, nullptr);
         _logger.logInfoLine("VkSurface successfully destroyed.");
     }
-} // namespace NovelRT::Graphics::Vulkan
+
+    VkSurfaceKHR VulkanGraphicsSurfaceContext::GetSurfaceContextHandle() const noexcept
+    {
+        return _vulkanSurface;
+    }
+
+    std::shared_ptr<IGraphicsSurface> VulkanGraphicsSurfaceContext::GetSurface() const noexcept
+    {
+        return _surface;
+    }
+
+    std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsSurfaceContext::GetProvider() const noexcept
+    {
+        return _provider;
+    }
+}

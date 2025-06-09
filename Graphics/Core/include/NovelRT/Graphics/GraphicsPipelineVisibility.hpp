@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Utilities/Operators.hpp>
+
 #include <cstdint>
 
 namespace NovelRT::Graphics
@@ -25,7 +27,9 @@ namespace NovelRT::Graphics
         Transfer = 1 << 12,
         BottomOfPipe = 1 << 13,
         Host = 1 << 14,
-        AllGraphics = DrawIndirect | VertexInput | VertexShader | TesselationControlShader | TesselationEvaluationShader | GeometryShader | FragmentShader | EarlyFragmentTests | LateFragmentTests | ColorAttachmentOutput,
+        AllGraphics = DrawIndirect | VertexInput | VertexShader | TesselationControlShader |
+                      TesselationEvaluationShader | GeometryShader | FragmentShader | EarlyFragmentTests |
+                      LateFragmentTests | ColorAttachmentOutput,
         AllCommands = AllGraphics | TopOfPipe | Transfer | BottomOfPipe | Host,
         All = AllCommands
     };

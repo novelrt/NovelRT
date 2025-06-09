@@ -1,11 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
+
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
@@ -13,20 +16,34 @@
 #include <NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <vulkan/vulkan.h>
+
+namespace NovelRT::Graphics
 {
-    VulkanGraphicsCmdList::VulkanGraphicsCmdList(std::shared_ptr<VulkanGraphicsContext> context, VkCommandBuffer commandBuffer) noexcept
-        : _context(context), _commandBuffer(commandBuffer)
+    using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsCmdList = GraphicsCmdList<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsContext = GraphicsContext<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsPipelineSignature = GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
+    template <template <typename> typename TResource>
+    using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
+
+    VulkanGraphicsCmdList::GraphicsCmdList(
+        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+        VkCommandBuffer commandBuffer) noexcept
+        : _context(std::move(context))
+        , _commandBuffer(commandBuffer)
     {
     }
 
-    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsCmdList::GetContext() const noexcept
-    {
-        return _context;
-    }
-
-    void VulkanGraphicsCmdList::CmdBeginRenderPass(std::shared_ptr<VulkanGraphicsRenderPass> targetPass,
-                                                   NovelRT::Utilities::Misc::Span<const ClearValue> clearValues)
+    void VulkanGraphicsCmdList::CmdBeginRenderPass(const std::shared_ptr<VulkanGraphicsRenderPass>& targetPass,
+                                                   Utilities::Span<const ClearValue> clearValues)
     {
         auto device = _context->GetDevice();
         auto surface = device->GetSurface();
@@ -72,35 +89,36 @@ namespace NovelRT::Graphics::Vulkan
         vkCmdEndRenderPass(_commandBuffer);
     }
 
-    void VulkanGraphicsCmdList::CmdBindDescriptorSets(
-        NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsDescriptorSet>> sets)
+    void VulkanGraphicsCmdList::CmdBindDescriptorSets(NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<VulkanGraphicsDescriptorSet>>> sets)
     {
-        for (auto&& set : sets)
+        for (const std::shared_ptr<VulkanGraphicsDescriptorSet>& set : sets)
         {
+            VkDescriptorSet handle = set->GetVulkanDescriptorSet();
+            auto pipeline = set->GetPipeline();
+            auto signature = pipeline->GetSignature();
             vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    set->GetPipeline()->GetSignature()->GetVulkanPipelineLayout(), 0, 1,
-                                    set->GetVulkanDescriptorSet(), 0, nullptr);
+                                    signature->GetVulkanPipelineLayout(), 0, 1,
+                                    &handle, 0, nullptr);
         }
     }
 
     void VulkanGraphicsCmdList::CmdBindVertexBuffers(
         uint32_t firstBinding,
         uint32_t bindingCount,
-        NovelRT::Utilities::Misc::Span<const std::shared_ptr<VulkanGraphicsBuffer>> buffers,
-        NovelRT::Utilities::Misc::Span<const size_t> offsets)
+        NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<VulkanGraphicsBuffer>>> buffers,
+        NovelRT::Utilities::Span<const size_t> offsets)
     {
         std::vector<VkBuffer> bufferArgs(buffers.size());
         std::vector<VkDeviceSize> offsetArgs(offsets.size());
 
-        std::transform(buffers.begin(), buffers.end(), bufferArgs.begin(), [](auto x) { return x->GetVulkanBuffer(); });
-        std::transform(offsets.begin(), offsets.end(), offsetArgs.begin(),
-                       [](auto x) { return static_cast<VkDeviceSize>(x); });
+        std::transform(buffers.begin(), buffers.end(), bufferArgs.begin(), [](const auto& x) { return x.get()->GetVulkanBuffer(); });
+        std::transform(offsets.begin(), offsets.end(), offsetArgs.begin(), [](auto x) { return static_cast<VkDeviceSize>(x); });
 
         vkCmdBindVertexBuffers(_commandBuffer, firstBinding, bindingCount, bufferArgs.data(), offsetArgs.data());
     }
 
     void VulkanGraphicsCmdList::CmdBindIndexBuffer(
-        std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> buffer,
+        const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>& buffer,
         IndexType indexType)
     {
         VkIndexType type = VK_INDEX_TYPE_NONE_KHR;
@@ -120,21 +138,24 @@ namespace NovelRT::Graphics::Vulkan
                 break;
         }
 
-        vkCmdBindIndexBuffer(_commandBuffer, buffer->GetOwningResource()->GetVulkanBuffer(),
+        auto bufferResource = buffer->GetOwningResource();
+        vkCmdBindIndexBuffer(_commandBuffer, bufferResource->GetVulkanBuffer(),
                              buffer->GetOffset(), type);
     }
 
-    void VulkanGraphicsCmdList::CmdCopy(std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> destination, std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> source)
+    void VulkanGraphicsCmdList::CmdCopy(const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>& destination, const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>& source)
     {
         VkBufferCopy vulkanBufferCopy{};
         vulkanBufferCopy.srcOffset = source->GetOffset();
         vulkanBufferCopy.dstOffset = destination->GetOffset();
         vulkanBufferCopy.size = std::min(destination->GetSize(), source->GetSize());
 
-        vkCmdCopyBuffer(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), destination->GetOwningResource()->GetVulkanBuffer(), 1, &vulkanBufferCopy);
+        auto sourceResource = source->GetOwningResource();
+        auto destinationResource = destination->GetOwningResource();
+        vkCmdCopyBuffer(_commandBuffer, sourceResource->GetVulkanBuffer(), destinationResource->GetVulkanBuffer(), 1, &vulkanBufferCopy);
     }
 
-    void VulkanGraphicsCmdList::CmdCopy(std::shared_ptr<VulkanGraphicsTexture> destination, std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsBuffer>> source)
+    void VulkanGraphicsCmdList::CmdCopy(const std::shared_ptr<VulkanGraphicsTexture>& destination, const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>& source)
     {
         if (destination->GetSize() > source->GetSize())
         {
@@ -201,7 +222,7 @@ namespace NovelRT::Graphics::Vulkan
         vkCmdSetViewport(_commandBuffer, 0, 1, &viewport);
     }
 
-    void VulkanGraphicsCmdList::CmdBeginTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture)
+    void VulkanGraphicsCmdList::CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<VulkanGraphicsTexture>& texture)
     {
         VkImageSubresourceRange subresourceRange{};
         subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -220,7 +241,7 @@ namespace NovelRT::Graphics::Vulkan
                              nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
     }
 
-    void VulkanGraphicsCmdList::CmdEndTexturePipelineBarrierLegacyVersion(std::shared_ptr<VulkanGraphicsTexture> texture)
+    void VulkanGraphicsCmdList::CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<VulkanGraphicsTexture>& texture)
     {
         VkImageSubresourceRange subresourceRange{};
         subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -240,28 +261,28 @@ namespace NovelRT::Graphics::Vulkan
                              VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
                              &vulkanImageMemoryBarrier);
     }
-    
-    void VulkanGraphicsCmdList::CmdBindPipeline(std::shared_ptr<VulkanGraphicsPipeline> pipeline)
+
+    void VulkanGraphicsCmdList::CmdBindPipeline(const std::shared_ptr<VulkanGraphicsPipeline>& pipeline)
     {
         vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetVulkanPipeline());
     }
 
-    void VulkanGraphicsCmdList::CmdPushConstants(std::shared_ptr<VulkanGraphicsPipelineSignature> pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Misc::Span<uint8_t> values)
+    void VulkanGraphicsCmdList::CmdPushConstants(const std::shared_ptr<VulkanGraphicsPipelineSignature>& pipelineSignature, ShaderProgramVisibility visibility, size_t offset, NovelRT::Utilities::Span<uint8_t> values)
     {
-        vkCmdPushConstants(_commandBuffer, pipelineSignature->GetVulkanPipelineLayout(), Utilities::GetVulkanShaderStageFlags(visibility), static_cast<uint32_t>(offset), static_cast<uint32_t>(values.size()), values.data());
+        vkCmdPushConstants(_commandBuffer, pipelineSignature->GetVulkanPipelineLayout(), Vulkan::Utilities::GetVulkanShaderStageFlags(visibility), static_cast<uint32_t>(offset), static_cast<uint32_t>(values.size()), values.data());
     }
 
-    void VulkanGraphicsCmdList::CmdPipelineBufferBarrier(std::shared_ptr<VulkanGraphicsBuffer> buffer, 
-        GraphicsMemoryAccessMode sourceAccessFlag, 
-        GraphicsMemoryAccessMode destinationAccessFlag, 
-        GraphicsPipelineVisibility sourceStageFlag, 
+    void VulkanGraphicsCmdList::CmdPipelineBufferBarrier(const std::shared_ptr<VulkanGraphicsBuffer>& buffer,
+        GraphicsMemoryAccessMode sourceAccessFlag,
+        GraphicsMemoryAccessMode destinationAccessFlag,
+        GraphicsPipelineVisibility sourceStageFlag,
         GraphicsPipelineVisibility destinationStageFlag)
     {
         VkBufferMemoryBarrier barrierInfo = {
             VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
             nullptr,
-            Utilities::GetVulkanAccessFlags(sourceAccessFlag),
-            Utilities::GetVulkanAccessFlags(destinationAccessFlag),
+            Vulkan::Utilities::GetVulkanAccessFlags(sourceAccessFlag),
+            Vulkan::Utilities::GetVulkanAccessFlags(destinationAccessFlag),
             VK_QUEUE_FAMILY_IGNORED,
             VK_QUEUE_FAMILY_IGNORED,
             buffer->GetVulkanBuffer(),
@@ -269,7 +290,7 @@ namespace NovelRT::Graphics::Vulkan
             VK_WHOLE_SIZE
         };
 
-        vkCmdPipelineBarrier(_commandBuffer, Utilities::GetVulkanPipelineStageFlags(sourceStageFlag), Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, 0, 1,
+        vkCmdPipelineBarrier(_commandBuffer, Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag), Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, 0, 1,
                          &barrierInfo, 0, 0);
     }
 }

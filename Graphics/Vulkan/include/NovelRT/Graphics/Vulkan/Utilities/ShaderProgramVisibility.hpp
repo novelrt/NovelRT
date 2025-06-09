@@ -3,9 +3,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <vulkan/vulkan.h>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
-#include <NovelRT/Utilities/Misc.h>
+#include <NovelRT/Utilities/Operators.hpp>
+
+#include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {

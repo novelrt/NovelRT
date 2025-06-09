@@ -4,8 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsSurfaceKind.hpp>
-#include <NovelRT/Maths/Maths.h>
-#include <NovelRT/Utilities/Event.h>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -14,14 +14,16 @@ namespace NovelRT::Graphics
     public:
         Utilities::Event<Maths::GeoVector2F> SizeChanged;
 
+        virtual ~IGraphicsSurface() = default;
+
         [[nodiscard]] virtual Maths::GeoVector2F GetSize() const noexcept = 0;
 
-        [[nodiscard]] inline float GetWidth() const noexcept
+        [[nodiscard]] float GetWidth() const noexcept
         {
             return GetSize().x;
         }
 
-        [[nodiscard]] inline float GetHeight() const noexcept
+        [[nodiscard]] float GetHeight() const noexcept
         {
             return GetSize().y;
         }

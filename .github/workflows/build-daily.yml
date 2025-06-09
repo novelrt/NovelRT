@@ -1,0 +1,85 @@
+name: Daily Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  Build:
+    name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, RelWithDebInfo]
+        os: [windows-2025, windows-2022, ubuntu-24.04, macos-15, macos-14, macos-13]
+        vulkan: [1.4.313.0, 1.3.296.0]
+
+    steps:
+      - name: Preinstall dependencies
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install libglm-dev cmake libxcb-dri3-0 libxcb-present0 \
+            libpciaccess0 libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev \
+            libx11-dev libwayland-dev libxrandr-dev libxcb-randr0-dev \
+            libxcb-ewmh-dev git python-is-python3 bison libx11-xcb-dev \
+            libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
+            libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
+            pkg-config libxml2-dev wayland-protocols python3-jsonschema \
+            clang-format qtbase5-dev qt6-base-dev
+
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
+
+          sudo update-alternatives --set cc /usr/bin/clang
+          sudo update-alternatives --set c++ /usr/bin/clang++
+
+      - uses: actions/checkout@v4
+
+      - uses: novelrt/setup-cpp@v1
+      - uses: novelrt/setup-vulkan@v2
+        with:
+          version: ${{ matrix.vulkan }}
+
+      - name: Restore incremental build artefacts
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ matrix.name }}-${{ matrix.configuration }}
+
+      - name: Setup Visual Studio Developer Command Prompt
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+          $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $installationPath = & $vsWhere -prerelease -latest -property installationPath
+          if ($installationPath -and (test-path "$installationPath\Common7\Tools\vsdevcmd.bat")) {
+            & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo -host_arch=amd64 -arch=amd64 && set" | foreach-object {
+              $name, $value = $_ -split '=', 2
+              $currentValue = if (Test-Path -Path "env:\$name") { (Get-Item -Path "env:\$name").Value } else { $null }
+              if ($value -ne $currentValue) {
+                if ($name -eq 'PATH') {
+                  echo "$value" >> "${Env:GITHUB_PATH}"
+                } else {
+                  echo "$name=$value" >> "${Env:GITHUB_ENV}"
+                }
+              }
+            }
+          }
+
+      - name: Generate build system
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
+
+      - name: Build NovelRT
+        run: cmake --build build --config ${{ matrix.configuration }} --parallel
+      - name: Install NovelRT
+        run: cmake --install build --config ${{ matrix.configuration }} --prefix artefacts
+
+      - name: Publish build artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-${{ matrix.configuration }}
+          path: artefacts

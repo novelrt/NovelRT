@@ -6,6 +6,7 @@ AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
 AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: false
+AlwaysBreakTemplateDeclarations: Yes
 BinPackParameters: false
 BreakBeforeBraces: Allman
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
@@ -20,4 +21,3 @@ SpaceBeforeAssignmentOperators: true
 Standard: c++17
 FixNamespaceComments: 'false'
 ...
-

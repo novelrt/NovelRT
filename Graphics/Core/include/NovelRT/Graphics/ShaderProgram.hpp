@@ -4,54 +4,28 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
 #include <memory>
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend> struct GraphicsBackendTraits;
+    template<typename TBackend>
+    struct GraphicsBackendTraits;
 
-    template<typename TBackend> class ShaderProgram : public GraphicsDeviceObject<TBackend>
+    template<typename TBackend>
+    class ShaderProgram final : public GraphicsDeviceObject<TBackend>
     {
     public:
-        using BackendShaderProgramType = typename GraphicsBackendTraits<TBackend>::ShaderProgramType;
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<ShaderProgram<TBackend>> shared_from_this();
 
-    private:
-        std::shared_ptr<BackendShaderProgramType> _implementation;
-        std::string _entryPointName;
-        ShaderProgramKind _kind;
+        ~ShaderProgram() noexcept final = default;
 
-    public:
-        ShaderProgram(std::shared_ptr<BackendShaderProgramType> implementation,
-                      std::shared_ptr<GraphicsDevice<TBackend>> device,
-                      std::string entryPointName,
-                      ShaderProgramKind kind) noexcept
-            : GraphicsDeviceObject<TBackend>(std::move(device)),
-              _implementation(implementation),
-              _entryPointName(entryPointName),
-              _kind(kind)
-        {
-        }
+        [[nodiscard]] const std::string& GetEntryPointName() const noexcept;
 
-        virtual ~ShaderProgram() noexcept override = default;
+        [[nodiscard]] ShaderProgramKind GetKind() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<BackendShaderProgramType> GetImplementation() const noexcept
-        {
-            return _implementation;
-        }
-
-        [[nodiscard]] const std::string& GetEntryPointName() const noexcept
-        {
-            return _entryPointName;
-        }
-
-        [[nodiscard]] ShaderProgramKind GetKind() const noexcept
-        {
-            return _kind;
-        }
-
-        [[nodiscard]] NovelRT::Utilities::Misc::Span<const uint8_t> GetBytecode() const noexcept
-        {
-            return _implementation->GetBytecode();
-        }
+        [[nodiscard]] NovelRT::Utilities::Span<const uint8_t> GetBytecode() const noexcept;
     };
 }

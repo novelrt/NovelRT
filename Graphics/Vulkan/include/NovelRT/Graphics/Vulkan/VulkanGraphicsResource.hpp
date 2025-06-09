@@ -3,63 +3,84 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsAdapter.hpp>
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
+#include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Vma.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <memory>
 #include <tuple>
 
 namespace NovelRT::Graphics::Vulkan
 {
-    class VulkanGraphicsDevice;
-    class VulkanGraphicsMemoryAllocator;
+    struct VulkanGraphicsBackend;
+}
 
-    class VulkanGraphicsResource : public std::enable_shared_from_this<VulkanGraphicsResource>
+namespace NovelRT::Graphics
+{
+    template<>
+    class GraphicsResource<Vulkan::VulkanGraphicsBackend> : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<VulkanGraphicsMemoryAllocator> _allocator;
-        std::shared_ptr<VulkanGraphicsDevice> _graphicsDevice;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> _allocator;
+
         VmaAllocation _allocation;
         VmaAllocationInfo _allocationInfo;
         VmaVirtualBlock _virtualBlock;
-        [[nodiscard]] std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> GetVirtualAllocation(size_t size, size_t alignment);
+
+        GraphicsResourceAccess _cpuAccess;
 
     protected:
-        [[nodiscard]] virtual std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> AllocateInternal(VmaVirtualAllocation allocation, VmaVirtualAllocationInfo info) = 0;
-        virtual void FreeInternal(VulkanGraphicsResourceMemoryRegionBase& region) = 0;
+        std::tuple<VmaVirtualAllocation, VmaVirtualAllocationInfo> GetVirtualAllocation(size_t size, size_t alignment);
 
     public:
-        VulkanGraphicsResource(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-                               std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
-                               GraphicsResourceAccess cpuAccess,
-                               VmaAllocation allocation,
-                               VmaAllocationInfo allocationInfo);
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsResource<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        virtual ~VulkanGraphicsResource() noexcept = default;
+        GraphicsResource(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
+                         std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> allocator,
+                         GraphicsResourceAccess cpuAccess,
+                         VmaAllocation allocation,
+                         VmaAllocationInfo allocationInfo);
+        virtual ~GraphicsResource() noexcept = default;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsMemoryAllocator> GetAllocator() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> GetAllocator()
+            const noexcept;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> GetDevice() const noexcept;
-
+        [[nodiscard]] GraphicsResourceAccess GetCpuAccess() const noexcept;
         [[nodiscard]] size_t GetDeviceMemoryOffset() const noexcept;
-
         [[nodiscard]] size_t GetSize() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<VulkanGraphicsResourceMemoryRegion<VulkanGraphicsResource>> Allocate(size_t size, size_t alignment);
+        [[nodiscard]] std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>>
+        Allocate(size_t size, size_t alignment);
 
-        void Free(VulkanGraphicsResourceMemoryRegionBase& region);
+        void Free(GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>& region);
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes();
+        [[nodiscard]] virtual NovelRT::Utilities::Span<uint8_t> MapBytes(size_t rangeOffset, size_t rangeLength) = 0;
 
-        [[nodiscard]] virtual NovelRT::Utilities::Misc::Span<const uint8_t> MapBytesForRead(size_t rangeOffset, size_t rangeLength) = 0;
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead();
+        [[nodiscard]] virtual NovelRT::Utilities::Span<const uint8_t> MapBytesForRead(size_t rangeOffset,
+                                                                                      size_t rangeLength) = 0;
 
         virtual void UnmapBytes() = 0;
 
+        virtual void UnmapBytesAndWrite() = 0;
         virtual void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) = 0;
 
+        void UnmapAndWrite(
+            const GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>* memoryRegion);
+
         [[nodiscard]] VmaAllocation GetAllocation() const noexcept;
-
         [[nodiscard]] const VmaAllocationInfo& GetAllocationInfo() const noexcept;
-
         [[nodiscard]] VmaVirtualBlock GetVirtualBlock() const noexcept;
     };
 }

@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Utilities/Operators.hpp>
+
 #include <cstdint>
 
 namespace NovelRT::Graphics
@@ -27,10 +29,9 @@ namespace NovelRT::Graphics
         HostWrite = 1 << 14,
         MemoryRead = 1 << 15,
         MemoryWrite = 1 << 16,
-        All = IndirectCommandRead | IndexRead | VertexAttributeRead 
-            | UniformRead | InputAttachmentRead | ShaderRead | ShaderWrite 
-            | ColorAttachmentRead | ColorAttachmentWrite | DepthStencilAttachmentRead 
-            | DepthStencilAttachmentWrite | TransferRead | TransferWrite 
-            | HostRead | HostWrite | MemoryRead | MemoryWrite
+        All = IndirectCommandRead | IndexRead | VertexAttributeRead | UniformRead | InputAttachmentRead | ShaderRead |
+              ShaderWrite | ColorAttachmentRead | ColorAttachmentWrite | DepthStencilAttachmentRead |
+              DepthStencilAttachmentWrite | TransferRead | TransferWrite | HostRead | HostWrite | MemoryRead |
+              MemoryWrite
     };
 }

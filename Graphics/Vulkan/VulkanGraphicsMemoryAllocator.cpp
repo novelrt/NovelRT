@@ -1,8 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Exceptions/InitialisationFailureException.h>
-#include <NovelRT/Graphics/GraphicsBufferCreateInfo.hpp>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
+
 #include <NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Texel.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
@@ -10,22 +11,45 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
-namespace NovelRT::Graphics::Vulkan
+namespace NovelRT::Graphics
 {
-    VulkanGraphicsMemoryAllocator::VulkanGraphicsMemoryAllocator(std::shared_ptr<VulkanGraphicsDevice> device,
-                                                                 std::shared_ptr<VulkanGraphicsProvider> provider)
-        : _allocator(VK_NULL_HANDLE), _device(device), _provider(provider)
+    using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDeviceObject = GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsMemoryAllocator = GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsMemoryAllocator> VulkanGraphicsMemoryAllocator::shared_from_this()
     {
-        auto vulkanDevice = GetDevice();
-        auto vulkanAdapter = vulkanDevice->GetAdapter();
-        auto vulkanProvider = GetProvider();
+        return std::static_pointer_cast<VulkanGraphicsMemoryAllocator>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsMemoryAllocator> VulkanGraphicsMemoryAllocator::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsMemoryAllocator>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    VulkanGraphicsMemoryAllocator::GraphicsMemoryAllocator(
+        std::shared_ptr<VulkanGraphicsDevice> device,
+        std::shared_ptr<VulkanGraphicsProvider> provider)
+        : VulkanGraphicsDeviceObject()
+        , _device(std::move(device))
+        , _provider(std::move(provider))
+        , _allocator(VK_NULL_HANDLE)
+    {
+        auto vulkanAdapter = _device->GetAdapter();
+        auto vulkanProvider = _provider;
 
         VmaAllocatorCreateInfo createInfo{};
         createInfo.vulkanApiVersion = vulkanProvider->GetApiVersion();
-        createInfo.physicalDevice = vulkanAdapter->GetVulkanPhysicalDevice();
-        createInfo.device = vulkanDevice->GetVulkanDevice();
+        createInfo.physicalDevice = vulkanAdapter->GetPhysicalDevice();
+        createInfo.device = _device->GetVulkanDevice();
         createInfo.instance = vulkanProvider->GetVulkanInstance();
 
         VkResult result = vmaCreateAllocator(&createInfo, &_allocator);
@@ -36,12 +60,7 @@ namespace NovelRT::Graphics::Vulkan
         }
     }
 
-    std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsMemoryAllocator::GetDevice() const noexcept
-    {
-        return _device;
-    }
-
-    std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
     {
         return _provider;
     }
@@ -49,25 +68,13 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateBuffer(
         const GraphicsBufferCreateInfo& createInfo)
     {
-        return CreateVulkanBuffer(createInfo);
-    }
-
-    std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
-        const GraphicsTextureCreateInfo& createInfo)
-    {
-        return CreateVulkanTexture(createInfo);
-    }
-
-    std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsMemoryAllocator::CreateVulkanBuffer(
-        const GraphicsBufferCreateInfo& createInfo)
-    {
         VkBufferCreateInfo bufferCreateInfo{};
         bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferCreateInfo.size = createInfo.size;
-        bufferCreateInfo.usage = Utilities::GetVulkanBufferUsageKind(createInfo.bufferKind, createInfo.gpuAccessKind);
+        bufferCreateInfo.usage = Vulkan::Utilities::GetVulkanBufferUsageKind(createInfo.bufferKind, createInfo.gpuAccessKind);
 
         VmaAllocationCreateInfo allocationCreateInfo{};
-        allocationCreateInfo.flags = Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind);
+        allocationCreateInfo.flags = Vulkan::Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind);
         allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
 
         VkBuffer outBuffer = VK_NULL_HANDLE;
@@ -85,12 +92,10 @@ namespace NovelRT::Graphics::Vulkan
                                                              result);
         }
 
-        return std::make_shared<VulkanGraphicsBuffer>(GetDevice(), shared_from_this(), createInfo.cpuAccessKind,
-                                                      createInfo.bufferKind, outAllocation, outAllocationInfo,
-                                                      outBuffer);
+        return std::make_shared<VulkanGraphicsBuffer>(_device, shared_from_this(), createInfo, outAllocation, outAllocationInfo, outBuffer);
     }
 
-    std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateVulkanTexture(
+    std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture(
         const GraphicsTextureCreateInfo& createInfo)
     {
         VkImageType imageType{};
@@ -120,12 +125,12 @@ namespace NovelRT::Graphics::Vulkan
         VkImageCreateInfo imageCreateInfo{};
         imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageCreateInfo.imageType = imageType;
-        imageCreateInfo.format = Utilities::Map(createInfo.texelFormat);
+        imageCreateInfo.format = Vulkan::Utilities::Map(createInfo.texelFormat);
         imageCreateInfo.extent = extent;
         imageCreateInfo.mipLevels = 1;
         imageCreateInfo.arrayLayers = 1;
         imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-        imageCreateInfo.usage = Utilities::GetVulkanImageUsageKind(createInfo.textureKind, createInfo.gpuAccessKind);
+        imageCreateInfo.usage = Vulkan::Utilities::GetVulkanImageUsageKind(createInfo.textureKind, createInfo.gpuAccessKind);
 
         VkImage vulkanImage = VK_NULL_HANDLE;
         VmaAllocation outAllocation = VK_NULL_HANDLE;
@@ -133,7 +138,7 @@ namespace NovelRT::Graphics::Vulkan
                                                // fairly sure we need it. Lol.
 
         VmaAllocationCreateInfo allocationCreateInfo{};
-        allocationCreateInfo.flags = Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind) | VMA_ALLOCATION_CREATE_DONT_BIND_BIT;
+        allocationCreateInfo.flags = Vulkan::Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind) | VMA_ALLOCATION_CREATE_DONT_BIND_BIT;
         allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
         // allocationCreateInfo.priority = 1; //TODO: do I need this?
 
@@ -147,10 +152,16 @@ namespace NovelRT::Graphics::Vulkan
                                                              result);
         }
 
-        return std::make_shared<VulkanGraphicsTexture>(
-            GetDevice(), shared_from_this(), createInfo.cpuAccessKind, createInfo.addressMode, createInfo.textureKind,
-            createInfo.width, createInfo.height, createInfo.depth, outAllocation, outAllocationInfo, vulkanImage);
+        return std::make_shared<VulkanGraphicsTexture>(_device, shared_from_this(), createInfo, outAllocation, outAllocationInfo, vulkanImage);
     }
+
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::CreateTexture2DRepeatGpuWriteOnly(uint32_t width, uint32_t height)
+        {
+            return CreateTexture(
+                GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
+                GraphicsResourceAccess::None, GraphicsResourceAccess::Write, width, height, 1,
+                GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});
+        }
 
     VmaAllocator VulkanGraphicsMemoryAllocator::GetVmaAllocator() const noexcept
     {
