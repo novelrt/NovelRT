@@ -52,7 +52,7 @@ namespace NovelRT::Windowing
         ~WindowProvider() noexcept final;
 
         template<typename TBackend>
-        std::shared_ptr<Graphics::GraphicsProvider<TBackend>> CreateGraphicsProvider();
+        std::shared_ptr<Graphics::GraphicsProvider<TBackend>> CreateGraphicsProvider(bool enableDebugMode);
 
         void ProcessAllMessages();
 

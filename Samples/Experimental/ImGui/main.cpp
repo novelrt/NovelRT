@@ -134,7 +134,7 @@ int main()
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>();
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
 
     auto clickAction = inputProvider->AddInputAction("LeftClick", "LeftMouseButton");

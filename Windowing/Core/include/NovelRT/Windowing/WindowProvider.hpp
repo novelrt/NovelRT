@@ -26,6 +26,6 @@ namespace NovelRT::Windowing
         void SetWindowTitle(const std::string& newTitle);
 
         template<typename TGraphicsBackend>
-        std::shared_ptr<Graphics::GraphicsProvider<TGraphicsBackend>> CreateGraphicsProvider();
+        std::shared_ptr<Graphics::GraphicsProvider<TGraphicsBackend>> CreateGraphicsProvider(bool enableDebugMode);
     };
 }

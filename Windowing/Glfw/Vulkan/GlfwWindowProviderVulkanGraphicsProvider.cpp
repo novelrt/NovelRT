@@ -13,7 +13,7 @@ namespace NovelRT::Windowing
 
     template<>
     std::shared_ptr<Graphics::GraphicsProvider<Graphics::Vulkan::VulkanGraphicsBackend>> GlfwWindowProvider::
-        CreateGraphicsProvider()
+        CreateGraphicsProvider(bool enableDebugMode)
     {
         if (glfwVulkanSupported() == GLFW_FALSE)
         {
@@ -53,7 +53,7 @@ namespace NovelRT::Windowing
 #endif
 
         return std::make_shared<Graphics::GraphicsProvider<Graphics::Vulkan::VulkanGraphicsBackend>>(
-            true, requiredExtensions, std::vector<std::string>{}, std::vector<std::string>{},
+            enableDebugMode, requiredExtensions, std::vector<std::string>{}, std::vector<std::string>{},
             std::vector<std::string>{});
     }
 }
