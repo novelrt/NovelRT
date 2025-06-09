@@ -16,10 +16,10 @@ namespace NovelRT::Graphics
     using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
 
-    VKAPI_ATTR VkBool32 VKAPI_CALL static DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-                                                        VkDebugUtilsMessageTypeFlagsEXT /*messageType*/,
-                                                        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-                                                        void* pUserData)
+    VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                 VkDebugUtilsMessageTypeFlagsEXT /*messageType*/,
+                                                 const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+                                                 void* pUserData)
     {
         LoggingService* logger = static_cast<LoggingService*>(pUserData);
 
@@ -253,9 +253,9 @@ namespace NovelRT::Graphics
         if (!enabledValidationFeatures.empty() || !disabledValidationFeatures.empty())
         {
             validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-            validationFeatures.enabledValidationFeatureCount = enabledValidationFeatures.size();
+            validationFeatures.enabledValidationFeatureCount = static_cast<uint32_t>(enabledValidationFeatures.size());
             validationFeatures.pEnabledValidationFeatures = enabledValidationFeatures.data();
-            validationFeatures.disabledValidationFeatureCount = disabledValidationFeatures.size();
+            validationFeatures.disabledValidationFeatureCount = static_cast<uint32_t>(disabledValidationFeatures.size());
             validationFeatures.pDisabledValidationFeatures = disabledValidationFeatures.data();
 
             *pNextPointer = &validationFeatures;
