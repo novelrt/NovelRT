@@ -30,7 +30,7 @@ int main()
     sineWave.Loop = true;
     sineWave.Volume = 0.1f;
     sineWave.Channels = 1;
-    sineWave.SampleRate = samples.size();
+    sineWave.SampleRate = int32_t(samples.size());
 
     uint32_t sineWaveId = provider->SubmitAudioBuffer(samples, sineWave);
 
