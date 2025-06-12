@@ -1,15 +1,19 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#pragma once
 
 #include <cstdint>
 
 namespace NovelRT::Audio
 {
-    enum class AudioSourceState : int32_t
+    struct AudioSourceContext
     {
-        SOURCE_STOPPED = 0,
-        SOURCE_PAUSED = 1,
-        SOURCE_PLAYING = 2
+    public:
+        float Volume = 0.75f;
+        float Pitch = 1.0f;
+        bool Loop = false;
+        int32_t Channels = 2;
+        int32_t SampleRate = 44100;
     };
 }
