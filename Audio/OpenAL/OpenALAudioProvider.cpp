@@ -58,7 +58,7 @@ namespace NovelRT::Audio
         const LoggingService& logger = *static_cast<LoggingService*>(userptr);
         std::string message(msg, length);
 
-        switch(level)
+        switch (level)
         {
             case 'W':
             {
@@ -85,8 +85,8 @@ namespace NovelRT::Audio
 
     static void InstallLogger(const LoggingService& logger)
     {
-        using callbackType = void ALC_APIENTRY(void* userptr, char level, const char* message, int length) noexcept;
-        using fnType = void ALC_APIENTRY(callbackType* callback, void* userptr);
+        using CallbackType = void ALC_APIENTRY(void* userptr, char level, const char* message, int length) noexcept;
+        using FnType = void ALC_APIENTRY(CallbackType* callback, void* userptr);
 
         void* callback = alcGetProcAddress(nullptr, "alsoft_set_log_callback");
         if (callback == nullptr)
@@ -96,7 +96,7 @@ namespace NovelRT::Audio
 
         // We unfortunately cannot directly cast to void*, because of const-correctness.
         const void* tmp = static_cast<const void*>(&logger);
-        reinterpret_cast<fnType*>(callback)(&LogMessage, const_cast<void*>(tmp));
+        reinterpret_cast<FnType*>(callback)(&LogMessage, const_cast<void*>(tmp));
     }
 
     static ALCdevice* CreateDevice(const LoggingService& logger)
@@ -188,7 +188,7 @@ namespace NovelRT::Audio
 
     static ALenum DetermineChannelFormat(int32_t numberOfChannels)
     {
-        switch(numberOfChannels)
+        switch (numberOfChannels)
         {
             case 1:
                 return AL_FORMAT_MONO_FLOAT32;
@@ -202,13 +202,15 @@ namespace NovelRT::Audio
         }
     }
 
-    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer, AudioSourceContext& context)
+    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer,
+                                                    AudioSourceContext& context)
     {
         ALuint alBuffer;
         alGetError();
         alGenBuffers(1, &alBuffer);
         GetALError(_logger);
-        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(), static_cast<ALsizei>(buffer.size() * sizeof(float)), context.SampleRate);
+        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(),
+                     static_cast<ALsizei>(buffer.size() * sizeof(float)), context.SampleRate);
         GetALError(_logger);
         _buffers.emplace_back(static_cast<uint32_t>(alBuffer));
         uint32_t sourceId = OpenSource(context);
@@ -230,7 +232,7 @@ namespace NovelRT::Audio
 
     static AudioSourceState ConvertToAudioSourceState(ALenum oALSourceState)
     {
-        switch(oALSourceState)
+        switch (oALSourceState)
         {
             case AL_PLAYING:
             {

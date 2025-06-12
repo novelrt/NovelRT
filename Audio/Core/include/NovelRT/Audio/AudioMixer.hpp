@@ -13,10 +13,10 @@
 
 namespace NovelRT::Audio
 {
-    template <typename TBackend>
+    template<typename TBackend>
     class AudioProvider;
 
-    template <typename TBackend>
+    template<typename TBackend>
     class AudioMixer
     {
     private:
@@ -25,9 +25,9 @@ namespace NovelRT::Audio
 
     public:
         explicit AudioMixer(std::shared_ptr<AudioProvider<TBackend>> provider)
-            : _audioProvider(std::move(provider)),
-            _sourceContextCache()
-        { }
+            : _audioProvider(std::move(provider)), _sourceContextCache()
+        {
+        }
 
         ~AudioMixer() = default;
 

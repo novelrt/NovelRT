@@ -18,7 +18,7 @@ namespace NovelRT::Audio::OpenAL
 
 namespace NovelRT::Audio
 {
-    template <>
+    template<>
     class AudioProvider<OpenAL::OpenALAudioBackend>
         : std::enable_shared_from_this<AudioProvider<OpenAL::OpenALAudioBackend>>
     {
@@ -36,8 +36,7 @@ namespace NovelRT::Audio
         explicit AudioProvider();
         ~AudioProvider();
 
-        uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer,
-                                   AudioSourceContext& context);
+        uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer, AudioSourceContext& context);
         void PlaySource(uint32_t sourceId);
         void StopSource(uint32_t sourceId);
         void PauseSource(uint32_t sourceId);

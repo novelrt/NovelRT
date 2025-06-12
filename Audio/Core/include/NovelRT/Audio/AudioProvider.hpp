@@ -11,15 +11,14 @@
 
 namespace NovelRT::Audio
 {
-    template <typename TBackend>
+    template<typename TBackend>
     class AudioProvider : std::enable_shared_from_this<AudioProvider<TBackend>>
     {
     public:
         explicit AudioProvider() = delete;
         ~AudioProvider() = default;
 
-        uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer,
-                                   AudioSourceContext& context);
+        uint32_t SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer, AudioSourceContext& context);
         void PlaySource(uint32_t sourceId);
         void StopSource(uint32_t sourceId);
         void PauseSource(uint32_t sourceId);
