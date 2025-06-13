@@ -24,7 +24,7 @@ namespace NovelRT::Graphics
     private:
         std::shared_ptr<IGraphicsSurface> _surface;
         std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> _provider;
-        LoggingService _logger;
+        Logging::LoggingService _logger;
         VkSurfaceKHR _vulkanSurface;
 
     public:

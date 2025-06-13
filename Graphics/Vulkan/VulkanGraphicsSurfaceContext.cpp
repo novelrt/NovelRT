@@ -19,7 +19,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<VulkanGraphicsProvider> provider)
         : _surface(std::move(surface))
         ,  _provider(std::move(provider))
-        ,  _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
+        ,  _logger(NovelRT::Logging::CONSOLE_LOG_GFX)
         ,  _vulkanSurface(VK_NULL_HANDLE)
     {
         if (_surface == nullptr)

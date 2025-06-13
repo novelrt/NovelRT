@@ -2,7 +2,9 @@ include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Windowing::Glfw
   DEPENDS
-    NovelRT::Base
+    NovelRT::Maths
+    NovelRT::Utilities
+
     NovelRT::Graphics::Core
     NovelRT::Windowing::Core
 

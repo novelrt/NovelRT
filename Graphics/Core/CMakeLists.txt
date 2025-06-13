@@ -2,7 +2,10 @@ include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
   DEPENDS
-    NovelRT::Base
+    NovelRT::Exceptions
+    NovelRT::Logging
+    NovelRT::Maths
+    NovelRT::Utilities
 
   SOURCES
     PRIVATE
@@ -53,13 +56,4 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/ShaderProgramKind.hpp
       include/NovelRT/Graphics/ShaderProgramVisibility.hpp
       include/NovelRT/Graphics/TexelFormat.hpp
-
-  COMPILE_DEFINITIONS
-    PUBLIC
-      GLM_ENABLE_EXPERIMENTAL=1
-
-  LINK_LIBRARIES
-    PUBLIC
-      spdlog
-      tbb
 )
