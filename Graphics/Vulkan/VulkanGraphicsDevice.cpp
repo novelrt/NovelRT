@@ -454,7 +454,7 @@ namespace NovelRT::Graphics
               [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
           _contextCount(contextCount),
           _contexts([this]() { return CreateInitialGraphicsContexts(_contextCount); }),
-          _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX)),
+          _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
           _surface(_surfaceContext->GetSurfaceContextHandle()),
           _device([this, requiredDeviceExtensions, optionalDeviceExtensions]()
                   { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); }),

@@ -34,7 +34,7 @@ namespace NovelRT::Graphics
 
         VkInstance _vulkanInstance;
         VkDebugUtilsMessengerEXT _debugLogger;
-        LoggingService _logger;
+        Logging::LoggingService _logger;
         bool _debugModeEnabled;
 
         mutable NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>>>>

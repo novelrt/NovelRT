@@ -11,6 +11,8 @@
 
 #include <atomic>
 
+using namespace NovelRT::Logging;
+
 namespace NovelRT::Graphics
 {
     using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
@@ -21,7 +23,7 @@ namespace NovelRT::Graphics
                                                  const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
                                                  void* pUserData)
     {
-        LoggingService* logger = static_cast<LoggingService*>(pUserData);
+        const Logging::LoggingService& logger = *static_cast<Logging::LoggingService*>(pUserData);
 
         LogLevel logLevel = LogLevel::Off;
         switch (messageSeverity)
@@ -39,7 +41,7 @@ namespace NovelRT::Graphics
                 logLevel = LogLevel::Err;
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT:
-                logger->logWarningLine("Unable to map from vulkan message severity, assuming error");
+                logger.logWarningLine("Unable to map from vulkan message severity, assuming error");
                 logLevel = LogLevel::Err;
                 break;
         }
@@ -47,7 +49,7 @@ namespace NovelRT::Graphics
         // TODO: EngineConfig was here
         if (logLevel != LogLevel::Off && logLevel >= LogLevel::Debug) // EngineConfig::MinimumInternalLoggingLevel())
         {
-            logger->log(std::string(pCallbackData->pMessage), logLevel);
+            logger.log(std::string(pCallbackData->pMessage), logLevel);
         }
 
         return VK_FALSE;
@@ -320,7 +322,7 @@ namespace NovelRT::Graphics
                                              std::vector<std::string> optionalInstanceLayers)
         : _vulkanInstance(VK_NULL_HANDLE),
           _debugLogger(VK_NULL_HANDLE),
-          _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX)),
+          _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
           _debugModeEnabled(enableDebugMode),
           _adapters([this]() { return GetGraphicsAdapters(shared_from_this()); })
     {

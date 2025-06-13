@@ -46,7 +46,7 @@ namespace NovelRT::Input
         uint32_t _previousBufferIndex;
         uint32_t _currentBufferIndex;
 
-        LoggingService _logger;
+        Logging::LoggingService _logger;
 
         void ProcessKeyInput(int32_t key, int32_t action);
         void ProcessCursorMovement(NovelRT::Maths::GeoVector2F& pos);
