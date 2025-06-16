@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build
-          key: ${{ matrix.name }}-${{ matrix.configuration }}
+          key: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
 
       - name: Setup Visual Studio Developer Command Prompt
         if: ${{ runner.os == 'Windows' }}
