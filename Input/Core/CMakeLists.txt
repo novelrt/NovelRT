@@ -2,7 +2,9 @@ include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Input::Core
   DEPENDS
-    NovelRT::Base
+    NovelRT::Maths
+    NovelRT::Timing
+    NovelRT::Utilities
 
     NovelRT::Windowing::Core
 

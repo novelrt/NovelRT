@@ -2,7 +2,7 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
-#include <NovelRT/Atom.hpp>
+#include <NovelRT/Utilities/Atom.hpp>
 
 #ifndef __TBB_PREVIEW_MUTEXES
 #define __TBB_PREVIEW_MUTEXES 1

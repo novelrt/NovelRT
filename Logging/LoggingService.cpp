@@ -7,7 +7,7 @@
 #include <NovelRT/Utilities/Macros.hpp>
 #include <iostream>
 
-namespace NovelRT
+namespace NovelRT::Logging
 {
 
 #ifndef NDEBUG
@@ -90,7 +90,7 @@ namespace NovelRT
         }
     }
 
-    void LoggingService::log(const std::string& message, LogLevel level)
+    void LoggingService::log(const std::string& message, LogLevel level) const
     {
         switch (level)
         {

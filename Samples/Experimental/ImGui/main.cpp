@@ -42,6 +42,8 @@
 
 #include <imgui.h>
 
+using namespace NovelRT::Logging;
+
 using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Graphics;
 
@@ -126,8 +128,8 @@ int main()
     //NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
     //NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
 
-    NovelRT::LoggingService logger = NovelRT::LoggingService();
-    logger.setLogLevel(NovelRT::LogLevel::Info);
+    LoggingService logger{};
+    logger.setLogLevel(LogLevel::Info);
 
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
         NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1024, 768));

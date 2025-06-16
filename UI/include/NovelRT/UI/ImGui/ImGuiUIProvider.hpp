@@ -129,7 +129,7 @@ namespace NovelRT::UI::ImGui
         std::vector<CachedDescriptorSetObject> _descriptorSetCache;
 
         std::shared_ptr<ImGuiContext> _imguiContext;
-        LoggingService _logger;
+        Logging::LoggingService _logger;
 
         bool _drawEnabled = false;
         ImDrawData* _cachedDrawData = nullptr;
@@ -248,7 +248,7 @@ namespace NovelRT::UI::ImGui
               _descriptorSetCache(),
 
               _imguiContext(nullptr),
-              _logger(LoggingService(NovelRT::Logging::CONSOLE_LOG_GFX))
+              _logger(NovelRT::Logging::CONSOLE_LOG_GFX)
         {
             ::IMGUI_CHECKVERSION();
 
