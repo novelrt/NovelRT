@@ -23,7 +23,7 @@ namespace NovelRT::Audio
         : std::enable_shared_from_this<AudioProvider<OpenAL::OpenALAudioBackend>>
     {
     private:
-        LoggingService _logger;
+        Logging::LoggingService _logger;
 
         ALCdevice* _device;
         ALCcontext* _context;

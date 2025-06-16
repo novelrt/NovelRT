@@ -11,7 +11,7 @@ namespace NovelRT::Audio
 {
     using OpenALAudioProvider = AudioProvider<OpenAL::OpenALAudioBackend>;
 
-    static std::string GetALError(const LoggingService& logger)
+    static std::string GetALError(const Logging::LoggingService& logger)
     {
         auto err = alGetError();
         switch (err)
@@ -55,7 +55,7 @@ namespace NovelRT::Audio
 
     static void LogMessage(void* userptr, char level, const char* msg, int length) noexcept
     {
-        const LoggingService& logger = *static_cast<LoggingService*>(userptr);
+        const Logging::LoggingService& logger = *static_cast<Logging::LoggingService*>(userptr);
         std::string message(msg, length);
 
         switch (level)
@@ -83,7 +83,7 @@ namespace NovelRT::Audio
         }
     }
 
-    static void InstallLogger(const LoggingService& logger)
+    static void InstallLogger(const Logging::LoggingService& logger)
     {
         using CallbackType = void ALC_APIENTRY(void* userptr, char level, const char* message, int length) noexcept;
         using FnType = void ALC_APIENTRY(CallbackType* callback, void* userptr);
@@ -99,7 +99,7 @@ namespace NovelRT::Audio
         reinterpret_cast<FnType*>(callback)(&LogMessage, const_cast<void*>(tmp));
     }
 
-    static ALCdevice* CreateDevice(const LoggingService& logger)
+    static ALCdevice* CreateDevice(const Logging::LoggingService& logger)
     {
         InstallLogger(logger);
 
@@ -113,7 +113,7 @@ namespace NovelRT::Audio
         return device;
     }
 
-    static ALCcontext* CreateContext(ALCdevice* device, const LoggingService& logger)
+    static ALCcontext* CreateContext(ALCdevice* device, const Logging::LoggingService& logger)
     {
         auto* context = alcCreateContext(device, nullptr);
         if (context == nullptr)

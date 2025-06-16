@@ -4,7 +4,7 @@ find_package(OpenAL "1.23.1" REQUIRED)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Audio::OpenAL
   DEPENDS
-    NovelRT::Base
+    NovelRT::Logging
     NovelRT::Audio::Core
 
   SOURCES

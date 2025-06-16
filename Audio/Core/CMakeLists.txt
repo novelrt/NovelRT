@@ -2,7 +2,7 @@ include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Audio::Core
   DEPENDS
-    NovelRT::Base
+    NovelRT::Utilities
 
   SOURCES
     PRIVATE
