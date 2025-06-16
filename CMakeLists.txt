@@ -53,6 +53,8 @@ add_subdirectory(Input)
 add_subdirectory(UI)
 add_subdirectory(Windowing)
 
+add_subdirectory(Ecs)
+
 add_subdirectory(Samples)
 
 if(NOVELRT_INSTALL)
