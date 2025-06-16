@@ -1,8 +1,7 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-
-#ifndef NOVELRT_ECS_CONFIGURATOR_H
-#define NOVELRT_ECS_CONFIGURATOR_H
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -267,5 +266,3 @@ namespace NovelRT::Ecs
         }
     };
 }
-
-#endif // NOVELRT_ECS_CONFIGURATOR_H

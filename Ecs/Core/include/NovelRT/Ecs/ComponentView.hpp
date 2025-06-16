@@ -1,12 +1,7 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-
-#ifndef NOVELRT_ECS_COMPONENTVIEW_H
-#define NOVELRT_ECS_COMPONENTVIEW_H
-
-#ifndef NOVELRT_ECS_H
-#error NovelRT does not support including types explicitly by default. Please include Ecs.h instead for the Ecs namespace subset.
-#endif
 
 namespace NovelRT::Ecs
 {
@@ -251,5 +246,3 @@ namespace NovelRT::Ecs
         }
     };
 }
-
-#endif //! NOVELRT_ECS_COMPONENTVIEW_H
