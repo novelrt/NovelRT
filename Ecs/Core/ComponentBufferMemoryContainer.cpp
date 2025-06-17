@@ -1,28 +1,35 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
+
+#include <NovelRT/Utilities/Memory.hpp>
+
 #include <utility>
 
 namespace NovelRT::Ecs
 {
     ComponentBufferMemoryContainer::ComponentBufferMemoryContainer(
         size_t poolSize,
-        const void* deleteInstructionState,
+        const std::byte* deleteInstructionState,
         size_t sizeOfDataTypeInBytes,
         std::function<void(void*, const void*, size_t)> componentUpdateLogic,
         std::function<bool(const void*, const void*)> componentComparatorLogic,
         const std::string& serialisedTypeName) noexcept
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets(std::vector<SparseSetMemoryContainer>{}),
-          _deleteInstructionState(std::vector<uint8_t>(sizeOfDataTypeInBytes)),
+          _deleteInstructionState(sizeOfDataTypeInBytes),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
           _componentUpdateLogic(std::move(componentUpdateLogic)),
           _componentComparatorLogic(std::move(componentComparatorLogic)),
           _serialisedTypeName(serialisedTypeName)
     {
-        NovelRT::Utilities::Memory::Copy(_deleteInstructionState.data(), _sizeOfDataTypeInBytes, deleteInstructionState,
-                                         _sizeOfDataTypeInBytes);
+        NovelRT::Utilities::Memory::Copy(
+            NovelRT::Utilities::Span{deleteInstructionState, _sizeOfDataTypeInBytes},
+            NovelRT::Utilities::Span{_deleteInstructionState.data(), _sizeOfDataTypeInBytes});
+
         for (size_t i = 0; i < poolSize; i++)
         {
             _updateSets.emplace_back(sizeOfDataTypeInBytes);

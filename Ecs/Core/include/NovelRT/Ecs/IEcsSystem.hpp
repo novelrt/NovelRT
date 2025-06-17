@@ -3,8 +3,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Timing/Timestamp.hpp>
+
 namespace NovelRT::Ecs
 {
+    class Catalogue;
+
     /**
      * @brief An interface declaration allowing for systems to be defined as C++ types.
      */

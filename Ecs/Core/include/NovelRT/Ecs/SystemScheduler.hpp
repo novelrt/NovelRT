@@ -3,8 +3,26 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
+#include <NovelRT/Timing/Timestamp.hpp>
+#include <NovelRT/Utilities/Atom.hpp>
+
+#include <atomic>
+#include <functional>
+#include <memory>
+#include <vector>
+#include <thread>
+#include <unordered_map>
+
+#include <oneapi/tbb/mutex.h>
+
 namespace NovelRT::Ecs
 {
+    class Catalogue;
+    class ComponentCache;
+    class EntityCache;
+    class IEcsSystem;
+
     /**
      * @brief Handles all thread and system scheduling related tasks. In a normal ECS instance, this is your root
      * object.

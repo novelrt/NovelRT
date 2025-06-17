@@ -3,8 +3,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+
+#include <limits>
+#include <optional>
+
 namespace NovelRT::Ecs
 {
+    class Catalogue;
+    template <typename T> class ComponentView;
+    struct LinkedEntityListNodeComponent;
+    template <typename, typename> class SparseSet;
+
     class LinkedEntityListView
     {
     public:

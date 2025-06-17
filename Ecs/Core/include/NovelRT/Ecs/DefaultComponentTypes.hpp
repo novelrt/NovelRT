@@ -3,6 +3,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Maths/GeoVector3F.hpp>
+#include <NovelRT/Maths/Constants.hpp>
+
 namespace NovelRT::Ecs
 {
     struct TransformComponent
@@ -17,13 +22,13 @@ namespace NovelRT::Ecs
             rotationInRadians += other.rotationInRadians;
             scale += other.scale;
 
-            if (rotationInRadians > Maths::Utilities::Tau<float>())
+            if (rotationInRadians > Maths::Tau<float>)
             {
-                rotationInRadians -= Maths::Utilities::Tau<float>();
+                rotationInRadians -= Maths::Tau<float>;
             }
-            else if (rotationInRadians < -Maths::Utilities::Tau<float>())
+            else if (rotationInRadians < -Maths::Tau<float>)
             {
-                rotationInRadians += Maths::Utilities::Tau<float>();
+                rotationInRadians += Maths::Tau<float>;
             }
 
             return *this;

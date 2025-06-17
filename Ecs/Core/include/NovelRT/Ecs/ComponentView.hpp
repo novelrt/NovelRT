@@ -3,8 +3,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+
+#include <cstddef>
+#include <utility>
+
 namespace NovelRT::Ecs
 {
+    template <typename TComponent> class ComponentBuffer;
+    template <typename, typename> class SparseSet;
+
     /**
      * @brief A thread-aware view into a ComponentBuffer that allows for both reading and writing of data.
      *

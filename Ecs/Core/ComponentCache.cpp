@@ -1,7 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+
+#include <memory>
 #include <utility>
 
 namespace NovelRT::Ecs
@@ -15,7 +19,7 @@ namespace NovelRT::Ecs
 
     std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::CreateContainer(
         size_t sizeOfDataType,
-        const void* deleteInstructionState,
+        const std::byte* deleteInstructionState,
         const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
         const std::function<bool(const void*, const void*)>& componentComparisonLogic,
         const std::string& serialisedTypeName) const
@@ -27,7 +31,7 @@ namespace NovelRT::Ecs
 
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
-        const void* deleteInstructionState,
+        const std::byte* deleteInstructionState,
         const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
         const std::function<bool(const void*, const void*)>& componentComparisonLogic,
         const std::string& serialisedTypeName)

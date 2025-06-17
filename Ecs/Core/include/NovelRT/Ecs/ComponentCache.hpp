@@ -3,8 +3,19 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+
+#include <functional>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 namespace NovelRT::Ecs
 {
+    template <typename T> class ComponentBuffer;
+    class ComponentBufferMemoryContainer;
+
     /**
      * @brief Stores all ComponentBuffer instances currently initialised for this instance of the ECS. You should not be
      * instantiating this yourself in a regular setup.
@@ -19,7 +30,7 @@ namespace NovelRT::Ecs
 
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,
-            const void* deleteInstructionState,
+            const std::byte* deleteInstructionState,
             const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
             const std::function<bool(const void*, const void*)>& componentComparatorLogic,
             const std::string& serialisedTypeName) const;
@@ -54,7 +65,7 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
             size_t sizeOfDataType,
-            const void* deleteInstructionState,
+            const std::byte* deleteInstructionState,
             const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
             const std::function<bool(const void*, const void*)>& componentComparatorLogic,
             const std::string& serialisedTypeName);

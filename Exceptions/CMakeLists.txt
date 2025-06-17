@@ -7,6 +7,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Exceptions
 
   HEADERS
     PUBLIC
+      include/NovelRT/Exceptions/DuplicateKeyException.hpp
       include/NovelRT/Exceptions/FileNotFoundException.hpp
       include/NovelRT/Exceptions/InitialisationFailureException.hpp
       include/NovelRT/Exceptions/InvalidOperationException.hpp
