@@ -47,6 +47,7 @@ add_subdirectory(Threading)
 add_subdirectory(Timing)
 add_subdirectory(Utilities)
 
+add_subdirectory(Audio)
 add_subdirectory(Graphics)
 add_subdirectory(Input)
 add_subdirectory(UI)

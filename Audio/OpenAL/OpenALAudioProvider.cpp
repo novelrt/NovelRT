@@ -1,66 +1,148 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
-#include <AL/alext.h>
+
 #include <NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp>
-#include <NovelRT/Exceptions/Exceptions.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Logging/BuiltInLogSections.hpp>
 
-namespace NovelRT::Audio::OpenAL
+#include <AL/alext.h>
+
+namespace NovelRT::Audio
 {
-    typedef void (ALC_APIENTRY*LoggingCallback)(void*, char, const char*, int) noexcept;
-    typedef void (ALC_APIENTRY*CallbackProvider)(LoggingCallback, void*) noexcept;
+    using OpenALAudioProvider = AudioProvider<OpenAL::OpenALAudioBackend>;
 
-    OpenALAudioProvider::OpenALAudioProvider():
-    _sources(std::vector<uint32_t>()),
-    _buffers(std::vector<uint32_t>()),
-    _logger(spdlog::stdout_color_mt("OpenAL"))
+    static std::string GetALError(const Logging::LoggingService& logger)
     {
-        //Logger init
-        _logger->set_level(spdlog::level::debug);
-        CallbackProvider setLogCallback = reinterpret_cast<CallbackProvider>(alcGetProcAddress(nullptr, "alsoft_set_log_callback"));
-        if (setLogCallback != nullptr)
+        auto err = alGetError();
+        switch (err)
         {
-            setLogCallback(static_cast<LoggingCallback>([](void* ptr, char l, const char* m, int) noexcept
+            case AL_INVALID_NAME:
             {
-                auto provider = reinterpret_cast<OpenALAudioProvider*>(ptr);
-                provider->LogOpenALMessages(l, m);
-            }), this);
+                logger.logErrorLine("A bad ID or name was passed to the OpenAL function.");
+                return std::string("A bad ID or name was passed to the OpenAL function.");
+            }
+            case AL_INVALID_ENUM:
+            {
+                logger.logErrorLine("An invalid enum was passed to an OpenAL function.");
+                return std::string("An invalid enum was passed to an OpenAL function.");
+            }
+            case AL_INVALID_VALUE:
+            {
+                logger.logErrorLine("An invalid value was passed to an OpenAL function.");
+                return std::string("An invalid value was passed to an OpenAL function.");
+            }
+            case AL_INVALID_OPERATION:
+            {
+                logger.logErrorLine("The requested operation is not valid.");
+                return std::string("The requested operation is not valid.");
+            }
+            case AL_OUT_OF_MEMORY:
+            {
+                logger.logErrorLine("The requested operation resulted in OpenAL running out of memory.");
+                return std::string("The requested operation resulted in OpenAL running out of memory.");
+            }
+            case AL_NO_ERROR:
+            {
+                return std::string();
+            }
+            default:
+            {
+                logger.logError("Unknown OpenAL Error - Code: {err}", err);
+                return std::string("Unknown OpenAL Error - Code: " + std::to_string(err));
+            }
+        }
+    }
+
+    static void LogMessage(void* userptr, char level, const char* msg, int length) noexcept
+    {
+        const Logging::LoggingService& logger = *static_cast<Logging::LoggingService*>(userptr);
+        std::string message(msg, length);
+
+        switch (level)
+        {
+            case 'W':
+            {
+                logger.logWarningLine(message);
+                break;
+            }
+            case 'E':
+            {
+                logger.logErrorLine(message);
+                break;
+            }
+            case 'I':
+            {
+                logger.logInfoLine(message);
+                break;
+            }
+            default:
+            {
+                logger.logDebugLine(message);
+                break;
+            }
+        }
+    }
+
+    static void InstallLogger(const Logging::LoggingService& logger)
+    {
+        using CallbackType = void ALC_APIENTRY(void* userptr, char level, const char* message, int length) noexcept;
+        using FnType = void ALC_APIENTRY(CallbackType* callback, void* userptr);
+
+        void* callback = alcGetProcAddress(nullptr, "alsoft_set_log_callback");
+        if (callback == nullptr)
+        {
+            return;
         }
 
+        // We unfortunately cannot directly cast to void*, because of const-correctness.
+        const void* tmp = static_cast<const void*>(&logger);
+        reinterpret_cast<FnType*>(callback)(&LogMessage, const_cast<void*>(tmp));
+    }
 
-        //Device and Context Init
-        _device = alcOpenDevice(nullptr);
-        if(!_device)
+    static ALCdevice* CreateDevice(const Logging::LoggingService& logger)
+    {
+        InstallLogger(logger);
+
+        auto* device = alcOpenDevice(nullptr);
+        if (device == nullptr)
         {
-            std::string error = GetALError();
-            throw Exceptions::InitialisationFailureException(
-                "OpenAL failed to create an audio device!", error);
+            auto err = GetALError(logger);
+            throw Exceptions::InitialisationFailureException("Failed to create OpenAL device:", err);
         }
-        _context = alcCreateContext(_device, nullptr);
-        if(!_context)
+
+        return device;
+    }
+
+    static ALCcontext* CreateContext(ALCdevice* device, const Logging::LoggingService& logger)
+    {
+        auto* context = alcCreateContext(device, nullptr);
+        if (context == nullptr)
         {
-            std::string error = GetALError();
-            throw Exceptions::InitialisationFailureException(
-                "OpenAL failed to create and attach a proper context!", error);
+            auto err = GetALError(logger);
+            throw Exceptions::InitialisationFailureException("Failed to create OpenAL context:", err);
         }
+
+        return context;
+    }
+
+    OpenALAudioProvider::AudioProvider()
+        : _logger(NovelRT::Logging::CONSOLE_LOG_AUDIO),
+          _device(CreateDevice(_logger)),
+          _context(CreateContext(_device, _logger))
+    {
         alcMakeContextCurrent(_context);
     }
 
-    OpenALAudioProvider::~OpenALAudioProvider()
-    {
-        Dispose();
-    }
-
-    void OpenALAudioProvider::Dispose()
+    OpenALAudioProvider::~AudioProvider()
     {
         alGetError();
         alSourceStopv(static_cast<int>(_sources.size()), reinterpret_cast<ALuint*>(_sources.data()));
-        GetALError();
+        GetALError(_logger);
         alDeleteSources(static_cast<int>(_sources.size()), reinterpret_cast<ALuint*>(_sources.data()));
-        GetALError();
+        GetALError(_logger);
         _sources.clear();
         alDeleteBuffers(static_cast<int>(_buffers.size()), reinterpret_cast<ALuint*>(_buffers.data()));
-        GetALError();
+        GetALError(_logger);
         _buffers.clear();
         alcMakeContextCurrent(NULL);
         alcDestroyContext(_context);
@@ -72,97 +154,68 @@ namespace NovelRT::Audio::OpenAL
         uint32_t source = 0;
         alGetError();
         alGenSources(1, &source);
-        GetALError();
+        GetALError(_logger);
         alSourcef(source, AL_GAIN, context.Volume);
-        GetALError();
+        GetALError(_logger);
         alSourcef(source, AL_PITCH, context.Pitch);
-        GetALError();
+        GetALError(_logger);
         alSourcei(source, AL_LOOPING, static_cast<int>(context.Loop));
-        GetALError();
+        GetALError(_logger);
         _sources.emplace_back(static_cast<uint32_t>(source));
         return source;
     }
-
-    // void OpenALAudioProvider::CloseSource()
-    // {
-    //     alDeleteSources(1, &_outputSource);
-    // }
 
     void OpenALAudioProvider::PlaySource(uint32_t sourceId)
     {
         alGetError();
         alSourcePlay(sourceId);
-        GetALError();
+        GetALError(_logger);
     }
 
     void OpenALAudioProvider::StopSource(uint32_t sourceId)
     {
         alGetError();
         alSourceStop(sourceId);
-        GetALError();
+        GetALError(_logger);
     }
 
     void OpenALAudioProvider::PauseSource(uint32_t sourceId)
     {
         alGetError();
         alSourcePause(sourceId);
-        GetALError();
+        GetALError(_logger);
     }
 
-    std::string OpenALAudioProvider::GetALError()
+    static ALenum DetermineChannelFormat(int32_t numberOfChannels)
     {
-        auto err = alGetError();
-        switch (err)
+        switch (numberOfChannels)
         {
-            case AL_INVALID_NAME:
-            {
-                _logger->error("A bad ID or name was passed to the OpenAL function.");
-                return std::string("A bad ID or name was passed to the OpenAL function.");
-            }
-            case AL_INVALID_ENUM:
-            {
-                _logger->error("An invalid enum was passed to an OpenAL function.");
-                return std::string("An invalid enum was passed to an OpenAL function.");
-            }
-            case AL_INVALID_VALUE:
-            {
-                _logger->error("An invalid value was passed to an OpenAL function.");
-                return std::string("An invalid value was passed to an OpenAL function.");
-            }
-            case AL_INVALID_OPERATION:
-            {
-                _logger->error("The requested operation is not valid.");
-                return std::string("The requested operation is not valid.");
-            }
-            case AL_OUT_OF_MEMORY:
-            {
-                _logger->error("The requested operation resulted in OpenAL running out of memory.");
-                return std::string("The requested operation resulted in OpenAL running out of memory.");
-            }
-            case AL_NO_ERROR:
-            {
-                return std::string();
-            }
+            case 1:
+                return AL_FORMAT_MONO_FLOAT32;
+            case 5:
+                return AL_FORMAT_51CHN32;
+            case 7:
+                return AL_FORMAT_71CHN32;
+            case 2:
             default:
-            {
-                _logger->error("Unknown OpenAL Error - Code: {err}", err);
-                return std::string("Unknown OpenAL Error - Code: " + std::to_string(err));
-            }
+                return AL_FORMAT_STEREO_FLOAT32;
         }
     }
 
-    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Misc::Span<float> buffer, AudioSourceContext& context)
+    uint32_t OpenALAudioProvider::SubmitAudioBuffer(const NovelRT::Utilities::Span<float> buffer,
+                                                    AudioSourceContext& context)
     {
         ALuint alBuffer;
         alGetError();
         alGenBuffers(1, &alBuffer);
-        GetALError();
-        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(), static_cast<ALsizei>(buffer.size() * sizeof(float)), context.SampleRate);
-        GetALError();
+        GetALError(_logger);
+        alBufferData(alBuffer, DetermineChannelFormat(context.Channels), buffer.data(),
+                     static_cast<ALsizei>(buffer.size() * sizeof(float)), context.SampleRate);
+        GetALError(_logger);
         _buffers.emplace_back(static_cast<uint32_t>(alBuffer));
         uint32_t sourceId = OpenSource(context);
         alSourcei(sourceId, AL_BUFFER, alBuffer);
-        GetALError();
+        GetALError(_logger);
         return sourceId;
     }
 
@@ -170,16 +223,16 @@ namespace NovelRT::Audio::OpenAL
     {
         alGetError();
         alSourcef(sourceId, AL_GAIN, context.Volume);
-        GetALError();
+        GetALError(_logger);
         alSourcef(sourceId, AL_PITCH, context.Pitch);
-        GetALError();
+        GetALError(_logger);
         alSourcei(sourceId, AL_LOOPING, static_cast<int>(context.Loop));
-        GetALError();
+        GetALError(_logger);
     }
 
-    AudioSourceState OpenALAudioProvider::ConvertToAudioSourceState(ALenum oALSourceState)
+    static AudioSourceState ConvertToAudioSourceState(ALenum oALSourceState)
     {
-        switch(oALSourceState)
+        switch (oALSourceState)
         {
             case AL_PLAYING:
             {
@@ -203,43 +256,7 @@ namespace NovelRT::Audio::OpenAL
         ALenum state = 0x0;
         alGetError();
         alGetSourcei(sourceId, AL_SOURCE_STATE, &state);
-        GetALError();
+        GetALError(_logger);
         return ConvertToAudioSourceState(state);
-    }
-
-    ALenum OpenALAudioProvider::DetermineChannelFormat(int32_t numberOfChannels)
-    {
-        switch(numberOfChannels)
-        {
-            case 1:
-                return AL_FORMAT_MONO_FLOAT32;
-            case 5:
-                return AL_FORMAT_51CHN32;
-            case 7:
-                return AL_FORMAT_71CHN32;
-            case 2:
-            default:
-                return AL_FORMAT_STEREO_FLOAT32;
-        }
-    }
-
-    void OpenALAudioProvider::LogOpenALMessages(char level, const char* message)
-    {
-        switch(level)
-        {
-            case 'W':
-            {
-                _logger->warn(message);
-            }
-            case 'E':
-            {
-                _logger->error(message);
-            }
-            case 'I':
-            default:
-            {
-                _logger->debug(message);
-            }
-        }
     }
 }
