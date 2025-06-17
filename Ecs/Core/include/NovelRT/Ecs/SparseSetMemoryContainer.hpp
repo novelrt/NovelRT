@@ -3,6 +3,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Utilities/Memory.hpp>
+#include <NovelRT/Utilities/Span.hpp>
+
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+
 namespace NovelRT::Ecs
 {
     class SparseSetMemoryContainer
@@ -10,22 +17,22 @@ namespace NovelRT::Ecs
     private:
         std::vector<size_t> _dense;
         std::vector<size_t> _sparse;
-        std::vector<uint8_t> _data;
+        std::vector<std::byte> _data;
         size_t _sizeOfDataTypeInBytes;
 
         [[nodiscard]] size_t GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept;
-        [[nodiscard]] uint8_t* GetDataObjectStartAtIndex(size_t location) noexcept;
+        [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
         void InsertInternal(size_t key, const void* value);
 
     public:
         class ByteIteratorView
         {
         private:
-            std::vector<uint8_t>::iterator _iteratorAtValue;
+            std::vector<std::byte>::iterator _iteratorAtValue;
             size_t _sizeOfObject;
 
         public:
-            explicit ByteIteratorView(std::vector<uint8_t>::iterator iteratorAtValue, size_t sizeOfObject) noexcept
+            explicit ByteIteratorView(std::vector<std::byte>::iterator iteratorAtValue, size_t sizeOfObject) noexcept
                 : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
             {
             }
@@ -35,19 +42,23 @@ namespace NovelRT::Ecs
                 return _sizeOfObject != 0;
             }
 
-            [[nodiscard]] inline std::vector<uint8_t>::iterator GetUnderlyingIterator() const noexcept
+            [[nodiscard]] inline std::vector<std::byte>::iterator GetUnderlyingIterator() const noexcept
             {
                 return _iteratorAtValue;
             }
 
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
-                NovelRT::Utilities::Memory::Copy(outputLocation, _sizeOfObject, &(*_iteratorAtValue), _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(
+                    NovelRT::Utilities::Span{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
+                    NovelRT::Utilities::Span{static_cast<std::byte*>(outputLocation), _sizeOfObject});
             }
 
-            inline void WriteToLocation(void* data) noexcept
+            inline void WriteToLocation(const void* data) noexcept
             {
-                NovelRT::Utilities::Memory::Copy(&(*_iteratorAtValue), _sizeOfObject, data, _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(
+                    NovelRT::Utilities::Span{static_cast<const std::byte*>(data), _sizeOfObject},
+                    NovelRT::Utilities::Span{&(*_iteratorAtValue), _sizeOfObject});
             }
 
             [[nodiscard]] inline void* GetDataHandle() const noexcept
@@ -64,11 +75,11 @@ namespace NovelRT::Ecs
         class ConstByteIteratorView
         {
         private:
-            std::vector<uint8_t>::const_iterator _iteratorAtValue;
+            std::vector<std::byte>::const_iterator _iteratorAtValue;
             size_t _sizeOfObject;
 
         public:
-            explicit ConstByteIteratorView(std::vector<uint8_t>::const_iterator iteratorAtValue,
+            explicit ConstByteIteratorView(std::vector<std::byte>::const_iterator iteratorAtValue,
                                            size_t sizeOfObject) noexcept
                 : _iteratorAtValue(iteratorAtValue), _sizeOfObject(sizeOfObject)
             {
@@ -79,14 +90,16 @@ namespace NovelRT::Ecs
                 return _sizeOfObject != 0;
             }
 
-            [[nodiscard]] inline std::vector<uint8_t>::const_iterator GetUnderlyingIterator() const noexcept
+            [[nodiscard]] inline std::vector<std::byte>::const_iterator GetUnderlyingIterator() const noexcept
             {
                 return _iteratorAtValue;
             }
 
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
-                NovelRT::Utilities::Memory::Copy(outputLocation, _sizeOfObject, &(*_iteratorAtValue), _sizeOfObject);
+                NovelRT::Utilities::Memory::Copy(
+                    NovelRT::Utilities::Span{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
+                    NovelRT::Utilities::Span{static_cast<std::byte*>(outputLocation), _sizeOfObject});
             }
 
             [[nodiscard]] const void* GetDataHandle() const noexcept
@@ -239,10 +252,10 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] size_t Length() const noexcept;
 
-        void ResetAndWriteDenseData(NovelRT::Utilities::Misc::Span<const size_t> ids,
-                                    NovelRT::Utilities::Misc::Span<const uint8_t> data);
+        void ResetAndWriteDenseData(NovelRT::Utilities::Span<const size_t> ids,
+                                    NovelRT::Utilities::Span<const std::byte> data);
 
-        void ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data);
+        void ResetAndWriteDenseData(const size_t* ids, size_t length, const std::byte* data);
 
         [[nodiscard]] ByteIteratorView operator[](size_t key) noexcept;
 

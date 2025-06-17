@@ -3,8 +3,20 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+
+#include <cstdint>
+#include <cstddef>
+#include <tuple>
+#include <vector>
+
 namespace NovelRT::Ecs
 {
+    class ComponentCache;
+    template <typename TComponent> class ComponentView;
+    class EntityCache;
+    class UnsafeComponentView;
+
     /**
      * @brief A thread-aware context into the current state of the ECS instance that created an instance of this object.
      * You should not be instantiating this yourself in a regular setup.

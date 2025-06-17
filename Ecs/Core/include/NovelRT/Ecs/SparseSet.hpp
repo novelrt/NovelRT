@@ -3,8 +3,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <iterator>
+#include <utility>
+
 namespace NovelRT::Ecs
 {
+    class SparseSetMemoryContainer;
+
     /**
      * @brief A custom sparse set implementation designed at storing small, blittable types.
      *
@@ -32,9 +37,9 @@ namespace NovelRT::Ecs
         public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = Utilities::KeyValuePair<TKey, TValue>;
+            using value_type = std::pair<TKey, TValue>;
             using pointer = SparseSetMemoryContainer::Iterator;
-            using reference = Utilities::KeyValuePair<TKey, TValue&>;
+            using reference = std::pair<TKey, TValue&>;
 
         private:
             pointer _ptr;
@@ -89,9 +94,9 @@ namespace NovelRT::Ecs
         public:
             using iterator_category = std::forward_iterator_tag;
             using difference_type = std::ptrdiff_t;
-            using value_type = Utilities::KeyValuePair<TKey, TValue>;
+            using value_type = std::pair<TKey, TValue>;
             using pointer = SparseSetMemoryContainer::ConstIterator;
-            using reference = Utilities::KeyValuePair<TKey, const TValue&>;
+            using reference = std::pair<TKey, const TValue&>;
 
         private:
             pointer _ptr;

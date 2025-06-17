@@ -3,14 +3,23 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+
+#include <functional>
+#include <memory>
+#include <string>
+#include <vector>
+
 namespace NovelRT::Ecs
 {
+    class SparseSetMemoryContainer;
+
     class ComponentBufferMemoryContainer : public std::enable_shared_from_this<ComponentBufferMemoryContainer>
     {
     private:
         SparseSetMemoryContainer _rootSet;
         std::vector<SparseSetMemoryContainer> _updateSets;
-        std::vector<uint8_t> _deleteInstructionState;
+        std::vector<std::byte> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
         std::function<void(void*, const void*, size_t)> _componentUpdateLogic;
         std::function<bool(const void*, const void*)> _componentComparatorLogic;
@@ -41,7 +50,7 @@ namespace NovelRT::Ecs
         };
 
         ComponentBufferMemoryContainer(size_t poolSize,
-                                       const void* deleteInstructionState,
+                                       const std::byte* deleteInstructionState,
                                        size_t sizeOfDataTypeInBytes,
                                        std::function<void(void*, const void*, size_t)> componentUpdateLogic,
                                        std::function<bool(const void*, const void*)> componentComparatorLogic,

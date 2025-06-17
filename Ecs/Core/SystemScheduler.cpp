@@ -1,7 +1,13 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/Catalogue.hpp>
+#include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/EntityCache.hpp>
+#include <NovelRT/Ecs/IEcsSystem.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
+
+#include <functional>
 
 namespace NovelRT::Ecs
 {

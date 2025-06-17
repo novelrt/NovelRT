@@ -1,14 +1,21 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Exceptions/DuplicateKeyException.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
+#include <NovelRT/Utilities/Memory.hpp>
+
+#include <cstddef>
+#include <optional>
+#include <vector>
 
 namespace NovelRT::Ecs
 {
     SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept
-        : _dense(std::vector<size_t>{}),
-          _sparse(std::vector<size_t>{}),
-          _data(std::vector<uint8_t>{}),
+        : _dense(),
+          _sparse(),
+          _data(),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
     {
     }
@@ -18,7 +25,7 @@ namespace NovelRT::Ecs
         return _sizeOfDataTypeInBytes * denseIndex;
     }
 
-    uint8_t* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
+    std::byte* SparseSetMemoryContainer::GetDataObjectStartAtIndex(size_t location) noexcept
     {
         return _data.data() + (location * _sizeOfDataTypeInBytes);
     }
@@ -34,7 +41,12 @@ namespace NovelRT::Ecs
         _sparse[key] = _dense.size() - 1;
         _data.resize(GetStartingByteIndexForDenseIndex(_dense.size()));
         auto dataPtr = GetDataObjectStartAtIndex(_dense.size() - 1);
-        NovelRT::Utilities::Memory::Copy(dataPtr, _sizeOfDataTypeInBytes, value, _sizeOfDataTypeInBytes);
+
+        // Cursed: We can't make a span<void> so we cast to std::byte* which is compatible
+        // Memory::Copy then casts this back to void* internally to allow memcpy to work
+        NovelRT::Utilities::Memory::Copy(
+            NovelRT::Utilities::Span{static_cast<const std::byte*>(value), _sizeOfDataTypeInBytes},
+            NovelRT::Utilities::Span{static_cast<std::byte*>(dataPtr), _sizeOfDataTypeInBytes});
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)
@@ -201,8 +213,8 @@ namespace NovelRT::Ecs
         return _dense.size();
     }
 
-    void SparseSetMemoryContainer::ResetAndWriteDenseData(NovelRT::Utilities::Misc::Span<const size_t> ids,
-                                                          NovelRT::Utilities::Misc::Span<const uint8_t> data)
+    void SparseSetMemoryContainer::ResetAndWriteDenseData(NovelRT::Utilities::Span<const size_t> ids,
+                                                          NovelRT::Utilities::Span<const std::byte> data)
     {
         _dense.clear();
         _dense.resize(ids.size());
@@ -210,11 +222,8 @@ namespace NovelRT::Ecs
         _data.clear();
         _data.resize(data.size());
 
-        const size_t denseSize = sizeof(size_t) * ids.size();
-        const size_t dataSize = sizeof(uint8_t) * data.size();
-
-        NovelRT::Utilities::Memory::Copy(_dense.data(), denseSize, ids.data(), denseSize);
-        NovelRT::Utilities::Memory::Copy(_data.data(), dataSize, data.data(), dataSize);
+        NovelRT::Utilities::Memory::Copy(ids, {_dense});
+        NovelRT::Utilities::Memory::Copy(data, {_data});
 
         for (size_t denseIndex = 0; denseIndex < _dense.size(); denseIndex++)
         {
@@ -228,11 +237,9 @@ namespace NovelRT::Ecs
         }
     }
 
-    void SparseSetMemoryContainer::ResetAndWriteDenseData(const size_t* ids, size_t length, const uint8_t* data)
+    void SparseSetMemoryContainer::ResetAndWriteDenseData(const size_t* ids, size_t length, const std::byte* data)
     {
-        ResetAndWriteDenseData(
-            NovelRT::Utilities::Misc::Span<const size_t>(ids, length),
-            NovelRT::Utilities::Misc::Span<const uint8_t>(data, length * GetSizeOfDataTypeInBytes()));
+        ResetAndWriteDenseData({ids, length}, {data, length * GetSizeOfDataTypeInBytes()});
     }
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept

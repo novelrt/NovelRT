@@ -1,7 +1,15 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/Catalogue.hpp>
+#include <NovelRT/Ecs/ComponentBuffer.hpp>
+#include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/DefaultComponentTypes.hpp>
+#include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/LinkedEntityListView.hpp>
+#include <NovelRT/Ecs/SparseSet.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 
 namespace NovelRT::Ecs
 {

@@ -3,8 +3,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/EcsUtils.hpp>
+
+#include <memory>
+#include <type_traits>
+#include <vector>
+
 namespace NovelRT::Ecs
 {
+    class ComponentBufferMemoryContainer;
+    template <typename, typename> class SparseSet;
+
     /**
      * @brief A storage type that manages the storage and modification of the given type concurrently. You should not be
      * instantiating this yourself in a regular setup.

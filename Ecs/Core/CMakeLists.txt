@@ -1,6 +1,11 @@
 include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
+  DEPENDS
+    NovelRT::Maths
+    NovelRT::Timing
+    NovelRT::Utilities
+
   SOURCES
     PRIVATE
       Catalogue.cpp

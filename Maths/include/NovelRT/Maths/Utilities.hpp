@@ -1,3 +1,5 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
@@ -11,12 +13,9 @@
 // The Log2DeBruijn table itself was taken from public domain at https://graphics.stanford.edu/~seander/bithacks.html
 // See there for additional information.
 
-#ifndef NOVELRT_MATHS_UTILITIES_H
-#define NOVELRT_MATHS_UTILITIES_H
-
-#ifndef NOVELRT_MATHS_H
-#error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
-#endif
+#include <array>
+#include <cstddef>
+#include <cstdint>
 
 #if __has_include(<version>)
 #include <version>
@@ -25,6 +24,8 @@
 #if __cpp_lib_bitops
 #include <bit>
 #endif
+
+#include <glm/glm.hpp>
 
 /**
  * @brief Contains utility functions to assist in mathematical operations.
@@ -225,64 +226,4 @@ namespace NovelRT::Maths::Utilities
     {
         return glm::degrees(radians);
     }
-
-    /**
-     * @brief Retrieves a constant for a full rotation expressed in radians.
-     *
-     * @details
-     * A full rotation is expressed as: \f[
-     *      2\pi = 6.283185307179586476925...
-     * \f]
-     *
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
-     * the method.
-     *
-     * @tparam TFloatingPointType A floating point type that is expressed as either float or double.
-     * @return A full rotation expressed in radians.
-     */
-    template<typename TFloatingPointType>[[nodiscard]] inline constexpr TFloatingPointType Tau() noexcept
-    {
-        _assert(std::is_same_v<TFloatingPointType, float> || std::is_same_v<TFloatingPointType, double>,
-                "Type is unsupported for a Tau representation.");
-    }
-
-    /**
-     * @brief Retrieves a constant for a full rotation expressed in radians.
-     *
-     * @details
-     * A full rotation is expressed as: \f[
-     *      2\pi = 6.283185307179586476925...
-     * \f]
-     * In this implementation it is expressed as \f(6.283185307\f).
-     *
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
-     * the method.
-     *
-     * @return A full rotation expressed in radians.
-     */
-    template<>[[nodiscard]] inline constexpr float Tau<float>() noexcept
-    {
-        return 6.283185307f;
-    }
-
-    /**
-     * @brief Retrieves a constant for a full rotation expressed in radians.
-     *
-     * @details
-     * A full rotation is expressed as: \f[
-     *      2\pi = 6.283185307179586476925...
-     * \f]
-     * In this implementation it is expressed as \f(6.283185307179586476925\f).
-     *
-     * This is a pure method. Calling this without using the result has no effect and can introduce overhead for calling
-     * the method.
-     *
-     * @return A full rotation expressed in radians.
-     */
-    template<>[[nodiscard]] inline constexpr double Tau<double>() noexcept
-    {
-        return 6.283185307179586476925;
-    }
 }
-
-#endif // NOVELRT_UTILITIES_H

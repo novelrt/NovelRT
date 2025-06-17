@@ -3,6 +3,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Utilities/Atom.hpp>
+
+#include <type_traits>
+#include <typeindex>
+#include <unordered_map>
+
 namespace NovelRT::Ecs
 {
     using EntityId = NovelRT::Atom;

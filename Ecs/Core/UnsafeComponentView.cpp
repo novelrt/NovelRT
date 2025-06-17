@@ -1,7 +1,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Ecs.h>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Ecs/UnsafeComponentView.hpp>
+
+#include <memory>
 #include <utility>
 
 namespace NovelRT::Ecs
