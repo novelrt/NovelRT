@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/DefaultComponentTypes.hpp>
+#include <NovelRT/Ecs/LinkedEntityListView.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
 #include <limits>
@@ -12,13 +14,11 @@
 namespace NovelRT::Ecs
 {
     class Catalogue;
-    struct EntityGraphComponent;
-    class LinkedEntityListView;
 
     class EntityGraphView
     {
     private:
-        Catalogue& _catalogue;
+        Catalogue* _catalogue;
         EntityId _owningEntity;
         EntityGraphComponent _component;
         Utilities::Lazy<LinkedEntityListView> _childrenChanges;
@@ -27,6 +27,10 @@ namespace NovelRT::Ecs
 
     public:
         EntityGraphView(Catalogue& catalogue, EntityId owningEntity, EntityGraphComponent component) noexcept;
+
+        EntityGraphView(EntityGraphView&& other) noexcept = default;
+        EntityGraphView& operator=(EntityGraphView&& other) noexcept = default;
+
         ~EntityGraphView();
 
         [[nodiscard]] inline EntityId GetRawEntityId() const noexcept

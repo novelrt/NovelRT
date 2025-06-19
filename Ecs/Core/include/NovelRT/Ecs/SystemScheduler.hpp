@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 #include <NovelRT/Timing/Timestamp.hpp>
 #include <NovelRT/Utilities/Atom.hpp>

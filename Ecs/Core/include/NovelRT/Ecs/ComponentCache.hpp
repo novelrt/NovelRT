@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
 #include <functional>
 #include <memory>
@@ -14,7 +16,6 @@
 namespace NovelRT::Ecs
 {
     template <typename T> class ComponentBuffer;
-    class ComponentBufferMemoryContainer;
 
     /**
      * @brief Stores all ComponentBuffer instances currently initialised for this instance of the ECS. You should not be
@@ -26,7 +27,7 @@ namespace NovelRT::Ecs
     private:
         std::unordered_map<ComponentTypeId, std::shared_ptr<ComponentBufferMemoryContainer>> _componentMap;
         size_t _poolSize;
-        Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
+        NovelRT::Utilities::Event<const std::vector<EntityId>&> _bufferPrepEvent;
 
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,

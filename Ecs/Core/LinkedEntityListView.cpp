@@ -254,14 +254,14 @@ namespace NovelRT::Ecs
     }
 
     LinkedEntityListView::LinkedEntityListView(EntityId node, Catalogue& catalogue) noexcept
-        : _begin(node), _tail(_end), _hasBeenCommitted(false), _changes{}, _catalogue(catalogue)
+        : _begin(node), _tail(_end), _hasBeenCommitted(false), _changes{}, _catalogue(&catalogue)
     {
         if (_begin == std::numeric_limits<EntityId>::max())
         {
             return;
         }
 
-        auto view = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto view = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
         LinkedEntityListNodeComponent currentBeginComponent{};
 
         if (!view.TryGetComponent(_begin, currentBeginComponent))
@@ -312,7 +312,7 @@ namespace NovelRT::Ecs
             nextIt++;
         }
 
-        auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto nodeView = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
         EntityId existingPreviousNode = nextIt.GetCurrentEntityNode();
 
         if (_changes.ContainsKey(existingPreviousNode) || _changes.ContainsKey(nextIt.GetListNode().previous))
@@ -366,7 +366,7 @@ namespace NovelRT::Ecs
             previousIt++;
         }
 
-        auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto nodeView = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
         EntityId existingPreviousNode = previousIt.GetCurrentEntityNode();
 
         if (_changes.ContainsKey(existingPreviousNode) || _changes.ContainsKey(previousIt.GetListNode().next))
@@ -408,7 +408,7 @@ namespace NovelRT::Ecs
 
     void LinkedEntityListView::AddInsertAtBackInstruction(EntityId newNode)
     {
-        auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto nodeView = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
 
         if (_newTailPostDiff.has_value())
         {
@@ -466,7 +466,7 @@ namespace NovelRT::Ecs
 
     void LinkedEntityListView::AddInsertAtFrontInstruction(EntityId newNode)
     {
-        auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto nodeView = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
 
         if (_newBeginPostDiff.has_value())
         {
@@ -518,7 +518,7 @@ namespace NovelRT::Ecs
 
     void LinkedEntityListView::AddRemoveNodeInstruction(EntityId nodeToRemove)
     {
-        auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto nodeView = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
 
         if (_changes.ContainsKey(nodeToRemove))
         {
@@ -670,7 +670,7 @@ namespace NovelRT::Ecs
     void LinkedEntityListView::Commit()
     {
         _hasBeenCommitted = true;
-        auto nodeView = _catalogue.GetComponentView<LinkedEntityListNodeComponent>();
+        auto nodeView = _catalogue->GetComponentView<LinkedEntityListNodeComponent>();
 
         for (auto [entity, diffInstruction] : _changes)
         {
