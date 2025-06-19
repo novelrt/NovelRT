@@ -3,7 +3,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Maths/GeoVector3F.hpp>
 #include <NovelRT/Maths/Constants.hpp>
@@ -92,4 +94,51 @@ namespace NovelRT::Ecs
         }
     };
 
+    class EcsDefaultsBuilder
+    {
+    private:
+        EntityGraphComponent _defaultEntityGraphComponent;
+        LinkedEntityListNodeComponent _defaultLinkedEntityListNodeComponent;
+        TransformComponent _defaultTransformComponent;
+
+        EcsDefaultsBuilder(SystemSchedulerBuilder& builder)
+        : _defaultEntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
+        _defaultLinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
+        _defaultTransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN}
+        {
+            builder.Configure([this](SystemScheduler& scheduler) {
+                auto& cache = scheduler.GetComponentCache();
+
+                cache.RegisterComponentType(_defaultEntityGraphComponent, "NovelRT::Ecs::EntityGraphComponent");
+                cache.RegisterComponentType(_defaultLinkedEntityListNodeComponent, "NovelRT::Ecs::LinkedEntityListNodeComponent");
+                cache.RegisterComponentType(_defaultTransformComponent, "NovelRT::Ecs::TransformComponent");
+            });
+        };
+
+        friend EcsDefaultsBuilder AddDefaults(SystemSchedulerBuilder&);
+
+    public:
+        EcsDefaultsBuilder& WithDefaultEntityGraphComponent(const EntityGraphComponent& defaultGraphComponent)
+        {
+            _defaultEntityGraphComponent = defaultGraphComponent;
+            return *this;
+        }
+
+        EcsDefaultsBuilder& WithDefaultLinkedEntityListNodeComponent(const LinkedEntityListNodeComponent& defaultLinkedEntityListNodeComponent)
+        {
+            _defaultLinkedEntityListNodeComponent = defaultLinkedEntityListNodeComponent;
+            return *this;
+        }
+
+        EcsDefaultsBuilder& WithDefaultTransformComponent(const TransformComponent& defaultTransformComponent)
+        {
+            _defaultTransformComponent = defaultTransformComponent;
+            return *this;
+        }
+    };
+
+    EcsDefaultsBuilder AddDefaults(SystemSchedulerBuilder& builder)
+    {
+        return EcsDefaultsBuilder{builder};
+    }
 }
