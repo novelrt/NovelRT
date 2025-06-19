@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/ComponentCache.hpp>
 
 #include <cstdint>
 #include <cstddef>
@@ -12,7 +13,6 @@
 
 namespace NovelRT::Ecs
 {
-    class ComponentCache;
     template <typename TComponent> class ComponentView;
     class EntityCache;
     class UnsafeComponentView;

@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/SparseSet.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 
 #include <limits>
 #include <optional>
@@ -13,7 +15,6 @@ namespace NovelRT::Ecs
     class Catalogue;
     template <typename T> class ComponentView;
     struct LinkedEntityListNodeComponent;
-    template <typename, typename> class SparseSet;
 
     class LinkedEntityListView
     {
@@ -23,7 +24,7 @@ namespace NovelRT::Ecs
         private:
             EntityId _currentEntityNode;
             LinkedEntityListNodeComponent _currentComponentNode;
-            Catalogue& _catalogue;
+            Catalogue* _catalogue;
 
         public:
             using value = EntityId;
@@ -36,7 +37,7 @@ namespace NovelRT::Ecs
                           ? catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
                                 currentEntityNode)
                           : catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
-                  _catalogue(catalogue)
+                  _catalogue(&catalogue)
             {
             }
 
@@ -52,12 +53,12 @@ namespace NovelRT::Ecs
                 if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
                     _currentComponentNode =
-                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
                 }
                 else
                 {
                     _currentComponentNode =
-                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
                             _currentEntityNode);
                 }
 
@@ -71,12 +72,12 @@ namespace NovelRT::Ecs
                 if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
                     _currentComponentNode =
-                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
                 }
                 else
                 {
                     _currentComponentNode =
-                        _catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
                             _currentEntityNode);
                 }
 
@@ -124,7 +125,7 @@ namespace NovelRT::Ecs
         SparseSet<EntityId, LinkedEntityListNodeComponent> _changes;
         std::optional<EntityId> _newTailPostDiff;
         std::optional<EntityId> _newBeginPostDiff;
-        Catalogue& _catalogue;
+        Catalogue* _catalogue;
 
         [[nodiscard]] EntityId& UpdateExistingChangesForAddBeforeOperation(
             EntityId& newNode,
@@ -140,16 +141,20 @@ namespace NovelRT::Ecs
 
     public:
         LinkedEntityListView(EntityId node, Catalogue& catalogue) noexcept;
+
+        LinkedEntityListView(LinkedEntityListView&& other) noexcept = default;
+        LinkedEntityListView& operator=(LinkedEntityListView&& other) noexcept = default;
+
         ~LinkedEntityListView();
 
         [[nodiscard]] inline ConstIterator begin() const noexcept
         {
-            return ConstIterator(_begin, _catalogue);
+            return ConstIterator(_begin, *_catalogue);
         }
 
         [[nodiscard]] inline ConstIterator end() const noexcept
         {
-            return ConstIterator(_end, _catalogue);
+            return ConstIterator(_end, *_catalogue);
         }
 
         [[nodiscard]] inline EntityId operator[](size_t index) const noexcept

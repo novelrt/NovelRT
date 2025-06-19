@@ -6,7 +6,9 @@
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SystemScheduler.hpp>
+#include <NovelRT/Maths/Utilities.hpp>
 
+#include <cassert>
 #include <functional>
 
 namespace NovelRT::Ecs
@@ -15,7 +17,7 @@ namespace NovelRT::Ecs
         : _entityCache(1),
           _componentCache(1),
           _workerThreadCount(maximumThreadCount),
-          _currentDelta(0),
+          _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
           _threadAvailabilityMap(0),
           _shouldShutDown(false),
           _threadsAreSpinning(false)

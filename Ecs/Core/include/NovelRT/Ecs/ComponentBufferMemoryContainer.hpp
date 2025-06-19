@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Utilities/Memory.hpp>
 
 #include <functional>
 #include <memory>
@@ -12,8 +14,6 @@
 
 namespace NovelRT::Ecs
 {
-    class SparseSetMemoryContainer;
-
     class ComponentBufferMemoryContainer : public std::enable_shared_from_this<ComponentBufferMemoryContainer>
     {
     private:
@@ -40,7 +40,9 @@ namespace NovelRT::Ecs
 
             inline void CopyDataFromLocation(void* outputLocation) const noexcept
             {
-                NovelRT::Utilities::Memory::Copy(outputLocation, _sizeOfObject, _data, _sizeOfObject);
+                NovelRT::Utilities::Span<const std::byte> source{ static_cast<const std::byte*>(_data), _sizeOfObject };
+                NovelRT::Utilities::Span<std::byte> destination{ static_cast<std::byte*>(outputLocation), _sizeOfObject };
+                NovelRT::Utilities::Memory::Copy(source, destination);
             }
 
             [[nodiscard]] inline const void* GetDataHandle() const noexcept
