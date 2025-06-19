@@ -87,7 +87,7 @@ namespace NovelRT::Ecs
         template<typename T> void RegisterComponentType(T deleteInstructionState, const std::string& serialisedTypeName)
         {
             std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(
-                sizeof(T), &deleteInstructionState,
+                sizeof(T), reinterpret_cast<std::byte*>(&deleteInstructionState),
                 [](auto rootComponent, auto updateComponent, auto) {
                     *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
                 },
