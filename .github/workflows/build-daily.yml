@@ -38,7 +38,11 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - uses: novelrt/setup-cpp@v1
+      - uses: novelrt/setup-cpp@v2
+        id: setup-cpp
+        with:
+          compiler-id: ${{ (runner.os == 'Windows' && 'MSVC') || 'Clang' }}
+
       - uses: novelrt/setup-vulkan@v2
         with:
           version: ${{ matrix.vulkan }}
@@ -48,7 +52,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build
-          key: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
+          key: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}
 
       - name: Setup Visual Studio Developer Command Prompt
         if: ${{ runner.os == 'Windows' }}
