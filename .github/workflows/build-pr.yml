@@ -3,6 +3,7 @@ name: Build PR
 on:
   pull_request:
     paths:
+      - '.github/workflows/build-pr.yml'
       - '**.cpp'
       - '**.hpp'
       - '**/*.cmake'
@@ -88,8 +89,12 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - uses: novelrt/setup-cpp@v1
-      - uses: novelrt/setup-vulkan@v2
+      - uses: novelrt/setup-cpp@v2
+        id: setup-cpp
+        with:
+          compiler-id: ${{ (runner.os == 'Windows' && 'MSVC') || 'Clang' }}
+
+      - uses: novelrt/setup-vulkan@v2.1
         with:
           version: ${{ matrix.vulkan }}
 
@@ -98,27 +103,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: build
-          key: pr${{ github.event.number }}-${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
-
-      - name: Setup Visual Studio Developer Command Prompt
-        if: ${{ runner.os == 'Windows' }}
-        shell: pwsh
-        run: |
-          $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $installationPath = & $vsWhere -prerelease -latest -property installationPath
-          if ($installationPath -and (test-path "$installationPath\Common7\Tools\vsdevcmd.bat")) {
-            & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo -host_arch=amd64 -arch=amd64 && set" | foreach-object {
-              $name, $value = $_ -split '=', 2
-              $currentValue = if (Test-Path -Path "env:\$name") { (Get-Item -Path "env:\$name").Value } else { $null }
-              if ($value -ne $currentValue) {
-                if ($name -eq 'PATH') {
-                  echo "$value" >> "${Env:GITHUB_PATH}"
-                } else {
-                  echo "$name=$value" >> "${Env:GITHUB_ENV}"
-                }
-              }
-            }
-          }
+          key: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-pr${{ github.event.number }}
 
       - name: Generate build system
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
