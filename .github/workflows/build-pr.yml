@@ -94,7 +94,7 @@ jobs:
         with:
           compiler-id: ${{ (runner.os == 'Windows' && 'MSVC') || 'Clang' }}
 
-      - uses: novelrt/setup-vulkan@v2
+      - uses: novelrt/setup-vulkan@v2.1
         with:
           version: ${{ matrix.vulkan }}
 
