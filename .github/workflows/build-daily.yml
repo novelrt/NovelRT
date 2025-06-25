@@ -1,6 +1,10 @@
 name: Daily Build
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/build-daily.yml'
+
   schedule:
     - cron: '0 0 * * *'
 
