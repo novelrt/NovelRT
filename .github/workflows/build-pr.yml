@@ -105,26 +105,6 @@ jobs:
           path: build
           key: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-pr${{ github.event.number }}
 
-      - name: Setup Visual Studio Developer Command Prompt
-        if: ${{ runner.os == 'Windows' }}
-        shell: pwsh
-        run: |
-          $vsWhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $installationPath = & $vsWhere -prerelease -latest -property installationPath
-          if ($installationPath -and (test-path "$installationPath\Common7\Tools\vsdevcmd.bat")) {
-            & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -no_logo -host_arch=amd64 -arch=amd64 && set" | foreach-object {
-              $name, $value = $_ -split '=', 2
-              $currentValue = if (Test-Path -Path "env:\$name") { (Get-Item -Path "env:\$name").Value } else { $null }
-              if ($value -ne $currentValue) {
-                if ($name -eq 'PATH') {
-                  echo "$value" >> "${Env:GITHUB_PATH}"
-                } else {
-                  echo "$name=$value" >> "${Env:GITHUB_ENV}"
-                }
-              }
-            }
-          }
-
       - name: Generate build system
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
 
