@@ -3,6 +3,7 @@ name: Build PR
 on:
   pull_request:
     paths:
+      - '.github/workflows/build-pr.yml'
       - '**.cpp'
       - '**.hpp'
       - '**/*.cmake'
