@@ -11,7 +11,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::Vulk
       main.cpp
 
   RESOURCES
-    PUBLIC
+    PRIVATE
       Resources/Shaders/vulkanrenderfrag.spv
       Resources/Shaders/vulkanrendervert.spv
 )
