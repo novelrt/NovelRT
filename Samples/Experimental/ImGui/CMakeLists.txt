@@ -13,7 +13,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::ImGu
       main.cpp
 
   RESOURCES
-    PUBLIC
+    PRIVATE
       Resources/Fonts/Raleway-Regular.ttf
       Resources/Shaders/imgui_frag.spv
       Resources/Shaders/imgui_vert.spv
