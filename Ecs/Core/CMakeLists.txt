@@ -26,7 +26,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
       include/NovelRT/Ecs/ComponentBufferMemoryContainer.hpp
       include/NovelRT/Ecs/ComponentCache.hpp
       include/NovelRT/Ecs/ComponentView.hpp
-      include/NovelRT/Ecs/Configurator.hpp
       include/NovelRT/Ecs/DefaultComponentTypes.hpp
       include/NovelRT/Ecs/EcsUtils.hpp
       include/NovelRT/Ecs/EntityCache.hpp
