@@ -8,4 +8,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Graphics
   SOURCES
     PRIVATE
       empty.cpp
+
+  HEADERS
+    PUBLIC
+      include/NovelRT/Ecs/Graphics/GraphicsComponents.hpp
 )
