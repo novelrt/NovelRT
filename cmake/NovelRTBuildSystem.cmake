@@ -105,7 +105,13 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   set(resx ${declareModule_RESOURCES_INTERFACE} ${declareModule_RESOURCES_PUBLIC} ${declareModule_RESOURCES_PRIVATE})
   foreach(file IN LISTS resx)
-    configure_file(${file} ${file} COPYONLY)
+    # Copy the resources to their output directory. In the future we may do something more advanced like compiling shaders.
+    add_custom_command(
+      OUTPUT ${file}
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "$<TARGET_FILE_DIR:${cmakeSafeName}>/${file}"
+      MAIN_DEPENDENCY ${file}
+      COMMENT "Copying resource ${file}"
+      DEPENDS_EXPLICIT_ONLY)
   endforeach()
 
   list(TRANSFORM declareModule_RESOURCES_INTERFACE REPLACE "^(.+)$" "$<BUILD_INTERFACE:\\1>")
@@ -127,7 +133,20 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     PRIVATE FILE_SET private_headers
     TYPE HEADERS
     BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
-    FILES ${declareModule_HEADERS_PRIVATE})
+    FILES ${declareModule_HEADERS_PRIVATE}
+
+    INTERFACE FILE_SET interface_resources
+    TYPE HEADERS
+    BASE_DIRS Resources ${declareModule_RESOURCES_BASE_DIRS}
+    FILES ${declareModule_RESOURCES_INTERFACE}
+    PUBLIC FILE_SET public_resources
+    TYPE HEADERS
+    BASE_DIRS Resources ${declareModule_RESOURCES_BASE_DIRS}
+    FILES ${declareModule_RESOURCES_PUBLIC}
+    PRIVATE FILE_SET private_resources
+    TYPE HEADERS
+    BASE_DIRS Resources ${declareModule_RESOURCES_BASE_DIRS}
+    FILES ${declareModule_RESOURCES_PRIVATE})
 
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
@@ -161,7 +180,10 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
     FILE_SET interface_headers DESTINATION include
-    FILE_SET public_headers DESTINATION include)
+    FILE_SET public_headers DESTINATION include
+
+    FILE_SET interface_resources DESTINATION bin
+    FILE_SET public_resources DESTINATION bin)
 endfunction()
 
 endblock()
