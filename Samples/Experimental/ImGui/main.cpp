@@ -299,7 +299,7 @@ int main()
             colourDataStruct.stencil = 0;
 
             std::vector<ClearValue> colourData{colourDataStruct};
-            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
+            currentCmdList->CmdBeginRenderPass(renderPass, context, colourData);
 
             ViewportInfo viewportInfoStruct{};
             viewportInfoStruct.x = 0;

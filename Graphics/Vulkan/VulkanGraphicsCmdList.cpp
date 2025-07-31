@@ -35,18 +35,18 @@ namespace NovelRT::Graphics
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
     VulkanGraphicsCmdList::GraphicsCmdList(
-        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         VkCommandBuffer commandBuffer) noexcept
-        : _context(std::move(context))
+        : _device(std::move(device))
         , _commandBuffer(commandBuffer)
     {
     }
 
     void VulkanGraphicsCmdList::CmdBeginRenderPass(const std::shared_ptr<VulkanGraphicsRenderPass>& targetPass,
+                                                   const std::shared_ptr<VulkanGraphicsContext>& context,
                                                    Utilities::Span<const ClearValue> clearValues)
     {
-        auto device = _context->GetDevice();
-        auto surface = device->GetSurface();
+        auto surface = _device->GetSurface();
 
         VkExtent2D extent2D{};
         extent2D.width = static_cast<uint32_t>(surface->GetWidth());
@@ -76,7 +76,7 @@ namespace NovelRT::Graphics
         VkRenderPassBeginInfo renderPassBeginInfo{};
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.renderPass = targetPass->GetVulkanRenderPass();
-        renderPassBeginInfo.framebuffer = _context->GetVulkanFramebuffer();
+        renderPassBeginInfo.framebuffer = context->GetVulkanFramebuffer();
         renderPassBeginInfo.renderArea = renderArea;
         renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValuesActual.size());
         renderPassBeginInfo.pClearValues = clearValuesActual.data();

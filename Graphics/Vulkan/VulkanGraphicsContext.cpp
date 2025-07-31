@@ -228,7 +228,7 @@ namespace NovelRT::Graphics
                 "Failed to initialise on the VkCommandBuffer instance correctly.", result);
         }
 
-        return std::make_shared<VulkanGraphicsCmdList>(shared_from_this(), GetVulkanCommandBuffer());
+        return std::make_shared<VulkanGraphicsCmdList>(_device, GetVulkanCommandBuffer());
     }
 
     void VulkanGraphicsContext::EndFrame()

@@ -20,6 +20,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsBufferKind.hpp
       include/NovelRT/Graphics/GraphicsCmdList.hpp
+      include/NovelRT/Graphics/GraphicsCmdPool.hpp
       include/NovelRT/Graphics/GraphicsContext.hpp
       include/NovelRT/Graphics/GraphicsDescriptorSet.hpp
       include/NovelRT/Graphics/GraphicsDevice.hpp

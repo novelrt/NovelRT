@@ -22,6 +22,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       VulkanGraphicsBackendTraits.cpp
       VulkanGraphicsBuffer.cpp
       VulkanGraphicsCmdList.cpp
+      VulkanGraphicsCmdPool.cpp
       VulkanGraphicsContext.cpp
       VulkanGraphicsDescriptorSet.cpp
       VulkanGraphicsDevice.cpp
@@ -45,6 +46,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsCmdPool.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
