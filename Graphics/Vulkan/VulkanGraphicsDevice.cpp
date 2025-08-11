@@ -576,43 +576,6 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsDevice::PresentFrame()
     {
-        auto presentCompletionGraphicsFence = _presentCompletionFence.Get();
-        presentCompletionGraphicsFence->Wait();
-        presentCompletionGraphicsFence->Reset();
-
-        auto contextIndex = static_cast<uint32_t>(GetContextIndex());
-        VkSwapchainKHR vulkanSwapchain = GetVulkanSwapchain();
-
-        VkPresentInfoKHR presentInfo{};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-        presentInfo.swapchainCount = 1;
-        presentInfo.pSwapchains = &vulkanSwapchain;
-        presentInfo.pImageIndices = &contextIndex;
-
-        auto context = _contexts.Get()[_contextIndex];
-        auto fence = context->GetFence();
-        Signal(context);
-        fence->Wait();
-        fence->Reset();
-
-        const VkResult presentResult = vkQueuePresentKHR(GetVulkanPresentQueue(), &presentInfo);
-
-        if (presentResult != VK_SUCCESS && presentResult != VK_SUBOPTIMAL_KHR)
-        {
-            throw std::runtime_error("Failed to present the data within the present queue!");
-        }
-
-        const VkResult acquireNextImageResult =
-            vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
-                                  VK_NULL_HANDLE, presentCompletionGraphicsFence->GetVulkanFence(), &contextIndex);
-
-        if (acquireNextImageResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
-                                     std::to_string(acquireNextImageResult));
-        }
-
-        _contextIndex = contextIndex;
     }
 
     void VulkanGraphicsDevice::Signal(const std::shared_ptr<VulkanGraphicsContext>& context)

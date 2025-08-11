@@ -45,6 +45,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/GraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/GraphicsSurfaceKind.hpp
+      include/NovelRT/Graphics/GraphicsSwapchain.hpp
       include/NovelRT/Graphics/GraphicsTexture.hpp
       include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
       include/NovelRT/Graphics/GraphicsTextureCreateInfo.hpp

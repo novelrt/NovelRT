@@ -244,6 +244,8 @@ namespace NovelRT::Graphics
                 "submitted.",
                 endCommandBufferResult);
         }
+
+        GetDevice()->Signal(shared_from_this());
     }
 
     void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
