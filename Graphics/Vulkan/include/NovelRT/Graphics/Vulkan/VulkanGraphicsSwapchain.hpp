@@ -36,6 +36,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept;
 
         VkSwapchainKHR CreateSwapchain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE);
+        void GetSwapchainImages();
 
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility

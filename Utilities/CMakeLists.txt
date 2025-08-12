@@ -17,6 +17,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Utilities
       include/NovelRT/Utilities/Event.hpp
       include/NovelRT/Utilities/Lazy.hpp
       include/NovelRT/Utilities/Macros.hpp
+      include/NovelRT/Utilities/Memory.hpp
+      include/NovelRT/Utilities/ObjectPool.hpp
       include/NovelRT/Utilities/Operators.hpp
       include/NovelRT/Utilities/Paths.hpp
       include/NovelRT/Utilities/Span.hpp

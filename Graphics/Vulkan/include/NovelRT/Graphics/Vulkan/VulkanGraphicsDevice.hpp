@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
@@ -25,21 +26,11 @@ namespace NovelRT::Graphics
     class GraphicsDevice<Vulkan::VulkanGraphicsBackend>
         : public std::enable_shared_from_this<GraphicsDevice<Vulkan::VulkanGraphicsBackend>>
     {
-    public:
-        using iterator =
-            typename std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>::iterator;
-        using const_iterator =
-            typename std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>::const_iterator;
-
     private:
         std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> _adapter;
         std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> _surfaceContext;
 
         NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>>> _presentCompletionFence;
-
-        uint32_t _contextCount;
-        NovelRT::Utilities::Lazy<std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>>
-            _contexts;
 
         Logging::LoggingService _logger;
 
@@ -50,22 +41,13 @@ namespace NovelRT::Graphics
         VkQueue _graphicsQueue;
         VkQueue _presentQueue;
 
-        size_t _contextIndex;
-        VkFormat _vulkanSwapChainFormat;
-        VkExtent2D _swapChainExtent;
-
         bool _isAttachedToResizeEvent;
 
-        NovelRT::Utilities::Lazy<VkSwapchainKHR> _vulkanSwapchain;
-        NovelRT::Utilities::Lazy<std::vector<VkImage>> _swapChainImages;
-        NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>> _renderPass;
+        NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>> _vulkanSwapchain;
 
         Vulkan::QueueFamilyIndices _indicesData;
 
         Threading::VolatileState _state;
-
-        [[nodiscard]] std::vector<std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>>
-        CreateInitialGraphicsContexts(uint32_t contextCount);
 
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
@@ -75,43 +57,15 @@ namespace NovelRT::Graphics
         VkDevice CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions,
                                      std::vector<std::string> optionalDeviceExtensions);
 
-        [[nodiscard]] VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
-            const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept;
-
-        [[nodiscard]] VkPresentModeKHR ChooseSwapPresentMode(
-            const std::vector<VkPresentModeKHR>& availablePresentModes) const noexcept;
-        [[nodiscard]] VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept;
-
-        VkSwapchainKHR CreateSwapChain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE);
-        std::vector<VkImage> GetSwapChainImages();
-
-        VkRenderPass CreateRenderPass();
-
-        void ResizeGraphicsContexts(int32_t newContextCount);
-
     public:
         GraphicsDevice(std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> adapter,
                        std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> surfaceContext,
-                       int32_t contextCount,
                        std::vector<std::string> requiredDeviceExtensions,
                        std::vector<std::string> optionalDeviceExtensions);
 
         ~GraphicsDevice();
 
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> GetAdapter() const;
-
-        size_t GetContextIndex() const noexcept;
-
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] iterator begin() noexcept;
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] const_iterator begin() const noexcept;
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] iterator end() noexcept;
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] const_iterator end() const noexcept;
-
-        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetCurrentContext() const;
 
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
@@ -131,9 +85,6 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges);
 
-        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass();
-        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass() const;
-
         [[nodiscard]] std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
@@ -141,19 +92,14 @@ namespace NovelRT::Graphics
 
         void PresentFrame();
 
+        // TODO: Reimplement the functionality in the source file for this method in the swapchain image.
         void Signal(const std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>& context);
 
         void WaitForIdle();
 
-        [[nodiscard]] VkSwapchainKHR GetVulkanSwapchain() const;
         [[nodiscard]] VkQueue GetVulkanPresentQueue() const noexcept;
         [[nodiscard]] VkQueue GetVulkanGraphicsQueue() const noexcept;
         [[nodiscard]] VkDevice GetVulkanDevice() const;
-        [[nodiscard]] VkRenderPass GetVulkanRenderPass() const;
-        [[nodiscard]] VkExtent2D GetSwapChainExtent() const noexcept;
-        [[nodiscard]] VkFormat GetVulkanSwapChainFormat() const noexcept;
-
-        [[nodiscard]] std::vector<VkImage> GetVulkanSwapChainImages() const;
 
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
 

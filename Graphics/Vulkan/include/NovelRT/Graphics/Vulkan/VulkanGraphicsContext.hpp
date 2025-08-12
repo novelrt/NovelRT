@@ -58,8 +58,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame();
 
-        void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
-
         [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const;
         [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
 
