@@ -140,12 +140,12 @@ namespace NovelRT::Graphics
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = buffers.size();
+        submitInfo.commandBufferCount = static_cast<uint32_t>(buffers.size());
         submitInfo.pCommandBuffers = buffers.data();
 
         // TODO: submit to the correct queue if it's just transfers somehow?
-        const VkResult queueSubmitResult =
-            vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo, _queueSubmissionFence->GetVulkanFence());
+        const VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo,
+                                                         _queueSubmissionFence->GetVulkanFence());
         //
         if (queueSubmitResult != VK_SUCCESS)
         {

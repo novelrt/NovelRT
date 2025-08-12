@@ -15,7 +15,12 @@ namespace NovelRT::Graphics
     using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSwapchainImage = GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>;
 
-    VkFramebuffer CreateVulkanFramebuffer(VkDevice device, VkRenderPass renderPass, VkImageView swapchainImageView, uint32_t width, uint32_t height, uint32_t layers = 1)
+    VkFramebuffer CreateVulkanFramebuffer(VkDevice device,
+                                          VkRenderPass renderPass,
+                                          VkImageView swapchainImageView,
+                                          uint32_t width,
+                                          uint32_t height,
+                                          uint32_t layers = 1)
     {
         VkFramebufferCreateInfo framebufferCreateInfo{};
         framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -74,8 +79,8 @@ namespace NovelRT::Graphics
         renderPassCreateInfo.dependencyCount = 1;
 
         VkRenderPass returnRenderPass = VK_NULL_HANDLE;
-        VkResult renderPassResult =
-            vkCreateRenderPass(image->GetDevice()->GetVulkanDevice(), &renderPassCreateInfo, nullptr, &returnRenderPass);
+        VkResult renderPassResult = vkCreateRenderPass(image->GetDevice()->GetVulkanDevice(), &renderPassCreateInfo,
+                                                       nullptr, &returnRenderPass);
 
         if (renderPassResult != VK_SUCCESS)
         {
@@ -86,11 +91,15 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsRenderPass::GraphicsRenderPass(
-        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> target)
-        : _context(std::move(context)),
+        : _device(std::move(device)),
           _vulkanRenderPass(CreateRenderPass(target)),
-          _vulkanFrameBuffer(CreateVulkanFramebuffer(target->GetDevice()->GetVulkanDevice(), _vulkanRenderPass, target->GetVulkanImageView(), target->GetWidth(), target->GetHeight()))
+          _vulkanFrameBuffer(CreateVulkanFramebuffer(target->GetDevice()->GetVulkanDevice(),
+                                                     _vulkanRenderPass,
+                                                     target->GetVulkanImageView(),
+                                                     target->GetWidth(),
+                                                     target->GetHeight()))
     {
     }
 
@@ -102,12 +111,7 @@ namespace NovelRT::Graphics
 
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsRenderPass::GetDevice() const
     {
-        return _context->GetDevice();
-    }
-
-    std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsRenderPass::GetContext() const
-    {
-        return _context;
+        return _device;
     }
 
     VkRenderPass VulkanGraphicsRenderPass::GetVulkanRenderPass() const noexcept

@@ -33,7 +33,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] uint32_t GetVendorId() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> CreateDevice(
-            const std::shared_ptr<GraphicsSurfaceContext<TBackend>>& surfaceContext,
-            int32_t contextCount);
+            const std::shared_ptr<GraphicsSurfaceContext<TBackend>>& surfaceContext);
     };
 }

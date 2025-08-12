@@ -195,7 +195,7 @@ namespace NovelRT::Graphics
         _logger.logInfoLine("Provided GPU device: " + _adapter->GetName());
         unused(_state.Transition(Threading::VolatileState::Initialised));
 
-        _surfaceContext->GetSurface()->SizeChanged += [this](auto arg){ OnGraphicsSurfaceSizeChanged(arg); };
+        _surfaceContext->GetSurface()->SizeChanged += [this](auto arg) { OnGraphicsSurfaceSizeChanged(arg); };
     }
 
     VulkanGraphicsDevice::~GraphicsDevice()
@@ -258,7 +258,7 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
-    void VulkanGraphicsDevice::BeginFrame()
+    std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDevice::BeginFrame()
     {
         auto swapchain = _vulkanSwapchain.Get();
         auto image = swapchain->AcquireNextImage();
@@ -268,6 +268,8 @@ namespace NovelRT::Graphics
             swapchain->RecreateSwapchain();
             image = swapchain->AcquireNextImage();
         }
+
+        return image;
     }
 
     void VulkanGraphicsDevice::PresentFrame()
