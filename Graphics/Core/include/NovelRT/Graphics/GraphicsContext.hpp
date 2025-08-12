@@ -21,13 +21,13 @@ namespace NovelRT::Graphics
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<TBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsContext<TBackend>> shared_from_this() const;
 
         GraphicsContext() = delete;
         ~GraphicsContext() override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept;
-
-        [[nodiscard]] size_t GetIndex() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> CreateRenderPass();
 
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
         void EndFrame();

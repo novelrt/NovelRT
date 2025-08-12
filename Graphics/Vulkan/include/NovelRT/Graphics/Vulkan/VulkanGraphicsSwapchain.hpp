@@ -7,7 +7,6 @@
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <vector>
 #include <vulkan/vulkan.h>
-#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -43,9 +42,11 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
         GraphicsSwapchain(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice);
-        ~GraphicsSwapchain() noexcept;
+        ~GraphicsSwapchain() noexcept final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
+
+        [[nodiscard]] VkFormat GetVulkanFormat() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> AcquireNextImage();
         [[nodiscard]] bool Present();

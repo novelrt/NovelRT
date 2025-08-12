@@ -183,6 +183,11 @@ namespace NovelRT::Graphics
         return _device;
     }
 
+    VkFormat GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetVulkanFormat() const
+    {
+        return _vulkanSwapchainFormat;
+    }
+
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<
         Vulkan::VulkanGraphicsBackend>::AcquireNextImage()
     {
