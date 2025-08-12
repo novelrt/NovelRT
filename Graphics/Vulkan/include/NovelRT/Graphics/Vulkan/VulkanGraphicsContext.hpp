@@ -32,12 +32,10 @@ namespace NovelRT::Graphics
                  std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
                  std::owner_less<>>
             _vulkanDescriptorSets;
-        std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
 
         mutable NovelRT::Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
         mutable NovelRT::Utilities::Lazy<VkFramebuffer> _vulkanFramebuffer;
-        mutable NovelRT::Utilities::Lazy<VkImageView> _vulkanSwapChainImageView;
 
         Threading::VolatileState _state;
 
@@ -53,7 +51,6 @@ namespace NovelRT::Graphics
         ~GraphicsContext() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
-        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
         [[nodiscard]] size_t GetIndex() const noexcept;
 

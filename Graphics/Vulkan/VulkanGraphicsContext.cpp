@@ -154,11 +154,9 @@ namespace NovelRT::Graphics
         : _device(std::move(device)),
           _index(index),
           _vulkanDescriptorSets(),
-          _fence(std::make_shared<VulkanGraphicsFence>(_device, /* isSignaled*/ false)),
           _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); }),
           _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); }),
-          _vulkanFramebuffer([this]() { return CreateVulkanFramebuffer(this); }),
-          _vulkanSwapChainImageView([this]() { return CreateVulkanSwapChainImageView(this); })
+          _vulkanFramebuffer([this]() { return CreateVulkanFramebuffer(this); })
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
     }
@@ -173,13 +171,6 @@ namespace NovelRT::Graphics
             VkFramebuffer framebuffer = _vulkanFramebuffer.Get();
             vkDestroyFramebuffer(device, framebuffer, nullptr);
             _vulkanFramebuffer.Reset();
-        }
-
-        if (_vulkanSwapChainImageView.HasValue())
-        {
-            VkImageView imageView = _vulkanSwapChainImageView.Get();
-            vkDestroyImageView(device, imageView, nullptr);
-            _vulkanSwapChainImageView.Reset();
         }
 
         if (_vulkanCommandBuffer.HasValue() && _vulkanCommandPool.HasValue())
@@ -201,11 +192,6 @@ namespace NovelRT::Graphics
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsContext::GetDevice() const
     {
         return _device;
-    }
-
-    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsContext::GetFence() const noexcept
-    {
-        return _fence;
     }
 
     size_t VulkanGraphicsContext::GetIndex() const noexcept
@@ -258,13 +244,6 @@ namespace NovelRT::Graphics
             _vulkanFramebuffer.Reset();
         }
 
-        if (_vulkanSwapChainImageView.HasValue())
-        {
-            VkImageView imageView = _vulkanSwapChainImageView.Get();
-            vkDestroyImageView(device, imageView, nullptr);
-            _vulkanSwapChainImageView.Reset();
-        }
-
         if (_vulkanCommandBuffer.HasValue() && _vulkanCommandPool.HasValue())
         {
             VkCommandBuffer commandBuffer = _vulkanCommandBuffer.Get();
@@ -285,17 +264,15 @@ namespace NovelRT::Graphics
     {
         return _vulkanCommandBuffer.Get();
     }
+
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
     {
         return _vulkanCommandPool.Get();
     }
+
     VkFramebuffer VulkanGraphicsContext::GetVulkanFramebuffer() const
     {
         return _vulkanFramebuffer.Get();
-    }
-    VkImageView VulkanGraphicsContext::GetVulkanSwapChainImageView() const
-    {
-        return _vulkanSwapChainImageView.Get();
     }
 
     void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature,
