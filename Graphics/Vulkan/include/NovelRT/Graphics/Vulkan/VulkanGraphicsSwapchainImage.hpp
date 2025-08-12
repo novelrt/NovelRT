@@ -38,7 +38,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkImage GetImage() const noexcept;
         [[nodiscard]] VkImageView GetImageView() const noexcept;
 
-        // TODO: FINISH THIS: std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>
+        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateContext();
         void SubmitQueuesFromContexts();
     };
 }

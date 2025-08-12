@@ -71,13 +71,19 @@ namespace NovelRT::Graphics
         return _device;
     }
 
-    [[nodiscard]] VkImage GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetImage() const noexcept
+    VkImage GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetImage() const noexcept
     {
         return _image;
     }
 
-    [[nodiscard]] VkImageView GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetImageView() const noexcept
+    VkImageView GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetImageView() const noexcept
     {
         return _imageView;
+    }
+
+    std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
+        Vulkan::VulkanGraphicsBackend>::CreateContext()
+    {
+        return nullptr;
     }
 }
