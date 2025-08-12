@@ -46,12 +46,10 @@ namespace NovelRT::Graphics
         [[nodiscard]] uint32_t GetVendorId() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> CreateDevice(
-            const std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>& surfaceContext,
-            int32_t contextCount);
+            const std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>& surfaceContext);
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> CreateDevice(
             const std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>& surfaceContext,
-            int32_t contextCount,
             std::vector<std::string> requiredDeviceExtensions,
             std::vector<std::string> optionalDeviceExtensions);
     };

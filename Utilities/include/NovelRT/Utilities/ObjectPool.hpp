@@ -20,14 +20,20 @@ namespace NovelRT::Utilities
         std::reference_wrapper<ObjectPool<T>> _owningPool;
 
     public:
-        ObjectPoolRef(std::shared_ptr<T> object, ObjectPool<T>& owningPool) noexcept
-            : _object(std::move(object)), _owningPool(owningPool)
+        ObjectPoolRef(std::shared_ptr<T>&& object, ObjectPool<T>& owningPool) noexcept
+            : _object(std::move(object)), _owningPool(std::ref(owningPool))
         {
         }
 
+        ObjectPoolRef(const ObjectPoolRef&) = delete;
+        ObjectPoolRef& operator=(const ObjectPoolRef&) = delete;
+
+        ObjectPoolRef(ObjectPoolRef&&) = default;
+        ObjectPoolRef& operator=(ObjectPoolRef&&) = default;
+
         ~ObjectPoolRef() noexcept
         {
-            _owningPool.Return(this);
+            _owningPool.get().Return(this);
         }
 
         T& operator*() const noexcept
@@ -54,6 +60,11 @@ namespace NovelRT::Utilities
     template<typename T>
     class ObjectPool
     {
+    public:
+        using size_type = typename std::deque<std::shared_ptr<T>>::size_type;
+        using iterator = typename std::deque<std::shared_ptr<T>>::iterator;
+        using const_iterator = typename std::deque<std::shared_ptr<T>>::const_iterator;
+
     private:
         std::deque<std::shared_ptr<T>> _objects;
         std::function<std::shared_ptr<T>()> _factory;
@@ -70,7 +81,9 @@ namespace NovelRT::Utilities
                 _objects.emplace_back(_factory());
             }
 
-            return ObjectPoolRef<T>(_objects.pop_front(), *this);
+            auto ptr = _objects.front();
+            _objects.pop_front();
+            return ObjectPoolRef<T>(std::move(ptr), *this);
         }
 
         void Return(ObjectPoolRef<T>* ref)
@@ -81,6 +94,36 @@ namespace NovelRT::Utilities
             }
 
             _objects.emplace_back(ref->GetObject());
+        }
+
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] size_type size() const noexcept
+        {
+            return _objects.size();
+        }
+
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] iterator begin() noexcept
+        {
+            return _objects.begin();
+        }
+
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] const_iterator begin() const noexcept
+        {
+            return _objects.begin();
+        }
+
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] iterator end() noexcept
+        {
+            return _objects.end();
+        }
+
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        [[nodiscard]] const_iterator end() const noexcept
+        {
+            return _objects.end();
         }
     };
 }

@@ -187,7 +187,6 @@ namespace NovelRT::Graphics
                   { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); }),
           _graphicsQueue(VK_NULL_HANDLE),
           _presentQueue(VK_NULL_HANDLE),
-          _isAttachedToResizeEvent(false),
           _vulkanSwapchain(
               [this]()
               { return std::make_shared<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>(shared_from_this()); }),
@@ -195,6 +194,8 @@ namespace NovelRT::Graphics
     {
         _logger.logInfoLine("Provided GPU device: " + _adapter->GetName());
         unused(_state.Transition(Threading::VolatileState::Initialised));
+
+        _surfaceContext->GetSurface()->SizeChanged += [this](auto arg){ OnGraphicsSurfaceSizeChanged(arg); };
     }
 
     VulkanGraphicsDevice::~GraphicsDevice()
@@ -257,28 +258,26 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
-    void VulkanGraphicsDevice::PresentFrame()
+    void VulkanGraphicsDevice::BeginFrame()
     {
+        auto swapchain = _vulkanSwapchain.Get();
+        auto image = swapchain->AcquireNextImage();
+
+        if (image == nullptr)
+        {
+            swapchain->RecreateSwapchain();
+            image = swapchain->AcquireNextImage();
+        }
     }
 
-    void VulkanGraphicsDevice::Signal(const std::shared_ptr<VulkanGraphicsContext>& /*context*/)
+    void VulkanGraphicsDevice::PresentFrame()
     {
-        // VkCommandBuffer commandBuffer = context->GetVulkanCommandBuffer();
-        //
-        // VkSubmitInfo submitInfo{};
-        // submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        // submitInfo.commandBufferCount = 1;
-        // submitInfo.pCommandBuffers = &commandBuffer;
-        //
-        //// auto executeGraphicsFence = GetWaitForExecuteCompletionFence();
-        //
-        // const VkResult queueSubmitResult =
-        //    vkQueueSubmit(GetVulkanGraphicsQueue(), 1, &submitInfo, context->GetFence()->GetVulkanFence());
-        //
-        // if (queueSubmitResult != VK_SUCCESS)
-        //{
-        //    throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
-        //}
+        auto swapchain = _vulkanSwapchain.Get();
+
+        if (!swapchain->Present())
+        {
+            swapchain->RecreateSwapchain();
+        }
     }
 
     void VulkanGraphicsDevice::WaitForIdle()

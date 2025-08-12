@@ -4,6 +4,7 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <mutex>
@@ -67,11 +68,13 @@ namespace NovelRT::Graphics
         uint32_t width,
         uint32_t height)
         : _swapchain(std::move(swapchain)),
+          _queueSubmissionFence(std::make_shared<GraphicsFence<Vulkan::VulkanGraphicsBackend>>(GetDevice(), false)),
           _image(image),
           _imageView(CreateVulkanSwapChainImageView(_swapchain, _image)),
           _width(width),
           _height(height),
-          _contextPool([this]() { return CreateGraphicsContext(); })
+          _contextPool([this]() { return CreateGraphicsContext(); }),
+          _contextMutex()
     {
     }
 
@@ -123,5 +126,30 @@ namespace NovelRT::Graphics
     {
         std::lock_guard<tbb::mutex> contextGuard(_contextMutex);
         return _contextPool.Get();
+    }
+
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::SubmitQueuesFromContexts()
+    {
+        std::vector<VkCommandBuffer> buffers;
+        buffers.reserve(_contextPool.size());
+        for (auto&& context : _contextPool)
+        {
+            if (context->_vulkanCommandBuffer.HasValue())
+                buffers.push_back(context->GetVulkanCommandBuffer());
+        }
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = buffers.size();
+        submitInfo.pCommandBuffers = buffers.data();
+
+        // TODO: submit to the correct queue if it's just transfers somehow?
+        const VkResult queueSubmitResult =
+            vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo, _queueSubmissionFence->GetVulkanFence());
+        //
+        if (queueSubmitResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
+        }
     }
 }

@@ -42,6 +42,8 @@ namespace NovelRT::Graphics
 
         void DestroyDescriptorSets();
 
+        friend void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::SubmitQueuesFromContexts();
+
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this();
