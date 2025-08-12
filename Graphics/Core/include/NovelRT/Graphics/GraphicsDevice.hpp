@@ -36,6 +36,8 @@ namespace NovelRT::Graphics
     class GraphicsPipelineSignature;
     template<typename TBackend>
     class ShaderProgram;
+    template<typename TBackend>
+    class GraphicsSwapchainImage;
 
     template<typename TBackend>
     class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
@@ -66,7 +68,7 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
-        void BeginFrame();
+        [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
         void PresentFrame();
 
         void WaitForIdle();

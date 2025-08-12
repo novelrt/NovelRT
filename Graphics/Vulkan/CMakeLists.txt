@@ -31,6 +31,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       VulkanGraphicsPipelineSignature.cpp
       VulkanGraphicsProvider.cpp
       VulkanGraphicsRenderPass.cpp
+      VulkanGraphicsRenderTarget.cpp
       VulkanGraphicsResource.cpp
       VulkanGraphicsResourceMemoryRegion.cpp
       VulkanGraphicsSurfaceContext.cpp
@@ -56,6 +57,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp

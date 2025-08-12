@@ -40,6 +40,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/GraphicsProvider.hpp
       include/NovelRT/Graphics/GraphicsPushConstantRange.hpp
       include/NovelRT/Graphics/GraphicsRenderPass.hpp
+      include/NovelRT/Graphics/GraphicsRenderTarget.hpp
       include/NovelRT/Graphics/GraphicsResource.hpp
       include/NovelRT/Graphics/GraphicsResourceAccess.hpp
       include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
