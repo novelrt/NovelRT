@@ -74,7 +74,7 @@ namespace NovelRT::Graphics
         VkRenderPassBeginInfo renderPassBeginInfo{};
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.renderPass = targetPass->GetVulkanRenderPass();
-        renderPassBeginInfo.framebuffer = _context->GetVulkanFramebuffer();
+        renderPassBeginInfo.framebuffer = targetPass->GetVulkanFramebuffer();
         renderPassBeginInfo.renderArea = renderArea;
         renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValuesActual.size());
         renderPassBeginInfo.pClearValues = clearValuesActual.data();

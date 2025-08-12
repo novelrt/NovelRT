@@ -41,25 +41,10 @@ namespace NovelRT::Graphics
     class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice<TBackend>>
     {
     public:
-        using iterator = typename std::vector<std::shared_ptr<GraphicsContext<TBackend>>>::iterator;
-        using const_iterator = typename std::vector<std::shared_ptr<GraphicsContext<TBackend>>>::const_iterator;
-
         GraphicsDevice() = delete;
 
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
 
-        [[nodiscard]] size_t GetContextIndex() const noexcept;
-
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] iterator begin() noexcept;
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] const_iterator begin() const noexcept;
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] iterator end() noexcept;
-        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
-        [[nodiscard]] const_iterator end() const noexcept;
-
-        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetCurrentContext() const;
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
 
@@ -76,16 +61,13 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<GraphicsPipelineResource> resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange> pushConstantRanges);
 
-        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> GetRenderPass();
-
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> CreateShaderProgram(
             std::string entryPointName,
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
+        void BeginFrame();
         void PresentFrame();
-
-        void Signal(const std::shared_ptr<GraphicsContext<TBackend>>& context);
 
         void WaitForIdle();
     };

@@ -126,7 +126,7 @@ namespace NovelRT::Graphics
 
     std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsContext::CreateRenderPass()
     {
-        return std::make_shared<VulkanGraphicsRenderPass>();
+        return std::make_shared<VulkanGraphicsRenderPass>(shared_from_this(), _swapchainImage);
     }
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
@@ -160,8 +160,6 @@ namespace NovelRT::Graphics
                 "submitted.",
                 endCommandBufferResult);
         }
-
-        GetDevice()->Signal(shared_from_this());
     }
 
     VkCommandBuffer VulkanGraphicsContext::GetVulkanCommandBuffer() const

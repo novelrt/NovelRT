@@ -241,6 +241,7 @@ namespace NovelRT::Graphics
 
     bool GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::Present()
     {
+        // Wait for the previous frame's present to complete
         auto presentCompletionGraphicsFence = GetDevice()->GetPresentCompletionFence();
         presentCompletionGraphicsFence->Wait();
         presentCompletionGraphicsFence->Reset();
@@ -254,19 +255,19 @@ namespace NovelRT::Graphics
         presentInfo.pSwapchains = &vulkanSwapchain;
         presentInfo.pImageIndices = &currentImageIndex;
 
-        // TODO: What am I supposed to be doing with this stuff?
+        // Wait for the swapchain's submit to complete
         auto context = _swapchainImages[_currentImageIndex];
         auto fence = context->GetQueueSubmissionFence();
         fence->Wait();
         fence->Reset();
 
         const VkResult presentResult = vkQueuePresentKHR(GetDevice()->GetVulkanPresentQueue(), &presentInfo);
-
         if (presentResult != VK_SUCCESS && presentResult != VK_SUBOPTIMAL_KHR)
         {
-            throw std::runtime_error("Failed to present the data within the present queue!");
+            return false;
         }
-        return false;
+
+        return true;
     }
 
     void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::RecreateSwapchain()

@@ -41,8 +41,6 @@ namespace NovelRT::Graphics
         VkQueue _graphicsQueue;
         VkQueue _presentQueue;
 
-        bool _isAttachedToResizeEvent;
-
         NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>> _vulkanSwapchain;
 
         Vulkan::QueueFamilyIndices _indicesData;
@@ -90,10 +88,8 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
+        void BeginFrame();
         void PresentFrame();
-
-        // TODO: Reimplement the functionality in the source file for this method in the swapchain image.
-        void Signal(const std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>>& context);
 
         void WaitForIdle();
 
