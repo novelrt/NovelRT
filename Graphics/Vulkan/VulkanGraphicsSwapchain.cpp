@@ -145,8 +145,43 @@ namespace NovelRT::Graphics
         _vulkanSwapchainFormat = surfaceFormat.format;
         _swapchainExtent = extent;
 
+        GetSwapchainImages();
+
         _logger.logInfoLine("VkSwapchainKHR successfully created.");
         return vulkanSwapchain;
+    }
+
+    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages()
+    {
+        VkDevice device = GetDevice()->GetVulkanDevice();
+        VkSwapchainKHR vulkanSwapchain = _swapchain;
+
+        uint32_t imageCount = 0;
+        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, nullptr);
+
+        if (imagesKHRQuery != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
+                                                             imagesKHRQuery);
+        }
+
+        _swapchainImages.clear();
+        _swapchainImages.reserve(imageCount);
+
+        std::vector<VkImage> swapchainImages = std::vector<VkImage>(imageCount);
+        imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapchainImages.data());
+
+        if (imagesKHRQuery != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
+                                                             imagesKHRQuery);
+        }
+
+        for (auto&& image : swapchainImages)
+        {
+            _swapchainImages.push_back(std::make_shared<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>(
+                shared_from_this(), image, _swapchainExtent.width, _swapchainExtent.height));
+        }
     }
 
     // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
@@ -219,8 +254,9 @@ namespace NovelRT::Graphics
         presentInfo.pSwapchains = &vulkanSwapchain;
         presentInfo.pImageIndices = &currentImageIndex;
 
+        // TODO: What am I supposed to be doing with this stuff?
         auto context = _swapchainImages[_currentImageIndex];
-        auto fence = context->GetFence();
+        auto fence = context->GetQueueSubmissionFence();
         fence->Wait();
         fence->Reset();
 

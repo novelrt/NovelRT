@@ -14,6 +14,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
@@ -41,17 +42,7 @@ namespace NovelRT::Graphics
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
     using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
 
-    std::vector<std::shared_ptr<VulkanGraphicsContext>> VulkanGraphicsDevice::CreateInitialGraphicsContexts(
-        uint32_t contextCount)
-    {
-        std::vector<std::shared_ptr<VulkanGraphicsContext>> contexts(contextCount);
-        std::generate(contexts.begin(), contexts.end(), [this, i = 0]() mutable
-                      { return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i++); });
-
-        return contexts;
-    }
-
-    void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F newSize)
+    void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F /*newSize*/)
     {
         auto presentCompletionGraphicsFence = GetPresentCompletionFence();
         presentCompletionGraphicsFence->Wait();
@@ -59,18 +50,7 @@ namespace NovelRT::Graphics
 
         if (_vulkanSwapchain.HasValue())
         {
-            _vulkanSwapchain.Reset(CreateSwapChain(_vulkanSwapchain.Get()));
-        }
-        else
-        {
-            _vulkanSwapchain.Reset(CreateSwapChain());
-        }
-
-        _swapChainImages.Reset(GetSwapChainImages());
-
-        for (auto&& context : _contexts.Get())
-        {
-            context->OnGraphicsSurfaceSizeChanged(newSize);
+            _vulkanSwapchain.Get()->RecreateSwapchain();
         }
     }
 
@@ -193,229 +173,24 @@ namespace NovelRT::Graphics
         return device;
     }
 
-    VkSurfaceFormatKHR VulkanGraphicsDevice::ChooseSwapSurfaceFormat(
-        const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept
-    {
-        VkSurfaceFormatKHR returnFormat{};
-        returnFormat.format = VK_FORMAT_UNDEFINED;
-
-        for (const auto& availableFormat : availableFormats)
-        {
-            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM ||
-                availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM)
-            {
-                if (returnFormat.format != VK_FORMAT_R8G8B8A8_UINT)
-                {
-                    returnFormat = availableFormat;
-                }
-            }
-        }
-
-        if (returnFormat.format == VK_FORMAT_UNDEFINED)
-        {
-            _logger.logWarningLine(
-                "Vulkan was unable to detect one of the preferred VkFormats for the specified surface. The first "
-                "format found is now being used. This may result in unexpected behaviour.");
-
-            returnFormat = availableFormats[0];
-        }
-        else
-        {
-            _logger.logInfo("Preferred VkFormat detected.");
-        }
-
-        return returnFormat;
-    }
-
-    // TODO: freesync and gsync support will go here in a later PR.
-    // NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this will likely need extra data in the future
-    VkPresentModeKHR VulkanGraphicsDevice::ChooseSwapPresentMode(
-        const std::vector<VkPresentModeKHR>& /*availablePresentModes*/) const noexcept
-    {
-        return VK_PRESENT_MODE_FIFO_KHR;
-    }
-
-    VkExtent2D VulkanGraphicsDevice::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept
-    {
-        if (capabilities.currentExtent.width != UINT32_MAX)
-        {
-            return capabilities.currentExtent;
-        }
-
-        auto surface = GetSurface();
-        auto localSize = surface->GetSize();
-
-        VkExtent2D actualExtent = {static_cast<uint32_t>(localSize.x), static_cast<uint32_t>(localSize.y)};
-
-        actualExtent.width = std::max(capabilities.minImageExtent.width,
-                                      std::min(capabilities.maxImageExtent.width, actualExtent.width));
-        actualExtent.height = std::max(capabilities.minImageExtent.height,
-                                       std::min(capabilities.maxImageExtent.height, actualExtent.height));
-
-        return actualExtent;
-    }
-
-    VkSwapchainKHR VulkanGraphicsDevice::CreateSwapChain(VkSwapchainKHR oldSwapchain)
-    {
-        auto swapChainSupport = Vulkan::Utilities::QuerySwapChainSupport(_adapter->GetPhysicalDevice(),
-                                                                         _surfaceContext->GetSurfaceContextHandle());
-
-        VkSurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
-        VkPresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
-        uint32_t imageCount = swapChainSupport.capabilities.minImageCount +
-                              1; // this variable gets re-used for the actual image count later
-
-        if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
-        {
-            imageCount = swapChainSupport.capabilities.maxImageCount;
-        }
-
-        VkSwapchainCreateInfoKHR createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        createInfo.surface = _surface;
-        createInfo.minImageCount = imageCount;
-        createInfo.imageFormat = surfaceFormat.format;
-        createInfo.imageColorSpace = surfaceFormat.colorSpace;
-        createInfo.imageExtent = extent;
-        createInfo.imageArrayLayers = 1;
-        createInfo.imageUsage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-
-        auto indices = Vulkan::Utilities::FindQueueFamilies(_adapter->GetPhysicalDevice(), _surface);
-        std::array<uint32_t, 2> queueFamilyIndices{indices.graphicsFamily.value(), indices.presentFamily.value()};
-
-        if (indices.graphicsFamily != indices.presentFamily)
-        {
-            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-            createInfo.queueFamilyIndexCount = 2;
-            createInfo.pQueueFamilyIndices = queueFamilyIndices.data();
-        }
-        else
-        {
-            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-            createInfo.queueFamilyIndexCount = 0;
-            createInfo.pQueueFamilyIndices = nullptr;
-        }
-
-        createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
-        createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-        createInfo.presentMode = presentMode;
-        createInfo.clipped = VK_TRUE;
-        createInfo.oldSwapchain = oldSwapchain;
-
-        VkSwapchainKHR vulkanSwapchain = VK_NULL_HANDLE;
-        VkResult swapChainResult = vkCreateSwapchainKHR(GetVulkanDevice(), &createInfo, nullptr, &vulkanSwapchain);
-        if (swapChainResult != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to create the VkSwapchainKHR.", swapChainResult);
-        }
-
-        if (oldSwapchain != VK_NULL_HANDLE)
-        {
-            vkDestroySwapchainKHR(GetVulkanDevice(), oldSwapchain, nullptr);
-        }
-
-        _vulkanSwapChainFormat = surfaceFormat.format;
-        _swapChainExtent = extent;
-
-        _logger.logInfoLine("VkSwapchainKHR successfully created.");
-        return vulkanSwapchain;
-    }
-
-    std::vector<VkImage> VulkanGraphicsDevice::GetSwapChainImages()
-    {
-        VkDevice device = GetVulkanDevice();
-        VkSwapchainKHR vulkanSwapchain = GetVulkanSwapchain();
-
-        uint32_t imageCount;
-        VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, nullptr);
-
-        if (imagesKHRQuery != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
-                                                             imagesKHRQuery);
-        }
-
-        ResizeGraphicsContexts(imageCount);
-
-        std::vector<VkImage> swapChainImages = std::vector<VkImage>(imageCount);
-        imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapChainImages.data());
-
-        if (imagesKHRQuery != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to retrieve the VkImages from the VkSwapchainKHR.",
-                                                             imagesKHRQuery);
-        }
-
-        auto presentCompletionGraphicsFence = _presentCompletionFence.Get();
-
-        uint32_t contextIndex = 0;
-        VkResult acquireNextImageResult =
-            vkAcquireNextImageKHR(GetVulkanDevice(), vulkanSwapchain, std::numeric_limits<uint64_t>::max(),
-                                  VK_NULL_HANDLE, presentCompletionGraphicsFence->GetVulkanFence(), &contextIndex);
-
-        if (acquireNextImageResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
-                                     std::to_string(acquireNextImageResult));
-        }
-        presentCompletionGraphicsFence->Wait();
-
-        if (!_isAttachedToResizeEvent)
-        {
-            _isAttachedToResizeEvent = true;
-            auto surface = GetSurface();
-            surface->SizeChanged += [&](auto args) { OnGraphicsSurfaceSizeChanged(args); };
-        }
-
-        _contextIndex = contextIndex;
-
-        _logger.logInfoLine("VkImages successfully retrieved.");
-        return swapChainImages;
-    }
-
-
-
-    void VulkanGraphicsDevice::ResizeGraphicsContexts(int32_t newContextCount)
-    {
-        _contextCount = newContextCount;
-        auto& contexts = _contexts.Get();
-        if (static_cast<int32_t>(contexts.size()) == newContextCount)
-        {
-            return;
-        }
-
-        const size_t oldSize = contexts.size();
-        contexts.resize(newContextCount);
-
-        std::generate(contexts.begin() + oldSize, contexts.end(), [this, i = oldSize]() mutable
-                      { return std::make_shared<VulkanGraphicsContext>(shared_from_this(), i); });
-    }
-
     VulkanGraphicsDevice::GraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
                                          std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
-                                         int32_t contextCount,
                                          std::vector<std::string> requiredDeviceExtensions,
                                          std::vector<std::string> optionalDeviceExtensions)
         : _adapter(std::move(adapter)),
           _surfaceContext(std::move(surfaceContext)),
           _presentCompletionFence(
               [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
-          _contextCount(contextCount),
-          _contexts([this]() { return CreateInitialGraphicsContexts(_contextCount); }),
           _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
           _surface(_surfaceContext->GetSurfaceContextHandle()),
           _device([this, requiredDeviceExtensions, optionalDeviceExtensions]()
                   { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); }),
           _graphicsQueue(VK_NULL_HANDLE),
           _presentQueue(VK_NULL_HANDLE),
-          _contextIndex(0),
-          _vulkanSwapChainFormat(VkFormat{}),
-          _swapChainExtent(VkExtent2D{}),
           _isAttachedToResizeEvent(false),
-          _vulkanSwapchain([this]() { return CreateSwapChain(); }),
-          _swapChainImages([this]() { return GetSwapChainImages(); }),
-          _renderPass([this]() { return std::make_shared<VulkanGraphicsRenderPass>(CreateRenderPass()); }),
+          _vulkanSwapchain(
+              [this]()
+              { return std::make_shared<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>(shared_from_this()); }),
           _indicesData{}
     {
         _logger.logInfoLine("Provided GPU device: " + _adapter->GetName());
@@ -426,7 +201,6 @@ namespace NovelRT::Graphics
     {
         if (_vulkanSwapchain.HasValue())
         {
-            vkDestroySwapchainKHR(GetVulkanDevice(), GetVulkanSwapchain(), nullptr);
             _vulkanSwapchain.Reset();
         }
 
@@ -442,36 +216,6 @@ namespace NovelRT::Graphics
     [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const
     {
         return _adapter;
-    }
-
-    size_t VulkanGraphicsDevice::GetContextIndex() const noexcept
-    {
-        return _contextIndex;
-    }
-
-    VulkanGraphicsDevice::iterator VulkanGraphicsDevice::begin() noexcept
-    {
-        return _contexts.Get().begin();
-    }
-
-    VulkanGraphicsDevice::const_iterator VulkanGraphicsDevice::begin() const noexcept
-    {
-        return _contexts.Get().begin();
-    }
-
-    VulkanGraphicsDevice::iterator VulkanGraphicsDevice::end() noexcept
-    {
-        return _contexts.Get().end();
-    }
-
-    VulkanGraphicsDevice::const_iterator VulkanGraphicsDevice::end() const noexcept
-    {
-        return _contexts.Get().end();
-    }
-
-    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::GetCurrentContext() const
-    {
-        return _contexts.Get()[GetContextIndex()];
     }
 
     std::shared_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
@@ -513,38 +257,28 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
-    std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass()
-    {
-        return _renderPass.Get();
-    }
-
-    std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::GetRenderPass() const
-    {
-        return _renderPass.Get();
-    }
-
     void VulkanGraphicsDevice::PresentFrame()
     {
     }
 
-    void VulkanGraphicsDevice::Signal(const std::shared_ptr<VulkanGraphicsContext>& context)
+    void VulkanGraphicsDevice::Signal(const std::shared_ptr<VulkanGraphicsContext>& /*context*/)
     {
-        VkCommandBuffer commandBuffer = context->GetVulkanCommandBuffer();
-
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandBuffer;
-
-        // auto executeGraphicsFence = GetWaitForExecuteCompletionFence();
-
-        const VkResult queueSubmitResult =
-            vkQueueSubmit(GetVulkanGraphicsQueue(), 1, &submitInfo, context->GetFence()->GetVulkanFence());
-
-        if (queueSubmitResult != VK_SUCCESS)
-        {
-            throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
-        }
+        // VkCommandBuffer commandBuffer = context->GetVulkanCommandBuffer();
+        //
+        // VkSubmitInfo submitInfo{};
+        // submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        // submitInfo.commandBufferCount = 1;
+        // submitInfo.pCommandBuffers = &commandBuffer;
+        //
+        //// auto executeGraphicsFence = GetWaitForExecuteCompletionFence();
+        //
+        // const VkResult queueSubmitResult =
+        //    vkQueueSubmit(GetVulkanGraphicsQueue(), 1, &submitInfo, context->GetFence()->GetVulkanFence());
+        //
+        // if (queueSubmitResult != VK_SUCCESS)
+        //{
+        //    throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
+        //}
     }
 
     void VulkanGraphicsDevice::WaitForIdle()
@@ -556,11 +290,6 @@ namespace NovelRT::Graphics
             throw std::runtime_error("The VkDevice did not idle correctly! Reason: " +
                                      std::to_string(waitForIdleResult));
         }
-    }
-
-    VkSwapchainKHR VulkanGraphicsDevice::GetVulkanSwapchain() const
-    {
-        return _vulkanSwapchain.Get();
     }
 
     VkQueue VulkanGraphicsDevice::GetVulkanPresentQueue() const noexcept
@@ -576,26 +305,6 @@ namespace NovelRT::Graphics
     VkDevice VulkanGraphicsDevice::GetVulkanDevice() const
     {
         return _device.Get();
-    }
-
-    VkRenderPass VulkanGraphicsDevice::GetVulkanRenderPass() const
-    {
-        return _renderPass.Get()->GetVulkanRenderPass();
-    }
-
-    VkExtent2D VulkanGraphicsDevice::GetSwapChainExtent() const noexcept
-    {
-        return _swapChainExtent;
-    }
-
-    VkFormat VulkanGraphicsDevice::GetVulkanSwapChainFormat() const noexcept
-    {
-        return _vulkanSwapChainFormat;
-    }
-
-    std::vector<VkImage> VulkanGraphicsDevice::GetVulkanSwapChainImages() const
-    {
-        return _swapChainImages.Get();
     }
 
     const Vulkan::QueueFamilyIndices& VulkanGraphicsDevice::GetIndicesData() const noexcept

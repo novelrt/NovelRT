@@ -87,7 +87,8 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<const VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
 
-    VulkanGraphicsContext::GraphicsContext(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) noexcept
+    VulkanGraphicsContext::GraphicsContext(
+        std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) noexcept
         : _swapchainImage(std::move(image)),
           _vulkanDescriptorSets(),
           _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); }),
@@ -161,26 +162,6 @@ namespace NovelRT::Graphics
         }
 
         GetDevice()->Signal(shared_from_this());
-    }
-
-    void VulkanGraphicsContext::OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F /*newSize*/)
-    {
-        VkDevice device = GetDevice()->GetVulkanDevice();
-
-        if (_vulkanCommandBuffer.HasValue() && _vulkanCommandPool.HasValue())
-        {
-            VkCommandBuffer commandBuffer = _vulkanCommandBuffer.Get();
-            VkCommandPool pool = _vulkanCommandPool.Get();
-            vkFreeCommandBuffers(device, pool, 1, &commandBuffer);
-            _vulkanCommandBuffer.Reset();
-        }
-
-        if (_vulkanCommandPool.HasValue())
-        {
-            VkCommandPool pool = _vulkanCommandPool.Get();
-            vkDestroyCommandPool(device, pool, nullptr);
-            _vulkanCommandPool.Reset();
-        }
     }
 
     VkCommandBuffer VulkanGraphicsContext::GetVulkanCommandBuffer() const

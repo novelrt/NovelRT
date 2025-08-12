@@ -4,9 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
-
+#include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <memory>
-
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
@@ -33,9 +32,8 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        explicit GraphicsRenderPass(
-            std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
-            std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> target);
+        explicit GraphicsRenderPass(std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+                                    std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> target);
         ~GraphicsRenderPass() noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;

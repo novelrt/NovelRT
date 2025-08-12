@@ -6,11 +6,14 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
+#include <mutex>
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics
 {
-    VkImageView CreateVulkanSwapChainImageView(std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain, VkImage image)
+    VkImageView CreateVulkanSwapChainImageView(
+        std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain,
+        VkImage image)
     {
         VkComponentMapping componentMapping{};
         componentMapping.r = VK_COMPONENT_SWIZZLE_R;
@@ -32,7 +35,8 @@ namespace NovelRT::Graphics
         swapChainImageViewCreateInfo.subresourceRange = subresourceRange;
 
         VkImageView swapChainImageView = VK_NULL_HANDLE;
-        VkResult result = vkCreateImageView(swapchain->GetDevice()->GetVulkanDevice(), &swapChainImageViewCreateInfo, nullptr, &swapChainImageView);
+        VkResult result = vkCreateImageView(swapchain->GetDevice()->GetVulkanDevice(), &swapChainImageViewCreateInfo,
+                                            nullptr, &swapChainImageView);
 
         if (result != VK_SUCCESS)
         {
@@ -41,6 +45,12 @@ namespace NovelRT::Graphics
         }
 
         return swapChainImageView;
+    }
+
+    std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
+        Vulkan::VulkanGraphicsBackend>::CreateGraphicsContext()
+    {
+        return std::make_shared<GraphicsContext<Vulkan::VulkanGraphicsBackend>>(shared_from_this());
     }
 
     // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
@@ -53,12 +63,15 @@ namespace NovelRT::Graphics
 
     GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchainImage(
         std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain,
-        VkImage image, uint32_t width, uint32_t height)
+        VkImage image,
+        uint32_t width,
+        uint32_t height)
         : _swapchain(std::move(swapchain)),
           _image(image),
           _imageView(CreateVulkanSwapChainImageView(_swapchain, _image)),
           _width(width),
-          _height(height)
+          _height(height),
+          _contextPool([this]() { return CreateGraphicsContext(); })
     {
     }
 
@@ -77,6 +90,12 @@ namespace NovelRT::Graphics
         Vulkan::VulkanGraphicsBackend>::GetSwapchain() const
     {
         return _swapchain;
+    }
+
+    std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
+        Vulkan::VulkanGraphicsBackend>::GetQueueSubmissionFence() const noexcept
+    {
+        return _queueSubmissionFence;
     }
 
     VkImage GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetVulkanImage() const noexcept
@@ -99,9 +118,10 @@ namespace NovelRT::Graphics
         return _height;
     }
 
-    std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
-        Vulkan::VulkanGraphicsBackend>::CreateContext()
+    Utilities::ObjectPoolRef<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
+        Vulkan::VulkanGraphicsBackend>::CreateOrGetContext()
     {
-        return std::make_shared<GraphicsContext<Vulkan::VulkanGraphicsBackend>>(shared_from_this());
+        std::lock_guard<tbb::mutex> contextGuard(_contextMutex);
+        return _contextPool.Get();
     }
 }
