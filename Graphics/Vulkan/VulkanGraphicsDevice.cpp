@@ -374,58 +374,7 @@ namespace NovelRT::Graphics
         return swapChainImages;
     }
 
-    VkRenderPass VulkanGraphicsDevice::CreateRenderPass()
-    {
-        VkRenderPass returnRenderPass;
 
-        // The swap chain needs to be created first to ensure we know the format
-        VkSwapchainKHR vulkanSwapchain = GetVulkanSwapchain();
-        unused(vulkanSwapchain);
-
-        VkAttachmentDescription attachmentDescription{};
-        attachmentDescription.format = _vulkanSwapChainFormat;
-        attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-        attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-        VkAttachmentReference colourAttachmentReference{};
-        colourAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-        VkSubpassDescription subpass{};
-        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        subpass.colorAttachmentCount = 1;
-        subpass.pColorAttachments = &colourAttachmentReference;
-
-        VkSubpassDependency dependency = {};
-        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-        dependency.dstSubpass = 0;
-        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        dependency.srcAccessMask = 0;
-        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-        VkRenderPassCreateInfo renderPassCreateInfo{};
-        renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassCreateInfo.attachmentCount = 1;
-        renderPassCreateInfo.pAttachments = &attachmentDescription;
-        renderPassCreateInfo.subpassCount = 1;
-        renderPassCreateInfo.pSubpasses = &subpass;
-        renderPassCreateInfo.pDependencies = &dependency;
-        renderPassCreateInfo.dependencyCount = 1;
-
-        VkResult renderPassResult =
-            vkCreateRenderPass(GetVulkanDevice(), &renderPassCreateInfo, nullptr, &returnRenderPass);
-
-        if (renderPassResult != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException("Failed to create the VkRenderPass.", renderPassResult);
-        }
-
-        _logger.logInfoLine("Successfully created the VkRenderPass.");
-        return returnRenderPass;
-    }
 
     void VulkanGraphicsDevice::ResizeGraphicsContexts(int32_t newContextCount)
     {

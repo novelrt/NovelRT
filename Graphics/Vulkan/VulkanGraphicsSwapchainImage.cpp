@@ -2,16 +2,16 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics
 {
-    VkImageView CreateVulkanSwapChainImageView(VkDevice device, VkImage image, VkFormat format)
+    VkImageView CreateVulkanSwapChainImageView(std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain, VkImage image)
     {
-        VkImageView swapChainImageView = VK_NULL_HANDLE;
-
         VkComponentMapping componentMapping{};
         componentMapping.r = VK_COMPONENT_SWIZZLE_R;
         componentMapping.g = VK_COMPONENT_SWIZZLE_G;
@@ -27,11 +27,12 @@ namespace NovelRT::Graphics
         swapChainImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         swapChainImageViewCreateInfo.image = image;
         swapChainImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        swapChainImageViewCreateInfo.format = format;
+        swapChainImageViewCreateInfo.format = swapchain->GetVulkanFormat();
         swapChainImageViewCreateInfo.components = componentMapping;
         swapChainImageViewCreateInfo.subresourceRange = subresourceRange;
 
-        VkResult result = vkCreateImageView(device, &swapChainImageViewCreateInfo, nullptr, &swapChainImageView);
+        VkImageView swapChainImageView = VK_NULL_HANDLE;
+        VkResult result = vkCreateImageView(swapchain->GetDevice()->GetVulkanDevice(), &swapChainImageViewCreateInfo, nullptr, &swapChainImageView);
 
         if (result != VK_SUCCESS)
         {
@@ -51,12 +52,13 @@ namespace NovelRT::Graphics
     }
 
     GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchainImage(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice,
-        VkImage image)
-        : _device(std::move(graphicsDevice)),
+        std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain,
+        VkImage image, uint32_t width, uint32_t height)
+        : _swapchain(std::move(swapchain)),
           _image(image),
-          _imageView(
-              CreateVulkanSwapChainImageView(_device->GetVulkanDevice(), _image, _device->GetVulkanSwapChainFormat()))
+          _imageView(CreateVulkanSwapChainImageView(_swapchain, _image)),
+          _width(width),
+          _height(height)
     {
     }
 
@@ -68,22 +70,38 @@ namespace NovelRT::Graphics
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
         Vulkan::VulkanGraphicsBackend>::GetDevice() const
     {
-        return _device;
+        return _swapchain->GetDevice();
     }
 
-    VkImage GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetImage() const noexcept
+    std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
+        Vulkan::VulkanGraphicsBackend>::GetSwapchain() const
+    {
+        return _swapchain;
+    }
+
+    VkImage GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetVulkanImage() const noexcept
     {
         return _image;
     }
 
-    VkImageView GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetImageView() const noexcept
+    VkImageView GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetVulkanImageView() const noexcept
     {
         return _imageView;
+    }
+
+    uint32_t GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetWidth() const noexcept
+    {
+        return _width;
+    }
+
+    uint32_t GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetHeight() const noexcept
+    {
+        return _height;
     }
 
     std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
         Vulkan::VulkanGraphicsBackend>::CreateContext()
     {
-        return nullptr;
+        return std::make_shared<GraphicsContext<Vulkan::VulkanGraphicsBackend>>(shared_from_this());
     }
 }

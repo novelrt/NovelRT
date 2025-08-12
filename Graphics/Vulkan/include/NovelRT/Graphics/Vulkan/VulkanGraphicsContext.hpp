@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
@@ -20,12 +21,13 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
+
     template<>
     class GraphicsContext<Vulkan::VulkanGraphicsBackend> final
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> _swapchainImage;
         size_t _index;
 
         std::map<std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
@@ -35,7 +37,6 @@ namespace NovelRT::Graphics
 
         mutable NovelRT::Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
-        mutable NovelRT::Utilities::Lazy<VkFramebuffer> _vulkanFramebuffer;
 
         Threading::VolatileState _state;
 
@@ -47,12 +48,12 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
+        GraphicsContext(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) noexcept;
         ~GraphicsContext() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
-        [[nodiscard]] size_t GetIndex() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> CreateRenderPass();
 
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame();
@@ -61,8 +62,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const;
         [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
-        [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
-        [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
 
         void RegisterDescriptorSetForFrame(
             std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
