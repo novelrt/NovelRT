@@ -29,6 +29,8 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class GraphicsRenderPass;
     template<typename TBackend>
+    class GraphicsRenderTarget;
+    template<typename TBackend>
     class GraphicsPipelineSignature;
     template<template<typename> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion;
@@ -71,6 +73,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept;
 
         void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<TBackend>>& targetPass,
+                                const std::shared_ptr<GraphicsRenderTarget<TBackend>>& renderTarget,
                                 Utilities::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();

@@ -7,6 +7,7 @@
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <vector>
 #include <vulkan/vulkan.h>
+#include <NovelRT/Utilities/Lazy.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -21,7 +22,7 @@ namespace NovelRT::Graphics
     {
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
-        VkSwapchainKHR _swapchain;
+        Utilities::Lazy<VkSwapchainKHR> _swapchain;
         std::vector<std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>> _swapchainImages;
         uint32_t _currentImageIndex;
         Logging::LoggingService _logger;
@@ -36,7 +37,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const noexcept;
 
         VkSwapchainKHR CreateSwapchain(VkSwapchainKHR oldSwapchain = VK_NULL_HANDLE);
-        void GetSwapchainImages();
+        void GetSwapchainImages(VkSwapchainKHR swapchain);
 
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility

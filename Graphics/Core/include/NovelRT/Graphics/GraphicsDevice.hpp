@@ -5,6 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsPipelineBlendFactor.hpp>
 #include <NovelRT/Graphics/GraphicsPushConstantRange.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Graphics/ShaderProgramKind.hpp>
@@ -54,6 +55,7 @@ namespace NovelRT::Graphics
             std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
             std::shared_ptr<ShaderProgram<TBackend>> vertexShader,
             std::shared_ptr<ShaderProgram<TBackend>> pixelShader,
+            std::shared_ptr<GraphicsRenderPass<TBackend>> renderPass,
             bool imguiRenderMode = false);
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> CreatePipelineSignature(
@@ -72,5 +74,8 @@ namespace NovelRT::Graphics
         void PresentFrame();
 
         void WaitForIdle();
+
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> CreateRenderPass(
+            const GraphicsRenderPassDescription& description);
     };
 }

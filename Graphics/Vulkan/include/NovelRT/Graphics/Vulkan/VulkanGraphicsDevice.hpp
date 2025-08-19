@@ -74,6 +74,7 @@ namespace NovelRT::Graphics
             std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
             std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
             std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
+            std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> renderPass,
             bool imguiRenderMode);
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> CreatePipelineSignature(
@@ -100,5 +101,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetPresentCompletionFence() const;
+
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> CreateRenderPass(
+            const GraphicsRenderPassDescription& description);
     };
 }

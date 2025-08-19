@@ -5,7 +5,6 @@
 
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <memory>
-#include <stdexcept>
 
 namespace NovelRT::Graphics
 {

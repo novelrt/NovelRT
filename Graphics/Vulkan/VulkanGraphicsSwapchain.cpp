@@ -11,6 +11,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics
 {
@@ -145,16 +146,16 @@ namespace NovelRT::Graphics
         _vulkanSwapchainFormat = surfaceFormat.format;
         _swapchainExtent = extent;
 
-        GetSwapchainImages();
+        GetSwapchainImages(vulkanSwapchain);
 
         _logger.logInfoLine("VkSwapchainKHR successfully created.");
         return vulkanSwapchain;
     }
 
-    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages()
+    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages(VkSwapchainKHR swapchain)
     {
         VkDevice device = GetDevice()->GetVulkanDevice();
-        VkSwapchainKHR vulkanSwapchain = _swapchain;
+        VkSwapchainKHR vulkanSwapchain = swapchain;
 
         uint32_t imageCount = 0;
         VkResult imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, nullptr);
@@ -195,20 +196,19 @@ namespace NovelRT::Graphics
     GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchain(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice)
         : _device(std::move(graphicsDevice)),
-          _swapchain(VK_NULL_HANDLE),
+          _swapchain([this]() { return CreateSwapchain(); }),
           _currentImageIndex(0ULL),
           _logger(Logging::CONSOLE_LOG_GFX),
           _vulkanSwapchainFormat(VK_FORMAT_UNDEFINED),
           _swapchainExtent{}
     {
-        CreateSwapchain();
     }
 
     GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::~GraphicsSwapchain() noexcept
     {
-        if (_swapchain != VK_NULL_HANDLE)
+        if (_swapchain.HasValue())
         {
-            vkDestroySwapchainKHR(GetDevice()->GetVulkanDevice(), _swapchain, nullptr);
+            vkDestroySwapchainKHR(GetDevice()->GetVulkanDevice(), _swapchain.Get(), nullptr);
         }
     }
 
@@ -227,7 +227,7 @@ namespace NovelRT::Graphics
         Vulkan::VulkanGraphicsBackend>::AcquireNextImage()
     {
         const VkResult acquireNextImageResult = vkAcquireNextImageKHR(
-            GetDevice()->GetVulkanDevice(), _swapchain, std::numeric_limits<uint64_t>::max(), VK_NULL_HANDLE,
+            GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(), VK_NULL_HANDLE,
             GetDevice()->GetPresentCompletionFence()->GetVulkanFence(), &_currentImageIndex);
 
         if (acquireNextImageResult != VK_SUCCESS)
@@ -235,8 +235,8 @@ namespace NovelRT::Graphics
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
-
-        return nullptr;
+    
+        return  _swapchainImages[_currentImageIndex];
     }
 
     bool GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::Present()
@@ -247,7 +247,7 @@ namespace NovelRT::Graphics
         presentCompletionGraphicsFence->Reset();
 
         auto currentImageIndex = _currentImageIndex;
-        VkSwapchainKHR vulkanSwapchain = _swapchain;
+        VkSwapchainKHR vulkanSwapchain = _swapchain.Get();
 
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -272,6 +272,6 @@ namespace NovelRT::Graphics
 
     void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::RecreateSwapchain()
     {
-        CreateSwapchain(_swapchain);
+        _swapchain.Reset(CreateSwapchain(_swapchain.HasValue() ? _swapchain.Get() : VK_NULL_HANDLE));
     }
 }

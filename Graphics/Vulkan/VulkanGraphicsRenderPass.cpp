@@ -9,49 +9,110 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Texel.hpp>
+#include <algorithm>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics
 {
     using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSwapchainImage = GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>;
 
-    VkFramebuffer CreateVulkanFramebuffer(VkDevice device,
-                                          VkRenderPass renderPass,
-                                          VkImageView swapchainImageView,
-                                          uint32_t width,
-                                          uint32_t height,
-                                          uint32_t layers = 1)
+    VkRenderPass CreateRenderPass(const GraphicsRenderPassDescription& description, VkDevice device)
     {
-        VkFramebufferCreateInfo framebufferCreateInfo{};
-        framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferCreateInfo.renderPass = renderPass;
-        framebufferCreateInfo.attachmentCount = 1;
-        framebufferCreateInfo.pAttachments = &swapchainImageView;
-        framebufferCreateInfo.width = width;
-        framebufferCreateInfo.height = height;
-        framebufferCreateInfo.layers = layers;
+        std::vector<VkAttachmentDescription> attachmentDescriptions(description.attachmentDescriptions.size());
 
-        VkFramebuffer vulkanFramebuffer = VK_NULL_HANDLE;
-        const VkResult result = vkCreateFramebuffer(device, &framebufferCreateInfo, nullptr, &vulkanFramebuffer);
+        std::transform(description.attachmentDescriptions.begin(), description.attachmentDescriptions.end(),
+                       attachmentDescriptions.begin(),
+                       [](const GraphicsAttachmentDescription& x)
+                       {
+                           VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 
-        if (result != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException(
-                "Failed to initialise the VkFramebuffer instance with the given parameters and VkDevice.", result);
-        }
+                           switch (x.loadOp)
+                           {
+                               case LoadOp::Load:
+                                   loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                                   break;
+                               case LoadOp::Clear:
+                                   loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                                   break;
+                               case LoadOp::DontCare:
+                                   loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                                   break;
+                           }
 
-        return vulkanFramebuffer;
-    }
+                           VkAttachmentLoadOp stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 
-    VkRenderPass CreateRenderPass(std::shared_ptr<VulkanGraphicsSwapchainImage> image)
-    {
-        VkAttachmentDescription attachmentDescription{};
-        attachmentDescription.format = image->GetSwapchain()->GetVulkanFormat();
-        attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-        attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                           switch (x.stencilLoadOp)
+                           {
+                               case LoadOp::Load:
+                                   stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                                   break;
+                               case LoadOp::Clear:
+                                   stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                                   break;
+                               case LoadOp::DontCare:
+                                   stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                                   break;
+                           }
+
+                           VkAttachmentStoreOp storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+
+                           if (x.storeOp != StoreOp::Store)
+                           {
+                               storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                           }
+
+                           VkAttachmentStoreOp stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+
+                           if (x.stencilStoreOp != StoreOp::Store)
+                           {
+                               stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                           }
+
+                           VkImageLayout initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+                           switch (x.initialLayout)
+                           {
+                            case ImageLayout::Undefined:
+                                initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                                break;
+                            case ImageLayout::Optimal:
+                                initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+                                break;
+                            case ImageLayout::Present:
+                                initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                                break;
+                           }
+
+                           VkImageLayout finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+                           switch (x.finalLayout)
+                           {
+                            case ImageLayout::Undefined:
+                                finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                                break;
+                            case ImageLayout::Optimal:
+                                finalLayout = VK_IMAGE_LAYOUT_GENERAL;
+                                break;
+                            case ImageLayout::Present:
+                                finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                                break;
+                           }
+
+                           VkAttachmentDescription attachmentDescription{};
+                           attachmentDescription.format = Vulkan::Utilities::Map(x.texelFormat);
+                           attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
+                           attachmentDescription.loadOp = loadOp;
+                           attachmentDescription.storeOp = storeOp;
+                           attachmentDescription.stencilLoadOp = stencilLoadOp;
+                           attachmentDescription.stencilStoreOp = stencilStoreOp;
+                           attachmentDescription.initialLayout = initialLayout;
+                           attachmentDescription.finalLayout = finalLayout;
+
+                           return attachmentDescription;
+                       });
 
         VkAttachmentReference colourAttachmentReference{};
         colourAttachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
@@ -71,16 +132,15 @@ namespace NovelRT::Graphics
 
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassCreateInfo.attachmentCount = 1;
-        renderPassCreateInfo.pAttachments = &attachmentDescription;
+        renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachmentDescriptions.size());
+        renderPassCreateInfo.pAttachments = attachmentDescriptions.data();
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &subpass;
         renderPassCreateInfo.pDependencies = &dependency;
         renderPassCreateInfo.dependencyCount = 1;
 
         VkRenderPass returnRenderPass = VK_NULL_HANDLE;
-        VkResult renderPassResult = vkCreateRenderPass(image->GetDevice()->GetVulkanDevice(), &renderPassCreateInfo,
-                                                       nullptr, &returnRenderPass);
+        VkResult renderPassResult = vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &returnRenderPass);
 
         if (renderPassResult != VK_SUCCESS)
         {
@@ -90,23 +150,15 @@ namespace NovelRT::Graphics
         return returnRenderPass;
     }
 
-    VulkanGraphicsRenderPass::GraphicsRenderPass(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> target)
-        : _device(std::move(device)),
-          _vulkanRenderPass(CreateRenderPass(target)),
-          _vulkanFrameBuffer(CreateVulkanFramebuffer(target->GetDevice()->GetVulkanDevice(),
-                                                     _vulkanRenderPass,
-                                                     target->GetVulkanImageView(),
-                                                     target->GetWidth(),
-                                                     target->GetHeight()))
+    VulkanGraphicsRenderPass::GraphicsRenderPass(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                                 const GraphicsRenderPassDescription& description)
+        : _device(std::move(device)), _vulkanRenderPass(CreateRenderPass(description, _device->GetVulkanDevice()))
     {
     }
 
     VulkanGraphicsRenderPass::~GraphicsRenderPass() noexcept
     {
         vkDestroyRenderPass(GetDevice()->GetVulkanDevice(), _vulkanRenderPass, nullptr);
-        vkDestroyFramebuffer(GetDevice()->GetVulkanDevice(), _vulkanFrameBuffer, nullptr);
     }
 
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsRenderPass::GetDevice() const
@@ -117,10 +169,5 @@ namespace NovelRT::Graphics
     VkRenderPass VulkanGraphicsRenderPass::GetVulkanRenderPass() const noexcept
     {
         return _vulkanRenderPass;
-    }
-
-    VkFramebuffer VulkanGraphicsRenderPass::GetVulkanFramebuffer() const noexcept
-    {
-        return _vulkanFrameBuffer;
     }
 }

@@ -8,7 +8,6 @@
 #include <NovelRT/Graphics/GraphicsResourceAccess.hpp>
 
 #include <cstddef>
-#include <cstdint>
 
 namespace NovelRT::Graphics
 {
