@@ -15,6 +15,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <vulkan/vulkan.h>
@@ -29,6 +30,7 @@ namespace NovelRT::Graphics
     using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsPipelineSignature = GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsRenderTarget = GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend>;
     template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
@@ -40,6 +42,7 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsCmdList::CmdBeginRenderPass(const std::shared_ptr<VulkanGraphicsRenderPass>& targetPass,
+                                                   const std::shared_ptr<VulkanGraphicsRenderTarget>& renderTarget,
                                                    Utilities::Span<const ClearValue> clearValues)
     {
         auto device = _context->GetDevice();
@@ -74,7 +77,7 @@ namespace NovelRT::Graphics
         VkRenderPassBeginInfo renderPassBeginInfo{};
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.renderPass = targetPass->GetVulkanRenderPass();
-        renderPassBeginInfo.framebuffer = targetPass->GetVulkanFramebuffer();
+        renderPassBeginInfo.framebuffer = renderTarget->GetVulkanFramebuffer();
         renderPassBeginInfo.renderArea = renderArea;
         renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValuesActual.size());
         renderPassBeginInfo.pClearValues = clearValuesActual.data();

@@ -124,11 +124,6 @@ namespace NovelRT::Graphics
         return _swapchainImage->GetDevice();
     }
 
-    std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsContext::CreateRenderPass()
-    {
-        return std::make_shared<VulkanGraphicsRenderPass>(shared_from_this(), _swapchainImage);
-    }
-
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
     {
         DestroyDescriptorSets();

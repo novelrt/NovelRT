@@ -33,8 +33,10 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetContext() const noexcept;
 
-        void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
-                                Utilities::Span<const ClearValue> clearValues);
+        void CmdBeginRenderPass(
+            const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
+            const std::shared_ptr<GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend>>& renderTarget,
+            Utilities::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();
 

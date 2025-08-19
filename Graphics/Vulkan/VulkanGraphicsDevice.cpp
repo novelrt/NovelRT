@@ -13,6 +13,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
@@ -241,10 +242,11 @@ namespace NovelRT::Graphics
         std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
         std::shared_ptr<VulkanShaderProgram> vertexShader,
         std::shared_ptr<VulkanShaderProgram> pixelShader,
+        std::shared_ptr<VulkanGraphicsRenderPass> renderPass,
         bool imguiRenderMode)
     {
         return std::make_shared<VulkanGraphicsPipeline>(shared_from_this(), signature, std::move(vertexShader),
-                                                        std::move(pixelShader), imguiRenderMode);
+                                                        std::move(pixelShader), renderPass, imguiRenderMode);
     }
 
     std::shared_ptr<VulkanGraphicsPipelineSignature> VulkanGraphicsDevice::CreatePipelineSignature(
@@ -263,7 +265,7 @@ namespace NovelRT::Graphics
         auto swapchain = _vulkanSwapchain.Get();
         auto image = swapchain->AcquireNextImage();
 
-        if (image == nullptr)
+        while (image == nullptr)
         {
             swapchain->RecreateSwapchain();
             image = swapchain->AcquireNextImage();
@@ -316,5 +318,11 @@ namespace NovelRT::Graphics
     std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsDevice::GetPresentCompletionFence() const
     {
         return _presentCompletionFence.Get();
+    }
+
+    std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::CreateRenderPass(
+        const GraphicsRenderPassDescription& description)
+    {
+        return std::make_shared<VulkanGraphicsRenderPass>(shared_from_this(), description);
     }
 }

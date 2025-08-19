@@ -23,6 +23,9 @@ namespace NovelRT::Graphics::Vulkan::Utilities
             case TexelFormat::R16G16UINT:
                 returnFormat = VK_FORMAT_R16G16_UINT;
                 break;
+            case TexelFormat::B8G8R8A8_UNORM:
+                returnFormat = VK_FORMAT_B8G8R8A8_UNORM;
+                break;
             default:
                 returnFormat = VK_FORMAT_UNDEFINED;
                 break;
