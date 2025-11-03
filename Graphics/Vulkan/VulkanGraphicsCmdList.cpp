@@ -8,7 +8,7 @@
 #include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
@@ -35,9 +35,9 @@ namespace NovelRT::Graphics
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsCmdList::GraphicsCmdList(std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+    VulkanGraphicsCmdList::GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
                                            VkCommandBuffer commandBuffer) noexcept
-        : _context(std::move(context)), _commandBuffer(commandBuffer)
+        : _device(std::move(device)), _commandBuffer(commandBuffer)
     {
     }
 
@@ -45,8 +45,7 @@ namespace NovelRT::Graphics
                                                    const std::shared_ptr<VulkanGraphicsRenderTarget>& renderTarget,
                                                    Utilities::Span<const ClearValue> clearValues)
     {
-        auto device = _context->GetDevice();
-        auto surface = device->GetSurface();
+        auto surface = _device->GetSurface();
 
         VkExtent2D extent2D{};
         extent2D.width = static_cast<uint32_t>(surface->GetWidth());

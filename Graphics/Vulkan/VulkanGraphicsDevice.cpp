@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
@@ -30,6 +31,7 @@ namespace NovelRT::Graphics
 {
     using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsCmdList = GraphicsCmdList<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsContext = GraphicsContext<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
@@ -42,6 +44,48 @@ namespace NovelRT::Graphics
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
     using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
+
+    VkCommandPool CreateVulkanCommandPool(VulkanGraphicsDevice* device)
+    {
+        VkCommandPool vulkanCommandPool = VK_NULL_HANDLE;
+
+        VkCommandPoolCreateInfo commandPoolCreateInfo{};
+        commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        commandPoolCreateInfo.queueFamilyIndex = device->GetIndicesData().graphicsFamily.value();
+
+        const VkResult result =
+        vkCreateCommandPool(device->GetVulkanDevice(), &commandPoolCreateInfo, nullptr, &vulkanCommandPool);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException(
+                "Failed to initialise the VkCommandPool instance with the given parameters and VkDevice.", result);
+        }
+
+        return vulkanCommandPool;
+    }
+
+    VkCommandBuffer CreateVulkanCommandBuffer(VulkanGraphicsDevice* device)
+    {
+        VkCommandBuffer vulkanCommandBuffer = VK_NULL_HANDLE;
+
+        VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
+        commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferAllocateInfo.commandPool = device->GetVulkanCommandPool();
+        commandBufferAllocateInfo.commandBufferCount = 1;
+
+        VkResult result =
+        vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InitialisationFailureException(
+                "Failed to initialise the VkCommandBuffer instance with the given parameters and VkDevice.", result);
+        }
+
+        return vulkanCommandBuffer;
+    }
 
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F /*newSize*/)
     {
@@ -176,6 +220,7 @@ namespace NovelRT::Graphics
                                          std::vector<std::string> optionalDeviceExtensions)
         : _adapter(std::move(adapter)),
           _surfaceContext(std::move(surfaceContext)),
+          _commandPool([this]() { return CreateVulkanCommandPool(this); }),
           _presentCompletionFence(
               [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
           _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
@@ -256,6 +301,12 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
+    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsDevice::CreateCmdList()
+    {
+        auto buffer = CreateVulkanCommandBuffer(this);
+        return std::make_shared<VulkanGraphicsCmdList>(shared_from_this(), buffer);
+    }
+
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDevice::BeginFrame()
     {
         auto swapchain = _vulkanSwapchain.Get();
@@ -304,6 +355,12 @@ namespace NovelRT::Graphics
     VkDevice VulkanGraphicsDevice::GetVulkanDevice() const
     {
         return _device.Get();
+    }
+
+
+    VkCommandPool VulkanGraphicsDevice::GetVulkanCommandPool() const
+    {
+        return _commandPool.Get();
     }
 
     const Vulkan::QueueFamilyIndices& VulkanGraphicsDevice::GetIndicesData() const noexcept

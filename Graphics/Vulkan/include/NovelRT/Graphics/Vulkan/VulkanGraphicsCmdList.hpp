@@ -22,16 +22,16 @@ namespace NovelRT::Graphics
         : std::enable_shared_from_this<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>
     {
     private:
-        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _context;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkCommandBuffer _commandBuffer;
 
     public:
-        GraphicsCmdList(std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
+        GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> context,
                         VkCommandBuffer commandBuffer) noexcept;
 
         ~GraphicsCmdList() = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
 
         void CmdBeginRenderPass(
             const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
