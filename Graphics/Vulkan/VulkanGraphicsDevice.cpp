@@ -41,6 +41,7 @@ namespace NovelRT::Graphics
     template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsSwapchain = GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
     using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
 
@@ -217,6 +218,11 @@ namespace NovelRT::Graphics
         return _adapter;
     }
 
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsSwapchain> VulkanGraphicsDevice::GetSwapchain() const
+    {
+        return _vulkanSwapchain.Get();
+    }
+
     std::shared_ptr<IGraphicsSurface> VulkanGraphicsDevice::GetSurface() const noexcept
     {
         return _surfaceContext->GetSurface();
@@ -257,6 +263,11 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContext()
+    {
+        return std::make_shared<VulkanGraphicsContext>(shared_from_this());
+    }
+
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDevice::BeginFrame()
     {
         auto swapchain = _vulkanSwapchain.Get();
@@ -269,6 +280,25 @@ namespace NovelRT::Graphics
         }
 
         return image;
+    }
+
+    void VulkanGraphicsDevice::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
+    {
+        std::vector<VkCommandBuffer> buffers;
+        buffers.emplace_back(cmdList->GetVkCommandBuffer());
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = static_cast<uint32_t>(buffers.size());
+        submitInfo.pCommandBuffers = buffers.data();
+
+        // TODO: submit to the correct queue if it's just transfers somehow?
+        const VkResult queueSubmitResult = vkQueueSubmit(GetVulkanGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+        //
+        if (queueSubmitResult != VK_SUCCESS)
+        {
+            throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
+        }
     }
 
     void VulkanGraphicsDevice::PresentFrame()

@@ -33,6 +33,8 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
 
+        [[nodiscard]] VkCommandBuffer GetVkCommandBuffer();
+
         void CmdBeginRenderPass(
             const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
             const std::shared_ptr<GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend>>& renderTarget,

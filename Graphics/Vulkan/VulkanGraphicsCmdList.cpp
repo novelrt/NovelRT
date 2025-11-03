@@ -41,6 +41,16 @@ namespace NovelRT::Graphics
     {
     }
 
+    std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsCmdList::GetDevice() const noexcept
+    {
+        return _device;
+    }
+
+    VkCommandBuffer VulkanGraphicsCmdList::GetVkCommandBuffer()
+    {
+        return _commandBuffer;
+    }
+
     void VulkanGraphicsCmdList::CmdBeginRenderPass(const std::shared_ptr<VulkanGraphicsRenderPass>& targetPass,
                                                    const std::shared_ptr<VulkanGraphicsRenderTarget>& renderTarget,
                                                    Utilities::Span<const ClearValue> clearValues)

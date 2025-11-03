@@ -31,11 +31,6 @@ namespace NovelRT::Graphics
         uint32_t _width;
         uint32_t _height;
 
-        Utilities::ObjectPool<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _contextPool;
-        tbb::mutex _contextMutex;
-
-        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateGraphicsContext();
-
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> shared_from_this();
@@ -56,7 +51,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] uint32_t GetWidth() const noexcept;
         [[nodiscard]] uint32_t GetHeight() const noexcept;
 
-        [[nodiscard]] Utilities::ObjectPoolRef<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateOrGetContext();
-        void SubmitQueuesFromContexts();
+        void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
     };
 }

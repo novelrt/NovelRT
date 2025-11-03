@@ -80,6 +80,7 @@ struct RenderingData
     std::shared_ptr<GraphicsPipeline<TBackend>> RenderPipeline;
     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
     std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
+    std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
 };
 
 template<typename TBackend>
@@ -128,7 +129,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     GraphicsRenderPassDescription passDesc{};
     GraphicsAttachmentDescription attachmentDesc{};
 
-    auto vulkanFormat = gfxSwapchainImage->GetSwapchain()->GetVulkanFormat();
+    auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
 
     if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
     {
@@ -151,6 +152,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     passDesc.attachmentDescriptions.push_back(attachmentDesc);
     auto pass = gfxDevice->CreateRenderPass(passDesc);
     auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
+    auto gfxContext = gfxDevice->CreateGraphicsContext();
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
@@ -183,10 +185,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     }
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
-
     {
-        auto gfxContext = gfxSwapchainImage->CreateOrGetContext();
-
         std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
 
         cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
@@ -196,6 +195,8 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
         cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
         gfxContext->EndFrame();
+        gfxDevice->QueueSubmit(cmdList);
+        gfxDevice->WaitForIdle();
     }
 
     RenderingData<TBackend> returnStruct{};
@@ -204,10 +205,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     returnStruct.VertexBufferRegion = vertexBufferRegion;
     returnStruct.VertexBuffer = vertexBuffer;
     returnStruct.RenderPass = pass;
-
-    gfxSwapchainImage->SubmitQueuesFromContexts();
-    gfxDevice->PresentFrame();
-    gfxDevice->WaitForIdle();
+    returnStruct.GraphicsContext = gfxContext;
 
     return returnStruct;
 }
@@ -225,8 +223,7 @@ void Render(RenderingData<TBackend>& renderingData,
     auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass, static_cast<uint32_t>(surfaceWidth),
                                                                    static_cast<uint32_t>(surfaceHeight));
     {
-
-        auto context = swapchainImage->CreateOrGetContext();
+        auto context = renderingData.GraphicsContext;
         auto currentCmdList = context->BeginFrame();
 
         // auto renderPass = context->CreateRenderPass();
@@ -276,8 +273,9 @@ void Render(RenderingData<TBackend>& renderingData,
         context->EndFrame();
         context->RegisterDescriptorSetForFrame(std::weak_ptr(renderingData.RenderPipeline->GetSignature()),
                                                descriptorSetData);
+
+        swapchainImage->QueueSubmit(currentCmdList);
     }
-    swapchainImage->SubmitQueuesFromContexts();
 
     gfxDevice->PresentFrame();
 }
