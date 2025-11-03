@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>

@@ -212,6 +212,76 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     return returnStruct;
 }
 
+template <typename TBackend>
+void Render(RenderingData<TBackend>& renderingData,
+            std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
+            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions)
+{
+    auto surface = gfxDevice->GetSurface();
+    float surfaceWidth = surface->GetWidth();
+    float surfaceHeight = surface->GetHeight();
+    auto swapchainImage = gfxDevice->BeginFrame();
+    std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
+    auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass, static_cast<uint32_t>(surfaceWidth),
+                                                                   static_cast<uint32_t>(surfaceHeight));
+    {
+
+        auto context = swapchainImage->CreateOrGetContext();
+        auto currentCmdList = context->BeginFrame();
+
+        // auto renderPass = context->CreateRenderPass();
+
+        NovelRT::Graphics::ClearValue colourDataStruct{};
+        colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+        colourDataStruct.depth = 0;
+        colourDataStruct.stencil = 0;
+
+        std::vector<ClearValue> colourData{colourDataStruct};
+        currentCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
+
+        ViewportInfo viewportInfoStruct{};
+        viewportInfoStruct.x = 0;
+        viewportInfoStruct.y = surfaceHeight;
+        viewportInfoStruct.width = surfaceWidth;
+        viewportInfoStruct.height = -surfaceHeight;
+        viewportInfoStruct.minDepth = 0.0f;
+        viewportInfoStruct.maxDepth = 1.0f;
+
+        currentCmdList->CmdSetViewport(viewportInfoStruct);
+        currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                      NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+        currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
+
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1>
+        buffers{std::cref(renderingData.VertexBuffer)};
+        std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
+
+        currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+
+        auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
+        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+        descriptorSetData->UpdateDescriptorSetData();
+
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>,
+        1>
+        descriptorData{std::cref(descriptorSetData)};
+        currentCmdList->CmdBindDescriptorSets(descriptorData);
+
+        currentCmdList->CmdDraw(
+            static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,
+                                0);
+
+        currentCmdList->CmdEndRenderPass();
+
+        context->EndFrame();
+        context->RegisterDescriptorSetForFrame(std::weak_ptr(renderingData.RenderPipeline->GetSignature()),
+                                               descriptorSetData);
+    }
+    swapchainImage->SubmitQueuesFromContexts();
+
+    gfxDevice->PresentFrame();
+}
+
 int main()
 {
     // TODO: EngineConfig was here
@@ -242,70 +312,7 @@ int main()
         wndProvider->ProcessAllMessages();
         if (wndProvider->IsVisible())
         {
-            auto surface = gfxDevice->GetSurface();
-            float surfaceWidth = surface->GetWidth();
-            float surfaceHeight = surface->GetHeight();
-            auto swapchainImage = gfxDevice->BeginFrame();
-            std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
-            auto target = std::make_shared<GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend>>(
-                gfxDevice, imageViewData, renderingData.RenderPass, static_cast<uint32_t>(surfaceWidth),
-                static_cast<uint32_t>(surfaceHeight));
-            {
-
-                auto context = swapchainImage->CreateOrGetContext();
-                auto currentCmdList = context->BeginFrame();
-
-                // auto renderPass = context->CreateRenderPass();
-
-                NovelRT::Graphics::ClearValue colourDataStruct{};
-                colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-                colourDataStruct.depth = 0;
-                colourDataStruct.stencil = 0;
-
-                std::vector<ClearValue> colourData{colourDataStruct};
-                currentCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
-
-                ViewportInfo viewportInfoStruct{};
-                viewportInfoStruct.x = 0;
-                viewportInfoStruct.y = surfaceHeight;
-                viewportInfoStruct.width = surfaceWidth;
-                viewportInfoStruct.height = -surfaceHeight;
-                viewportInfoStruct.minDepth = 0.0f;
-                viewportInfoStruct.maxDepth = 1.0f;
-
-                currentCmdList->CmdSetViewport(viewportInfoStruct);
-                currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                              NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-                currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
-
-                std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>>, 1>
-                    buffers{std::cref(renderingData.VertexBuffer)};
-                std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
-
-                currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-
-                auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
-                descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-                descriptorSetData->UpdateDescriptorSetData();
-
-                std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>>,
-                           1>
-                    descriptorData{std::cref(descriptorSetData)};
-                currentCmdList->CmdBindDescriptorSets(descriptorData);
-
-                currentCmdList->CmdDraw(
-                    static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,
-                    0);
-
-                currentCmdList->CmdEndRenderPass();
-
-                context->EndFrame();
-                context->RegisterDescriptorSetForFrame(std::weak_ptr(renderingData.RenderPipeline->GetSignature()),
-                                                       descriptorSetData);
-            }
-            swapchainImage->SubmitQueuesFromContexts();
-
-            gfxDevice->PresentFrame();
+            Render(renderingData, gfxDevice, inputResourceRegions);
         }
     }
 
