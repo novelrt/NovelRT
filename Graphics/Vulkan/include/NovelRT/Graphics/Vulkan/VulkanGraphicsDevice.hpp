@@ -30,8 +30,6 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> _adapter;
         std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> _surfaceContext;
 
-        NovelRT::Utilities::Lazy<VkCommandPool> _commandPool;
-
         NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>>> _presentCompletionFence;
 
         Logging::LoggingService _logger;
@@ -91,8 +89,6 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> CreateCmdList();
-
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void PresentFrame();
 
@@ -101,7 +97,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkQueue GetVulkanPresentQueue() const noexcept;
         [[nodiscard]] VkQueue GetVulkanGraphicsQueue() const noexcept;
         [[nodiscard]] VkDevice GetVulkanDevice() const;
-        [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
 
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
 

@@ -72,8 +72,6 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList();
-
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
         void PresentFrame();
 

@@ -16,12 +16,23 @@ namespace NovelRT::Ecs::Graphics
         int priority;
     };
 
+    struct RenderPass
+    {
+        int renderPassIndex;
+    };
+
+    template <typename TGraphicsBackend>
+    class RenderOrchestratorSystem;
+
     template <typename TGraphicsBackend>
     class EcsGraphicsBuilder
     {
     private:
         std::shared_ptr<NovelRT::Graphics::GraphicsProvider<TGraphicsBackend>> _graphicsProvider;
+        std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>> _orchestrator;
+
         BuiltCommandList _defaultBuiltCommandListComponent;
+        RenderPass _defaultRenderPassComponent;
 
         EcsGraphicsBuilder(SystemSchedulerBuilder& builder)
             : _defaultBuiltCommandListComponent{nullptr, 0}
@@ -31,6 +42,9 @@ namespace NovelRT::Ecs::Graphics
                 auto& cache = scheduler.GetComponentCache();
 
                 cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
+                cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
+
+                scheduler.RegisterSystem(_orchestrator);
             });
         };
 
@@ -46,6 +60,18 @@ namespace NovelRT::Ecs::Graphics
         EcsGraphicsBuilder& WithDefaultBuiltCommandListComponent(const BuiltCommandList& defaultBuiltCommandListComponent)
         {
             _defaultBuiltCommandListComponent = defaultBuiltCommandListComponent;
+            return *this;
+        }
+
+        EcsGraphicsBuilder& WithDefaultRenderPassComponent(const RenderPass& defaultRenderPassComponent)
+        {
+            _defaultRenderPassComponent = defaultRenderPassComponent;
+            return *this;
+        }
+
+        EcsGraphicsBuilder& WithOrchestrator(const std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>>& orchestrator)
+        {
+            _orchestrator = orchestrator;
             return *this;
         }
     };

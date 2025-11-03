@@ -7,9 +7,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Graphics
 
   SOURCES
     PRIVATE
-      empty.cpp
+      RenderOrchestratorSystem.cpp
 
   HEADERS
     PUBLIC
       include/NovelRT/Ecs/Graphics/GraphicsComponents.hpp
+      include/NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp
 )
