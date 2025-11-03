@@ -15,6 +15,7 @@
 
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 
+#include <algorithm>
 #include <map>
 #include <set>
 
@@ -79,8 +80,17 @@ namespace NovelRT::Ecs::Graphics
             auto context = image->CreateOrGetContext();
             auto cmdList = context->BeginFrame();
 
+            auto sorter = [&ordered](EntityId left, EntityId right)
+            {
+                auto leftPos = std::distance(ordered.begin(), std::find(ordered.begin(), ordered.end(), left));
+                auto rightPos = std::distance(ordered.begin(), std::find(ordered.begin(), ordered.end(), right));
+                return leftPos < rightPos;
+            };
+
             for (auto& [pass, entities] : passes)
             {
+                std::sort(entities.begin(), entities.end(), sorter);
+
                 // cmdList->CmdBeginRenderPass(...)
 
                 for (auto& entity : entities)
