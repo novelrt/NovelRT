@@ -26,6 +26,8 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class GraphicsContext;
     template<typename TBackend>
+    class GraphicsCmdList;
+    template<typename TBackend>
     class GraphicsPipeline;
     template<typename TBackend>
     class GraphicsDevice;
@@ -69,6 +71,8 @@ namespace NovelRT::Graphics
             std::string entryPointName,
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
+
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
         void PresentFrame();
