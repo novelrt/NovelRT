@@ -45,10 +45,6 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsDevice::OnGraphicsSurfaceSizeChanged(NovelRT::Maths::GeoVector2F /*newSize*/)
     {
-        auto presentCompletionGraphicsFence = GetPresentCompletionFence();
-        presentCompletionGraphicsFence->Wait();
-        presentCompletionGraphicsFence->Reset();
-
         if (_vulkanSwapchain.HasValue())
         {
             _vulkanSwapchain.Get()->RecreateSwapchain();

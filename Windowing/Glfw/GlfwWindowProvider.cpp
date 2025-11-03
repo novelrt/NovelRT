@@ -62,9 +62,10 @@ namespace NovelRT::Windowing
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
         glfwSetWindowUserPointer(window, this);
 
-        glfwSetWindowSizeCallback(window, [](auto window, auto width, auto height) {
-            auto thisDevice = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
-            thisDevice->SizeChanged(Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height)));
+        glfwSetFramebufferSizeCallback(window, [](auto window, auto width, auto height) {
+            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+            thisPtr->_currentSize = Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+            thisPtr->SizeChanged(thisPtr->_currentSize);
         });
 
         glfwSetKeyCallback(window, [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
@@ -119,6 +120,10 @@ namespace NovelRT::Windowing
 
     Maths::GeoVector2F GlfwWindowProvider::GetSize() const noexcept
     {
+        if (_currentSize.x > 0 || _currentSize.y > 0)
+        {
+            return _currentSize;
+        }
         int32_t width = 0;
         int32_t height = 0;
 

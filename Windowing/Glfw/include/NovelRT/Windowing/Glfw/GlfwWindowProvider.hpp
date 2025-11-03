@@ -46,6 +46,7 @@ namespace NovelRT::Windowing
     private:
         GLFWwindow* _window;
         std::string _currentTitle;
+        Maths::GeoVector2F _currentSize;
 
     public:
         WindowProvider(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize);

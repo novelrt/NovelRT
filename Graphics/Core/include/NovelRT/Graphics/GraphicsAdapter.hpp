@@ -5,6 +5,7 @@
 
 #include <NovelRT/Exceptions/NullPointerException.hpp>
 
+#include <cstdint>
 #include <memory>
 #include <string>
 
