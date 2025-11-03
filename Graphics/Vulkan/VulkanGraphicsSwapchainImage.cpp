@@ -3,6 +3,7 @@
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
@@ -48,12 +49,6 @@ namespace NovelRT::Graphics
         return swapChainImageView;
     }
 
-    std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
-        Vulkan::VulkanGraphicsBackend>::CreateGraphicsContext()
-    {
-        return std::make_shared<GraphicsContext<Vulkan::VulkanGraphicsBackend>>(shared_from_this());
-    }
-
     // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
         Vulkan::VulkanGraphicsBackend>::shared_from_this()
@@ -72,9 +67,7 @@ namespace NovelRT::Graphics
           _image(image),
           _imageView(CreateVulkanSwapChainImageView(_swapchain, _image)),
           _width(width),
-          _height(height),
-          _contextPool([this]() { return CreateGraphicsContext(); }),
-          _contextMutex()
+          _height(height)
     {
     }
 
@@ -121,22 +114,10 @@ namespace NovelRT::Graphics
         return _height;
     }
 
-    Utilities::ObjectPoolRef<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
-        Vulkan::VulkanGraphicsBackend>::CreateOrGetContext()
-    {
-        std::lock_guard<tbb::mutex> contextGuard(_contextMutex);
-        return _contextPool.Get();
-    }
-
-    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::SubmitQueuesFromContexts()
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
     {
         std::vector<VkCommandBuffer> buffers;
-        buffers.reserve(_contextPool.size());
-        for (auto&& context : _contextPool)
-        {
-            if (context->_vulkanCommandBuffer.HasValue())
-                buffers.push_back(context->GetVulkanCommandBuffer());
-        }
+        buffers.emplace_back(cmdList->GetVkCommandBuffer());
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

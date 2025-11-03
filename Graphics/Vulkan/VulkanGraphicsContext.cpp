@@ -88,8 +88,8 @@ namespace NovelRT::Graphics
     }
 
     VulkanGraphicsContext::GraphicsContext(
-        std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) noexcept
-        : _swapchainImage(std::move(image)),
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept
+        : _device(std::move(device)),
           _vulkanDescriptorSets(),
           _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); }),
           _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
@@ -121,7 +121,7 @@ namespace NovelRT::Graphics
 
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsContext::GetDevice() const
     {
-        return _swapchainImage->GetDevice();
+        return _device;
     }
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()

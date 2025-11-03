@@ -27,7 +27,7 @@ namespace NovelRT::Graphics
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
-        std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> _swapchainImage;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         size_t _index;
 
         std::map<std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
@@ -42,15 +42,13 @@ namespace NovelRT::Graphics
 
         void DestroyDescriptorSets();
 
-        friend void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::SubmitQueuesFromContexts();
-
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this();
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) noexcept;
+        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept;
         ~GraphicsContext() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;

@@ -65,6 +65,8 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> GetAdapter() const;
 
+        [[nodiscard]] std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> GetSwapchain() const;
+
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext()
@@ -89,7 +91,10 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
+        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateGraphicsContext();
+
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> BeginFrame();
+        void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
         void PresentFrame();
 
         void WaitForIdle();

@@ -40,6 +40,8 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class ShaderProgram;
     template<typename TBackend>
+    class GraphicsSwapchain;
+    template<typename TBackend>
     class GraphicsSwapchainImage;
 
     template<typename TBackend>
@@ -49,6 +51,8 @@ namespace NovelRT::Graphics
         GraphicsDevice() = delete;
 
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<TBackend>> GetAdapter() const;
+
+        [[nodiscard]] std::shared_ptr<GraphicsSwapchain<TBackend>> GetSwapchain() const;
 
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
@@ -72,7 +76,10 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> CreateGraphicsContext();
+
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
+        void QueueSubmit(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList);
         void PresentFrame();
 
         void WaitForIdle();
