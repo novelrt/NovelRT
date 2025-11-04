@@ -54,7 +54,7 @@ namespace NovelRT::Ecs::Graphics
         }
 
     public:
-        void Update(Timing::Timestamp delta, Catalogue catalogue) override
+        void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
             std::map<int, std::vector<EntityId>> passes{};
             std::set<EntityGraphView> roots{};

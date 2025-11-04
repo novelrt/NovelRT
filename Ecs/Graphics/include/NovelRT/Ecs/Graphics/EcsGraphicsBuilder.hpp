@@ -9,11 +9,15 @@
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
 #include <memory>
+#include <unordered_map>
 
 namespace NovelRT::Ecs::Graphics
 {
     template <typename TGraphicsBackend>
     class RenderOrchestratorSystem;
+
+    template <typename TGraphicsBackend>
+    class RenderPassManager;
 
     template <typename TGraphicsBackend>
     class EcsGraphicsBuilder
@@ -24,6 +28,8 @@ namespace NovelRT::Ecs::Graphics
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         Components::RenderPass _defaultRenderPassComponent;
+
+        RenderPassManager<TGraphicsBackend> _passManager;
 
         EcsGraphicsBuilder(SystemSchedulerBuilder& builder)
             : _defaultBuiltCommandListComponent{nullptr, 0}
@@ -42,9 +48,22 @@ namespace NovelRT::Ecs::Graphics
         friend EcsGraphicsBuilder AddGraphics(SystemSchedulerBuilder&);
 
     public:
+        // Intentionally disallow moving/copying
+        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = delete;
+        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = delete;
+        EcsGraphicsBuilder(EcsGraphicsBuilder&& other) = delete;
+        EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = delete;
+        ~EcsGraphicsBuilder() = default;
+
         EcsGraphicsBuilder& WithGraphicsProvider(std::shared_ptr<NovelRT::Graphics::GraphicsProvider<TGraphicsBackend>>& provider)
         {
             _graphicsProvider = provider;
+            return *this;
+        }
+
+        EcsGraphicsBuilder& ConfigureRenderPasses(std::function<void(RenderPassManager<TGraphicsBackend>&)> configure)
+        {
+            configure(_passManager);
             return *this;
         }
 

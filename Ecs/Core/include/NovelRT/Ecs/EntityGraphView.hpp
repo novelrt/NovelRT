@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
-#include <NovelRT/Ecs/DefaultComponentTypes.hpp>
 #include <NovelRT/Ecs/LinkedEntityListView.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
@@ -20,13 +20,13 @@ namespace NovelRT::Ecs
     private:
         Catalogue* _catalogue;
         EntityId _owningEntity;
-        EntityGraphComponent _component;
+        Components::EntityGraphComponent _component;
         Utilities::Lazy<LinkedEntityListView> _childrenChanges;
         std::map<EntityId, EntityGraphView> _externalChanges;
         bool _hasBeenCommitted;
 
     public:
-        EntityGraphView(Catalogue& catalogue, EntityId owningEntity, EntityGraphComponent component) noexcept;
+        EntityGraphView(Catalogue& catalogue, EntityId owningEntity, Components::EntityGraphComponent component) noexcept;
 
         EntityGraphView(EntityGraphView&& other) noexcept = default;
         EntityGraphView& operator=(EntityGraphView&& other) noexcept = default;
@@ -48,12 +48,12 @@ namespace NovelRT::Ecs
             return _component.childrenStartNode != std::numeric_limits<EntityId>::max();
         }
 
-        [[nodiscard]] inline EntityGraphComponent& GetRawComponentData() noexcept
+        [[nodiscard]] inline Components::EntityGraphComponent& GetRawComponentData() noexcept
         {
             return _component;
         }
 
-        [[nodiscard]] inline const EntityGraphComponent& GetRawComponentData() const noexcept
+        [[nodiscard]] inline const Components::EntityGraphComponent& GetRawComponentData() const noexcept
         {
             return _component;
         }
