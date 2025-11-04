@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp>
+
 #include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
@@ -14,7 +16,6 @@ namespace NovelRT::Ecs
 {
     class Catalogue;
     template <typename T> class ComponentView;
-    struct LinkedEntityListNodeComponent;
 
     class LinkedEntityListView
     {
@@ -23,7 +24,7 @@ namespace NovelRT::Ecs
         {
         private:
             EntityId _currentEntityNode;
-            LinkedEntityListNodeComponent _currentComponentNode;
+            Components::LinkedEntityListNodeComponent _currentComponentNode;
             Catalogue* _catalogue;
 
         public:
@@ -34,9 +35,9 @@ namespace NovelRT::Ecs
                 : _currentEntityNode(currentEntityNode),
                   _currentComponentNode(
                       currentEntityNode != std::numeric_limits<EntityId>::max()
-                          ? catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                          ? catalogue.GetComponentView<Components::LinkedEntityListNodeComponent>().GetComponentUnsafe(
                                 currentEntityNode)
-                          : catalogue.GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
+                          : catalogue.GetComponentView<Components::LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
                   _catalogue(&catalogue)
             {
             }
@@ -53,12 +54,12 @@ namespace NovelRT::Ecs
                 if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
                     _currentComponentNode =
-                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                        _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>().GetDeleteInstructionState();
                 }
                 else
                 {
                     _currentComponentNode =
-                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                        _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>().GetComponentUnsafe(
                             _currentEntityNode);
                 }
 
@@ -72,12 +73,12 @@ namespace NovelRT::Ecs
                 if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
                     _currentComponentNode =
-                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                        _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>().GetDeleteInstructionState();
                 }
                 else
                 {
                     _currentComponentNode =
-                        _catalogue->GetComponentView<LinkedEntityListNodeComponent>().GetComponentUnsafe(
+                        _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>().GetComponentUnsafe(
                             _currentEntityNode);
                 }
 
@@ -101,7 +102,7 @@ namespace NovelRT::Ecs
                 return _currentEntityNode;
             }
 
-            [[nodiscard]] inline LinkedEntityListNodeComponent GetListNode() const noexcept
+            [[nodiscard]] inline Components::LinkedEntityListNodeComponent GetListNode() const noexcept
             {
                 return _currentComponentNode;
             }
@@ -122,7 +123,7 @@ namespace NovelRT::Ecs
         EntityId _end = std::numeric_limits<EntityId>::max();
         EntityId _tail;
         bool _hasBeenCommitted;
-        SparseSet<EntityId, LinkedEntityListNodeComponent> _changes;
+        SparseSet<EntityId, Components::LinkedEntityListNodeComponent> _changes;
         std::optional<EntityId> _newTailPostDiff;
         std::optional<EntityId> _newBeginPostDiff;
         Catalogue* _catalogue;
@@ -130,13 +131,13 @@ namespace NovelRT::Ecs
         [[nodiscard]] EntityId& UpdateExistingChangesForAddBeforeOperation(
             EntityId& newNode,
             ConstIterator& nextIt,
-            const ComponentView<LinkedEntityListNodeComponent>& nodeView,
+            const ComponentView<Components::LinkedEntityListNodeComponent>& nodeView,
             EntityId& existingNextNode);
 
         [[nodiscard]] EntityId& UpdateExistingChangesForAddAfterOperation(
             EntityId& newNode,
             ConstIterator& previousIt,
-            const ComponentView<LinkedEntityListNodeComponent>& nodeView,
+            const ComponentView<Components::LinkedEntityListNodeComponent>& nodeView,
             EntityId& existingPreviousNode);
 
     public:
@@ -199,7 +200,7 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] inline bool TryGetComposedDiffInstruction(
             EntityId node,
-            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+            Components::LinkedEntityListNodeComponent& outNodeComponent) const noexcept
         {
             if (_changes.ContainsKey(node))
             {
@@ -211,7 +212,7 @@ namespace NovelRT::Ecs
         }
 
         [[nodiscard]] inline bool TryGetComposedDiffInstructionAtBeginning(
-            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+            Components::LinkedEntityListNodeComponent& outNodeComponent) const noexcept
         {
             if (_newBeginPostDiff.has_value())
             {
@@ -223,7 +224,7 @@ namespace NovelRT::Ecs
         }
 
         [[nodiscard]] inline bool TryGetComposedDiffInstructionAtEnd(
-            LinkedEntityListNodeComponent& outNodeComponent) const noexcept
+            Components::LinkedEntityListNodeComponent& outNodeComponent) const noexcept
         {
             if (_newTailPostDiff.has_value())
             {
