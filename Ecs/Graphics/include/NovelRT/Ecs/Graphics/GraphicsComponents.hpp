@@ -5,15 +5,21 @@
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
+#include <NovelRT/Graphics/GraphicsCmdList.hpp>
 
 #include <memory>
 
 namespace NovelRT::Ecs::Graphics
 {
+    template <typename TGraphicsBackend>
     struct BuiltCommandList
     {
-        void* SomeOpaqueHandleThingIGuess;
-        int priority;
+        std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>* commandList;
+    };
+
+    struct Sprite
+    {
+
     };
 
     struct RenderPass
@@ -31,7 +37,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsProvider<TGraphicsBackend>> _graphicsProvider;
         std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>> _orchestrator;
 
-        BuiltCommandList _defaultBuiltCommandListComponent;
+        BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         RenderPass _defaultRenderPassComponent;
 
         EcsGraphicsBuilder(SystemSchedulerBuilder& builder)
@@ -57,7 +63,7 @@ namespace NovelRT::Ecs::Graphics
             return *this;
         }
 
-        EcsGraphicsBuilder& WithDefaultBuiltCommandListComponent(const BuiltCommandList& defaultBuiltCommandListComponent)
+        EcsGraphicsBuilder& WithDefaultBuiltCommandListComponent(const BuiltCommandList<TGraphicsBackend>& defaultBuiltCommandListComponent)
         {
             _defaultBuiltCommandListComponent = defaultBuiltCommandListComponent;
             return *this;

@@ -13,4 +13,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Graphics
     PUBLIC
       include/NovelRT/Ecs/Graphics/GraphicsComponents.hpp
       include/NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp
+      include/NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp
 )
