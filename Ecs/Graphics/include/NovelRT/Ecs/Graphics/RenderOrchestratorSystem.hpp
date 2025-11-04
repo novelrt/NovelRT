@@ -58,8 +58,10 @@ namespace NovelRT::Ecs::Graphics
             std::map<int, std::vector<EntityId>> passes{};
             std::set<EntityGraphView> roots{};
             std::vector<EntityId> ordered{};
+            // TODO: maybe come up with a more "standardized" way to do this?
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> perFrameCommandLists{};
 
-            auto [renderPasses, graph] = catalogue.GetComponentViews<RenderPass, EntityGraphComponent>();
+            auto [renderPasses, commandLists, graph] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TGraphicsBackend>, EntityGraphComponent>();
             for (auto [entity, component] : renderPasses)
             {
                 auto [iterator, inserted] = passes.try_emplace(component.renderPassIndex);
@@ -77,7 +79,7 @@ namespace NovelRT::Ecs::Graphics
             }
 
             auto image = _graphicsDevice->BeginFrame();
-            auto context = image->CreateOrGetContext();
+            auto context = _graphicsDevice->CreateGraphicsContext();
             auto cmdList = context->BeginFrame();
 
             auto sorter = [&ordered](EntityId left, EntityId right)
@@ -95,14 +97,21 @@ namespace NovelRT::Ecs::Graphics
 
                 for (auto& entity : entities)
                 {
+                    if (!commandLists.HasComponent(entity)) continue;
+                    auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
+                    auto subCmdList = perFrameCommandLists.emplace_back(*subCmdListPtr);
+                    cmdList->CmdExecuteCommands(subCmdList);
                     // cmdList->CmdDispatchCmdList(...)
+                    renderPasses.RemoveComponent(entity);
+                    commandLists.RemoveComponent(entity);
+                    delete subCmdListPtr;
                 }
 
                 // cmdList->CmdBeginRenderPass()
             }
 
             context->EndFrame();
-            image->SubmitQueuesFromContexts();
+            image->QueueSubmit(cmdList);
 
             // TODO: should this be in ECS?
             _graphicsDevice->PresentFrame();
