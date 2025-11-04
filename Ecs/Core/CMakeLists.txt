@@ -11,6 +11,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
       Catalogue.cpp
       ComponentBufferMemoryContainer.cpp
       ComponentCache.cpp
+      EcsDefaultsBuilder.cpp
       EcsUtils.cpp
       EntityCache.cpp
       EntityGraphView.cpp
@@ -21,12 +22,15 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
 
   HEADERS
     PUBLIC
+      include/NovelRT/Ecs/Components/EntityGraphComponent.hpp
+      include/NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp
+      include/NovelRT/Ecs/Components/TransformComponent.hpp
       include/NovelRT/Ecs/Catalogue.hpp
       include/NovelRT/Ecs/ComponentBuffer.hpp
       include/NovelRT/Ecs/ComponentBufferMemoryContainer.hpp
       include/NovelRT/Ecs/ComponentCache.hpp
       include/NovelRT/Ecs/ComponentView.hpp
-      include/NovelRT/Ecs/DefaultComponentTypes.hpp
+      include/NovelRT/Ecs/EcsDefaultsBuilder.hpp
       include/NovelRT/Ecs/EcsUtils.hpp
       include/NovelRT/Ecs/EntityCache.hpp
       include/NovelRT/Ecs/EntityGraphView.hpp

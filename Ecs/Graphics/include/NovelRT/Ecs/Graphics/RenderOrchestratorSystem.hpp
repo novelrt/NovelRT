@@ -3,8 +3,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Graphics/GraphicsComponents.hpp>
-#include <NovelRT/Ecs/DefaultComponentTypes.hpp>
+#include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
+#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
@@ -27,7 +28,7 @@ namespace NovelRT::Ecs::Graphics
     private:
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
 
-        EntityGraphView GetRoot(ComponentView<EntityGraphComponent>& view, Catalogue& catalogue, EntityId entity)
+        EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view, Catalogue& catalogue, EntityId entity)
         {
             EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
             if (!it.HasParent())
@@ -38,7 +39,7 @@ namespace NovelRT::Ecs::Graphics
             return GetRoot(view, catalogue, it.GetRawComponentData().parent);
         }
 
-        void EnumerateChildren(EntityGraphView& graph, ComponentView<RenderPass>& view, std::vector<EntityId> inOrder)
+        void EnumerateChildren(EntityGraphView& graph, ComponentView<Components::RenderPass>& view, std::vector<EntityId> inOrder)
         {
             if (view.HasComponent(graph.GetRawEntityId()))
                 inOrder.push_back(graph.GetRawEntityId());
@@ -61,7 +62,7 @@ namespace NovelRT::Ecs::Graphics
             // TODO: maybe come up with a more "standardized" way to do this?
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> perFrameCommandLists{};
 
-            auto [renderPasses, commandLists, graph] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TGraphicsBackend>, EntityGraphComponent>();
+            auto [renderPasses, commandLists, graph] = catalogue.GetComponentViews<Components::RenderPass, Components::BuiltCommandList<TGraphicsBackend>, Ecs::Components::EntityGraphComponent>();
             for (auto [entity, component] : renderPasses)
             {
                 auto [iterator, inserted] = passes.try_emplace(component.renderPassIndex);
