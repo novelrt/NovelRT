@@ -27,9 +27,8 @@ namespace NovelRT::Graphics
         GraphicsContext() = delete;
         ~GraphicsContext() override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> CreateRenderPass();
-
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
+        void BeginFrame();
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList(bool primary);
         void EndFrame();
 
         void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature,

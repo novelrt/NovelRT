@@ -8,6 +8,7 @@
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
+#include <limits>
 #include <memory>
 #include <unordered_map>
 
@@ -32,7 +33,8 @@ namespace NovelRT::Ecs::Graphics
         RenderPassManager<TGraphicsBackend> _passManager;
 
         EcsGraphicsBuilder(SystemSchedulerBuilder& builder)
-            : _defaultBuiltCommandListComponent{nullptr, 0}
+            : _defaultBuiltCommandListComponent{nullptr, 0},
+            _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max()}
         {
             builder.Configure([this](SystemScheduler& scheduler) {
                 // TODO: add systems and components for rendering
