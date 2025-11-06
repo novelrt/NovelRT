@@ -127,5 +127,7 @@ namespace NovelRT::Graphics
                                       GraphicsMemoryAccessMode destinationAccessFlag,
                                       GraphicsPipelineVisibility sourceStageFlag,
                                       GraphicsPipelineVisibility destinationStageFlag);
+
+        void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<TBackend>>& cmdList);
     };
 }

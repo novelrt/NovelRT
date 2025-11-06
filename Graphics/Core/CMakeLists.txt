@@ -54,6 +54,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/GraphicsTextureKind.hpp
       include/NovelRT/Graphics/IGraphicsAdapterSelector.hpp
       include/NovelRT/Graphics/IGraphicsSurface.hpp
+      include/NovelRT/Graphics/NullGraphicsBackend.hpp
       include/NovelRT/Graphics/RGBAColour.hpp
       include/NovelRT/Graphics/ShaderProgram.hpp
       include/NovelRT/Graphics/ShaderProgramKind.hpp

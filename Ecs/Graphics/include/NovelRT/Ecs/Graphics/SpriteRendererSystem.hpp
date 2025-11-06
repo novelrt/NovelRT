@@ -18,16 +18,18 @@
 #include <NovelRT/Graphics/GraphicsContext.hpp>
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 
+#include <NovelRT/Graphics/NullGraphicsBackend.hpp> // God is dead and so are my preferred editors - Matt J.
+
 namespace NovelRT::Ecs::Graphics
 {
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     class SpriteRendererSystem : public NovelRT::Ecs::IEcsSystem
     {
     private:
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
 
     public:
-        void Update(Timing::Timestamp delta, Catalogue catalogue) override
+        void Update(Timing::Timestamp /*delta*/, Catalogue catalogue) override
         {
             auto [sprites, renderPasses, commandLists] = catalogue.GetComponentViews<Components::Sprite, Components::RenderPass, Components::BuiltCommandList<TGraphicsBackend>>();
 
@@ -42,6 +44,7 @@ namespace NovelRT::Ecs::Graphics
                 context->EndFrame();
 
                 Components::BuiltCommandList<TGraphicsBackend> temp{new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>};
+
                 temp.commandList = cmdList;
                 renderPasses.AddComponent(entity, {1});
                 commandLists.AddComponent(entity, temp);
