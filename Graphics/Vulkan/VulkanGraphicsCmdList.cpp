@@ -347,4 +347,10 @@ namespace NovelRT::Graphics
                              Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, 0, 1,
                              &barrierInfo, 0, 0);
     }
+
+    void VulkanGraphicsCmdList::CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList)
+    {
+        auto vkCmdList = cmdList->GetVkCommandBuffer();
+        vkCmdExecuteCommands(_commandBuffer, 1, &vkCmdList);
+    }
 }
