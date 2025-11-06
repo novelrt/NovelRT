@@ -75,7 +75,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     CXX_CLANG_TIDY "${clangTidyCommandLine}")
 
-  target_compile_features(${cmakeSafeName} PUBLIC cxx_std_17)
+  target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
   target_compile_options(${cmakeSafeName} PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wall>
     $<$<CXX_COMPILER_ID:GNU>:-Wabi>
@@ -112,9 +112,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   list(TRANSFORM declareModule_RESOURCES_PUBLIC REPLACE "^(.+)$" "$<BUILD_INTERFACE:\\1>")
 
   target_sources(${cmakeSafeName}
+    PUBLIC FILE_SET public_sources
+    TYPE CXX_MODULES
+    BASE_DIRS Public ${declareModule_SOURCES_BASE_DIRS}
+    FILES ${declareModule_SOURCES_PUBLIC}
+
     INTERFACE ${declareModule_SOURCES_INTERFACE} ${declareModule_RESOURCES_INTERFACE}
-    PUBLIC ${declareModule_SOURCES_PUBLIC} ${declareModule_RESOURCES_PUBLIC}
-    PRIVATE ${declareModule_SOURCES_PRIVATE} ${declareModule_RESOURCES_PRIVATE}
+    PUBLIC ${declareModule_RESOURCES_PUBLIC}
+    PRIVATE ${DeclareModule_SOURCES_PRIVATE} ${declareModule_RESOURCES_PRIVATE}
 
     INTERFACE FILE_SET interface_headers
     TYPE HEADERS
@@ -154,14 +159,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_compile_definitions(${cmakeSafeName} NOVELRT_USE_STD_SPAN=true)
   endif()
 
-  install(
-    TARGETS ${cmakeSafeName}
-    EXPORT NovelRTConfig
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    FILE_SET interface_headers DESTINATION include
-    FILE_SET public_headers DESTINATION include)
+  #install(
+  #  TARGETS ${cmakeSafeName}
+  #  EXPORT NovelRTConfig
+  #  ARCHIVE DESTINATION lib
+  #  LIBRARY DESTINATION lib
+  #  RUNTIME DESTINATION bin
+  #  FILE_SET interface_headers DESTINATION include
+  #  FILE_SET public_headers DESTINATION include)
 endfunction()
 
 endblock()

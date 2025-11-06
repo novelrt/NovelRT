@@ -1,0 +1,23 @@
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
+
+module;
+
+#include <stdexcept>
+#include <string>
+#include <cstdint>
+
+export module NovelRT.Exceptions:TimeoutException;
+
+export namespace NovelRT::Exceptions
+{
+    class TimeoutException : public std::runtime_error
+    {
+    public:
+        explicit TimeoutException(uint64_t milliseconds)
+            : std::runtime_error("An operation exceeded the specified timeout window of " +
+                                 std::to_string(milliseconds) + " milliseconds.")
+        {
+        }
+    };
+}

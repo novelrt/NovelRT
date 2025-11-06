@@ -3,16 +3,11 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Logging
   DEPENDS
     NovelRT::Exceptions
-    NovelRT::Utilities
+    # NovelRT::Utilities
 
   SOURCES
-    PRIVATE
-      LoggingService.cpp
-
-  HEADERS
     PUBLIC
-      include/NovelRT/Logging/BuiltInLogSections.hpp
-      include/NovelRT/Logging/LoggingService.hpp
+      Public/LoggingService.cpp
 
   LINK_LIBRARIES
     PUBLIC

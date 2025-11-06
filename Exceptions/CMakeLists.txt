@@ -2,17 +2,14 @@ include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Exceptions
   SOURCES
-    PRIVATE
-      empty.cpp
-
-  HEADERS
     PUBLIC
-      include/NovelRT/Exceptions/DuplicateKeyException.hpp
-      include/NovelRT/Exceptions/FileNotFoundException.hpp
-      include/NovelRT/Exceptions/InitialisationFailureException.hpp
-      include/NovelRT/Exceptions/InvalidOperationException.hpp
-      include/NovelRT/Exceptions/KeyNotFoundException.hpp
-      include/NovelRT/Exceptions/NotSupportedException.hpp
-      include/NovelRT/Exceptions/NullPointerException.hpp
-      include/NovelRT/Exceptions/OutOfMemoryException.hpp
-      include/NovelRT/Exceptions/TimeoutException.hpp)
+      Public/Exceptions.cpp
+      Public/DuplicateKeyException.cpp
+      Public/FileNotFoundException.cpp
+      Public/InitialisationFailureException.cpp
+      Public/InvalidOperationException.cpp
+      Public/KeyNotFoundException.cpp
+      Public/NotSupportedException.cpp
+      Public/NullPointerException.cpp
+      Public/OutOfMemoryException.cpp
+      Public/TimeoutException.cpp)

@@ -47,21 +47,21 @@ add_subdirectory(Threading)
 add_subdirectory(Timing)
 add_subdirectory(Utilities)
 
-add_subdirectory(Audio)
-add_subdirectory(Graphics)
-add_subdirectory(Input)
-add_subdirectory(UI)
-add_subdirectory(Windowing)
+#add_subdirectory(Audio)
+#add_subdirectory(Graphics)
+#add_subdirectory(Input)
+#add_subdirectory(UI)
+#add_subdirectory(Windowing)
 
-add_subdirectory(Ecs)
+#add_subdirectory(Ecs)
 
-add_subdirectory(Samples)
+#add_subdirectory(Samples)
 
-if(NOVELRT_INSTALL)
-  install(
-    EXPORT NovelRTConfig
-    EXPORT_LINK_INTERFACE_LIBRARIES
-    NAMESPACE NovelRT::
-    DESTINATION lib
-  )
-endif()
+#if(NOVELRT_INSTALL)
+#  install(
+#    EXPORT NovelRTConfig
+#    EXPORT_LINK_INTERFACE_LIBRARIES
+#    NAMESPACE NovelRT::
+#    DESTINATION lib
+#  )
+#endif()

@@ -9,13 +9,13 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
 
   SOURCES
     PRIVATE
+      GraphicsAdapter.cpp
       GraphicsPipelineInput.cpp
       GraphicsPipelineInputElement.cpp
       GraphicsPipelineResource.cpp
 
   HEADERS
     PUBLIC
-      include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
       include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsBufferKind.hpp

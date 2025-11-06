@@ -5,21 +5,17 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Maths
     NovelRT::Utilities
 
   SOURCES
-    PRIVATE
-      empty.cpp
-
-  HEADERS
     PUBLIC
-      include/NovelRT/Maths/Constants.hpp
-      include/NovelRT/Maths/GeoVector2F.hpp
-      include/NovelRT/Maths/GeoVector3F.hpp
-      include/NovelRT/Maths/GeoVector4F.hpp
-      include/NovelRT/Maths/Utilities.hpp
+      Public/Constants.cpp
+      Public/GeoVector2F.cpp
+      Public/GeoVector3F.cpp
+      Public/GeoVector4F.cpp
+      Public/Utilities.cpp
 
   COMPILE_DEFINITIONS
-    PUBLIC
+    PRIVATE
       GLM_ENABLE_EXPERIMENTAL=1
 
   LINK_LIBRARIES
-    PUBLIC
+    PRIVATE
       glm::glm-header-only)
