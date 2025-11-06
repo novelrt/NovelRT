@@ -72,6 +72,9 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const noexcept;
 
+        void Begin();
+        void End();
+
         void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<TBackend>>& targetPass,
                                 const std::shared_ptr<GraphicsRenderTarget<TBackend>>& renderTarget,
                                 Utilities::Span<const ClearValue> clearValues);

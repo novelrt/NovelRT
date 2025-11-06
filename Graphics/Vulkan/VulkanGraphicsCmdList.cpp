@@ -51,6 +51,29 @@ namespace NovelRT::Graphics
         return _commandBuffer;
     }
 
+    void VulkanGraphicsCmdList::Begin()
+    {
+        VkCommandBufferBeginInfo commandBufferBeginInfo{};
+        commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+        const VkResult result = vkBeginCommandBuffer(_commandBuffer, &commandBufferBeginInfo);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InvalidOperationException("Failed to begin VkCommandBuffer.");
+        }
+    }
+
+    void VulkanGraphicsCmdList::End()
+    {
+        const VkResult result = vkEndCommandBuffer(_commandBuffer);
+
+        if (result != VK_SUCCESS)
+        {
+            throw Exceptions::InvalidOperationException("Failed to end VkCommandBuffer.");
+        }
+    }
+
     void VulkanGraphicsCmdList::CmdBeginRenderPass(const std::shared_ptr<VulkanGraphicsRenderPass>& targetPass,
                                                    const std::shared_ptr<VulkanGraphicsRenderTarget>& renderTarget,
                                                    Utilities::Span<const ClearValue> clearValues)

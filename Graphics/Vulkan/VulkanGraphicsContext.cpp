@@ -48,13 +48,14 @@ namespace NovelRT::Graphics
         return vulkanCommandPool;
     }
 
-    VkCommandBuffer CreateVulkanCommandBuffer(VulkanGraphicsContext* context)
+    VkCommandBuffer CreateVulkanCommandBuffer(VulkanGraphicsContext* context, bool primary)
     {
         VkCommandBuffer vulkanCommandBuffer = VK_NULL_HANDLE;
 
         VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
         commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         commandBufferAllocateInfo.commandPool = context->GetVulkanCommandPool();
+        commandBufferAllocateInfo.level = primary ? VK_COMMAND_BUFFER_LEVEL_PRIMARY : VK_COMMAND_BUFFER_LEVEL_SECONDARY;
         commandBufferAllocateInfo.commandBufferCount = 1;
 
         auto device = context->GetDevice();
@@ -91,7 +92,6 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept
         : _device(std::move(device)),
           _vulkanDescriptorSets(),
-          _vulkanCommandBuffer([this]() { return CreateVulkanCommandBuffer(this); }),
           _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
     {
         static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
@@ -102,14 +102,6 @@ namespace NovelRT::Graphics
         DestroyDescriptorSets();
 
         VkDevice device = GetDevice()->GetVulkanDevice();
-
-        if (_vulkanCommandBuffer.HasValue() && _vulkanCommandPool.HasValue())
-        {
-            VkCommandBuffer commandBuffer = _vulkanCommandBuffer.Get();
-            VkCommandPool pool = _vulkanCommandPool.Get();
-            vkFreeCommandBuffers(device, pool, 1, &commandBuffer);
-            _vulkanCommandBuffer.Reset();
-        }
 
         if (_vulkanCommandPool.HasValue())
         {
@@ -124,43 +116,19 @@ namespace NovelRT::Graphics
         return _device;
     }
 
-    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::BeginFrame()
+    void VulkanGraphicsContext::BeginFrame()
     {
         DestroyDescriptorSets();
+    }
 
-        VkCommandBufferBeginInfo commandBufferBeginInfo{};
-        commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-        const VkResult result = vkBeginCommandBuffer(GetVulkanCommandBuffer(), &commandBufferBeginInfo);
-
-        if (result != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException(
-                "Failed to initialise on the VkCommandBuffer instance correctly.", result);
-        }
-
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), GetVulkanCommandBuffer());
+    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(bool primary)
+    {
+        VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, primary);
+        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer);
     }
 
     void VulkanGraphicsContext::EndFrame()
-    {
-        VkCommandBuffer commandBuffer = GetVulkanCommandBuffer();
-
-        const VkResult endCommandBufferResult = vkEndCommandBuffer(commandBuffer);
-
-        if (endCommandBufferResult != VK_SUCCESS)
-        {
-            throw Exceptions::InitialisationFailureException(
-                "Failed to finalise initialisation for the VkCommandBuffer Instance. This instance cannot be "
-                "submitted.",
-                endCommandBufferResult);
-        }
-    }
-
-    VkCommandBuffer VulkanGraphicsContext::GetVulkanCommandBuffer() const
-    {
-        return _vulkanCommandBuffer.Get();
-    }
+    { }
 
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
     {

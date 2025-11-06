@@ -102,7 +102,6 @@ namespace NovelRT::Ecs::Graphics
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
                     auto subCmdList = perFrameCommandLists.emplace_back(*subCmdListPtr);
                     cmdList->CmdExecuteCommands(subCmdList);
-                    // cmdList->CmdDispatchCmdList(...)
                     renderPasses.RemoveComponent(entity);
                     commandLists.RemoveComponent(entity);
                     delete subCmdListPtr;

@@ -3,3 +3,4 @@
 
 #include <NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp>
 #include <NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp>
+#include <NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp>

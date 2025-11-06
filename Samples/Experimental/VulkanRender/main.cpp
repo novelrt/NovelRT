@@ -186,13 +186,16 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
     {
-        std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
+        gfxContext->BeginFrame();
+        auto cmdList = gfxContext->CreateCmdList(true);
 
+        cmdList->Begin();
         cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
         cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
         cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
         cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->End();
 
         gfxContext->EndFrame();
         gfxDevice->QueueSubmit(cmdList);
@@ -224,8 +227,10 @@ void Render(RenderingData<TBackend>& renderingData,
                                                                    static_cast<uint32_t>(surfaceHeight));
     {
         auto context = renderingData.GraphicsContext;
-        auto currentCmdList = context->BeginFrame();
+        context->BeginFrame();
+        auto currentCmdList = context->CreateCmdList(true);
 
+        currentCmdList->Begin();
         // auto renderPass = context->CreateRenderPass();
 
         NovelRT::Graphics::ClearValue colourDataStruct{};
@@ -269,6 +274,8 @@ void Render(RenderingData<TBackend>& renderingData,
                                 0);
 
         currentCmdList->CmdEndRenderPass();
+
+        currentCmdList->End();
 
         context->EndFrame();
         context->RegisterDescriptorSetForFrame(std::weak_ptr(renderingData.RenderPipeline->GetSignature()),

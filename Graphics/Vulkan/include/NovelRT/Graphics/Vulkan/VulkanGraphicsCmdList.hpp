@@ -35,6 +35,9 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] VkCommandBuffer GetVkCommandBuffer();
 
+        void Begin();
+        void End();
+
         void CmdBeginRenderPass(
             const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
             const std::shared_ptr<GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend>>& renderTarget,
