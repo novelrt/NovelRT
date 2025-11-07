@@ -5,6 +5,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 set(PNG_TOOLS OFF)
 set(PNG_TESTS OFF)
+set(SKIP_INSTALL_ALL ON)
 
 # Libpng evaluates these include dirs outside of the context of a generator, so we have to strip them out.
 # ZLIB_INCLUDE_DIRS is used while generating pnglibconf.out, and it is written in such a way that it cannot
@@ -15,3 +16,15 @@ string(REGEX REPLACE [[\$<BUILD_INTERFACE:([^>]+)>?]] [[\1]] incl "${incl}")
 set(ZLIB_INCLUDE_DIRS "${incl}")
 
 FetchContent_MakeAvailable(PNG)
+add_library(PNG::png ALIAS png_shared)
+
+install(
+  TARGETS png_shared 
+  EXPORT PNGExports 
+  FILE_SET interface_headers DESTINATION include
+)
+install(
+  EXPORT PNGExports 
+  NAMESPACE PNG::
+  DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/lib"
+)

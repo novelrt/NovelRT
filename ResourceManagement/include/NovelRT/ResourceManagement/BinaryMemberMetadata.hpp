@@ -1,12 +1,11 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_RESOURCEMANAGEMENT_BINARYMEMBERMETADATA_H
-#define NOVELRT_RESOURCEMANAGEMENT_BINARYMEMBERMETADATA_H
-
-#ifndef NOVELRT_RESOURCEMANAGEMENT_H
-#error NovelRT does not support including types explicitly by default. Please include ResourceManagement.h instead for the ResourceManagement namespace subset.
-#endif
+#include <string>
+#include <cstdint>
+#include <NovelRT/ResourceManagement/BinaryDataType.hpp>
 
 namespace NovelRT::ResourceManagement
 {
@@ -20,5 +19,3 @@ namespace NovelRT::ResourceManagement
         size_t sizeOfSerialisedDataInBytes;
     };
 }
-
-#endif // NOVELRT_RESOURCEMANAGEMENT_BINARYMEMBERMETADATA_H

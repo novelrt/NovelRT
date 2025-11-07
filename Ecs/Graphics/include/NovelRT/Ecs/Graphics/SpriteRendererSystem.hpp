@@ -143,7 +143,7 @@ namespace NovelRT::Ecs::Graphics
 
                 cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
                 cmdList->CmdBindIndexBuffer(_indexRegion, NovelRT::Graphics::IndexType::UInt16);
-                cmdList->CmdBindDescriptorSets(nullptr); // TODO: sort this
+                //cmdList->CmdBindDescriptorSets(nullptr); // TODO: sort this
                 cmdList->CmdDrawIndexed(6, 1, 0, 0, 0);
                 cmdList->End();
 

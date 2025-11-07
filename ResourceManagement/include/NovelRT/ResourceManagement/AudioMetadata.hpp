@@ -1,8 +1,11 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_RESOURCEMANAGEMENT_AUDIOMETADATA_H
-#define NOVELRT_RESOURCEMANAGEMENT_AUDIOMETADATA_H
+#include <vector>
+#include <uuid.h>
+#include <cstdint>
 
 namespace NovelRT::ResourceManagement
 {
@@ -14,5 +17,3 @@ namespace NovelRT::ResourceManagement
         uuids::uuid databaseHandle;
     };
 }
-
-#endif // NOVELRT_RESOURCEMANAGEMENT_AUDIOMETADATA_H

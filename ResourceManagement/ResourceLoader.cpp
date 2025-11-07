@@ -1,7 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/ResourceManagement/ResourceManagement.h>
+#include <NovelRT/ResourceManagement/ResourceLoader.hpp>
+
 namespace NovelRT::ResourceManagement
 {
     uuids::uuid ResourceLoader::RegisterAsset(const std::filesystem::path& filePath)

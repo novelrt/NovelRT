@@ -1,12 +1,18 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_RESOURCEMANAGEMENT_RESOURCELOADER_H
-#define NOVELRT_RESOURCEMANAGEMENT_RESOURCELOADER_H
+#include <memory>
+#include <uuid.h>
+#include <map>
+#include <filesystem>
 
-#ifndef NOVELRT_RESOURCEMANAGEMENT_H
-#error NovelRT does not support including types explicitly by default. Please include ResourceManagement.h instead for the ResourceManagement namespace subset.
-#endif
+#include <NovelRT/ResourceManagement/AudioMetadata.hpp>
+#include <NovelRT/ResourceManagement/BinaryPackage.hpp>
+#include <NovelRT/ResourceManagement/ShaderMetadata.hpp>
+#include <NovelRT/ResourceManagement/TextureMetadata.hpp>
+#include <NovelRT/Utilities/Paths.hpp>
 
 namespace NovelRT::ResourceManagement
 {
@@ -24,7 +30,7 @@ namespace NovelRT::ResourceManagement
         bool _hasLoadedAssetDatabase = false;
 
     protected:
-        std::filesystem::path _resourcesRootDirectory = Utilities::Misc::getExecutableDirPath() / "Resources";
+        std::filesystem::path _resourcesRootDirectory = Utilities::GetExecutableDirPath() / "Resources";
         std::string _assetDatabaseFileName = "AssetDB.txt";
 
         [[nodiscard]] inline std::map<uuids::uuid, std::filesystem::path>& GetGuidsToFilePathsMap() noexcept
@@ -120,5 +126,3 @@ namespace NovelRT::ResourceManagement
         virtual ~ResourceLoader() = default;
     };
 }
-
-#endif // NOVELRT_RESOURCEMANAGEMENT_RESOURCELOADER_H

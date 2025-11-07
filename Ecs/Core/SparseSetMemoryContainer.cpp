@@ -45,8 +45,8 @@ namespace NovelRT::Ecs
         // Cursed: We can't make a span<void> so we cast to std::byte* which is compatible
         // Memory::Copy then casts this back to void* internally to allow memcpy to work
         NovelRT::Utilities::Memory::Copy(
-            NovelRT::Utilities::Span{static_cast<const std::byte*>(value), _sizeOfDataTypeInBytes},
-            NovelRT::Utilities::Span{static_cast<std::byte*>(dataPtr), _sizeOfDataTypeInBytes});
+            NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(value), _sizeOfDataTypeInBytes},
+            NovelRT::Utilities::Span<std::byte>{static_cast<std::byte*>(dataPtr), _sizeOfDataTypeInBytes});
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)

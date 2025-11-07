@@ -1,19 +1,17 @@
+#pragma once
+
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#ifndef NOVELRT_RESOURCEMANAGEMENT_DESKTOP_DESKTOPRESOURCELOADER_H
-#define NOVELRT_RESOURCEMANAGEMENT_DESKTOP_DESKTOPRESOURCELOADER_H
-
-#ifndef NOVELRT_RESOURCEMANAGEMENT_DESKTOP_H
-#error NovelRT does not support including types explicitly by default. Please include ResourceManagement.Desktop.h instead for the ResourceManagement::Desktop namespace subset.
-#endif
+#include <NovelRT/ResourceManagement/ResourceLoader.hpp>
+#include <NovelRT/Logging/LoggingService.hpp>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
     class DesktopResourceLoader final : public ResourceLoader
     {
     private:
-        LoggingService _logger;
+        Logging::LoggingService _logger;
         bool _isAssetDBInitialised;
 
     protected:
@@ -42,4 +40,3 @@ namespace NovelRT::ResourceManagement::Desktop
     };
 }
 
-#endif // !NOVELRT_RESOURCEMANAGEMENT_DESKTOP_DESKTOPRESOURCELOADER_H

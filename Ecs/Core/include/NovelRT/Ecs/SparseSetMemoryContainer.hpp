@@ -50,15 +50,15 @@ namespace NovelRT::Ecs
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
                 NovelRT::Utilities::Memory::Copy(
-                    NovelRT::Utilities::Span{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
-                    NovelRT::Utilities::Span{static_cast<std::byte*>(outputLocation), _sizeOfObject});
+                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
+                    NovelRT::Utilities::Span<std::byte>{static_cast<std::byte*>(outputLocation), _sizeOfObject});
             }
 
             inline void WriteToLocation(const void* data) noexcept
             {
                 NovelRT::Utilities::Memory::Copy(
-                    NovelRT::Utilities::Span{static_cast<const std::byte*>(data), _sizeOfObject},
-                    NovelRT::Utilities::Span{&(*_iteratorAtValue), _sizeOfObject});
+                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(data), _sizeOfObject},
+                    NovelRT::Utilities::Span<std::byte>{&(*_iteratorAtValue), _sizeOfObject});
             }
 
             [[nodiscard]] inline void* GetDataHandle() const noexcept
@@ -98,8 +98,8 @@ namespace NovelRT::Ecs
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
                 NovelRT::Utilities::Memory::Copy(
-                    NovelRT::Utilities::Span{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
-                    NovelRT::Utilities::Span{static_cast<std::byte*>(outputLocation), _sizeOfObject});
+                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
+                    NovelRT::Utilities::Span<std::byte>{static_cast<std::byte*>(outputLocation), _sizeOfObject});
             }
 
             [[nodiscard]] const void* GetDataHandle() const noexcept

@@ -27,8 +27,8 @@ namespace NovelRT::Ecs
           _serialisedTypeName(serialisedTypeName)
     {
         NovelRT::Utilities::Memory::Copy(
-            NovelRT::Utilities::Span{deleteInstructionState, _sizeOfDataTypeInBytes},
-            NovelRT::Utilities::Span{_deleteInstructionState.data(), _sizeOfDataTypeInBytes});
+            NovelRT::Utilities::Span<const std::byte>{deleteInstructionState, _sizeOfDataTypeInBytes},
+            NovelRT::Utilities::Span<std::byte>{_deleteInstructionState.data(), _sizeOfDataTypeInBytes});
 
         for (size_t i = 0; i < poolSize; i++)
         {
