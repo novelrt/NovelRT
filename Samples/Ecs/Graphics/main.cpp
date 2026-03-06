@@ -36,7 +36,6 @@ int main()
     AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
         .WithGraphicsProvider(gfxProvider);
 
-
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
     Event<Timestamp::duration> TimerCallback{};

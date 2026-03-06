@@ -57,7 +57,7 @@ namespace NovelRT::Ecs::Graphics
     public:
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
-            std::map<int, std::vector<EntityId>> passes{};
+            std::map<Components::RenderPassId, std::vector<EntityId>> passes{};
             std::set<EntityId> rootEntities{};
             std::vector<EntityGraphView> roots{};
             std::vector<EntityId> ordered{};
@@ -73,8 +73,8 @@ namespace NovelRT::Ecs::Graphics
                 if (graph.HasComponent(entity))
                 {
                     auto root = GetRoot(graph, catalogue, entity);
-                    auto [it, inserted] = rootEntities.insert(root.GetRawEntityId());
-                    if (inserted)
+                    auto [it, insertedTwo] = rootEntities.insert(root.GetRawEntityId());
+                    if (insertedTwo)
                         roots.emplace_back(std::move(root));
                 }
             }
