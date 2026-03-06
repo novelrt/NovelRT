@@ -1,8 +1,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/Exceptions/InitialisationFailureException.hpp"
-#include "NovelRT/Graphics/GraphicsRenderPassDescription.hpp"
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
 
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
