@@ -9,7 +9,8 @@
 
 #include <map>
 #include <memory>
-#include <unordered_map>
+#include <set>
+#include <tuple>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -20,7 +21,18 @@ namespace NovelRT::Ecs::Graphics
     class RenderPassManager
     {
     private:
-        std::unordered_map<std::weak_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>, Components::RenderPassId> _registeredRenderPasses;
+        using RenderPass = std::weak_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>;
+        using Tuple = std::tuple<RenderPass, Components::RenderPassId>;
+        struct Compare
+        {
+            constexpr bool operator()(const Tuple& lhs, const Tuple& rhs) const
+            {
+                std::less<RenderPass> impl{};
+                return impl(std::get<RenderPass>(lhs), std::get<RenderPass>(rhs));
+            }
+        };
+
+        std::set<Tuple, Compare> _registeredRenderPasses;
         std::map<Components::RenderPassId, std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>> _reverseRenderPassMapping;
 
         explicit RenderPassManager() { }
@@ -38,15 +50,15 @@ namespace NovelRT::Ecs::Graphics
         {
             static AtomFactory& renderPassIdFactory = AtomFactoryDatabase::GetFactory("NovelRT::Ecs::Graphics::RenderPassId");
 
-            auto [it, inserted] = _registeredRenderPasses.try_emplace(pass, Atom(0));
+            auto [it, inserted] = _registeredRenderPasses.emplace(std::make_tuple(pass, Atom(0)));
 
             if (inserted)
             {
-                it->second = renderPassIdFactory.GetNext();
-                _reverseRenderPassMapping[it->second] = pass;
+                std::get<Components::RenderPassId>(it) = renderPassIdFactory.GetNext();
+                _reverseRenderPassMapping[std::get<Components::RenderPassId>(it)] = pass;
             }
 
-            return it->second;
+            return std::get<Components::RenderPassId>(it);
         }
     };
 }

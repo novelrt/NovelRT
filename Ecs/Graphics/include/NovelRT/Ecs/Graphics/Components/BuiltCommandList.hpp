@@ -14,5 +14,22 @@ namespace NovelRT::Ecs::Graphics::Components
     struct BuiltCommandList
     {
         std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>* commandList;
+
+        inline BuiltCommandList& operator+=(const BuiltCommandList& other)
+        {
+            // TODO: does this need to `delete` our commandList if it's valid?
+            *this = other;
+            return *this;
+        }
+
+        [[nodiscard]] inline bool operator==(const BuiltCommandList& other) const noexcept
+        {
+            return commandList == other.commandList;
+        }
+
+        [[nodiscard]] inline bool operator!=(const BuiltCommandList& other) const noexcept
+        {
+            return !(*this == other);
+        }
     };
 }

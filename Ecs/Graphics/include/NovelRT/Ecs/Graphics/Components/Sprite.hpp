@@ -7,6 +7,21 @@ namespace NovelRT::Ecs::Graphics::Components
 {
     struct Sprite
     {
-        
+        inline Sprite& operator+=(const Sprite& other)
+        {
+            *this = other;
+            return *this;
+        }
+
+        [[nodiscard]] inline bool operator==(const Sprite& /* other */) const noexcept
+        {
+            // TODO: implement this
+            return true;
+        }
+
+        [[nodiscard]] inline bool operator!=(const Sprite& other) const noexcept
+        {
+            return !(*this == other);
+        }
     };
 }

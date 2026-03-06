@@ -18,11 +18,11 @@ namespace NovelRT::Maths
      * @return A full rotation expressed in radians.
      */
     template <typename T>
-    constexpr T Tau;
+    constexpr inline T Tau;
 
     template <>
-    constexpr float Tau<float> = 6.283185307f;
+    constexpr inline float Tau<float> = 6.283185307f;
 
     template<>
-    constexpr double Tau<double> = 6.283185307179586476925;
+    constexpr inline double Tau<double> = 6.283185307179586476925;
 }

@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <map>
 #include <set>
+#include <vector>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -47,9 +48,9 @@ namespace NovelRT::Ecs::Graphics
             if (!graph.HasChildren())
                 return;
 
-            for (auto& child : graph.GetOriginalChildren())
+            for (const auto& child : graph.GetOriginalChildren())
             {
-                EnumerateChildren(child, view, inOrder);
+                EnumerateChildren(child.get(), view, inOrder);
             }
         }
 
@@ -57,7 +58,8 @@ namespace NovelRT::Ecs::Graphics
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
             std::map<int, std::vector<EntityId>> passes{};
-            std::set<EntityGraphView> roots{};
+            std::set<EntityId> rootEntities{};
+            std::vector<EntityGraphView> roots{};
             std::vector<EntityId> ordered{};
             // TODO: maybe come up with a more "standardized" way to do this?
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> perFrameCommandLists{};
@@ -70,7 +72,10 @@ namespace NovelRT::Ecs::Graphics
 
                 if (graph.HasComponent(entity))
                 {
-                    roots.insert(GetRoot(graph, catalogue, entity));
+                    auto root = GetRoot(graph, catalogue, entity);
+                    auto [it, inserted] = rootEntities.insert(root.GetRawEntityId());
+                    if (inserted)
+                        roots.emplace_back(std::move(root));
                 }
             }
 
@@ -81,7 +86,8 @@ namespace NovelRT::Ecs::Graphics
 
             auto image = _graphicsDevice->BeginFrame();
             auto context = _graphicsDevice->CreateGraphicsContext();
-            auto cmdList = context->BeginFrame();
+            auto cmdList = context->CreateCmdList(true);
+            context->BeginFrame();
 
             auto sorter = [&ordered](EntityId left, EntityId right)
             {

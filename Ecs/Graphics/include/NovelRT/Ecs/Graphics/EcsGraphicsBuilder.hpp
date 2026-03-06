@@ -10,7 +10,7 @@
 
 #include <limits>
 #include <memory>
-#include <unordered_map>
+#include <utility>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -33,7 +33,7 @@ namespace NovelRT::Ecs::Graphics
         RenderPassManager<TGraphicsBackend> _passManager;
 
         EcsGraphicsBuilder(SystemSchedulerBuilder& builder)
-            : _defaultBuiltCommandListComponent{nullptr, 0},
+            : _defaultBuiltCommandListComponent{nullptr},
             _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max()}
         {
             builder.Configure([this](SystemScheduler& scheduler) {
@@ -43,11 +43,14 @@ namespace NovelRT::Ecs::Graphics
                 cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
                 cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
 
-                scheduler.RegisterSystem(_orchestrator);
+                scheduler.RegisterSystem([orchestrator = _orchestrator](auto&& delta, auto&& catalogue) {
+                    orchestrator->Update(std::forward<decltype(delta)>(delta), std::forward<decltype(catalogue)>(catalogue));
+                });
             });
         };
 
-        friend EcsGraphicsBuilder AddGraphics(SystemSchedulerBuilder&);
+        template <typename T>
+        friend EcsGraphicsBuilder<T> AddGraphics(SystemSchedulerBuilder&);
 
     public:
         // Intentionally disallow moving/copying

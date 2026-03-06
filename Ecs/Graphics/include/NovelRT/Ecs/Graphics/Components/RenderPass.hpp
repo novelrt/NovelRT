@@ -12,5 +12,21 @@ namespace NovelRT::Ecs::Graphics::Components
     struct RenderPass
     {
         RenderPassId renderPassIndex;
+
+        inline RenderPass& operator+=(const RenderPass& other)
+        {
+            *this = other;
+            return *this;
+        }
+
+        [[nodiscard]] inline bool operator==(const RenderPass& other) const noexcept
+        {
+            return renderPassIndex == other.renderPassIndex;
+        }
+
+        [[nodiscard]] inline bool operator!=(const RenderPass& other) const noexcept
+        {
+            return !(*this == other);
+        }
     };
 }

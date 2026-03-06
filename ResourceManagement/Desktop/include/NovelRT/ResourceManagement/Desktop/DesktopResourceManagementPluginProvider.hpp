@@ -4,7 +4,7 @@
 // for more information.
 
 #include <memory>
-#include <NoveLRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
+#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
 namespace NovelRT::ResourceManagement::Desktop
 {

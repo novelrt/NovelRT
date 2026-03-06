@@ -164,10 +164,14 @@ namespace NovelRT::ResourceManagement::Desktop
                                           "Unable to continue! File failed to provide an info struct.");
         }
 
+        #ifdef _MSC_VER
         #pragma warning(push)
         #pragma warning(disable : 4611)
+        #endif
         if (setjmp(png_jmpbuf(png)))
+        #ifdef _MSC_VER
         #pragma warning(pop)
+        #endif
         { // This is how libpng does error handling.
             _logger.logError("Image at path {} appears to be corrupted! Aborting...", filePath.string());
             throw Exceptions::IOException(filePath.string(), "Unable to continue! File appears to be corrupted.");

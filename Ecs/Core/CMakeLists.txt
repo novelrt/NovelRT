@@ -39,5 +39,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
       include/NovelRT/Ecs/SparseSet.hpp
       include/NovelRT/Ecs/SparseSetMemoryContainer.hpp
       include/NovelRT/Ecs/SystemScheduler.hpp
+      include/NovelRT/Ecs/SystemSchedulerBuilder.hpp
       include/NovelRT/Ecs/UnsafeComponentView.hpp
 )

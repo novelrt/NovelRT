@@ -45,6 +45,7 @@ namespace NovelRT::Ecs
 
     std::vector<std::reference_wrapper<EntityGraphView>> EntityGraphView::GetOriginalChildren()
     {
+
         auto view = _catalogue->GetComponentView<Components::EntityGraphComponent>();
 
         std::vector<std::reference_wrapper<EntityGraphView>> returnVec{};
