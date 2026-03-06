@@ -24,7 +24,7 @@ namespace NovelRT::Ecs::Graphics
     class EcsGraphicsBuilder
     {
     private:
-        std::shared_ptr<NovelRT::Graphics::GraphicsProvider<TGraphicsBackend>> _graphicsProvider;
+        std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>> _orchestrator;
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
@@ -43,9 +43,7 @@ namespace NovelRT::Ecs::Graphics
                 cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
                 cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
 
-                scheduler.RegisterSystem([orchestrator = _orchestrator](auto&& delta, auto&& catalogue) {
-                    orchestrator->Update(std::forward<decltype(delta)>(delta), std::forward<decltype(catalogue)>(catalogue));
-                });
+                scheduler.RegisterSystem(_orchestrator);
             });
         };
 
@@ -60,9 +58,9 @@ namespace NovelRT::Ecs::Graphics
         EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = delete;
         ~EcsGraphicsBuilder() = default;
 
-        EcsGraphicsBuilder& WithGraphicsProvider(std::shared_ptr<NovelRT::Graphics::GraphicsProvider<TGraphicsBackend>>& provider)
+        EcsGraphicsBuilder& WithGraphicsDevice(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
         {
-            _graphicsProvider = provider;
+            _graphicsDevice = device;
             return *this;
         }
 
@@ -90,6 +88,11 @@ namespace NovelRT::Ecs::Graphics
         {
             _orchestrator = orchestrator;
             return *this;
+        }
+
+        EcsGraphicsBuilder& WithDefaultOrchestrator()
+        {
+            return WithOrchestrator(std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice));
         }
     };
 

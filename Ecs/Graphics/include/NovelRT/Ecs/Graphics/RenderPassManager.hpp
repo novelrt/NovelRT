@@ -60,5 +60,10 @@ namespace NovelRT::Ecs::Graphics
 
             return std::get<Components::RenderPassId>(it);
         }
+
+        std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> GetRenderPass(Components::RenderPassId id) const
+        {
+            return _reverseRenderPassMapping.at(id);
+        }
     };
 }

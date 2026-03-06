@@ -15,11 +15,13 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include<NovelRT/Ecs/Graphics/RenderPassManager.hpp>
 
 #include <algorithm>
 #include <map>
 #include <set>
 #include <vector>
+#include <utility>
 
 namespace NovelRT::Ecs::Graphics
 {
@@ -28,19 +30,21 @@ namespace NovelRT::Ecs::Graphics
     {
     private:
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
+        RenderPassManager<TGraphicsBackend> _renderPassManager;
 
         EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view, Catalogue& catalogue, EntityId entity)
         {
             EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
-            if (!it.HasParent())
+
+            while (it.HasParent())
             {
-                return it;
+                it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
             }
 
-            return GetRoot(view, catalogue, it.GetRawComponentData().parent);
+            return it;
         }
 
-        void EnumerateChildren(EntityGraphView& graph, ComponentView<Components::RenderPass>& view, std::vector<EntityId> inOrder)
+        void EnumerateChildren(EntityGraphView& graph, ComponentView<Components::RenderPass>& view, std::vector<EntityId>& inOrder)
         {
             if (view.HasComponent(graph.GetRawEntityId()))
                 inOrder.push_back(graph.GetRawEntityId());
@@ -55,6 +59,8 @@ namespace NovelRT::Ecs::Graphics
         }
 
     public:
+        explicit RenderOrchestratorSystem(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice, RenderPassManager<TGraphicsBackend> renderPassManager) : _graphicsDevice(std::move(graphicsDevice)), _renderPassManager(renderPassManager) {}
+
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
             std::map<Components::RenderPassId, std::vector<EntityId>> passes{};
@@ -100,7 +106,8 @@ namespace NovelRT::Ecs::Graphics
             {
                 std::sort(entities.begin(), entities.end(), sorter);
 
-                // cmdList->CmdBeginRenderPass(...)
+                auto pass = _renderPassManager.GetRenderPass(pass);
+                cmdList->CmdBeginRenderPass(pass);
 
                 for (auto& entity : entities)
                 {
@@ -113,7 +120,7 @@ namespace NovelRT::Ecs::Graphics
                     delete subCmdListPtr;
                 }
 
-                // cmdList->CmdBeginRenderPass()
+                cmdList->CmdBeginRenderPass(pass);
             }
 
             context->EndFrame();

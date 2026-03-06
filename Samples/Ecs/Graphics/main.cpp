@@ -10,6 +10,10 @@
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 
 #include <NovelRT/Timing/StepTimer.hpp>
 
@@ -19,6 +23,7 @@ using namespace NovelRT::Ecs;
 using namespace NovelRT::Ecs::Graphics;
 using namespace NovelRT::Logging;
 using namespace NovelRT::Graphics;
+using namespace NovelRT::Graphics::Vulkan;
 using namespace NovelRT::Timing;
 using namespace NovelRT::Windowing;
 using namespace NovelRT::Utilities;
@@ -28,13 +33,22 @@ int main()
     auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
         NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<Vulkan::VulkanGraphicsBackend>(true);
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
+    auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
+
+    VulkanGraphicsAdapterSelector selector{};
+    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
+    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
+    auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     SystemSchedulerBuilder builder{};
 
-    AddDefaults(builder);
-    AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
-        .WithGraphicsProvider(gfxProvider);
+    // TODO: These variables are here to prevent a segfault. We need to revisit the builder to get rid of these arbitrary variables. - Matt J.
+    auto a = AddDefaults(builder);
+    auto b = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder);
+
+        b.WithGraphicsDevice(gfxDevice)
+        .WithDefaultOrchestrator();
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
