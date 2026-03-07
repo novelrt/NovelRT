@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
@@ -26,6 +27,7 @@ namespace NovelRT::Ecs::Graphics
     private:
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>> _orchestrator;
+        std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _context;
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         Components::RenderPass _defaultRenderPassComponent;
@@ -64,6 +66,12 @@ namespace NovelRT::Ecs::Graphics
             return *this;
         }
 
+        EcsGraphicsBuilder& WithSurfaceContext(std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>>& context)
+        {
+            _context = context;
+            return *this;
+        }
+
         EcsGraphicsBuilder& ConfigureRenderPasses(std::function<void(RenderPassManager<TGraphicsBackend>&)> configure)
         {
             configure(_passManager);
@@ -92,7 +100,7 @@ namespace NovelRT::Ecs::Graphics
 
         EcsGraphicsBuilder& WithDefaultOrchestrator()
         {
-            return WithOrchestrator(std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice));
+            return WithOrchestrator(std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager));
         }
     };
 

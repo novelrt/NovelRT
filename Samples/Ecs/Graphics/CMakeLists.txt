@@ -5,6 +5,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::GraphicsEcsTe
     NovelRT::Ecs
     NovelRT::Ecs::Graphics
     NovelRT::Windowing
+    NovelRT::ResourceManagement::Desktop
 
   SOURCES
     PRIVATE

@@ -27,8 +27,8 @@ namespace NovelRT::Ecs::Graphics
         {
             constexpr bool operator()(const Tuple& lhs, const Tuple& rhs) const
             {
-                std::less<RenderPass> impl{};
-                return impl(std::get<RenderPass>(lhs), std::get<RenderPass>(rhs));
+                std::less<Components::RenderPassId> impl{};
+                return impl(std::get<Components::RenderPassId>(lhs), std::get<Components::RenderPassId>(rhs));
             }
         };
 
@@ -50,15 +50,14 @@ namespace NovelRT::Ecs::Graphics
         {
             static AtomFactory& renderPassIdFactory = AtomFactoryDatabase::GetFactory("NovelRT::Ecs::Graphics::RenderPassId");
 
-            auto [it, inserted] = _registeredRenderPasses.emplace(std::make_tuple(pass, Atom(0)));
+            auto [it, inserted] = _registeredRenderPasses.emplace(std::make_tuple(pass, renderPassIdFactory.GetNext()));
 
             if (inserted)
             {
-                std::get<Components::RenderPassId>(it) = renderPassIdFactory.GetNext();
-                _reverseRenderPassMapping[std::get<Components::RenderPassId>(it)] = pass;
+                _reverseRenderPassMapping[std::get<Components::RenderPassId>(*it)] = pass;
             }
 
-            return std::get<Components::RenderPassId>(it);
+            return std::get<Components::RenderPassId>(*it);
         }
 
         std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> GetRenderPass(Components::RenderPassId id) const

@@ -87,6 +87,9 @@ namespace NovelRT::Graphics
         VkRect2D renderArea{};
         renderArea.extent = extent2D;
 
+        VkRenderPassBeginInfo renderPassBeginInfo{};
+
+
         std::vector<VkClearValue> clearValuesActual(clearValues.size());
 
         std::transform(clearValues.begin(), clearValues.end(), clearValuesActual.begin(),
@@ -106,7 +109,6 @@ namespace NovelRT::Graphics
                            return returnStruct;
                        });
 
-        VkRenderPassBeginInfo renderPassBeginInfo{};
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.renderPass = targetPass->GetVulkanRenderPass();
         renderPassBeginInfo.framebuffer = renderTarget->GetVulkanFramebuffer();

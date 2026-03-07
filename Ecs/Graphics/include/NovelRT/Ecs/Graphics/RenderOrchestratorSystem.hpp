@@ -15,7 +15,11 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
-#include<NovelRT/Ecs/Graphics/RenderPassManager.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
+#include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
+#include <NovelRT/Graphics/GraphicsRenderTarget.hpp>
+
+#include <vulkan/vulkan.h>
 
 #include <algorithm>
 #include <map>
@@ -30,6 +34,8 @@ namespace NovelRT::Ecs::Graphics
     {
     private:
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
+        std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _surfaceContext;
+
         RenderPassManager<TGraphicsBackend> _renderPassManager;
 
         EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view, Catalogue& catalogue, EntityId entity)
@@ -59,7 +65,7 @@ namespace NovelRT::Ecs::Graphics
         }
 
     public:
-        explicit RenderOrchestratorSystem(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice, RenderPassManager<TGraphicsBackend> renderPassManager) : _graphicsDevice(std::move(graphicsDevice)), _renderPassManager(renderPassManager) {}
+        RenderOrchestratorSystem(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice, std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> context, RenderPassManager<TGraphicsBackend> renderPassManager) : _graphicsDevice(std::move(graphicsDevice)), _surfaceContext(std::move(context)), _renderPassManager(renderPassManager) {}
 
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
@@ -67,6 +73,7 @@ namespace NovelRT::Ecs::Graphics
             std::set<EntityId> rootEntities{};
             std::vector<EntityGraphView> roots{};
             std::vector<EntityId> ordered{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargetCache{};
             // TODO: maybe come up with a more "standardized" way to do this?
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> perFrameCommandLists{};
 
@@ -91,6 +98,8 @@ namespace NovelRT::Ecs::Graphics
             }
 
             auto image = _graphicsDevice->BeginFrame();
+            auto surface = _surfaceContext->GetSurface();
+            std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
             auto context = _graphicsDevice->CreateGraphicsContext();
             auto cmdList = context->CreateCmdList(true);
             context->BeginFrame();
@@ -106,8 +115,9 @@ namespace NovelRT::Ecs::Graphics
             {
                 std::sort(entities.begin(), entities.end(), sorter);
 
-                auto pass = _renderPassManager.GetRenderPass(pass);
-                cmdList->CmdBeginRenderPass(pass);
+                auto passTwo = _renderPassManager.GetRenderPass(pass);
+                auto target = std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(_graphicsDevice, imageViewData, passTwo, static_cast<uint32_t>(surface->GetWidth()), static_cast<uint32_t>(surface->GetHeight()));
+                cmdList->CmdBeginRenderPass(passTwo, target, std::vector<NovelRT::Graphics::ClearValue>{});
 
                 for (auto& entity : entities)
                 {
@@ -120,7 +130,9 @@ namespace NovelRT::Ecs::Graphics
                     delete subCmdListPtr;
                 }
 
-                cmdList->CmdBeginRenderPass(pass);
+                cmdList->CmdEndRenderPass();
+
+                renderTargetCache.emplace_back(target);
             }
 
             context->EndFrame();
