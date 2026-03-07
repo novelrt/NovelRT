@@ -10,6 +10,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
 
@@ -146,13 +147,13 @@ namespace NovelRT::Graphics
         _vulkanSwapchainFormat = surfaceFormat.format;
         _swapchainExtent = extent;
 
-        GetSwapchainImages(vulkanSwapchain);
+        GetSwapchainImages(vulkanSwapchain, surfaceFormat.format);
 
         _logger.logInfoLine("VkSwapchainKHR successfully created.");
         return vulkanSwapchain;
     }
 
-    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages(VkSwapchainKHR swapchain)
+    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages(VkSwapchainKHR swapchain, VkFormat swapchainFormat)
     {
         VkDevice device = GetDevice()->GetVulkanDevice();
         VkSwapchainKHR vulkanSwapchain = swapchain;
@@ -181,7 +182,7 @@ namespace NovelRT::Graphics
         for (auto&& image : swapchainImages)
         {
             _swapchainImages.push_back(std::make_shared<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>(
-                shared_from_this(), image, _swapchainExtent.width, _swapchainExtent.height));
+                shared_from_this(), image, swapchainFormat, _swapchainExtent.width, _swapchainExtent.height));
         }
     }
 
@@ -196,7 +197,7 @@ namespace NovelRT::Graphics
     GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchain(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice)
         : _device(std::move(graphicsDevice)),
-          _swapchain([this]() { return CreateSwapchain(); }),
+          _swapchain([this]() { return CreateSwapchain(VK_NULL_HANDLE); }),
           _currentImageIndex(0ULL),
           _logger(Logging::CONSOLE_LOG_GFX),
           _vulkanSwapchainFormat(VK_FORMAT_UNDEFINED),
@@ -220,6 +221,8 @@ namespace NovelRT::Graphics
 
     VkFormat GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetVulkanFormat() const
     {
+        // Ensure the swapchain was created
+        unused(_swapchain.Get());
         return _vulkanSwapchainFormat;
     }
 

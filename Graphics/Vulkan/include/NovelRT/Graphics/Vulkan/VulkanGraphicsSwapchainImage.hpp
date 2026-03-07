@@ -37,6 +37,7 @@ namespace NovelRT::Graphics
 
         GraphicsSwapchainImage(std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain,
                                VkImage image,
+                               VkFormat imageFormat,
                                uint32_t width,
                                uint32_t height);
         ~GraphicsSwapchainImage() noexcept final;

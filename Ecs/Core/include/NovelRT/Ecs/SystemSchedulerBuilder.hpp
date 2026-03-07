@@ -40,14 +40,14 @@ namespace NovelRT::Ecs
          * @brief Adds a callback to configure the system scheduler after it has been created.
          *
          * @param configure The callback to use to configure the scheduler.
-         * @returns A reference to this to allow method chaining.
+         * @returns A reference to the added callback for method chaining.
          */
-        SystemSchedulerBuilder& Configure(std::function<void(SystemScheduler&)> configure) noexcept
+        template <typename T>
+        T& Configure(T&& configure) noexcept
         {
-            _configureCallbacks.emplace_back(configure);
-            return *this;
+            auto& fn = _configureCallbacks.emplace_back(std::forward<T>(configure));
+            return *(fn.template target<T>());
         }
-
 
         /**
          * @brief Creates the ECS instance and registers component types to it.

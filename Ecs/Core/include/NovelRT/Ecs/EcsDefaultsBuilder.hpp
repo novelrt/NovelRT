@@ -18,15 +18,15 @@ namespace NovelRT::Ecs
         Components::LinkedEntityListNodeComponent _defaultLinkedEntityListNodeComponent;
         Components::TransformComponent _defaultTransformComponent;
 
-        explicit EcsDefaultsBuilder(SystemSchedulerBuilder& builder);
-        friend EcsDefaultsBuilder AddDefaults(SystemSchedulerBuilder&);
+        EcsDefaultsBuilder();
+        friend EcsDefaultsBuilder& AddDefaults(SystemSchedulerBuilder&);
 
     public:
         // Intentionally disallow moving/copying
-        EcsDefaultsBuilder(const EcsDefaultsBuilder& other) = delete;
-        EcsDefaultsBuilder& operator=(const EcsDefaultsBuilder& other) = delete;
-        EcsDefaultsBuilder(EcsDefaultsBuilder&& other) = delete;
-        EcsDefaultsBuilder& operator=(EcsDefaultsBuilder&& other) = delete;
+        EcsDefaultsBuilder(const EcsDefaultsBuilder& other) = default;
+        EcsDefaultsBuilder& operator=(const EcsDefaultsBuilder& other) = default;
+        EcsDefaultsBuilder(EcsDefaultsBuilder&& other) = default;
+        EcsDefaultsBuilder& operator=(EcsDefaultsBuilder&& other) = default;
         ~EcsDefaultsBuilder() = default;
 
         EcsDefaultsBuilder& WithDefaultEntityGraphComponent(
@@ -35,7 +35,9 @@ namespace NovelRT::Ecs
             const Components::LinkedEntityListNodeComponent& defaultLinkedEntityListNodeComponent);
         EcsDefaultsBuilder& WithDefaultTransformComponent(
             const Components::TransformComponent& defaultTransformComponent);
+
+        void operator()(SystemScheduler& scheduler);
     };
 
-    EcsDefaultsBuilder AddDefaults(SystemSchedulerBuilder& builder);
+    EcsDefaultsBuilder& AddDefaults(SystemSchedulerBuilder& builder);
 }

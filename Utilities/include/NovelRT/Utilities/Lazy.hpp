@@ -16,6 +16,12 @@ namespace NovelRT::Utilities
         std::function<T()> _delegate;
         mutable std::optional<T> _actual;
 
+        template <typename U>
+        void Reset(U&& newExplicitValue) const noexcept
+        {
+            _actual.emplace(std::forward<U>(newExplicitValue));
+        }
+
     public:
         Lazy(std::function<T()> delegate) : _delegate(std::move(delegate)), _actual()
         {
@@ -31,7 +37,7 @@ namespace NovelRT::Utilities
         {
             if (!HasValue())
             {
-                std::optional<T>(std::move(_delegate())).swap(_actual);
+                Reset(_delegate());
             }
 
             return _actual.value();
@@ -41,30 +47,10 @@ namespace NovelRT::Utilities
         {
             if (!HasValue())
             {
-                std::optional<T>(std::move(_delegate())).swap(_actual);
+                Reset(_delegate());
             }
 
             return _actual.value();
-        }
-
-        constexpr T&& Get() &&
-        {
-            if (!HasValue())
-            {
-                std::optional<T>(std::move(_delegate())).swap(_actual);
-            }
-
-            return std::move(_actual.value());
-        }
-
-        constexpr const T&& Get() const&&
-        {
-            if (!HasValue())
-            {
-                std::optional<T>(std::move(_delegate())).swap(_actual);
-            }
-
-            return std::move(_actual.value());
         }
 
         void Reset() noexcept
@@ -72,9 +58,10 @@ namespace NovelRT::Utilities
             _actual.reset();
         }
 
-        void Reset(T newExplicitValue) noexcept
+        template <typename U>
+        void Reset(U&& newExplicitValue) noexcept
         {
-            _actual = newExplicitValue;
+            _actual.emplace(std::forward<U>(newExplicitValue));
         }
 
         [[nodiscard]] bool HasValue() const noexcept

@@ -15,7 +15,8 @@ namespace NovelRT::Graphics
 {
     VkImageView CreateVulkanSwapChainImageView(
         std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain,
-        VkImage image)
+        VkImage image,
+        VkFormat imageFormat)
     {
         VkComponentMapping componentMapping{};
         componentMapping.r = VK_COMPONENT_SWIZZLE_R;
@@ -32,7 +33,7 @@ namespace NovelRT::Graphics
         swapChainImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         swapChainImageViewCreateInfo.image = image;
         swapChainImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        swapChainImageViewCreateInfo.format = swapchain->GetVulkanFormat();
+        swapChainImageViewCreateInfo.format = imageFormat;
         swapChainImageViewCreateInfo.components = componentMapping;
         swapChainImageViewCreateInfo.subresourceRange = subresourceRange;
 
@@ -60,12 +61,13 @@ namespace NovelRT::Graphics
     GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchainImage(
         std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> swapchain,
         VkImage image,
+        VkFormat imageFormat,
         uint32_t width,
         uint32_t height)
         : _swapchain(std::move(swapchain)),
           _queueSubmissionFence(std::make_shared<GraphicsFence<Vulkan::VulkanGraphicsBackend>>(GetDevice(), false)),
           _image(image),
-          _imageView(CreateVulkanSwapChainImageView(_swapchain, _image)),
+          _imageView(CreateVulkanSwapChainImageView(_swapchain, _image, imageFormat)),
           _width(width),
           _height(height)
     {

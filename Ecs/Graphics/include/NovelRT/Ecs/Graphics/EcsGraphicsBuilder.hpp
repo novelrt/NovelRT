@@ -34,30 +34,19 @@ namespace NovelRT::Ecs::Graphics
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
-        EcsGraphicsBuilder(SystemSchedulerBuilder& builder)
+        EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
             _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max()}
-        {
-            builder.Configure([this](SystemScheduler& scheduler) {
-                // TODO: add systems and components for rendering
-                auto& cache = scheduler.GetComponentCache();
-
-                cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
-                cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
-
-                scheduler.RegisterSystem(_orchestrator);
-            });
-        };
+        { }
 
         template <typename T>
-        friend EcsGraphicsBuilder<T> AddGraphics(SystemSchedulerBuilder&);
+        friend EcsGraphicsBuilder<T>& AddGraphics(SystemSchedulerBuilder&);
 
     public:
-        // Intentionally disallow moving/copying
-        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = delete;
-        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = delete;
-        EcsGraphicsBuilder(EcsGraphicsBuilder&& other) = delete;
-        EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = delete;
+        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = default;
+        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = default;
+        EcsGraphicsBuilder(EcsGraphicsBuilder&& other) = default;
+        EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = default;
         ~EcsGraphicsBuilder() = default;
 
         EcsGraphicsBuilder& WithGraphicsDevice(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
@@ -102,11 +91,22 @@ namespace NovelRT::Ecs::Graphics
         {
             return WithOrchestrator(std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager));
         }
+
+        void operator()(SystemScheduler& scheduler)
+        {
+                // TODO: add systems and components for rendering
+            auto& cache = scheduler.GetComponentCache();
+
+            cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
+            cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
+
+            scheduler.RegisterSystem(_orchestrator);
+        }
     };
 
     template <typename TGraphicsBackend>
-    EcsGraphicsBuilder<TGraphicsBackend> AddGraphics(SystemSchedulerBuilder& builder)
+    EcsGraphicsBuilder<TGraphicsBackend>& AddGraphics(SystemSchedulerBuilder& builder)
     {
-        return EcsGraphicsBuilder<TGraphicsBackend>{builder};
+        return builder.Configure(EcsGraphicsBuilder<TGraphicsBackend>{});
     };
 }

@@ -5,19 +5,11 @@
 
 using namespace NovelRT::Ecs;
 
-EcsDefaultsBuilder::EcsDefaultsBuilder(SystemSchedulerBuilder& builder)
+EcsDefaultsBuilder::EcsDefaultsBuilder()
     : _defaultEntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
     _defaultLinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
     _defaultTransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN}
-{
-    builder.Configure([this](SystemScheduler& scheduler) {
-        auto& cache = scheduler.GetComponentCache();
-
-        cache.RegisterComponentType(_defaultEntityGraphComponent, "NovelRT::Ecs::EntityGraphComponent");
-        cache.RegisterComponentType(_defaultLinkedEntityListNodeComponent, "NovelRT::Ecs::LinkedEntityListNodeComponent");
-        cache.RegisterComponentType(_defaultTransformComponent, "NovelRT::Ecs::TransformComponent");
-    });
-};
+{ };
 
 EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultEntityGraphComponent(
     const Components::EntityGraphComponent& defaultGraphComponent)
@@ -26,7 +18,7 @@ EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultEntityGraphComp
     return *this;
 }
 
-EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultLinkedEntityListNodeComponent(
+EcsDefaultsBuilder& EcsDefaultsBuilder::WithDefaultLinkedEntityListNodeComponent(
     const Components::LinkedEntityListNodeComponent& defaultLinkedEntityListNodeComponent)
 {
     _defaultLinkedEntityListNodeComponent = defaultLinkedEntityListNodeComponent;
@@ -34,15 +26,24 @@ EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultLinkedEntityLis
 }
 
 
-EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultTransformComponent(
+EcsDefaultsBuilder& EcsDefaultsBuilder::WithDefaultTransformComponent(
     const Components::TransformComponent& defaultTransformComponent)
 {
     _defaultTransformComponent = defaultTransformComponent;
     return *this;
 }
 
-
-EcsDefaultsBuilder NovelRT::Ecs::AddDefaults(SystemSchedulerBuilder& builder)
+void EcsDefaultsBuilder::operator()(SystemScheduler& scheduler)
 {
-    return EcsDefaultsBuilder{builder};
+    auto& cache = scheduler.GetComponentCache();
+
+    cache.RegisterComponentType(_defaultEntityGraphComponent, "NovelRT::Ecs::EntityGraphComponent");
+    cache.RegisterComponentType(_defaultLinkedEntityListNodeComponent, "NovelRT::Ecs::LinkedEntityListNodeComponent");
+    cache.RegisterComponentType(_defaultTransformComponent, "NovelRT::Ecs::TransformComponent");
 }
+
+EcsDefaultsBuilder& NovelRT::Ecs::AddDefaults(SystemSchedulerBuilder& builder)
+{
+    return builder.Configure(EcsDefaultsBuilder{});
+}
+
