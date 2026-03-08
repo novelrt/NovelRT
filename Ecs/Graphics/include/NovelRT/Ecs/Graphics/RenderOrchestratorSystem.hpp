@@ -97,6 +97,11 @@ namespace NovelRT::Ecs::Graphics
                 EnumerateChildren(root, renderPasses, ordered);
             }
 
+            if (passes.empty())
+            {
+                return;
+            }
+
             auto image = _graphicsDevice->BeginFrame();
             auto surface = _surfaceContext->GetSurface();
             std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
