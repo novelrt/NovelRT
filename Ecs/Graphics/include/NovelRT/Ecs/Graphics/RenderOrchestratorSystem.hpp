@@ -91,16 +91,17 @@ namespace NovelRT::Ecs::Graphics
                         roots.emplace_back(std::move(root));
                 }
             }
+            
+            if (passes.empty())
+            {
+                return;
+            }
 
             for (auto& root : roots)
             {
                 EnumerateChildren(root, renderPasses, ordered);
             }
 
-            if (passes.empty())
-            {
-                return;
-            }
 
             auto image = _graphicsDevice->BeginFrame();
             auto surface = _surfaceContext->GetSurface();

@@ -257,7 +257,7 @@ public:
         context->RegisterDescriptorSetForFrame(std::weak_ptr(_renderingData.RenderPipeline->GetSignature()),
                                                descriptorSetData);
 
-        auto [renderPassView, cmdListView, graphComponentView] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TBackend>, EntityGraphComponent>();
+        auto [renderPassView, cmdListView, graphComponentView, linkedListView] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TBackend>, EntityGraphComponent, LinkedEntityListNodeComponent>();
 
         if (!_cmdListEntity.has_value())
         {
@@ -274,6 +274,7 @@ public:
             EntityGraphComponent graphCompChild{};
             graphCompChild.parent = renderPassEntity;
             graphComponentView.AddComponent(cmdListEntityLocal, graphCompChild);
+            linkedListView.AddComponent(cmdListEntityLocal);
 
             BuiltCommandList<TBackend> cmdListComp{};
             cmdListComp.commandList = new std::shared_ptr<GraphicsCmdList<TBackend>>(currentCmdList);
