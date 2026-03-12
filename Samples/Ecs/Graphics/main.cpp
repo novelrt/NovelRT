@@ -178,7 +178,7 @@ public:
                                                                           textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
                                                                           {
                                                                               gfxContext->BeginFrame();
-                                                                              auto cmdList = gfxContext->CreateCmdList(true);
+                                                                              auto cmdList = gfxContext->CreateCmdList();
 
                                                                               cmdList->Begin();
                                                                               cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
@@ -208,7 +208,8 @@ public:
         float surfaceHeight = GetPtrNonsenseStruct().sampleSurface->GetHeight();
 
         auto context = _renderingData.GraphicsContext;
-        auto currentCmdList = context->CreateCmdList(false);
+        context->BeginFrame();
+        auto currentCmdList = context->CreateCmdList(std::optional<SecondaryCmdListInfo<TBackend>>({GetPtrNonsenseStruct().trianglePass, 0}));
 
         currentCmdList->Begin();
 
@@ -287,6 +288,8 @@ public:
             cmdListComp.commandList = new std::shared_ptr<GraphicsCmdList<TBackend>>(currentCmdList);
             cmdListView.PushComponentUpdateInstruction(_cmdListEntity.value(), cmdListComp);
         }
+
+        context->EndFrame();
     }
 };
 

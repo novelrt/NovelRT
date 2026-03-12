@@ -36,8 +36,8 @@ namespace NovelRT::Graphics
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
     VulkanGraphicsCmdList::GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-                                           VkCommandBuffer commandBuffer) noexcept
-        : _device(std::move(device)), _commandBuffer(commandBuffer)
+                                           VkCommandBuffer commandBuffer, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
+        : _device(std::move(device)), _commandBuffer(commandBuffer), _secondaryContextData(std::move(secondaryContextData))
     {
     }
 
@@ -55,6 +55,24 @@ namespace NovelRT::Graphics
     {
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
         commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+
+        VkCommandBufferInheritanceInfo inheritanceInfo{};
+
+        if (_secondaryContextData.has_value())
+        {
+            auto& secondaryContext = _secondaryContextData.value();
+            inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+            inheritanceInfo.framebuffer = VK_NULL_HANDLE;
+            inheritanceInfo.occlusionQueryEnable = VK_FALSE; // TODO: Fix this later probably
+            inheritanceInfo.pipelineStatistics = 0;
+            inheritanceInfo.queryFlags = 0;
+            inheritanceInfo.renderPass = secondaryContext.renderPass->GetVulkanRenderPass();
+            inheritanceInfo.subpass = static_cast<uint32_t>(secondaryContext.subpassIndex);
+            
+            commandBufferBeginInfo.pInheritanceInfo = &inheritanceInfo;
+            commandBufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
+        }
 
         const VkResult result = vkBeginCommandBuffer(_commandBuffer, &commandBufferBeginInfo);
 

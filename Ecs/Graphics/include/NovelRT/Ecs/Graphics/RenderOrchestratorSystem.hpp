@@ -107,8 +107,9 @@ namespace NovelRT::Ecs::Graphics
             auto surface = _surfaceContext->GetSurface();
             std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
             auto context = _graphicsDevice->CreateGraphicsContext();
-            auto cmdList = context->CreateCmdList(true);
+            auto cmdList = context->CreateCmdList();
             context->BeginFrame();
+            cmdList->Begin();
 
             auto sorter = [&ordered](EntityId left, EntityId right)
             {
@@ -123,7 +124,13 @@ namespace NovelRT::Ecs::Graphics
 
                 auto passTwo = _renderPassManager.GetRenderPass(pass);
                 auto target = std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(_graphicsDevice, imageViewData, passTwo, static_cast<uint32_t>(surface->GetWidth()), static_cast<uint32_t>(surface->GetHeight()));
-                cmdList->CmdBeginRenderPass(passTwo, target, std::vector<NovelRT::Graphics::ClearValue>{});
+                
+                NovelRT::Graphics::ClearValue colourDataStruct{};
+                colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+                colourDataStruct.depth = 0;
+                colourDataStruct.stencil = 0;
+                
+                cmdList->CmdBeginRenderPass(passTwo, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
 
                 for (auto& entity : entities)
                 {
@@ -140,6 +147,8 @@ namespace NovelRT::Ecs::Graphics
 
                 renderTargetCache.emplace_back(target);
             }
+
+            cmdList->End();
 
             context->EndFrame();
             image->QueueSubmit(cmdList);

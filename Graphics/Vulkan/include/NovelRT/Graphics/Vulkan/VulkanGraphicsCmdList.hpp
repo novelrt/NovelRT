@@ -5,8 +5,10 @@
 
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Utilities/Span.hpp>
+#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
 
 #include <functional>
+#include <optional>
 
 #include <vulkan/vulkan.h>
 
@@ -24,10 +26,11 @@ namespace NovelRT::Graphics
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkCommandBuffer _commandBuffer;
+        std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
 
     public:
         GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> context,
-                        VkCommandBuffer commandBuffer) noexcept;
+                        VkCommandBuffer commandBuffer, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
 
         ~GraphicsCmdList() = default;
 

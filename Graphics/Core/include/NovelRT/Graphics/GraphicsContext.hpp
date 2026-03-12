@@ -6,7 +6,10 @@
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
+#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
+
+#include <optional>
 
 namespace NovelRT::Graphics
 {
@@ -28,7 +31,7 @@ namespace NovelRT::Graphics
         ~GraphicsContext() override = default;
 
         void BeginFrame();
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList(bool primary);
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList(std::optional<SecondaryCmdListInfo<TBackend>> secondaryContextData = {});
         void EndFrame();
 
         void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature,

@@ -52,7 +52,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
         void BeginFrame();
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> CreateCmdList(bool primary);
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> CreateCmdList(std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData = {});
         void EndFrame();
 
         [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;

@@ -10,6 +10,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -56,7 +57,7 @@ namespace NovelRT::Graphics
         commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         commandBufferAllocateInfo.commandPool = context->GetVulkanCommandPool();
         commandBufferAllocateInfo.level = primary ? VK_COMMAND_BUFFER_LEVEL_PRIMARY : VK_COMMAND_BUFFER_LEVEL_SECONDARY;
-        commandBufferAllocateInfo.commandBufferCount = 1;
+        commandBufferAllocateInfo.commandBufferCount = 1; 
 
         auto device = context->GetDevice();
 
@@ -94,7 +95,7 @@ namespace NovelRT::Graphics
           _vulkanDescriptorSets(),
           _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
     {
-        static_cast<void>(_state.Transition(Threading::VolatileState::Initialised));
+        unused(_state.Transition(Threading::VolatileState::Initialised));
     }
 
     VulkanGraphicsContext::~GraphicsContext()
@@ -121,13 +122,13 @@ namespace NovelRT::Graphics
         DestroyDescriptorSets();
     }
 
-    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(bool primary)
+    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
     {
-        VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, primary);
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer);
+        VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, !secondaryContextData.has_value());
+        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer, secondaryContextData);
     }
 
-    void VulkanGraphicsContext::EndFrame()
+    void VulkanGraphicsContext::EndFrame() // TODO: WTF?
     { }
 
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
