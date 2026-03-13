@@ -17,7 +17,7 @@ namespace NovelRT::Ecs::Graphics::Components
 
         inline BuiltCommandList& operator+=(const BuiltCommandList& other)
         {
-            // TODO: does this need to `delete` our commandList if it's valid?
+            if (commandList != nullptr) delete commandList;
             *this = other;
             return *this;
         }

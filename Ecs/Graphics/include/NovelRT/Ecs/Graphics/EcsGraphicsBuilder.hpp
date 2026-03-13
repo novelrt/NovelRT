@@ -30,13 +30,13 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _context;
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
-        Components::RenderPass _defaultRenderPassComponent;
+        Components::RenderPass<TGraphicsBackend> _defaultRenderPassComponent;
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
-            _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max()}
+            _defaultRenderPassComponent{nullptr, std::numeric_limits<Components::RenderPassId>::max()}
         { }
 
         template <typename T>
@@ -75,7 +75,7 @@ namespace NovelRT::Ecs::Graphics
         }
 
         EcsGraphicsBuilder& WithDefaultRenderPassComponent(
-            const Components::RenderPass& defaultRenderPassComponent)
+            const Components::RenderPass<TGraphicsBackend>& defaultRenderPassComponent)
         {
             _defaultRenderPassComponent = defaultRenderPassComponent;
             return *this;

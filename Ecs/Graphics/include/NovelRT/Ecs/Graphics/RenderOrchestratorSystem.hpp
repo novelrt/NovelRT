@@ -50,7 +50,7 @@ namespace NovelRT::Ecs::Graphics
             return it;
         }
 
-        void EnumerateChildren(EntityGraphView& graph, ComponentView<Components::RenderPass>& view, std::vector<EntityId>& inOrder)
+        void EnumerateChildren(EntityGraphView& graph, ComponentView<Components::RenderPass<TGraphicsBackend>>& view, std::vector<EntityId>& inOrder)
         {
             if (view.HasComponent(graph.GetRawEntityId()))
                 inOrder.push_back(graph.GetRawEntityId());
@@ -65,7 +65,13 @@ namespace NovelRT::Ecs::Graphics
         }
 
     public:
-        RenderOrchestratorSystem(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice, std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> context, RenderPassManager<TGraphicsBackend> renderPassManager) : _graphicsDevice(std::move(graphicsDevice)), _surfaceContext(std::move(context)), _renderPassManager(renderPassManager) {}
+        RenderOrchestratorSystem(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
+                                 std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> context,
+                                 RenderPassManager<TGraphicsBackend> renderPassManager)
+            : _graphicsDevice(std::move(graphicsDevice)),
+            _surfaceContext(std::move(context)),
+            _renderPassManager(renderPassManager)
+        {}
 
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
@@ -76,8 +82,9 @@ namespace NovelRT::Ecs::Graphics
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargetCache{};
             // TODO: maybe come up with a more "standardized" way to do this?
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> perFrameCommandLists{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>> perFrameDescriptorSets{};
 
-            auto [renderPasses, commandLists, graph] = catalogue.GetComponentViews<Components::RenderPass, Components::BuiltCommandList<TGraphicsBackend>, Ecs::Components::EntityGraphComponent>();
+            auto [renderPasses, commandLists, graph] = catalogue.GetComponentViews<Components::RenderPass<TGraphicsBackend>, Components::BuiltCommandList<TGraphicsBackend>, Ecs::Components::EntityGraphComponent>();
             for (auto [entity, component] : renderPasses)
             {
                 auto [iterator, inserted] = passes.try_emplace(component.renderPassIndex);
@@ -138,10 +145,10 @@ namespace NovelRT::Ecs::Graphics
 
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
                     auto subCmdList = perFrameCommandLists.emplace_back(*subCmdListPtr);
+                    auto* descriptorSetPtr = renderPasses.GetComponent(entity).descriptorSet;
+                    perFrameDescriptorSets.emplace_back(*descriptorSetPtr);
+
                     cmdList->CmdExecuteCommands(subCmdList);
-                    renderPasses.RemoveComponent(entity);
-                    commandLists.RemoveComponent(entity);
-                    delete subCmdListPtr;
                 }
 
                 cmdList->CmdEndRenderPass();

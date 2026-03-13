@@ -259,12 +259,9 @@ public:
 
         currentCmdList->End();
 
-        context->RegisterDescriptorSetForFrame(
-            std::weak_ptr(_renderingData.RenderPipeline->GetSignature()),
-            descriptorSetData);
         context->EndFrame();
 
-        auto [renderPassView, cmdListView, graphComponentView] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TBackend>, EntityGraphComponent>();
+        auto [renderPassView, cmdListView, graphComponentView] = catalogue.GetComponentViews<RenderPass<TBackend>, BuiltCommandList<TBackend>, EntityGraphComponent>();
 
         if (!_cmdListEntity.has_value())
         {
@@ -276,7 +273,8 @@ public:
             graphComp.childrenStartNode = std::numeric_limits<EntityId>::max();
             graphComponentView.AddComponent(cmdListEntityLocal, graphComp);
 
-            RenderPass passComponent{};
+            RenderPass<TBackend> passComponent{};
+            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
             passComponent.renderPassIndex = GetPtrNonsenseStruct().triangleRenderPassId; //TODO: There's no other way to pass this through yet. I am just trying to get this working.
             renderPassView.AddComponent(cmdListEntityLocal, passComponent);
 
@@ -286,7 +284,8 @@ public:
         }
         else
         {
-            RenderPass passComponent{};
+            RenderPass<TBackend> passComponent{};
+            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
             passComponent.renderPassIndex = GetPtrNonsenseStruct().triangleRenderPassId;
             renderPassView.PushComponentUpdateInstruction(_cmdListEntity.value(), passComponent);
 
