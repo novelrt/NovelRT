@@ -225,7 +225,7 @@ namespace NovelRT::Graphics
             _device.Reset();
         }
 
-        _logger.logInfoLine("Vulkan logical device version 1.2 successfully torn down.");
+        _logger.logInfoLine("Vulkan logical device successfully torn down.");
     }
 
     [[nodiscard]] std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsDevice::GetAdapter() const

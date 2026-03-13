@@ -259,7 +259,6 @@ public:
 
         currentCmdList->End();
 
-        //TODO: This is actually causing a memory leak. I'm such a comedian! - Matt J.
         context->RegisterDescriptorSetForFrame(
             std::weak_ptr(_renderingData.RenderPipeline->GetSignature()),
             descriptorSetData);
