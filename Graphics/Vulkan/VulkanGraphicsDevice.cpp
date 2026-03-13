@@ -133,6 +133,8 @@ namespace NovelRT::Graphics
         auto physicalDeviceExtensionPtrs = NovelRT::Utilities::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
+        VkPhysicalDeviceNestedCommandBufferFeaturesEXT nestedCommandBuffer{};
+        VkPhysicalDeviceMaintenance7FeaturesKHR maintenance7{};
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -141,6 +143,19 @@ namespace NovelRT::Graphics
         createInfo.pEnabledFeatures = &deviceFeatures;
         createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
         createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
+
+        if (std::find(physicalDeviceExtensions.begin(), physicalDeviceExtensions.end(), VK_KHR_MAINTENANCE_7_EXTENSION_NAME) != physicalDeviceExtensions.end())
+        {
+            createInfo.pNext = &maintenance7;
+            maintenance7.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
+            maintenance7.maintenance7 = true;
+        }
+        else
+        {
+            createInfo.pNext = &nestedCommandBuffer;
+            nestedCommandBuffer.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_FEATURES_EXT;
+            nestedCommandBuffer.nestedCommandBuffer = true;
+        }
 
         std::vector<const char*> allValidationLayerPtrs{};
 

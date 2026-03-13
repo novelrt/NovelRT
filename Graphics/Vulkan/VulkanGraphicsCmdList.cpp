@@ -134,7 +134,7 @@ namespace NovelRT::Graphics
         renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValuesActual.size());
         renderPassBeginInfo.pClearValues = clearValuesActual.data();
 
-        vkCmdBeginRenderPass(_commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBeginRenderPass(_commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR);
     }
 
     void VulkanGraphicsCmdList::CmdEndRenderPass()
