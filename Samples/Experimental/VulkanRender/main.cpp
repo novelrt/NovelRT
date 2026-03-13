@@ -81,6 +81,7 @@ struct RenderingData
     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
     std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
     std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
+    std::shared_ptr<GraphicsCmdList<TBackend>> CmdListCache;
 };
 
 template<typename TBackend>
@@ -229,6 +230,7 @@ void Render(RenderingData<TBackend>& renderingData,
         auto context = renderingData.GraphicsContext;
         context->BeginFrame();
         auto currentCmdList = context->CreateCmdList();
+        renderingData.CmdListCache = currentCmdList;
 
         currentCmdList->Begin();
         // auto renderPass = context->CreateRenderPass();
