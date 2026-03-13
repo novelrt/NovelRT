@@ -14,6 +14,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
 #include <NovelRT/Utilities/Span.hpp>
@@ -36,19 +37,19 @@ namespace NovelRT::Graphics
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
     VulkanGraphicsCmdList::GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-                                           VkCommandBuffer commandBuffer, VkCommandPool owningPool, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
-        : _isBufferValid(true), _device(std::move(device)), _commandBuffer(commandBuffer), _owningPool(owningPool), _secondaryContextData(std::move(secondaryContextData))
+                                           VkCommandBuffer commandBuffer, std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
+        : _device(std::move(device)), _commandBuffer(commandBuffer), _owningContext(std::move(owningContext)), _secondaryContextData(std::move(secondaryContextData))
     {
     }
 
     VulkanGraphicsCmdList::~GraphicsCmdList()
     {
-        if (!_isBufferValid)
+        if (_owningContext.expired())
         {
             return;
         }
         
-        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningPool, 1, &_commandBuffer);
+        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext.lock()->GetVulkanCommandPool(), 1, &_commandBuffer);
     }
 
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsCmdList::GetDevice() const noexcept
@@ -382,10 +383,5 @@ namespace NovelRT::Graphics
     {
         auto vkCmdList = cmdList->GetVkCommandBuffer();
         vkCmdExecuteCommands(_commandBuffer, 1, &vkCmdList);
-    }
-
-    void VulkanGraphicsCmdList::MarkAsInvalid()
-    {
-        _isBufferValid = false;
     }
 }

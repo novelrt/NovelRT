@@ -6,9 +6,11 @@
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 #include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
+#include <NovelRT/Graphics/GraphicsContext.hpp>
 
 #include <functional>
 #include <optional>
+#include <memory>
 
 #include <vulkan/vulkan.h>
 
@@ -24,15 +26,14 @@ namespace NovelRT::Graphics
         : std::enable_shared_from_this<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>
     {
     private:
-        bool _isBufferValid;
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkCommandBuffer _commandBuffer;
-        VkCommandPool _owningPool;
+        std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _owningContext;
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
 
     public:
-        GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> context,
-                        VkCommandBuffer commandBuffer, VkCommandPool owningPool, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
+        GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                        VkCommandBuffer commandBuffer, std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
 
         ~GraphicsCmdList();
 
@@ -107,7 +108,5 @@ namespace NovelRT::Graphics
                                       GraphicsPipelineVisibility destinationStageFlag);
         
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList);
-
-        void MarkAsInvalid();
     };
 }
