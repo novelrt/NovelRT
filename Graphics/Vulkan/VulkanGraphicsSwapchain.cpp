@@ -42,10 +42,6 @@ namespace NovelRT::Graphics
 
             returnFormat = availableFormats[0];
         }
-        else
-        {
-            _logger.logInfo("Preferred VkFormat detected.");
-        }
 
         return returnFormat;
     }
@@ -148,8 +144,6 @@ namespace NovelRT::Graphics
         _swapchainExtent = extent;
 
         GetSwapchainImages(vulkanSwapchain, surfaceFormat.format);
-
-        _logger.logInfoLine("VkSwapchainKHR successfully created.");
         return vulkanSwapchain;
     }
 

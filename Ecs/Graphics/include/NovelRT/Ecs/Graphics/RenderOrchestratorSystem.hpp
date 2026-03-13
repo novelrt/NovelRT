@@ -118,23 +118,24 @@ namespace NovelRT::Ecs::Graphics
                 return leftPos < rightPos;
             };
 
-            for (auto& [pass, entities] : passes)
+            for (auto& [passId, entities] : passes)
             {
                 std::sort(entities.begin(), entities.end(), sorter);
 
-                auto passTwo = _renderPassManager.GetRenderPass(pass);
-                auto target = std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(_graphicsDevice, imageViewData, passTwo, static_cast<uint32_t>(surface->GetWidth()), static_cast<uint32_t>(surface->GetHeight()));
+                auto pass = _renderPassManager.GetRenderPass(passId);
+                auto target = std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(_graphicsDevice, imageViewData, pass, static_cast<uint32_t>(surface->GetWidth()), static_cast<uint32_t>(surface->GetHeight()));
                 
                 NovelRT::Graphics::ClearValue colourDataStruct{};
                 colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
                 colourDataStruct.depth = 0;
                 colourDataStruct.stencil = 0;
                 
-                cmdList->CmdBeginRenderPass(passTwo, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
+                cmdList->CmdBeginRenderPass(pass, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
 
-                for (auto& entity : entities)
+                for (const auto& entity : entities)
                 {
                     if (!commandLists.HasComponent(entity)) continue;
+
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
                     auto subCmdList = perFrameCommandLists.emplace_back(*subCmdListPtr);
                     cmdList->CmdExecuteCommands(subCmdList);

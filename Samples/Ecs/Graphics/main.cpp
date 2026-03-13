@@ -42,7 +42,6 @@
 #include <NovelRT/Utilities/Macros.hpp>
 
 #include <optional>
-
 #include <memory>
 
 using namespace NovelRT::Ecs;
@@ -126,80 +125,86 @@ public:
         auto gfxSwapchainImage = GetPtrNonsenseStruct().gfxDevice->BeginFrame();
 
         std::vector<GraphicsPipelineInputElement> elements{
-            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
-                                         12),
-                                         GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                                                      GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
+            GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector3F),
+                GraphicsPipelineInputElementKind::Position,
+                12),
+            GraphicsPipelineInputElement(
+                typeid(NovelRT::Maths::GeoVector2F),
+                GraphicsPipelineInputElementKind::TextureCoordinate,
+                8)};
 
-                                                                      std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-                                                                      std::vector<GraphicsPipelineResource> resources{
-                                                                          GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+        std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+        std::vector<GraphicsPipelineResource> resources{
+            GraphicsPipelineResource(
+                GraphicsPipelineResourceKind::Texture,
+                ShaderProgramVisibility::Pixel)};
 
-                                                                          std::vector<GraphicsPushConstantRange> dummyData{};
-                                                                          auto signature = GetPtrNonsenseStruct().gfxDevice->CreatePipelineSignature(
-                                                                              GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
-                                                                              NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
-                                                                          auto vertShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData.shaderCode);
-                                                                          auto pixelShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
+        std::vector<GraphicsPushConstantRange> dummyData{};
+        auto signature = GetPtrNonsenseStruct().gfxDevice->CreatePipelineSignature(
+            GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
+            NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
+        auto vertShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData.shaderCode);
+        auto pixelShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
 
-                                                                          auto pipeline = GetPtrNonsenseStruct().gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, GetPtrNonsenseStruct().trianglePass);
-                                                                          auto gfxContext = GetPtrNonsenseStruct().gfxDevice->CreateGraphicsContext();
+        auto pipeline = GetPtrNonsenseStruct().gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, GetPtrNonsenseStruct().trianglePass);
+        auto gfxContext = GetPtrNonsenseStruct().gfxDevice->CreateGraphicsContext();
 
-                                                                          auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-                                                                          auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+        auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+        auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-                                                                          auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
+        auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
 
-                                                                          pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-                                                                          pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-                                                                          pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+        pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+        pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+        pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
-                                                                          vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+        vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
 
-                                                                          uint32_t textureWidth = 256;
-                                                                          uint32_t textureHeight = 256;
-                                                                          uint32_t texturePixels = textureWidth * textureHeight;
-                                                                          uint32_t cellWidth = textureWidth / 8;
-                                                                          uint32_t cellHeight = textureHeight / 8;
+        uint32_t textureWidth = 256;
+        uint32_t textureHeight = 256;
+        uint32_t texturePixels = textureWidth * textureHeight;
+        uint32_t cellWidth = textureWidth / 8;
+        uint32_t cellHeight = textureHeight / 8;
 
-                                                                          auto texture2D = GetPtrNonsenseStruct().memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
-                                                                          auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-                                                                          auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-                                                                          auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
+        auto texture2D = GetPtrNonsenseStruct().memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+        auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+        auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
+        auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
 
-                                                                          for (uint32_t n = 0; n < texturePixels; n++)
-                                                                          {
-                                                                              auto x = n % textureWidth;
-                                                                              auto y = n / textureWidth;
+        for (uint32_t n = 0; n < texturePixels; n++)
+        {
+            auto x = n % textureWidth;
+            auto y = n / textureWidth;
 
-                                                                              pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
-                                                                          }
+            pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
+        }
 
-                                                                          textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
-                                                                          {
-                                                                              gfxContext->BeginFrame();
-                                                                              auto cmdList = gfxContext->CreateCmdList();
+        textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+        {
+            gfxContext->BeginFrame();
+            auto cmdList = gfxContext->CreateCmdList();
 
-                                                                              cmdList->Begin();
-                                                                              cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
+            cmdList->Begin();
+            cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-                                                                              cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-                                                                              cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-                                                                              cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-                                                                              cmdList->End();
+            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->End();
 
-                                                                              gfxContext->EndFrame();
-                                                                              GetPtrNonsenseStruct().gfxDevice->QueueSubmit(cmdList);
-                                                                              GetPtrNonsenseStruct().gfxDevice->WaitForIdle();
-                                                                          }
+            gfxContext->EndFrame();
+            GetPtrNonsenseStruct().gfxDevice->QueueSubmit(cmdList);
+            GetPtrNonsenseStruct().gfxDevice->WaitForIdle();
+        }
 
-                                                                          _renderingData.RenderPipeline = pipeline;
-                                                                          _renderingData.TextureRegion = texture2DRegion;
-                                                                          _renderingData.VertexBufferRegion = vertexBufferRegion;
-                                                                          _renderingData.VertexBuffer = vertexBuffer;
-                                                                          _renderingData.GraphicsContext = gfxContext;
+        _renderingData.RenderPipeline = pipeline;
+        _renderingData.TextureRegion = texture2DRegion;
+        _renderingData.VertexBufferRegion = vertexBufferRegion;
+        _renderingData.VertexBuffer = vertexBuffer;
+        _renderingData.GraphicsContext = gfxContext;
 
-                                                                          _inputResourceRegions = {_renderingData.TextureRegion};
+        _inputResourceRegions = {_renderingData.TextureRegion};
     }
 
     void Update(Timestamp /*delta*/, Catalogue catalogue) final
@@ -243,53 +248,53 @@ public:
         descriptorSetData->AddMemoryRegionsToInputs(_inputResourceRegions);
         descriptorSetData->UpdateDescriptorSetData();
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>,
-        1>
-        descriptorData{std::cref(descriptorSetData)};
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
         currentCmdList->CmdBindDescriptorSets(descriptorData);
 
         currentCmdList->CmdDraw(
-            static_cast<uint32_t>(_renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,
-                                0);
+            static_cast<uint32_t>(_renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)),
+            1,
+            0,
+            0);
 
         currentCmdList->End();
 
         //TODO: This is actually causing a memory leak. I'm such a comedian! - Matt J.
-        context->RegisterDescriptorSetForFrame(std::weak_ptr(_renderingData.RenderPipeline->GetSignature()),
-                                               descriptorSetData);
+        context->RegisterDescriptorSetForFrame(
+            std::weak_ptr(_renderingData.RenderPipeline->GetSignature()),
+            descriptorSetData);
+        context->EndFrame();
 
-        auto [renderPassView, cmdListView, graphComponentView, linkedListView] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TBackend>, EntityGraphComponent, LinkedEntityListNodeComponent>();
+        auto [renderPassView, cmdListView, graphComponentView] = catalogue.GetComponentViews<RenderPass, BuiltCommandList<TBackend>, EntityGraphComponent>();
 
         if (!_cmdListEntity.has_value())
         {
-            EntityId renderPassEntity = catalogue.CreateEntity();
             _cmdListEntity = catalogue.CreateEntity();
             auto cmdListEntityLocal = _cmdListEntity.value();
 
+            EntityGraphComponent graphComp{};
+            graphComp.parent = std::numeric_limits<EntityId>::max();
+            graphComp.childrenStartNode = std::numeric_limits<EntityId>::max();
+            graphComponentView.AddComponent(cmdListEntityLocal, graphComp);
+
             RenderPass passComponent{};
             passComponent.renderPassIndex = GetPtrNonsenseStruct().triangleRenderPassId; //TODO: There's no other way to pass this through yet. I am just trying to get this working.
-            renderPassView.AddComponent(renderPassEntity, passComponent);
-            EntityGraphComponent graphComp{};
-            graphComp.childrenStartNode = cmdListEntityLocal;
-            graphComponentView.AddComponent(renderPassEntity, graphComp);
-            EntityGraphComponent graphCompChild{};
-            graphCompChild.parent = renderPassEntity;
-            graphComponentView.AddComponent(cmdListEntityLocal, graphCompChild);
-            linkedListView.AddComponent(cmdListEntityLocal);
+            renderPassView.AddComponent(cmdListEntityLocal, passComponent);
 
             BuiltCommandList<TBackend> cmdListComp{};
             cmdListComp.commandList = new std::shared_ptr<GraphicsCmdList<TBackend>>(currentCmdList);
-
             cmdListView.AddComponent(cmdListEntityLocal, cmdListComp);
         }
         else
         {
+            RenderPass passComponent{};
+            passComponent.renderPassIndex = GetPtrNonsenseStruct().triangleRenderPassId;
+            renderPassView.PushComponentUpdateInstruction(_cmdListEntity.value(), passComponent);
+
             BuiltCommandList<TBackend> cmdListComp{};
             cmdListComp.commandList = new std::shared_ptr<GraphicsCmdList<TBackend>>(currentCmdList);
             cmdListView.PushComponentUpdateInstruction(_cmdListEntity.value(), cmdListComp);
         }
-
-        context->EndFrame();
     }
 };
 
@@ -339,16 +344,15 @@ int main()
 
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
                 GetPtrNonsenseStruct().trianglePass = GetPtrNonsenseStruct().gfxDevice->CreateRenderPass(passDesc);
-                GetPtrNonsenseStruct().triangleRenderPassId = renderPassManager.RegisterRenderPass(GetPtrNonsenseStruct().trianglePass);
+                auto passId = renderPassManager.RegisterRenderPass(GetPtrNonsenseStruct().trianglePass);
+                GetPtrNonsenseStruct().triangleRenderPassId = passId;
             })
         .WithDefaultOrchestrator();
 
-        auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>();
-
-        builder.Configure([triangleSystem](SystemScheduler& scheduler) {
-
-            scheduler.RegisterSystem(triangleSystem);
-        });
+    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>();
+    builder.Configure([triangleSystem](SystemScheduler& scheduler) {
+        scheduler.RegisterSystem(triangleSystem);
+    });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
