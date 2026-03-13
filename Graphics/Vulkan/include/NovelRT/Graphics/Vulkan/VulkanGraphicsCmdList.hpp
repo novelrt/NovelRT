@@ -24,15 +24,17 @@ namespace NovelRT::Graphics
         : std::enable_shared_from_this<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>
     {
     private:
+        bool _isBufferValid;
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkCommandBuffer _commandBuffer;
+        VkCommandPool _owningPool;
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
 
     public:
         GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> context,
-                        VkCommandBuffer commandBuffer, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
+                        VkCommandBuffer commandBuffer, VkCommandPool owningPool, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
 
-        ~GraphicsCmdList() = default;
+        ~GraphicsCmdList();
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
 
@@ -105,5 +107,7 @@ namespace NovelRT::Graphics
                                       GraphicsPipelineVisibility destinationStageFlag);
         
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList);
+
+        void MarkAsInvalid();
     };
 }

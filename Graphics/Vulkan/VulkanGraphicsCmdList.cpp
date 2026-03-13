@@ -36,9 +36,19 @@ namespace NovelRT::Graphics
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
     VulkanGraphicsCmdList::GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-                                           VkCommandBuffer commandBuffer, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
-        : _device(std::move(device)), _commandBuffer(commandBuffer), _secondaryContextData(std::move(secondaryContextData))
+                                           VkCommandBuffer commandBuffer, VkCommandPool owningPool, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
+        : _isBufferValid(true), _device(std::move(device)), _commandBuffer(commandBuffer), _owningPool(owningPool), _secondaryContextData(std::move(secondaryContextData))
     {
+    }
+
+    VulkanGraphicsCmdList::~GraphicsCmdList()
+    {
+        if (!_isBufferValid)
+        {
+            return;
+        }
+        
+        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningPool, 1, &_commandBuffer);
     }
 
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsCmdList::GetDevice() const noexcept
@@ -372,5 +382,10 @@ namespace NovelRT::Graphics
     {
         auto vkCmdList = cmdList->GetVkCommandBuffer();
         vkCmdExecuteCommands(_commandBuffer, 1, &vkCmdList);
+    }
+
+    void VulkanGraphicsCmdList::MarkAsInvalid()
+    {
+        _isBufferValid = false;
     }
 }

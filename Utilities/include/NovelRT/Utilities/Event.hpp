@@ -154,6 +154,11 @@ namespace NovelRT::Utilities
                 handler(args...);
             }
         }
+
+        void Reset()
+        {
+            _handlers.clear();
+        }
     };
 
     template<>
@@ -220,6 +225,11 @@ namespace NovelRT::Utilities
             {
                 handler();
             }
+        }
+        
+        void Reset()
+        {
+            _handlers.clear();
         }
     };
 }

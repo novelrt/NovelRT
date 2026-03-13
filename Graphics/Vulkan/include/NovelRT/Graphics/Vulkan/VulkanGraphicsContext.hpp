@@ -7,6 +7,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
 #include <map>
 #include <memory>
@@ -37,6 +38,8 @@ namespace NovelRT::Graphics
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
 
         Threading::VolatileState _state;
+
+        NovelRT::Utilities::Event<> _invalidateCmdLists;
 
         void DestroyDescriptorSets();
 

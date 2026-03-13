@@ -11,6 +11,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
 namespace NovelRT::Graphics
 {
@@ -108,6 +109,8 @@ namespace NovelRT::Graphics
         {
             VkCommandPool pool = _vulkanCommandPool.Get();
             vkDestroyCommandPool(device, pool, nullptr);
+            _invalidateCmdLists();
+            _invalidateCmdLists.Reset();
             _vulkanCommandPool.Reset();
         }
     }
@@ -125,7 +128,10 @@ namespace NovelRT::Graphics
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
     {
         VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, !secondaryContextData.has_value());
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer, secondaryContextData);
+        auto cmdList = std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer, _vulkanCommandPool.Get(), secondaryContextData);
+        _invalidateCmdLists += [cmdList]() { cmdList->MarkAsInvalid(); };
+        
+        return cmdList;
     }
 
     void VulkanGraphicsContext::EndFrame() // TODO: WTF?
