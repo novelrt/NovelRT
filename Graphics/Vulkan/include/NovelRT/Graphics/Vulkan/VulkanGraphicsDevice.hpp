@@ -11,6 +11,7 @@
 #include <NovelRT/Utilities/Lazy.hpp>
 
 #include <cstdint>
+#include <limits>
 #include <memory>
 
 #include <vulkan/vulkan.h>
@@ -29,8 +30,6 @@ namespace NovelRT::Graphics
     private:
         std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> _adapter;
         std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> _surfaceContext;
-
-        NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>>> _presentCompletionFence;
 
         Logging::LoggingService _logger;
 
@@ -72,6 +71,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext()
             const noexcept;
 
+        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> CreateSemaphore(uint64_t initialValue = std::numeric_limits<uint64_t>::max());
+
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
             std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
@@ -94,8 +95,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateGraphicsContext();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> BeginFrame();
+        void EndFrame();
         void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
-        void PresentFrame();
 
         void WaitForIdle();
 
@@ -104,8 +105,6 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkDevice GetVulkanDevice() const;
 
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
-
-        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetPresentCompletionFence() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> CreateRenderPass(
             const GraphicsRenderPassDescription& description);

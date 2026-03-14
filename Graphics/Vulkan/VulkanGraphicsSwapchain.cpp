@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
@@ -144,6 +145,7 @@ namespace NovelRT::Graphics
         _swapchainExtent = extent;
 
         GetSwapchainImages(vulkanSwapchain, surfaceFormat.format);
+
         return vulkanSwapchain;
     }
 
@@ -164,6 +166,12 @@ namespace NovelRT::Graphics
 
         _swapchainImages.clear();
         _swapchainImages.reserve(imageCount);
+        _activeSemaphores.clear();
+        _activeSemaphores.resize(imageCount);
+        for (size_t n = _semaphores.size(); n < imageCount * 2 + 1; n++)
+        {
+            _semaphores.emplace_back(GetDevice()->CreateSemaphore());
+        }
 
         std::vector<VkImage> swapchainImages = std::vector<VkImage>(imageCount);
         imagesKHRQuery = vkGetSwapchainImagesKHR(device, vulkanSwapchain, &imageCount, swapchainImages.data());
@@ -192,6 +200,7 @@ namespace NovelRT::Graphics
     GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchain(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice)
         : _device(std::move(graphicsDevice)),
+          _fence(std::make_shared<GraphicsFence<Vulkan::VulkanGraphicsBackend>>(_device, false)),
           _swapchain([this]() { return CreateSwapchain(VK_NULL_HANDLE); }),
           _currentImageIndex(0ULL),
           _logger(Logging::CONSOLE_LOG_GFX),
@@ -221,12 +230,21 @@ namespace NovelRT::Graphics
         return _vulkanSwapchainFormat;
     }
 
+    std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetActiveSemaphore(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const
+    {
+        auto index = std::distance(_swapchainImages.begin(), std::find(_swapchainImages.begin(), _swapchainImages.end(), image));
+        return _activeSemaphores[index];
+    }
+
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<
         Vulkan::VulkanGraphicsBackend>::AcquireNextImage()
     {
+        auto semaphore = _semaphores.front();
+        _semaphores.pop_front();
         const VkResult acquireNextImageResult = vkAcquireNextImageKHR(
-            GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(), VK_NULL_HANDLE,
-            GetDevice()->GetPresentCompletionFence()->GetVulkanFence(), &_currentImageIndex);
+            GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(),
+            semaphore->GetVulkanSemaphore(),
+            _fence->GetVulkanFence(), &_currentImageIndex);
 
         if (acquireNextImageResult != VK_SUCCESS)
         {
@@ -234,30 +252,34 @@ namespace NovelRT::Graphics
                                      std::to_string(acquireNextImageResult));
         }
 
+        if (_activeSemaphores[_currentImageIndex] != nullptr)
+        {
+            _semaphores.push_back(_activeSemaphores[_currentImageIndex]);
+        }
+
+        _activeSemaphores[_currentImageIndex] = semaphore;
         return _swapchainImages[_currentImageIndex];
     }
 
     bool GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::Present()
     {
-        // Wait for the previous frame's present to complete
-        auto presentCompletionGraphicsFence = GetDevice()->GetPresentCompletionFence();
-        presentCompletionGraphicsFence->Wait();
-        presentCompletionGraphicsFence->Reset();
+        // Wait for the acquire fence to complete
+        _fence->Wait();
+        _fence->Reset();
 
         auto currentImageIndex = _currentImageIndex;
+        auto image = _swapchainImages[currentImageIndex];
+
         VkSwapchainKHR vulkanSwapchain = _swapchain.Get();
+        VkSemaphore imageSemaphore = _activeSemaphores[currentImageIndex]->GetVulkanSemaphore();
 
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        presentInfo.waitSemaphoreCount = 1;
+        presentInfo.pWaitSemaphores = &imageSemaphore;
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = &vulkanSwapchain;
         presentInfo.pImageIndices = &currentImageIndex;
-
-        // Wait for the swapchain's submit to complete
-        auto context = _swapchainImages[_currentImageIndex];
-        auto fence = context->GetQueueSubmissionFence();
-        fence->Wait();
-        fence->Reset();
 
         const VkResult presentResult = vkQueuePresentKHR(GetDevice()->GetVulkanPresentQueue(), &presentInfo);
         if (presentResult != VK_SUCCESS && presentResult != VK_SUBOPTIMAL_KHR)
@@ -270,6 +292,7 @@ namespace NovelRT::Graphics
 
     void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::RecreateSwapchain()
     {
+        _device->WaitForIdle();
         _swapchain.Reset(CreateSwapchain(_swapchain.HasValue() ? _swapchain.Get() : VK_NULL_HANDLE));
     }
 }

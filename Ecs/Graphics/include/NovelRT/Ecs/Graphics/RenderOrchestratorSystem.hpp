@@ -17,11 +17,13 @@
 #include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsRenderTarget.hpp>
+#include <NovelRT/Graphics/GraphicsSemaphore.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <vulkan/vulkan.h>
 
 #include <algorithm>
+#include <deque>
 #include <map>
 #include <set>
 #include <utility>
@@ -33,8 +35,22 @@ namespace NovelRT::Ecs::Graphics
     class RenderOrchestratorSystem : public NovelRT::Ecs::IEcsSystem
     {
     private:
+        struct PerFrameResources
+        {
+            uint64_t frameNumber;
+
+            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> _frameImage;
+
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargets{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> commandLists{};
+        };
+
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _surfaceContext;
+
+        std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _deletionSemaphore;
+        std::deque<PerFrameResources> _frameResources;
+        uint64_t _renderedFrames{0};
 
         RenderPassManager<TGraphicsBackend> _renderPassManager;
 
@@ -74,21 +90,26 @@ namespace NovelRT::Ecs::Graphics
                                  RenderPassManager<TGraphicsBackend> renderPassManager)
             : _graphicsDevice(std::move(graphicsDevice)),
               _surfaceContext(std::move(context)),
+              _deletionSemaphore(_graphicsDevice->CreateSemaphore(0)),
               _renderPassManager(renderPassManager)
         {
         }
 
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
         {
+            // 1. Clean up any resources that are no longer valid.
+            auto lastRenderedFrame = _deletionSemaphore->GetValue();
+            if (lastRenderedFrame > 0) lastRenderedFrame -= 1; // this is important to avoid underflow
+
+            _frameResources.erase(
+                std::remove_if(_frameResources.begin(), _frameResources.end(), [lastRenderedFrame](auto& it){ return it.frameNumber < lastRenderedFrame; }),
+                _frameResources.end());
+
+            // 2. Determine the order in which we should enumerate the entities based on their render pass
             std::map<Components::RenderPassId, std::vector<EntityId>> passes{};
             std::set<EntityId> rootEntities{};
             std::vector<EntityGraphView> roots{};
             std::vector<EntityId> ordered{};
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargetCache{};
-            // TODO: maybe come up with a more "standardized" way to do this?
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> perFrameCommandLists{};
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>>
-                perFrameDescriptorSets{};
 
             auto [renderPasses, commandLists, graph] =
                 catalogue.GetComponentViews<Components::RenderPass<TGraphicsBackend>,
@@ -118,14 +139,6 @@ namespace NovelRT::Ecs::Graphics
                 EnumerateChildren(root, renderPasses, ordered);
             }
 
-            auto image = _graphicsDevice->BeginFrame();
-            auto surface = _surfaceContext->GetSurface();
-            std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
-            auto context = _graphicsDevice->CreateGraphicsContext();
-            auto cmdList = context->CreateCmdList();
-            context->BeginFrame();
-            cmdList->Begin();
-
             auto sorter = [&ordered](EntityId left, EntityId right)
             {
                 auto leftPos = std::distance(ordered.begin(), std::find(ordered.begin(), ordered.end(), left));
@@ -133,14 +146,30 @@ namespace NovelRT::Ecs::Graphics
                 return leftPos < rightPos;
             };
 
+
+            // 3. Prepare to render a frame
+            auto image = _graphicsDevice->BeginFrame();
+            auto surface = _surfaceContext->GetSurface();
+            auto context = _graphicsDevice->CreateGraphicsContext();
+            std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
+            auto cmdList = context->CreateCmdList();
+            context->BeginFrame();
+            cmdList->Begin();
+
+            auto& frameResources = _frameResources.emplace_back(PerFrameResources{ ++_renderedFrames, image });
+
+            // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
             {
+                // 5. Sort the entities within this pass according to their scene graph order.
                 std::sort(entities.begin(), entities.end(), sorter);
 
+                // 6. Prepare the render pass
                 auto pass = _renderPassManager.GetRenderPass(passId);
-                auto target = std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(
-                    _graphicsDevice, imageViewData, pass, static_cast<uint32_t>(surface->GetWidth()),
-                    static_cast<uint32_t>(surface->GetHeight()));
+                auto target = frameResources.renderTargets.emplace_back(
+                    std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(
+                        _graphicsDevice, imageViewData, pass, static_cast<uint32_t>(surface->GetWidth()),
+                        static_cast<uint32_t>(surface->GetHeight())));
 
                 NovelRT::Graphics::ClearValue colourDataStruct{};
                 colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
@@ -149,31 +178,30 @@ namespace NovelRT::Ecs::Graphics
 
                 cmdList->CmdBeginRenderPass(pass, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
 
+                // 7. Enumerate over the entities and dispatch their individual command lists
                 for (const auto& entity : entities)
                 {
                     if (!commandLists.HasComponent(entity))
                         continue;
 
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
-                    auto subCmdList = perFrameCommandLists.emplace_back(*subCmdListPtr);
-                    auto* descriptorSetPtr = renderPasses.GetComponent(entity).descriptorSet;
-                    perFrameDescriptorSets.emplace_back(*descriptorSetPtr);
+                    auto subCmdList = frameResources.commandLists.emplace_back(*subCmdListPtr);
 
                     cmdList->CmdExecuteCommands(subCmdList);
                 }
 
                 cmdList->CmdEndRenderPass();
-
-                renderTargetCache.emplace_back(target);
             }
 
             cmdList->End();
 
             context->EndFrame();
-            image->QueueSubmit(cmdList);
+            image->QueueSubmit(cmdList, { _deletionSemaphore, frameResources.frameNumber });
+
+            frameResources.commandLists.emplace_back(cmdList);
 
             // TODO: should this be in ECS?
-            _graphicsDevice->PresentFrame();
+            _graphicsDevice->EndFrame();
         }
     };
 }

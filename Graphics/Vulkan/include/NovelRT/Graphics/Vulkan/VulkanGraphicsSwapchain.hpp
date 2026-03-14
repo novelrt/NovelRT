@@ -3,9 +3,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsFence.hpp>
+#include <NovelRT/Graphics/GraphicsSemaphore.hpp>
 #include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
+#include <deque>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -22,8 +25,11 @@ namespace NovelRT::Graphics
     {
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
         Utilities::Lazy<VkSwapchainKHR> _swapchain;
         std::vector<std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>> _swapchainImages;
+        std::vector<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>> _activeSemaphores;
+        std::deque<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>> _semaphores;
         uint32_t _currentImageIndex;
         Logging::LoggingService _logger;
         VkFormat _vulkanSwapchainFormat;
@@ -50,8 +56,11 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] VkFormat GetVulkanFormat() const;
 
+        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> GetActiveSemaphore(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const;
+
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> AcquireNextImage();
         [[nodiscard]] bool Present();
+
         void RecreateSwapchain();
     };
 }

@@ -28,14 +28,14 @@ namespace NovelRT::Graphics
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkCommandBuffer _commandBuffer;
-        std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _owningContext;
+        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _owningContext;
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
 
     public:
         GraphicsCmdList(
             std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
             VkCommandBuffer commandBuffer,
-            std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
+            std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
             std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
 
         ~GraphicsCmdList();

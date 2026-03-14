@@ -15,6 +15,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp>
@@ -40,6 +41,7 @@ namespace NovelRT::Graphics
     using VulkanGraphicsRenderPass = GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>;
     template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsSemaphore = GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSwapchain = GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
@@ -133,11 +135,16 @@ namespace NovelRT::Graphics
         auto physicalDeviceExtensionPtrs = NovelRT::Utilities::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
+        VkPhysicalDeviceTimelineSemaphoreFeaturesKHR timelineSemaphore{};
+        timelineSemaphore.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES_KHR;
+        timelineSemaphore.timelineSemaphore = true;
+
         VkPhysicalDeviceNestedCommandBufferFeaturesEXT nestedCommandBuffer{};
         VkPhysicalDeviceMaintenance7FeaturesKHR maintenance7{};
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        createInfo.pNext = &timelineSemaphore;
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.pEnabledFeatures = &deviceFeatures;
@@ -147,13 +154,13 @@ namespace NovelRT::Graphics
         if (std::find(physicalDeviceExtensions.begin(), physicalDeviceExtensions.end(),
                       VK_KHR_MAINTENANCE_7_EXTENSION_NAME) != physicalDeviceExtensions.end())
         {
-            createInfo.pNext = &maintenance7;
+            timelineSemaphore.pNext = &maintenance7;
             maintenance7.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
             maintenance7.maintenance7 = true;
         }
         else
         {
-            createInfo.pNext = &nestedCommandBuffer;
+            timelineSemaphore.pNext = &nestedCommandBuffer;
             nestedCommandBuffer.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_FEATURES_EXT;
             nestedCommandBuffer.nestedCommandBuffer = true;
         }
@@ -194,8 +201,6 @@ namespace NovelRT::Graphics
                                          std::vector<std::string> optionalDeviceExtensions)
         : _adapter(std::move(adapter)),
           _surfaceContext(std::move(surfaceContext)),
-          _presentCompletionFence(
-              [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
           _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
           _surface(_surfaceContext->GetSurfaceContextHandle()),
           _device([this, requiredDeviceExtensions, optionalDeviceExtensions]()
@@ -257,6 +262,12 @@ namespace NovelRT::Graphics
         return std::make_shared<VulkanShaderProgram>(shared_from_this(), std::move(entryPointName), kind, byteData);
     }
 
+    std::shared_ptr<VulkanGraphicsSemaphore> VulkanGraphicsDevice::CreateSemaphore(uint64_t initialValue)
+    {
+        return std::make_shared<VulkanGraphicsSemaphore>(shared_from_this(), initialValue);
+    }
+
+
     std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
         std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
         std::shared_ptr<VulkanShaderProgram> vertexShader,
@@ -298,6 +309,16 @@ namespace NovelRT::Graphics
         return image;
     }
 
+    void VulkanGraphicsDevice::EndFrame()
+    {
+        auto swapchain = _vulkanSwapchain.Get();
+
+        if (!swapchain->Present())
+        {
+            swapchain->RecreateSwapchain();
+        }
+    }
+
     void VulkanGraphicsDevice::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
     {
         std::vector<VkCommandBuffer> buffers;
@@ -314,16 +335,6 @@ namespace NovelRT::Graphics
         if (queueSubmitResult != VK_SUCCESS)
         {
             throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
-        }
-    }
-
-    void VulkanGraphicsDevice::PresentFrame()
-    {
-        auto swapchain = _vulkanSwapchain.Get();
-
-        if (!swapchain->Present())
-        {
-            swapchain->RecreateSwapchain();
         }
     }
 
@@ -356,11 +367,6 @@ namespace NovelRT::Graphics
     const Vulkan::QueueFamilyIndices& VulkanGraphicsDevice::GetIndicesData() const noexcept
     {
         return _indicesData;
-    }
-
-    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsDevice::GetPresentCompletionFence() const
-    {
-        return _presentCompletionFence.Get();
     }
 
     std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::CreateRenderPass(

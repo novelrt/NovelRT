@@ -39,7 +39,7 @@ namespace NovelRT::Graphics
     VulkanGraphicsCmdList::GraphicsCmdList(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         VkCommandBuffer commandBuffer,
-        std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
+        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
         : _device(std::move(device)),
           _commandBuffer(commandBuffer),
@@ -50,12 +50,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsCmdList::~GraphicsCmdList()
     {
-        if (_owningContext.expired())
-        {
-            return;
-        }
-
-        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext.lock()->GetVulkanCommandPool(), 1,
+        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext->GetVulkanCommandPool(), 1,
                              &_commandBuffer);
     }
 

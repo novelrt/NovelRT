@@ -20,8 +20,6 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class GraphicsAdapter;
     template<typename TBackend>
-    class GraphicsFence;
-    template<typename TBackend>
     class GraphicsSurfaceContext;
     template<typename TBackend>
     class GraphicsContext;
@@ -40,6 +38,8 @@ namespace NovelRT::Graphics
     template<typename TBackend>
     class ShaderProgram;
     template<typename TBackend>
+    class GraphicsSemaphore;
+    template<typename TBackend>
     class GraphicsSwapchain;
     template<typename TBackend>
     class GraphicsSwapchainImage;
@@ -56,6 +56,8 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
+
+        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<TBackend>> CreateSemaphore(uint64_t initialValue = std::numeric_limits<uint64_t>::max());
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,
@@ -79,8 +81,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> CreateGraphicsContext();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
+        void EndFrame();
         void QueueSubmit(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList);
-        void PresentFrame();
 
         void WaitForIdle();
 

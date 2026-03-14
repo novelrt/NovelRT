@@ -35,6 +35,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       VulkanGraphicsResource.cpp
       VulkanGraphicsResourceMemoryRegion.cpp
       VulkanGraphicsSurfaceContext.cpp
+      VulkanGraphicsSemaphore.cpp
       VulkanGraphicsSwapchain.cpp
       VulkanGraphicsSwapchainImage.cpp
       VulkanGraphicsTexture.cpp
@@ -61,6 +62,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp

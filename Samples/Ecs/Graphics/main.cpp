@@ -56,25 +56,17 @@ using namespace NovelRT::Utilities;
 using namespace NovelRT::ResourceManagement::Desktop;
 using namespace NovelRT::Timing;
 
-struct PtrNonsense
-{
-    std::shared_ptr<GraphicsRenderPass<VulkanGraphicsBackend>> trianglePass;
-    std::shared_ptr<IGraphicsSurface> sampleSurface;
-    std::shared_ptr<GraphicsMemoryAllocator<VulkanGraphicsBackend>> memoryAllocator;
-    std::shared_ptr<GraphicsDevice<VulkanGraphicsBackend>> gfxDevice;
-    RenderPassId triangleRenderPassId;
-};
-
-PtrNonsense& GetPtrNonsenseStruct()
-{
-    static PtrNonsense storage{};
-    return storage;
-}
-
 struct TexturedVertex
 {
     NovelRT::Maths::GeoVector3F Position;
     NovelRT::Maths::GeoVector2F UV;
+};
+
+template <typename TBackend>
+struct TrianglePass
+{
+    std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
+    RenderPassId RenderPassId;
 };
 
 template<typename TBackend>
@@ -84,7 +76,6 @@ struct RenderingData
     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> VertexBufferRegion;
     std::shared_ptr<GraphicsPipeline<TBackend>> RenderPipeline;
     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
-    std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
 };
 
 template<typename TBackend>
@@ -92,35 +83,36 @@ class SampleTriangleRenderingSystem : public IEcsSystem
 {
 private:
     std::shared_ptr<DesktopResourceLoader> _resourceLoader; // TODO: This is bad. Too bad! - Matt J.
+    std::shared_ptr<GraphicsDevice<TBackend>> _graphicsDevice;
+    std::shared_ptr<GraphicsSurfaceContext<TBackend>> _surfaceContext;
+    std::shared_ptr<GraphicsMemoryAllocator<TBackend>> _memoryAllocator;
+    TrianglePass<TBackend> _trianglePass;
     RenderingData<TBackend> _renderingData;
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-        _inputResourceRegions;
+    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> _inputResourceRegions;
     std::optional<EntityId> _cmdListEntity;
 
-public:
-    SampleTriangleRenderingSystem() : _resourceLoader(std::make_shared<DesktopResourceLoader>())
+    static RenderingData<TBackend> ComputeRenderingData(DesktopResourceLoader* resourceLoader, GraphicsDevice<TBackend>* graphicsDevice, GraphicsMemoryAllocator<TBackend>* memoryAllocator, TrianglePass<TBackend> trianglePass)
     {
         GraphicsBufferCreateInfo bufferCreateInfo{};
         bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
         bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
         bufferCreateInfo.size = 64 * 1024;
 
-        auto vertexStagingBuffer = GetPtrNonsenseStruct().memoryAllocator->CreateBuffer(bufferCreateInfo);
+        auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
         bufferCreateInfo.size = 64 * 1024 * 4; // need this to be a different size but rest of the values are unchanged.
 
-        auto textureStagingBuffer = GetPtrNonsenseStruct().memoryAllocator->CreateBuffer(bufferCreateInfo);
+        auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
         bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
         bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
         bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
         bufferCreateInfo.size = 64 * 1024;
 
-        auto vertexBuffer = GetPtrNonsenseStruct().memoryAllocator->CreateBuffer(bufferCreateInfo);
+        auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-        auto vertShaderData = _resourceLoader->LoadShaderSource("vulkanrendervert.spv");
-        auto pixelShaderData = _resourceLoader->LoadShaderSource("vulkanrenderfrag.spv");
-        auto gfxSwapchainImage = GetPtrNonsenseStruct().gfxDevice->BeginFrame();
+        auto vertShaderData = resourceLoader->LoadShaderSource("vulkanrendervert.spv");
+        auto pixelShaderData = resourceLoader->LoadShaderSource("vulkanrenderfrag.spv");
 
         std::vector<GraphicsPipelineInputElement> elements{
             GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F),
@@ -133,17 +125,16 @@ public:
             GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
         std::vector<GraphicsPushConstantRange> dummyData{};
-        auto signature = GetPtrNonsenseStruct().gfxDevice->CreatePipelineSignature(
+        auto signature = graphicsDevice->CreatePipelineSignature(
             GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
-        auto vertShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex,
+        auto vertShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex,
                                                                                     vertShaderData.shaderCode);
-        auto pixelShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel,
+        auto pixelShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel,
                                                                                      pixelShaderData.shaderCode);
 
-        auto pipeline = GetPtrNonsenseStruct().gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg,
-                                                                         GetPtrNonsenseStruct().trianglePass);
-        auto gfxContext = GetPtrNonsenseStruct().gfxDevice->CreateGraphicsContext();
+        auto pipeline = graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, trianglePass.RenderPass);
+        auto gfxContext = graphicsDevice->CreateGraphicsContext();
 
         auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
         auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
@@ -165,8 +156,7 @@ public:
         uint32_t cellWidth = textureWidth / 8;
         uint32_t cellHeight = textureHeight / 8;
 
-        auto texture2D =
-            GetPtrNonsenseStruct().memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+        auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
         auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
         auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
@@ -193,28 +183,42 @@ public:
             cmdList->End();
 
             gfxContext->EndFrame();
-            GetPtrNonsenseStruct().gfxDevice->QueueSubmit(cmdList);
-            GetPtrNonsenseStruct().gfxDevice->WaitForIdle();
+            graphicsDevice->QueueSubmit(cmdList);
+            graphicsDevice->WaitForIdle();
         }
 
-        _renderingData.RenderPipeline = pipeline;
-        _renderingData.TextureRegion = texture2DRegion;
-        _renderingData.VertexBufferRegion = vertexBufferRegion;
-        _renderingData.VertexBuffer = vertexBuffer;
-        _renderingData.GraphicsContext = gfxContext;
+        RenderingData<TBackend> renderData{};
+        renderData.RenderPipeline = pipeline;
+        renderData.TextureRegion = texture2DRegion;
+        renderData.VertexBufferRegion = vertexBufferRegion;
+        renderData.VertexBuffer = vertexBuffer;
 
-        _inputResourceRegions = {_renderingData.TextureRegion};
+        return renderData;
     }
+
+public:
+    SampleTriangleRenderingSystem(std::shared_ptr<GraphicsProvider<TBackend>> provider,
+                                  std::shared_ptr<GraphicsDevice<TBackend>> device,
+                                  std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext,
+                                  TrianglePass<TBackend> trianglePass)
+        : _resourceLoader(std::make_shared<DesktopResourceLoader>()),
+          _graphicsDevice(std::move(device)),
+          _surfaceContext(std::move(surfaceContext)),
+          _memoryAllocator(std::make_shared<GraphicsMemoryAllocator<TBackend>>(_graphicsDevice, provider)),
+          _trianglePass(std::move(trianglePass)),
+          _renderingData(ComputeRenderingData(_resourceLoader.get(), _graphicsDevice.get(), _memoryAllocator.get(), _trianglePass)),
+          _inputResourceRegions{_renderingData.TextureRegion}
+    { }
 
     void Update(Timestamp /*delta*/, Catalogue catalogue) final
     {
-        float surfaceWidth = GetPtrNonsenseStruct().sampleSurface->GetWidth();
-        float surfaceHeight = GetPtrNonsenseStruct().sampleSurface->GetHeight();
+        float surfaceWidth = _surfaceContext->GetSurface()->GetWidth();
+        float surfaceHeight = _surfaceContext->GetSurface()->GetHeight();
 
-        auto context = _renderingData.GraphicsContext;
+        auto context = _graphicsDevice->CreateGraphicsContext();
         context->BeginFrame();
         auto currentCmdList = context->CreateCmdList(
-            std::optional<SecondaryCmdListInfo<TBackend>>({GetPtrNonsenseStruct().trianglePass, 0}));
+            std::optional<SecondaryCmdListInfo<TBackend>>({_trianglePass.RenderPass, 0}));
 
         currentCmdList->Begin();
 
@@ -258,6 +262,7 @@ public:
         currentCmdList->End();
 
         context->EndFrame();
+        context->RegisterDescriptorSetForFrame(descriptorSetData);
 
         auto [renderPassView, cmdListView, graphComponentView] =
             catalogue.GetComponentViews<RenderPass<TBackend>, BuiltCommandList<TBackend>, EntityGraphComponent>();
@@ -273,10 +278,7 @@ public:
             graphComponentView.AddComponent(cmdListEntityLocal, graphComp);
 
             RenderPass<TBackend> passComponent{};
-            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
-            passComponent.renderPassIndex =
-                GetPtrNonsenseStruct().triangleRenderPassId; // TODO: There's no other way to pass this through yet. I
-                                                             // am just trying to get this working.
+            passComponent.renderPassIndex = _trianglePass.RenderPassId;
             renderPassView.AddComponent(cmdListEntityLocal, passComponent);
 
             BuiltCommandList<TBackend> cmdListComp{};
@@ -286,8 +288,7 @@ public:
         else
         {
             RenderPass<TBackend> passComponent{};
-            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
-            passComponent.renderPassIndex = GetPtrNonsenseStruct().triangleRenderPassId;
+            passComponent.renderPassIndex = _trianglePass.RenderPassId;
             renderPassView.PushComponentUpdateInstruction(_cmdListEntity.value(), passComponent);
 
             BuiltCommandList<TBackend> cmdListComp{};
@@ -304,26 +305,24 @@ int main()
 
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
-    GetPtrNonsenseStruct().sampleSurface = gfxSurfaceContext->GetSurface();
 
     VulkanGraphicsAdapterSelector selector{};
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
-    GetPtrNonsenseStruct().gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
-    GetPtrNonsenseStruct().memoryAllocator =
-        std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(GetPtrNonsenseStruct().gfxDevice, gfxProvider);
+    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
+    TrianglePass<VulkanGraphicsBackend> trianglePass{};
 
     SystemSchedulerBuilder builder{};
     AddDefaults(builder);
     AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
-        .WithGraphicsDevice(GetPtrNonsenseStruct().gfxDevice)
+        .WithGraphicsDevice(gfxDevice)
         .WithSurfaceContext(gfxSurfaceContext)
         .ConfigureRenderPasses(
-            [](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
+            [gfxDevice, &trianglePass](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
             {
                 GraphicsRenderPassDescription passDesc{};
                 GraphicsAttachmentDescription attachmentDesc{};
 
-                auto vulkanFormat = GetPtrNonsenseStruct().gfxDevice->GetSwapchain()->GetVulkanFormat();
+                auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
                 if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
                 {
                     attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
@@ -343,13 +342,12 @@ int main()
                 attachmentDesc.finalLayout = ImageLayout::Present;
 
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                GetPtrNonsenseStruct().trianglePass = GetPtrNonsenseStruct().gfxDevice->CreateRenderPass(passDesc);
-                auto passId = renderPassManager.RegisterRenderPass(GetPtrNonsenseStruct().trianglePass);
-                GetPtrNonsenseStruct().triangleRenderPassId = passId;
+                trianglePass.RenderPass = gfxDevice->CreateRenderPass(passDesc);
+                trianglePass.RenderPassId = renderPassManager.RegisterRenderPass(trianglePass.RenderPass);
             })
         .WithDefaultOrchestrator();
 
-    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>();
+    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>(gfxProvider, gfxDevice, gfxSurfaceContext, trianglePass);
     builder.Configure([triangleSystem](SystemScheduler& scheduler) { scheduler.RegisterSystem(triangleSystem); });
 
     SystemScheduler scheduler = builder.Build();
@@ -363,6 +361,8 @@ int main()
         wndProvider->ProcessAllMessages();
         timer.Tick(TimerCallback);
     }
+
+    gfxDevice->WaitForIdle();
 
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <mutex>
@@ -65,7 +66,6 @@ namespace NovelRT::Graphics
         uint32_t width,
         uint32_t height)
         : _swapchain(std::move(swapchain)),
-          _queueSubmissionFence(std::make_shared<GraphicsFence<Vulkan::VulkanGraphicsBackend>>(GetDevice(), false)),
           _image(image),
           _imageView(CreateVulkanSwapChainImageView(_swapchain, _image, imageFormat)),
           _width(width),
@@ -90,12 +90,6 @@ namespace NovelRT::Graphics
         return _swapchain;
     }
 
-    std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchainImage<
-        Vulkan::VulkanGraphicsBackend>::GetQueueSubmissionFence() const noexcept
-    {
-        return _queueSubmissionFence;
-    }
-
     VkImage GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetVulkanImage() const noexcept
     {
         return _image;
@@ -116,21 +110,94 @@ namespace NovelRT::Graphics
         return _height;
     }
 
-    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(
-        std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
     {
-        std::vector<VkCommandBuffer> buffers;
-        buffers.emplace_back(cmdList->GetVkCommandBuffer());
+        std::vector<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists{cmdList};
+        QueueSubmit({}, cmdLists, {});
+    }
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToWait,
+                     std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
+    {
+        std::vector<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToWait{semaphoreToWait};
+        std::vector<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists{cmdList};
+        QueueSubmit(semaphoresToWait, cmdLists, {});
+    }
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList,
+                     std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToSignal)
+    {
+        std::vector<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists{cmdList};
+        std::vector<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToSignal{semaphoreToSignal};
+        QueueSubmit({}, cmdLists, semaphoresToSignal);
+    }
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToWait,
+                     std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList,
+                     std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToSignal)
+    {
+        std::vector<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToWait{semaphoreToWait};
+        std::vector<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists{cmdList};
+        std::vector<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToSignal{semaphoreToSignal};
+        QueueSubmit(semaphoresToWait, cmdLists, semaphoresToSignal);
+    }
+
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists)
+    {
+        QueueSubmit({}, cmdLists, {});
+    }
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToWait,
+                     NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists)
+    {
+        QueueSubmit(semaphoresToWait, cmdLists, {});
+    }
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+                     NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToSignal)
+    {
+        QueueSubmit({}, cmdLists, semaphoresToSignal);
+    }
+
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(
+        NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToWait,
+        NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+        NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToSignal)
+    {
+        VkSemaphore vulkanSemaphore = _swapchain->GetActiveSemaphore(shared_from_this())->GetVulkanSemaphore();
+        VkPipelineStageFlags allCommands = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+
+        std::vector<VkCommandBuffer> buffers(cmdLists.size());
+        std::vector<VkSemaphore> waitSemaphores(semaphoresToWait.size());
+        std::vector<uint64_t> waitSemaphoreValues(semaphoresToWait.size());
+        std::vector<VkSemaphore> signalSemaphores(semaphoresToSignal.size());
+        std::vector<uint64_t> signalSemaphoreValues(semaphoresToSignal.size());
+        std::transform(cmdLists.begin(), cmdLists.end(), buffers.begin(), [](const auto& cmdList) { return cmdList->GetVkCommandBuffer(); });
+        std::transform(semaphoresToWait.begin(), semaphoresToWait.end(), waitSemaphores.begin(), [](const auto& semaphore) { return semaphore.first->GetVulkanSemaphore(); });
+        std::transform(semaphoresToWait.begin(), semaphoresToWait.end(), waitSemaphoreValues.begin(), [](const auto& semaphore) { return semaphore.second; });
+        std::transform(semaphoresToSignal.begin(), semaphoresToSignal.end(), signalSemaphores.begin(), [](const auto& semaphore) { return semaphore.first->GetVulkanSemaphore(); });
+        std::transform(semaphoresToSignal.begin(), semaphoresToSignal.end(), signalSemaphoreValues.begin(), [](const auto& semaphore) { return semaphore.second; });
+
+        waitSemaphores.push_back(vulkanSemaphore);
+        waitSemaphoreValues.push_back(0);
+        signalSemaphores.push_back(vulkanSemaphore);
+        signalSemaphoreValues.push_back(0);
+
+        VkTimelineSemaphoreSubmitInfo semaphoreSubmitInfo{};
+        semaphoreSubmitInfo.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
+        semaphoreSubmitInfo.waitSemaphoreValueCount = waitSemaphoreValues.size();
+        semaphoreSubmitInfo.pWaitSemaphoreValues = waitSemaphoreValues.data();
+        semaphoreSubmitInfo.signalSemaphoreValueCount = signalSemaphoreValues.size();
+        semaphoreSubmitInfo.pSignalSemaphoreValues = signalSemaphoreValues.data();
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.pNext = &semaphoreSubmitInfo;
         submitInfo.commandBufferCount = static_cast<uint32_t>(buffers.size());
         submitInfo.pCommandBuffers = buffers.data();
+        submitInfo.signalSemaphoreCount = signalSemaphores.size();
+        submitInfo.pSignalSemaphores = signalSemaphores.data();
+        submitInfo.waitSemaphoreCount = waitSemaphores.size();
+        submitInfo.pWaitSemaphores = waitSemaphores.data();
+        submitInfo.pWaitDstStageMask = &allCommands;
 
         // TODO: submit to the correct queue if it's just transfers somehow?
-        const VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo,
-                                                         _queueSubmissionFence->GetVulkanFence());
-        //
+        const VkResult queueSubmitResult = vkQueueSubmit(GetDevice()->GetVulkanGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
         if (queueSubmitResult != VK_SUCCESS)
         {
             throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));

@@ -73,11 +73,6 @@ namespace NovelRT::Graphics
         return vulkanCommandBuffer;
     }
 
-    void VulkanGraphicsContext::DestroyDescriptorSets()
-    {
-        _vulkanDescriptorSets.clear();
-    }
-
     // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsContext::shared_from_this()
     {
@@ -100,8 +95,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsContext::~GraphicsContext()
     {
-        DestroyDescriptorSets();
-
+        _vulkanDescriptorSets.clear();
         VkDevice device = GetDevice()->GetVulkanDevice();
 
         if (_vulkanCommandPool.HasValue())
@@ -118,38 +112,28 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsContext::BeginFrame()
-    {
-        DestroyDescriptorSets();
-    }
+    { }
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
     {
         VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, !secondaryContextData.has_value());
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer,
-                                                       std::weak_ptr<VulkanGraphicsContext>(shared_from_this()),
+        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(),
+                                                       commandBuffer,
+                                                       shared_from_this(),
                                                        secondaryContextData);
     }
 
     void VulkanGraphicsContext::EndFrame() // TODO: WTF?
-    {
-    }
+    { }
 
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
     {
         return _vulkanCommandPool.Get();
     }
 
-    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::weak_ptr<VulkanGraphicsPipelineSignature> signature,
-                                                              std::shared_ptr<VulkanGraphicsDescriptorSet> set)
+    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::shared_ptr<VulkanGraphicsDescriptorSet> set)
     {
-        auto it = _vulkanDescriptorSets.find(signature);
-        if (it == _vulkanDescriptorSets.end())
-        {
-            _vulkanDescriptorSets.emplace_hint(it, signature, std::vector{set});
-            return;
-        }
-
-        it->second.emplace_back(set);
+        _vulkanDescriptorSets.emplace_back(set);
     }
 }

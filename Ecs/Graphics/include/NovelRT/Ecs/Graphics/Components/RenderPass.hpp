@@ -14,20 +14,17 @@ namespace NovelRT::Ecs::Graphics::Components
     template<typename TGraphicsBackend>
     struct RenderPass
     {
-        std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>* descriptorSet;
         RenderPassId renderPassIndex;
 
         inline RenderPass& operator+=(const RenderPass& other)
         {
-            if (descriptorSet != nullptr)
-                delete descriptorSet;
             *this = other;
             return *this;
         }
 
         [[nodiscard]] inline bool operator==(const RenderPass& other) const noexcept
         {
-            return renderPassIndex == other.renderPassIndex && descriptorSet == other.descriptorSet;
+            return renderPassIndex == other.renderPassIndex;
         }
 
         [[nodiscard]] inline bool operator!=(const RenderPass& other) const noexcept

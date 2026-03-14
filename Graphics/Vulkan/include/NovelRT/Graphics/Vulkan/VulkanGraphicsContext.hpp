@@ -8,7 +8,6 @@
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
-#include <map>
 #include <memory>
 #include <vector>
 
@@ -29,16 +28,11 @@ namespace NovelRT::Graphics
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
-        std::map<std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
-                 std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
-                 std::owner_less<>>
-            _vulkanDescriptorSets;
+        std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>> _vulkanDescriptorSets;
 
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
 
         Threading::VolatileState _state;
-
-        void DestroyDescriptorSets();
 
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
@@ -58,8 +52,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
 
-        void RegisterDescriptorSetForFrame(
-            std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
-            std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
+        void RegisterDescriptorSetForFrame(std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };
 }
