@@ -226,10 +226,7 @@ namespace NovelRT::Graphics
     {
         const VkResult acquireNextImageResult = vkAcquireNextImageKHR(
             GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(), VK_NULL_HANDLE,
-            GetDevice()->GetImageAcquiredFence()->GetVulkanFence(), &_currentImageIndex);
-
-        GetDevice()->GetImageAcquiredFence()->Wait();
-        GetDevice()->GetImageAcquiredFence()->Reset();
+            GetDevice()->GetPresentCompletionFence()->GetVulkanFence(), &_currentImageIndex);
 
         if (acquireNextImageResult != VK_SUCCESS)
         {

@@ -196,8 +196,6 @@ namespace NovelRT::Graphics
           _surfaceContext(std::move(surfaceContext)),
           _presentCompletionFence(
               [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
-          _imageAcquiredFence(
-              [this]() { return std::make_shared<VulkanGraphicsFence>(shared_from_this(), /* isSignaled*/ false); }),
           _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
           _surface(_surfaceContext->GetSurfaceContextHandle()),
           _device([this, requiredDeviceExtensions, optionalDeviceExtensions]()
@@ -363,11 +361,6 @@ namespace NovelRT::Graphics
     std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsDevice::GetPresentCompletionFence() const
     {
         return _presentCompletionFence.Get();
-    }
-
-    std::shared_ptr<VulkanGraphicsFence> VulkanGraphicsDevice::GetImageAcquiredFence() const
-    {
-        return _imageAcquiredFence.Get();
     }
 
     std::shared_ptr<VulkanGraphicsRenderPass> VulkanGraphicsDevice::CreateRenderPass(
