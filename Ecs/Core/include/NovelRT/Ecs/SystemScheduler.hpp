@@ -218,7 +218,7 @@ namespace NovelRT::Ecs
          * This only needs to be called once, and should not be called by the developer in a standard ECS instance.
          *
          */
-        void SpinThreads() noexcept;
+        void InitialiseThreads() noexcept;
 
         /**
          * @brief Executes an iteration of the ECS.

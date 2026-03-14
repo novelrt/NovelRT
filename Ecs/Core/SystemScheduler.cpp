@@ -54,7 +54,7 @@ namespace NovelRT::Ecs
         if (other.GetThreadsAreSpinning())
         {
             other.ShutDown();
-            SpinThreads();
+            InitialiseThreads();
         }
     }
 
@@ -75,7 +75,7 @@ namespace NovelRT::Ecs
         if (other.GetThreadsAreSpinning())
         {
             other.ShutDown();
-            SpinThreads();
+            InitialiseThreads();
         }
 
         return *this;
@@ -162,7 +162,7 @@ namespace NovelRT::Ecs
         }
     }
 
-    void SystemScheduler::SpinThreads() noexcept
+    void SystemScheduler::InitialiseThreads() noexcept
     {
         _shouldShutDown = false;
 

@@ -86,7 +86,8 @@ namespace NovelRT::Audio
     static void InstallLogger(const Logging::LoggingService& logger)
     {
         using CallbackType = void ALC_APIENTRY(void* userptr, char level, const char* message, int length) noexcept;
-        using FnType = void ALC_APIENTRY(CallbackType * callback, void* userptr);
+        // NOLINTNEXTLINE(clang-format): Some versions of clang-format believe this should be formatted as `CallbackType * callback`, which is incorrect.
+        using FnType = void ALC_APIENTRY(CallbackType* callback, void* userptr);
 
         void* callback = alcGetProcAddress(nullptr, "alsoft_set_log_callback");
         if (callback == nullptr)

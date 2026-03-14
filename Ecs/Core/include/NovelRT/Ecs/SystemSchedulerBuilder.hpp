@@ -64,7 +64,7 @@ namespace NovelRT::Ecs
                 configure(scheduler);
             }
 
-            scheduler.SpinThreads();
+            scheduler.InitialiseThreads();
 
             return scheduler;
         }

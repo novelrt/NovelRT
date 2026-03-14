@@ -13,6 +13,7 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentCaseLabels: true
 IndentWidth: 4
 NamespaceIndentation: All
+OneLineFormatOffRegex: '^(// NOLINTNEXTLINE\(clang-format\)): .+$'
 PointerAlignment: Left
 SortIncludes: true
 SortUsingDeclarations: true
