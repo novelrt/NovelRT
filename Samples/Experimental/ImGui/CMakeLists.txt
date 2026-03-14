@@ -19,3 +19,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::ImGu
       Resources/Shaders/imgui_vert.spv
       Resources/Shaders/vulkanrenderfrag.spv
       Resources/Shaders/vulkanrendervert.spv)
+
+
+# FIXME: Remove this when updating NovelRT::UI
+set_target_properties(NovelRT-Samples-Experimental-ImGui PROPERTIES SKIP_LINTING TRUE)

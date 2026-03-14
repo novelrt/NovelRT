@@ -13,3 +13,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::UI
     PUBLIC
       imgui::imgui
 )
+
+# FIXME: Remove this when updating NovelRT::UI
+set_target_properties(NovelRT-UI PROPERTIES SKIP_LINTING TRUE)
