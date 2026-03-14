@@ -14,10 +14,10 @@
 
 namespace NovelRT::Ecs::Graphics
 {
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     class EcsGraphicsBuilder;
 
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     class RenderPassManager
     {
     private:
@@ -33,9 +33,12 @@ namespace NovelRT::Ecs::Graphics
         };
 
         std::set<Tuple, Compare> _registeredRenderPasses;
-        std::map<Components::RenderPassId, std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>> _reverseRenderPassMapping;
+        std::map<Components::RenderPassId, std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>>
+            _reverseRenderPassMapping;
 
-        explicit RenderPassManager() { }
+        explicit RenderPassManager()
+        {
+        }
 
         friend EcsGraphicsBuilder<TGraphicsBackend>;
 
@@ -46,9 +49,11 @@ namespace NovelRT::Ecs::Graphics
         RenderPassManager& operator=(RenderPassManager&& other) = default;
         ~RenderPassManager() = default;
 
-        Components::RenderPassId RegisterRenderPass(const std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>& pass)
+        Components::RenderPassId RegisterRenderPass(
+            const std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>>& pass)
         {
-            static AtomFactory& renderPassIdFactory = AtomFactoryDatabase::GetFactory("NovelRT::Ecs::Graphics::RenderPassId");
+            static AtomFactory& renderPassIdFactory =
+                AtomFactoryDatabase::GetFactory("NovelRT::Ecs::Graphics::RenderPassId");
 
             auto [it, inserted] = _registeredRenderPasses.emplace(std::make_tuple(pass, renderPassIdFactory.GetNext()));
 
@@ -60,7 +65,8 @@ namespace NovelRT::Ecs::Graphics
             return std::get<Components::RenderPassId>(*it);
         }
 
-        std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> GetRenderPass(Components::RenderPassId id) const
+        std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> GetRenderPass(
+            Components::RenderPassId id) const
         {
             return _reverseRenderPassMapping.at(id);
         }

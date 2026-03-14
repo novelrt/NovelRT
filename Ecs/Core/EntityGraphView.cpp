@@ -1,10 +1,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 #include <NovelRT/Ecs/EntityGraphView.hpp>
 #include <NovelRT/Ecs/LinkedEntityListView.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
@@ -19,18 +19,21 @@ namespace NovelRT::Ecs
         : _catalogue(&catalogue),
           _owningEntity(owningEntity),
           _component(component),
-          _childrenChanges([&]() {
-              if (_component.childrenStartNode == std::numeric_limits<EntityId>::max())
+          _childrenChanges(
+              [&]()
               {
-                  _component.childrenStartNode = _catalogue->CreateEntity();
-                  Components::EntityGraphComponent newComponent{};
-                  newComponent.parent = _owningEntity;
-                  _externalChanges.emplace(_component.childrenStartNode,
-                                           EntityGraphView(*_catalogue, _component.childrenStartNode, newComponent));
-              }
+                  if (_component.childrenStartNode == std::numeric_limits<EntityId>::max())
+                  {
+                      _component.childrenStartNode = _catalogue->CreateEntity();
+                      Components::EntityGraphComponent newComponent{};
+                      newComponent.parent = _owningEntity;
+                      _externalChanges.emplace(
+                          _component.childrenStartNode,
+                          EntityGraphView(*_catalogue, _component.childrenStartNode, newComponent));
+                  }
 
-              return LinkedEntityListView(_component.childrenStartNode, *_catalogue);
-          }),
+                  return LinkedEntityListView(_component.childrenStartNode, *_catalogue);
+              }),
           _hasBeenCommitted(false)
     {
     }
@@ -104,7 +107,8 @@ namespace NovelRT::Ecs
     EntityGraphView& EntityGraphView::AddRemoveChildInstruction(EntityId childToRemove)
     {
         auto [entityGraphView, linkedListView] =
-            _catalogue->GetComponentViews<Components::EntityGraphComponent, Components::LinkedEntityListNodeComponent>();
+            _catalogue
+                ->GetComponentViews<Components::EntityGraphComponent, Components::LinkedEntityListNodeComponent>();
         Components::EntityGraphComponent component{};
 
         if (_externalChanges.find(childToRemove) == _externalChanges.end())

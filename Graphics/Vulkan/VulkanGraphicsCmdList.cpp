@@ -8,13 +8,13 @@
 #include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
 #include <NovelRT/Utilities/Span.hpp>
@@ -36,9 +36,15 @@ namespace NovelRT::Graphics
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsCmdList::GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-                                           VkCommandBuffer commandBuffer, std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
-        : _device(std::move(device)), _commandBuffer(commandBuffer), _owningContext(std::move(owningContext)), _secondaryContextData(std::move(secondaryContextData))
+    VulkanGraphicsCmdList::GraphicsCmdList(
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+        VkCommandBuffer commandBuffer,
+        std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
+        std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept
+        : _device(std::move(device)),
+          _commandBuffer(commandBuffer),
+          _owningContext(std::move(owningContext)),
+          _secondaryContextData(std::move(secondaryContextData))
     {
     }
 
@@ -48,8 +54,9 @@ namespace NovelRT::Graphics
         {
             return;
         }
-        
-        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext.lock()->GetVulkanCommandPool(), 1, &_commandBuffer);
+
+        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext.lock()->GetVulkanCommandPool(), 1,
+                             &_commandBuffer);
     }
 
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsCmdList::GetDevice() const noexcept
@@ -67,7 +74,6 @@ namespace NovelRT::Graphics
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
         commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-
         VkCommandBufferInheritanceInfo inheritanceInfo{};
 
         if (_secondaryContextData.has_value())
@@ -80,7 +86,7 @@ namespace NovelRT::Graphics
             inheritanceInfo.queryFlags = 0;
             inheritanceInfo.renderPass = secondaryContext.renderPass->GetVulkanRenderPass();
             inheritanceInfo.subpass = static_cast<uint32_t>(secondaryContext.subpassIndex);
-            
+
             commandBufferBeginInfo.pInheritanceInfo = &inheritanceInfo;
             commandBufferBeginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
         }
@@ -118,7 +124,6 @@ namespace NovelRT::Graphics
 
         VkRenderPassBeginInfo renderPassBeginInfo{};
 
-
         std::vector<VkClearValue> clearValuesActual(clearValues.size());
 
         std::transform(clearValues.begin(), clearValues.end(), clearValuesActual.begin(),
@@ -145,7 +150,8 @@ namespace NovelRT::Graphics
         renderPassBeginInfo.clearValueCount = static_cast<uint32_t>(clearValuesActual.size());
         renderPassBeginInfo.pClearValues = clearValuesActual.data();
 
-        vkCmdBeginRenderPass(_commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR);
+        vkCmdBeginRenderPass(_commandBuffer, &renderPassBeginInfo,
+                             VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR);
     }
 
     void VulkanGraphicsCmdList::CmdEndRenderPass()
@@ -379,7 +385,8 @@ namespace NovelRT::Graphics
                              &barrierInfo, 0, 0);
     }
 
-    void VulkanGraphicsCmdList::CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList)
+    void VulkanGraphicsCmdList::CmdExecuteCommands(
+        const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList)
     {
         auto vkCmdList = cmdList->GetVkCommandBuffer();
         vkCmdExecuteCommands(_commandBuffer, 1, &vkCmdList);

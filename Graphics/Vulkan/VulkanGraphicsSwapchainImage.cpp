@@ -2,8 +2,8 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
@@ -116,7 +116,8 @@ namespace NovelRT::Graphics
         return _height;
     }
 
-    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
+    void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(
+        std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
     {
         std::vector<VkCommandBuffer> buffers;
         buffers.emplace_back(cmdList->GetVkCommandBuffer());

@@ -15,7 +15,8 @@
 namespace NovelRT::Ecs
 {
     class Catalogue;
-    template <typename T> class ComponentView;
+    template<typename T>
+    class ComponentView;
 
     class LinkedEntityListView
     {
@@ -37,7 +38,8 @@ namespace NovelRT::Ecs
                       currentEntityNode != std::numeric_limits<EntityId>::max()
                           ? catalogue.GetComponentView<Components::LinkedEntityListNodeComponent>().GetComponentUnsafe(
                                 currentEntityNode)
-                          : catalogue.GetComponentView<Components::LinkedEntityListNodeComponent>().GetDeleteInstructionState()),
+                          : catalogue.GetComponentView<Components::LinkedEntityListNodeComponent>()
+                                .GetDeleteInstructionState()),
                   _catalogue(&catalogue)
             {
             }
@@ -53,8 +55,8 @@ namespace NovelRT::Ecs
 
                 if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
-                    _currentComponentNode =
-                        _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                    _currentComponentNode = _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>()
+                                                .GetDeleteInstructionState();
                 }
                 else
                 {
@@ -72,8 +74,8 @@ namespace NovelRT::Ecs
 
                 if (_currentEntityNode == std::numeric_limits<EntityId>::max())
                 {
-                    _currentComponentNode =
-                        _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>().GetDeleteInstructionState();
+                    _currentComponentNode = _catalogue->GetComponentView<Components::LinkedEntityListNodeComponent>()
+                                                .GetDeleteInstructionState();
                 }
                 else
                 {

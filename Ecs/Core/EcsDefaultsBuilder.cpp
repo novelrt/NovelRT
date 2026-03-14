@@ -7,9 +7,9 @@ using namespace NovelRT::Ecs;
 
 EcsDefaultsBuilder::EcsDefaultsBuilder()
     : _defaultEntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
-    _defaultLinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
-    _defaultTransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN}
-{ };
+      _defaultLinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(),
+                                            std::numeric_limits<EntityId>::max()},
+      _defaultTransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN} {};
 
 EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultEntityGraphComponent(
     const Components::EntityGraphComponent& defaultGraphComponent)
@@ -24,7 +24,6 @@ EcsDefaultsBuilder& EcsDefaultsBuilder::WithDefaultLinkedEntityListNodeComponent
     _defaultLinkedEntityListNodeComponent = defaultLinkedEntityListNodeComponent;
     return *this;
 }
-
 
 EcsDefaultsBuilder& EcsDefaultsBuilder::WithDefaultTransformComponent(
     const Components::TransformComponent& defaultTransformComponent)
@@ -46,4 +45,3 @@ EcsDefaultsBuilder& NovelRT::Ecs::AddDefaults(SystemSchedulerBuilder& builder)
 {
     return builder.Configure(EcsDefaultsBuilder{});
 }
-

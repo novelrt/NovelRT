@@ -12,7 +12,8 @@
 namespace NovelRT::Ecs
 {
     class ComponentBufferMemoryContainer;
-    template <typename, typename> class SparseSet;
+    template<typename, typename>
+    class SparseSet;
 
     /**
      * @brief A storage type that manages the storage and modification of the given type concurrently. You should not be
@@ -28,7 +29,8 @@ namespace NovelRT::Ecs
      *
      * @tparam T The type of component this ComponentBuffer will manage.
      */
-    template<typename T> class ComponentBuffer
+    template<typename T>
+    class ComponentBuffer
     {
     private:
         std::shared_ptr<ComponentBufferMemoryContainer> _innerContainer;
@@ -50,12 +52,10 @@ namespace NovelRT::Ecs
                   poolSize,
                   &deleteInstructionState,
                   sizeof(T),
-                  [](auto rootComponent, auto updateComponent, auto) {
-                      *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
-                  },
-                  [](const void* left, const void* right) {
-                      return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right);
-                  },
+                  [](auto rootComponent, auto updateComponent, auto)
+                  { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); },
+                  [](const void* left, const void* right)
+                  { return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right); },
                   serialisedTypeName))
         {
             static_assert(std::is_trivially_copyable<T>::value,

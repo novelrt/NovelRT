@@ -107,7 +107,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetPresentCompletionFence() const;
-        
+
         [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetImageAcquiredFence() const;
 
         [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> CreateRenderPass(

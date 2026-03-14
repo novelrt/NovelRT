@@ -4,8 +4,8 @@
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 
 namespace NovelRT::Graphics
@@ -34,9 +34,10 @@ namespace NovelRT::Graphics
         return vulkanFence;
     }
 
-    VulkanGraphicsFence::GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, bool isSignaled) noexcept
-        : _device(std::move(device))
-        ,  _vulkanFence([device = _device, isSignaled]() { return CreateVulkanFence(device, isSignaled); })
+    VulkanGraphicsFence::GraphicsFence(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                       bool isSignaled) noexcept
+        : _device(std::move(device)),
+          _vulkanFence([device = _device, isSignaled]() { return CreateVulkanFence(device, isSignaled); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
     }

@@ -12,9 +12,7 @@ namespace NovelRT::Windowing
 {
     using GlfwWindowProvider = WindowProvider<Glfw::GlfwWindowingBackend>;
 
-    GlfwWindowProvider::WindowProvider(
-        NovelRT::Windowing::WindowMode windowMode,
-        Maths::GeoVector2F desiredWindowSize)
+    GlfwWindowProvider::WindowProvider(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize)
     {
         if (glfwInit() == GLFW_FALSE)
         {
@@ -43,10 +41,9 @@ namespace NovelRT::Windowing
         }
 
         auto window = glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
-                                       static_cast<int32_t>(floor(desiredWindowSize.y)),
-                                       "NovelRT", monitor, nullptr);
-                                       // TODO: EngineConfig was here
-                                       //EngineConfig::ApplicationName().c_str(), monitor, nullptr);
+                                       static_cast<int32_t>(floor(desiredWindowSize.y)), "NovelRT", monitor, nullptr);
+        // TODO: EngineConfig was here
+        // EngineConfig::ApplicationName().c_str(), monitor, nullptr);
 
         if (window == nullptr)
         {
@@ -62,33 +59,45 @@ namespace NovelRT::Windowing
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, windowMode == NovelRT::Windowing::WindowMode::Windowed);
         glfwSetWindowUserPointer(window, this);
 
-        glfwSetFramebufferSizeCallback(window, [](auto window, auto width, auto height) {
-            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
-            thisPtr->_currentSize = Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
-            thisPtr->SizeChanged(thisPtr->_currentSize);
-        });
+        glfwSetFramebufferSizeCallback(
+            window,
+            [](auto window, auto width, auto height)
+            {
+                auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                thisPtr->_currentSize = Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+                thisPtr->SizeChanged(thisPtr->_currentSize);
+            });
 
-        glfwSetKeyCallback(window, [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/) {
-            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
-            thisPtr->KeyboardButtonChanged(ButtonChangeEventArgs{key, action});
-        });
+        glfwSetKeyCallback(window,
+                           [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/)
+                           {
+                               auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                               thisPtr->KeyboardButtonChanged(ButtonChangeEventArgs{key, action});
+                           });
 
-        glfwSetMouseButtonCallback(window, [](auto window, auto mouseButton, auto action, auto /*mods*/) {
-            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
-            thisPtr->MouseButtonClicked(ButtonChangeEventArgs{mouseButton, action});
-        });
+        glfwSetMouseButtonCallback(window,
+                                   [](auto window, auto mouseButton, auto action, auto /*mods*/)
+                                   {
+                                       auto thisPtr =
+                                           reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                                       thisPtr->MouseButtonClicked(ButtonChangeEventArgs{mouseButton, action});
+                                   });
 
-        glfwSetCursorPosCallback(window, [](auto window, double x, double y) {
-            auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
-            thisPtr->CursorMoved(CursorPositionEventArgs{x, y});
-        });
+        glfwSetCursorPosCallback(window,
+                                 [](auto window, double x, double y)
+                                 {
+                                     auto thisPtr =
+                                         reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                                     thisPtr->CursorMoved(CursorPositionEventArgs{x, y});
+                                 });
 
         _window = window;
     }
 
     GlfwWindowProvider::~WindowProvider() noexcept
     {
-        if (_window) glfwDestroyWindow(_window);
+        if (_window)
+            glfwDestroyWindow(_window);
         glfwTerminate();
     }
 

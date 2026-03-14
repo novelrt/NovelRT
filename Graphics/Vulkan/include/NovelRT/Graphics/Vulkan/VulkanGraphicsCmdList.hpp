@@ -4,13 +4,13 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
-#include <NovelRT/Utilities/Span.hpp>
-#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
 #include <NovelRT/Graphics/GraphicsContext.hpp>
+#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
+#include <NovelRT/Utilities/Span.hpp>
 
 #include <functional>
-#include <optional>
 #include <memory>
+#include <optional>
 
 #include <vulkan/vulkan.h>
 
@@ -32,8 +32,11 @@ namespace NovelRT::Graphics
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
 
     public:
-        GraphicsCmdList(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-                        VkCommandBuffer commandBuffer, std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext, std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
+        GraphicsCmdList(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            VkCommandBuffer commandBuffer,
+            std::weak_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
+            std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
 
         ~GraphicsCmdList();
 
@@ -106,7 +109,7 @@ namespace NovelRT::Graphics
                                       GraphicsMemoryAccessMode destinationAccessFlag,
                                       GraphicsPipelineVisibility sourceStageFlag,
                                       GraphicsPipelineVisibility destinationStageFlag);
-        
+
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList);
     };
 }

@@ -144,7 +144,8 @@ namespace NovelRT::Graphics
         createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
         createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
 
-        if (std::find(physicalDeviceExtensions.begin(), physicalDeviceExtensions.end(), VK_KHR_MAINTENANCE_7_EXTENSION_NAME) != physicalDeviceExtensions.end())
+        if (std::find(physicalDeviceExtensions.begin(), physicalDeviceExtensions.end(),
+                      VK_KHR_MAINTENANCE_7_EXTENSION_NAME) != physicalDeviceExtensions.end())
         {
             createInfo.pNext = &maintenance7;
             maintenance7.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;

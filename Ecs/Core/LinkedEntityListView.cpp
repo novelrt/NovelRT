@@ -460,8 +460,8 @@ namespace NovelRT::Ecs
             }
 
             _newTailPostDiff = newNode;
-            _changes.Insert(newNode,
-                            Components::LinkedEntityListNodeComponent{true, finalPrevious, std::numeric_limits<EntityId>::max()});
+            _changes.Insert(newNode, Components::LinkedEntityListNodeComponent{true, finalPrevious,
+                                                                               std::numeric_limits<EntityId>::max()});
         }
     }
 
@@ -512,8 +512,8 @@ namespace NovelRT::Ecs
             }
 
             _newBeginPostDiff = newNode;
-            _changes.Insert(newNode,
-                            Components::LinkedEntityListNodeComponent{true, std::numeric_limits<EntityId>::max(), finalNext});
+            _changes.Insert(newNode, Components::LinkedEntityListNodeComponent{
+                                         true, std::numeric_limits<EntityId>::max(), finalNext});
         }
     }
 
@@ -544,8 +544,8 @@ namespace NovelRT::Ecs
             else if (component.previous != std::numeric_limits<EntityId>::max())
             {
                 auto previousComponent = nodeView.GetComponentUnsafe(component.previous);
-                _changes.Insert(component.previous,
-                                Components::LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
+                _changes.Insert(component.previous, Components::LinkedEntityListNodeComponent{
+                                                        true, previousComponent.previous, component.next});
             }
 
             if (next.has_value())
@@ -555,8 +555,8 @@ namespace NovelRT::Ecs
             else if (component.next != std::numeric_limits<EntityId>::max())
             {
                 auto nextComponent = nodeView.GetComponentUnsafe(component.next);
-                _changes.Insert(component.next,
-                                Components::LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
+                _changes.Insert(component.next, Components::LinkedEntityListNodeComponent{true, component.previous,
+                                                                                          nextComponent.next});
             }
 
             if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeToRemove)
@@ -623,8 +623,8 @@ namespace NovelRT::Ecs
             else if (component.previous != std::numeric_limits<EntityId>::max())
             {
                 auto previousComponent = nodeView.GetComponentUnsafe(component.previous);
-                _changes.Insert(component.previous,
-                                Components::LinkedEntityListNodeComponent{true, previousComponent.previous, component.next});
+                _changes.Insert(component.previous, Components::LinkedEntityListNodeComponent{
+                                                        true, previousComponent.previous, component.next});
             }
 
             if (next.has_value())
@@ -634,8 +634,8 @@ namespace NovelRT::Ecs
             else if (component.next != std::numeric_limits<EntityId>::max())
             {
                 auto nextComponent = nodeView.GetComponentUnsafe(component.next);
-                _changes.Insert(component.next,
-                                Components::LinkedEntityListNodeComponent{true, component.previous, nextComponent.next});
+                _changes.Insert(component.next, Components::LinkedEntityListNodeComponent{true, component.previous,
+                                                                                          nextComponent.next});
             }
 
             if (_newBeginPostDiff.has_value() && _newBeginPostDiff.value() == nodeToRemove)

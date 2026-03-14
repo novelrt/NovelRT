@@ -1,20 +1,19 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <fstream>
-#include <samplerate.h>
-#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
+#include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Exceptions/IOException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
-#include <NovelRT/Utilities/Strings.hpp>
-#include <png.h>
-#include <NovelRT/Exceptions/FileNotFoundException.hpp>
-#include <nlohmann/json.hpp>
-#include <NovelRT/ResourceManagement/Desktop/ImageData.hpp>
-#include <NovelRT/Exceptions/OutOfMemoryException.hpp>
 #include <NovelRT/Exceptions/NotSupportedException.hpp>
+#include <NovelRT/Exceptions/OutOfMemoryException.hpp>
+#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
+#include <NovelRT/ResourceManagement/Desktop/ImageData.hpp>
+#include <NovelRT/Utilities/Strings.hpp>
+#include <fstream>
+#include <nlohmann/json.hpp>
+#include <png.h>
+#include <samplerate.h>
 #include <sndfile.h>
-
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -164,14 +163,14 @@ namespace NovelRT::ResourceManagement::Desktop
                                           "Unable to continue! File failed to provide an info struct.");
         }
 
-        #ifdef _MSC_VER
-        #pragma warning(push)
-        #pragma warning(disable : 4611)
-        #endif
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4611)
+#endif
         if (setjmp(png_jmpbuf(png)))
-        #ifdef _MSC_VER
-        #pragma warning(pop)
-        #endif
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
         { // This is how libpng does error handling.
             _logger.logError("Image at path {} appears to be corrupted! Aborting...", filePath.string());
             throw Exceptions::IOException(filePath.string(), "Unable to continue! File appears to be corrupted.");
@@ -449,7 +448,8 @@ namespace NovelRT::ResourceManagement::Desktop
             SRC_DATA conversionInfo = SRC_DATA{};
             conversionInfo.data_in = data.data();
             conversionInfo.data_out = resampledData.data();
-            conversionInfo.input_frames = static_cast<long>(info.channels == 1 ? data.size() : data.size() / info.channels); // lmao
+            conversionInfo.input_frames =
+                static_cast<long>(info.channels == 1 ? data.size() : data.size() / info.channels); // lmao
             conversionInfo.output_frames = conversionInfo.input_frames;
             double rate = 44100.0 / static_cast<double>(info.samplerate);
             _logger.logDebug("Scaling by ratio of {0:f}", rate);

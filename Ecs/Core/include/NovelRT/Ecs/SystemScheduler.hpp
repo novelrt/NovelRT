@@ -12,9 +12,9 @@
 #include <atomic>
 #include <functional>
 #include <memory>
-#include <vector>
 #include <thread>
 #include <unordered_map>
+#include <vector>
 
 #include <oneapi/tbb/mutex.h>
 
@@ -189,7 +189,8 @@ namespace NovelRT::Ecs
          *
          * @exception Exceptions::KeyNotFoundException if the specified type does not have a registered instance.
          */
-        template<typename TSystemType>[[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
+        template<typename TSystemType>
+        [[nodiscard]] std::shared_ptr<TSystemType> GetRegisteredIEcsSystemAs() const
         {
             std::shared_ptr<TSystemType> returnPtr = nullptr;
 

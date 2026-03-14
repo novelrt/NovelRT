@@ -3,10 +3,10 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <filesystem>
+#include <map>
 #include <memory>
 #include <uuid.h>
-#include <map>
-#include <filesystem>
 
 #include <NovelRT/ResourceManagement/AudioMetadata.hpp>
 #include <NovelRT/ResourceManagement/BinaryPackage.hpp>

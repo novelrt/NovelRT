@@ -1,16 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Ecs/EcsDefaultsBuilder.hpp>
+#include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
-#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 
-#include <NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp>
-#include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
-#include <NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp>
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
+#include <NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp>
+#include <NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp>
+#include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 
@@ -18,20 +18,19 @@
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInputElementKind.hpp>
-#include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
@@ -41,8 +40,8 @@
 
 #include <NovelRT/Utilities/Macros.hpp>
 
-#include <optional>
 #include <memory>
+#include <optional>
 
 using namespace NovelRT::Ecs;
 using namespace NovelRT::Ecs::Components;
@@ -65,7 +64,6 @@ struct PtrNonsense
     std::shared_ptr<GraphicsDevice<VulkanGraphicsBackend>> gfxDevice;
     RenderPassId triangleRenderPassId;
 };
-
 
 PtrNonsense& GetPtrNonsenseStruct()
 {
@@ -96,7 +94,7 @@ private:
     std::shared_ptr<DesktopResourceLoader> _resourceLoader; // TODO: This is bad. Too bad! - Matt J.
     RenderingData<TBackend> _renderingData;
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-    _inputResourceRegions;
+        _inputResourceRegions;
     std::optional<EntityId> _cmdListEntity;
 
 public:
@@ -125,29 +123,26 @@ public:
         auto gfxSwapchainImage = GetPtrNonsenseStruct().gfxDevice->BeginFrame();
 
         std::vector<GraphicsPipelineInputElement> elements{
-            GraphicsPipelineInputElement(
-                typeid(NovelRT::Maths::GeoVector3F),
-                GraphicsPipelineInputElementKind::Position,
-                12),
-            GraphicsPipelineInputElement(
-                typeid(NovelRT::Maths::GeoVector2F),
-                GraphicsPipelineInputElementKind::TextureCoordinate,
-                8)};
+            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F),
+                                         GraphicsPipelineInputElementKind::Position, 12),
+            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                         GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
         std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
         std::vector<GraphicsPipelineResource> resources{
-            GraphicsPipelineResource(
-                GraphicsPipelineResourceKind::Texture,
-                ShaderProgramVisibility::Pixel)};
+            GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
         std::vector<GraphicsPushConstantRange> dummyData{};
         auto signature = GetPtrNonsenseStruct().gfxDevice->CreatePipelineSignature(
             GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
-        auto vertShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData.shaderCode);
-        auto pixelShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
+        auto vertShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex,
+                                                                                    vertShaderData.shaderCode);
+        auto pixelShaderProg = GetPtrNonsenseStruct().gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel,
+                                                                                     pixelShaderData.shaderCode);
 
-        auto pipeline = GetPtrNonsenseStruct().gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, GetPtrNonsenseStruct().trianglePass);
+        auto pipeline = GetPtrNonsenseStruct().gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg,
+                                                                         GetPtrNonsenseStruct().trianglePass);
         auto gfxContext = GetPtrNonsenseStruct().gfxDevice->CreateGraphicsContext();
 
         auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
@@ -155,9 +150,12 @@ public:
 
         auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
 
-        pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-        pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-        pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+        pVertexBuffer[0] =
+            TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+        pVertexBuffer[1] =
+            TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+        pVertexBuffer[2] =
+            TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
         vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
 
@@ -167,7 +165,8 @@ public:
         uint32_t cellWidth = textureWidth / 8;
         uint32_t cellHeight = textureHeight / 8;
 
-        auto texture2D = GetPtrNonsenseStruct().memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+        auto texture2D =
+            GetPtrNonsenseStruct().memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
         auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
         auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
@@ -214,7 +213,8 @@ public:
 
         auto context = _renderingData.GraphicsContext;
         context->BeginFrame();
-        auto currentCmdList = context->CreateCmdList(std::optional<SecondaryCmdListInfo<TBackend>>({GetPtrNonsenseStruct().trianglePass, 0}));
+        auto currentCmdList = context->CreateCmdList(
+            std::optional<SecondaryCmdListInfo<TBackend>>({GetPtrNonsenseStruct().trianglePass, 0}));
 
         currentCmdList->Begin();
 
@@ -238,8 +238,8 @@ public:
                                       NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
         currentCmdList->CmdBindPipeline(_renderingData.RenderPipeline);
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1>
-        buffers{std::cref(_renderingData.VertexBuffer)};
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
+            std::cref(_renderingData.VertexBuffer)};
         std::array<size_t, 1> offsets{_renderingData.VertexBufferRegion->GetOffset()};
 
         currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
@@ -248,20 +248,19 @@ public:
         descriptorSetData->AddMemoryRegionsToInputs(_inputResourceRegions);
         descriptorSetData->UpdateDescriptorSetData();
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
+            std::cref(descriptorSetData)};
         currentCmdList->CmdBindDescriptorSets(descriptorData);
 
         currentCmdList->CmdDraw(
-            static_cast<uint32_t>(_renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)),
-            1,
-            0,
-            0);
+            static_cast<uint32_t>(_renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
         currentCmdList->End();
 
         context->EndFrame();
 
-        auto [renderPassView, cmdListView, graphComponentView] = catalogue.GetComponentViews<RenderPass<TBackend>, BuiltCommandList<TBackend>, EntityGraphComponent>();
+        auto [renderPassView, cmdListView, graphComponentView] =
+            catalogue.GetComponentViews<RenderPass<TBackend>, BuiltCommandList<TBackend>, EntityGraphComponent>();
 
         if (!_cmdListEntity.has_value())
         {
@@ -275,7 +274,9 @@ public:
 
             RenderPass<TBackend> passComponent{};
             passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
-            passComponent.renderPassIndex = GetPtrNonsenseStruct().triangleRenderPassId; //TODO: There's no other way to pass this through yet. I am just trying to get this working.
+            passComponent.renderPassIndex =
+                GetPtrNonsenseStruct().triangleRenderPassId; // TODO: There's no other way to pass this through yet. I
+                                                             // am just trying to get this working.
             renderPassView.AddComponent(cmdListEntityLocal, passComponent);
 
             BuiltCommandList<TBackend> cmdListComp{};
@@ -308,7 +309,8 @@ int main()
     VulkanGraphicsAdapterSelector selector{};
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
     GetPtrNonsenseStruct().gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
-    GetPtrNonsenseStruct().memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(GetPtrNonsenseStruct().gfxDevice, gfxProvider);
+    GetPtrNonsenseStruct().memoryAllocator =
+        std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(GetPtrNonsenseStruct().gfxDevice, gfxProvider);
 
     SystemSchedulerBuilder builder{};
     AddDefaults(builder);
@@ -348,15 +350,13 @@ int main()
         .WithDefaultOrchestrator();
 
     auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>();
-    builder.Configure([triangleSystem](SystemScheduler& scheduler) {
-        scheduler.RegisterSystem(triangleSystem);
-    });
+    builder.Configure([triangleSystem](SystemScheduler& scheduler) { scheduler.RegisterSystem(triangleSystem); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
     Event<Timestamp::duration> TimerCallback{};
 
-    TimerCallback += [&timer,&scheduler](auto /* delta */) { scheduler.ExecuteIteration(timer.getTotalTime()); };
+    TimerCallback += [&timer, &scheduler](auto /* delta */) { scheduler.ExecuteIteration(timer.getTotalTime()); };
 
     while (!wndProvider->ShouldClose())
     {

@@ -26,7 +26,9 @@ namespace NovelRT::Ecs
         bool _hasBeenCommitted;
 
     public:
-        EntityGraphView(Catalogue& catalogue, EntityId owningEntity, Components::EntityGraphComponent component) noexcept;
+        EntityGraphView(Catalogue& catalogue,
+                        EntityId owningEntity,
+                        Components::EntityGraphComponent component) noexcept;
 
         EntityGraphView(EntityGraphView&& other) noexcept = default;
         EntityGraphView& operator=(EntityGraphView&& other) noexcept = default;

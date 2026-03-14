@@ -5,9 +5,9 @@
 
 #include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
+#include <NovelRT/Utilities/Lazy.hpp>
 #include <vector>
 #include <vulkan/vulkan.h>
-#include <NovelRT/Utilities/Lazy.hpp>
 
 namespace NovelRT::Graphics::Vulkan
 {

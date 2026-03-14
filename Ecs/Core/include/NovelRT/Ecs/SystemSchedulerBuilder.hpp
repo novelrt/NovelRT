@@ -42,7 +42,7 @@ namespace NovelRT::Ecs
          * @param configure The callback to use to configure the scheduler.
          * @returns A reference to the added callback for method chaining.
          */
-        template <typename T>
+        template<typename T>
         T& Configure(T&& configure) noexcept
         {
             auto& fn = _configureCallbacks.emplace_back(std::forward<T>(configure));

@@ -64,7 +64,7 @@ namespace NovelRT::Utilities
         }
 
         explicit EventHandler(const std::function<void(void)>& function)
-        : _id((function != nullptr) ? _eventIdFactory.GetNext() : Atom()), _function(function)
+            : _id((function != nullptr) ? _eventIdFactory.GetNext() : Atom()), _function(function)
         {
         }
 
@@ -226,7 +226,7 @@ namespace NovelRT::Utilities
                 handler();
             }
         }
-        
+
         void Reset()
         {
             _handlers.clear();

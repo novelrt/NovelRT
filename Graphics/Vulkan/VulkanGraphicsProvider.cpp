@@ -257,7 +257,8 @@ namespace NovelRT::Graphics
             validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
             validationFeatures.enabledValidationFeatureCount = static_cast<uint32_t>(enabledValidationFeatures.size());
             validationFeatures.pEnabledValidationFeatures = enabledValidationFeatures.data();
-            validationFeatures.disabledValidationFeatureCount = static_cast<uint32_t>(disabledValidationFeatures.size());
+            validationFeatures.disabledValidationFeatureCount =
+                static_cast<uint32_t>(disabledValidationFeatures.size());
             validationFeatures.pDisabledValidationFeatures = disabledValidationFeatures.data();
 
             *pNextPointer = &validationFeatures;

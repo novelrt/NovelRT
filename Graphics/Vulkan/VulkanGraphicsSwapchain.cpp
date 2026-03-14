@@ -147,7 +147,8 @@ namespace NovelRT::Graphics
         return vulkanSwapchain;
     }
 
-    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages(VkSwapchainKHR swapchain, VkFormat swapchainFormat)
+    void GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetSwapchainImages(VkSwapchainKHR swapchain,
+                                                                              VkFormat swapchainFormat)
     {
         VkDevice device = GetDevice()->GetVulkanDevice();
         VkSwapchainKHR vulkanSwapchain = swapchain;
@@ -222,21 +223,21 @@ namespace NovelRT::Graphics
 
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<
         Vulkan::VulkanGraphicsBackend>::AcquireNextImage()
-    { 
+    {
         const VkResult acquireNextImageResult = vkAcquireNextImageKHR(
             GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(), VK_NULL_HANDLE,
             GetDevice()->GetImageAcquiredFence()->GetVulkanFence(), &_currentImageIndex);
 
-            GetDevice()->GetImageAcquiredFence()->Wait();
-            GetDevice()->GetImageAcquiredFence()->Reset();
+        GetDevice()->GetImageAcquiredFence()->Wait();
+        GetDevice()->GetImageAcquiredFence()->Reset();
 
         if (acquireNextImageResult != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
         }
-    
-        return  _swapchainImages[_currentImageIndex];
+
+        return _swapchainImages[_currentImageIndex];
     }
 
     bool GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::Present()

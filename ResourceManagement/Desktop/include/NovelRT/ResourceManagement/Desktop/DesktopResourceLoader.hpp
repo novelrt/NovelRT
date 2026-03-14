@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/ResourceManagement/ResourceLoader.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
+#include <NovelRT/ResourceManagement/ResourceLoader.hpp>
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -39,4 +39,3 @@ namespace NovelRT::ResourceManagement::Desktop
         ~DesktopResourceLoader() final = default;
     };
 }
-

@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
+#include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Utilities/Event.hpp>
 
 #include <functional>
@@ -15,7 +15,8 @@
 
 namespace NovelRT::Ecs
 {
-    template <typename T> class ComponentBuffer;
+    template<typename T>
+    class ComponentBuffer;
 
     /**
      * @brief Stores all ComponentBuffer instances currently initialised for this instance of the ECS. You should not be
@@ -85,17 +86,15 @@ namespace NovelRT::Ecs
          * @exception std::bad_alloc when a ComponentBuffer could not be allocated in memory for the given component
          * type.
          */
-        template<typename T> void RegisterComponentType(T deleteInstructionState, const std::string& serialisedTypeName)
+        template<typename T>
+        void RegisterComponentType(T deleteInstructionState, const std::string& serialisedTypeName)
         {
             std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(
                 sizeof(T), reinterpret_cast<std::byte*>(&deleteInstructionState),
-                [](auto rootComponent, auto updateComponent, auto) {
-                    *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent);
-                },
-                [](const void* lhs, const void* rhs) {
-                    return *reinterpret_cast<const T*>(lhs) == *reinterpret_cast<const T*>(rhs);
-                },
-                serialisedTypeName);
+                [](auto rootComponent, auto updateComponent, auto)
+                { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); },
+                [](const void* lhs, const void* rhs)
+                { return *reinterpret_cast<const T*>(lhs) == *reinterpret_cast<const T*>(rhs); }, serialisedTypeName);
             _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }
@@ -121,7 +120,8 @@ namespace NovelRT::Ecs
          *
          * @exceptions std::out_of_range if the specified component type has not been registered.
          */
-        template<typename T>[[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
+        template<typename T>
+        [[nodiscard]] ComponentBuffer<T> GetComponentBuffer()
         {
             return ComponentBuffer<T>(_componentMap.at(GetComponentTypeId<T>()));
         }

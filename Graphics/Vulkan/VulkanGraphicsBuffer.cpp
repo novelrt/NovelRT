@@ -16,37 +16,38 @@ namespace NovelRT::Graphics
     using VulkanGraphicsDeviceObject = GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsMemoryAllocator = GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsResource = GraphicsResource<Vulkan::VulkanGraphicsBackend>;
-    template <template <typename> typename TResource>
+    template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
 
-    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<VulkanGraphicsBuffer> VulkanGraphicsBuffer::shared_from_this()
     {
         return std::static_pointer_cast<VulkanGraphicsBuffer>(GraphicsResource::shared_from_this());
     }
 
-    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<const VulkanGraphicsBuffer> VulkanGraphicsBuffer::shared_from_this() const
     {
         return std::static_pointer_cast<const VulkanGraphicsBuffer>(GraphicsResource::shared_from_this());
     }
 
     VulkanGraphicsBuffer::GraphicsBuffer(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-        std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
-        const GraphicsBufferCreateInfo& createInfo,
-        VmaAllocation allocation,
-        VmaAllocationInfo allocationInfo,
-        VkBuffer vulkanBuffer)
-        : VulkanGraphicsResource(
-            std::move(graphicsDevice),
-            std::move(allocator),
-            createInfo.cpuAccessKind,
-            allocation, allocationInfo)
-        , _vulkanBuffer(vulkanBuffer)
-        , _mappedMemoryRegions(0)
-        , _cpuAccess(createInfo.cpuAccessKind)
-        , _kind(createInfo.bufferKind)
-    {}
+                                         std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+                                         const GraphicsBufferCreateInfo& createInfo,
+                                         VmaAllocation allocation,
+                                         VmaAllocationInfo allocationInfo,
+                                         VkBuffer vulkanBuffer)
+        : VulkanGraphicsResource(std::move(graphicsDevice),
+                                 std::move(allocator),
+                                 createInfo.cpuAccessKind,
+                                 allocation,
+                                 allocationInfo),
+          _vulkanBuffer(vulkanBuffer),
+          _mappedMemoryRegions(0),
+          _cpuAccess(createInfo.cpuAccessKind),
+          _kind(createInfo.bufferKind)
+    {
+    }
 
     VulkanGraphicsBuffer::~GraphicsBuffer() noexcept
     {
@@ -58,10 +59,12 @@ namespace NovelRT::Graphics
         vmaDestroyBuffer(vmaAllocator, _vulkanBuffer, allocation);
     }
 
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>> VulkanGraphicsBuffer::Allocate(size_t size, size_t alignment)
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>> VulkanGraphicsBuffer::Allocate(size_t size,
+                                                                                                       size_t alignment)
     {
         auto [allocation, info] = GetVirtualAllocation(size, alignment);
-        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>(GetDevice(), shared_from_this(), allocation, info);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>>(GetDevice(), shared_from_this(),
+                                                                                    allocation, info);
     }
 
     void VulkanGraphicsBuffer::Free(VulkanGraphicsResourceMemoryRegion<GraphicsBuffer>& region)
@@ -81,9 +84,9 @@ namespace NovelRT::Graphics
 
     Utilities::Span<uint8_t> VulkanGraphicsBuffer::MapBytes(size_t rangeOffset, size_t rangeLength)
     {
-        static_assert(
-            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
-            "uint8_t must be able to access the object representation of the byte buffer");
+        static_assert(std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> ||
+                          std::is_same_v<uint8_t, std::byte>,
+                      "uint8_t must be able to access the object representation of the byte buffer");
 
         const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
@@ -110,9 +113,9 @@ namespace NovelRT::Graphics
 
     Utilities::Span<const uint8_t> VulkanGraphicsBuffer::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
     {
-        static_assert(
-            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
-            "uint8_t must be able to access the object representation of the byte buffer");
+        static_assert(std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> ||
+                          std::is_same_v<uint8_t, std::byte>,
+                      "uint8_t must be able to access the object representation of the byte buffer");
 
         const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         const size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
@@ -152,7 +155,8 @@ namespace NovelRT::Graphics
     {
         if (_mappedMemoryRegions == 0)
         {
-            throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
+            throw Exceptions::InvalidOperationException(
+                "Attempted to unmap region of buffer when no memory map was created.");
         }
 
         _mappedMemoryRegions--;
@@ -171,7 +175,8 @@ namespace NovelRT::Graphics
     {
         if (_mappedMemoryRegions == 0)
         {
-            throw Exceptions::InvalidOperationException("Attempted to unmap region of buffer when no memory map was created.");
+            throw Exceptions::InvalidOperationException(
+                "Attempted to unmap region of buffer when no memory map was created.");
         }
 
         const size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
@@ -200,7 +205,9 @@ namespace NovelRT::Graphics
         vmaUnmapMemory(vmaAllcoator, allocation);
     }
 
-    void VulkanGraphicsBuffer::UnmapAndWrite(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>& memoryRegion)
+    void VulkanGraphicsBuffer::UnmapAndWrite(
+        const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>&
+            memoryRegion)
     {
         return UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
     }

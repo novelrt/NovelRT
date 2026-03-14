@@ -9,9 +9,9 @@
 namespace NovelRT::Timing
 {
     StepTimer::StepTimer(uint32_t targetFrameRate, double maxSecondDelta) noexcept
-        :
-          _maxCounterDelta(TimeFromSeconds(maxSecondDelta).time_since_epoch()),
-          _targetFrequency(TimeFromFrequency<double>((targetFrameRate != 0) ? targetFrameRate : 60).time_since_epoch()), // 60fps, if nothing else specified
+        : _maxCounterDelta(TimeFromSeconds(maxSecondDelta).time_since_epoch()),
+          _targetFrequency(TimeFromFrequency<double>((targetFrameRate != 0) ? targetFrameRate : 60)
+                               .time_since_epoch()), // 60fps, if nothing else specified
           _lastCounter(GameClock::now()),
           _secondCounter(0),
           _remainingTicks(0),
@@ -63,7 +63,9 @@ namespace NovelRT::Timing
             constexpr auto OneQuarterMillisecond = std::chrono::duration<int64_t, QuarterMillisecond>{1};
 
             using SignedDuration = std::chrono::duration<int64_t, GameClock::period>;
-            auto delta = std::chrono::duration_cast<Timestamp::duration>(std::chrono::abs(std::chrono::duration_cast<SignedDuration>(ticksDelta) - std::chrono::duration_cast<SignedDuration>(_targetFrequency)));
+            auto delta = std::chrono::duration_cast<Timestamp::duration>(
+                std::chrono::abs(std::chrono::duration_cast<SignedDuration>(ticksDelta) -
+                                 std::chrono::duration_cast<SignedDuration>(_targetFrequency)));
             if (delta < OneQuarterMillisecond)
             {
                 ticksDelta = _targetFrequency;

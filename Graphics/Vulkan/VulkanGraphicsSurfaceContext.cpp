@@ -14,13 +14,12 @@ namespace NovelRT::Graphics
     using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsSurfaceContext::GraphicsSurfaceContext(
-        std::shared_ptr<IGraphicsSurface> surface,
-        std::shared_ptr<VulkanGraphicsProvider> provider)
-        : _surface(std::move(surface))
-        ,  _provider(std::move(provider))
-        ,  _logger(NovelRT::Logging::CONSOLE_LOG_GFX)
-        ,  _vulkanSurface(VK_NULL_HANDLE)
+    VulkanGraphicsSurfaceContext::GraphicsSurfaceContext(std::shared_ptr<IGraphicsSurface> surface,
+                                                         std::shared_ptr<VulkanGraphicsProvider> provider)
+        : _surface(std::move(surface)),
+          _provider(std::move(provider)),
+          _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
+          _vulkanSurface(VK_NULL_HANDLE)
     {
         if (_surface == nullptr)
         {
@@ -80,7 +79,8 @@ namespace NovelRT::Graphics
         return _surface;
     }
 
-    std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsSurfaceContext::GetProvider() const noexcept
+    std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsSurfaceContext::GetProvider()
+        const noexcept
     {
         return _provider;
     }

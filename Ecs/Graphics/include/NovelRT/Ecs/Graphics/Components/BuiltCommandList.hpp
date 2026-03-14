@@ -3,21 +3,22 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
+#include <NovelRT/Graphics/GraphicsProvider.hpp>
 
 #include <memory>
 
 namespace NovelRT::Ecs::Graphics::Components
 {
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     struct BuiltCommandList
     {
         std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>* commandList;
 
         inline BuiltCommandList& operator+=(const BuiltCommandList& other)
         {
-            if (commandList != nullptr) delete commandList;
+            if (commandList != nullptr)
+                delete commandList;
             *this = other;
             return *this;
         }

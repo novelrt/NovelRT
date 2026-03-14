@@ -10,15 +10,18 @@
 
 namespace NovelRT::Ecs
 {
-    template <typename TComponent> class ComponentBuffer;
-    template <typename, typename> class SparseSet;
+    template<typename TComponent>
+    class ComponentBuffer;
+    template<typename, typename>
+    class SparseSet;
 
     /**
      * @brief A thread-aware view into a ComponentBuffer that allows for both reading and writing of data.
      *
      * @tparam TComponent The type of component that this view provides access to.
      */
-    template<typename TComponent> class ComponentView
+    template<typename TComponent>
+    class ComponentView
     {
     private:
         size_t _poolId;

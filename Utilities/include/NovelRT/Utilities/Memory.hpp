@@ -11,9 +11,9 @@
 
 namespace NovelRT::Utilities::Memory
 {
-    template <typename T>
-    constexpr std::enable_if_t<std::is_trivially_copyable_v<T>>
-    Copy(NovelRT::Utilities::Span<const T> source, NovelRT::Utilities::Span<T> destination)
+    template<typename T>
+    constexpr std::enable_if_t<std::is_trivially_copyable_v<T>> Copy(NovelRT::Utilities::Span<const T> source,
+                                                                     NovelRT::Utilities::Span<T> destination)
     {
         if (source.data() < destination.data() && (source.data() + source.size()) >= destination.data())
         {

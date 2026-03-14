@@ -16,7 +16,7 @@ namespace NovelRT::Utilities
         std::function<T()> _delegate;
         mutable std::optional<T> _actual;
 
-        template <typename U>
+        template<typename U>
         void Reset(U&& newExplicitValue) const noexcept
         {
             _actual.emplace(std::forward<U>(newExplicitValue));
@@ -58,7 +58,7 @@ namespace NovelRT::Utilities
             _actual.reset();
         }
 
-        template <typename U>
+        template<typename U>
         void Reset(U&& newExplicitValue) noexcept
         {
             _actual.emplace(std::forward<U>(newExplicitValue));

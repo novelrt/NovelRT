@@ -22,7 +22,8 @@ namespace NovelRT::Ecs
      * @tparam TKey The type to use for the Key.
      * @tparam TValue The type to use for the value.
      */
-    template<typename TKey, typename TValue> class SparseSet
+    template<typename TKey, typename TValue>
+    class SparseSet
     {
     private:
         SparseSetMemoryContainer _innerContainer;

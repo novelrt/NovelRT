@@ -3,17 +3,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/EcsUtils.hpp>
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <tuple>
 #include <vector>
 
 namespace NovelRT::Ecs
 {
-    template <typename TComponent> class ComponentView;
+    template<typename TComponent>
+    class ComponentView;
     class EntityCache;
     class UnsafeComponentView;
 
@@ -54,7 +55,8 @@ namespace NovelRT::Ecs
          * @tparam TComponent The component type the view should be exposing.
          * @return A ComponentView<TComponent> instance that has its threading context set to the current thread.
          */
-        template<typename TComponent>[[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
+        template<typename TComponent>
+        [[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
             return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
         }

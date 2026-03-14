@@ -1,9 +1,9 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
-#include <NovelRT/Exceptions/FileNotFoundException.hpp>
 
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
@@ -214,7 +214,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     return returnStruct;
 }
 
-template <typename TBackend>
+template<typename TBackend>
 void Render(RenderingData<TBackend>& renderingData,
             std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
             std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions)
@@ -224,7 +224,8 @@ void Render(RenderingData<TBackend>& renderingData,
     float surfaceHeight = surface->GetHeight();
     auto swapchainImage = gfxDevice->BeginFrame();
     std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
-    auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass, static_cast<uint32_t>(surfaceWidth),
+    auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass,
+                                                                   static_cast<uint32_t>(surfaceWidth),
                                                                    static_cast<uint32_t>(surfaceHeight));
     {
         auto context = renderingData.GraphicsContext;
@@ -256,8 +257,8 @@ void Render(RenderingData<TBackend>& renderingData,
                                       NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
         currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1>
-        buffers{std::cref(renderingData.VertexBuffer)};
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
+            std::cref(renderingData.VertexBuffer)};
         std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
 
         currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
@@ -266,14 +267,12 @@ void Render(RenderingData<TBackend>& renderingData,
         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
         descriptorSetData->UpdateDescriptorSetData();
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>,
-        1>
-        descriptorData{std::cref(descriptorSetData)};
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
+            std::cref(descriptorSetData)};
         currentCmdList->CmdBindDescriptorSets(descriptorData);
 
         currentCmdList->CmdDraw(
-            static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,
-                                0);
+            static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
         currentCmdList->CmdEndRenderPass();
 

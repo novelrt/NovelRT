@@ -13,10 +13,7 @@
 namespace NovelRT::Ecs
 {
     SparseSetMemoryContainer::SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept
-        : _dense(),
-          _sparse(),
-          _data(),
-          _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
+        : _dense(), _sparse(), _data(), _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes)
     {
     }
 

@@ -75,30 +75,30 @@ namespace NovelRT::Graphics
 
                            switch (x.initialLayout)
                            {
-                            case ImageLayout::Undefined:
-                                initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                                break;
-                            case ImageLayout::Optimal:
-                                initialLayout = VK_IMAGE_LAYOUT_GENERAL;
-                                break;
-                            case ImageLayout::Present:
-                                initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                                break;
+                               case ImageLayout::Undefined:
+                                   initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                                   break;
+                               case ImageLayout::Optimal:
+                                   initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+                                   break;
+                               case ImageLayout::Present:
+                                   initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                                   break;
                            }
 
                            VkImageLayout finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
                            switch (x.finalLayout)
                            {
-                            case ImageLayout::Undefined:
-                                finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                                break;
-                            case ImageLayout::Optimal:
-                                finalLayout = VK_IMAGE_LAYOUT_GENERAL;
-                                break;
-                            case ImageLayout::Present:
-                                finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                                break;
+                               case ImageLayout::Undefined:
+                                   finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                                   break;
+                               case ImageLayout::Optimal:
+                                   finalLayout = VK_IMAGE_LAYOUT_GENERAL;
+                                   break;
+                               case ImageLayout::Present:
+                                   finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                                   break;
                            }
 
                            VkAttachmentDescription attachmentDescription{};

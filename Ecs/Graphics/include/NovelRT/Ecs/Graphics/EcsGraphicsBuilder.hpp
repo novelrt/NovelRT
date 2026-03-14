@@ -15,13 +15,13 @@
 
 namespace NovelRT::Ecs::Graphics
 {
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     class RenderOrchestratorSystem;
 
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     class RenderPassManager;
 
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     class EcsGraphicsBuilder
     {
     private:
@@ -36,10 +36,11 @@ namespace NovelRT::Ecs::Graphics
 
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
-            _defaultRenderPassComponent{nullptr, std::numeric_limits<Components::RenderPassId>::max()}
-        { }
+              _defaultRenderPassComponent{nullptr, std::numeric_limits<Components::RenderPassId>::max()}
+        {
+        }
 
-        template <typename T>
+        template<typename T>
         friend EcsGraphicsBuilder<T>& AddGraphics(SystemSchedulerBuilder&);
 
     public:
@@ -49,13 +50,15 @@ namespace NovelRT::Ecs::Graphics
         EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = default;
         ~EcsGraphicsBuilder() = default;
 
-        EcsGraphicsBuilder& WithGraphicsDevice(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
+        EcsGraphicsBuilder& WithGraphicsDevice(
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
         {
             _graphicsDevice = device;
             return *this;
         }
 
-        EcsGraphicsBuilder& WithSurfaceContext(std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>>& context)
+        EcsGraphicsBuilder& WithSurfaceContext(
+            std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>>& context)
         {
             _context = context;
             return *this;
@@ -81,7 +84,8 @@ namespace NovelRT::Ecs::Graphics
             return *this;
         }
 
-        EcsGraphicsBuilder& WithOrchestrator(const std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>>& orchestrator)
+        EcsGraphicsBuilder& WithOrchestrator(
+            const std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>>& orchestrator)
         {
             _orchestrator = orchestrator;
             return *this;
@@ -89,12 +93,13 @@ namespace NovelRT::Ecs::Graphics
 
         EcsGraphicsBuilder& WithDefaultOrchestrator()
         {
-            return WithOrchestrator(std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager));
+            return WithOrchestrator(
+                std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager));
         }
 
         void operator()(SystemScheduler& scheduler)
         {
-                // TODO: add systems and components for rendering
+            // TODO: add systems and components for rendering
             auto& cache = scheduler.GetComponentCache();
 
             cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
@@ -104,7 +109,7 @@ namespace NovelRT::Ecs::Graphics
         }
     };
 
-    template <typename TGraphicsBackend>
+    template<typename TGraphicsBackend>
     EcsGraphicsBuilder<TGraphicsBackend>& AddGraphics(SystemSchedulerBuilder& builder)
     {
         return builder.Configure(EcsGraphicsBuilder<TGraphicsBackend>{});

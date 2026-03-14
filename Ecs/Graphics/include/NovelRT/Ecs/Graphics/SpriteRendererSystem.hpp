@@ -14,10 +14,10 @@
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 
-#include <NovelRT/Graphics/GraphicsDevice.hpp>
-#include <NovelRT/Graphics/GraphicsContext.hpp>
-#include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
+#include <NovelRT/Graphics/GraphicsCmdList.hpp>
+#include <NovelRT/Graphics/GraphicsContext.hpp>
+#include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 
@@ -35,9 +35,11 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
         std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> _vertexBuffer;
         std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> _indexBuffer;
-        std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
+        std::shared_ptr<
+            NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
             _vertexRegion;
-        std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
+        std::shared_ptr<
+            NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
             _indexRegion;
 
         struct TexturedVertex
@@ -48,7 +50,8 @@ namespace NovelRT::Ecs::Graphics
 
     public:
         SpriteRendererSystem(
-            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice, std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator)
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
+            std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator)
             : _graphicsDevice(std::move(graphicsDevice)),
               _memoryAllocator(std::move(memoryAllocator)),
               _vertexBuffer(nullptr),
@@ -56,76 +59,77 @@ namespace NovelRT::Ecs::Graphics
               _vertexRegion(nullptr),
               _indexRegion(nullptr)
         {
-            //NovelRT::Graphics::GraphicsBufferCreateInfo stagingCreateInfo{};
-            //stagingCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            //stagingCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-            //stagingCreateInfo.size = 64 * 1024;
+            // NovelRT::Graphics::GraphicsBufferCreateInfo stagingCreateInfo{};
+            // stagingCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
+            // stagingCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
+            // stagingCreateInfo.size = 64 * 1024;
 
-            //auto stagingBuffer = _memoryAllocator->CreateBuffer(stagingCreateInfo);
+            // auto stagingBuffer = _memoryAllocator->CreateBuffer(stagingCreateInfo);
 
-            //NovelRT::Graphics::GraphicsBufferCreateInfo vertexReadOnlyCreateInfo{};
-            //vertexReadOnlyCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Vertex;
-            //vertexReadOnlyCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
-            //vertexReadOnlyCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            //vertexReadOnlyCreateInfo.size = 64 * 1024;
+            // NovelRT::Graphics::GraphicsBufferCreateInfo vertexReadOnlyCreateInfo{};
+            // vertexReadOnlyCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Vertex;
+            // vertexReadOnlyCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
+            // vertexReadOnlyCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
+            // vertexReadOnlyCreateInfo.size = 64 * 1024;
 
             //_vertexBuffer = _memoryAllocator->CreateBuffer(vertexReadOnlyCreateInfo);
 
-            //NovelRT::Graphics::GraphicsBufferCreateInfo indexReadOnlyCreateInfo{};
-            //vertexReadOnlyCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Index;
-            //vertexReadOnlyCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
-            //vertexReadOnlyCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            //vertexReadOnlyCreateInfo.size = 64 * 1024;
+            // NovelRT::Graphics::GraphicsBufferCreateInfo indexReadOnlyCreateInfo{};
+            // vertexReadOnlyCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Index;
+            // vertexReadOnlyCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
+            // vertexReadOnlyCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
+            // vertexReadOnlyCreateInfo.size = 64 * 1024;
 
             //_indexBuffer = _memoryAllocator->CreateBuffer(indexReadOnlyCreateInfo);
 
             //_vertexRegion = _vertexBuffer->Allocate(sizeof(TexturedVertex) * 4, 16);
-            //auto vertexStagingRegion = stagingBuffer->Allocate(sizeof(TexturedVertex) * 4, 16);
+            // auto vertexStagingRegion = stagingBuffer->Allocate(sizeof(TexturedVertex) * 4, 16);
             //_indexRegion = _indexBuffer->Allocate(sizeof(uint16_t) * 6, 16);
-            //auto indexStagingRegion = stagingBuffer->Allocate(sizeof(uint16_t) * 6, 16);
+            // auto indexStagingRegion = stagingBuffer->Allocate(sizeof(uint16_t) * 6, 16);
 
-            //auto pVertexRegion = stagingBuffer->template Map<TexturedVertex>(_vertexRegion);
+            // auto pVertexRegion = stagingBuffer->template Map<TexturedVertex>(_vertexRegion);
 
-            //pVertexRegion[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, 1, 0), NovelRT::Maths::GeoVector2F(0.0f, 0.0f)};
-            //pVertexRegion[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, 1, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
-            //pVertexRegion[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-            //pVertexRegion[3] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+            // pVertexRegion[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, 1, 0),
+            // NovelRT::Maths::GeoVector2F(0.0f, 0.0f)}; pVertexRegion[1] =
+            // TexturedVertex{NovelRT::Maths::GeoVector3F(1, 1, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
+            // pVertexRegion[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0),
+            // NovelRT::Maths::GeoVector2F(1.0f, 1.0f)}; pVertexRegion[3] =
+            // TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
-            //stagingBuffer->UnmapAndWrite(_vertexRegion);
+            // stagingBuffer->UnmapAndWrite(_vertexRegion);
 
-            //auto pIndexRegion = stagingBuffer->template Map<uint16_t>(_indexRegion);
+            // auto pIndexRegion = stagingBuffer->template Map<uint16_t>(_indexRegion);
 
             //// Clockwise order
-            //pIndexRegion[0] = 0;
-            //pIndexRegion[1] = 1;
-            //pIndexRegion[2] = 2;
-            //pIndexRegion[3] = 0;
-            //pIndexRegion[4] = 2;
-            //pIndexRegion[5] = 3;
+            // pIndexRegion[0] = 0;
+            // pIndexRegion[1] = 1;
+            // pIndexRegion[2] = 2;
+            // pIndexRegion[3] = 0;
+            // pIndexRegion[4] = 2;
+            // pIndexRegion[5] = 3;
 
-            //stagingBuffer->UnmapAndWrite(_indexRegion);
+            // stagingBuffer->UnmapAndWrite(_indexRegion);
 
-            //auto gfxContext = _graphicsDevice->CreateGraphicsContext();
-            
+            // auto gfxContext = _graphicsDevice->CreateGraphicsContext();
 
-            //auto cmdList = gfxContext->CreateCmdList({});
+            // auto cmdList = gfxContext->CreateCmdList({});
 
-            //cmdList->Begin();
-            //cmdList->CmdCopy(_vertexRegion, vertexStagingRegion);
-            //cmdList->CmdCopy(_indexRegion, indexStagingRegion);
-            //cmdList->End();
+            // cmdList->Begin();
+            // cmdList->CmdCopy(_vertexRegion, vertexStagingRegion);
+            // cmdList->CmdCopy(_indexRegion, indexStagingRegion);
+            // cmdList->End();
 
             //_graphicsDevice->QueueSubmit(cmdList);
-            //_graphicsDevice->WaitForIdle(); 
+            //_graphicsDevice->WaitForIdle();
         }
-
 
         void Update(Timing::Timestamp /*delta*/, Catalogue catalogue) override
         {
-            auto [sprites, renderPasses, commandLists] = catalogue.GetComponentViews<Components::Sprite, Components::RenderPass, Components::BuiltCommandList<TGraphicsBackend>>();
+            auto [sprites, renderPasses, commandLists] =
+                catalogue.GetComponentViews<Components::Sprite, Components::RenderPass,
+                                            Components::BuiltCommandList<TGraphicsBackend>>();
 
             auto context = _graphicsDevice->CreateGraphicsContext();
-
 
             for (auto [entity, sprite] : sprites)
             {
@@ -135,25 +139,26 @@ namespace NovelRT::Ecs::Graphics
                 // rendering la la la
                 cmdList->CmdBindPipeline(nullptr); // TODO: sort this
 
-                
-                std::array<std::reference_wrapper<const std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>>>, 1>
+                std::array<
+                    std::reference_wrapper<const std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>>>,
+                    1>
                     buffers{std::cref(_vertexBuffer)};
 
                 std::array<size_t, 1> offsets{_vertexRegion->GetOffset()};
 
                 cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
                 cmdList->CmdBindIndexBuffer(_indexRegion, NovelRT::Graphics::IndexType::UInt16);
-                //cmdList->CmdBindDescriptorSets(nullptr); // TODO: sort this
+                // cmdList->CmdBindDescriptorSets(nullptr); // TODO: sort this
                 cmdList->CmdDrawIndexed(6, 1, 0, 0, 0);
                 cmdList->End();
 
-                Components::BuiltCommandList<TGraphicsBackend> temp{new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>};
+                Components::BuiltCommandList<TGraphicsBackend> temp{
+                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>};
 
                 *(temp.commandList) = cmdList;
                 renderPasses.AddComponent(entity, {1});
                 commandLists.AddComponent(entity, temp);
             }
-
         }
     };
 }

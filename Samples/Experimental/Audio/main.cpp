@@ -21,10 +21,12 @@ int main()
     auto provider = std::make_shared<AudioProvider<OpenAL::OpenALAudioBackend>>();
 
     std::vector<float> samples(48'000);
-    std::generate(samples.begin(), samples.end(), [rate = samples.size(), freq = 440, n = 0]() mutable {
-        float t = float(n++) / rate;
-        return std::sin(freq * 2.f * PI * t);
-    });
+    std::generate(samples.begin(), samples.end(),
+                  [rate = samples.size(), freq = 440, n = 0]() mutable
+                  {
+                      float t = float(n++) / rate;
+                      return std::sin(freq * 2.f * PI * t);
+                  });
 
     AudioSourceContext sineWave{};
     sineWave.Loop = true;

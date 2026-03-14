@@ -84,7 +84,7 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-template <typename TGraphicsBackend>
+template<typename TGraphicsBackend>
 std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
     std::shared_ptr<GraphicsContext<TGraphicsBackend>> context,
     std::shared_ptr<GraphicsCmdList<TGraphicsBackend>> currentCmdList,
@@ -95,15 +95,15 @@ std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
     std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> pipeline,
     std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> vertexBuffer,
     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> vertexBufferRegion,
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>>
-        inputResourceRegions)
+    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>> inputResourceRegions)
 {
 
     currentCmdList->CmdBindPipeline(pipeline);
     currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                   NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
 
-    std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{std::cref(vertexBuffer)};
+    std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{
+        std::cref(vertexBuffer)};
     std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
 
     currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
@@ -112,7 +112,8 @@ std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
     descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
     descriptorSetData->UpdateDescriptorSetData();
 
-    std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
+    std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>>>, 1>
+        descriptorData{std::cref(descriptorSetData)};
     currentCmdList->CmdBindDescriptorSets(descriptorData);
     context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
 
@@ -125,8 +126,8 @@ std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
 int main()
 {
     // TODO: EngineConfig was here
-    //NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    //NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
+    // NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    // NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
 
     LoggingService logger{};
     logger.setLogLevel(LogLevel::Info);
@@ -149,10 +150,10 @@ int main()
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     /// IMGUI
-    auto uiProvider = std::make_shared<ImGuiUIProvider<
-        NovelRT::Graphics::Vulkan::VulkanGraphicsBackend,
-        NovelRT::Input::Glfw::GlfwInputBackend,
-        NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice, memoryAllocator, true);
+    auto uiProvider = std::make_shared<
+        ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
+                        NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
+                                                                         memoryAllocator, true);
     /// IMGUI
 
     GraphicsBufferCreateInfo bufferCreateInfo{};
@@ -248,7 +249,8 @@ int main()
     auto surface = gfxDevice->GetSurface();
     bool clicked = false;
     NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
-    DummyUpdateStuff += [&](auto delta) {
+    DummyUpdateStuff += [&](auto delta)
+    {
         wndProvider->ProcessAllMessages();
         inputProvider->Update(delta);
 
@@ -311,8 +313,9 @@ int main()
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
-            auto descriptorSetData = regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature, pipeline,
-                            vertexBuffer, vertexBufferRegion, inputResourceRegions);
+            auto descriptorSetData =
+                regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
+                                pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
             uiProvider->Draw(currentCmdList);
 

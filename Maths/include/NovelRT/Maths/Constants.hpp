@@ -17,10 +17,10 @@ namespace NovelRT::Maths
      * @tparam TFloatingPointType A floating point type that is expressed as either float or double.
      * @return A full rotation expressed in radians.
      */
-    template <typename T>
+    template<typename T>
     constexpr inline T Tau;
 
-    template <>
+    template<>
     constexpr inline float Tau<float> = 6.283185307f;
 
     template<>

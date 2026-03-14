@@ -57,7 +57,7 @@ namespace NovelRT::Graphics
         commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         commandBufferAllocateInfo.commandPool = context->GetVulkanCommandPool();
         commandBufferAllocateInfo.level = primary ? VK_COMMAND_BUFFER_LEVEL_PRIMARY : VK_COMMAND_BUFFER_LEVEL_SECONDARY;
-        commandBufferAllocateInfo.commandBufferCount = 1; 
+        commandBufferAllocateInfo.commandBufferCount = 1;
 
         auto device = context->GetDevice();
 
@@ -122,14 +122,18 @@ namespace NovelRT::Graphics
         DestroyDescriptorSets();
     }
 
-    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
+    std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(
+        std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
     {
         VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, !secondaryContextData.has_value());
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer, std::weak_ptr<VulkanGraphicsContext>(shared_from_this()), secondaryContextData);
+        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer,
+                                                       std::weak_ptr<VulkanGraphicsContext>(shared_from_this()),
+                                                       secondaryContextData);
     }
 
     void VulkanGraphicsContext::EndFrame() // TODO: WTF?
-    { }
+    {
+    }
 
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
     {

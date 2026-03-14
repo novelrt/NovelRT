@@ -50,7 +50,8 @@ namespace NovelRT::Ecs
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
                 NovelRT::Utilities::Memory::Copy(
-                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
+                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(&(*_iteratorAtValue)),
+                                                              _sizeOfObject},
                     NovelRT::Utilities::Span<std::byte>{static_cast<std::byte*>(outputLocation), _sizeOfObject});
             }
 
@@ -98,7 +99,8 @@ namespace NovelRT::Ecs
             inline void CopyFromLocation(void* outputLocation) const noexcept
             {
                 NovelRT::Utilities::Memory::Copy(
-                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(&(*_iteratorAtValue)), _sizeOfObject},
+                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(&(*_iteratorAtValue)),
+                                                              _sizeOfObject},
                     NovelRT::Utilities::Span<std::byte>{static_cast<std::byte*>(outputLocation), _sizeOfObject});
             }
 

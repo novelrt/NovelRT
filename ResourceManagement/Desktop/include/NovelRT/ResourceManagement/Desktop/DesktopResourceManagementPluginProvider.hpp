@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <memory>
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
+#include <memory>
 
 namespace NovelRT::ResourceManagement::Desktop
 {

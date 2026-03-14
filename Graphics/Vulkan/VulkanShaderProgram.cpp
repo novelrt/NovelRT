@@ -13,9 +13,8 @@ namespace NovelRT::Graphics
     using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
     using VulkanShaderProgram = ShaderProgram<Vulkan::VulkanGraphicsBackend>;
 
-    VkShaderModule CreateShaderModule(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        NovelRT::Utilities::Span<const uint8_t> bytecode)
+    VkShaderModule CreateShaderModule(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                      NovelRT::Utilities::Span<const uint8_t> bytecode)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -23,7 +22,8 @@ namespace NovelRT::Graphics
         createInfo.pCode = reinterpret_cast<const uint32_t*>(bytecode.data());
 
         VkShaderModule shaderModule = VK_NULL_HANDLE;
-        const VkResult moduleCreationResult = vkCreateShaderModule(device->GetVulkanDevice(), &createInfo, nullptr, &shaderModule);
+        const VkResult moduleCreationResult =
+            vkCreateShaderModule(device->GetVulkanDevice(), &createInfo, nullptr, &shaderModule);
 
         if (moduleCreationResult != VK_SUCCESS)
         {
@@ -34,17 +34,17 @@ namespace NovelRT::Graphics
         return shaderModule;
     }
 
-    VulkanShaderProgram::ShaderProgram(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        std::string entryPointName,
-        ShaderProgramKind kind,
-        NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept
-        : _device(std::move(device))
-        , _entryPointName(std::move(entryPointName))
-        , _kind(kind)
-        , _shaderModule([device = _device, &bytecode = _bytecode]() { return CreateShaderModule(device, bytecode); })
-        , _bytecode(bytecode.begin(), bytecode.end())
-    { }
+    VulkanShaderProgram::ShaderProgram(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                       std::string entryPointName,
+                                       ShaderProgramKind kind,
+                                       NovelRT::Utilities::Span<const uint8_t> bytecode) noexcept
+        : _device(std::move(device)),
+          _entryPointName(std::move(entryPointName)),
+          _kind(kind),
+          _shaderModule([device = _device, &bytecode = _bytecode]() { return CreateShaderModule(device, bytecode); }),
+          _bytecode(bytecode.begin(), bytecode.end())
+    {
+    }
 
     VulkanShaderProgram::~ShaderProgram() noexcept
     {
