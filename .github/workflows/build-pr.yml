@@ -25,7 +25,7 @@ jobs:
           legacySrcDir="$(pwd)/LegacySrc"
           artefactsDir="$(pwd)/artefacts"
           find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
-            -name '*.cpp' -o -name '*.hpp' -exec clang-format --dry-run --Werror --style=file '{}' \+
+            -name '*.cpp' -o -name '*.hpp' -exec clang-format -v --dry-run --Werror --style=file '{}' \+
 
       - name: Preinstall dependencies
         if: ${{ runner.os == 'Linux' }}
