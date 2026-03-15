@@ -312,6 +312,10 @@ int main()
     TrianglePass<VulkanGraphicsBackend> trianglePass{};
 
     SystemSchedulerBuilder builder{};
+
+    // FIXME: This is a workaround to silence Vulkan warnings about multiple threads.
+    builder.WithThreadCount(1);
+
     AddDefaults(builder);
     AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
