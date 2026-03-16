@@ -8,6 +8,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <tuple>
 #include <vector>
 
 namespace NovelRT::Ecs
