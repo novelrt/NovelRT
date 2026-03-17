@@ -2,6 +2,8 @@
 // for more information.
 
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
@@ -23,7 +25,10 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 
 #include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
 
@@ -67,28 +72,35 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-int main()
+template<typename TBackend>
+struct PerFrameResources
 {
-    // TODO: EngineConfig was here
-    // NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    // NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+    uint64_t frameNumber;
 
-    LoggingService logger{};
-    logger.setLogLevel(LogLevel::Info);
+    std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TBackend>> renderTarget{};
+    std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TBackend>> descriptorSet{};
+    std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>> commandList{};
+};
 
-    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+template<typename TBackend>
+struct RenderingData
+{
+    std::shared_ptr<GraphicsBuffer<TBackend>> VertexBuffer;
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> VertexBufferRegion;
+    std::shared_ptr<GraphicsPipeline<TBackend>> RenderPipeline;
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
+    std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
+    std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
 
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
-    auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
+    std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> DeletionSemaphore;
+    std::deque<PerFrameResources<TBackend>> FrameResources;
+    uint64_t RenderedFrames{0};
+};
 
-    VulkanGraphicsAdapterSelector selector{};
-    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
-    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext, 2);
-
-    auto gfxContext = gfxDevice->GetCurrentContext();
-    auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
-
+template<typename TBackend>
+RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
+                                    std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
+{
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
@@ -110,8 +122,6 @@ int main()
     auto vertShaderData = LoadSpv("vulkanrendervert.spv");
     auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
 
-    std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
-
     std::vector<GraphicsPipelineInputElement> elements{
         GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
                                      12),
@@ -128,19 +138,45 @@ int main()
         NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
+
+    GraphicsRenderPassDescription passDesc{};
+    GraphicsAttachmentDescription attachmentDesc{};
+
+    auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
+
+    if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
+    {
+        attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
+    }
+    else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
+    {
+        attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
+    }
+    else
+    {
+        throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
+    }
+
+    attachmentDesc.loadOp = LoadOp::Clear;
+    attachmentDesc.storeOp = StoreOp::Store;
+    attachmentDesc.initialLayout = ImageLayout::Undefined;
+    attachmentDesc.finalLayout = ImageLayout::Present;
+
+    passDesc.attachmentDescriptions.push_back(attachmentDesc);
+    auto pass = gfxDevice->CreateRenderPass(passDesc);
+    auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
+    auto gfxContext = gfxDevice->CreateGraphicsContext();
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-    auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
+    auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
 
     pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
     pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
     pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-    cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
     uint32_t textureWidth = 256;
     uint32_t textureHeight = 256;
@@ -151,7 +187,7 @@ int main()
     auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-    auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
+    auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
 
     for (uint32_t n = 0; n < texturePixels; n++)
     {
@@ -162,76 +198,155 @@ int main()
     }
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+    {
+        gfxContext->BeginFrame();
+        auto cmdList = gfxContext->CreateCmdList();
+
+        cmdList->Begin();
+        cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
+
+        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->End();
+
+        gfxContext->EndFrame();
+        gfxDevice->QueueSubmit(cmdList);
+        gfxDevice->WaitForIdle();
+    }
+
+    RenderingData<TBackend> returnStruct{};
+    returnStruct.RenderPipeline = pipeline;
+    returnStruct.TextureRegion = texture2DRegion;
+    returnStruct.VertexBufferRegion = vertexBufferRegion;
+    returnStruct.VertexBuffer = vertexBuffer;
+    returnStruct.RenderPass = pass;
+    returnStruct.GraphicsContext = gfxContext;
+    returnStruct.DeletionSemaphore = gfxDevice->CreateSemaphore(0);
+
+    return returnStruct;
+}
+
+template<typename TBackend>
+void Render(RenderingData<TBackend>& renderingData,
+            std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
+            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions)
+{
+    auto lastRenderedFrame = renderingData.DeletionSemaphore->GetValue();
+    if (lastRenderedFrame > 0)
+        lastRenderedFrame -= 1;
+
+    renderingData.FrameResources.erase(std::remove_if(renderingData.FrameResources.begin(),
+                                                      renderingData.FrameResources.end(), [lastRenderedFrame](auto& it)
+                                                      { return it.frameNumber < lastRenderedFrame; }),
+                                       renderingData.FrameResources.end());
+
+    auto surface = gfxDevice->GetSurface();
+    float surfaceWidth = surface->GetWidth();
+    float surfaceHeight = surface->GetHeight();
+    auto swapchainImage = gfxDevice->BeginFrame();
+    std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
+    auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass,
+                                                                   static_cast<uint32_t>(surfaceWidth),
+                                                                   static_cast<uint32_t>(surfaceHeight));
+    {
+        auto context = renderingData.GraphicsContext;
+        context->BeginFrame();
+        auto currentCmdList = context->CreateCmdList();
+
+        currentCmdList->Begin();
+        // auto renderPass = context->CreateRenderPass();
+
+        auto& frameResources =
+            renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
+
+        NovelRT::Graphics::ClearValue colourDataStruct{};
+        colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+        colourDataStruct.depth = 0;
+        colourDataStruct.stencil = 0;
+
+        std::vector<ClearValue> colourData{colourDataStruct};
+        currentCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
+
+        ViewportInfo viewportInfoStruct{};
+        viewportInfoStruct.x = 0;
+        viewportInfoStruct.y = surfaceHeight;
+        viewportInfoStruct.width = surfaceWidth;
+        viewportInfoStruct.height = -surfaceHeight;
+        viewportInfoStruct.minDepth = 0.0f;
+        viewportInfoStruct.maxDepth = 1.0f;
+
+        currentCmdList->CmdSetViewport(viewportInfoStruct);
+        currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                      NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+        currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
+
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
+            std::cref(renderingData.VertexBuffer)};
+        std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
+
+        currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+
+        auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
+        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+        descriptorSetData->UpdateDescriptorSetData();
+
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
+            std::cref(descriptorSetData)};
+        currentCmdList->CmdBindDescriptorSets(descriptorData);
+
+        currentCmdList->CmdDraw(
+            static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
+
+        currentCmdList->CmdEndRenderPass();
+
+        currentCmdList->End();
+
+        frameResources.descriptorSet = descriptorSetData;
+        frameResources.renderTarget = target;
+        frameResources.commandList = currentCmdList;
+
+        context->EndFrame();
+        swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
+    }
+
+    gfxDevice->EndFrame();
+}
+
+int main()
+{
+    // TODO: EngineConfig was here
+    // NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    // NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+
+    LoggingService logger{};
+    logger.setLogLevel(LogLevel::Info);
+
+    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
+    auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
+
+    VulkanGraphicsAdapterSelector selector{};
+    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
+    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
+    auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
+
+    auto renderingData = SetupSample(gfxDevice, memoryAllocator);
 
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-        inputResourceRegions{texture2DRegion};
-
-    cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-    cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-    cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-
-    gfxContext->EndFrame();
-    gfxDevice->Signal(gfxContext);
-    gfxDevice->WaitForIdle();
-    gfxContext->GetFence()->Reset();
+        inputResourceRegions{renderingData.TextureRegion};
 
     while (!wndProvider->ShouldClose())
     {
         wndProvider->ProcessAllMessages();
         if (wndProvider->IsVisible())
         {
-            auto surface = gfxDevice->GetSurface();
-            auto context = gfxDevice->GetCurrentContext();
-            auto currentCmdList = context->BeginFrame();
-
-            float surfaceWidth = surface->GetWidth();
-            float surfaceHeight = surface->GetHeight();
-
-            auto renderPass = gfxDevice->GetRenderPass();
-
-            NovelRT::Graphics::ClearValue colourDataStruct{};
-            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-            colourDataStruct.depth = 0;
-            colourDataStruct.stencil = 0;
-
-            std::vector<ClearValue> colourData{colourDataStruct};
-            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
-
-            ViewportInfo viewportInfoStruct{};
-            viewportInfoStruct.x = 0;
-            viewportInfoStruct.y = surfaceHeight;
-            viewportInfoStruct.width = surfaceWidth;
-            viewportInfoStruct.height = -surfaceHeight;
-            viewportInfoStruct.minDepth = 0.0f;
-            viewportInfoStruct.maxDepth = 1.0f;
-
-            currentCmdList->CmdSetViewport(viewportInfoStruct);
-            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-            currentCmdList->CmdBindPipeline(pipeline);
-
-            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<VulkanGraphicsBackend>>>, 1> buffers{std::cref(vertexBuffer)};
-            std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
-
-            currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-
-            auto descriptorSetData = pipeline->CreateDescriptorSet();
-            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-            descriptorSetData->UpdateDescriptorSetData();
-
-            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<VulkanGraphicsBackend>>>, 1> descriptorData{std::cref(descriptorSetData)};
-            currentCmdList->CmdBindDescriptorSets(descriptorData);
-
-            currentCmdList->CmdDraw(static_cast<uint32_t>(vertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0,
-                                    0);
-
-            currentCmdList->CmdEndRenderPass();
-
-            context->EndFrame();
-            context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), descriptorSetData);
-            gfxDevice->PresentFrame();
+            Render(renderingData, gfxDevice, inputResourceRegions);
         }
     }
 
+    gfxDevice->WaitForIdle();
     return 0;
 }

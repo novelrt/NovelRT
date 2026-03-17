@@ -31,9 +31,13 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       VulkanGraphicsPipelineSignature.cpp
       VulkanGraphicsProvider.cpp
       VulkanGraphicsRenderPass.cpp
+      VulkanGraphicsRenderTarget.cpp
       VulkanGraphicsResource.cpp
       VulkanGraphicsResourceMemoryRegion.cpp
       VulkanGraphicsSurfaceContext.cpp
+      VulkanGraphicsSemaphore.cpp
+      VulkanGraphicsSwapchain.cpp
+      VulkanGraphicsSwapchainImage.cpp
       VulkanGraphicsTexture.cpp
       VulkanShaderProgram.cpp
 
@@ -54,9 +58,13 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp
+      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp

@@ -14,18 +14,29 @@ namespace NovelRT::Graphics
 {
     using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsDescriptorSet = GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>;
+    using VulkanGraphicsDevice = GraphicsDevice<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsPipeline = GraphicsPipeline<Vulkan::VulkanGraphicsBackend>;
-    template <template <typename> typename TResource>
+    template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VulkanGraphicsDescriptorSet::GraphicsDescriptorSet(
-        std::shared_ptr<VulkanGraphicsPipeline> targetPipeline,
-        VkDescriptorSet descriptorSetHandle) noexcept
-        :  _descriptorSetHandle(descriptorSetHandle)
-        , _pipeline(std::move(targetPipeline))
-        , _inputResourceRegions{}
-    { }
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<VulkanGraphicsDescriptorSet> VulkanGraphicsDescriptorSet::shared_from_this()
+    {
+        return std::static_pointer_cast<VulkanGraphicsDescriptorSet>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    std::shared_ptr<const VulkanGraphicsDescriptorSet> VulkanGraphicsDescriptorSet::shared_from_this() const
+    {
+        return std::static_pointer_cast<const VulkanGraphicsDescriptorSet>(GraphicsDeviceObject::shared_from_this());
+    }
+
+    VulkanGraphicsDescriptorSet::GraphicsDescriptorSet(std::shared_ptr<VulkanGraphicsPipeline> targetPipeline,
+                                                       VkDescriptorSet descriptorSetHandle) noexcept
+        : _descriptorSetHandle(descriptorSetHandle), _pipeline(std::move(targetPipeline)), _inputResourceRegions{}
+    {
+    }
 
     VulkanGraphicsDescriptorSet::~GraphicsDescriptorSet()
     {
@@ -34,12 +45,19 @@ namespace NovelRT::Graphics
         vkFreeDescriptorSets(device->GetVulkanDevice(), signature->GetVulkanDescriptorPool(), 1, &_descriptorSetHandle);
     }
 
-    void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>& region)
+    [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsDescriptorSet::GetDevice() const
+    {
+        return _pipeline->GetDevice();
+    }
+
+    void VulkanGraphicsDescriptorSet::AddMemoryRegionToInputs(
+        const std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>& region)
     {
         _inputResourceRegions.emplace_back(region);
     }
 
-    void VulkanGraphicsDescriptorSet::AddMemoryRegionsToInputs(Utilities::Span<std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>> regions)
+    void VulkanGraphicsDescriptorSet::AddMemoryRegionsToInputs(
+        Utilities::Span<std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsResource>>> regions)
     {
         _inputResourceRegions.insert(_inputResourceRegions.end(), regions.begin(), regions.end());
     }
@@ -72,8 +90,7 @@ namespace NovelRT::Graphics
                     writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                     writeDescriptorSet.pBufferInfo = &descriptorBufferInfo;
 
-                    vkUpdateDescriptorSets(device->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
-                                           nullptr);
+                    vkUpdateDescriptorSets(device->GetVulkanDevice(), 1, &writeDescriptorSet, 0, nullptr);
                 }
                 else if (auto texture = std::dynamic_pointer_cast<VulkanGraphicsTexture>(resource))
                 {
@@ -89,8 +106,7 @@ namespace NovelRT::Graphics
                     writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
                     writeDescriptorSet.pImageInfo = &descriptorImageInfo;
 
-                    vkUpdateDescriptorSets(device->GetVulkanDevice(), 1, &writeDescriptorSet, 0,
-                                           nullptr);
+                    vkUpdateDescriptorSets(device->GetVulkanDevice(), 1, &writeDescriptorSet, 0, nullptr);
                 }
                 else
                 {
@@ -105,7 +121,8 @@ namespace NovelRT::Graphics
         return _descriptorSetHandle;
     }
 
-    std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDescriptorSet::GetPipeline() const noexcept
+    std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDescriptorSet::GetPipeline()
+        const noexcept
     {
         return _pipeline;
     }

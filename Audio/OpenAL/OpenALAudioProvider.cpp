@@ -86,7 +86,10 @@ namespace NovelRT::Audio
     static void InstallLogger(const Logging::LoggingService& logger)
     {
         using CallbackType = void ALC_APIENTRY(void* userptr, char level, const char* message, int length) noexcept;
+        // FIXME: CI uses an older version of clang-format, which incorrectly formats this line.
+        // clang-format off
         using FnType = void ALC_APIENTRY(CallbackType* callback, void* userptr);
+        // clang-format on
 
         void* callback = alcGetProcAddress(nullptr, "alsoft_set_log_callback");
         if (callback == nullptr)

@@ -13,7 +13,8 @@ namespace NovelRT::Input
 {
     using GlfwInputProvider = InputProvider<Glfw::GlfwInputBackend>;
 
-    GlfwInputProvider::InputProvider(std::shared_ptr<Windowing::WindowProvider<Windowing::Glfw::GlfwWindowingBackend>> windowProvider)
+    GlfwInputProvider::InputProvider(
+        std::shared_ptr<Windowing::WindowProvider<Windowing::Glfw::GlfwWindowingBackend>> windowProvider)
         : _windowProvider(std::move(windowProvider)),
           _previousStates({}),
           _mappedActions({}),
@@ -37,8 +38,10 @@ namespace NovelRT::Input
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
         _windowProvider->MouseButtonClicked +=
             [this](auto eventArgs) { ProcessKeyInput(eventArgs.key, eventArgs.action); };
-        _windowProvider->CursorMoved += [this](auto eventArgs) {
-            NovelRT::Maths::GeoVector2F nativePos = NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y));
+        _windowProvider->CursorMoved += [this](auto eventArgs)
+        {
+            NovelRT::Maths::GeoVector2F nativePos =
+                NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y));
             ProcessCursorMovement(nativePos);
         };
 
@@ -221,16 +224,14 @@ namespace NovelRT::Input
 
     InputAction* GlfwInputProvider::FindInputActionForKey(const std::string& keyRequested)
     {
-        auto key = std::find_if(_availableKeys.begin(), _availableKeys.end(), [&keyRequested](const auto& it) {
-            return it.first == keyRequested;
-        });
+        auto key = std::find_if(_availableKeys.begin(), _availableKeys.end(),
+                                [&keyRequested](const auto& it) { return it.first == keyRequested; });
 
         if (key == _availableKeys.end())
             return nullptr;
 
-        auto action = std::find_if(_mappedActions.begin(), _mappedActions.end(), [&key = key->second](const auto& it) {
-            return key == it.pairedKey;
-        });
+        auto action = std::find_if(_mappedActions.begin(), _mappedActions.end(),
+                                   [&key = key->second](const auto& it) { return key == it.pairedKey; });
 
         if (action == _mappedActions.end())
             return nullptr;
@@ -375,7 +376,7 @@ namespace NovelRT::Input
             }
 
             auto stateList = _keyStates.at(_currentBufferIndex);
-            if(stateList.size() > 0)
+            if (stateList.size() > 0)
                 return stateList.at(action.pairedKey.GetExternalKeyCode());
         }
 

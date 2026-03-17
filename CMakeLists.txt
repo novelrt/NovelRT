@@ -43,6 +43,7 @@ add_subdirectory(ThirdParty)
 add_subdirectory(Exceptions)
 add_subdirectory(Logging)
 add_subdirectory(Maths)
+add_subdirectory(ResourceManagement)
 add_subdirectory(Threading)
 add_subdirectory(Timing)
 add_subdirectory(Utilities)
@@ -52,6 +53,8 @@ add_subdirectory(Graphics)
 add_subdirectory(Input)
 add_subdirectory(UI)
 add_subdirectory(Windowing)
+
+add_subdirectory(Ecs)
 
 add_subdirectory(Samples)
 

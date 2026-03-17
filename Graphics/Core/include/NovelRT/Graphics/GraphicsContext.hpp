@@ -6,7 +6,10 @@
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
 #include <NovelRT/Graphics/RGBAColour.hpp>
+#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
+
+#include <optional>
 
 namespace NovelRT::Graphics
 {
@@ -21,18 +24,15 @@ namespace NovelRT::Graphics
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<TBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsContext<TBackend>> shared_from_this() const;
 
         GraphicsContext() = delete;
         ~GraphicsContext() override = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsFence<TBackend>> GetFence() const noexcept;
-
-        [[nodiscard]] size_t GetIndex() const noexcept;
-
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> BeginFrame();
+        void BeginFrame();
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList(
+            std::optional<SecondaryCmdListInfo<TBackend>> secondaryContextData = {});
         void EndFrame();
-
-        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature,
-                                           std::shared_ptr<GraphicsDescriptorSet<TBackend>> set);
     };
 }

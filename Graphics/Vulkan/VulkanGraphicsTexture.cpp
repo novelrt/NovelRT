@@ -18,14 +18,13 @@ namespace NovelRT::Graphics
     using VulkanGraphicsDeviceObject = GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsMemoryAllocator = GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsResource = GraphicsResource<Vulkan::VulkanGraphicsBackend>;
-    template <template <typename> typename TResource>
+    template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VkImageView CreateVulkanImageView(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        GraphicsTextureKind kind,
-        VkImage image)
+    VkImageView CreateVulkanImageView(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                      GraphicsTextureKind kind,
+                                      VkImage image)
     {
         VkImageViewType viewType;
         switch (kind)
@@ -77,9 +76,8 @@ namespace NovelRT::Graphics
         return vulkanImageView;
     }
 
-    VkSampler CreateVulkanSampler(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
-        GraphicsTextureAddressMode addressMode)
+    VkSampler CreateVulkanSampler(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                  GraphicsTextureAddressMode addressMode)
     {
         VkSamplerCreateInfo samplerCreateInfo{};
         samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -106,39 +104,45 @@ namespace NovelRT::Graphics
         return vulkanSampler;
     }
 
-    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsTexture::shared_from_this()
     {
         return std::static_pointer_cast<VulkanGraphicsTexture>(GraphicsResource::shared_from_this());
     }
 
-    //NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+    // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<const VulkanGraphicsTexture> VulkanGraphicsTexture::shared_from_this() const
     {
         return std::static_pointer_cast<const VulkanGraphicsTexture>(GraphicsResource::shared_from_this());
     }
 
-    VulkanGraphicsTexture::GraphicsTexture(
-        std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
-        std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
-        const GraphicsTextureCreateInfo& createInfo,
-        VmaAllocation allocation,
-        VmaAllocationInfo allocationInfo,
-        VkImage vulkanImage)
-        : VulkanGraphicsResource(std::move(graphicsDevice), std::move(allocator), createInfo.cpuAccessKind, allocation, allocationInfo)
-        , _vulkanImage(vulkanImage)
-        , _mappedMemoryRegions(0)
-        , _addressMode(createInfo.addressMode)
-        , _kind(createInfo.textureKind)
-        , _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]() { return CreateVulkanImageView(device, textureKind, vulkanImage); })
-        , _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]() { return CreateVulkanSampler(device, addressMode); })
-        , _width(createInfo.width)
-        , _height(createInfo.height)
-        , _depth(createInfo.depth)
+    VulkanGraphicsTexture::GraphicsTexture(std::shared_ptr<VulkanGraphicsDevice> graphicsDevice,
+                                           std::shared_ptr<VulkanGraphicsMemoryAllocator> allocator,
+                                           const GraphicsTextureCreateInfo& createInfo,
+                                           VmaAllocation allocation,
+                                           VmaAllocationInfo allocationInfo,
+                                           VkImage vulkanImage)
+        : VulkanGraphicsResource(std::move(graphicsDevice),
+                                 std::move(allocator),
+                                 createInfo.cpuAccessKind,
+                                 allocation,
+                                 allocationInfo),
+          _vulkanImage(vulkanImage),
+          _mappedMemoryRegions(0),
+          _addressMode(createInfo.addressMode),
+          _kind(createInfo.textureKind),
+          _vulkanImageView([device = GetDevice(), textureKind = createInfo.textureKind, vulkanImage]()
+                           { return CreateVulkanImageView(device, textureKind, vulkanImage); }),
+          _vulkanSampler([device = GetDevice(), addressMode = createInfo.addressMode]()
+                         { return CreateVulkanSampler(device, addressMode); }),
+          _width(createInfo.width),
+          _height(createInfo.height),
+          _depth(createInfo.depth)
     {
 
         auto device = GetDevice();
-        VkResult result = vkBindImageMemory(device->GetVulkanDevice(), vulkanImage, allocationInfo.deviceMemory, allocationInfo.offset);
+        VkResult result = vkBindImageMemory(device->GetVulkanDevice(), vulkanImage, allocationInfo.deviceMemory,
+                                            allocationInfo.offset);
 
         if (result != VK_SUCCESS)
         {
@@ -172,10 +176,13 @@ namespace NovelRT::Graphics
         vmaDestroyImage(vmaAllocator, _vulkanImage, allocation);
     }
 
-    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsTexture>> VulkanGraphicsTexture::Allocate(size_t size, size_t alignment)
+    std::shared_ptr<VulkanGraphicsResourceMemoryRegion<GraphicsTexture>> VulkanGraphicsTexture::Allocate(
+        size_t size,
+        size_t alignment)
     {
         auto [allocation, info] = GetVirtualAllocation(size, alignment);
-        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsTexture>>(GetDevice(), shared_from_this(), allocation, info);
+        return std::make_shared<VulkanGraphicsResourceMemoryRegion<GraphicsTexture>>(GetDevice(), shared_from_this(),
+                                                                                     allocation, info);
     }
 
     void VulkanGraphicsTexture::Free(VulkanGraphicsResourceMemoryRegion<GraphicsTexture>& region)
@@ -210,9 +217,9 @@ namespace NovelRT::Graphics
 
     NovelRT::Utilities::Span<uint8_t> VulkanGraphicsTexture::MapBytes(size_t rangeOffset, size_t rangeLength)
     {
-        static_assert(
-            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
-            "uint8_t must be able to access the object representation of the byte buffer");
+        static_assert(std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> ||
+                          std::is_same_v<uint8_t, std::byte>,
+                      "uint8_t must be able to access the object representation of the byte buffer");
 
         size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
@@ -238,11 +245,12 @@ namespace NovelRT::Graphics
         return {static_cast<uint8_t*>(data) + rangeOffset, rangeLength};
     }
 
-    NovelRT::Utilities::Span<const uint8_t> VulkanGraphicsTexture::MapBytesForRead(size_t rangeOffset, size_t rangeLength)
+    NovelRT::Utilities::Span<const uint8_t> VulkanGraphicsTexture::MapBytesForRead(size_t rangeOffset,
+                                                                                   size_t rangeLength)
     {
-        static_assert(
-            std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> || std::is_same_v<uint8_t, std::byte>,
-            "uint8_t must be able to access the object representation of the byte buffer");
+        static_assert(std::is_same_v<uint8_t, char> || std::is_same_v<uint8_t, unsigned char> ||
+                          std::is_same_v<uint8_t, std::byte>,
+                      "uint8_t must be able to access the object representation of the byte buffer");
 
         size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
         size_t rangeValidationValue = sizeOfBuffer - rangeOffset;
@@ -282,7 +290,8 @@ namespace NovelRT::Graphics
     {
         if (_mappedMemoryRegions == 0)
         {
-            throw Exceptions::InvalidOperationException("Attempted to unmap region of texture when no memory map was created.");
+            throw Exceptions::InvalidOperationException(
+                "Attempted to unmap region of texture when no memory map was created.");
         }
 
         _mappedMemoryRegions--;
@@ -301,7 +310,8 @@ namespace NovelRT::Graphics
     {
         if (_mappedMemoryRegions == 0)
         {
-            throw Exceptions::InvalidOperationException("Attempted to unmap region of texture when no memory map was created.");
+            throw Exceptions::InvalidOperationException(
+                "Attempted to unmap region of texture when no memory map was created.");
         }
 
         size_t sizeOfBuffer = static_cast<size_t>(GetAllocationInfo().size);
@@ -330,7 +340,8 @@ namespace NovelRT::Graphics
         vmaUnmapMemory(vmaAllcoator, allocation);
     }
 
-    void VulkanGraphicsTexture::UnmapAndWrite(const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion)
+    void VulkanGraphicsTexture::UnmapAndWrite(
+        const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion)
     {
         return UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
     }

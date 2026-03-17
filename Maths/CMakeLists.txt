@@ -10,9 +10,11 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Maths
 
   HEADERS
     PUBLIC
+      include/NovelRT/Maths/Constants.hpp
       include/NovelRT/Maths/GeoVector2F.hpp
       include/NovelRT/Maths/GeoVector3F.hpp
       include/NovelRT/Maths/GeoVector4F.hpp
+      include/NovelRT/Maths/Utilities.hpp
 
   COMPILE_DEFINITIONS
     PUBLIC

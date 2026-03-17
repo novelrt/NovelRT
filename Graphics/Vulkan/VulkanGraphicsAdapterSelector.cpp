@@ -140,8 +140,9 @@ namespace NovelRT::Graphics::Vulkan
         const std::shared_ptr<VulkanGraphicsProvider>& provider,
         const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext) const
     {
-        return GetDefaultRecommendedAdapter(provider, surfaceContext,
-                                            std::vector<std::string>{VK_KHR_SWAPCHAIN_EXTENSION_NAME},
-                                            std::vector<std::string>{});
+        return GetDefaultRecommendedAdapter(
+            provider, surfaceContext,
+            std::vector<std::string>{VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME},
+            std::vector<std::string>{VK_KHR_MAINTENANCE_7_EXTENSION_NAME});
     }
 } // namespace NovelRT::Graphics::Vulkan

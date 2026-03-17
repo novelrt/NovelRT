@@ -17,9 +17,9 @@
 namespace NovelRT::Graphics
 {
     template<typename TBackend>
-    class GraphicsContext;
-    template<typename TBackend>
     class GraphicsBuffer;
+    template<typename TBackend>
+    class GraphicsDevice;
     template<typename TBackend>
     class GraphicsPipeline;
     template<typename TBackend>
@@ -28,6 +28,8 @@ namespace NovelRT::Graphics
     class GraphicsDescriptorSet;
     template<typename TBackend>
     class GraphicsRenderPass;
+    template<typename TBackend>
+    class GraphicsRenderTarget;
     template<typename TBackend>
     class GraphicsPipelineSignature;
     template<template<typename> typename TResource, typename TBackend>
@@ -68,9 +70,13 @@ namespace NovelRT::Graphics
         GraphicsCmdList() = delete;
         ~GraphicsCmdList() = default;
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> GetContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const noexcept;
+
+        void Begin();
+        void End();
 
         void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<TBackend>>& targetPass,
+                                const std::shared_ptr<GraphicsRenderTarget<TBackend>>& renderTarget,
                                 Utilities::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();
@@ -121,5 +127,7 @@ namespace NovelRT::Graphics
                                       GraphicsMemoryAccessMode destinationAccessFlag,
                                       GraphicsPipelineVisibility sourceStageFlag,
                                       GraphicsPipelineVisibility destinationStageFlag);
+
+        void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<TBackend>>& cmdList);
     };
 }

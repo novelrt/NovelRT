@@ -31,9 +31,6 @@ namespace NovelRT::Graphics
     class GraphicsTexture;
 
     template<typename TBackend>
-    struct GraphicsBackendTraits;
-
-    template<typename TBackend>
     class GraphicsMemoryAllocator : public GraphicsDeviceObject<TBackend>
     {
     public:

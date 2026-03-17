@@ -23,7 +23,6 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] bool TryWait();
         [[nodiscard]] bool TryWait(uint64_t millisecondsTimeout);
-        [[nodiscard]] bool TryWait(std::chrono::duration<uint64_t, std::milli> timeout);
 
         void Wait();
         void Wait(uint64_t millisecondsTimeout);

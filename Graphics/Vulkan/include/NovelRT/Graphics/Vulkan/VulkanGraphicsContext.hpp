@@ -4,10 +4,10 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
-#include <map>
 #include <memory>
 #include <vector>
 
@@ -20,28 +20,17 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
+
     template<>
     class GraphicsContext<Vulkan::VulkanGraphicsBackend> final
         : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
-        size_t _index;
 
-        std::map<std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>>,
-                 std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>,
-                 std::owner_less<>>
-            _vulkanDescriptorSets;
-        std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> _fence;
-
-        mutable NovelRT::Utilities::Lazy<VkCommandBuffer> _vulkanCommandBuffer;
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
-        mutable NovelRT::Utilities::Lazy<VkFramebuffer> _vulkanFramebuffer;
-        mutable NovelRT::Utilities::Lazy<VkImageView> _vulkanSwapChainImageView;
 
         Threading::VolatileState _state;
-
-        void DestroyDescriptorSets();
 
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
@@ -49,26 +38,16 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, size_t index) noexcept;
+        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept;
         ~GraphicsContext() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
-        [[nodiscard]] std::shared_ptr<GraphicsFence<Vulkan::VulkanGraphicsBackend>> GetFence() const noexcept;
 
-        [[nodiscard]] size_t GetIndex() const noexcept;
-
-        [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> BeginFrame();
+        void BeginFrame();
+        [[nodiscard]] std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> CreateCmdList(
+            std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData = {});
         void EndFrame();
 
-        void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
-
-        [[nodiscard]] VkCommandBuffer GetVulkanCommandBuffer() const;
         [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
-        [[nodiscard]] VkFramebuffer GetVulkanFramebuffer() const;
-        [[nodiscard]] VkImageView GetVulkanSwapChainImageView() const;
-
-        void RegisterDescriptorSetForFrame(
-            std::weak_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
-            std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };
 }

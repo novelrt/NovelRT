@@ -40,18 +40,24 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       include/NovelRT/Graphics/GraphicsProvider.hpp
       include/NovelRT/Graphics/GraphicsPushConstantRange.hpp
       include/NovelRT/Graphics/GraphicsRenderPass.hpp
+      include/NovelRT/Graphics/GraphicsRenderPassDescription.hpp
+      include/NovelRT/Graphics/GraphicsRenderTarget.hpp
       include/NovelRT/Graphics/GraphicsResource.hpp
       include/NovelRT/Graphics/GraphicsResourceAccess.hpp
       include/NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp
       include/NovelRT/Graphics/GraphicsSurfaceContext.hpp
       include/NovelRT/Graphics/GraphicsSurfaceKind.hpp
+      include/NovelRT/Graphics/GraphicsSemaphore.hpp
+      include/NovelRT/Graphics/GraphicsSwapchain.hpp
       include/NovelRT/Graphics/GraphicsTexture.hpp
       include/NovelRT/Graphics/GraphicsTextureAddressMode.hpp
       include/NovelRT/Graphics/GraphicsTextureCreateInfo.hpp
       include/NovelRT/Graphics/GraphicsTextureKind.hpp
       include/NovelRT/Graphics/IGraphicsAdapterSelector.hpp
       include/NovelRT/Graphics/IGraphicsSurface.hpp
+      include/NovelRT/Graphics/NullGraphicsBackend.hpp
       include/NovelRT/Graphics/RGBAColour.hpp
+      include/NovelRT/Graphics/SecondaryCmdListInfo.hpp
       include/NovelRT/Graphics/ShaderProgram.hpp
       include/NovelRT/Graphics/ShaderProgramKind.hpp
       include/NovelRT/Graphics/ShaderProgramVisibility.hpp

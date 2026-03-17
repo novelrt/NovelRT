@@ -12,7 +12,7 @@ namespace NovelRT::Exceptions
     {
     public:
         FileNotFoundException(const std::string& filePath)
-            : std::runtime_error("File failed to load. File path: \"" + filePath + "\".")
+            : std::runtime_error("Specified file path does not exist. File path: \"" + filePath + "\".")
         {
         }
         FileNotFoundException(const std::string& filePath, const std::string& message)

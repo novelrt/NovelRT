@@ -13,6 +13,8 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentCaseLabels: true
 IndentWidth: 4
 NamespaceIndentation: All
+# FIXME: Uncomment this when CI supports a newer version of clang-format
+# OneLineFormatOffRegex: '^(// NOLINTNEXTLINE\(clang-format\)): .+$'
 PointerAlignment: Left
 SortIncludes: true
 SortUsingDeclarations: true

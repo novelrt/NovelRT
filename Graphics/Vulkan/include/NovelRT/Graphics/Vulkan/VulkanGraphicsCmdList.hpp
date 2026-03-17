@@ -4,9 +4,13 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsCmdList.hpp>
+#include <NovelRT/Graphics/GraphicsContext.hpp>
+#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <functional>
+#include <memory>
+#include <optional>
 
 #include <vulkan/vulkan.h>
 
@@ -22,19 +26,31 @@ namespace NovelRT::Graphics
         : std::enable_shared_from_this<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>
     {
     private:
-        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _context;
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkCommandBuffer _commandBuffer;
+        std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _owningContext;
+        std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
 
     public:
-        GraphicsCmdList(std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> context,
-                        VkCommandBuffer commandBuffer) noexcept;
+        GraphicsCmdList(
+            std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+            VkCommandBuffer commandBuffer,
+            std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> owningContext,
+            std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData) noexcept;
 
-        ~GraphicsCmdList() = default;
+        ~GraphicsCmdList();
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> GetContext() const noexcept;
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
 
-        void CmdBeginRenderPass(const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
-                                Utilities::Span<const ClearValue> clearValues);
+        [[nodiscard]] VkCommandBuffer GetVkCommandBuffer();
+
+        void Begin();
+        void End();
+
+        void CmdBeginRenderPass(
+            const std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>& targetPass,
+            const std::shared_ptr<GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend>>& renderTarget,
+            Utilities::Span<const ClearValue> clearValues);
 
         void CmdEndRenderPass();
 
@@ -93,5 +109,7 @@ namespace NovelRT::Graphics
                                       GraphicsMemoryAccessMode destinationAccessFlag,
                                       GraphicsPipelineVisibility sourceStageFlag,
                                       GraphicsPipelineVisibility destinationStageFlag);
+
+        void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList);
     };
 }

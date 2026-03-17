@@ -18,4 +18,5 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::ImGu
       Resources/Shaders/imgui_frag.spv
       Resources/Shaders/imgui_vert.spv
       Resources/Shaders/vulkanrenderfrag.spv
-      Resources/Shaders/vulkanrendervert.spv)
+      Resources/Shaders/vulkanrendervert.spv
+)

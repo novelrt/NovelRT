@@ -12,8 +12,7 @@ namespace NovelRT::Graphics
     {
     }
 
-    NovelRT::Utilities::Span<const GraphicsPipelineInputElement> GraphicsPipelineInput::GetElements()
-        const noexcept
+    NovelRT::Utilities::Span<const GraphicsPipelineInputElement> GraphicsPipelineInput::GetElements() const noexcept
     {
         return _elements;
     }

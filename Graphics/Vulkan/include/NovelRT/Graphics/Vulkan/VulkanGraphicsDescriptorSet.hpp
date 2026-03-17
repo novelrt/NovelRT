@@ -20,7 +20,7 @@ namespace NovelRT::Graphics
 {
     template<>
     class GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>
-        : std::enable_shared_from_this<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
         VkDescriptorSet _descriptorSetHandle;
@@ -29,9 +29,16 @@ namespace NovelRT::Graphics
             _inputResourceRegions;
 
     public:
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
+
         explicit GraphicsDescriptorSet(std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> targetPipeline,
                                        VkDescriptorSet descriptorSet) noexcept;
         ~GraphicsDescriptorSet();
+
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
         void AddMemoryRegionToInputs(
             const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, Vulkan::VulkanGraphicsBackend>>&

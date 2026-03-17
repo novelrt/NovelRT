@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPass.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
@@ -27,6 +28,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _vertexShader;
         std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> _pixelShader;
         std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> _signature;
+        std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> _renderPass;
 
         mutable NovelRT::Utilities::Lazy<VkPipeline> _vulkanPipeline;
 
@@ -40,6 +42,7 @@ namespace NovelRT::Graphics
                          std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,
                          std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
                          std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
+                         std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> renderPass,
                          bool imguiRenderMode) noexcept;
         ~GraphicsPipeline() final = default;
 
@@ -55,6 +58,8 @@ namespace NovelRT::Graphics
             const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> CreateDescriptorSet();
+
+        [[nodiscard]] std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> GetRenderPass() const noexcept;
 
         [[nodiscard]] VkPipeline GetVulkanPipeline() const;
     };

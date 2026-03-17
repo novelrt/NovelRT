@@ -4,9 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
-
+#include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <memory>
-
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
@@ -16,16 +15,27 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
+    struct GraphicsRenderPassDescription;
 
     template<>
-    class GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>
-        : public std::enable_shared_from_this<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>>
+    class GraphicsRenderPass<Vulkan::VulkanGraphicsBackend> final
+        : public GraphicsDeviceObject<Vulkan::VulkanGraphicsBackend>
     {
     private:
+        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
         VkRenderPass _vulkanRenderPass;
 
     public:
-        explicit GraphicsRenderPass(VkRenderPass VkRenderPass) noexcept;
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> shared_from_this();
+        // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
+        std::shared_ptr<const GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
+
+        explicit GraphicsRenderPass(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                    const GraphicsRenderPassDescription& description);
+        ~GraphicsRenderPass() noexcept;
+
+        [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
         [[nodiscard]] VkRenderPass GetVulkanRenderPass() const noexcept;
     };

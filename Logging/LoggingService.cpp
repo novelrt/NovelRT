@@ -2,8 +2,8 @@
 // for more information.
 
 #include <NovelRT/Exceptions/NullPointerException.hpp>
-#include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 #include <iostream>
 
@@ -33,8 +33,8 @@ namespace NovelRT::Logging
 #endif
 
             // Set spdlog's error handler in case it fails.
-            spdlog::set_error_handler(
-                [](const std::string& msg) { std::cerr << "SPDLOG ERROR: " << msg << std::endl; });
+            spdlog::set_error_handler([](const std::string& msg)
+                                      { std::cerr << "SPDLOG ERROR: " << msg << std::endl; });
         }
         catch (const spdlog::spdlog_ex& ex)
         {
@@ -59,8 +59,8 @@ namespace NovelRT::Logging
 #endif
 
             // Set spdlog's error handler in case it fails.
-            spdlog::set_error_handler(
-                [](const std::string& msg) { std::cerr << "SPDLOG ERROR: " << msg << std::endl; });
+            spdlog::set_error_handler([](const std::string& msg)
+                                      { std::cerr << "SPDLOG ERROR: " << msg << std::endl; });
         }
         catch (const spdlog::spdlog_ex& ex)
         {
@@ -81,8 +81,8 @@ namespace NovelRT::Logging
             setLogLevel(level);
 
             // Set spdlog's error handler in case it fails.
-            spdlog::set_error_handler(
-                [](const std::string& msg) { std::cerr << "SPDLOG ERROR: " << msg << std::endl; });
+            spdlog::set_error_handler([](const std::string& msg)
+                                      { std::cerr << "SPDLOG ERROR: " << msg << std::endl; });
         }
         catch (const spdlog::spdlog_ex& ex)
         {
