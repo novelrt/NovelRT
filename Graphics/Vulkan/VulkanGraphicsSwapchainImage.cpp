@@ -180,9 +180,9 @@ namespace NovelRT::Graphics
 
         VkTimelineSemaphoreSubmitInfo semaphoreSubmitInfo{};
         semaphoreSubmitInfo.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
-        semaphoreSubmitInfo.waitSemaphoreValueCount = waitSemaphoreValues.size();
+        semaphoreSubmitInfo.waitSemaphoreValueCount = static_cast<uint32_t>(waitSemaphoreValues.size());
         semaphoreSubmitInfo.pWaitSemaphoreValues = waitSemaphoreValues.data();
-        semaphoreSubmitInfo.signalSemaphoreValueCount = signalSemaphoreValues.size();
+        semaphoreSubmitInfo.signalSemaphoreValueCount = static_cast<uint32_t>(signalSemaphoreValues.size());
         semaphoreSubmitInfo.pSignalSemaphoreValues = signalSemaphoreValues.data();
 
         VkSubmitInfo submitInfo{};
@@ -190,9 +190,9 @@ namespace NovelRT::Graphics
         submitInfo.pNext = &semaphoreSubmitInfo;
         submitInfo.commandBufferCount = static_cast<uint32_t>(buffers.size());
         submitInfo.pCommandBuffers = buffers.data();
-        submitInfo.signalSemaphoreCount = signalSemaphores.size();
+        submitInfo.signalSemaphoreCount = static_cast<uint32_t>(signalSemaphores.size());
         submitInfo.pSignalSemaphores = signalSemaphores.data();
-        submitInfo.waitSemaphoreCount = waitSemaphores.size();
+        submitInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
         submitInfo.pWaitSemaphores = waitSemaphores.data();
         submitInfo.pWaitDstStageMask = &allCommands;
 
