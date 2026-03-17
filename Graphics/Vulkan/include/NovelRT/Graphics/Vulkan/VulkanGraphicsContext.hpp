@@ -28,8 +28,6 @@ namespace NovelRT::Graphics
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
 
-        std::vector<std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>> _vulkanDescriptorSets;
-
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
 
         Threading::VolatileState _state;
@@ -51,7 +49,5 @@ namespace NovelRT::Graphics
         void EndFrame();
 
         [[nodiscard]] VkCommandPool GetVulkanCommandPool() const;
-
-        void RegisterDescriptorSetForFrame(std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>> set);
     };
 }

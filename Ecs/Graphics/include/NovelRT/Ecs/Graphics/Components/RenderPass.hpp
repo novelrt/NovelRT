@@ -16,8 +16,12 @@ namespace NovelRT::Ecs::Graphics::Components
     {
         RenderPassId renderPassIndex;
 
+        std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>* descriptorSet;
+
         inline RenderPass& operator+=(const RenderPass& other)
         {
+            if (descriptorSet != nullptr)
+                delete descriptorSet;
             *this = other;
             return *this;
         }

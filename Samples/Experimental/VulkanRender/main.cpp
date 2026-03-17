@@ -72,6 +72,16 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
+template <typename TBackend>
+struct PerFrameResources
+{
+    uint64_t frameNumber;
+
+    std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TBackend>> renderTarget{};
+    std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TBackend>> descriptorSet{};
+    std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>> commandList{};
+};
+
 template<typename TBackend>
 struct RenderingData
 {
@@ -81,7 +91,10 @@ struct RenderingData
     std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
     std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
     std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
-    std::shared_ptr<GraphicsCmdList<TBackend>> CmdListCache;
+
+    std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> DeletionSemaphore;
+    std::deque<PerFrameResources<TBackend>> FrameResources;
+    uint64_t RenderedFrames{0};
 };
 
 template<typename TBackend>
@@ -108,7 +121,6 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
 
     auto vertShaderData = LoadSpv("vulkanrendervert.spv");
     auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
-    auto gfxSwapchainImage = gfxDevice->BeginFrame();
 
     std::vector<GraphicsPipelineInputElement> elements{
         GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
@@ -210,6 +222,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     returnStruct.VertexBuffer = vertexBuffer;
     returnStruct.RenderPass = pass;
     returnStruct.GraphicsContext = gfxContext;
+    returnStruct.DeletionSemaphore = gfxDevice->CreateSemaphore(0);
 
     return returnStruct;
 }
@@ -219,6 +232,14 @@ void Render(RenderingData<TBackend>& renderingData,
             std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
             std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions)
 {
+    auto lastRenderedFrame = renderingData.DeletionSemaphore->GetValue();
+    if (lastRenderedFrame > 0) lastRenderedFrame -= 1;
+
+    renderingData.FrameResources.erase(
+        std::remove_if(renderingData.FrameResources.begin(), renderingData.FrameResources.end(), [lastRenderedFrame](auto& it){ return it.frameNumber < lastRenderedFrame; }),
+        renderingData.FrameResources.end());
+
+
     auto surface = gfxDevice->GetSurface();
     float surfaceWidth = surface->GetWidth();
     float surfaceHeight = surface->GetHeight();
@@ -231,10 +252,11 @@ void Render(RenderingData<TBackend>& renderingData,
         auto context = renderingData.GraphicsContext;
         context->BeginFrame();
         auto currentCmdList = context->CreateCmdList();
-        renderingData.CmdListCache = currentCmdList;
 
         currentCmdList->Begin();
         // auto renderPass = context->CreateRenderPass();
+
+        auto& frameResources = renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{ ++renderingData.RenderedFrames });
 
         NovelRT::Graphics::ClearValue colourDataStruct{};
         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
@@ -278,14 +300,15 @@ void Render(RenderingData<TBackend>& renderingData,
 
         currentCmdList->End();
 
-        context->EndFrame();
-        context->RegisterDescriptorSetForFrame(std::weak_ptr(renderingData.RenderPipeline->GetSignature()),
-                                               descriptorSetData);
+        frameResources.descriptorSet = descriptorSetData;
+        frameResources.renderTarget = target;
+        frameResources.commandList = currentCmdList;
 
-        swapchainImage->QueueSubmit(currentCmdList);
+        context->EndFrame();
+        swapchainImage->QueueSubmit(currentCmdList, { renderingData.DeletionSemaphore, frameResources.frameNumber });
     }
 
-    gfxDevice->PresentFrame();
+    gfxDevice->EndFrame();
 }
 
 int main()
@@ -322,5 +345,6 @@ int main()
         }
     }
 
+    gfxDevice->WaitForIdle();
     return 0;
 }

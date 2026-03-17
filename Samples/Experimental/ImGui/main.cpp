@@ -322,7 +322,7 @@ int main()
             currentCmdList->CmdEndRenderPass();
             context->EndFrame();
             context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), descriptorSetData);
-            gfxDevice->PresentFrame();
+            gfxDevice->EndFrame();
         }
     };
 

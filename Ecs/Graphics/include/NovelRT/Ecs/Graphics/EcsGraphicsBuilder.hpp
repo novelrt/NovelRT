@@ -36,7 +36,7 @@ namespace NovelRT::Ecs::Graphics
 
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
-              _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max()}
+              _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr}
         {
         }
 

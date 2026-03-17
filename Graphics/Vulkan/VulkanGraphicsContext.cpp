@@ -87,7 +87,6 @@ namespace NovelRT::Graphics
     VulkanGraphicsContext::GraphicsContext(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept
         : _device(std::move(device)),
-          _vulkanDescriptorSets(),
           _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
@@ -95,7 +94,6 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsContext::~GraphicsContext()
     {
-        _vulkanDescriptorSets.clear();
         VkDevice device = GetDevice()->GetVulkanDevice();
 
         if (_vulkanCommandPool.HasValue())
@@ -130,10 +128,5 @@ namespace NovelRT::Graphics
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
     {
         return _vulkanCommandPool.Get();
-    }
-
-    void VulkanGraphicsContext::RegisterDescriptorSetForFrame(std::shared_ptr<VulkanGraphicsDescriptorSet> set)
-    {
-        _vulkanDescriptorSets.emplace_back(set);
     }
 }

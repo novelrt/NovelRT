@@ -42,6 +42,7 @@ namespace NovelRT::Ecs::Graphics
             std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> _frameImage;
 
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargets{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>> descriptorSets{};
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> commandLists{};
         };
 
@@ -186,8 +187,11 @@ namespace NovelRT::Ecs::Graphics
 
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
                     auto subCmdList = frameResources.commandLists.emplace_back(*subCmdListPtr);
+                    auto* descriptorSetPtr = renderPasses.GetComponent(entity).descriptorSet;
+                    frameResources.descriptorSets.emplace_back(*descriptorSetPtr);
 
                     cmdList->CmdExecuteCommands(subCmdList);
+
                 }
 
                 cmdList->CmdEndRenderPass();

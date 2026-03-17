@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <memory>
@@ -16,7 +18,7 @@ namespace NovelRT::Graphics
     class GraphicsResourceMemoryRegion;
 
     template<typename TBackend>
-    class GraphicsDescriptorSet : std::enable_shared_from_this<GraphicsDescriptorSet<TBackend>>
+    class GraphicsDescriptorSet : public GraphicsDeviceObject<TBackend>
     {
     public:
         GraphicsDescriptorSet() = delete;

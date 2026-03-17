@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/GraphicsRenderTarget.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 #include <vulkan/vulkan.h>
@@ -15,8 +16,6 @@ namespace NovelRT::Graphics::Vulkan
 
 namespace NovelRT::Graphics
 {
-    template<typename TBackend>
-    class GraphicsRenderTarget;
 
     template<>
     class GraphicsRenderTarget<Vulkan::VulkanGraphicsBackend> final

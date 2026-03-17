@@ -34,8 +34,5 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsCmdList<TBackend>> CreateCmdList(
             std::optional<SecondaryCmdListInfo<TBackend>> secondaryContextData = {});
         void EndFrame();
-
-        void RegisterDescriptorSetForFrame(std::weak_ptr<GraphicsPipelineSignature<TBackend>> signature,
-                                           std::shared_ptr<GraphicsDescriptorSet<TBackend>> set);
     };
 }

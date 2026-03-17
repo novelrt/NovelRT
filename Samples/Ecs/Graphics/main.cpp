@@ -262,7 +262,6 @@ public:
         currentCmdList->End();
 
         context->EndFrame();
-        context->RegisterDescriptorSetForFrame(descriptorSetData);
 
         auto [renderPassView, cmdListView, graphComponentView] =
             catalogue.GetComponentViews<RenderPass<TBackend>, BuiltCommandList<TBackend>, EntityGraphComponent>();
@@ -279,6 +278,7 @@ public:
 
             RenderPass<TBackend> passComponent{};
             passComponent.renderPassIndex = _trianglePass.RenderPassId;
+            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
             renderPassView.AddComponent(cmdListEntityLocal, passComponent);
 
             BuiltCommandList<TBackend> cmdListComp{};
@@ -289,6 +289,7 @@ public:
         {
             RenderPass<TBackend> passComponent{};
             passComponent.renderPassIndex = _trianglePass.RenderPassId;
+            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
             renderPassView.PushComponentUpdateInstruction(_cmdListEntity.value(), passComponent);
 
             BuiltCommandList<TBackend> cmdListComp{};
