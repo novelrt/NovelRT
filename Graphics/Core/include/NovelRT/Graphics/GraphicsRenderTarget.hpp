@@ -7,7 +7,6 @@
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
-
 namespace NovelRT::Graphics
 {
     template<typename TBackend>
@@ -15,7 +14,8 @@ namespace NovelRT::Graphics
     {
     public:
         GraphicsRenderTarget() = delete;
-        ~GraphicsRenderTarget() noexcept final = delete;;
+        ~GraphicsRenderTarget() noexcept final = delete;
+        ;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<TBackend>> GetDevice() const noexcept;
     };

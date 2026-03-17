@@ -86,8 +86,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsContext::GraphicsContext(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept
-        : _device(std::move(device)),
-          _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
+        : _device(std::move(device)), _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
     }
@@ -110,20 +109,20 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsContext::BeginFrame()
-    { }
+    {
+    }
 
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
     {
         VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, !secondaryContextData.has_value());
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(),
-                                                       commandBuffer,
-                                                       shared_from_this(),
+        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer, shared_from_this(),
                                                        secondaryContextData);
     }
 
     void VulkanGraphicsContext::EndFrame() // TODO: WTF?
-    { }
+    {
+    }
 
     VkCommandPool VulkanGraphicsContext::GetVulkanCommandPool() const
     {

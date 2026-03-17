@@ -71,7 +71,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> GetSurfaceContext()
             const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> CreateSemaphore(uint64_t initialValue = std::numeric_limits<uint64_t>::max());
+        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> CreateSemaphore(
+            uint64_t initialValue = std::numeric_limits<uint64_t>::max());
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> signature,

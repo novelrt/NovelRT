@@ -44,10 +44,11 @@ namespace NovelRT::Graphics
         return vulkanSemaphore;
     }
 
-    VulkanGraphicsSemaphore::GraphicsSemaphore(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, uint64_t initialValue) noexcept
-        : _device(std::move(device)),
-          _semaphore(CreateVulkanSemaphore(_device.get(), initialValue))
-    { }
+    VulkanGraphicsSemaphore::GraphicsSemaphore(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                               uint64_t initialValue) noexcept
+        : _device(std::move(device)), _semaphore(CreateVulkanSemaphore(_device.get(), initialValue))
+    {
+    }
 
     void DisposeVulkanSemaphore(VkDevice device, VkSemaphore vulkanSemaphore)
     {
@@ -69,9 +70,7 @@ namespace NovelRT::Graphics
 
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InvalidOperationException(
-                "Failed to get VkSemaphore value: " +
-                std::to_string(result));
+            throw Exceptions::InvalidOperationException("Failed to get VkSemaphore value: " + std::to_string(result));
         }
 
         return value;
@@ -85,13 +84,10 @@ namespace NovelRT::Graphics
         signalInfo.semaphore = _semaphore;
         signalInfo.value = value;
 
-
         VkResult result = vkSignalSemaphore(_device->GetVulkanDevice(), &signalInfo);
         if (result != VK_SUCCESS)
         {
-            throw Exceptions::InvalidOperationException(
-                "Failed to signal VkSemaphore: " +
-                 std::to_string(result));
+            throw Exceptions::InvalidOperationException("Failed to signal VkSemaphore: " + std::to_string(result));
         }
     }
 
@@ -116,9 +112,7 @@ namespace NovelRT::Graphics
 
         if (result != VK_SUCCESS && result != VK_TIMEOUT)
         {
-            throw Exceptions::InvalidOperationException(
-                "Failed to wait on VkSemaphore: " +
-                std::to_string(result));
+            throw Exceptions::InvalidOperationException("Failed to wait on VkSemaphore: " + std::to_string(result));
         }
 
         return result == VK_SUCCESS;

@@ -50,22 +50,32 @@ namespace NovelRT::Graphics
         [[nodiscard]] uint32_t GetHeight() const noexcept;
 
         void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
-        void QueueSubmit(std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToWait,
-                         std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
-        void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList,
-                         std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToSignal);
-        void QueueSubmit(std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToWait,
-                         std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList,
-                         std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToSignal);
+        void QueueSubmit(
+            std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToWait,
+            std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
+        void QueueSubmit(
+            std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList,
+            std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToSignal);
+        void QueueSubmit(
+            std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToWait,
+            std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList,
+            std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t> semaphoreToSignal);
 
-        void QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists);
-        void QueueSubmit(NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToWait,
-                         NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists);
-        void QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
-                         NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToSignal);
-        void QueueSubmit(NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToWait,
-                         NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
-                         NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>> semaphoresToSignal);
-
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists);
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToWait,
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists);
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToSignal);
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToWait,
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToSignal);
     };
 }

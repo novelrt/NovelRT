@@ -56,7 +56,8 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] VkFormat GetVulkanFormat() const;
 
-        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> GetActiveSemaphore(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const;
+        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> GetActiveSemaphore(
+            std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const;
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> AcquireNextImage();
         [[nodiscard]] bool Present();

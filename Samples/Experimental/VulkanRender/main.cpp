@@ -72,7 +72,7 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-template <typename TBackend>
+template<typename TBackend>
 struct PerFrameResources
 {
     uint64_t frameNumber;
@@ -233,12 +233,13 @@ void Render(RenderingData<TBackend>& renderingData,
             std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions)
 {
     auto lastRenderedFrame = renderingData.DeletionSemaphore->GetValue();
-    if (lastRenderedFrame > 0) lastRenderedFrame -= 1;
+    if (lastRenderedFrame > 0)
+        lastRenderedFrame -= 1;
 
-    renderingData.FrameResources.erase(
-        std::remove_if(renderingData.FrameResources.begin(), renderingData.FrameResources.end(), [lastRenderedFrame](auto& it){ return it.frameNumber < lastRenderedFrame; }),
-        renderingData.FrameResources.end());
-
+    renderingData.FrameResources.erase(std::remove_if(renderingData.FrameResources.begin(),
+                                                      renderingData.FrameResources.end(), [lastRenderedFrame](auto& it)
+                                                      { return it.frameNumber < lastRenderedFrame; }),
+                                       renderingData.FrameResources.end());
 
     auto surface = gfxDevice->GetSurface();
     float surfaceWidth = surface->GetWidth();
@@ -256,7 +257,8 @@ void Render(RenderingData<TBackend>& renderingData,
         currentCmdList->Begin();
         // auto renderPass = context->CreateRenderPass();
 
-        auto& frameResources = renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{ ++renderingData.RenderedFrames });
+        auto& frameResources =
+            renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
 
         NovelRT::Graphics::ClearValue colourDataStruct{};
         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
@@ -305,7 +307,7 @@ void Render(RenderingData<TBackend>& renderingData,
         frameResources.commandList = currentCmdList;
 
         context->EndFrame();
-        swapchainImage->QueueSubmit(currentCmdList, { renderingData.DeletionSemaphore, frameResources.frameNumber });
+        swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
     }
 
     gfxDevice->EndFrame();

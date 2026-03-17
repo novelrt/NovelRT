@@ -31,7 +31,8 @@ namespace NovelRT::Graphics
         VkSemaphore _semaphore;
 
     public:
-        GraphicsSemaphore(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device, uint64_t initialValue) noexcept;
+        GraphicsSemaphore(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                          uint64_t initialValue) noexcept;
         ~GraphicsSemaphore() noexcept;
 
         [[nodiscard]] uint64_t GetValue() const;

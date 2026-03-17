@@ -267,7 +267,6 @@ namespace NovelRT::Graphics
         return std::make_shared<VulkanGraphicsSemaphore>(shared_from_this(), initialValue);
     }
 
-
     std::shared_ptr<VulkanGraphicsPipeline> VulkanGraphicsDevice::CreatePipeline(
         std::shared_ptr<VulkanGraphicsPipelineSignature> signature,
         std::shared_ptr<VulkanShaderProgram> vertexShader,

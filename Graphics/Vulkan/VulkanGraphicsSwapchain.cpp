@@ -230,9 +230,11 @@ namespace NovelRT::Graphics
         return _vulkanSwapchainFormat;
     }
 
-    std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetActiveSemaphore(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const
+    std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::
+        GetActiveSemaphore(std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const
     {
-        auto index = std::distance(_swapchainImages.begin(), std::find(_swapchainImages.begin(), _swapchainImages.end(), image));
+        auto index =
+            std::distance(_swapchainImages.begin(), std::find(_swapchainImages.begin(), _swapchainImages.end(), image));
         return _activeSemaphores[index];
     }
 
@@ -243,8 +245,7 @@ namespace NovelRT::Graphics
         _semaphores.pop_front();
         const VkResult acquireNextImageResult = vkAcquireNextImageKHR(
             GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(),
-            semaphore->GetVulkanSemaphore(),
-            _fence->GetVulkanFence(), &_currentImageIndex);
+            semaphore->GetVulkanSemaphore(), _fence->GetVulkanFence(), &_currentImageIndex);
 
         if (acquireNextImageResult != VK_SUCCESS)
         {

@@ -100,11 +100,13 @@ namespace NovelRT::Ecs::Graphics
         {
             // 1. Clean up any resources that are no longer valid.
             auto lastRenderedFrame = _deletionSemaphore->GetValue();
-            if (lastRenderedFrame > 0) lastRenderedFrame -= 1; // this is important to avoid underflow
+            if (lastRenderedFrame > 0)
+                lastRenderedFrame -= 1; // this is important to avoid underflow
 
-            _frameResources.erase(
-                std::remove_if(_frameResources.begin(), _frameResources.end(), [lastRenderedFrame](auto& it){ return it.frameNumber < lastRenderedFrame; }),
-                _frameResources.end());
+            _frameResources.erase(std::remove_if(_frameResources.begin(), _frameResources.end(),
+                                                 [lastRenderedFrame](auto& it)
+                                                 { return it.frameNumber < lastRenderedFrame; }),
+                                  _frameResources.end());
 
             // 2. Determine the order in which we should enumerate the entities based on their render pass
             std::map<Components::RenderPassId, std::vector<EntityId>> passes{};
@@ -147,7 +149,6 @@ namespace NovelRT::Ecs::Graphics
                 return leftPos < rightPos;
             };
 
-
             // 3. Prepare to render a frame
             auto image = _graphicsDevice->BeginFrame();
             auto surface = _surfaceContext->GetSurface();
@@ -157,7 +158,7 @@ namespace NovelRT::Ecs::Graphics
             context->BeginFrame();
             cmdList->Begin();
 
-            auto& frameResources = _frameResources.emplace_back(PerFrameResources{ ++_renderedFrames, image });
+            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image});
 
             // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
@@ -191,7 +192,6 @@ namespace NovelRT::Ecs::Graphics
                     frameResources.descriptorSets.emplace_back(*descriptorSetPtr);
 
                     cmdList->CmdExecuteCommands(subCmdList);
-
                 }
 
                 cmdList->CmdEndRenderPass();
@@ -200,7 +200,7 @@ namespace NovelRT::Ecs::Graphics
             cmdList->End();
 
             context->EndFrame();
-            image->QueueSubmit(cmdList, { _deletionSemaphore, frameResources.frameNumber });
+            image->QueueSubmit(cmdList, {_deletionSemaphore, frameResources.frameNumber});
 
             frameResources.commandLists.emplace_back(cmdList);
 

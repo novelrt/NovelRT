@@ -62,7 +62,7 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-template <typename TBackend>
+template<typename TBackend>
 struct TrianglePass
 {
     std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
@@ -91,7 +91,10 @@ private:
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> _inputResourceRegions;
     std::optional<EntityId> _cmdListEntity;
 
-    static RenderingData<TBackend> ComputeRenderingData(DesktopResourceLoader* resourceLoader, GraphicsDevice<TBackend>* graphicsDevice, GraphicsMemoryAllocator<TBackend>* memoryAllocator, TrianglePass<TBackend> trianglePass)
+    static RenderingData<TBackend> ComputeRenderingData(DesktopResourceLoader* resourceLoader,
+                                                        GraphicsDevice<TBackend>* graphicsDevice,
+                                                        GraphicsMemoryAllocator<TBackend>* memoryAllocator,
+                                                        TrianglePass<TBackend> trianglePass)
     {
         GraphicsBufferCreateInfo bufferCreateInfo{};
         bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
@@ -128,12 +131,13 @@ private:
         auto signature = graphicsDevice->CreatePipelineSignature(
             GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
             NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
-        auto vertShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex,
-                                                                                    vertShaderData.shaderCode);
-        auto pixelShaderProg = graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel,
-                                                                                     pixelShaderData.shaderCode);
+        auto vertShaderProg =
+            graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData.shaderCode);
+        auto pixelShaderProg =
+            graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
 
-        auto pipeline = graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, trianglePass.RenderPass);
+        auto pipeline =
+            graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, trianglePass.RenderPass);
         auto gfxContext = graphicsDevice->CreateGraphicsContext();
 
         auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
@@ -206,9 +210,13 @@ public:
           _surfaceContext(std::move(surfaceContext)),
           _memoryAllocator(std::make_shared<GraphicsMemoryAllocator<TBackend>>(_graphicsDevice, provider)),
           _trianglePass(std::move(trianglePass)),
-          _renderingData(ComputeRenderingData(_resourceLoader.get(), _graphicsDevice.get(), _memoryAllocator.get(), _trianglePass)),
+          _renderingData(ComputeRenderingData(_resourceLoader.get(),
+                                              _graphicsDevice.get(),
+                                              _memoryAllocator.get(),
+                                              _trianglePass)),
           _inputResourceRegions{_renderingData.TextureRegion}
-    { }
+    {
+    }
 
     void Update(Timestamp /*delta*/, Catalogue catalogue) final
     {
@@ -217,8 +225,8 @@ public:
 
         auto context = _graphicsDevice->CreateGraphicsContext();
         context->BeginFrame();
-        auto currentCmdList = context->CreateCmdList(
-            std::optional<SecondaryCmdListInfo<TBackend>>({_trianglePass.RenderPass, 0}));
+        auto currentCmdList =
+            context->CreateCmdList(std::optional<SecondaryCmdListInfo<TBackend>>({_trianglePass.RenderPass, 0}));
 
         currentCmdList->Begin();
 
@@ -352,7 +360,8 @@ int main()
             })
         .WithDefaultOrchestrator();
 
-    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>(gfxProvider, gfxDevice, gfxSurfaceContext, trianglePass);
+    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>(
+        gfxProvider, gfxDevice, gfxSurfaceContext, trianglePass);
     builder.Configure([triangleSystem](SystemScheduler& scheduler) { scheduler.RegisterSystem(triangleSystem); });
 
     SystemScheduler scheduler = builder.Build();

@@ -57,7 +57,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<IGraphicsSurface> GetSurface() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsSurfaceContext<TBackend>> GetSurfaceContext() const noexcept;
 
-        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<TBackend>> CreateSemaphore(uint64_t initialValue = std::numeric_limits<uint64_t>::max());
+        [[nodiscard]] std::shared_ptr<GraphicsSemaphore<TBackend>> CreateSemaphore(
+            uint64_t initialValue = std::numeric_limits<uint64_t>::max());
 
         [[nodiscard]] std::shared_ptr<GraphicsPipeline<TBackend>> CreatePipeline(
             std::shared_ptr<GraphicsPipelineSignature<TBackend>> signature,

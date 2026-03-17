@@ -50,8 +50,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsCmdList::~GraphicsCmdList()
     {
-        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext->GetVulkanCommandPool(), 1,
-                             &_commandBuffer);
+        vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext->GetVulkanCommandPool(), 1, &_commandBuffer);
     }
 
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsCmdList::GetDevice() const noexcept
