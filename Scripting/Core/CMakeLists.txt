@@ -7,5 +7,9 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Scripting::Core
 
   SOURCES
     PRIVATE
-      empty.cpp
+      ScriptManager.cpp
+
+  HEADERS
+    PUBLIC
+      include/NovelRT/Scripting/ScriptManager.hpp
 )
