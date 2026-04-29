@@ -9,6 +9,8 @@ typedef struct lua_State lua_State;
 
 namespace NovelRT::Scripting
 {
+    class DecisionTree;
+
     class ScriptManager
     {
     private:
@@ -28,32 +30,6 @@ namespace NovelRT::Scripting
         ScriptManager& operator=(const ScriptManager&) = delete;
         ScriptManager& operator=(ScriptManager&&) = default;
 
-        // Some thinking...
-        // DecisionTree LoadDecisionTree(SomeTextResource resource);
+        std::unique_ptr<DecisionTree> LoadDecisionTree(/* TODO: resource file */);
     };
-
-    // Some thinking...
-    /*
-     * struct DecisionTree
-     * {
-     *     Result Begin(); // Begins a new instance of this decision tree - only one can run at a time though multiple can be in progress.
-     *                     // Returns a polymorphic type (see below) indicating the current state.
-     *     // Maybe retain a list of active decision trees?
-     * };
-     *
-     * struct TextResult
-     * {
-     *     std::string Speaker;
-     *     std::string Text;
-     *     Result Continue();
-     * };
-     *
-     * struct BranchResult
-     * {
-     *     std::vector<std::string> Branches; // Branch keys
-     *     Result Continue(std::string branch);
-     * };
-     *
-     * In the future there may be additional types...
-     */
 }

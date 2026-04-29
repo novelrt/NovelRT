@@ -12,4 +12,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Scripting::Core
   HEADERS
     PUBLIC
       include/NovelRT/Scripting/ScriptManager.hpp
+      include/NovelRT/Scripting/DecisionTree.hpp
+      include/NovelRT/Scripting/DecisionTreeResult.hpp
 )
