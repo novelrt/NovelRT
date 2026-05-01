@@ -98,7 +98,7 @@ struct RenderingData
 };
 
 template<typename TBackend>
-RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
+RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
                                     std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
 {
     GraphicsBufferCreateInfo bufferCreateInfo{};
@@ -139,6 +139,7 @@ RenderingData<TBackend> SetupSample(std::shared_ptr<GraphicsDevice<TBackend>>& g
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
 
+    //create the render pass and pipeline
     GraphicsRenderPassDescription passDesc{};
     GraphicsAttachmentDescription attachmentDesc{};
 
@@ -333,7 +334,7 @@ int main()
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
-    auto renderingData = SetupSample(gfxDevice, memoryAllocator);
+    auto renderingData = SetupTriangleSample(gfxDevice, memoryAllocator);
 
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
         inputResourceRegions{renderingData.TextureRegion};

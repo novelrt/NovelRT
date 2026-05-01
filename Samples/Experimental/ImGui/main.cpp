@@ -2,6 +2,8 @@
 // for more information.
 
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
@@ -23,40 +25,42 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
+
+#include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
 
 #include <NovelRT/Input/Glfw/GlfwInputProvider.hpp>
 
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
+#include <NovelRT/Timing/StepTimer.hpp>
+
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Maths/GeoVector3F.hpp>
-#include <NovelRT/Timing/StepTimer.hpp>
 #include <NovelRT/Utilities/Paths.hpp>
 
-#include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
-
+#include <filesystem>
 #include <fstream>
-#include <functional>
 #include <memory>
 
 #include <imgui.h>
 
 using namespace NovelRT::Logging;
-
-using namespace NovelRT::Graphics::Vulkan;
-using namespace NovelRT::Graphics;
-
-using namespace NovelRT::Input::Glfw;
-using namespace NovelRT::Input;
-
 using namespace NovelRT::Windowing::Glfw;
 using namespace NovelRT::Windowing;
-
+using namespace NovelRT::Graphics::Vulkan;
+using namespace NovelRT::Graphics;
+using namespace NovelRT::Input::Glfw;
+using namespace NovelRT::Input;
 using namespace NovelRT::UI::ImGui;
 
-std::vector<GraphicsBuffer<VulkanGraphicsBackend>> shittyBuffer{};
-NovelRT::Utilities::Event<NovelRT::Timing::Timestamp::duration> DummyUpdateStuff;
+//Globals
+uint32_t strIndex = 0;
+std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
+
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
@@ -84,78 +88,36 @@ struct TexturedVertex
     NovelRT::Maths::GeoVector2F UV;
 };
 
-template<typename TGraphicsBackend>
-std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>> regularDrawCmds(
-    std::shared_ptr<GraphicsContext<TGraphicsBackend>> context,
-    std::shared_ptr<GraphicsCmdList<TGraphicsBackend>> currentCmdList,
-    std::shared_ptr<GraphicsRenderPass<TGraphicsBackend>>,
-    float surfaceWidth,
-    float surfaceHeight,
-    std::shared_ptr<GraphicsPipelineSignature<TGraphicsBackend>> pipelineSignature,
-    std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> pipeline,
-    std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> vertexBuffer,
-    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> vertexBufferRegion,
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TGraphicsBackend>>> inputResourceRegions)
+template<typename TBackend>
+struct PerFrameResources
 {
+    uint64_t frameNumber;
 
-    currentCmdList->CmdBindPipeline(pipeline);
-    currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                  NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+    std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TBackend>> renderTarget{};
+    std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TBackend>> descriptorSet{};
+    std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>> commandList{};
+};
 
-    std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{
-        std::cref(vertexBuffer)};
-    std::array<size_t, 1> offsets{vertexBufferRegion->GetOffset()};
-
-    currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-
-    auto descriptorSetData = pipeline->CreateDescriptorSet();
-    descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-    descriptorSetData->UpdateDescriptorSetData();
-
-    std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TGraphicsBackend>>>, 1>
-        descriptorData{std::cref(descriptorSetData)};
-    currentCmdList->CmdBindDescriptorSets(descriptorData);
-    context->RegisterDescriptorSetForFrame(pipelineSignature, descriptorSetData);
-
-    auto vertexCount = vertexBufferRegion->GetSize() / sizeof(TexturedVertex);
-    currentCmdList->CmdDraw(static_cast<uint32_t>(vertexCount), 1, 0, 0);
-
-    return descriptorSetData;
-}
-
-int main()
+template<typename TBackend>
+struct RenderingData
 {
-    // TODO: EngineConfig was here
-    // NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
-    // NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Debug;
+    std::shared_ptr<GraphicsBuffer<TBackend>> VertexBuffer;
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> VertexBufferRegion;
+    std::shared_ptr<GraphicsPipeline<TBackend>> RenderPipeline;
+    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
+    std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
+    std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
 
-    LoggingService logger{};
-    logger.setLogLevel(LogLevel::Info);
+    std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> DeletionSemaphore;
+    std::deque<PerFrameResources<TBackend>> FrameResources;
+    uint64_t RenderedFrames{0};
+};
 
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1024, 768));
-
-    auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
-
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>(true);
-    auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
-
-    auto clickAction = inputProvider->AddInputAction("LeftClick", "LeftMouseButton");
-
-    VulkanGraphicsAdapterSelector selector{};
-    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
-    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
-
-    std::shared_ptr<GraphicsContext<VulkanGraphicsBackend>> gfxContext = gfxDevice->GetCurrentContext();
-    auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
-
-    /// IMGUI
-    auto uiProvider = std::make_shared<
-        ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
-                        NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
-                                                                         memoryAllocator, true);
-    /// IMGUI
-
+template<typename TBackend>
+RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
+                                    std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
+{
+    //Setup Triangle
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
@@ -177,8 +139,6 @@ int main()
     auto vertShaderData = LoadSpv("vulkanrendervert.spv");
     auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
 
-    std::shared_ptr<GraphicsCmdList<VulkanGraphicsBackend>> cmdList = gfxContext->BeginFrame();
-
     std::vector<GraphicsPipelineInputElement> elements{
         GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
                                      12),
@@ -190,24 +150,51 @@ int main()
         GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
     std::vector<GraphicsPushConstantRange> dummyData{};
-    auto signature =
-        gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
-                                           GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources, dummyData);
+    auto signature = gfxDevice->CreatePipelineSignature(
+        GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
+        NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg);
+
+    //create the render pass and pipeline
+    GraphicsRenderPassDescription passDesc{};
+    GraphicsAttachmentDescription attachmentDesc{};
+
+    auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
+
+    if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
+    {
+        attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
+    }
+    else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
+    {
+        attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
+    }
+    else
+    {
+        throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
+    }
+
+    attachmentDesc.loadOp = LoadOp::Clear;
+    attachmentDesc.storeOp = StoreOp::Store;
+    attachmentDesc.initialLayout = ImageLayout::Undefined;
+    attachmentDesc.finalLayout = ImageLayout::Present;
+
+    passDesc.attachmentDescriptions.push_back(attachmentDesc);
+    auto pass = gfxDevice->CreateRenderPass(passDesc);
+    auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
+    auto gfxContext = gfxDevice->CreateGraphicsContext();
 
     auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
     auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-    auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
+    auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
 
     pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
     pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
     pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-    cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
     uint32_t textureWidth = 256;
     uint32_t textureHeight = 256;
@@ -218,7 +205,7 @@ int main()
     auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-    auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
+    auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
 
     for (uint32_t n = 0; n < texturePixels; n++)
     {
@@ -229,107 +216,549 @@ int main()
     }
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+    {
+        gfxContext->BeginFrame();
+        auto cmdList = gfxContext->CreateCmdList();
 
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-        inputResourceRegions{texture2DRegion};
+        cmdList->Begin();
+        cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-    cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-    cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-    cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->End();
 
-    gfxContext->EndFrame();
-    gfxDevice->Signal(gfxContext);
-    gfxDevice->WaitForIdle();
-    gfxContext->GetFence()->Reset();
+        gfxContext->EndFrame();
+        gfxDevice->QueueSubmit(cmdList);
+        gfxDevice->WaitForIdle();
+    }
 
-    /// imgui
-    uint32_t strIndex = 0;
-    std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
+    RenderingData<TBackend> returnStruct{};
+    returnStruct.RenderPipeline = pipeline;
+    returnStruct.TextureRegion = texture2DRegion;
+    returnStruct.VertexBufferRegion = vertexBufferRegion;
+    returnStruct.VertexBuffer = vertexBuffer;
+    returnStruct.RenderPass = pass;
+    returnStruct.GraphicsContext = gfxContext;
+    returnStruct.DeletionSemaphore = gfxDevice->CreateSemaphore(0);
+
+    return returnStruct;
+}
+
+template<typename TBackend, typename TInputBackend, typename TWindowingBackend>
+void Render(RenderingData<TBackend>& renderingData,
+            std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
+            std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions,
+            std::shared_ptr<ImGuiUIProvider<TBackend,TInputBackend,TWindowingBackend>>& uiProvider)
+{
+    auto lastRenderedFrame = renderingData.DeletionSemaphore->GetValue();
+    if (lastRenderedFrame > 0)
+        lastRenderedFrame -= 1;
+
+    renderingData.FrameResources.erase(std::remove_if(renderingData.FrameResources.begin(),
+                                                      renderingData.FrameResources.end(), [lastRenderedFrame](auto& it)
+                                                      { return it.frameNumber < lastRenderedFrame; }),
+                                       renderingData.FrameResources.end());
 
     auto surface = gfxDevice->GetSurface();
-    bool clicked = false;
-    NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
-    DummyUpdateStuff += [&](auto delta)
+    float surfaceWidth = surface->GetWidth();
+    float surfaceHeight = surface->GetHeight();
+    auto swapchainImage = gfxDevice->BeginFrame();
+    std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
+    auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass,
+                                                                   static_cast<uint32_t>(surfaceWidth),
+                                                                   static_cast<uint32_t>(surfaceHeight));
     {
+        //Setup our context
+        auto context = renderingData.GraphicsContext;
+        context->BeginFrame();
+
+        //Setup + begin command list
+        auto currentCmdList = context->CreateCmdList();
+        currentCmdList->Begin();
+
+        //Track new frame rendering
+        auto& frameResources =
+            renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
+
+        // Upload ImGui verts + indices to GPU
+        uiProvider->UploadToGPU(currentCmdList);
+
+        NovelRT::Graphics::ClearValue colourDataStruct{};
+        colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+        colourDataStruct.depth = 0;
+        colourDataStruct.stencil = 0;
+
+        std::vector<ClearValue> colourData{colourDataStruct};
+        currentCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
+
+        ViewportInfo viewportInfoStruct{};
+        viewportInfoStruct.x = 0;
+        viewportInfoStruct.y = surfaceHeight;
+        viewportInfoStruct.width = surfaceWidth;
+        viewportInfoStruct.height = -surfaceHeight;
+        viewportInfoStruct.minDepth = 0.0f;
+        viewportInfoStruct.maxDepth = 1.0f;
+
+        currentCmdList->CmdSetViewport(viewportInfoStruct);
+        currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                      NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+        currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
+
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
+            std::cref(renderingData.VertexBuffer)};
+        std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
+
+        currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+
+        auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
+        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+        descriptorSetData->UpdateDescriptorSetData();
+
+        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
+            std::cref(descriptorSetData)};
+        currentCmdList->CmdBindDescriptorSets(descriptorData);
+
+        currentCmdList->CmdDraw(
+            static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
+
+
+        // Insert Draw ImGui Commands
+        uiProvider->Draw(currentCmdList);
+
+        //End Renderpass
+        currentCmdList->CmdEndRenderPass();
+
+        currentCmdList->End();
+
+        frameResources.descriptorSet = descriptorSetData;
+        frameResources.renderTarget = target;
+        frameResources.commandList = currentCmdList;
+
+        context->EndFrame();
+        swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
+    }
+
+    gfxDevice->EndFrame();
+}
+
+// template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
+// void RenderImGuiWindows(RenderingData<TGraphicsBackend>& imGuiRenderingData,
+//                     std::shared_ptr<GraphicsDevice<TGraphicsBackend>>& gfxDevice)
+// {
+//     auto lastRenderedFrame = imGuiRenderingData.DeletionSemaphore->GetValue();
+//     if (lastRenderedFrame > 0)
+//         lastRenderedFrame -= 1;
+
+//     imGuiRenderingData.FrameResources.erase(std::remove_if(imGuiRenderingData.FrameResources.begin(),
+//                                                       imGuiRenderingData.FrameResources.end(), [lastRenderedFrame](auto& it)
+//                                                       { return it.frameNumber < lastRenderedFrame; }),
+//                                        imGuiRenderingData.FrameResources.end());
+
+//     auto surface = gfxDevice->GetSurface();
+//     float surfaceWidth = surface->GetWidth();
+//     float surfaceHeight = surface->GetHeight();
+//     auto swapchainImage = gfxDevice->BeginFrame();
+//     std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
+//     auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass,
+//                                                                    static_cast<uint32_t>(surfaceWidth),
+//                                                                    static_cast<uint32_t>(surfaceHeight));
+//     {
+//         auto context = imGuiRenderingData.GraphicsContext;
+//         context->BeginFrame();
+//         auto currentCmdList = context->BeginFrame();
+//         auto renderPass = gfxDevice->GetRenderPass();
+
+//         //Begin commands here
+//         currentCmdList->Begin();
+
+//         // Indicate new frame rendering
+//         auto& frameResources =
+//             renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
+
+//         // Upload ImGui verts + indices to GPU
+//         uiProvider->UploadToGPU(currentCmdList);
+
+//         NovelRT::Graphics::ClearValue colourDataStruct{};
+//         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+//         colourDataStruct.depth = 0;
+//         colourDataStruct.stencil = 0;
+
+//         std::vector<ClearValue> colourData{colourDataStruct};
+//         currentCmdList->CmdBeginRenderPass(renderPass, colourData);
+
+//         ViewportInfo viewportInfoStruct{};
+//         viewportInfoStruct.x = 0;
+//         viewportInfoStruct.y = surfaceHeight;
+//         viewportInfoStruct.width = surfaceWidth;
+//         viewportInfoStruct.height = -surfaceHeight;
+//         viewportInfoStruct.minDepth = 0.0f;
+//         viewportInfoStruct.maxDepth = 1.0f;
+
+//         currentCmdList->CmdSetViewport(viewportInfoStruct);
+
+//         auto descriptorSetData =
+//             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
+//                             pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
+
+//         uiProvider->Draw(currentCmdList);
+
+//         currentCmdList->CmdEndRenderPass();
+//         context->EndFrame();
+//         context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), descriptorSetData);
+//         gfxDevice->EndFrame();
+//     }
+// }
+
+template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
+void HandleClickAction(NovelRT::Input::InputAction& action,
+                    uint32_t& indexNumber,
+                    bool& clicked,
+                    std::shared_ptr<InputProvider<TInputBackend>>& inputProvider,
+                    std::shared_ptr<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>& uiProvider,
+                    NovelRT::Timing::Timestamp::duration delta)
+{
+    //Check Input
+    NovelRT::Input::KeyStateFrameChangeLog cl = inputProvider->GetCurrentChangeLog(action.actionName);
+
+    //React to Input
+    if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
+    {
+        indexNumber++;
+        clicked = true;
+    }
+    else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
+    {
+        clicked = false;
+    }
+
+    // Begin UI Frame
+    uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
+
+    ImGui::SetNextWindowSize(ImVec2(612, 200));
+    ImGui::SetNextWindowPos(ImVec2(100, 500));
+    ImGui::Begin("Test", NULL,
+                    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+    if (strIndex < arr.size())
+    {
+        ImGui::Text("%s", arr.at(strIndex).c_str());
+    }
+
+    //End UI Frame
+    ImGui::End();
+    uiProvider->EndFrame();
+}
+
+int main()
+{
+    // TODO: EngineConfig was here
+    // NovelRT::EngineConfig::EnableDebugOutputFromEngineInternals() = true;
+    // NovelRT::EngineConfig::MinimumInternalLoggingLevel() = NovelRT::LogLevel::Warn;
+
+    LoggingService logger{};
+    logger.setLogLevel(LogLevel::Info);
+
+    // Windowing Setup
+    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+
+    // Graphics Setup
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
+    auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
+    
+    VulkanGraphicsAdapterSelector selector{};
+    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
+    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
+    auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
+
+    //Input Provider Setup + Setting up Actions
+    auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
+    auto clickAction = inputProvider->AddInputAction("LeftClick", "LeftMouseButton");
+
+    //ImGui Setup
+    auto uiProvider = std::make_shared<
+        ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
+                        NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
+                                                                         memoryAllocator, true);
+
+    // Setup Background Triangle + Input Resource Regions for rendering
+    auto renderingData = SetupTriangleSample(gfxDevice, memoryAllocator);
+    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
+        triangleInputResourceRegions{renderingData.TextureRegion};
+
+    // Setup NovelRT Timer
+    NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
+
+    // Custom Event Setup
+    NovelRT::Utilities::Event<NovelRT::Timing::Timestamp::duration> UpdateEvent;
+    bool clicked = false;
+
+    UpdateEvent += [&](auto delta)
+    {
+        //On Invocation...
+
+        //Process all windowing messages
         wndProvider->ProcessAllMessages();
+
+        //Update the input provider to react to input
         inputProvider->Update(delta);
 
+        //if the window is visible...
         if (wndProvider->IsVisible())
         {
-            auto cl = inputProvider->GetCurrentChangeLog(clickAction.actionName);
+            //Handle UI Updates
+            HandleClickAction(clickAction, strIndex, clicked, inputProvider, uiProvider, delta);
 
-            if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
-            {
-                strIndex++;
-                clicked = true;
-            }
-            else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
-            {
-                clicked = false;
-            }
+            //Render ImGui
+            //Render the background triangle
+            Render(renderingData, gfxDevice, triangleInputResourceRegions, uiProvider);
 
-            // ImGuiiiiiiiiiiiiiiiiiiiiii
-            uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
-
-            ImGui::SetNextWindowSize(ImVec2(612, 200));
-            ImGui::SetNextWindowPos(ImVec2(100, 500));
-            ImGui::Begin("Test", NULL,
-                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-
-            if (strIndex < arr.size())
-            {
-                ImGui::Text("%s", arr.at(strIndex).c_str());
-            }
-
-            ImGui::End();
-            uiProvider->EndFrame();
-
-            auto surface = gfxDevice->GetSurface();
-            auto context = gfxDevice->GetCurrentContext();
-            auto currentCmdList = context->BeginFrame();
-
-            float surfaceWidth = surface->GetWidth();
-            float surfaceHeight = surface->GetHeight();
-
-            auto renderPass = gfxDevice->GetRenderPass();
-
-            uiProvider->UploadToGPU(currentCmdList);
-
-            NovelRT::Graphics::ClearValue colourDataStruct{};
-            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-            colourDataStruct.depth = 0;
-            colourDataStruct.stencil = 0;
-
-            std::vector<ClearValue> colourData{colourDataStruct};
-            currentCmdList->CmdBeginRenderPass(renderPass, colourData);
-
-            ViewportInfo viewportInfoStruct{};
-            viewportInfoStruct.x = 0;
-            viewportInfoStruct.y = surfaceHeight;
-            viewportInfoStruct.width = surfaceWidth;
-            viewportInfoStruct.height = -surfaceHeight;
-            viewportInfoStruct.minDepth = 0.0f;
-            viewportInfoStruct.maxDepth = 1.0f;
-
-            currentCmdList->CmdSetViewport(viewportInfoStruct);
-
-            auto descriptorSetData =
-                regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
-                                pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
-
-            uiProvider->Draw(currentCmdList);
-
-            currentCmdList->CmdEndRenderPass();
-            context->EndFrame();
-            context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), descriptorSetData);
-            gfxDevice->EndFrame();
+            gfxDevice->WaitForIdle();
         }
     };
 
+    //Setup main loop
     while (!wndProvider->ShouldClose())
     {
-        timer.Tick(DummyUpdateStuff);
+        timer.Tick(UpdateEvent);
     }
 
     return 0;
 }
+
+
+//
+
+    // /// IMGUI
+    // auto uiProvider = std::make_shared<
+    //     ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
+    //                     NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
+    //                                                                      memoryAllocator, true);
+    // /// IMGUI
+
+    // GraphicsBufferCreateInfo bufferCreateInfo{};
+    // bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+    // bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+    // bufferCreateInfo.size = 64 * 1024;
+
+    // auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    // bufferCreateInfo.size = 64 * 1024 * 4; // need this to be a different size but rest of the values are unchanged.
+
+    // auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    // bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
+    // bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
+    // bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
+    // bufferCreateInfo.size = 64 * 1024;
+
+    // auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+    // auto vertShaderData = LoadSpv("vulkanrendervert.spv");
+    // auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
+
+    // gfxContext->BeginFrame();
+    // auto cmdList = gfxContext->CreateCmdList();
+
+    // std::vector<GraphicsPipelineInputElement> elements{
+    //     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
+    //                                  12),
+    //     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+    //                                  GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
+
+    // std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+    // std::vector<GraphicsPipelineResource> resources{
+    //     GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+
+    // std::vector<GraphicsPushConstantRange> dummyData{};
+    // auto signature =
+    //     gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+    //                                        GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources, dummyData);
+    // auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
+    // auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
+    
+    // //create the pipeline and renderpass
+    // GraphicsRenderPassDescription passDesc{};
+    // GraphicsAttachmentDescription attachmentDesc{};
+    
+
+    // attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ? 
+    //     TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
+    // attachmentDesc.loadOp = LoadOp::Clear;
+    // attachmentDesc.storeOp = StoreOp::Store;
+    // attachmentDesc.initialLayout = ImageLayout::Undefined;
+    // attachmentDesc.finalLayout = ImageLayout::Present;
+
+    // passDesc.attachmentDescriptions.push_back(attachmentDesc);
+    // auto pass = gfxDevice->CreateRenderPass(passDesc);
+    
+    // auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
+
+    // auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+    // auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+
+    // auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
+
+    // pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+    // pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+    // pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+
+    // vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+    // cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
+
+    // uint32_t textureWidth = 256;
+    // uint32_t textureHeight = 256;
+    // uint32_t texturePixels = textureWidth * textureHeight;
+    // uint32_t cellWidth = textureWidth / 8;
+    // uint32_t cellHeight = textureHeight / 8;
+
+    // auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+    // auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+    // auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
+    // auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
+
+    // for (uint32_t n = 0; n < texturePixels; n++)
+    // {
+    //     auto x = n % textureWidth;
+    //     auto y = n / textureWidth;
+
+    //     pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
+    // }
+
+    // textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+
+    // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
+    //     inputResourceRegions{texture2DRegion};
+
+    // cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+    // cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+    // cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+
+    // cmdList->End();
+    // gfxContext->EndFrame();
+    // gfxDevice->QueueSubmit(cmdList);
+    // gfxDevice->WaitForIdle();
+    
+    // /// imgui
+    // uint32_t strIndex = 0;
+    // std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
+
+    // auto surface = gfxDevice->GetSurface();
+    // bool clicked = false;
+    // NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
+    // auto deletionSemaphore = gfxDevice->CreateSemaphore(0);
+    // //uint64_t renderedFrames{0};
+
+    // DummyUpdateStuff += [&](auto delta)
+    // {
+    //     wndProvider->ProcessAllMessages();
+    //     inputProvider->Update(delta);
+
+    //     if (wndProvider->IsVisible())
+    //     {
+    //         // auto& frameResources =
+    //         // renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderedFrames});
+    //         auto cl = inputProvider->GetCurrentChangeLog(clickAction.actionName);
+
+    //         if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
+    //         {
+    //             strIndex++;
+    //             clicked = true;
+    //         }
+    //         else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
+    //         {
+    //             clicked = false;
+    //         }
+
+    //         // ImGuiiiiiiiiiiiiiiiiiiiiii
+    //         uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
+
+    //         ImGui::SetNextWindowSize(ImVec2(612, 200));
+    //         ImGui::SetNextWindowPos(ImVec2(100, 500));
+    //         ImGui::Begin("Test", NULL,
+    //                      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+    //         if (strIndex < arr.size())
+    //         {
+    //             ImGui::Text("%s", arr.at(strIndex).c_str());
+    //         }
+
+    //         ImGui::End();
+    //         uiProvider->EndFrame();
+
+    //         auto surface = gfxDevice->GetSurface();
+    //         auto context = gfxDevice->CreateGraphicsContext();
+    //         auto currentCmdList = context->CreateCmdList();
+
+    //         float surfaceWidth = surface->GetWidth();
+    //         float surfaceHeight = surface->GetHeight();
+
+    //         auto swapchainImage = gfxDevice->BeginFrame();
+    //         std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
+
+    //         //create the pipeline and renderpass
+    //         GraphicsRenderPassDescription passDesc{};
+    //         GraphicsAttachmentDescription attachmentDesc{};
+            
+
+    //         attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ? 
+    //             TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
+    //         attachmentDesc.loadOp = LoadOp::Clear;
+    //         attachmentDesc.storeOp = StoreOp::Store;
+    //         attachmentDesc.initialLayout = ImageLayout::Undefined;
+    //         attachmentDesc.finalLayout = ImageLayout::Present;
+
+    //         passDesc.attachmentDescriptions.push_back(attachmentDesc);
+    //         auto renderPass = gfxDevice->CreateRenderPass(passDesc);
+
+    //         auto target = std::make_shared<GraphicsRenderTarget<VulkanGraphicsBackend>>(gfxDevice, imageViewData, renderPass,
+    //                                                                static_cast<uint32_t>(surfaceWidth),
+    //                                                                static_cast<uint32_t>(surfaceHeight));
+
+    //         uiProvider->UploadToGPU(currentCmdList);
+
+    //         NovelRT::Graphics::ClearValue colourDataStruct{};
+    //         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+    //         colourDataStruct.depth = 0;
+    //         colourDataStruct.stencil = 0;
+
+    //         std::vector<ClearValue> colourData{colourDataStruct};
+    //         currentCmdList->CmdBeginRenderPass(renderPass, target, colourData);
+
+    //         ViewportInfo viewportInfoStruct{};
+    //         viewportInfoStruct.x = 0;
+    //         viewportInfoStruct.y = surfaceHeight;
+    //         viewportInfoStruct.width = surfaceWidth;
+    //         viewportInfoStruct.height = -surfaceHeight;
+    //         viewportInfoStruct.minDepth = 0.0f;
+    //         viewportInfoStruct.maxDepth = 1.0f;
+
+    //         currentCmdList->CmdSetViewport(viewportInfoStruct);
+
+    //         auto descriptorSetData =
+    //             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
+    //                             pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
+
+    //         uiProvider->Draw(currentCmdList);
+
+    //         currentCmdList->CmdEndRenderPass();
+    //         currentCmdList->End();
+
+    //         // frameResources.descriptorSet = descriptorSetData;
+    //         // frameResources.renderTarget = target;
+    //         // frameResources.commandList = currentCmdList;
+
+    //         context->EndFrame();
+    //         swapchainImage->QueueSubmit(currentCmdList);
+    //         gfxDevice->EndFrame();
+    //     }
+    // };
+
+    // while (!wndProvider->ShouldClose())
+    // {
+    //     timer.Tick(DummyUpdateStuff);
+    // }
+
+    // return 0;
+//}
