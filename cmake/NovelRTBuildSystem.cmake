@@ -75,7 +75,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     CXX_CLANG_TIDY "${clangTidyCommandLine}")
 
-  target_compile_features(${cmakeSafeName} PUBLIC cxx_std_17)
+  target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
   target_compile_options(${cmakeSafeName} PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wall>
     $<$<CXX_COMPILER_ID:GNU>:-Wabi>
@@ -167,10 +167,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
   if(declareModule_LINK_LIBRARIES)
     target_link_libraries(${cmakeSafeName} ${declareModule_LINK_LIBRARIES})
-  endif()
-
-  if(NOVELRT_USE_STD_SPAN)
-    target_compile_definitions(${cmakeSafeName} NOVELRT_USE_STD_SPAN=true)
   endif()
 
   install(
