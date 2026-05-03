@@ -9,6 +9,7 @@ namespace NovelRT::Utilities
 {
 
     const size_t DynamicExtent = std::dynamic_extent;
+
     template<class T, std::size_t Extent = DynamicExtent>
     using Span = std::span<T, Extent>;
 
