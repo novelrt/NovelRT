@@ -16,9 +16,9 @@
 #include <type_traits>
 #include <vector>
 
-#include <version>
 #include <bit>
 #include <span>
+#include <version>
 
 #define unused(x) static_cast<void>(x)
 
@@ -46,11 +46,7 @@ namespace NovelRT::Utilities
 #endif
 
         template<class T, std::size_t Extent = DynamicExtent>
-#ifdef NOVELRT_USE_STD_SPAN
         using Span = std::span<T, Extent>;
-#else
-        using Span = gsl::span<T, Extent>;
-#endif
 
         template<typename TTo, typename TFrom, std::size_t NFrom>
         static auto SpanCast(Span<TFrom, NFrom> s) noexcept -> Span<TTo, (sizeof(TFrom) * NFrom) / sizeof(TTo)>
@@ -131,24 +127,21 @@ namespace NovelRT::Utilities
 #if __cpp_lib_bit_cast
         constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> &&
                                               std::is_trivially_copyable_v<TFrom>,
-                                          TTo>
-        BitCast(const TFrom& value) noexcept
+                                          TTo> BitCast(const TFrom& value) noexcept
         {
             return std::bit_cast<TTo>(value);
         }
 #elif _NOVELRT_UTILITIES_HAS_BUILTIN_BIT_CAST
         constexpr static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> &&
                                               std::is_trivially_copyable_v<TFrom>,
-                                          TTo>
-        BitCast(const TFrom& value) noexcept
+                                          TTo> BitCast(const TFrom& value) noexcept
         {
             return __builtin_bit_cast(TTo, value);
         }
 #else
         inline static std::enable_if_t<sizeof(TTo) == sizeof(TFrom) && std::is_trivially_copyable_v<TTo> &&
                                            std::is_trivially_copyable_v<TFrom>,
-                                       TTo>
-        BitCast(const TFrom& value) noexcept
+                                       TTo> BitCast(const TFrom& value) noexcept
         {
             return *reinterpret_cast<const TTo*>(&value);
         }
@@ -156,37 +149,44 @@ namespace NovelRT::Utilities
     };
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T operator~(T a)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T operator~(T a)
 {
     return static_cast<T>(~static_cast<U>(a));
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T operator|(T a, T b)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T operator|(T a, T b)
 {
     return static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T operator&(T a, T b)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T operator&(T a, T b)
 {
     return static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T operator^(T a, T b)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T operator^(T a, T b)
 {
     return static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T& operator|=(T& a, T b)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T& operator|=(T& a, T b)
 {
     return a = static_cast<T>((static_cast<U>(a) | static_cast<U>(b)));
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T& operator&=(T& a, T b)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T& operator&=(T& a, T b)
 {
     return a = static_cast<T>((static_cast<U>(a) & static_cast<U>(b)));
 }
 
-template<class T, class U = std::underlying_type_t<T>> constexpr T& operator^=(T& a, T b)
+template<class T, class U = std::underlying_type_t<T>>
+constexpr T& operator^=(T& a, T b)
 {
     return a = static_cast<T>((static_cast<U>(a) ^ static_cast<U>(b)));
 }
