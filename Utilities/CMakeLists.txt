@@ -26,7 +26,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Utilities
 
   LINK_LIBRARIES
     PUBLIC
-      Microsoft.GSL::GSL
       TBB::tbb
 
     PRIVATE

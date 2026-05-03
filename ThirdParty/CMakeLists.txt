@@ -127,7 +127,6 @@ foreach(module
   Fabulist
   glfw3
   glm
-  GSL
   GTest
   Opus Ogg FLAC Vorbis SndFile samplerate
   #OpenAL
