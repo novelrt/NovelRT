@@ -7,16 +7,20 @@
 
 namespace NovelRT::Scripting
 {
-    class DecisionTreeResult;
+    class DecisionTreeStatus;
+    class ScriptManager;
 
     class DecisionTree
     {
+        std::shared_ptr<ScriptManager> _manager;
+
         // Reference created with luaL_ref
-        int reference;
+        int _reference;
 
     public:
-        explicit DecisionTree();
-        ~DecisionTree() = default;
+        // Assumes the decision tree function is on the top of the Lua stack!
+        explicit DecisionTree(const std::shared_ptr<ScriptManager>& manager);
+        ~DecisionTree();
 
         DecisionTree(const DecisionTree&) = delete;
         DecisionTree(DecisionTree&&) = default;
@@ -24,6 +28,7 @@ namespace NovelRT::Scripting
         DecisionTree& operator=(const DecisionTree&) = delete;
         DecisionTree& operator=(DecisionTree&&) = default;
 
-        std::unique_ptr<DecisionTreeResult> Begin();
+        // N.B. Returning a raw pointer here is intentional - Lua owns this memory.
+        DecisionTreeStatus* Begin();
     };
 }

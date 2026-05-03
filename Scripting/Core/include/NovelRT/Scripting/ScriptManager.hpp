@@ -4,6 +4,7 @@
 // for more information.
 
 #include <memory>
+#include <span>
 
 typedef struct lua_State lua_State;
 
@@ -11,7 +12,7 @@ namespace NovelRT::Scripting
 {
     class DecisionTree;
 
-    class ScriptManager
+    class ScriptManager : public std::enable_shared_from_this<ScriptManager>
     {
     private:
         struct CloseState {
@@ -30,6 +31,8 @@ namespace NovelRT::Scripting
         ScriptManager& operator=(const ScriptManager&) = delete;
         ScriptManager& operator=(ScriptManager&&) = default;
 
-        std::unique_ptr<DecisionTree> LoadDecisionTree(/* TODO: resource file */);
+        lua_State* GetLuaState() const;
+
+        std::unique_ptr<DecisionTree> LoadDecisionTree(std::span<uint8_t> byteData);
     };
 }
