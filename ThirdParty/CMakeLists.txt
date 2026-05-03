@@ -41,10 +41,11 @@ thirdparty_module(glm
   URL https://github.com/g-truc/glm/archive/2d4c4b4dd31fde06cfffad7915c2b3006402322f.zip
   URL_HASH SHA512=770cb1ab820f8b32e6abc650c254364ae9bf820fe278ad0b082ee4aadcaf084d66da700ee6d18202fc99fe360fc8756ed837e3d9c71dba9ebd6f502bd8011561
 )
-thirdparty_module(GSL
-  URL https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.zip
-  URL_HASH SHA512=710ab8b06b24dbca2cd1a8abb2eca2282548644224519784d04b1c7b70e3639f3b3e8d8f993f7f8c3dce3fcfe9ff0f3757b8d2625b676df36c84caa6f684133e
-)
+#thirdparty_module(GSL
+#  URL https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.zip
+#  URL_HASH SHA512=710ab8b06b24dbca2cd1a8abb2eca2282548644224519784d04b1c7b70e3639f3b3e8d8f993f7f8c3dce3fcfe9ff0f3757b8d2625b676df36c84caa6f684133e
+#)
+
 thirdparty_module(GTest
   URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
   URL_HASH SHA512=16cc8f5b03b862e2937d1b926ca6dc291234ac5670050dc4fc2752ec98497330ebcd46f292317cd2bbb111ce33bbdcfd088ddf6a7fe273e2442963908732d589

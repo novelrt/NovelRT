@@ -16,19 +16,9 @@
 #include <type_traits>
 #include <vector>
 
-#if __has_include(<version>)
 #include <version>
-#endif
-
-#if __cpp_lib_bit_cast
 #include <bit>
-#endif
-
-#if NOVELRT_USE_STD_SPAN
 #include <span>
-#else
-#include <gsl/span>
-#endif // NOVELRT_USE_STD_SPAN
 
 #define unused(x) static_cast<void>(x)
 
