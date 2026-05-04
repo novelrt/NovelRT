@@ -10,6 +10,7 @@
 #include <NovelRT/Utilities/Strings.hpp>
 
 #include <atomic>
+#include <algorithm>
 
 using namespace NovelRT::Logging;
 
