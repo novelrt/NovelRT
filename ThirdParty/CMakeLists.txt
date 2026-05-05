@@ -99,8 +99,8 @@ thirdparty_module(stduuid
   URL_HASH SHA512=a0e1c4b889919b43290ab8c978e96c2f51782a1c7972780351c80b4a860f1c4a488a957bf832b3e38eea97a8efa1dcce632c04fbb083331e2b83f54b16e87a67
 )
 thirdparty_module(TBB
-  URL https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v2022.1.0.zip
-  URL_HASH SHA512=f87fffa1fec7eed77ba26353825ec8aef574e4ee8d6694882ada04bfe89eba12167036aeca4cc132b6838cd655812dba976b686956fd47e7bae8551bfc98c55e
+  URL https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v2023.0.0.zip
+  URL_HASH SHA512=7bfd6f59978fefb3f6dafc605bf7ba99bb837b03743a1b53e77a4da9c5a67acdc9f6b235dcce36d59e2fa4df69e7a1ccb4312b6670d2b2f79bee47900dbbf19d
 )
 thirdparty_module(Vorbis
   URL https://github.com/xiph/vorbis/releases/download/v1.3.7/libvorbis-1.3.7.tar.gz

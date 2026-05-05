@@ -18,23 +18,13 @@ namespace NovelRT::Ecs
           _componentCache(1),
           _workerThreadCount(maximumThreadCount),
           _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
-          _threadAvailabilityMap(0),
-          _shouldShutDown(false),
-          _threadsAreSpinning(false)
+          _ecsArena(std::make_unique<tbb::task_arena>(maximumThreadCount == 0 ? tbb::task_arena::automatic
+                                                                              : static_cast<int>(maximumThreadCount))),
+          _asyncArena(std::make_unique<tbb::task_arena>(tbb::task_arena::automatic)),
+          _ecsTasks(std::make_unique<tbb::task_group>()),
+          _asyncTasks(std::make_unique<tbb::task_group>())
     {
-        if (_workerThreadCount == 0)
-        {
-            _workerThreadCount = std::thread::hardware_concurrency() - 1;
-        }
-
-        // in case the previous call doesn't work
-        if (_workerThreadCount == 0)
-        {
-            _workerThreadCount = DEFAULT_BLIND_THREAD_LIMIT;
-        }
-
-        _threadAvailabilityMap = (1ULL << _workerThreadCount) - 1;
-
+        _workerThreadCount = _ecsArena->max_concurrency();
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
     }
@@ -47,15 +37,11 @@ namespace NovelRT::Ecs
           _componentCache(std::move(other._componentCache)),
           _workerThreadCount(other._workerThreadCount),
           _currentDelta(other._currentDelta),
-          _threadAvailabilityMap((1ULL << other._workerThreadCount) - 1),
-          _shouldShutDown(false),
-          _threadsAreSpinning(false)
+          _ecsArena(std::move(other._ecsArena)),
+          _asyncArena(std::move(other._asyncArena)),
+          _ecsTasks(std::move(other._ecsTasks)),
+          _asyncTasks(std::move(other._asyncTasks))
     {
-        if (other.GetThreadsAreSpinning())
-        {
-            other.ShutDown();
-            InitialiseThreads();
-        }
     }
 
     SystemScheduler& SystemScheduler::operator=(SystemScheduler&& other) noexcept
@@ -66,18 +52,11 @@ namespace NovelRT::Ecs
         _entityCache = std::move(other._entityCache);
         _componentCache = std::move(other._componentCache);
         _workerThreadCount = other._workerThreadCount;
-        _threadWorkItem = std::move(other._threadWorkItem);
-        _threadCache = std::move(other._threadCache);
         _currentDelta = other._currentDelta;
-        _shouldShutDown = false;
-        _threadsAreSpinning = false;
-
-        if (other.GetThreadsAreSpinning())
-        {
-            other.ShutDown();
-            InitialiseThreads();
-        }
-
+        _ecsArena = std::move(other._ecsArena);
+        _asyncArena = std::move(other._asyncArena);
+        _ecsTasks = std::move(other._ecsTasks);
+        _asyncTasks = std::move(other._asyncTasks);
         return *this;
     }
 
@@ -96,93 +75,26 @@ namespace NovelRT::Ecs
         RegisterSystem([targetSystem](auto delta, auto catalogue) { targetSystem->Update(delta, catalogue); });
     }
 
-    bool SystemScheduler::JobAvailable(size_t poolId) const noexcept
-    {
-        return (_threadAvailabilityMap & (1ULL << poolId)) == 0;
-    }
-
-    void SystemScheduler::WaitForJob(size_t poolId)
-    {
-        _mutexCache[poolId]->lock();
-        assert(JobAvailable(poolId) && "Lock acquired on mutex when no job is available!");
-    }
-
-    void SystemScheduler::CycleForJob(size_t poolId)
-    {
-        while (true)
-        {
-            WaitForJob(poolId);
-
-            Atom workItem = _threadWorkItem[poolId];
-
-            if (workItem == std::numeric_limits<Atom>::max())
-            {
-                _mutexCache[poolId]->unlock();
-                return;
-            }
-
-            _systems[workItem](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
-
-            assert(((_threadAvailabilityMap & (1ULL << poolId)) == 0) && "Thread marked as available while working!");
-            _threadAvailabilityMap ^= (1ULL << poolId);
-        }
-    }
-
     void SystemScheduler::ScheduleUpdateWork()
     {
-        uint64_t threadAvailabilityMap = _threadAvailabilityMap;
-        assert((threadAvailabilityMap == ((1ULL << _workerThreadCount) - 1)) &&
-               "Some threads are busy while new work is attempted to be scheduled!");
-        for (auto&& systemId : _systemIds)
-        {
-            uint64_t workerIndex;
-
-            while ((workerIndex = NovelRT::Maths::Utilities::LeadingZeroCount64(_threadAvailabilityMap)) == 64)
+        _ecsArena->execute(
+            [&]()
             {
-                std::this_thread::yield();
-            }
+                for (auto&& systemId : _systemIds)
+                {
+                    _ecsTasks->run(
+                        [&, systemId]()
+                        {
+                            // Intentionally no try/catch - engine is fail fast.
+                            // Unhandled exceptions terminate the process with full
+                            // callstack intact for debugging purposes.
+                            size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
 
-            workerIndex = 63 - workerIndex;
-
-            assert((workerIndex <= (_workerThreadCount)) &&
-                   "Returned worker index does not exist! Index out of range.");
-
-            _threadWorkItem[workerIndex] = systemId;
-
-            assert(((_threadAvailabilityMap & (1ULL << workerIndex)) == (1ULL << workerIndex)) &&
-                   "Thread marked as busy while available!");
-            _threadAvailabilityMap ^= (1ULL << workerIndex);
-
-            _mutexCache[workerIndex]->unlock();
-        }
-
-        while (_threadAvailabilityMap != threadAvailabilityMap)
-        {
-            std::this_thread::yield();
-        }
-    }
-
-    void SystemScheduler::InitialiseThreads() noexcept
-    {
-        _shouldShutDown = false;
-
-        _mutexCache.reserve(_workerThreadCount);
-
-        for (size_t i = 0; i < _workerThreadCount; i++)
-        {
-            _mutexCache.emplace_back(std::make_unique<tbb::mutex>());
-            _mutexCache.back()->lock();
-        }
-
-        std::vector<Atom> vec2(_workerThreadCount);
-        _threadWorkItem.swap(vec2);
-
-        for (size_t i = 0; i < _workerThreadCount; i++)
-        {
-            _threadCache.emplace_back(std::thread([&, i]() { CycleForJob(i); }));
-        }
-
-        _threadsAreSpinning = true;
+                            _systems[systemId](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
+                        });
+                }
+                _ecsTasks->wait();
+            });
     }
 
     void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
@@ -196,41 +108,13 @@ namespace NovelRT::Ecs
         _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
     }
 
-    void SystemScheduler::ShutDown() noexcept
-    {
-        assert((_threadAvailabilityMap == ((1ULL << _workerThreadCount) - 1)) &&
-               "Work was scheduled while the SystemScheduler is shutting down!");
-        for (auto&& workItem : _threadWorkItem)
-        {
-            workItem = std::numeric_limits<Atom>::max();
-        }
-
-        _threadAvailabilityMap = 0;
-
-        for (auto&& mutex : _mutexCache)
-        {
-            mutex->unlock();
-        }
-
-        for (auto&& i : _threadCache)
-        {
-            if (i.joinable())
-            {
-                i.join();
-            }
-        }
-
-        _threadCache.clear();
-        _threadWorkItem.clear();
-        _mutexCache.clear();
-        _threadsAreSpinning = false;
-    }
-
     SystemScheduler::~SystemScheduler() noexcept
     {
-        if (GetThreadsAreSpinning())
-        {
-            ShutDown();
-        }
+        _ecsArena->execute(
+            [&]()
+            {
+                _ecsTasks->wait();
+                _asyncTasks->wait();
+            });
     }
 } // namespace NovelRT::Ecs

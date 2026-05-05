@@ -17,6 +17,8 @@
 #include <vector>
 
 #include <oneapi/tbb/mutex.h>
+#include <oneapi/tbb/task_arena.h>
+#include <oneapi/tbb/task_group.h>
 
 namespace NovelRT::Ecs
 {
@@ -35,7 +37,7 @@ namespace NovelRT::Ecs
     private:
         std::vector<Atom> _systemIds;
 
-        static inline const uint32_t DEFAULT_BLIND_THREAD_LIMIT = 8;
+        static constexpr uint32_t DefaultBlindThreadLimit = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
         std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
@@ -45,20 +47,16 @@ namespace NovelRT::Ecs
 
         uint32_t _workerThreadCount;
 
-        std::vector<Atom> _threadWorkItem;
-        std::vector<std::thread> _threadCache;
-        std::vector<std::unique_ptr<tbb::mutex>> _mutexCache;
+        std::unique_ptr<tbb::task_arena> _ecsArena;
+        std::unique_ptr<tbb::task_arena> _asyncArena;
+        std::unique_ptr<tbb::task_group> _ecsTasks;
+        std::unique_ptr<tbb::task_group> _asyncTasks;
 
         Timing::Timestamp _currentDelta;
-        std::atomic_uint64_t _threadAvailabilityMap;
-        // std::atomic_uint64_t _threadShutDownStatus;
 
         std::atomic_bool _shouldShutDown;
         bool _threadsAreSpinning;
 
-        bool JobAvailable(size_t poolId) const noexcept;
-        void WaitForJob(size_t poolId);
-        void CycleForJob(size_t poolId);
         void ScheduleUpdateWork();
 
     public:
@@ -87,16 +85,6 @@ namespace NovelRT::Ecs
          * @return The moved instance of SystemScheduler.
          */
         SystemScheduler& operator=(SystemScheduler&& other) noexcept;
-
-        /**
-         * @brief Gets the current state of the threads.
-         *
-         * @returns true if the threads are spinning, false if they aren't.
-         */
-        [[nodiscard]] inline bool GetThreadsAreSpinning() const noexcept
-        {
-            return _threadsAreSpinning;
-        }
 
         /**
          * @brief Registers a function to the SystemScheduler instance.
@@ -213,14 +201,6 @@ namespace NovelRT::Ecs
         }
 
         /**
-         * @brief Initialises the allocated worker threads for ECS processing.
-         *
-         * This only needs to be called once, and should not be called by the developer in a standard ECS instance.
-         *
-         */
-        void InitialiseThreads() noexcept;
-
-        /**
          * @brief Executes an iteration of the ECS.
          *
          * @param delta the current delta time to supply to systems.
@@ -228,11 +208,6 @@ namespace NovelRT::Ecs
          * @exception Any and all exceptions that might possibly propagate from any given system.
          */
         void ExecuteIteration(Timing::Timestamp delta);
-
-        /**
-         * @brief Shuts down the ECS instance and terminates threads.
-         */
-        void ShutDown() noexcept;
 
         /**
          * @brief Destroys the SystemScheduler.
