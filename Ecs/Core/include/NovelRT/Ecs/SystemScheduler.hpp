@@ -43,6 +43,8 @@ namespace NovelRT::Ecs
      */
     class SystemScheduler
     {
+        friend class Catalogue;
+
     private:
         std::vector<Atom> _systemIds;
 
