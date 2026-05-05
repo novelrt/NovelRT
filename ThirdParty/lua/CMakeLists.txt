@@ -68,7 +68,10 @@ target_include_directories(lua
 
 target_compile_definitions(lua
   PUBLIC
-    LUA_ANSI
+    $<$<PLATFORM_ID:Windows>:LUA_USE_WINDOWS>
+    $<$<PLATFORM_ID:Linux>:LUA_USE_LINUX>
+    $<$<PLATFORM_ID:Darwin>:LUA_USE_MACOSX>
+    $<$<PLATFORM_ID:iOS>:LUA_USE_IOS>
 )
 
 target_compile_options(lua

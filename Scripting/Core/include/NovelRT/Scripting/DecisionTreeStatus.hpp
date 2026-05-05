@@ -9,24 +9,22 @@ typedef struct lua_State lua_State;
 
 namespace NovelRT::Scripting
 {
+    class ScriptManager;
+
     class DecisionTreeStatus
     {
+    protected:
+        lua_State* _state;
         std::shared_ptr<ScriptManager> _manager;
 
-        // Reference created with luaL_ref
-        int _reference;
-
     public:
-        // Assumes the coroutine is on the top of the Lua stack
-        explicit DecisionTreeStatus(const std::shared_ptr<ScriptManager>& manager);
-        virtual ~DecisionTreeStatus();
+        explicit DecisionTreeStatus(lua_State* L, const std::shared_ptr<ScriptManager>& manager);
+        virtual ~DecisionTreeStatus() = default;
 
         DecisionTreeStatus(const DecisionTreeStatus&) = delete;
         DecisionTreeStatus(DecisionTreeStatus&&) = default;
 
         DecisionTreeStatus& operator=(const DecisionTreeStatus&) = delete;
         DecisionTreeStatus& operator=(DecisionTreeStatus&&) = default;
-
-        DecisionTreeStatus* Continue();
     };
 }

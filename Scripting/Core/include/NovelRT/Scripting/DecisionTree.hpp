@@ -28,7 +28,6 @@ namespace NovelRT::Scripting
         DecisionTree& operator=(const DecisionTree&) = delete;
         DecisionTree& operator=(DecisionTree&&) = default;
 
-        // N.B. Returning a raw pointer here is intentional - Lua owns this memory.
-        DecisionTreeStatus* Begin();
+        std::unique_ptr<DecisionTreeStatus> Begin();
     };
 }

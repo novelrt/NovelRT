@@ -4,7 +4,6 @@
 #include <NovelRT/Scripting/DecisionTree.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 #include <NovelRT/Scripting/ScriptManager.hpp>
-
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
 #include <format>
@@ -24,8 +23,7 @@ namespace NovelRT::Scripting
         luaL_unref(_manager->GetLuaState(), LUA_REGISTRYINDEX, _reference);
     }
 
-
-    DecisionTreeStatus* DecisionTree::Begin()
+    std::unique_ptr<DecisionTreeStatus> DecisionTree::Begin()
     {
         int type = lua_rawgeti(_manager->GetLuaState(), LUA_REGISTRYINDEX, _reference);
         if (type != LUA_TFUNCTION)
@@ -37,7 +35,7 @@ namespace NovelRT::Scripting
         lua_rawgeti(L, LUA_REGISTRYINDEX, _reference);
 
         int nresults;
-        int status = lua_resume(L, nullptr, 0, &nresults);
+        int status = lua_resume(L, _manager->GetLuaState(), 0, &nresults);
         if (status != LUA_YIELD)
             throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield (returned {})", status));
         if (nresults != 1)
@@ -47,7 +45,7 @@ namespace NovelRT::Scripting
         if (data == nullptr)
             throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield a status (returned {})", lua_typename(L, lua_type(L, -1))));
 
-        // Anything which yields a status will handle creating this properly.
-        return static_cast<DecisionTreeStatus*>(data);
+
+        return std::unique_ptr<DecisionTreeStatus>(static_cast<DecisionTreeStatus*>(data));
     }
 }
