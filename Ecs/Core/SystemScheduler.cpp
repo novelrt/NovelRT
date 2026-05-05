@@ -80,19 +80,29 @@ namespace NovelRT::Ecs
         _ecsArena->execute(
             [&]()
             {
+                // Drain pending completions first, before normal system work
+                std::function<void(Timing::Timestamp, Catalogue)> completion;
+                while (_pendingCompletions.try_pop(completion))
+                {
+                    _ecsTasks->run(
+                        [completion = std::move(completion), this]() mutable
+                        {
+                            size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
+                            completion(_currentDelta, Catalogue(poolId, *this));
+                        });
+                }
+
+                // Normal system work
                 for (auto&& systemId : _systemIds)
                 {
                     _ecsTasks->run(
                         [&, systemId]()
                         {
-                            // Intentionally no try/catch - engine is fail fast.
-                            // Unhandled exceptions terminate the process with full
-                            // callstack intact for debugging purposes.
                             size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
-
-                            _systems[systemId](_currentDelta, Catalogue(poolId, _componentCache, _entityCache));
+                            _systems[systemId](_currentDelta, Catalogue(poolId, *this));
                         });
                 }
+
                 _ecsTasks->wait();
             });
     }

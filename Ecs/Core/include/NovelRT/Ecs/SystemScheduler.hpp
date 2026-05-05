@@ -19,6 +19,7 @@
 #include <oneapi/tbb/mutex.h>
 #include <oneapi/tbb/task_arena.h>
 #include <oneapi/tbb/task_group.h>
+#include<oneapi/tbb/concurrent_queue.h>
 
 namespace NovelRT::Ecs
 {
@@ -26,6 +27,14 @@ namespace NovelRT::Ecs
     class ComponentCache;
     class EntityCache;
     class IEcsSystem;
+
+    namespace Detail
+    {
+        template<typename TWork, typename TCompletion>
+        concept ValidScheduleWithCompletion =
+            std::invocable<TWork> &&
+            std::invocable<TCompletion, Timing::Timestamp, Catalogue, std::invoke_result_t<TWork>>;
+    }
 
     /**
      * @brief Handles all thread and system scheduling related tasks. In a normal ECS instance, this is your root
@@ -39,6 +48,7 @@ namespace NovelRT::Ecs
 
         static constexpr uint32_t DefaultBlindThreadLimit = 8;
 
+
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
         std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
 
@@ -51,6 +61,7 @@ namespace NovelRT::Ecs
         std::unique_ptr<tbb::task_arena> _asyncArena;
         std::unique_ptr<tbb::task_group> _ecsTasks;
         std::unique_ptr<tbb::task_group> _asyncTasks;
+        tbb::concurrent_queue<std::function<void(Timing::Timestamp, Catalogue)>> _pendingCompletions;
 
         Timing::Timestamp _currentDelta;
 
@@ -58,6 +69,26 @@ namespace NovelRT::Ecs
         bool _threadsAreSpinning;
 
         void ScheduleUpdateWork();
+
+        template<typename TWork, typename TCompletion>
+        requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
+            TWork&& work,
+            TCompletion&& completion) noexcept
+        {
+            _asyncArena->execute(
+                [&]()
+                {
+                    _asyncTasks->run(
+                        [work = std::forward<TWork>(work), completion = std::forward<TCompletion>(completion),
+                         this]() mutable
+                        {
+                            auto result = work();
+                            _pendingCompletions.push([completion = std::move(completion), result = std::move(result)](
+                                                         Timing::Timestamp delta, Catalogue cat) mutable
+                                                     { completion(delta, cat, std::move(result)); });
+                        });
+                });
+        }
 
     public:
         /**
