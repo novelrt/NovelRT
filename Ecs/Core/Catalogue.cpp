@@ -5,15 +5,17 @@
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/UnsafeComponentView.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
 
 #include <algorithm>
 
 namespace NovelRT::Ecs
 {
-    Catalogue::Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept
+    Catalogue::Catalogue(size_t poolId, SystemScheduler& scheduler) noexcept
         : _poolId(poolId),
-          _componentCache(componentCache),
-          _entityCache(entityCache),
+          _componentCache(scheduler.GetComponentCache()),
+          _entityCache(scheduler.GetEntityCache()),
+          _scheduler(scheduler),
           _createdEntitiesThisFrame(std::vector<EntityId>{})
     {
     }

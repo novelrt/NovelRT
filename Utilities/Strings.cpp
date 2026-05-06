@@ -1,5 +1,5 @@
 #include <NovelRT/Utilities/Strings.hpp>
-
+#include <NovelRT/Utilities/Span.hpp>
 namespace NovelRT::Utilities
 {
     [[nodiscard]] std::vector<const char*> GetStringSpanAsCharPtrVector(

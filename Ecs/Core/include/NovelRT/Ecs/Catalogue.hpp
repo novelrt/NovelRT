@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/ImplDetail.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -16,6 +17,7 @@ namespace NovelRT::Ecs
     template<typename TComponent>
     class ComponentView;
     class EntityCache;
+    class SystemScheduler;
     class UnsafeComponentView;
 
     /**
@@ -31,6 +33,7 @@ namespace NovelRT::Ecs
         size_t _poolId;
         ComponentCache& _componentCache;
         EntityCache& _entityCache;
+        SystemScheduler& _scheduler;
         std::vector<EntityId> _createdEntitiesThisFrame;
 
     public:
@@ -42,7 +45,7 @@ namespace NovelRT::Ecs
          * @param entityCache The storage object for all modifications being made directly to entities themselves (such
          * as a delete instruction).
          */
-        Catalogue(size_t poolId, ComponentCache& componentCache, EntityCache& entityCache) noexcept;
+        Catalogue(size_t poolId, SystemScheduler& scheduler) noexcept;
 
         /**
          * @brief Gets a view into the ComponentCache for the specified component type based on the context of the
@@ -74,7 +77,7 @@ namespace NovelRT::Ecs
          * that has their threading contexts set to the current thread.
          */
         template<typename... TComponents>
-        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() const noexcept
+        [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() noexcept
         {
             return std::make_tuple(
                 ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
@@ -109,5 +112,34 @@ namespace NovelRT::Ecs
          * @param entity The entity to delete.
          */
         void DeleteEntity(EntityId entity) noexcept;
+
+        /**
+         * @brief Schedules a unit of work to be executed outside of the ECS context, with a completion
+         * callback that is executed on the next iteration of the ECS once the work is done.
+         *
+         * The work functor is executed asynchronously on a separate thread pool and must not interact
+         * with the ECS or capture any references to a Catalogue instance, as the behaviour is undefined.
+         * The completion functor is executed on the ECS thread pool in the next available iteration,
+         * and receives a fresh Catalogue instance with the correct threading context, the current delta time,
+         * and the result of the work functor.
+         *
+         * This is a pure method with respect to the Catalogue itself. Calling this without using the
+         * result of the work functor in the completion has no effect and introduces overhead.
+         *
+         * @tparam TWork The type of the work functor. Must be invocable with no arguments.
+         * @tparam TCompletion The type of the completion functor. Must be invocable with a
+         * Timing::Timestamp, a Catalogue, and the return type of TWork.
+         *
+         * @param work A functor to be executed outside of the ECS context. Must not capture or interact
+         * with any ECS state.
+         * @param completion A functor to be executed on the ECS thread pool once the work is complete.
+         * Receives the current delta time, a valid Catalogue instance, and the result of the work functor.
+         */
+        template<typename TWork, typename TCompletion>
+        requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
+            TWork&& work,
+            TCompletion&& completion) noexcept;
     };
 }
+
+#include <NovelRT/Ecs/MiscTemplateImpls.hpp> // This has to be here due to template implementation detials - Matt J.
