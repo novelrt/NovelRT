@@ -63,6 +63,11 @@ namespace NovelRT::Graphics
         }
     }
 
+    VulkanGraphicsResource::~GraphicsResource() noexcept
+    {
+        vmaDestroyVirtualBlock(GetVirtualBlock());
+    }
+
     std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsResource::GetDevice() const noexcept
     {
         return _device;

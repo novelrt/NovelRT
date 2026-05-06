@@ -49,7 +49,8 @@ namespace NovelRT::Graphics
                          GraphicsResourceAccess cpuAccess,
                          VmaAllocation allocation,
                          VmaAllocationInfo allocationInfo);
-        virtual ~GraphicsResource() noexcept = default;
+
+        virtual ~GraphicsResource() noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const noexcept;
         [[nodiscard]] std::shared_ptr<GraphicsMemoryAllocator<Vulkan::VulkanGraphicsBackend>> GetAllocator()

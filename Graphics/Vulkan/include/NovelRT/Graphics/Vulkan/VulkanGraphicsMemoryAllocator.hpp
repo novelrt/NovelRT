@@ -35,6 +35,8 @@ namespace NovelRT::Graphics
         GraphicsMemoryAllocator(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
                                 std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> provider);
 
+        virtual ~GraphicsMemoryAllocator() noexcept;
+
         [[nodiscard]] std::shared_ptr<GraphicsProvider<Vulkan::VulkanGraphicsBackend>> GetProvider() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsBuffer<Vulkan::VulkanGraphicsBackend>> CreateBuffer(
