@@ -41,8 +41,8 @@ namespace NovelRT::Ecs
           _asyncArena(std::move(other._asyncArena)),
           _ecsTasks(std::move(other._ecsTasks)),
           _asyncTasks(std::move(other._asyncTasks)),
-          _currentDelta(other._currentDelta),
-          _pendingCompletions(std::move(other._pendingCompletions))
+          _pendingCompletions(std::move(other._pendingCompletions)),
+          _currentDelta(other._currentDelta)
     {
     }
 
