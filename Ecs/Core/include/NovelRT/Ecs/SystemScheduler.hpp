@@ -68,22 +68,7 @@ namespace NovelRT::Ecs
         template<typename TWork, typename TCompletion>
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
-            TCompletion&& completion) noexcept
-        {
-            _asyncArena->execute(
-                [&]()
-                {
-                    _asyncTasks->run(
-                        [work = std::forward<TWork>(work), completion = std::forward<TCompletion>(completion),
-                         this]() mutable
-                        {
-                            auto result = work();
-                            _pendingCompletions.push([completion = std::move(completion), result = std::move(result)](
-                                                         Timing::Timestamp delta, Catalogue cat) mutable
-                                                     { completion(delta, cat, std::move(result)); });
-                        });
-                });
-        }
+            TCompletion&& completion) noexcept;
 
     public:
         /**

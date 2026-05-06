@@ -6,7 +6,6 @@
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Ecs/ImplDetail.hpp>
-#include <NovelRT/Ecs/SystemScheduler.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -18,6 +17,7 @@ namespace NovelRT::Ecs
     template<typename TComponent>
     class ComponentView;
     class EntityCache;
+    class SystemScheduler;
     class UnsafeComponentView;
 
     /**
@@ -138,9 +138,8 @@ namespace NovelRT::Ecs
         template<typename TWork, typename TCompletion>
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
-            TCompletion&& completion) noexcept
-        {
-            _scheduler.ScheduleWithCompletion(std::forward<TWork>(work), std::forward<TCompletion>(completion));
-        }
+            TCompletion&& completion) noexcept;
     };
 }
+
+#include <NovelRT/Ecs/MiscTemplateImpls.hpp> // This has to be here due to template implementation detials - Matt J.

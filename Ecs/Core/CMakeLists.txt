@@ -38,6 +38,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
       include/NovelRT/Ecs/IEcsSystem.hpp
       include/NovelRT/Ecs/ImplDetail.hpp
       include/NovelRT/Ecs/LinkedEntityListView.hpp
+      include/NovelRT/Ecs/MiscTemplateImpls.hpp
       include/NovelRT/Ecs/SparseSet.hpp
       include/NovelRT/Ecs/SparseSetMemoryContainer.hpp
       include/NovelRT/Ecs/SystemScheduler.hpp
