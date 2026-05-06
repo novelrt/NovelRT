@@ -6,6 +6,7 @@
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Ecs/ImplDetail.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -18,7 +19,6 @@ namespace NovelRT::Ecs
     class ComponentView;
     class EntityCache;
     class UnsafeComponentView;
-    class SystemScheduler;
 
     /**
      * @brief A thread-aware context into the current state of the ECS instance that created an instance of this object.
