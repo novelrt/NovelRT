@@ -274,6 +274,14 @@ namespace NovelRT::Graphics
     {
     }
 
+    VulkanGraphicsPipeline::~GraphicsPipeline() 
+    {
+        if (_vulkanPipeline.HasValue())
+        {
+            vkDestroyPipeline(_device->GetVulkanDevice(), _vulkanPipeline.Get(), nullptr);
+        } 
+    }
+
     [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsPipeline::GetDevice() const
     {
         return _device;

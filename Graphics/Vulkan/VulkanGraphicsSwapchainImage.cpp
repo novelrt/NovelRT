@@ -72,7 +72,7 @@ namespace NovelRT::Graphics
           _height(height)
     {
     }
-
+    
     GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::~GraphicsSwapchainImage() noexcept
     {
         vkDestroyImageView(GetDevice()->GetVulkanDevice(), _imageView, nullptr);

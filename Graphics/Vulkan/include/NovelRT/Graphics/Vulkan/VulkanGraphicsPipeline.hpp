@@ -44,7 +44,7 @@ namespace NovelRT::Graphics
                          std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
                          std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> renderPass,
                          bool imguiRenderMode) noexcept;
-        ~GraphicsPipeline() final = default;
+        ~GraphicsPipeline() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;
 
