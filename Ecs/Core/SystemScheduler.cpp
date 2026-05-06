@@ -17,12 +17,13 @@ namespace NovelRT::Ecs
         : _entityCache(1),
           _componentCache(1),
           _workerThreadCount(maximumThreadCount),
-          _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
           _ecsArena(std::make_unique<tbb::task_arena>(maximumThreadCount == 0 ? int(tbb::task_arena::automatic)
                                                                               : static_cast<int>(maximumThreadCount))),
           _asyncArena(std::make_unique<tbb::task_arena>(int(tbb::task_arena::automatic))),
           _ecsTasks(std::make_unique<tbb::task_group>()),
-          _asyncTasks(std::make_unique<tbb::task_group>())
+          _asyncTasks(std::make_unique<tbb::task_group>()),
+          _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
+          _pendingCompletions()
     {
         _workerThreadCount = _ecsArena->max_concurrency();
         _entityCache = EntityCache(_workerThreadCount);
@@ -40,7 +41,8 @@ namespace NovelRT::Ecs
           _ecsArena(std::move(other._ecsArena)),
           _asyncArena(std::move(other._asyncArena)),
           _ecsTasks(std::move(other._ecsTasks)),
-          _asyncTasks(std::move(other._asyncTasks))
+          _asyncTasks(std::move(other._asyncTasks)),
+          _pendingCompletions(std::move(other._pendingCompletions))
     {
     }
 
@@ -57,6 +59,7 @@ namespace NovelRT::Ecs
         _asyncArena = std::move(other._asyncArena);
         _ecsTasks = std::move(other._ecsTasks);
         _asyncTasks = std::move(other._asyncTasks);
+        _pendingCompletions = std::move(other._pendingCompletions);
         return *this;
     }
 
