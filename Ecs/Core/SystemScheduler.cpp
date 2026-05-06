@@ -23,7 +23,7 @@ namespace NovelRT::Ecs
           _ecsTasks(std::make_unique<tbb::task_group>()),
           _asyncTasks(std::make_unique<tbb::task_group>()),
           _pendingCompletions(),
-          _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
+          _currentDelta(NovelRT::Timing::TimeFromSeconds(0))
     {
         _workerThreadCount = _ecsArena->max_concurrency();
         _entityCache = EntityCache(_workerThreadCount);
