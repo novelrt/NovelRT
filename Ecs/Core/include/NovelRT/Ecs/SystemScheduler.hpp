@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
+#include <NovelRT/Ecs/ImplDetail.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 #include <NovelRT/Timing/Timestamp.hpp>
 #include <NovelRT/Utilities/Atom.hpp>
