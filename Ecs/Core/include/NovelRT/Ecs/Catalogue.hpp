@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/ImplDetail.hpp>
 
 #include <cstddef>
 #include <cstdint>

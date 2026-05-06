@@ -28,14 +28,6 @@ namespace NovelRT::Ecs
     class EntityCache;
     class IEcsSystem;
 
-    namespace Detail
-    {
-        template<typename TWork, typename TCompletion>
-        concept ValidScheduleWithCompletion =
-            std::invocable<TWork> &&
-            std::invocable<TCompletion, Timing::Timestamp, Catalogue, std::invoke_result_t<TWork>>;
-    }
-
     /**
      * @brief Handles all thread and system scheduling related tasks. In a normal ECS instance, this is your root
      * object.

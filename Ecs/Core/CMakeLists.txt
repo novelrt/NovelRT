@@ -36,6 +36,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
       include/NovelRT/Ecs/EntityGraphView.hpp
       include/NovelRT/Ecs/ExecutionContext.hpp
       include/NovelRT/Ecs/IEcsSystem.hpp
+      include/NovelRT/Ecs/ImplDetail.hpp
       include/NovelRT/Ecs/LinkedEntityListView.hpp
       include/NovelRT/Ecs/SparseSet.hpp
       include/NovelRT/Ecs/SparseSetMemoryContainer.hpp
