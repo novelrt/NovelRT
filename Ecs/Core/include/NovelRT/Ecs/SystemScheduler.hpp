@@ -17,10 +17,10 @@
 #include <unordered_map>
 #include <vector>
 
+#include <oneapi/tbb/concurrent_queue.h>
 #include <oneapi/tbb/mutex.h>
 #include <oneapi/tbb/task_arena.h>
 #include <oneapi/tbb/task_group.h>
-#include<oneapi/tbb/concurrent_queue.h>
 
 namespace NovelRT::Ecs
 {
@@ -42,7 +42,6 @@ namespace NovelRT::Ecs
         std::vector<Atom> _systemIds;
 
         static constexpr uint32_t DefaultBlindThreadLimit = 8;
-
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
         std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
