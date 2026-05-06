@@ -78,10 +78,9 @@ namespace NovelRT::Ecs
     void SystemScheduler::ScheduleUpdateWork()
     {
         _ecsArena->execute(
-            [&]()
+            [&]() mutable
             {
-                // Drain pending completions first, before normal system work
-                std::function<void(Timing::Timestamp, Catalogue)> completion;
+                std::function<void(Timing::Timestamp, Catalogue)> completion{};
                 while (_pendingCompletions.try_pop(completion))
                 {
                     _ecsTasks->run(
@@ -92,11 +91,10 @@ namespace NovelRT::Ecs
                         });
                 }
 
-                // Normal system work
                 for (auto&& systemId : _systemIds)
                 {
                     _ecsTasks->run(
-                        [&, systemId]()
+                        [&, systemId]() mutable
                         {
                             size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
                             _systems[systemId](_currentDelta, Catalogue(poolId, *this));
