@@ -343,31 +343,31 @@ namespace NovelRT::UI::ImGui
         {
             ::ImGui::Render();
 
-            // for (auto it = _bufferCache.begin(); it != _bufferCache.end();)
-            // {
-            //     it->frameLifetime--;
-            //     if (it->frameLifetime <= 0)
-            //     {
-            //         it = _bufferCache.erase(it);
-            //     }
-            //     else
-            //     {
-            //         it++;
-            //     }
-            // }
+            for (auto it = _bufferCache.begin(); it != _bufferCache.end();)
+            {
+                it->frameLifetime--;
+                if (it->frameLifetime <= 0)
+                {
+                    it = _bufferCache.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+            }
 
-            // for (auto it = _descriptorSetCache.begin(); it != _descriptorSetCache.end();)
-            // {
-            //     it->frameLifetime--;
-            //     if (it->frameLifetime <= 0)
-            //     {
-            //         it = _descriptorSetCache.erase(it);
-            //     }
-            //     else
-            //     {
-            //         it++;
-            //     }
-            // }
+            for (auto it = _descriptorSetCache.begin(); it != _descriptorSetCache.end();)
+            {
+                it->frameLifetime--;
+                if (it->frameLifetime <= 0)
+                {
+                    it = _descriptorSetCache.erase(it);
+                }
+                else
+                {
+                    it++;
+                }
+            }
         }
 
         void UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
@@ -393,13 +393,13 @@ namespace NovelRT::UI::ImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
             bufferCreateInfo.size = vertexSize;
             auto vertexStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            //_bufferCache.emplace_back(CachedBufferObject{vertexStagingBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{vertexStagingBuffer, 1});
 
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto vertexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            //_bufferCache.emplace_back(CachedBufferObject{vertexBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{vertexBuffer, 1});
 
             // Create index buffer + staging
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
@@ -407,13 +407,13 @@ namespace NovelRT::UI::ImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
             bufferCreateInfo.size = indexSize;
             auto indexStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            //_bufferCache.emplace_back(CachedBufferObject{indexStagingBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{indexStagingBuffer, 1});
 
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto indexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            //_bufferCache.emplace_back(CachedBufferObject{indexBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{indexBuffer, 1});
 
             // Allocate buffers
             auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 4);
@@ -575,7 +575,7 @@ namespace NovelRT::UI::ImGui
                         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
                         descriptorSetData->UpdateDescriptorSetData();
                         //graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
-                        //_descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 10});
+                        _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 1});
 
                         // Bind the descriptor set
                         std::array<
