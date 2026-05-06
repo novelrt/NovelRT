@@ -18,9 +18,9 @@ namespace NovelRT::Ecs
           _componentCache(1),
           _workerThreadCount(maximumThreadCount),
           _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
-          _ecsArena(std::make_unique<tbb::task_arena>(maximumThreadCount == 0 ? tbb::task_arena::automatic
+          _ecsArena(std::make_unique<tbb::task_arena>(maximumThreadCount == 0 ? int(tbb::task_arena::automatic)
                                                                               : static_cast<int>(maximumThreadCount))),
-          _asyncArena(std::make_unique<tbb::task_arena>(tbb::task_arena::automatic)),
+          _asyncArena(std::make_unique<tbb::task_arena>(int(tbb::task_arena::automatic))),
           _ecsTasks(std::make_unique<tbb::task_group>()),
           _asyncTasks(std::make_unique<tbb::task_group>())
     {
