@@ -58,6 +58,11 @@ namespace NovelRT::Graphics
             Exceptions::InitialisationFailureException("Failed to create the VulkanMemoryAllocator.", result);
         }
     }
+        
+    VulkanGraphicsMemoryAllocator::~GraphicsMemoryAllocator() noexcept
+    {
+        vmaDestroyAllocator(GetVmaAllocator());
+    }
 
     [[nodiscard]] std::shared_ptr<VulkanGraphicsProvider> VulkanGraphicsMemoryAllocator::GetProvider() const noexcept
     {
