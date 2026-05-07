@@ -112,6 +112,8 @@ namespace NovelRT::Ecs
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
         _systemDependencies.emplace(id, std::move(dependencies));
+        
+        return id;
     }
 
     SystemScheduler::SystemScheduler(uint32_t maximumThreadCount) noexcept
@@ -246,7 +248,7 @@ namespace NovelRT::Ecs
         _ecsArena->execute(
             [&]()
             {
-                for (auto&& layer : _schedulingLayers)
+                for (auto& layer : _schedulingLayers)
                 {
                     std::function<void(Timing::Timestamp, Catalogue)> completion{};
 
@@ -260,7 +262,7 @@ namespace NovelRT::Ecs
                             });
                     }
 
-                    for (auto&& systemId : _systemIds)
+                    for (SystemId systemId : layer)
                     {
                         _ecsTasks->run(
                             [&, systemId]()
