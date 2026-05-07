@@ -142,4 +142,4 @@ namespace NovelRT::Ecs
     };
 }
 
-#include <NovelRT/Ecs/MiscTemplateImpls.hpp> // This has to be here due to template implementation detials - Matt J.
+#include <NovelRT/Ecs/MiscTemplateImpls.hpp> // This has to be here due to template implementation details - Matt J.
