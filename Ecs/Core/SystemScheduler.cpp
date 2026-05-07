@@ -111,7 +111,7 @@ namespace NovelRT::Ecs
         SystemId id = systemIdFactory.GetNext();
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
-        _systemDependencies.emplace(id, std::move(dependencies));
+        _systemDependencies.emplace(id, std::vector<SystemId>(dependencies.begin(), dependencies.end()));
         
         return id;
     }
