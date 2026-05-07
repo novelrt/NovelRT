@@ -10,15 +10,15 @@
 #include <NovelRT/Timing/Timestamp.hpp>
 #include <NovelRT/Utilities/Atom.hpp>
 
-#include <atomic>
 #include <functional>
 #include <memory>
+#include <span>
 #include <thread>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include <oneapi/tbb/concurrent_queue.h>
-#include <oneapi/tbb/mutex.h>
 #include <oneapi/tbb/task_arena.h>
 #include <oneapi/tbb/task_group.h>
 
@@ -28,6 +28,8 @@ namespace NovelRT::Ecs
     class ComponentCache;
     class EntityCache;
     class IEcsSystem;
+
+    using SystemId = Atom;
 
     /**
      * @brief Handles all thread and system scheduling related tasks. In a normal ECS instance, this is your root
@@ -39,12 +41,15 @@ namespace NovelRT::Ecs
         friend class Catalogue;
 
     private:
-        std::vector<Atom> _systemIds;
+        std::vector<SystemId> _systemIds;
 
         static constexpr uint32_t DefaultBlindThreadLimit = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
-        std::unordered_map<Atom, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
+        std::unordered_map<SystemId, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
+        std::unordered_map<SystemId, std::vector<SystemId>> _systemDependencies;
+        std::vector<std::vector<SystemId>> _schedulingLayers;
+        std::unordered_set<SystemId> _terminalSystemIds;
 
         EntityCache _entityCache;
         ComponentCache _componentCache;
@@ -59,8 +64,7 @@ namespace NovelRT::Ecs
 
         Timing::Timestamp _currentDelta;
 
-        std::atomic_bool _shouldShutDown;
-        bool _threadsAreSpinning;
+        bool _hasExecutedAtLeastOnce;
 
         void ScheduleUpdateWork();
 
@@ -68,6 +72,12 @@ namespace NovelRT::Ecs
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
             TCompletion&& completion) noexcept;
+
+        void RebuildSystemDependencyTreeLayers();
+
+        [[nodiscard]] SystemId RegisterSystemInternalNoTreeRebuild(
+            std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr,
+            std::span<const SystemId> dependencies);
 
     public:
         /**
@@ -99,16 +109,94 @@ namespace NovelRT::Ecs
         /**
          * @brief Registers a function to the SystemScheduler instance.
          *
+         * @warning Registering the same function twice results in undefined behaviour. Unlike IEcsSystem registrations,
+         * duplicate function registrations cannot be detected at runtime. It is the caller's responsibility to ensure
+         * each system function is only registered once.
+         *
          * @param systemUpdatePtr a valid std::function object that points to the system function in question.
+         * @param dependencies a collection of system IDs used to signal to the scheduler when to run this system in a
+         * given iteration.
+         * @return The internal ID of the registered system.
+         *
+         * @exception std::invalid_argument if any of the provided dependency IDs do not match a registered system.
+         * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
+         * executed.
          */
-        void RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr) noexcept;
+        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr,
+                                              std::span<const SystemId> dependencies);
+
+        /**
+         * @brief Registers a function to the SystemScheduler instance with no dependencies.
+         *
+         * @warning Registering the same function twice results in undefined behaviour. Unlike IEcsSystem registrations,
+         * duplicate function registrations cannot be detected at runtime. It is the caller's responsibility to ensure
+         * each system function is only registered once.
+         *
+         * @param systemUpdatePtr a valid std::function object that points to the system function in question.
+         * @return The internal ID of the registered system.
+         *
+         * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
+         * executed.
+         */
+        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr);
 
         /**
          * @brief Registers an IEcsSystem instance to the SystemScheduler instance.
          *
-         * @param targetSystem a valid std::function object that points to the system function in question.
+         * @param targetSystem a valid IEcsSystem object instance.
+         * @param dependencies a collection of system IDs used to signal to the scheduler when to run this system in a
+         * given iteration.
+         * @return The internal ID of the registered system.
+         *
+         * @exception std::invalid_argument if the provided system has already been registered, or if any of the
+         * provided dependency IDs do not match a registered system.
+         * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
+         * executed.
          */
-        void RegisterSystem(std::shared_ptr<IEcsSystem> targetSystem) noexcept;
+        [[nodiscard]] SystemId RegisterSystem(std::shared_ptr<IEcsSystem> targetSystem,
+                                              std::span<const SystemId> dependencies);
+
+        /**
+         * @brief Registers an IEcsSystem instance to the SystemScheduler instance with no dependencies.
+         *
+         * @param targetSystem a valid IEcsSystem object instance.
+         * @return The internal ID of the registered system.
+         *
+         * @exception std::invalid_argument if the provided system has already been registered.
+         * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
+         * executed.
+         */
+        [[nodiscard]] SystemId RegisterSystem(std::shared_ptr<IEcsSystem> targetSystem);
+
+        /**
+         * @brief Registers a function to the SystemScheduler instance as a terminal system. A terminal system depends
+         * on all other non-terminal systems and is always scheduled in the final layer of execution.
+         *
+         * @warning Registering the same function twice results in undefined behaviour. Unlike IEcsSystem registrations,
+         * duplicate function registrations cannot be detected at runtime. It is the caller's responsibility to ensure
+         * each system function is only registered once.
+         *
+         * @param systemUpdatePtr a valid std::function object that points to the system function in question.
+         * @return The internal ID of the registered system.
+         *
+         * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
+         * executed.
+         */
+        [[nodiscard]] SystemId RegisterSystemDependsOnAll(
+            std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr);
+
+        /**
+         * @brief Registers an IEcsSystem instance to the SystemScheduler instance as a terminal system. A terminal
+         * system depends on all other non-terminal systems and is always scheduled in the final layer of execution.
+         *
+         * @param targetSystem a valid IEcsSystem object instance.
+         * @return The internal ID of the registered system.
+         *
+         * @exception std::invalid_argument if the provided system has already been registered.
+         * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
+         * executed.
+         */
+        [[nodiscard]] SystemId RegisterSystemDependsOnAll(std::shared_ptr<IEcsSystem> targetSystem);
 
         /**
          * @brief Gets the amount of worker threads associated with this SystemScheduler.
@@ -222,11 +310,12 @@ namespace NovelRT::Ecs
         /**
          * @brief Destroys the SystemScheduler.
          *
-         * The destructor also implicitly shuts down all threads being used by this scheduler.
+         * The destructor waits for any in-flight ECS and async tasks to complete
+         * before releasing all resources.
          *
          */
         ~SystemScheduler() noexcept;
     };
 }
 
-#include <NovelRT/Ecs/MiscTemplateImpls.hpp> // This has to be here due to template implementation detials - Matt J.
+#include <NovelRT/Ecs/MiscTemplateImpls.hpp> // This has to be here due to template implementation details - Matt J.
