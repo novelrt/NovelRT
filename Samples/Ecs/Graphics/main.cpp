@@ -309,74 +309,75 @@ public:
 
 int main()
 {
-    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+    // Commenting this out to fix the issues with the build in a separate PR. - Matt J.
+    //auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
+    //    NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
-    auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
+    //auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
+    //auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
 
-    VulkanGraphicsAdapterSelector selector{};
-    auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
-    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
-    TrianglePass<VulkanGraphicsBackend> trianglePass{};
+    //VulkanGraphicsAdapterSelector selector{};
+    //auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
+    //auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
+    //TrianglePass<VulkanGraphicsBackend> trianglePass{};
 
-    SystemSchedulerBuilder builder{};
+    //SystemSchedulerBuilder builder{};
 
-    // FIXME: This is a workaround to silence Vulkan warnings about multiple threads.
-    builder.WithThreadCount(1);
+    //// FIXME: This is a workaround to silence Vulkan warnings about multiple threads.
+    //builder.WithThreadCount(1);
 
-    AddDefaults(builder);
-    AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
-        .WithGraphicsDevice(gfxDevice)
-        .WithSurfaceContext(gfxSurfaceContext)
-        .ConfigureRenderPasses(
-            [gfxDevice, &trianglePass](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
-            {
-                GraphicsRenderPassDescription passDesc{};
-                GraphicsAttachmentDescription attachmentDesc{};
+    //AddDefaults(builder);
+    //AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
+    //    .WithGraphicsDevice(gfxDevice)
+    //    .WithSurfaceContext(gfxSurfaceContext)
+    //    .ConfigureRenderPasses(
+    //        [gfxDevice, &trianglePass](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
+    //        {
+    //            GraphicsRenderPassDescription passDesc{};
+    //            GraphicsAttachmentDescription attachmentDesc{};
 
-                auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
-                if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
-                {
-                    attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
-                }
-                else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
-                {
-                    attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
-                }
-                else
-                {
-                    throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
-                }
+    //            auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
+    //            if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
+    //            {
+    //                attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
+    //            }
+    //            else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
+    //            {
+    //                attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
+    //            }
+    //            else
+    //            {
+    //                throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
+    //            }
 
-                attachmentDesc.loadOp = LoadOp::Clear;
-                attachmentDesc.storeOp = StoreOp::Store;
-                attachmentDesc.initialLayout = ImageLayout::Undefined;
-                attachmentDesc.finalLayout = ImageLayout::Present;
+    //            attachmentDesc.loadOp = LoadOp::Clear;
+    //            attachmentDesc.storeOp = StoreOp::Store;
+    //            attachmentDesc.initialLayout = ImageLayout::Undefined;
+    //            attachmentDesc.finalLayout = ImageLayout::Present;
 
-                passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                trianglePass.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                trianglePass.RenderPassId = renderPassManager.RegisterRenderPass(trianglePass.RenderPass);
-            })
-        .WithDefaultOrchestrator();
+    //            passDesc.attachmentDescriptions.push_back(attachmentDesc);
+    //            trianglePass.RenderPass = gfxDevice->CreateRenderPass(passDesc);
+    //            trianglePass.RenderPassId = renderPassManager.RegisterRenderPass(trianglePass.RenderPass);
+    //        })
+    //    .WithDefaultOrchestrator();
 
-    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>(
-        gfxProvider, gfxDevice, gfxSurfaceContext, trianglePass);
-    builder.Configure([triangleSystem](SystemScheduler& scheduler) { scheduler.RegisterSystem(triangleSystem); });
+    //auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>(
+    //    gfxProvider, gfxDevice, gfxSurfaceContext, trianglePass);
+    //builder.Configure([triangleSystem](SystemScheduler& scheduler) { scheduler.RegisterSystem(triangleSystem); });
 
-    SystemScheduler scheduler = builder.Build();
-    StepTimer timer{};
-    Event<Timestamp::duration> TimerCallback{};
+    //SystemScheduler scheduler = builder.Build();
+    //StepTimer timer{};
+    //Event<Timestamp::duration> TimerCallback{};
 
-    TimerCallback += [&timer, &scheduler](auto /* delta */) { scheduler.ExecuteIteration(timer.getTotalTime()); };
+    //TimerCallback += [&timer, &scheduler](auto /* delta */) { scheduler.ExecuteIteration(timer.getTotalTime()); };
 
-    while (!wndProvider->ShouldClose())
-    {
-        wndProvider->ProcessAllMessages();
-        timer.Tick(TimerCallback);
-    }
+    //while (!wndProvider->ShouldClose())
+    //{
+    //    wndProvider->ProcessAllMessages();
+    //    timer.Tick(TimerCallback);
+    //}
 
-    gfxDevice->WaitForIdle();
+    //gfxDevice->WaitForIdle();
 
     return 0;
 }
