@@ -190,15 +190,15 @@ namespace NovelRT::UI::ImGui
             auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
             auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
 
-            //Create Render Pass
+            // Create Render Pass
             NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
             NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
 
             auto vulkanFormat = _graphicsDevice->GetSwapchain()->GetVulkanFormat();
 
-            attachmentDesc.texelFormat = vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM ? 
-                NovelRT::Graphics::TexelFormat::R8G8B8A8_UNORM :
-                NovelRT::Graphics::TexelFormat::B8G8R8A8_UNORM;
+            attachmentDesc.texelFormat = vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM
+                                             ? NovelRT::Graphics::TexelFormat::R8G8B8A8_UNORM
+                                             : NovelRT::Graphics::TexelFormat::B8G8R8A8_UNORM;
 
             attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
             attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
@@ -244,7 +244,7 @@ namespace NovelRT::UI::ImGui
             cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
             cmdList->End();
 
-            //End Frame
+            // End Frame
             context->EndFrame();
             _graphicsDevice->QueueSubmit(cmdList);
             _graphicsDevice->WaitForIdle();
@@ -574,7 +574,7 @@ namespace NovelRT::UI::ImGui
                         auto descriptorSetData = _pipeline->CreateDescriptorSet();
                         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
                         descriptorSetData->UpdateDescriptorSetData();
-                        //graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
+                        // graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
                         _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 1});
 
                         // Bind the descriptor set
