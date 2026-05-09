@@ -9,6 +9,8 @@
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
+#include <NovelRT/Utilities/Macros.hpp>
+
 #include <limits>
 #include <memory>
 #include <utility>
@@ -105,7 +107,7 @@ namespace NovelRT::Ecs::Graphics
             cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
             cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
 
-            scheduler.RegisterSystem(_orchestrator);
+            unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
         }
     };
 
