@@ -162,10 +162,11 @@ namespace NovelRT::UI::ImGui
             auto vertImguiShader = LoadSpv("imgui_vert.spv");
             auto pixelImguiShader = LoadSpv("imgui_frag.spv");
 
-            auto context = _graphicsDevice->GetCurrentContext();
+            auto context = _graphicsDevice->CreateGraphicsContext();
 
             // Begin commands
-            std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList = context->BeginFrame();
+            context->BeginFrame();
+            std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList = context->CreateCmdList();
 
             // Define elements that make up vertex shader
             std::vector<GraphicsPipelineInputElement> elements{
@@ -189,8 +190,26 @@ namespace NovelRT::UI::ImGui
             auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
             auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
 
+            // Create Render Pass
+            NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
+            NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
+
+            auto vulkanFormat = _graphicsDevice->GetSwapchain()->GetVulkanFormat();
+
+            attachmentDesc.texelFormat = vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM
+                                             ? NovelRT::Graphics::TexelFormat::R8G8B8A8_UNORM
+                                             : NovelRT::Graphics::TexelFormat::B8G8R8A8_UNORM;
+
+            attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
+            attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
+            attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
+            attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
+
+            passDesc.attachmentDescriptions.push_back(attachmentDesc);
+            auto pass = _graphicsDevice->CreateRenderPass(passDesc);
+
             // Create pipeline
-            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, true);
+            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, pass, true);
 
             // Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
@@ -219,14 +238,16 @@ namespace NovelRT::UI::ImGui
             io.Fonts->SetTexID(0);
 
             // Send the data to GPU
+            cmdList->Begin();
             cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
             cmdList->CmdCopy(texture2D, stagingBufferRegion);
             cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->End();
 
+            // End Frame
             context->EndFrame();
-            _graphicsDevice->Signal(context);
+            _graphicsDevice->QueueSubmit(cmdList);
             _graphicsDevice->WaitForIdle();
-            context->GetFence()->Reset();
 
             _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
         }
@@ -360,7 +381,7 @@ namespace NovelRT::UI::ImGui
             }
             _drawEnabled = true;
 
-            auto graphicsContext = _graphicsDevice->GetCurrentContext();
+            auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
             auto graphicsSurface = _graphicsDevice->GetSurface();
 
             size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
@@ -372,13 +393,13 @@ namespace NovelRT::UI::ImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
             bufferCreateInfo.size = vertexSize;
             auto vertexStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{vertexStagingBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{vertexStagingBuffer, 1});
 
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto vertexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{vertexBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{vertexBuffer, 1});
 
             // Create index buffer + staging
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Default;
@@ -386,13 +407,13 @@ namespace NovelRT::UI::ImGui
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
             bufferCreateInfo.size = indexSize;
             auto indexStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{indexStagingBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{indexStagingBuffer, 1});
 
             bufferCreateInfo.bufferKind = GraphicsBufferKind::Index;
             bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
             bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
             auto indexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-            _bufferCache.emplace_back(CachedBufferObject{indexBuffer, 10});
+            _bufferCache.emplace_back(CachedBufferObject{indexBuffer, 1});
 
             // Allocate buffers
             auto vertexBufferRegion = vertexBuffer->Allocate(vertexSize, 4);
@@ -446,7 +467,7 @@ namespace NovelRT::UI::ImGui
                 return;
             auto drawData = _cachedDrawData;
 
-            auto graphicsContext = _graphicsDevice->GetCurrentContext();
+            auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
             auto graphicsSurface = _graphicsDevice->GetSurface();
             float surfaceWidth = graphicsSurface->GetWidth();
             float surfaceHeight = graphicsSurface->GetHeight();
@@ -553,8 +574,8 @@ namespace NovelRT::UI::ImGui
                         auto descriptorSetData = _pipeline->CreateDescriptorSet();
                         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
                         descriptorSetData->UpdateDescriptorSetData();
-                        graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
-                        _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 10});
+                        // graphicsContext->RegisterDescriptorSetForFrame(_pipelineSignature, descriptorSetData);
+                        _descriptorSetCache.emplace_back(CachedDescriptorSetObject{descriptorSetData, 1});
 
                         // Bind the descriptor set
                         std::array<
