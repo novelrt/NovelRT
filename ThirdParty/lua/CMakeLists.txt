@@ -53,11 +53,11 @@ foreach(file IN LISTS source_files header_files)
   )
 endforeach()
 
-add_library(lua ${source_files})
+add_library(lua STATIC ${source_files})
 add_library(lua::lua ALIAS lua)
 set_target_properties(lua
   PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
+    POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     OUTPUT_NAME lua-$<CONFIG>
     VERSION 5.5.0
 )
