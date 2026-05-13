@@ -8,13 +8,16 @@
 
 #include <format>
 
+// clang-format off
+// Lua includes operate in this order.
 #include <lua.h>
 #include <lauxlib.h>
+// clang-format on
 
 NovelRT::Scripting::DecisionTreeStatus::DecisionTreeStatus(lua_State* L, const std::shared_ptr<ScriptManager>& manager)
-    : _state(L),
-      _manager(std::move(manager))
-{ }
+    : _state(L), _manager(std::move(manager))
+{
+}
 
 auto NovelRT::Scripting::DecisionTreeStatus::DoContinue(int nargs) -> std::unique_ptr<DecisionTreeStatus>
 {
@@ -31,7 +34,8 @@ auto NovelRT::Scripting::DecisionTreeStatus::DoContinue(int nargs) -> std::uniqu
         // Lua allows pushing non-string errors, so we check first.
         if (!lua_isstring(_state, -1))
         {
-            throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield (returned {})", status));
+            throw NovelRT::Exceptions::InvalidOperationException(
+                std::format("Internal error - decision tree function did not yield (returned {})", status));
         }
 
         size_t length;
@@ -41,12 +45,14 @@ auto NovelRT::Scripting::DecisionTreeStatus::DoContinue(int nargs) -> std::uniqu
 
     // Now that we're for sure a yield state, we need to make sure it did actually return a status.
     if (nresults != 1)
-        throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield any results (returned {} results)", nresults));
+        throw NovelRT::Exceptions::InvalidOperationException(std::format(
+            "Internal error - decision tree function did not yield any results (returned {} results)", nresults));
 
     DecisionTreeStatus* data = static_cast<DecisionTreeStatus*>(lua_touserdata(_state, -1));
     if (data == nullptr)
-        throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield a status (returned {})",
-                                                                         lua_typename(_state, lua_type(_state, -1))));
+        throw NovelRT::Exceptions::InvalidOperationException(
+            std::format("Internal error - decision tree function did not yield a status (returned {})",
+                        lua_typename(_state, lua_type(_state, -1))));
 
     return std::unique_ptr<DecisionTreeStatus>(data);
 }

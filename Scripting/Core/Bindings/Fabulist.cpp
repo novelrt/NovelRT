@@ -10,11 +10,10 @@ int CreateChoice(lua_State* L);
 void RegisterSpeaker(lua_State* L);
 void RegisterChoice(lua_State* L);
 
-luaL_Reg DefaultFunctions[]
-{
+luaL_Reg DefaultFunctions[]{
     {"speaker", CreateSpeaker},
     {"choice", CreateChoice},
-    {nullptr, nullptr}
+    {nullptr, nullptr},
 };
 
 int NovelRT::Scripting::Bindings::RegisterFabulist(lua_State* L)

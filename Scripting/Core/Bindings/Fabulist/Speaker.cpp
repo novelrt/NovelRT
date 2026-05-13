@@ -19,7 +19,7 @@ int CreateSpeaker(lua_State* L)
     luaL_setmetatable(L, "Speaker");
 
     // Because we're creating objects in memory we don't own, we need to use placement new.
-    new(buffer) SpeakerInfo{name};
+    new (buffer) SpeakerInfo{name};
 
     lua_setglobal(L, name);
 
@@ -54,11 +54,10 @@ int ProduceSpeakerLine(lua_State* L)
     return lua_yieldk(L, 1, 0, ProduceSpeakerLine_Cont);
 }
 
-luaL_Reg SpeakerFuncs[]
-{
+luaL_Reg SpeakerFuncs[]{
     {"__call", ProduceSpeakerLine},
     {"__gc", CleanupSpeaker},
-    {nullptr, nullptr}
+    {nullptr, nullptr},
 };
 
 void RegisterSpeaker(lua_State* L)

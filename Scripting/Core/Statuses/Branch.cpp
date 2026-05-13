@@ -6,17 +6,19 @@
 
 #include <format>
 
+// clang-format off
+// Lua includes operate in this order.
 #include <lua.h>
 #include <lauxlib.h>
+// clang-format on
 
 NovelRT::Scripting::Statuses::Branch::Branch(const std::string& prompt,
                                              const std::vector<std::string>& options,
                                              lua_State* L,
                                              const std::shared_ptr<ScriptManager>& manager)
-    : DecisionTreeStatus(L, std::move(manager)),
-    _prompt(prompt),
-    _options(std::move(options))
-{ }
+    : DecisionTreeStatus(L, std::move(manager)), _prompt(prompt), _options(std::move(options))
+{
+}
 
 const std::string NovelRT::Scripting::Statuses::Branch::GetPrompt() const
 {
@@ -31,7 +33,8 @@ std::span<const std::string> NovelRT::Scripting::Statuses::Branch::GetOptions() 
 auto NovelRT::Scripting::Statuses::Branch::Continue(size_t index) -> std::unique_ptr<DecisionTreeStatus>
 {
     if (_options.size() <= index)
-        throw NovelRT::Exceptions::InvalidOperationException(std::format("Index {} was outside the range of the array", index));
+        throw NovelRT::Exceptions::InvalidOperationException(
+            std::format("Index {} was outside the range of the array", index));
 
     lua_pushinteger(_state, index);
     return DoContinue(1);

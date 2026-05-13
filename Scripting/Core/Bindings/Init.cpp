@@ -31,12 +31,11 @@ lua_State* NovelRT::Scripting::Bindings::CreateState()
     std::random_device r;
     lua_State* L = lua_newstate(AllocMemory, nullptr, r());
     // TODO: probably should handle this
-    if (L == nullptr) return nullptr;
+    if (L == nullptr)
+        return nullptr;
 
     lua_atpanic(L, Panic);
-    luaL_openselectedlibs(L,
-                          LUA_GLIBK | LUA_STRLIBK | LUA_UTF8LIBK | LUA_TABLIBK | LUA_MATHLIBK,
-                          0);
+    luaL_openselectedlibs(L, LUA_GLIBK | LUA_STRLIBK | LUA_UTF8LIBK | LUA_TABLIBK | LUA_MATHLIBK, 0);
     luaL_requiref(L, "fabulist", RegisterFabulist, false);
 
     lua_pushglobaltable(L);

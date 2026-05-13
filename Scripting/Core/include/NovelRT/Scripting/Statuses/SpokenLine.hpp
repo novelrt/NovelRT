@@ -3,11 +3,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Scripting/ScriptManager.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
+#include <NovelRT/Scripting/ScriptManager.hpp>
 
-#include <string>
 #include <memory>
+#include <string>
 
 namespace NovelRT::Scripting::Statuses
 {

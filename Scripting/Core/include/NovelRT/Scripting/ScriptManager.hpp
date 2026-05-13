@@ -15,7 +15,8 @@ namespace NovelRT::Scripting
     class ScriptManager : public std::enable_shared_from_this<ScriptManager>
     {
     private:
-        struct CloseState {
+        struct CloseState
+        {
             void operator()(lua_State*);
         };
 

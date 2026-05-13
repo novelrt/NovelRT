@@ -22,7 +22,7 @@ int CreateChoice(lua_State* L)
     luaL_setmetatable(L, "Choice");
 
     // Because we're creating objects in memory we don't own, we need to use placement new.
-    new(buffer) ChoiceInfo{prompt};
+    new (buffer) ChoiceInfo{prompt};
 
     return 1;
 }
@@ -52,7 +52,8 @@ int ProduceChoices(lua_State* L)
         int type = lua_rawgeti(L, 2, n + 1);
         if (type != LUA_TSTRING)
         {
-            const char* msg = lua_pushfstring(L, "bad table index #%d (string expected, got %s)", n + 1, lua_typename(L, type));
+            const char* msg =
+                lua_pushfstring(L, "bad table index #%d (string expected, got %s)", n + 1, lua_typename(L, type));
             return luaL_argerror(L, 2, msg);
         }
 
@@ -71,11 +72,10 @@ int ProduceChoices(lua_State* L)
     return lua_yieldk(L, 1, 0, ProduceChoices_Cont);
 }
 
-luaL_Reg ChoiceFuncs[]
-{
+luaL_Reg ChoiceFuncs[]{
     {"__call", ProduceChoices},
     {"__gc", CleanupChoice},
-    {nullptr, nullptr}
+    {nullptr, nullptr},
 };
 
 void RegisterChoice(lua_State* L)

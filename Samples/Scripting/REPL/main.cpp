@@ -4,11 +4,11 @@
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
-//#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
+// #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
-#include <NovelRT/Scripting/ScriptManager.hpp>
 #include <NovelRT/Scripting/DecisionTree.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
+#include <NovelRT/Scripting/ScriptManager.hpp>
 #include <NovelRT/Scripting/Statuses/Branch.hpp>
 #include <NovelRT/Scripting/Statuses/SpokenLine.hpp>
 
@@ -21,7 +21,7 @@
 #include <iostream>
 #include <vector>
 
-//using namespace NovelRT::ResourceManagement::Desktop;
+// using namespace NovelRT::ResourceManagement::Desktop;
 using namespace NovelRT::Scripting;
 
 std::vector<uint8_t> LoadData(std::filesystem::path filePath)
@@ -44,7 +44,7 @@ std::vector<uint8_t> LoadData(std::filesystem::path filePath)
 
 int main()
 {
-    //std::shared_ptr<DesktopResourceLoader> resourceLoader = std::make_shared<DesktopResourceLoader>();
+    // std::shared_ptr<DesktopResourceLoader> resourceLoader = std::make_shared<DesktopResourceLoader>();
     std::shared_ptr<ScriptManager> manager = std::make_shared<ScriptManager>();
 
     std::vector<uint8_t> data = LoadData(NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "sample.lua");
@@ -64,10 +64,8 @@ int main()
         else if (auto* branch = dynamic_cast<NovelRT::Scripting::Statuses::Branch*>(state.get()))
         {
             std::cout << branch->GetPrompt() << '\n';
-            std::for_each(branch->GetOptions().begin(), branch->GetOptions().end(), [n = 0](auto& it) mutable
-            {
-                std::cout << ++n << ". " << it << '\n';
-            });
+            std::for_each(branch->GetOptions().begin(), branch->GetOptions().end(),
+                          [n = 0](auto& it) mutable { std::cout << ++n << ". " << it << '\n'; });
 
             std::cout << "> ";
             size_t index;
@@ -78,7 +76,8 @@ int main()
         }
         else
         {
-            throw NovelRT::Exceptions::InvalidOperationException(std::format("Unknown status result {}", typeid(state.get()).name()));
+            throw NovelRT::Exceptions::InvalidOperationException(
+                std::format("Unknown status result {}", typeid(state.get()).name()));
         }
     }
 

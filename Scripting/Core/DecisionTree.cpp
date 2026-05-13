@@ -1,22 +1,25 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 #include <NovelRT/Scripting/DecisionTree.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 #include <NovelRT/Scripting/ScriptManager.hpp>
-#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
 #include <format>
 
+// clang-format off
+// Lua includes operate in this order.
 #include <lua.h>
 #include <lauxlib.h>
+// clang-format on
 
 namespace NovelRT::Scripting
 {
     DecisionTree::DecisionTree(const std::shared_ptr<ScriptManager>& manager)
-    : _manager(std::move(manager)),
-      _reference(luaL_ref(_manager->GetLuaState(), LUA_REGISTRYINDEX))
-    { }
+        : _manager(std::move(manager)), _reference(luaL_ref(_manager->GetLuaState(), LUA_REGISTRYINDEX))
+    {
+    }
 
     DecisionTree::~DecisionTree()
     {
@@ -27,7 +30,8 @@ namespace NovelRT::Scripting
     {
         int type = lua_rawgeti(_manager->GetLuaState(), LUA_REGISTRYINDEX, _reference);
         if (type != LUA_TFUNCTION)
-            throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree type was not a function (was {})", type));
+            throw NovelRT::Exceptions::InvalidOperationException(
+                std::format("Internal error - decision tree type was not a function (was {})", type));
 
         // It's easier to just pop and re-fetch from the registry
         lua_pop(_manager->GetLuaState(), 1);
@@ -43,7 +47,8 @@ namespace NovelRT::Scripting
         {
             if (!lua_isstring(L, -1))
             {
-                throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield (returned {})", status));
+                throw NovelRT::Exceptions::InvalidOperationException(
+                    std::format("Internal error - decision tree function did not yield (returned {})", status));
             }
 
             size_t length;
@@ -52,12 +57,14 @@ namespace NovelRT::Scripting
         }
 
         if (nresults != 1)
-            throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield any results (returned {} results)", nresults));
+            throw NovelRT::Exceptions::InvalidOperationException(std::format(
+                "Internal error - decision tree function did not yield any results (returned {} results)", nresults));
 
         DecisionTreeStatus* data = static_cast<DecisionTreeStatus*>(lua_touserdata(L, -1));
         if (data == nullptr)
-            throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield a status (returned {})", lua_typename(L, lua_type(L, -1))));
-
+            throw NovelRT::Exceptions::InvalidOperationException(
+                std::format("Internal error - decision tree function did not yield a status (returned {})",
+                            lua_typename(L, lua_type(L, -1))));
 
         return std::unique_ptr<DecisionTreeStatus>(data);
     }
