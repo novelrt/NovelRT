@@ -36,9 +36,9 @@ namespace NovelRT::Scripting
 
         int nresults;
         int status = lua_resume(L, _manager->GetLuaState(), 0, &nresults);
-        if (status == LUA_OK)
-            return nullptr;
 
+        // When starting a decision tree, it's not valid for it to immediately terminate.
+        // Otherwise, the remainder of this logic is equivalent to DecisionTreeStatus::DoContinue
         if (status != LUA_YIELD)
         {
             if (!lua_isstring(L, -1))
@@ -54,11 +54,11 @@ namespace NovelRT::Scripting
         if (nresults != 1)
             throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield any results (returned {} results)", nresults));
 
-        void* data = lua_touserdata(L, -1);
+        DecisionTreeStatus* data = static_cast<DecisionTreeStatus*>(lua_touserdata(L, -1));
         if (data == nullptr)
             throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield a status (returned {})", lua_typename(L, lua_type(L, -1))));
 
 
-        return std::unique_ptr<DecisionTreeStatus>(static_cast<DecisionTreeStatus*>(data));
+        return std::unique_ptr<DecisionTreeStatus>(data);
     }
 }
