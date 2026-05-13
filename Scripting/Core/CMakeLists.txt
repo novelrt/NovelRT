@@ -9,7 +9,9 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Scripting::Core
     PRIVATE
       Bindings/Init.cpp
       Bindings/Fabulist.cpp
+      Bindings/Fabulist/Choice.cpp
       Bindings/Fabulist/Speaker.cpp
+      Statuses/Branch.cpp
       Statuses/SpokenLine.cpp
       Bindings.hpp
       DecisionTree.cpp
@@ -18,6 +20,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Scripting::Core
 
   HEADERS
     PUBLIC
+      include/NovelRT/Scripting/Statuses/Branch.hpp
       include/NovelRT/Scripting/Statuses/SpokenLine.hpp
       include/NovelRT/Scripting/ScriptManager.hpp
       include/NovelRT/Scripting/DecisionTree.hpp

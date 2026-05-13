@@ -36,8 +36,21 @@ namespace NovelRT::Scripting
 
         int nresults;
         int status = lua_resume(L, _manager->GetLuaState(), 0, &nresults);
+        if (status == LUA_OK)
+            return nullptr;
+
         if (status != LUA_YIELD)
-            throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield (returned {})", status));
+        {
+            if (!lua_isstring(L, -1))
+            {
+                throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield (returned {})", status));
+            }
+
+            size_t length;
+            const char* msg = luaL_tolstring(L, -1, &length);
+            throw NovelRT::Exceptions::InvalidOperationException(std::string(msg, length));
+        }
+
         if (nresults != 1)
             throw NovelRT::Exceptions::InvalidOperationException(std::format("Internal error - decision tree function did not yield any results (returned {} results)", nresults));
 

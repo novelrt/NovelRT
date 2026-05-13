@@ -2,37 +2,42 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
-#include <NovelRT/Scripting/Statuses/SpokenLine.hpp>
+#include <NovelRT/Scripting/Statuses/Branch.hpp>
 
 #include <format>
 
 #include <lua.h>
 #include <lauxlib.h>
 
-NovelRT::Scripting::Statuses::SpokenLine::SpokenLine(const std::string& speaker,
-                                                     const std::string& text,
-                                                     lua_State* L,
-                                                     const std::shared_ptr<ScriptManager>& manager)
+NovelRT::Scripting::Statuses::Branch::Branch(const std::string& prompt,
+                                             const std::vector<std::string>& options,
+                                             lua_State* L,
+                                             const std::shared_ptr<ScriptManager>& manager)
     : DecisionTreeStatus(L, std::move(manager)),
-      _speaker(std::move(speaker)),
-      _text(std::move(text))
+    _prompt(prompt),
+    _options(std::move(options))
 { }
 
-const std::string NovelRT::Scripting::Statuses::SpokenLine::GetSpeaker() const
+const std::string NovelRT::Scripting::Statuses::Branch::GetPrompt() const
 {
-    return _speaker;
+    return _prompt;
 }
 
-const std::string NovelRT::Scripting::Statuses::SpokenLine::GetText() const
+std::span<const std::string> NovelRT::Scripting::Statuses::Branch::GetOptions() const
 {
-    return _text;
+    return _options;
 }
 
-auto NovelRT::Scripting::Statuses::SpokenLine::Continue() -> std::unique_ptr<DecisionTreeStatus>
+auto NovelRT::Scripting::Statuses::Branch::Continue(size_t index) -> std::unique_ptr<DecisionTreeStatus>
 {
+    if (_options.size() <= index)
+        throw NovelRT::Exceptions::InvalidOperationException(std::format("Index {} was outside the range of the array", index));
+
+    lua_pushinteger(_state, index);
+
     // TODO: it may be worth extracting this into a common logic snippet somewhere...
     int nresults;
-    int status = lua_resume(_state, _manager->GetLuaState(), 0, &nresults);
+    int status = lua_resume(_state, _manager->GetLuaState(), 1, &nresults);
     if (status == LUA_OK)
         return nullptr;
 

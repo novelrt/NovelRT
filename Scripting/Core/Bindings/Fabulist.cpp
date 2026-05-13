@@ -6,11 +6,14 @@
 #include "../Bindings.hpp"
 
 int CreateSpeaker(lua_State* L);
+int CreateChoice(lua_State* L);
 void RegisterSpeaker(lua_State* L);
+void RegisterChoice(lua_State* L);
 
 luaL_Reg DefaultFunctions[]
 {
     {"speaker", CreateSpeaker},
+    {"choice", CreateChoice},
     {nullptr, nullptr}
 };
 
@@ -21,8 +24,7 @@ int NovelRT::Scripting::Bindings::RegisterFabulist(lua_State* L)
     lua_pop(L, 1);
 
     RegisterSpeaker(L);
+    RegisterChoice(L);
 
     return 1;
 }
-
-#include "Fabulist/Speaker.cpp"

@@ -6,6 +6,9 @@
 #include <NovelRT/Scripting/ScriptManager.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 
+#include <string>
+#include <memory>
+
 namespace NovelRT::Scripting::Statuses
 {
     class SpokenLine final : public DecisionTreeStatus
@@ -26,8 +29,8 @@ namespace NovelRT::Scripting::Statuses
         SpokenLine& operator=(const SpokenLine&) = delete;
         SpokenLine& operator=(SpokenLine&&) = default;
 
-        std::string GetSpeaker();
-        std::string GetText();
+        const std::string GetSpeaker() const;
+        const std::string GetText() const;
 
         std::unique_ptr<DecisionTreeStatus> Continue();
     };

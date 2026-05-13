@@ -2,17 +2,21 @@
 // for more information.
 
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
 //#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
 #include <NovelRT/Scripting/ScriptManager.hpp>
 #include <NovelRT/Scripting/DecisionTree.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
+#include <NovelRT/Scripting/Statuses/Branch.hpp>
 #include <NovelRT/Scripting/Statuses/SpokenLine.hpp>
 
 #include <NovelRT/Utilities/Paths.hpp>
 
+#include <algorithm>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -51,11 +55,30 @@ int main()
     auto state = tree->Begin();
     while (state != nullptr)
     {
-        if (auto* spokenLine = static_cast<NovelRT::Scripting::Statuses::SpokenLine*>(state.get()))
+        if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(state.get()))
         {
             std::cout << spokenLine->GetSpeaker() << ": " << spokenLine->GetText();
             std::cin.get();
             state = spokenLine->Continue();
+        }
+        else if (auto* branch = dynamic_cast<NovelRT::Scripting::Statuses::Branch*>(state.get()))
+        {
+            std::cout << branch->GetPrompt() << '\n';
+            std::for_each(branch->GetOptions().begin(), branch->GetOptions().end(), [n = 0](auto& it) mutable
+            {
+                std::cout << ++n << ". " << it << '\n';
+            });
+
+            std::cout << "> ";
+            size_t index;
+            std::cin >> index;
+            std::cin.get();
+
+            state = branch->Continue(index - 1);
+        }
+        else
+        {
+            throw NovelRT::Exceptions::InvalidOperationException(std::format("Unknown status result {}", typeid(state.get()).name()));
         }
     }
 
