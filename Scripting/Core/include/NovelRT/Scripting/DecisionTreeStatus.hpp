@@ -17,6 +17,8 @@ namespace NovelRT::Scripting
         lua_State* _state;
         std::shared_ptr<ScriptManager> _manager;
 
+        std::unique_ptr<DecisionTreeStatus> DoContinue(int nargs);
+
     public:
         explicit DecisionTreeStatus(lua_State* L, const std::shared_ptr<ScriptManager>& manager);
         virtual ~DecisionTreeStatus() = default;
