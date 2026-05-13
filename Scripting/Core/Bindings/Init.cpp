@@ -23,7 +23,6 @@ int Panic(lua_State*)
 {
     // TODO: the error object is on the top of the stack, we should log it.
     std::terminate();
-    return 0;
 }
 
 lua_State* NovelRT::Scripting::Bindings::CreateState()
