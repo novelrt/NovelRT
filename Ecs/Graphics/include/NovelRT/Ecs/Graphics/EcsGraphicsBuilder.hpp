@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>

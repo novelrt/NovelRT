@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <oneapi/tbb/mutex.h>
+
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
@@ -39,10 +41,13 @@ namespace NovelRT::Graphics
 
         VkQueue _graphicsQueue;
         VkQueue _presentQueue;
+        VkQueue _transferQueue;
 
         NovelRT::Utilities::Lazy<std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>> _vulkanSwapchain;
 
         Vulkan::QueueFamilyIndices _indicesData;
+
+        std::unique_ptr<tbb::mutex> _queueSubmitMutex;
 
         Threading::VolatileState _state;
 
@@ -97,10 +102,21 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame();
-        void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
+
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToSignal);
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToWait,
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+            NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>,
+                                               uint64_t>> semaphoresToSignal);
 
         void WaitForIdle();
 
+        [[nodiscard]] VkQueue GetVulkanTransferQueue() const noexcept;
         [[nodiscard]] VkQueue GetVulkanPresentQueue() const noexcept;
         [[nodiscard]] VkQueue GetVulkanGraphicsQueue() const noexcept;
         [[nodiscard]] VkDevice GetVulkanDevice() const;

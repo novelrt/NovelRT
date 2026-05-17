@@ -6,6 +6,7 @@
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
 #include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
+#include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
@@ -19,146 +20,336 @@
 #include <NovelRT/Graphics/GraphicsContext.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
+#include <NovelRT/Graphics/GraphicsSemaphore.hpp>
 
 #include <NovelRT/Graphics/NullGraphicsBackend.hpp> // God is dead and so are my preferred editors - Matt J.
 
+#include <NovelRT/Maths/GeoMatrix4x4F.hpp>
 #include <NovelRT/Maths/GeoVector3F.hpp>
+
+#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
 namespace NovelRT::Ecs::Graphics
 {
     template<typename TGraphicsBackend>
     class SpriteRendererSystem : public NovelRT::Ecs::IEcsSystem
     {
-    private:
-        std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
-        std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
-        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> _vertexBuffer;
-        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> _indexBuffer;
-        std::shared_ptr<
-            NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
-            _vertexRegion;
-        std::shared_ptr<
-            NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
-            _indexRegion;
-
-        struct TexturedVertex
+        struct SpritePushConstant
         {
-            NovelRT::Maths::GeoVector3F Position;
-            NovelRT::Maths::GeoVector2F UV;
+            Maths::GeoMatrix4x4F model;
+            float tintR;
+            float tintG;
+            float tintB;
+            float tintA;
         };
 
-    public:
-        SpriteRendererSystem(
-            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
-            std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator)
-            : _graphicsDevice(std::move(graphicsDevice)),
-              _memoryAllocator(std::move(memoryAllocator)),
-              _vertexBuffer(nullptr),
-              _indexBuffer(nullptr),
-              _vertexRegion(nullptr),
-              _indexRegion(nullptr)
+        struct SpriteVertexShaderInputs
         {
-            // NovelRT::Graphics::GraphicsBufferCreateInfo stagingCreateInfo{};
-            // stagingCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            // stagingCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-            // stagingCreateInfo.size = 64 * 1024;
+            Maths::GeoVector3F Position;
+            Maths::GeoVector2F UV;
+        };
 
-            // auto stagingBuffer = _memoryAllocator->CreateBuffer(stagingCreateInfo);
+        struct SpritePass
+        {
+            std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> RenderPass;
+            Components::RenderPassId RenderPassId;
+        };
 
-            // NovelRT::Graphics::GraphicsBufferCreateInfo vertexReadOnlyCreateInfo{};
-            // vertexReadOnlyCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Vertex;
-            // vertexReadOnlyCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
-            // vertexReadOnlyCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            // vertexReadOnlyCreateInfo.size = 64 * 1024;
+    private:
+        struct PendingStagingBuffer
+        {
+            uint64_t uploadIndex;
+            std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> stagingBuffer;
+        };
 
-            //_vertexBuffer = _memoryAllocator->CreateBuffer(vertexReadOnlyCreateInfo);
+        std::shared_ptr<ResourceManagement::Desktop::DesktopResourceLoader> _resourceLoader; // TODO: FUCK.
+        std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
+        std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
 
-            // NovelRT::Graphics::GraphicsBufferCreateInfo indexReadOnlyCreateInfo{};
-            // vertexReadOnlyCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Index;
-            // vertexReadOnlyCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
-            // vertexReadOnlyCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            // vertexReadOnlyCreateInfo.size = 64 * 1024;
+        std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> _vertexBuffer;
+        std::shared_ptr<
+            NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>>
+            _vertexBufferRegion;
+        std::shared_ptr<NovelRT::Graphics::GraphicsPipeline<TGraphicsBackend>> _pipeline;
 
-            //_indexBuffer = _memoryAllocator->CreateBuffer(indexReadOnlyCreateInfo);
+        SpritePass _renderPass;
 
-            //_vertexRegion = _vertexBuffer->Allocate(sizeof(TexturedVertex) * 4, 16);
-            // auto vertexStagingRegion = stagingBuffer->Allocate(sizeof(TexturedVertex) * 4, 16);
-            //_indexRegion = _indexBuffer->Allocate(sizeof(uint16_t) * 6, 16);
-            // auto indexStagingRegion = stagingBuffer->Allocate(sizeof(uint16_t) * 6, 16);
+        std::unordered_map<
+            uuids::uuid,
+            std::shared_ptr<
+                NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsTexture, TGraphicsBackend>>>
+            _textureCache;
+        std::unordered_set<uuids::uuid> _pendingLoads;
 
-            // auto pVertexRegion = stagingBuffer->template Map<TexturedVertex>(_vertexRegion);
+        std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _uploadSemaphore;
+        uint64_t _submittedUploads{0};
+        std::vector<PendingStagingBuffer> _pendingStagingBuffers;
 
-            // pVertexRegion[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, 1, 0),
-            // NovelRT::Maths::GeoVector2F(0.0f, 0.0f)}; pVertexRegion[1] =
-            // TexturedVertex{NovelRT::Maths::GeoVector3F(1, 1, 0), NovelRT::Maths::GeoVector2F(1.0f, 0.0f)};
-            // pVertexRegion[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0),
-            // NovelRT::Maths::GeoVector2F(1.0f, 1.0f)}; pVertexRegion[3] =
-            // TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+        void HandleNewSpriteTextures(Catalogue catalogue)
+        {
+            auto lastCompletedUpload = _uploadSemaphore->GetValue();
+            if (lastCompletedUpload > 0)
+                lastCompletedUpload -= 1;
 
-            // stagingBuffer->UnmapAndWrite(_vertexRegion);
+            _pendingStagingBuffers.erase(std::remove_if(_pendingStagingBuffers.begin(), _pendingStagingBuffers.end(),
+                                                        [lastCompletedUpload](const auto& pending)
+                                                        { return pending.uploadIndex <= lastCompletedUpload; }),
+                                         _pendingStagingBuffers.end());
 
-            // auto pIndexRegion = stagingBuffer->template Map<uint16_t>(_indexRegion);
+            auto spriteView = catalogue.GetComponentView<Components::Sprite>();
 
-            //// Clockwise order
-            // pIndexRegion[0] = 0;
-            // pIndexRegion[1] = 1;
-            // pIndexRegion[2] = 2;
-            // pIndexRegion[3] = 0;
-            // pIndexRegion[4] = 2;
-            // pIndexRegion[5] = 3;
+            for (auto [entityId, sprite] : spriteView)
+            {
+                if (_textureCache.find(sprite.assetId) != _textureCache.end() ||
+                    _pendingLoads.find(sprite.assetId) != _pendingLoads.end())
+                {
+                    continue;
+                }
 
-            // stagingBuffer->UnmapAndWrite(_indexRegion);
+                _pendingLoads.insert(sprite.assetId);
 
-            // auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+                catalogue.ScheduleWithCompletion(
+                    [this, assetId = sprite.assetId]() { return _resourceLoader->LoadTexture(assetId); },
+                    [this, assetId = sprite.assetId](Timing::Timestamp /*delta*/, Catalogue completionCatalogue,
+                                                     ResourceManagement::TextureMetadata textureMetadata)
+                    {
+                        NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
+                        bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
+                        bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
+                        bufferCreateInfo.size = static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4;
 
-            // auto cmdList = gfxContext->CreateCmdList({});
+                        auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+                        auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
+                                                                                             textureMetadata.height);
+                        auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+                        auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
-            // cmdList->Begin();
-            // cmdList->CmdCopy(_vertexRegion, vertexStagingRegion);
-            // cmdList->CmdCopy(_indexRegion, indexStagingRegion);
-            // cmdList->End();
+                        auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
+                        std::memcpy(pTextureData, textureMetadata.data.data(), textureMetadata.data.size());
+                        textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
-            //_graphicsDevice->QueueSubmit(cmdList);
-            //_graphicsDevice->WaitForIdle();
+                        auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+                        auto uploadCmdList = gfxContext->CreateCmdList();
+                        uploadCmdList->Begin();
+                        uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+                        uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+                        uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+                        uploadCmdList->End();
+
+                        _graphicsDevice->QueueSubmit(uploadCmdList, {_uploadSemaphore, ++_submittedUploads});
+
+                        Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{};
+                        newUploadTracker.semaphore =
+                            new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
+                                _uploadSemaphore);
+                        newUploadTracker = _submittedUploads;
+
+                        completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
+                            .AddComponent(newUploadTracker);
+
+                        _pendingStagingBuffers.push_back({_submittedUploads, textureStagingBuffer});
+                        _textureCache[assetId] = texture2DRegion;
+                        _pendingLoads.erase(assetId);
+                    });
+            }
         }
 
-        void Update(Timing::Timestamp /*delta*/, Catalogue catalogue) override
+        void SubmitToOrchestrator(Catalogue& catalogue)
         {
-            auto [sprites, renderPasses, commandLists] =
-                catalogue.GetComponentViews<Components::Sprite, Components::RenderPass,
-                                            Components::BuiltCommandList<TGraphicsBackend>>();
+            float surfaceWidth = _surfaceContext->GetSurface()->GetWidth();
+            float surfaceHeight = _surfaceContext->GetSurface()->GetHeight();
 
-            auto context = _graphicsDevice->CreateGraphicsContext();
+            auto [renderPassView, cmdListView, spriteView,
+                  transformView] = catalogue.GetComponentViews Components::RenderPass<TGraphicsBackend>,
+                  Components::BuiltCommandList<TGraphicsBackend>, Components::Sprite, Components::TransformComponent>();
 
-            for (auto [entity, sprite] : sprites)
+            for (auto [entityId, sprite] : spriteView)
             {
-                auto cmdList = context->CreateCmdList({});
+                if (_textureCache.find(sprite.assetId) == _textureCache.end())
+                {
+                    continue;
+                }
 
-                cmdList->Begin();
-                // rendering la la la
-                cmdList->CmdBindPipeline(nullptr); // TODO: sort this
+                auto& textureRegion = _textureCache.at(sprite.assetId);
+
+                TransformComponent transform{};
+                transformView.TryGetComponent(entityId, transform);
+
+                auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
+                model.Translate(Maths::GeoVector3F(transform.position.x, transform.position.y, 0.0f));
+                model.Rotate(transform.rotationInRadians);
+                model.Scale(Maths::GeoVector2F(transform.scale.x, transform.scale.y));
+
+                SpritePushConstant pushConstant{};
+                pushConstant.model = model;
+                pushConstant.tintR = sprite.tint.getRScalar();
+                pushConstant.tintG = sprite.tint.getGScalar();
+                pushConstant.tintB = sprite.tint.getBScalar();
+                pushConstant.tintA = sprite.tint.getAScalar();
+
+                auto context = _graphicsDevice->CreateGraphicsContext();
+                auto currentCmdList = context->CreateCmdList(
+                    std::optional<SecondaryCmdListInfo<TGraphicsBackend>>({_renderPass.RenderPass, 0}));
+
+                currentCmdList->Begin();
+
+                ViewportInfo viewportInfoStruct{};
+                viewportInfoStruct.x = 0;
+                viewportInfoStruct.y = surfaceHeight;
+                viewportInfoStruct.width = surfaceWidth;
+                viewportInfoStruct.height = -surfaceHeight;
+                viewportInfoStruct.minDepth = 0.0f;
+                viewportInfoStruct.maxDepth = 1.0f;
+
+                currentCmdList->CmdSetViewport(viewportInfoStruct);
+                currentCmdList->CmdSetScissor(Maths::GeoVector2F::Zero(),
+                                              Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+                currentCmdList->CmdBindPipeline(_pipeline);
 
                 std::array<
                     std::reference_wrapper<const std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>>>,
                     1>
                     buffers{std::cref(_vertexBuffer)};
+                std::array<size_t, 1> offsets{_vertexBufferRegion->GetOffset()};
+                currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
 
-                std::array<size_t, 1> offsets{_vertexRegion->GetOffset()};
+                std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<
+                    NovelRT::Graphics::GraphicsResource, TGraphicsBackend>>>
+                    inputRegions{textureRegion};
+                auto descriptorSet = _pipeline->CreateDescriptorSet();
+                descriptorSet->AddMemoryRegionsToInputs(inputRegions);
+                descriptorSet->UpdateDescriptorSetData();
 
-                cmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-                cmdList->CmdBindIndexBuffer(_indexRegion, NovelRT::Graphics::IndexType::UInt16);
-                // cmdList->CmdBindDescriptorSets(nullptr); // TODO: sort this
-                cmdList->CmdDrawIndexed(6, 1, 0, 0, 0);
-                cmdList->End();
+                std::array<std::reference_wrapper<
+                               const std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>>,
+                           1>
+                    descriptorData{std::cref(descriptorSet)};
+                currentCmdList->CmdBindDescriptorSets(descriptorData);
 
-                Components::BuiltCommandList<TGraphicsBackend> temp{
-                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>};
+                currentCmdList->CmdPushConstants(NovelRT::Utilities::Span<uint8_t>(
+                    reinterpret_cast<uint8_t*>(&pushConstant), sizeof(SpritePushConstant)));
 
-                *(temp.commandList) = cmdList;
-                renderPasses.AddComponent(entity, {1});
-                commandLists.AddComponent(entity, temp);
+                currentCmdList->CmdDraw(6, 1, 0, 0);
+
+                currentCmdList->End();
+
+                Components::RenderPass<TGraphicsBackend> passComponent{};
+                passComponent.renderPassIndex = _renderPass.RenderPassId;
+                passComponent.descriptorSet =
+                    new std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>(descriptorSet);
+
+                Components::BuiltCommandList<TGraphicsBackend> cmdListComp{};
+                cmdListComp.commandList =
+                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(currentCmdList);
+
+                if (!renderPassView.HasComponent(entityId))
+                {
+                    renderPassView.AddComponent(entityId, passComponent);
+                    cmdListView.AddComponent(entityId, cmdListComp);
+                }
+                else
+                {
+                    renderPassView.PushComponentUpdateInstruction(entityId, passComponent);
+                    cmdListView.PushComponentUpdateInstruction(entityId, cmdListComp);
+                }
             }
+        }
+
+    public:
+        SpriteRendererSystem(
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> device,
+            SpritePass renderPass,
+            std::shared_ptr<ResourceManagement::Desktop::DesktopResourceLoader> resourceLoader,
+            std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator)
+            : _resourceLoader(std::move(resourceLoader)),
+              _graphicsDevice(std::move(device)),
+              _memoryAllocator(std::move(memoryAllocator)),
+              _renderPass(std::move(renderPass))
+        {
+            NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
+            bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
+            bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
+            bufferCreateInfo.size = 64 * 1024;
+
+            auto stagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+            bufferCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Vertex;
+            bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::None;
+            bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
+
+            _vertexBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+            _vertexBufferRegion = _vertexBuffer->Allocate(sizeof(SpriteVertexShaderInputs) * 6, 16);
+            auto stagingRegion = stagingBuffer->Allocate(sizeof(SpriteVertexShaderInputs) * 6, 16);
+
+            auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion);
+
+            pVertexBuffer[0] =
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, 0.5f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};
+            pVertexBuffer[1] =
+                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, 0.5f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
+            pVertexBuffer[2] =
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, -0.5f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
+            pVertexBuffer[3] =
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, -0.5f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
+            pVertexBuffer[4] =
+                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, 0.5f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
+            pVertexBuffer[5] =
+                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, -0.5f, 0.0f), Maths::GeoVector2F(1.0f, 1.0f)};
+
+            stagingBuffer->UnmapAndWrite(stagingRegion);
+
+            auto vertShaderData = _resourceLoader->LoadShaderSource("SpriteVertex.spv");
+            auto pixelShaderData = _resourceLoader->LoadShaderSource("SpritePixel.spv");
+
+            std::vector<NovelRT::Graphics::GraphicsPipelineInputElement> elements{
+                NovelRT::Graphics::GraphicsPipelineInputElement(
+                    typeid(Maths::GeoVector3F), NovelRT::Graphics::GraphicsPipelineInputElementKind::Position, 12),
+                NovelRT::Graphics::GraphicsPipelineInputElement(
+                    typeid(Maths::GeoVector2F), NovelRT::Graphics::GraphicsPipelineInputElementKind::TextureCoordinate,
+                    8)};
+
+            std::vector<NovelRT::Graphics::GraphicsPipelineInput> inputs{
+                NovelRT::Graphics::GraphicsPipelineInput(elements)};
+
+            std::vector<NovelRT::Graphics::GraphicsPipelineResource> resources{
+                NovelRT::Graphics::GraphicsPipelineResource(NovelRT::Graphics::GraphicsPipelineResourceKind::Texture,
+                                                            NovelRT::Graphics::ShaderProgramVisibility::Pixel)};
+
+            std::vector<NovelRT::Graphics::GraphicsPushConstantRange> pushConstantRanges{
+                NovelRT::Graphics::GraphicsPushConstantRange{NovelRT::Graphics::ShaderProgramVisibility::All, 0,
+                                                             sizeof(SpritePushConstant)}};
+
+            auto signature = _graphicsDevice->CreatePipelineSignature(
+                NovelRT::Graphics::GraphicsPipelineBlendFactor::SrcAlpha,
+                NovelRT::Graphics::GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
+                NovelRT::Utilities::Span<NovelRT::Graphics::GraphicsPushConstantRange>(pushConstantRanges));
+
+            auto vertShaderProg = _graphicsDevice->CreateShaderProgram(
+                "main", NovelRT::Graphics::ShaderProgramKind::Vertex, vertShaderData.shaderCode);
+            auto pixelShaderProg = _graphicsDevice->CreateShaderProgram(
+                "main", NovelRT::Graphics::ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
+
+            _pipeline =
+                _graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, _renderPass.RenderPass);
+
+            auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+            auto cmdList = gfxContext->CreateCmdList();
+            cmdList->Begin();
+            cmdList->CmdCopy(_vertexBufferRegion, stagingRegion);
+            cmdList->End();
+            _graphicsDevice->QueueSubmit(cmdList);
+            _graphicsDevice->WaitForIdle();
+        }
+
+        void Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
+        {
+            HandleNewSpriteTextures(catalogue);
+            SubmitToOrchestrator(catalogue);
         }
     };
 }

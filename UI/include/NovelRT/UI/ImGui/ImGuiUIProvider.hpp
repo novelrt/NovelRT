@@ -194,12 +194,7 @@ namespace NovelRT::UI::ImGui
             NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
             NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
 
-            auto vulkanFormat = _graphicsDevice->GetSwapchain()->GetVulkanFormat();
-
-            attachmentDesc.texelFormat = vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM
-                                             ? NovelRT::Graphics::TexelFormat::R8G8B8A8_UNORM
-                                             : NovelRT::Graphics::TexelFormat::B8G8R8A8_UNORM;
-
+            attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
             attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
             attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
             attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;

@@ -11,6 +11,7 @@
 #include <NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp>
 #include <NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp>
 #include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
+#include <NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp>
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 
@@ -332,20 +333,7 @@ int main()
                 GraphicsRenderPassDescription passDesc{};
                 GraphicsAttachmentDescription attachmentDesc{};
 
-                auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
-                if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
-                {
-                    attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
-                }
-                else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
-                {
-                    attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
-                }
-                else
-                {
-                    throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
-                }
-
+                attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
                 attachmentDesc.loadOp = LoadOp::Clear;
                 attachmentDesc.storeOp = StoreOp::Store;
                 attachmentDesc.initialLayout = ImageLayout::Undefined;

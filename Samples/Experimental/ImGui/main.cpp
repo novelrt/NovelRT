@@ -160,17 +160,9 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     GraphicsRenderPassDescription passDesc{};
     GraphicsAttachmentDescription attachmentDesc{};
 
-    auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
+    attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
 
-    if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
-    {
-        attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
-    }
-    else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
-    {
-        attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
-    }
-    else
+    if (attachmentDesc.texelFormat == TexelFormat::UnknownOrUndefined)
     {
         throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
     }

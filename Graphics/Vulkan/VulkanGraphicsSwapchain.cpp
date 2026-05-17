@@ -3,6 +3,7 @@
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/Texel.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp>
@@ -195,6 +196,11 @@ namespace NovelRT::Graphics
     {
         return std::static_pointer_cast<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>(
             GraphicsDeviceObject::shared_from_this());
+    }
+    
+    [[nodiscard]] Graphics::TexelFormat GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetFormat()
+    {
+        return Vulkan::Utilities::MapInverse(GetVulkanFormat());
     }
 
     GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GraphicsSwapchain(

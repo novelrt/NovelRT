@@ -2,6 +2,8 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsDefaultsBuilder.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Maths/GeoVector3F.hpp>
 
 using namespace NovelRT::Ecs;
 
@@ -9,7 +11,7 @@ EcsDefaultsBuilder::EcsDefaultsBuilder()
     : _defaultEntityGraphComponent{false, std::numeric_limits<EntityId>::max(), std::numeric_limits<EntityId>::max()},
       _defaultLinkedEntityListNodeComponent{false, std::numeric_limits<EntityId>::max(),
                                             std::numeric_limits<EntityId>::max()},
-      _defaultTransformComponent{Maths::GeoVector3F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN} {};
+      _defaultTransformComponent{Maths::GeoVector2F::Uniform(NAN), Maths::GeoVector2F::Uniform(NAN), NAN} {};
 
 EcsDefaultsBuilder& NovelRT::Ecs::EcsDefaultsBuilder::WithDefaultEntityGraphComponent(
     const Components::EntityGraphComponent& defaultGraphComponent)

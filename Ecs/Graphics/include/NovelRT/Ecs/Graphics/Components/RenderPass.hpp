@@ -21,7 +21,10 @@ namespace NovelRT::Ecs::Graphics::Components
         inline RenderPass& operator+=(const RenderPass& other)
         {
             if (descriptorSet != nullptr)
+            {
                 delete descriptorSet;
+            }
+
             *this = other;
             return *this;
         }
