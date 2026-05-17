@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
@@ -34,12 +35,16 @@ namespace NovelRT::Ecs::Graphics
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         Components::RenderPass<TGraphicsBackend> _defaultRenderPassComponent;
+        Components::TrackedSemaphore<TGraphicsBackend> _defaultTrackedSemaphoreComponent;
+        Components::Sprite _defaultSpriteComponent;
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
-              _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr}
+              _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr},
+              _defaultTrackedSemaphoreComponent{nullptr, 0},
+              _defaultSpriteComponent{}
         {
         }
 
@@ -107,6 +112,8 @@ namespace NovelRT::Ecs::Graphics
 
             cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
             cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
+            cache.RegisterComponentType(_defaultTrackedSemaphoreComponent, "NovelRT::Ecs::Graphics::TrackedSemaphore");
+            cache.RegisterComponentType(_defaultSpriteComponent, "NovelRT::Ecs::Graphics::Sprite");
 
             unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
         }

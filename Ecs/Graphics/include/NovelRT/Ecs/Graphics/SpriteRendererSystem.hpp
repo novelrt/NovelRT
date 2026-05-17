@@ -295,7 +295,8 @@ namespace NovelRT::Ecs::Graphics
               _graphicsDevice(std::move(device)),
               _memoryAllocator(std::move(memoryAllocator)),
               _renderPass(std::move(renderPass)),
-              _surfaceContext(std::move(surfaceContext))
+              _surfaceContext(std::move(surfaceContext)),
+              _uploadSemaphore(_graphicsDevice->CreateSemaphore(0))
         {
             NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
             bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
