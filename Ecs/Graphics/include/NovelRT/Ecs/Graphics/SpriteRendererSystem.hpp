@@ -11,6 +11,7 @@
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/Components/TransformComponent.hpp>
 #include <NovelRT/Ecs/EntityGraphView.hpp>
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
@@ -34,11 +35,23 @@
 
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
+#include <NovelRT/Utilities/Memory.hpp>
+
+#include <span>
+
 namespace NovelRT::Ecs::Graphics
 {
     template<typename TGraphicsBackend>
     class SpriteRendererSystem : public NovelRT::Ecs::IEcsSystem
     {
+    public:
+        struct SpritePass
+        {
+            std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> RenderPass;
+            Components::RenderPassId RenderPassId;
+        };
+
+    private:
         struct SpritePushConstant
         {
             Maths::GeoMatrix4x4F model;
@@ -52,12 +65,6 @@ namespace NovelRT::Ecs::Graphics
         {
             Maths::GeoVector3F Position;
             Maths::GeoVector2F UV;
-        };
-
-        struct SpritePass
-        {
-            std::shared_ptr<NovelRT::Graphics::GraphicsRenderPass<TGraphicsBackend>> RenderPass;
-            Components::RenderPassId RenderPassId;
         };
 
     private:
@@ -78,6 +85,8 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsPipeline<TGraphicsBackend>> _pipeline;
 
         SpritePass _renderPass;
+
+        std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _surfaceContext;
 
         std::unordered_map<
             uuids::uuid,
@@ -130,7 +139,10 @@ namespace NovelRT::Ecs::Graphics
                         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
                         auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
-                        std::memcpy(pTextureData, textureMetadata.data.data(), textureMetadata.data.size());
+                        // std::memcpy(pTextureData, textureMetadata.data.data(), textureMetadata.data.size());
+
+                        NovelRT::Utilities::Memory::Copy(std::span<const uint8_t>(textureMetadata.data), pTextureData);
+
                         textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
                         auto gfxContext = _graphicsDevice->CreateGraphicsContext();
@@ -141,16 +153,25 @@ namespace NovelRT::Ecs::Graphics
                         uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
                         uploadCmdList->End();
 
-                        _graphicsDevice->QueueSubmit(uploadCmdList, {_uploadSemaphore, ++_submittedUploads});
+                        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{
+                            uploadCmdList};
+
+                        std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
+                                              uint64_t>>
+                            signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
+
+                        _graphicsDevice->QueueSubmit(lists, signalSemaphores);
 
                         Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{};
                         newUploadTracker.semaphore =
                             new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
                                 _uploadSemaphore);
-                        newUploadTracker = _submittedUploads;
+                        newUploadTracker.signalValue = _submittedUploads;
+
+                        auto id = completionCatalogue.CreateEntity();
 
                         completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
-                            .AddComponent(newUploadTracker);
+                            .AddComponent(id, newUploadTracker);
 
                         _pendingStagingBuffers.push_back({_submittedUploads, textureStagingBuffer});
                         _textureCache[assetId] = texture2DRegion;
@@ -164,9 +185,10 @@ namespace NovelRT::Ecs::Graphics
             float surfaceWidth = _surfaceContext->GetSurface()->GetWidth();
             float surfaceHeight = _surfaceContext->GetSurface()->GetHeight();
 
-            auto [renderPassView, cmdListView, spriteView,
-                  transformView] = catalogue.GetComponentViews Components::RenderPass<TGraphicsBackend>,
-                  Components::BuiltCommandList<TGraphicsBackend>, Components::Sprite, Components::TransformComponent>();
+            auto [renderPassView, cmdListView, spriteView, transformView] =
+                catalogue.GetComponentViews<Components::RenderPass<TGraphicsBackend>,
+                                            Components::BuiltCommandList<TGraphicsBackend>, Components::Sprite,
+                                            NovelRT::Ecs::Components::TransformComponent>();
 
             for (auto [entityId, sprite] : spriteView)
             {
@@ -177,8 +199,7 @@ namespace NovelRT::Ecs::Graphics
 
                 auto& textureRegion = _textureCache.at(sprite.assetId);
 
-                TransformComponent transform{};
-                transformView.TryGetComponent(entityId, transform);
+                NovelRT::Ecs::Components::TransformComponent transform = transformView.GetComponent(entityId);
 
                 auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
                 model.Translate(Maths::GeoVector3F(transform.position.x, transform.position.y, 0.0f));
@@ -193,12 +214,13 @@ namespace NovelRT::Ecs::Graphics
                 pushConstant.tintA = sprite.tint.getAScalar();
 
                 auto context = _graphicsDevice->CreateGraphicsContext();
-                auto currentCmdList = context->CreateCmdList(
-                    std::optional<SecondaryCmdListInfo<TGraphicsBackend>>({_renderPass.RenderPass, 0}));
+                auto currentCmdList =
+                    context->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
+                        {_renderPass.RenderPass, 0}));
 
                 currentCmdList->Begin();
 
-                ViewportInfo viewportInfoStruct{};
+                NovelRT::Graphics::ViewportInfo viewportInfoStruct{};
                 viewportInfoStruct.x = 0;
                 viewportInfoStruct.y = surfaceHeight;
                 viewportInfoStruct.width = surfaceWidth;
@@ -231,8 +253,10 @@ namespace NovelRT::Ecs::Graphics
                     descriptorData{std::cref(descriptorSet)};
                 currentCmdList->CmdBindDescriptorSets(descriptorData);
 
-                currentCmdList->CmdPushConstants(NovelRT::Utilities::Span<uint8_t>(
-                    reinterpret_cast<uint8_t*>(&pushConstant), sizeof(SpritePushConstant)));
+                currentCmdList->CmdPushConstants(
+                    _pipeline->GetSignature(), NovelRT::Graphics::ShaderProgramVisibility::All, 0,
+                    NovelRT::Utilities::Span<uint8_t>(reinterpret_cast<uint8_t*>(&pushConstant),
+                                                      sizeof(SpritePushConstant)));
 
                 currentCmdList->CmdDraw(6, 1, 0, 0);
 
@@ -265,11 +289,13 @@ namespace NovelRT::Ecs::Graphics
             std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> device,
             SpritePass renderPass,
             std::shared_ptr<ResourceManagement::Desktop::DesktopResourceLoader> resourceLoader,
-            std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator)
+            std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator,
+            std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> surfaceContext)
             : _resourceLoader(std::move(resourceLoader)),
               _graphicsDevice(std::move(device)),
               _memoryAllocator(std::move(memoryAllocator)),
-              _renderPass(std::move(renderPass))
+              _renderPass(std::move(renderPass)),
+              _surfaceContext(std::move(surfaceContext))
         {
             NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
             bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
@@ -342,7 +368,10 @@ namespace NovelRT::Ecs::Graphics
             cmdList->Begin();
             cmdList->CmdCopy(_vertexBufferRegion, stagingRegion);
             cmdList->End();
-            _graphicsDevice->QueueSubmit(cmdList);
+
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
+
+            _graphicsDevice->QueueSubmit(lists);
             _graphicsDevice->WaitForIdle();
         }
 

@@ -102,7 +102,7 @@ namespace NovelRT::Ecs
          */
         void RemoveAllComponents()
         {
-            for (auto&& [entity, component] : container)
+            for (auto&& [entity, component] : *this)
             {
                 RemoveComponent(entity);   
             }

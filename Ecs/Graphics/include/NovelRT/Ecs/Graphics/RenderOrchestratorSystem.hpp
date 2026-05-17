@@ -208,18 +208,19 @@ namespace NovelRT::Ecs::Graphics
             waitSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
 
             std::transform(trackedSemaphores.begin(), trackedSemaphores.end(), std::back_inserter(waitSemaphores),
-                           [](auto& pair)
+                           [](const auto& pair)
                            {
                                auto semaphoreTempLocal = *pair.second.semaphore;
                                delete pair.second.semaphore;
 
-                               return
-                               {
-                                   semaphoreTempLocal, pair.second.signalValue
-                               }
+                               return std::make_pair(semaphoreTempLocal, pair.second.signalValue);
                            });
 
-            image->QueueSubmit(waitSemaphores, cmdList, {_deletionSemaphore, frameResources.frameNumber});
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
+            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
+                signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.frameNumber)};
+
+            image->QueueSubmit(waitSemaphores, lists, signalSemaphores);
 
             renderPasses.RemoveAllComponents();
             commandLists.RemoveAllComponents();

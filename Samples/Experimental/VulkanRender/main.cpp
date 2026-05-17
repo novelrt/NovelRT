@@ -204,7 +204,8 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->End();
 
         gfxContext->EndFrame();
-        gfxDevice->QueueSubmit(cmdList);
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {cmdList};
+        gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
     }
 

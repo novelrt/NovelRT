@@ -322,6 +322,20 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsDevice::QueueSubmit(
+        NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists)
+    {
+        QueueSubmit({}, cmdLists, {});
+    }
+
+    void VulkanGraphicsDevice::QueueSubmit(
+        NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+        NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>>
+            semaphoresToSignal)
+    {
+        QueueSubmit({}, cmdLists, semaphoresToSignal);
+    }
+
+    void VulkanGraphicsDevice::QueueSubmit(
         NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>>
             semaphoresToWait,
         NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
@@ -366,8 +380,7 @@ namespace NovelRT::Graphics
         submitInfo.pWaitSemaphores = waitSemaphores.data();
         submitInfo.pWaitDstStageMask = &allCommands;
 
-        const VkResult queueSubmitResult =
-            vkQueueSubmit(GetVulkanTransferQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+        const VkResult queueSubmitResult = vkQueueSubmit(GetVulkanTransferQueue(), 1, &submitInfo, VK_NULL_HANDLE);
         if (queueSubmitResult != VK_SUCCESS)
         {
             throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
