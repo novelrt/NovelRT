@@ -130,7 +130,7 @@ namespace NovelRT::Ecs::Graphics
                         NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
                         bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
                         bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-                        bufferCreateInfo.size = static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4;
+                        bufferCreateInfo.size = (static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4) * 2;
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
                         auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,

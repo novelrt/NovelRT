@@ -57,9 +57,57 @@ using namespace NovelRT::Utilities;
 using namespace NovelRT::ResourceManagement::Desktop;
 using namespace NovelRT::Timing;
 
+class SpriteSetupSystem : public IEcsSystem
+{
+private:
+    std::optional<EntityId> _spriteEntity;
+    std::shared_ptr<DesktopResourceLoader> _resourceLoader;
+
+public:
+    explicit SpriteSetupSystem(std::shared_ptr<DesktopResourceLoader> resourceLoader)
+        : _resourceLoader(std::move(resourceLoader))
+    {
+    }
+
+    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    {
+        if (_spriteEntity.has_value())
+        {
+            return;
+        }
+
+        auto [spriteView, transformView, graphView] =
+            catalogue.GetComponentViews
+               <NovelRT::Ecs::Graphics::Components::Sprite,
+                NovelRT::Ecs::Components::TransformComponent,
+                NovelRT::Ecs::Components::EntityGraphComponent>();
+
+        auto entity = catalogue.CreateEntity();
+        _spriteEntity = entity;
+
+        auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/novel-chan.png").value();
+
+        NovelRT::Ecs::Graphics::Components::Sprite sprite{};
+        sprite.assetId = assetId;
+        spriteView.AddComponent(entity, sprite);
+
+        NovelRT::Ecs::Components::TransformComponent transform{};
+        transform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
+        transform.scale = NovelRT::Maths::GeoVector2F(0.5f, 0.5f);
+        transform.rotationInRadians = 0.0f;
+        transformView.AddComponent(entity, transform);
+
+        EntityGraphComponent graphComp{};
+        graphComp.parent = std::numeric_limits<EntityId>::max();
+        graphComp.childrenStartNode = std::numeric_limits<EntityId>::max();
+        graphView.AddComponent(entity, graphComp);
+    }
+};
+
 int main()
 {
     auto resourceLoader = std::make_shared<DesktopResourceLoader>();
+    resourceLoader->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
 
     auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
         NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
@@ -100,8 +148,11 @@ int main()
 
     auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
+
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader);
     
         builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
+        builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};

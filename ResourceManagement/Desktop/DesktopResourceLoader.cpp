@@ -126,7 +126,7 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         if (filePath.is_relative())
         {
-            filePath = _resourcesRootDirectory / "Images" / filePath;
+            filePath = _resourcesRootDirectory / "Images" / filePath.filename();
         }
 
         std::string filePathStr = filePath.string();
@@ -139,7 +139,7 @@ namespace NovelRT::ResourceManagement::Desktop
 #else
         cFile = fopen(filePathStr.c_str(), "rb");
         _logger.throwIfNullPtr(
-            cFile, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
+            cFile, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked. File path: " + filePathStr);
 #endif
 
         auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr,
@@ -286,7 +286,7 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         if (filePath.is_relative())
         {
-            filePath = _resourcesRootDirectory / "Shaders" / filePath;
+            filePath = _resourcesRootDirectory / "Shaders" / filePath.filename();
         }
 
         std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
@@ -411,7 +411,7 @@ namespace NovelRT::ResourceManagement::Desktop
 
         if (filePath.is_relative())
         {
-            filePath = _resourcesRootDirectory / "Audio" / filePath;
+            filePath = _resourcesRootDirectory / "Audio" / filePath.filename();
         }
 
         SF_INFO info;

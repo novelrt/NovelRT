@@ -15,4 +15,5 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::GraphicsEcsTe
     PUBLIC
       Resources/Shaders/SpritePixel.spv
       Resources/Shaders/SpriteVertex.spv
+      Resources/Images/novel-chan.png
 )
