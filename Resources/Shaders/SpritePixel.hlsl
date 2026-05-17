@@ -10,7 +10,7 @@ struct PSInput
 [[vk::binding(0, 0)]]
 Texture2D spriteTexture : register(t0);
 
-[[vk::binding(1, 0)]]
+[[vk::binding(0, 0)]]
 SamplerState spriteSampler : register(s0);
 
 float4 main(PSInput input) : SV_TARGET
