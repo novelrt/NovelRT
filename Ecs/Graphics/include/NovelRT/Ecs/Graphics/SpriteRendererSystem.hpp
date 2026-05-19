@@ -37,6 +37,7 @@
 
 #include <NovelRT/Utilities/Memory.hpp>
 
+#include <optional>
 #include <span>
 
 namespace NovelRT::Ecs::Graphics
@@ -72,6 +73,14 @@ namespace NovelRT::Ecs::Graphics
         {
             uint64_t uploadIndex;
             std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> stagingBuffer;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> uploadContext;
+            std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>> uploadCmdList;
+        };
+
+        struct PendingGraphicsContext
+        {
+            uint64_t frameIndex;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> context;
         };
 
         std::shared_ptr<ResourceManagement::Desktop::DesktopResourceLoader> _resourceLoader; // TODO: FUCK.
@@ -99,11 +108,19 @@ namespace NovelRT::Ecs::Graphics
         uint64_t _submittedUploads{0};
         std::vector<PendingStagingBuffer> _pendingStagingBuffers;
 
+        std::vector<PendingGraphicsContext> _pendingContexts;
+
+        uint64_t _frameCounter{0};
+        std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _orchestratorSubmissionSemaphore;
+        std::optional<EntityId> _orchestratorSubmissionSemaphoreEntity;
+
         void HandleNewSpriteTextures(Catalogue catalogue)
         {
             auto lastCompletedUpload = _uploadSemaphore->GetValue();
             if (lastCompletedUpload > 0)
+            {
                 lastCompletedUpload -= 1;
+            }
 
             _pendingStagingBuffers.erase(std::remove_if(_pendingStagingBuffers.begin(), _pendingStagingBuffers.end(),
                                                         [lastCompletedUpload](const auto& pending)
@@ -130,7 +147,8 @@ namespace NovelRT::Ecs::Graphics
                         NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
                         bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
                         bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-                        bufferCreateInfo.size = (static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4) * 2;
+                        bufferCreateInfo.size =
+                            (static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4) * 2;
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
                         auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
@@ -139,7 +157,6 @@ namespace NovelRT::Ecs::Graphics
                         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
                         auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
-                        // std::memcpy(pTextureData, textureMetadata.data.data(), textureMetadata.data.size());
 
                         NovelRT::Utilities::Memory::Copy(std::span<const uint8_t>(textureMetadata.data), pTextureData);
 
@@ -173,7 +190,7 @@ namespace NovelRT::Ecs::Graphics
                         completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
                             .AddComponent(id, newUploadTracker);
 
-                        _pendingStagingBuffers.push_back({_submittedUploads, textureStagingBuffer});
+                        _pendingStagingBuffers.push_back({_submittedUploads, textureStagingBuffer, gfxContext, uploadCmdList});
                         _textureCache[assetId] = texture2DRegion;
                         _pendingLoads.erase(assetId);
                     });
@@ -182,13 +199,44 @@ namespace NovelRT::Ecs::Graphics
 
         void SubmitToOrchestrator(Catalogue& catalogue)
         {
+            auto lastSubmittedFrame = _uploadSemaphore->GetValue();
+
+            if (lastSubmittedFrame > 0)
+            {
+                lastSubmittedFrame -= 1;
+            }
+
+            _pendingContexts.erase(std::remove_if(_pendingContexts.begin(), _pendingContexts.end(),
+                                                  [lastSubmittedFrame](const auto& pending)
+                                                  { return pending.frameIndex <= lastSubmittedFrame; }),
+                                   _pendingContexts.end());
+
             float surfaceWidth = _surfaceContext->GetSurface()->GetWidth();
             float surfaceHeight = _surfaceContext->GetSurface()->GetHeight();
 
-            auto [renderPassView, cmdListView, spriteView, transformView] =
+            auto [renderPassView, cmdListView, spriteView, transformView, trackedSemaphoresView] =
                 catalogue.GetComponentViews<Components::RenderPass<TGraphicsBackend>,
                                             Components::BuiltCommandList<TGraphicsBackend>, Components::Sprite,
-                                            NovelRT::Ecs::Components::TransformComponent>();
+                                            NovelRT::Ecs::Components::TransformComponent,
+                                            Components::TrackedSemaphore<TGraphicsBackend>>();
+
+            auto context = _graphicsDevice->CreateGraphicsContext();
+
+            if (!_orchestratorSubmissionSemaphoreEntity.has_value())
+            {
+                _orchestratorSubmissionSemaphoreEntity = catalogue.CreateEntity();
+            }
+
+            Components::TrackedSemaphore<TGraphicsBackend> signalSemaComponent{};
+
+            signalSemaComponent.isWaitSemaphore = false;
+            signalSemaComponent.semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
+                _orchestratorSubmissionSemaphore);
+            signalSemaComponent.signalValue = ++_frameCounter;
+
+            trackedSemaphoresView.AddComponent(_orchestratorSubmissionSemaphoreEntity.value(), signalSemaComponent);
+
+            _pendingContexts.emplace_back(_frameCounter, context);
 
             for (auto [entityId, sprite] : spriteView)
             {
@@ -213,7 +261,6 @@ namespace NovelRT::Ecs::Graphics
                 pushConstant.tintB = sprite.tint.getBScalar();
                 pushConstant.tintA = sprite.tint.getAScalar();
 
-                auto context = _graphicsDevice->CreateGraphicsContext();
                 auto currentCmdList =
                     context->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
                         {_renderPass.RenderPass, 0}));
@@ -271,16 +318,8 @@ namespace NovelRT::Ecs::Graphics
                 cmdListComp.commandList =
                     new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(currentCmdList);
 
-                if (!renderPassView.HasComponent(entityId))
-                {
-                    renderPassView.AddComponent(entityId, passComponent);
-                    cmdListView.AddComponent(entityId, cmdListComp);
-                }
-                else
-                {
-                    renderPassView.PushComponentUpdateInstruction(entityId, passComponent);
-                    cmdListView.PushComponentUpdateInstruction(entityId, cmdListComp);
-                }
+                renderPassView.AddComponent(entityId, passComponent);
+                cmdListView.AddComponent(entityId, cmdListComp);
             }
         }
 
@@ -296,7 +335,8 @@ namespace NovelRT::Ecs::Graphics
               _memoryAllocator(std::move(memoryAllocator)),
               _renderPass(std::move(renderPass)),
               _surfaceContext(std::move(surfaceContext)),
-              _uploadSemaphore(_graphicsDevice->CreateSemaphore(0))
+              _uploadSemaphore(_graphicsDevice->CreateSemaphore(0)),
+              _orchestratorSubmissionSemaphore(_graphicsDevice->CreateSemaphore(0))
         {
             NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
             bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;

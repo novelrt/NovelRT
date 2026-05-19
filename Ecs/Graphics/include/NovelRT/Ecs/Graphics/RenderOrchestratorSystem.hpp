@@ -40,7 +40,8 @@ namespace NovelRT::Ecs::Graphics
         {
             uint64_t frameNumber;
 
-            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> _frameImage;
+            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> frameImage;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> localContext;
 
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargets{};
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>> descriptorSets{};
@@ -158,7 +159,7 @@ namespace NovelRT::Ecs::Graphics
             context->BeginFrame();
             cmdList->Begin();
 
-            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image});
+            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image, context});
 
             // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
@@ -207,18 +208,25 @@ namespace NovelRT::Ecs::Graphics
                 waitSemaphores{};
             waitSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
 
-            std::transform(trackedSemaphores.begin(), trackedSemaphores.end(), std::back_inserter(waitSemaphores),
-                           [](const auto& pair)
-                           {
-                               auto semaphoreTempLocal = *pair.second.semaphore;
-                               delete pair.second.semaphore;
-
-                               return std::make_pair(semaphoreTempLocal, pair.second.signalValue);
-                           });
-
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
             std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
                 signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.frameNumber)};
+            signalSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
+
+            for (auto&& [entity, trackedSemaLocal] : trackedSemaphores)
+            {
+                if (trackedSemaLocal.isWaitSemaphore)
+                {
+                    waitSemaphores.emplace_back(*trackedSemaLocal.semaphore, trackedSemaLocal.signalValue);
+                }
+                else
+                {
+                    signalSemaphores.emplace_back(*trackedSemaLocal.semaphore, trackedSemaLocal.signalValue);
+                }
+
+                delete trackedSemaLocal.semaphore;
+            }
+
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
 
             image->QueueSubmit(waitSemaphores, lists, signalSemaphores);
 

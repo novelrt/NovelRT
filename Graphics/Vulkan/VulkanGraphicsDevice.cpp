@@ -344,8 +344,6 @@ namespace NovelRT::Graphics
     {
         std::lock_guard guard(*_queueSubmitMutex);
 
-        VkPipelineStageFlags allCommands = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
-
         std::vector<VkCommandBuffer> buffers(cmdLists.size());
         std::vector<VkSemaphore> waitSemaphores(semaphoresToWait.size());
         std::vector<uint64_t> waitSemaphoreValues(semaphoresToWait.size());
@@ -361,6 +359,8 @@ namespace NovelRT::Graphics
                        [](const auto& semaphore) { return semaphore.first->GetVulkanSemaphore(); });
         std::transform(semaphoresToSignal.begin(), semaphoresToSignal.end(), signalSemaphoreValues.begin(),
                        [](const auto& semaphore) { return semaphore.second; });
+
+        std::vector<VkPipelineStageFlags> waitDstStageMasks(waitSemaphores.size(), VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
         VkTimelineSemaphoreSubmitInfo semaphoreSubmitInfo{};
         semaphoreSubmitInfo.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
@@ -378,7 +378,7 @@ namespace NovelRT::Graphics
         submitInfo.pSignalSemaphores = signalSemaphores.data();
         submitInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
         submitInfo.pWaitSemaphores = waitSemaphores.data();
-        submitInfo.pWaitDstStageMask = &allCommands;
+        submitInfo.pWaitDstStageMask = waitDstStageMasks.data();
 
         const VkResult queueSubmitResult = vkQueueSubmit(GetVulkanTransferQueue(), 1, &submitInfo, VK_NULL_HANDLE);
         if (queueSubmitResult != VK_SUCCESS)

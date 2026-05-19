@@ -175,7 +175,7 @@ namespace NovelRT::Graphics
             semaphoresToSignal)
     {
         VkSemaphore vulkanSemaphore = _swapchain->GetActiveSemaphore(shared_from_this())->GetVulkanSemaphore();
-        VkPipelineStageFlags allCommands = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+        //VkPipelineStageFlags allCommands = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
 
         std::vector<VkCommandBuffer> buffers(cmdLists.size());
         std::vector<VkSemaphore> waitSemaphores(semaphoresToWait.size());
@@ -198,6 +198,8 @@ namespace NovelRT::Graphics
         signalSemaphores.push_back(vulkanSemaphore);
         signalSemaphoreValues.push_back(0);
 
+            std::vector<VkPipelineStageFlags> waitDstStageMasks(waitSemaphores.size(), VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+
         VkTimelineSemaphoreSubmitInfo semaphoreSubmitInfo{};
         semaphoreSubmitInfo.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
         semaphoreSubmitInfo.waitSemaphoreValueCount = static_cast<uint32_t>(waitSemaphoreValues.size());
@@ -214,7 +216,7 @@ namespace NovelRT::Graphics
         submitInfo.pSignalSemaphores = signalSemaphores.data();
         submitInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
         submitInfo.pWaitSemaphores = waitSemaphores.data();
-        submitInfo.pWaitDstStageMask = &allCommands;
+        submitInfo.pWaitDstStageMask = waitDstStageMasks.data();
 
         // TODO: submit to the correct queue if it's just transfers somehow?
         const VkResult queueSubmitResult =

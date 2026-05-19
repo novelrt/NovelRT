@@ -14,6 +14,7 @@ namespace NovelRT::Ecs::Graphics::Components
     {
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>* semaphore = nullptr;
         uint64_t signalValue = 0;
+        bool isWaitSemaphore = true;
 
         inline TrackedSemaphore& operator+=(const TrackedSemaphore& other)
         {
@@ -29,7 +30,7 @@ namespace NovelRT::Ecs::Graphics::Components
 
         [[nodiscard]] inline bool operator==(const TrackedSemaphore& other) const noexcept
         {
-            return semaphore == other.semaphore;
+            return semaphore == other.semaphore && signalValue == other.signalValue;
         }
 
         [[nodiscard]] inline bool operator!=(const TrackedSemaphore& other) const noexcept
