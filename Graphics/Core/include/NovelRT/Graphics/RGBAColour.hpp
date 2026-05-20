@@ -39,5 +39,13 @@ namespace NovelRT::Graphics
         {
             return a / 255.0f;
         }
+
+        [[nodiscard]] inline bool operator==(const RGBAColour& other) const noexcept
+        {
+            return r == other.r
+                && g == other.g
+                && b == other.b
+                && a == other.a;
+        }
     };
 }
