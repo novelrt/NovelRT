@@ -11,29 +11,30 @@
 
 namespace NovelRT::Ecs::UI::Components
 {
-    struct UISpriteButton : UIButton
-    {
-        NovelRT::Graphics::RGBAColour tint = NovelRT::Graphics::RGBAColour(255,255,255,255);
+    // Will work on when sprite rendering is merged
+    // struct UISpriteButton : UIButton
+    // {
+    //     NovelRT::Graphics::RGBAColour tint = NovelRT::Graphics::RGBAColour(255,255,255,255);
 
-        inline UISpriteButton& operator+=(const UISpriteButton& other)
-        {
-            *this = other;
-            return *this;
-        }
+    //     inline UISpriteButton& operator+=(const UISpriteButton& other)
+    //     {
+    //         *this = other;
+    //         return *this;
+    //     }
 
-        [[nodiscard]] inline bool operator==(const UISpriteButton& other) const noexcept
-        {
-            return tint == other.tint
-                && label == other.label
-                && bgColour == other.bgColour
-                && activeColour == other.activeColour
-                && hoveredColour == other.hoveredColour
-                && textColour == other.textColour;
-        }
+    //     [[nodiscard]] inline bool operator==(const UISpriteButton& other) const noexcept
+    //     {
+    //         return tint == other.tint
+    //             && label == other.label
+    //             && bgColour == other.bgColour
+    //             && activeColour == other.activeColour
+    //             && hoveredColour == other.hoveredColour
+    //             && textColour == other.textColour;
+    //     }
 
-        [[nodiscard]] inline bool operator!=(const UISpriteButton& other) const noexcept
-        {
-            return !(*this == other);
-        }
-    };
+    //     [[nodiscard]] inline bool operator!=(const UISpriteButton& other) const noexcept
+    //     {
+    //         return !(*this == other);
+    //     }
+    // };
 }
