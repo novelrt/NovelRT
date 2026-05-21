@@ -23,6 +23,8 @@ namespace NovelRT::Windowing
         [[nodiscard]] bool ShouldClose() const noexcept;
 
         [[nodiscard]] std::string GetWindowTitle() const noexcept;
+        [[nodiscard]] std::string GetClipboardText() const;
+        void SetClipboardText(const std::string& text) const;
         void SetWindowTitle(const std::string& newTitle);
 
         template<typename TGraphicsBackend>

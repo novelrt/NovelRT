@@ -36,19 +36,6 @@ using namespace NovelRT::Input;
 
 namespace NovelRT::UI::ImGui
 {
-
-    static inline const char* ImGui_GetClipboardText(void* user_data)
-    {
-        unused(user_data);
-        return "placeholder text";
-    }
-
-    static inline void ImGui_SetClipboardText(void* user_data, const char* text)
-    {
-        unused(user_data);
-        unused(text);
-    }
-
     template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
     class ImGuiUIProvider final
         : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
@@ -272,7 +259,6 @@ namespace NovelRT::UI::ImGui
               _logger(NovelRT::Logging::CONSOLE_LOG_GFX)
         {
             ::IMGUI_CHECKVERSION();
-
             _imguiContext = std::shared_ptr<ImGuiContext>{::ImGui::CreateContext(), ::ImGui::DestroyContext};
             auto& io = ::ImGui::GetIO();
             ::ImGui::StyleColorsDark();
@@ -283,9 +269,18 @@ namespace NovelRT::UI::ImGui
             io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
             io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
             io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
-            io.GetClipboardTextFn = &ImGui_GetClipboardText;
-            io.SetClipboardTextFn = &ImGui_SetClipboardText;
+            io.GetClipboardTextFn = [](void* userData)
+            {
+                auto provider = std::dynamic_pointer_cast<std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>>>(userData);
+                return provider->GetClipboardText();
+            };
+            io.SetClipboardTextFn = [](void* userData, const char* text)
+            {
+                auto provider = std::dynamic_pointer_cast<std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>>>(userData);
+                provider->SetClipboardText(std::string(text));
+            };
             io.BackendRendererName = "NovelRT";
+            io.ClipboardUserData = &_windowProvider->shared_from_this();
 
             ::ImGui::GetMainViewport()->PlatformHandleRaw = (void*)_windowProvider->GetHandle();
             auto windowSize = _windowProvider->GetSize();

@@ -160,4 +160,14 @@ namespace NovelRT::Windowing
     {
         return Graphics::GraphicsSurfaceKind::Glfw;
     }
+
+    std::string GlfwWindowProvider::GetClipboardText() const
+    {
+        return std::string(glfwGetClipboardString(_window));
+    }
+
+    void GlfwWindowProvider::SetClipboardText(const std::string& text) const
+    {
+        glfwSetClipboardString(_window, text.c_str());
+    }
 }
