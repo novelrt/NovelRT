@@ -31,10 +31,12 @@ namespace NovelRT::Graphics::Vulkan::Utilities
             {
                 returnObject.graphicsFamily = familyIndex;
             }
-            
+
             if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT)
             {
-                if (!returnObject.transferFamily.has_value() || (Maths::Utilities::PopCount(queueFamily.queueFlags) <= Maths::Utilities::PopCount(returnObject.transferFamily.value())))
+                if (!returnObject.transferFamily.has_value() ||
+                    (Maths::Utilities::PopCount(queueFamily.queueFlags) <=
+                     Maths::Utilities::PopCount(returnObject.transferFamily.value())))
                 {
                     returnObject.transferFamily = familyIndex;
                 }
@@ -45,7 +47,6 @@ namespace NovelRT::Graphics::Vulkan::Utilities
             {
                 returnObject.presentFamily = familyIndex;
             }
- 
 
             if (returnObject.IsComplete())
             {

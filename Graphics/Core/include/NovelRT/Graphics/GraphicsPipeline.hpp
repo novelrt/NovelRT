@@ -22,13 +22,13 @@ namespace NovelRT::Graphics
         bool HasPixelShader() const noexcept;
 
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> GetVertexShader() const noexcept;
-        
+
         [[nodiscard]] std::shared_ptr<ShaderProgram<TBackend>> GetPixelShader() const noexcept;
-        
+
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<TBackend>> GetSignature() const noexcept;
 
         [[nodiscard]] std::shared_ptr<GraphicsDescriptorSet<TBackend>> CreateDescriptorSet();
-        
+
         [[nodiscard]] std::shared_ptr<GraphicsRenderPass<TBackend>> GetRenderPass() const noexcept;
     };
 }

@@ -102,8 +102,9 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame();
-        
-        void QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists);
+
+        void QueueSubmit(
+            NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists);
 
         void QueueSubmit(
             NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
