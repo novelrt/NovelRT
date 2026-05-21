@@ -18,7 +18,6 @@ namespace NovelRT::Windowing
         if (glfwVulkanSupported() == GLFW_FALSE)
         {
             throw Exceptions::InvalidOperationException("Vulkan is not supported on this platform.");
-            return nullptr;
         }
 
         uint32_t extensionCount = 0;
