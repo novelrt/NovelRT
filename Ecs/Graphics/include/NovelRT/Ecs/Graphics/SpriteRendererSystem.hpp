@@ -219,8 +219,9 @@ namespace NovelRT::Ecs::Graphics
                         _pendingStagingBuffers.push_back(
                             {_submittedUploads, textureStagingBuffer, gfxContext, uploadCmdList});
                         _textureCache.emplace(
-                            assetId, TextureCacheItem{texture2DRegion, Maths::GeoVector2F(static_cast<float>(textureMetadata.width),
-                                                                                          static_cast<float>(textureMetadata.height))});
+                            assetId, TextureCacheItem{texture2DRegion,
+                                                      Maths::GeoVector2F(static_cast<float>(textureMetadata.width),
+                                                                         static_cast<float>(textureMetadata.height))});
                         _pendingLoads.erase(assetId);
                     });
             }
