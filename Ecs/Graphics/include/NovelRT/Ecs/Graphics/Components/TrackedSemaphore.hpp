@@ -22,7 +22,6 @@ namespace NovelRT::Ecs::Graphics::Components
             {
                 delete semaphore;
             }
-            
 
             *this = other;
             return *this;

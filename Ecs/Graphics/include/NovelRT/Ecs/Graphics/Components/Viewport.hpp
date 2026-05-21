@@ -19,20 +19,12 @@ namespace NovelRT::Ecs::Graphics::Components
 
         [[nodiscard]] inline bool operator==(const Viewport& other) const noexcept
         {
-            return x == other.x &&
-                   y == other.y &&
-                   width == other.width &&
-                   height == other.height;
+            return x == other.x && y == other.y && width == other.width && height == other.height;
         }
 
         [[nodiscard]] inline bool operator!=(const Viewport& other) const noexcept
         {
             return !(*this == other);
-        }
-
-        [[nodiscard]] static Viewport GetDeleteInstructionState() noexcept
-        {
-            return Viewport{0.0f, 0.0f, 0.0f, 0.0f};
         }
     };
 }

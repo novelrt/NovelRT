@@ -23,14 +23,10 @@ namespace NovelRT::Ecs::Graphics::Components
 
         [[nodiscard]] inline bool operator==(const Camera& other) const noexcept
         {
-            // normally I would care more about floating point comparison but this is basically only here to handle deletion, where it'll always be zero. - Matt J.
-            return left == other.left &&
-                   right == other.right &&
-                   bottom == other.bottom &&
-                   top == other.top &&
-                   nearPlane == other.nearPlane &&
-                   farPlane == other.farPlane &&
-                   isScreenSpace == other.isScreenSpace;
+            // normally I would care more about floating point comparison but this is basically only here to handle
+            // deletion, where it'll always be zero. - Matt J.
+            return left == other.left && right == other.right && bottom == other.bottom && top == other.top &&
+                   nearPlane == other.nearPlane && farPlane == other.farPlane && isScreenSpace == other.isScreenSpace;
         }
 
         [[nodiscard]] inline bool operator!=(const Camera& other) const noexcept
