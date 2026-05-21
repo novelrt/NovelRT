@@ -9,9 +9,13 @@
 #include <NovelRT/Graphics/GraphicsPipelineInputElement.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResourceKind.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineVisibility.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
+#include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 #include <NovelRT/Graphics/ShaderProgramVisibility.hpp>
+#include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Input/InputProvider.hpp>
+#include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 #include <NovelRT/Utilities/Paths.hpp>
@@ -33,13 +37,13 @@ using namespace NovelRT::Input;
 namespace NovelRT::UI::ImGui
 {
 
-    static const char* ImGui_GetClipboardText(void* user_data)
+    static inline const char* ImGui_GetClipboardText(void* user_data)
     {
         unused(user_data);
         return "placeholder text";
     }
 
-    static void ImGui_SetClipboardText(void* user_data, const char* text)
+    static inline void ImGui_SetClipboardText(void* user_data, const char* text)
     {
         unused(user_data);
         unused(text);
@@ -129,7 +133,7 @@ namespace NovelRT::UI::ImGui
         std::vector<CachedDescriptorSetObject> _descriptorSetCache;
 
         std::shared_ptr<ImGuiContext> _imguiContext;
-        Logging::LoggingService _logger;
+        NovelRT::Logging::LoggingService _logger;
 
         bool _drawEnabled = false;
         ImDrawData* _cachedDrawData = nullptr;
@@ -194,11 +198,7 @@ namespace NovelRT::UI::ImGui
             NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
             NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
 
-            auto vulkanFormat = _graphicsDevice->GetSwapchain()->GetVulkanFormat();
-
-            attachmentDesc.texelFormat = vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM
-                                             ? NovelRT::Graphics::TexelFormat::R8G8B8A8_UNORM
-                                             : NovelRT::Graphics::TexelFormat::B8G8R8A8_UNORM;
+            attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
 
             attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
             attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;

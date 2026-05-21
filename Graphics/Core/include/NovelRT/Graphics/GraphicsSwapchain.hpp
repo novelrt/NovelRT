@@ -21,6 +21,7 @@ namespace NovelRT::Graphics
         std::shared_ptr<GraphicsSwapchain<TBackend>> shared_from_this();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> AcquireNextImage();
+        [[nodiscard]] TexelFormat GetFormat();
         [[nodiscard]] bool Present();
     };
 }

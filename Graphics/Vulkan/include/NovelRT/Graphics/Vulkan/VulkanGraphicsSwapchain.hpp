@@ -60,6 +60,7 @@ namespace NovelRT::Graphics
             std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> image) const;
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> AcquireNextImage();
+        [[nodiscard]] TexelFormat GetFormat();
         [[nodiscard]] bool Present();
 
         void RecreateSwapchain();

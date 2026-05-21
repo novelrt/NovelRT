@@ -3,12 +3,12 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::UI
   DEPENDS
     NovelRT::Ecs::Core
-    NovelRT::UI
     NovelRT::Graphics::Core
+    NovelRT::UI
 
   SOURCES
     PRIVATE
-      empty.cpp
+      UISystem.cpp
 
   HEADERS
     PUBLIC
@@ -17,4 +17,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::UI
       include/NovelRT/Ecs/UI/Components/UIButton.hpp
       include/NovelRT/Ecs/UI/Components/UISpriteButton.hpp
       include/NovelRT/Ecs/UI/Components/UIClickEvent.hpp
+      include/NovelRT/Ecs/UI/UISystem.hpp
 )
