@@ -7,6 +7,8 @@
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
 #include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Camera.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
@@ -37,6 +39,8 @@ namespace NovelRT::Ecs::Graphics
         Components::RenderPass<TGraphicsBackend> _defaultRenderPassComponent;
         Components::TrackedSemaphore<TGraphicsBackend> _defaultTrackedSemaphoreComponent;
         Components::Sprite _defaultSpriteComponent;
+        Components::Camera _defaultCameraComponent;
+        Components::Viewport _defaultViewportComponent;
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
@@ -114,6 +118,8 @@ namespace NovelRT::Ecs::Graphics
             cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
             cache.RegisterComponentType(_defaultTrackedSemaphoreComponent, "NovelRT::Ecs::Graphics::TrackedSemaphore");
             cache.RegisterComponentType(_defaultSpriteComponent, "NovelRT::Ecs::Graphics::Sprite");
+            cache.RegisterComponentType(_defaultCameraComponent, "NovelRT::Ecs::Graphics::Camera");
+            cache.RegisterComponentType(_defaultViewportComponent, "NovelRT::Ecs::Graphics::Viewport");
 
             unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
         }

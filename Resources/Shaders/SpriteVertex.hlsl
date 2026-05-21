@@ -15,17 +15,27 @@ struct VSOutput
 
 struct SpritePushConstant
 {
-    float4x4 model;
+    row_major float4x4 model;
     float4 tint;
+};
+
+struct CameraConstantBuffer
+{
+    row_major float4x4 view;
+    row_major float4x4 projection;
 };
 
 [[vk::push_constant]]
 SpritePushConstant pushConstant;
 
+[[vk::binding(1, 0)]]
+ConstantBuffer<CameraConstantBuffer> camera : register(b0);
+
 VSOutput main(VSInput input)
 {
     VSOutput output;
-    output.Position = mul(float4(input.Position, 1.0f), pushConstant.model);
+    float4 worldPos = mul(float4(input.Position, 1.0f), pushConstant.model);
+    output.Position = mul(mul(worldPos, camera.view), camera.projection);
     output.UV = input.UV;
     output.Tint = pushConstant.tint;
     return output;

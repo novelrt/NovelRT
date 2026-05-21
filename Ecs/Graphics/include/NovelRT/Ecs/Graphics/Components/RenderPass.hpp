@@ -15,14 +15,14 @@ namespace NovelRT::Ecs::Graphics::Components
     struct RenderPass
     {
         RenderPassId renderPassIndex;
-
-        std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>* descriptorSet;
+        std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>* descriptorSets;
+        size_t descriptorSetCount = 0;
 
         inline RenderPass& operator+=(const RenderPass& other)
         {
-            if (descriptorSet != nullptr)
+            if (descriptorSets != nullptr)
             {
-                delete descriptorSet;
+                delete[] descriptorSets;
             }
 
             *this = other;
@@ -31,7 +31,8 @@ namespace NovelRT::Ecs::Graphics::Components
 
         [[nodiscard]] inline bool operator==(const RenderPass& other) const noexcept
         {
-            return renderPassIndex == other.renderPassIndex;
+            return renderPassIndex == other.renderPassIndex && descriptorSets == other.descriptorSets &&
+                   descriptorSetCount == other.descriptorSetCount;
         }
 
         [[nodiscard]] inline bool operator!=(const RenderPass& other) const noexcept

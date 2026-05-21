@@ -181,19 +181,23 @@ namespace NovelRT::Ecs::Graphics
 
                 cmdList->CmdBeginRenderPass(pass, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
 
-                // 7. Enumerate over the entities and dispatch their individual command lists
-                for (const auto& entity : entities)
+                for (const auto entity : entities)
                 {
                     if (!commandLists.HasComponent(entity))
                         continue;
 
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
                     auto subCmdList = frameResources.commandLists.emplace_back(*subCmdListPtr);
-                    auto* descriptorSetPtr = renderPasses.GetComponent(entity).descriptorSet;
-                    frameResources.descriptorSets.emplace_back(*descriptorSetPtr);
+                    auto renderPassComponent = renderPasses.GetComponent(entity);
+                    auto* descriptorSetsPtr = renderPassComponent.descriptorSets;
+
+                    for (size_t i = 0; i < renderPassComponent.descriptorSetCount; i++)
+                    {
+                        frameResources.descriptorSets.emplace_back(descriptorSetsPtr[i]);
+                    }
 
                     delete subCmdListPtr;
-                    delete descriptorSetPtr;
+                    delete[] descriptorSetsPtr;
 
                     cmdList->CmdExecuteCommands(subCmdList);
                 }
