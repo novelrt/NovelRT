@@ -197,7 +197,7 @@ namespace NovelRT::Graphics
         signalSemaphores.push_back(vulkanSemaphore);
         signalSemaphoreValues.push_back(0);
 
-            std::vector<VkPipelineStageFlags> waitDstStageMasks(waitSemaphores.size(), VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+        std::vector<VkPipelineStageFlags> waitDstStageMasks(waitSemaphores.size(), VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
 
         VkTimelineSemaphoreSubmitInfo semaphoreSubmitInfo{};
         semaphoreSubmitInfo.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
