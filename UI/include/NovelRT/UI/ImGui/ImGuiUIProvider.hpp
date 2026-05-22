@@ -136,7 +136,7 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
 
-        inline void UploadFontData(std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> renderPass)
+        inline void UploadFontData()
         {
             uint8_t* pixels;
             int32_t width, height;
@@ -183,27 +183,6 @@ namespace NovelRT::UI::ImGui
             auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
             auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
 
-            // Create Render Pass
-            if (renderPass == nullptr)
-            {
-                NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
-                NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
-
-                attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
-
-                attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
-                attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
-                attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
-                attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
-
-                passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                _renderpass = _graphicsDevice->CreateRenderPass(passDesc);
-            }
-            else
-            {
-                _renderpass = renderPass;
-            }
-
             // Create pipeline
             _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
 
@@ -248,6 +227,25 @@ namespace NovelRT::UI::ImGui
             _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
         }
 
+        inline void CreateDedicatedRenderPass()
+        {
+            // Create Render Pass
+            if (_renderpass == nullptr)
+            {
+                NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
+                NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
+
+                attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
+
+                attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
+                attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
+                attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
+                attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
+
+                passDesc.attachmentDescriptions.push_back(attachmentDesc);
+                _renderpass = _graphicsDevice->CreateRenderPass(passDesc);
+            }
+        }
     public:
         ImGuiUIProvider(std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>> windowProvider,
                         std::shared_ptr<Input::InputProvider<TInputBackend>> inputProvider,
@@ -304,6 +302,10 @@ namespace NovelRT::UI::ImGui
             {
                 _renderpass = std::move(renderPass);
             }
+            else
+            {
+                CreateDedicatedRenderPass();
+            }
 
             auto* action = _inputProvider->FindInputActionForKey("LeftMouseButton");
             if (!action)
@@ -324,7 +326,8 @@ namespace NovelRT::UI::ImGui
 
         void Initialise()
         {
-            UploadFontData(_renderpass);
+            CreateDedicatedRenderPass();
+            UploadFontData();
         }
 
         void AddFontToUpload(const std::string& name, const std::string& filePath)
@@ -622,6 +625,11 @@ namespace NovelRT::UI::ImGui
             currentCmdList->CmdSetScissor(
                 NovelRT::Maths::GeoVector2F::Zero(),
                 NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+        }
+    
+        std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> GetDedicatedRenderPass()
+        {
+            return _renderpass;
         }
     };
 }

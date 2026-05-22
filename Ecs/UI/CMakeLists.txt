@@ -3,8 +3,10 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::UI
   DEPENDS
     NovelRT::Ecs::Core
+    NovelRT::Ecs::Graphics
     NovelRT::Graphics::Core
     NovelRT::UI
+    NovelRT::Input::Core
 
   SOURCES
     PRIVATE

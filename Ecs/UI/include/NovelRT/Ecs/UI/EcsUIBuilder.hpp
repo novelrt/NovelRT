@@ -11,6 +11,7 @@
 #include <NovelRT/Ecs/UI/Components/UISpriteButton.hpp>
 #include <NovelRT/Ecs/UI/Components/UIText.hpp>
 #include <NovelRT/Ecs/UI/Components/UIClickEvent.hpp>
+#include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
 
 #include <NovelRT/Utilities/Macros.hpp>
 
@@ -20,8 +21,8 @@
 
 namespace NovelRT::Ecs::UI
 {
-    template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
-    class UISystem;
+    // template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
+    // class UISystem;
 
     template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
     class EcsUIBuilder
@@ -29,6 +30,10 @@ namespace NovelRT::Ecs::UI
     private:
         std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> _uiProvider;
         std::shared_ptr<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>> _system;
+        std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _gfxDevice;
+        std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>> _inputProvider;
+        std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>> _wndProvider;
+        std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _allocator;
 
         EcsUIBuilder(){}
 
@@ -49,17 +54,73 @@ namespace NovelRT::Ecs::UI
             return *this;
         }
 
+        EcsUIBuilder& WithUIProvider(
+                        std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>>& windowProvider,
+                        std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>>& inputProvider,
+                        std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& graphicsDevice,
+                        std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>>& memoryAllocator,
+                        bool debugMode = false
+        )
+        {
+            _uiProvider = std::make_shared<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>(windowProvider, inputProvider, graphicsDevice, memoryAllocator, debugMode);
+            return *this;
+        }
+
+        EcsUIBuilder& WithDefaultUIProvider(bool debugMode = false)
+        {
+            _uiProvider = std::make_shared<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>(_wndProvider, _inputProvider, _gfxDevice, _allocator, debugMode);
+            return *this;
+        }
+
         EcsUIBuilder& WithUISystem(
-            const std::shared_ptr<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>& system)
+            const std::shared_ptr<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>> system)
         {
             _system = system;
             return *this;
         }
 
+        EcsUIBuilder& WithGraphicsDevice(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
+        {
+            _gfxDevice = device;
+            return *this;
+        }
+
+        EcsUIBuilder& WithGraphicsMemoryAllocator(std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>>& allocator)
+        {
+            _allocator = allocator;
+            return *this;
+        }
+
+        EcsUIBuilder& WithWindowProvider(std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>>& provider)
+        {
+            _wndProvider = provider;
+            return *this;
+        }
+
+        EcsUIBuilder& WithInputProvider(std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>>& provider)
+        {
+            _inputProvider = provider;
+            return *this;
+        }
+
+        EcsUIBuilder& WithGraphicsBuilder(NovelRT::Ecs::Graphics::EcsGraphicsBuilder<TGraphicsBackend>& builder)
+        {
+            builder.ConfigureRenderPasses([this](NovelRT::Ecs::Graphics::RenderPassManager<TGraphicsBackend>& renderPassManager)
+            {
+                renderPassManager.RegisterRenderPass(_uiProvider->GetDedicatedRenderPass());
+            });
+            return *this;
+        }
+
         EcsUIBuilder& WithDefaultUISystem()
         {
-            return WithOrchestrator(
-                std::make_shared<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>(_uiProvider));
+            return WithUISystem(std::make_shared<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>(_uiProvider));
+        }
+
+        EcsUIBuilder& AddFont(const std::string& name, const std::string& filePath)
+        {
+            _uiProvider->AddFontToUpload(name, filePath);
+            return *this;
         }
 
         void operator()(SystemScheduler& scheduler)
@@ -68,8 +129,8 @@ namespace NovelRT::Ecs::UI
 
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIWidgetContainer{}, "NovelRT::Ecs::UI::UIWidgetContainer");
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIButton{}, "NovelRT::Ecs::UI::UIButton");
-            cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIClickEvent, "NovelRT::Ecs::UI::UIClickEvent");
-            cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIText, "NovelRT::Ecs::UI::UIText");
+            cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIClickEvent{}, "NovelRT::Ecs::UI::UIClickEvent");
+            cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIText{}, "NovelRT::Ecs::UI::UIText");
             
             unused(scheduler.RegisterSystemDependsOnAll(_system));
         }

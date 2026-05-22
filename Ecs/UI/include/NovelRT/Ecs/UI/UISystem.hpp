@@ -3,10 +3,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-// #include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
-// #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
-// #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
-
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
 #include <NovelRT/Ecs/Catalogue.hpp>
@@ -16,13 +12,6 @@
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 
-// #include <algorithm>
-// #include <deque>
-// #include <map>
-// #include <set>
-// #include <utility>
-// #include <vector>
-
 namespace NovelRT::Ecs::UI
 {
     template<typename TGraphicsBackend, typename TWindowingBackend, typename TInputBackend>
@@ -30,6 +19,7 @@ namespace NovelRT::Ecs::UI
     {
     private:
         std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> _uiProvider;
+        bool _firstSpin = true;
 
         // EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view,
         //                         Catalogue& catalogue,
