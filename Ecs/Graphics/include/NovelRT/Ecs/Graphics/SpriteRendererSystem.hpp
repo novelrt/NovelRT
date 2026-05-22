@@ -61,10 +61,7 @@ namespace NovelRT::Ecs::Graphics
         struct SpritePushConstant
         {
             Maths::GeoMatrix4x4F model;
-            float tintR;
-            float tintG;
-            float tintB;
-            float tintA;
+            Maths::GeoVector4F tintColour;
         };
 
         struct CameraConstantBuffer
@@ -170,11 +167,10 @@ namespace NovelRT::Ecs::Graphics
                     [this, assetId = sprite.assetId](Timing::Timestamp /*delta*/, Catalogue completionCatalogue,
                                                      ResourceManagement::TextureMetadata textureMetadata)
                     {
-                        NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
-                        bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-                        bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-                        bufferCreateInfo.size =
-                            (static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4) * 2;
+                        NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
+                            .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
+                            .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
+                            .size = (static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4) * 2};
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
                         auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
@@ -205,11 +201,10 @@ namespace NovelRT::Ecs::Graphics
 
                         _graphicsDevice->QueueSubmit(lists, signalSemaphores);
 
-                        Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{};
-                        newUploadTracker.semaphore =
-                            new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
-                                _uploadSemaphore);
-                        newUploadTracker.signalValue = _submittedUploads;
+                        Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
+                            .semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
+                                _uploadSemaphore),
+                            .signalValue = _submittedUploads};
 
                         auto id = completionCatalogue.CreateEntity();
 
@@ -266,11 +261,13 @@ namespace NovelRT::Ecs::Graphics
 
                 if (_cameraConstantBuffers.find(cameraEntityId) == _cameraConstantBuffers.end())
                 {
-                    NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
-                    bufferCreateInfo.bufferKind = NovelRT::Graphics::GraphicsBufferKind::Constant;
-                    bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-                    bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-                    bufferCreateInfo.size = sizeof(CameraConstantBuffer);
+                    NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo
+                    {
+                        .bufferKind = NovelRT::Graphics::GraphicsBufferKind::Constant,
+                        .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
+                        .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
+                        .size = sizeof(CameraConstantBuffer)
+                    };
 
                     auto constantBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
                     auto constantBufferRegion = constantBuffer->Allocate(sizeof(CameraConstantBuffer), 16);
@@ -302,12 +299,14 @@ namespace NovelRT::Ecs::Graphics
 
             for (auto [entityId, sprite] : spriteView)
             {
-                if (_textureCache.find(sprite.assetId) == _textureCache.end())
+                auto textureCacheIterator = _textureCache.find(sprite.assetId);
+
+                if (textureCacheIterator == _textureCache.end())
                 {
                     continue;
                 }
 
-                auto& texture = _textureCache.at(sprite.assetId);
+                auto& texture = (*textureCacheIterator).second;
 
                 NovelRT::Ecs::Components::TransformComponent transform = transformView.GetComponent(entityId);
 
@@ -343,25 +342,23 @@ namespace NovelRT::Ecs::Graphics
                     model.Rotate(transform.rotationInRadians);
                     model.Scale(finalScale);
 
-                    SpritePushConstant pushConstant{};
-                    pushConstant.model = model;
-                    pushConstant.tintR = sprite.tint.getRScalar();
-                    pushConstant.tintG = sprite.tint.getGScalar();
-                    pushConstant.tintB = sprite.tint.getBScalar();
-                    pushConstant.tintA = sprite.tint.getAScalar();
+                    SpritePushConstant pushConstant{
+                        .model = model,
+                        .tintColour = Maths::GeoVector4F(sprite.tint.getRScalar(), sprite.tint.getGScalar(),
+                                                         sprite.tint.getBScalar(), sprite.tint.getAScalar())};
 
                     currentCmdList->CmdPushConstants(
                         _pipeline->GetSignature(), NovelRT::Graphics::ShaderProgramVisibility::All, 0,
                         NovelRT::Utilities::Span<uint8_t>(reinterpret_cast<uint8_t*>(&pushConstant),
                                                           sizeof(SpritePushConstant)));
 
-                    NovelRT::Graphics::ViewportInfo viewportInfoStruct{};
-                    viewportInfoStruct.x = cameraData.viewport.x;
-                    viewportInfoStruct.y = cameraData.viewport.y + cameraData.viewport.height;
-                    viewportInfoStruct.width = cameraData.viewport.width;
-                    viewportInfoStruct.height = -(cameraData.viewport.height);
-                    viewportInfoStruct.minDepth = 0.0f;
-                    viewportInfoStruct.maxDepth = 1.0f;
+                    NovelRT::Graphics::ViewportInfo viewportInfoStruct{.x = cameraData.viewport.x,
+                                                                       .y = cameraData.viewport.y +
+                                                                            cameraData.viewport.height,
+                                                                       .width = cameraData.viewport.width,
+                                                                       .height = -(cameraData.viewport.height),
+                                                                       .minDepth = 0.0f,
+                                                                       .maxDepth = 1.0f};
 
                     currentCmdList->CmdSetViewport(viewportInfoStruct);
                     currentCmdList->CmdSetScissor(
@@ -408,14 +405,13 @@ namespace NovelRT::Ecs::Graphics
 
                 currentCmdList->End();
 
-                Components::RenderPass<TGraphicsBackend> passComponent{};
-                passComponent.renderPassIndex = _renderPass.RenderPassId;
-                passComponent.descriptorSets = descriptorSetArray;
-                passComponent.descriptorSetCount = worldSpaceCameras.size();
+                Components::RenderPass<TGraphicsBackend> passComponent{.renderPassIndex = _renderPass.RenderPassId,
+                                                                       .descriptorSets = descriptorSetArray,
+                                                                       .descriptorSetCount = worldSpaceCameras.size()};
 
-                Components::BuiltCommandList<TGraphicsBackend> cmdListComp{};
-                cmdListComp.commandList =
-                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(currentCmdList);
+                Components::BuiltCommandList<TGraphicsBackend> cmdListComp{
+                    .commandList =
+                        new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(currentCmdList)};
 
                 renderPassView.AddComponent(entityId, passComponent);
                 cmdListView.AddComponent(entityId, cmdListComp);
@@ -437,10 +433,10 @@ namespace NovelRT::Ecs::Graphics
               _uploadSemaphore(_graphicsDevice->CreateSemaphore(0)),
               _orchestratorSubmissionSemaphore(_graphicsDevice->CreateSemaphore(0))
         {
-            NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{};
-            bufferCreateInfo.cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write;
-            bufferCreateInfo.gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read;
-            bufferCreateInfo.size = 64 * 1024;
+            NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
+                .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
+                .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
+                .size = 64 * 1024};
 
             auto stagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
 

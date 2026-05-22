@@ -195,7 +195,7 @@ namespace NovelRT::Ecs::Graphics
                     {
                         frameResources.descriptorSets.emplace_back(descriptorSetsPtr[i]);
                     }
-
+                    
                     delete subCmdListPtr;
                     delete[] descriptorSetsPtr;
 

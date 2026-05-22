@@ -44,10 +44,5 @@ namespace NovelRT::Graphics
         {
             return r == other.r && g == other.g && b == other.b && a == other.a;
         }
-
-        [[nodiscard]] inline bool operator!=(const RGBAColour& other) const noexcept
-        {
-            return !(*this == other);
-        }
     };
 }

@@ -175,7 +175,6 @@ namespace NovelRT::Graphics
             semaphoresToSignal)
     {
         VkSemaphore vulkanSemaphore = _swapchain->GetActiveSemaphore(shared_from_this())->GetVulkanSemaphore();
-        //VkPipelineStageFlags allCommands = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
 
         std::vector<VkCommandBuffer> buffers(cmdLists.size());
         std::vector<VkSemaphore> waitSemaphores(semaphoresToWait.size());

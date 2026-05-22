@@ -21,31 +21,24 @@ namespace NovelRT::Graphics
     VkSurfaceFormatKHR GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::ChooseSwapSurfaceFormat(
         const std::vector<VkSurfaceFormatKHR>& availableFormats) const noexcept
     {
-        VkSurfaceFormatKHR returnFormat{};
-        returnFormat.format = VK_FORMAT_UNDEFINED;
+        auto it =
+            std::find_if(availableFormats.begin(), availableFormats.end(),
+                         [](auto& it)
+                         {
+                             return it.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR &&
+                                    (it.format == VK_FORMAT_R8G8B8A8_UNORM || it.format == VK_FORMAT_B8G8R8A8_UNORM);
+                         });
 
-        for (const auto& availableFormat : availableFormats)
+        if (it != availableFormats.end())
         {
-            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM ||
-                availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM)
-            {
-                if (availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-                {
-                    return availableFormat; // HACK - Best case, return immediately
-                }
-            }
+            return *it;
         }
 
-        if (returnFormat.format == VK_FORMAT_UNDEFINED)
-        {
-            _logger.logWarningLine(
-                "Vulkan was unable to detect one of the preferred VkFormats for the specified surface. The first "
-                "format found is now being used. This may result in unexpected behaviour.");
+        _logger.logWarningLine(
+            "Vulkan was unable to detect one of the preferred VkFormats for the specified surface. The first "
+            "format found is now being used. This may result in unexpected behaviour.");
 
-            returnFormat = availableFormats[0];
-        }
-
-        return returnFormat;
+        return availableFormats.at(0);
     }
 
     // TODO: freesync and gsync support will go here in a later PR.
@@ -197,7 +190,7 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>(
             GraphicsDeviceObject::shared_from_this());
     }
-    
+
     [[nodiscard]] Graphics::TexelFormat GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetFormat()
     {
         return Vulkan::Utilities::MapInverse(GetVulkanFormat());

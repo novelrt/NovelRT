@@ -14,7 +14,6 @@ namespace NovelRT::Windowing
 
     GlfwWindowProvider::WindowProvider(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize)
     {
-        glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
         if (glfwInit() == GLFW_FALSE)
         {
             const char* output = nullptr;
