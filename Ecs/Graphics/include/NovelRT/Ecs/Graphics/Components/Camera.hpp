@@ -13,6 +13,9 @@ namespace NovelRT::Ecs::Graphics::Components
         float top = 1.0f;
         float nearPlane = 0.0f;
         float farPlane = 1.0f;
+        int32_t referenceResolutionWidth = 100;
+        int32_t referenceResolutionHeight = 100;
+
         bool isScreenSpace = false;
 
         inline Camera& operator+=(const Camera& other)
@@ -26,17 +29,14 @@ namespace NovelRT::Ecs::Graphics::Components
             // normally I would care more about floating point comparison but this is basically only here to handle
             // deletion, where it'll always be zero. - Matt J.
             return left == other.left && right == other.right && bottom == other.bottom && top == other.top &&
-                   nearPlane == other.nearPlane && farPlane == other.farPlane && isScreenSpace == other.isScreenSpace;
+                   nearPlane == other.nearPlane && farPlane == other.farPlane && isScreenSpace == other.isScreenSpace &&
+                   referenceResolutionWidth == other.referenceResolutionWidth &&
+                   referenceResolutionHeight == other.referenceResolutionHeight;
         }
 
         [[nodiscard]] inline bool operator!=(const Camera& other) const noexcept
         {
             return !(*this == other);
-        }
-
-        [[nodiscard]] static Camera GetDeleteInstructionState() noexcept
-        {
-            return Camera{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false};
         }
     };
 }

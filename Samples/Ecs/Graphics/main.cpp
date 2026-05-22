@@ -121,22 +121,16 @@ public:
         transformView.AddComponent(cameraViewportEntity, viewportTransform);
 
         auto size = _viewportSize;
-        float width = size.x;
-        float height = size.y;
-        float halfWidth = width / 2.0f;
-        float halfHeight = height / 2.0f;
-        float left = -halfWidth;
-        float right = +halfWidth;
-        float top = -halfHeight;
-        float bottom = +halfHeight;
 
         NovelRT::Ecs::Graphics::Components::Camera camera{};
-        camera.left = left;
-        camera.right = right;
-        camera.top = top;
-        camera.bottom = bottom;
-        camera.nearPlane = -1.0f;
-        camera.farPlane = 65535.0f;
+        camera.left = -1.0f;
+        camera.right = 1.0f;
+        camera.top = -1.0f;
+        camera.bottom = 1.0f;
+        camera.nearPlane = 0.0f;
+        camera.farPlane = 1.0f;
+        camera.referenceResolutionWidth = 1920;
+        camera.referenceResolutionHeight = 1080;
 
         cameraView.AddComponent(cameraViewportEntity, camera);
 
@@ -155,7 +149,7 @@ int main()
         ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
 
     auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1920, 1080));
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1920.0f, 1080.0f) / 2.0f);
 
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
@@ -194,7 +188,7 @@ int main()
     auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
-    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920, 1080));
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
 
     builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
                       { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });

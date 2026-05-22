@@ -48,7 +48,9 @@ namespace NovelRT::Ecs::Graphics
             : _defaultBuiltCommandListComponent{nullptr},
               _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr},
               _defaultTrackedSemaphoreComponent{nullptr, 0},
-              _defaultSpriteComponent{}
+              _defaultSpriteComponent{},
+              _defaultCameraComponent{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, false},
+              _defaultViewportComponent{0.0f, 0.0f, 0.0f, 0.0f}
         {
         }
 

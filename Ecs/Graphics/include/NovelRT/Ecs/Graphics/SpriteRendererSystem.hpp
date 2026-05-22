@@ -311,18 +311,6 @@ namespace NovelRT::Ecs::Graphics
 
                 NovelRT::Ecs::Components::TransformComponent transform = transformView.GetComponent(entityId);
 
-                auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
-                model.Translate(Maths::GeoVector3F(transform.position.x, transform.position.y, 0.0f));
-                model.Rotate(transform.rotationInRadians);
-                model.Scale(texture.textureSize * Maths::GeoVector2F(transform.scale.x, transform.scale.y));
-
-                SpritePushConstant pushConstant{};
-                pushConstant.model = model;
-                pushConstant.tintR = sprite.tint.getRScalar();
-                pushConstant.tintG = sprite.tint.getGScalar();
-                pushConstant.tintB = sprite.tint.getBScalar();
-                pushConstant.tintA = sprite.tint.getAScalar();
-
                 auto currentCmdList =
                     context->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
                         {_renderPass.RenderPass, 0}));
@@ -337,17 +325,36 @@ namespace NovelRT::Ecs::Graphics
                 std::array<size_t, 1> offsets{_vertexBufferRegion->GetOffset()};
                 currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
 
-                currentCmdList->CmdPushConstants(
-                    _pipeline->GetSignature(), NovelRT::Graphics::ShaderProgramVisibility::All, 0,
-                    NovelRT::Utilities::Span<uint8_t>(reinterpret_cast<uint8_t*>(&pushConstant),
-                                                      sizeof(SpritePushConstant)));
-
                 auto* descriptorSetArray = new std::shared_ptr<
                     NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>[worldSpaceCameras.size()];
                 size_t descriptorSetIndex = 0;
 
                 for (auto& cameraData : worldSpaceCameras)
                 {
+
+                    auto finalScale = Maths::GeoVector2F(
+                        (texture.textureSize.x / static_cast<float>(cameraData.camera.referenceResolutionWidth)) *
+                            transform.scale.x,
+                        (texture.textureSize.y / static_cast<float>(cameraData.camera.referenceResolutionHeight)) *
+                            transform.scale.y);
+
+                    auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
+                    model.Translate(Maths::GeoVector3F(transform.position.x, transform.position.y, 0.0f));
+                    model.Rotate(transform.rotationInRadians);
+                    model.Scale(finalScale);
+
+                    SpritePushConstant pushConstant{};
+                    pushConstant.model = model;
+                    pushConstant.tintR = sprite.tint.getRScalar();
+                    pushConstant.tintG = sprite.tint.getGScalar();
+                    pushConstant.tintB = sprite.tint.getBScalar();
+                    pushConstant.tintA = sprite.tint.getAScalar();
+
+                    currentCmdList->CmdPushConstants(
+                        _pipeline->GetSignature(), NovelRT::Graphics::ShaderProgramVisibility::All, 0,
+                        NovelRT::Utilities::Span<uint8_t>(reinterpret_cast<uint8_t*>(&pushConstant),
+                                                          sizeof(SpritePushConstant)));
+
                     NovelRT::Graphics::ViewportInfo viewportInfoStruct{};
                     viewportInfoStruct.x = cameraData.viewport.x;
                     viewportInfoStruct.y = cameraData.viewport.y + cameraData.viewport.height;
