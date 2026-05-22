@@ -482,6 +482,9 @@ int main()
                         NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
                                                                          memoryAllocator, true);
 
+    unused(uiProvider->AddFontToUpload("default", "Raleway-Regular.ttf"));
+    uiProvider->Initialise();
+
     // Setup Background Triangle + Input Resource Regions for rendering
     auto renderingData = SetupTriangleSample(gfxDevice, memoryAllocator);
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>

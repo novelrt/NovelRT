@@ -41,7 +41,7 @@ namespace NovelRT::UI::ImGui
         : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
     {
     private:
-        std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
+        std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget) const
         {
             std::filesystem::path finalPath =
                 NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
@@ -124,17 +124,19 @@ namespace NovelRT::UI::ImGui
 
         bool _drawEnabled = false;
         ImDrawData* _cachedDrawData = nullptr;
+        int32_t _defaultFontPixelSize = 20;
 
         NovelRT::Input::InputAction _mouseInputAction;
 
         std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> _pipeline;
         std::shared_ptr<GraphicsPipelineSignature<TGraphicsBackend>> _pipelineSignature;
+        std::shared_ptr<GraphicsRenderPass<TGraphicsBackend>> _renderpass;
 
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
 
-        inline void UploadFontData()
+        inline void UploadFontData(std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> renderPass)
         {
             uint8_t* pixels;
             int32_t width, height;
@@ -182,21 +184,28 @@ namespace NovelRT::UI::ImGui
             auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
 
             // Create Render Pass
-            NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
-            NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
+            if (renderPass == nullptr)
+            {
+                NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
+                NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
 
-            attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
+                attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
 
-            attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
-            attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
-            attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
-            attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
+                attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
+                attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
+                attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
+                attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
 
-            passDesc.attachmentDescriptions.push_back(attachmentDesc);
-            auto pass = _graphicsDevice->CreateRenderPass(passDesc);
+                passDesc.attachmentDescriptions.push_back(attachmentDesc);
+                _renderpass = _graphicsDevice->CreateRenderPass(passDesc);
+            }
+            else
+            {
+                _renderpass = renderPass;
+            }
 
             // Create pipeline
-            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, pass, true);
+            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
 
             // Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
@@ -244,6 +253,7 @@ namespace NovelRT::UI::ImGui
                         std::shared_ptr<Input::InputProvider<TInputBackend>> inputProvider,
                         std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
                         std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator,
+                        std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> renderPass,
                         bool debugMode = false)
             : _windowProvider(std::move(windowProvider)),
               _inputProvider(std::move(inputProvider)),
@@ -262,36 +272,38 @@ namespace NovelRT::UI::ImGui
             _imguiContext = std::shared_ptr<ImGuiContext>{::ImGui::CreateContext(), ::ImGui::DestroyContext};
             auto& io = ::ImGui::GetIO();
             ::ImGui::StyleColorsDark();
-            LoadFontFile(std::string("default"), "Raleway-Regular.ttf", 20);
+            //LoadFontFile(std::string("default"), "Raleway-Regular.ttf", 20);
 
             io.IniFilename = NULL;
             io.BackendPlatformName = "NovelRT";
             io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
             io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
             io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
-            io.GetClipboardTextFn = [](void* userData)
+            io.ClipboardUserData = &_windowProvider;
+            io.GetClipboardTextFn = [](void* userData) -> const char*
             {
-                auto provider = std::dynamic_pointer_cast<std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>>>(userData);
+                auto provider = *reinterpret_cast<std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>>*>(userData);
                 return provider->GetClipboardText();
             };
             io.SetClipboardTextFn = [](void* userData, const char* text)
             {
-                auto provider = std::dynamic_pointer_cast<std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>>>(userData);
+                auto provider = *reinterpret_cast<std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>>*>(userData);
                 provider->SetClipboardText(std::string(text));
             };
             io.BackendRendererName = "NovelRT";
-            io.ClipboardUserData = &_windowProvider->shared_from_this();
+            
 
             ::ImGui::GetMainViewport()->PlatformHandleRaw = (void*)_windowProvider->GetHandle();
             auto windowSize = _windowProvider->GetSize();
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
 
-            if ((windowSize.x > 0) && (windowSize.y > 0))
-            {
-                io.DisplayFramebufferScale = ImVec2(1, 1);
-            }
+            NovelRT::Maths::GeoVector2F scale = _windowProvider->GetWindowScale();
+            io.DisplayFramebufferScale = ImVec2(scale.x, scale.y);
 
-            UploadFontData();
+            if(renderPass != nullptr)
+            {
+                _renderpass = std::move(renderPass);
+            }
 
             auto* action = _inputProvider->FindInputActionForKey("LeftMouseButton");
             if (!action)
@@ -300,7 +312,25 @@ namespace NovelRT::UI::ImGui
             _mouseInputAction = *action;
         }
 
+        ImGuiUIProvider(std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>> windowProvider,
+                        std::shared_ptr<Input::InputProvider<TInputBackend>> inputProvider,
+                        std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
+                        std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator,
+                        bool debugMode = false)
+            : ImGuiUIProvider(windowProvider, inputProvider, graphicsDevice, memoryAllocator, nullptr, debugMode)
+        {}
+
         ~ImGuiUIProvider() = default;
+
+        void Initialise()
+        {
+            UploadFontData(_renderpass);
+        }
+
+        void AddFontToUpload(const std::string& name, const std::string& filePath)
+        {
+            LoadFontFile(name, filePath, _defaultFontPixelSize);
+        }
 
         void BeginFrame(float deltaTime)
         {

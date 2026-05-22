@@ -161,13 +161,21 @@ namespace NovelRT::Windowing
         return Graphics::GraphicsSurfaceKind::Glfw;
     }
 
-    std::string GlfwWindowProvider::GetClipboardText() const
+    const char* GlfwWindowProvider::GetClipboardText() const
     {
-        return std::string(glfwGetClipboardString(_window));
+        return glfwGetClipboardString(_window);
     }
 
     void GlfwWindowProvider::SetClipboardText(const std::string& text) const
     {
         glfwSetClipboardString(_window, text.c_str());
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowScale() const noexcept
+    {
+        float x = 1;
+        float y = 1;
+        glfwGetWindowContentScale(_window, &x, &y);
+        return NovelRT::Maths::GeoVector2F(x, y);
     }
 }
