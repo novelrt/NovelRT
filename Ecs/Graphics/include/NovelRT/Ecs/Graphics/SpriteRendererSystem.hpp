@@ -261,13 +261,11 @@ namespace NovelRT::Ecs::Graphics
 
                 if (_cameraConstantBuffers.find(cameraEntityId) == _cameraConstantBuffers.end())
                 {
-                    NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo
-                    {
+                    NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
                         .bufferKind = NovelRT::Graphics::GraphicsBufferKind::Constant,
                         .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
                         .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
-                        .size = sizeof(CameraConstantBuffer)
-                    };
+                        .size = sizeof(CameraConstantBuffer)};
 
                     auto constantBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
                     auto constantBufferRegion = constantBuffer->Allocate(sizeof(CameraConstantBuffer), 16);
