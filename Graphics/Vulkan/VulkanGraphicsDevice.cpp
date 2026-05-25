@@ -190,6 +190,7 @@ namespace NovelRT::Graphics
 
         vkGetDeviceQueue(device, _indicesData.graphicsFamily.value(), 0, &_graphicsQueue);
         vkGetDeviceQueue(device, _indicesData.presentFamily.value(), 0, &_presentQueue);
+        vkGetDeviceQueue(device, _indicesData.transferFamily.value(), 0, &_transferQueue);
 
         _logger.logInfoLine("VkDevice successfully created.");
         return device;
@@ -207,10 +208,12 @@ namespace NovelRT::Graphics
                   { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); }),
           _graphicsQueue(VK_NULL_HANDLE),
           _presentQueue(VK_NULL_HANDLE),
+          _transferQueue(VK_NULL_HANDLE),
           _vulkanSwapchain(
               [this]()
               { return std::make_shared<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>>(shared_from_this()); }),
-          _indicesData{}
+          _indicesData{},
+          _queueSubmitMutex(std::make_unique<tbb::mutex>())
     {
         _logger.logInfoLine("Provided GPU device: " + _adapter->GetName());
         unused(_state.Transition(Threading::VolatileState::Initialised));
@@ -318,19 +321,66 @@ namespace NovelRT::Graphics
         }
     }
 
-    void VulkanGraphicsDevice::QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList)
+    void VulkanGraphicsDevice::QueueSubmit(
+        NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists)
     {
-        std::vector<VkCommandBuffer> buffers;
-        buffers.emplace_back(cmdList->GetVkCommandBuffer());
+        QueueSubmit({}, cmdLists, {});
+    }
+
+    void VulkanGraphicsDevice::QueueSubmit(
+        NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+        NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>>
+            semaphoresToSignal)
+    {
+        QueueSubmit({}, cmdLists, semaphoresToSignal);
+    }
+
+    void VulkanGraphicsDevice::QueueSubmit(
+        NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>>
+            semaphoresToWait,
+        NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>> cmdLists,
+        NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<Vulkan::VulkanGraphicsBackend>>, uint64_t>>
+            semaphoresToSignal)
+    {
+        std::lock_guard guard(*_queueSubmitMutex);
+
+        std::vector<VkCommandBuffer> buffers(cmdLists.size());
+        std::vector<VkSemaphore> waitSemaphores(semaphoresToWait.size());
+        std::vector<uint64_t> waitSemaphoreValues(semaphoresToWait.size());
+        std::vector<VkSemaphore> signalSemaphores(semaphoresToSignal.size());
+        std::vector<uint64_t> signalSemaphoreValues(semaphoresToSignal.size());
+        std::transform(cmdLists.begin(), cmdLists.end(), buffers.begin(),
+                       [](const auto& cmdList) { return cmdList->GetVkCommandBuffer(); });
+        std::transform(semaphoresToWait.begin(), semaphoresToWait.end(), waitSemaphores.begin(),
+                       [](const auto& semaphore) { return semaphore.first->GetVulkanSemaphore(); });
+        std::transform(semaphoresToWait.begin(), semaphoresToWait.end(), waitSemaphoreValues.begin(),
+                       [](const auto& semaphore) { return semaphore.second; });
+        std::transform(semaphoresToSignal.begin(), semaphoresToSignal.end(), signalSemaphores.begin(),
+                       [](const auto& semaphore) { return semaphore.first->GetVulkanSemaphore(); });
+        std::transform(semaphoresToSignal.begin(), semaphoresToSignal.end(), signalSemaphoreValues.begin(),
+                       [](const auto& semaphore) { return semaphore.second; });
+
+        std::vector<VkPipelineStageFlags> waitDstStageMasks(waitSemaphores.size(), VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+
+        VkTimelineSemaphoreSubmitInfo semaphoreSubmitInfo{};
+        semaphoreSubmitInfo.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
+        semaphoreSubmitInfo.waitSemaphoreValueCount = static_cast<uint32_t>(waitSemaphoreValues.size());
+        semaphoreSubmitInfo.pWaitSemaphoreValues = waitSemaphoreValues.data();
+        semaphoreSubmitInfo.signalSemaphoreValueCount = static_cast<uint32_t>(signalSemaphoreValues.size());
+        semaphoreSubmitInfo.pSignalSemaphoreValues = signalSemaphoreValues.data();
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.pNext = &semaphoreSubmitInfo;
         submitInfo.commandBufferCount = static_cast<uint32_t>(buffers.size());
         submitInfo.pCommandBuffers = buffers.data();
+        submitInfo.signalSemaphoreCount = static_cast<uint32_t>(signalSemaphores.size());
+        submitInfo.pSignalSemaphores = signalSemaphores.data();
+        submitInfo.waitSemaphoreCount = static_cast<uint32_t>(waitSemaphores.size());
+        submitInfo.pWaitSemaphores = waitSemaphores.data();
+        submitInfo.pWaitDstStageMask = waitDstStageMasks.data();
 
-        // TODO: submit to the correct queue if it's just transfers somehow?
-        const VkResult queueSubmitResult = vkQueueSubmit(GetVulkanGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-        //
+        const VkResult queueSubmitResult = vkQueueSubmit(GetVulkanTransferQueue(), 1, &submitInfo, VK_NULL_HANDLE);
         if (queueSubmitResult != VK_SUCCESS)
         {
             throw std::runtime_error("vkQueueSubmit failed! Reason: " + std::to_string(queueSubmitResult));
@@ -346,6 +396,11 @@ namespace NovelRT::Graphics
             throw std::runtime_error("The VkDevice did not idle correctly! Reason: " +
                                      std::to_string(waitForIdleResult));
         }
+    }
+
+    VkQueue VulkanGraphicsDevice::GetVulkanTransferQueue() const noexcept
+    {
+        return _transferQueue;
     }
 
     VkQueue VulkanGraphicsDevice::GetVulkanPresentQueue() const noexcept

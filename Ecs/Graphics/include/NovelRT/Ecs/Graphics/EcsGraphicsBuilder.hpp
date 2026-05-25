@@ -4,7 +4,11 @@
 // for more information.
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Camera.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
+#include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
@@ -33,12 +37,20 @@ namespace NovelRT::Ecs::Graphics
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         Components::RenderPass<TGraphicsBackend> _defaultRenderPassComponent;
+        Components::TrackedSemaphore<TGraphicsBackend> _defaultTrackedSemaphoreComponent;
+        Components::Sprite _defaultSpriteComponent;
+        Components::Camera _defaultCameraComponent;
+        Components::Viewport _defaultViewportComponent;
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
-              _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr}
+              _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr},
+              _defaultTrackedSemaphoreComponent{nullptr, 0},
+              _defaultSpriteComponent{},
+              _defaultCameraComponent{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0, 0, false},
+              _defaultViewportComponent{0.0f, 0.0f, 0.0f, 0.0f}
         {
         }
 
@@ -106,6 +118,10 @@ namespace NovelRT::Ecs::Graphics
 
             cache.RegisterComponentType(_defaultBuiltCommandListComponent, "NovelRT::Ecs::Graphics::BuiltCommandList");
             cache.RegisterComponentType(_defaultRenderPassComponent, "NovelRT::Ecs::Graphics::RenderPass");
+            cache.RegisterComponentType(_defaultTrackedSemaphoreComponent, "NovelRT::Ecs::Graphics::TrackedSemaphore");
+            cache.RegisterComponentType(_defaultSpriteComponent, "NovelRT::Ecs::Graphics::Sprite");
+            cache.RegisterComponentType(_defaultCameraComponent, "NovelRT::Ecs::Graphics::Camera");
+            cache.RegisterComponentType(_defaultViewportComponent, "NovelRT::Ecs::Graphics::Viewport");
 
             unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
         }

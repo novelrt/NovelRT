@@ -57,10 +57,9 @@ using namespace NovelRT::Input::Glfw;
 using namespace NovelRT::Input;
 using namespace NovelRT::UI::ImGui;
 
-//Globals
+// Globals
 uint32_t strIndex = 0;
 std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
-
 
 std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
 {
@@ -115,9 +114,9 @@ struct RenderingData
 
 template<typename TBackend>
 RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
-                                    std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
+                                            std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
 {
-    //Setup Triangle
+    // Setup Triangle
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
     bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
@@ -156,21 +155,13 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
 
-    //create the render pass and pipeline
+    // create the render pass and pipeline
     GraphicsRenderPassDescription passDesc{};
     GraphicsAttachmentDescription attachmentDesc{};
 
-    auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
+    attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
 
-    if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
-    {
-        attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
-    }
-    else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
-    {
-        attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
-    }
-    else
+    if (attachmentDesc.texelFormat == TexelFormat::UnknownOrUndefined)
     {
         throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
     }
@@ -229,7 +220,9 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->End();
 
         gfxContext->EndFrame();
-        gfxDevice->QueueSubmit(cmdList);
+
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
+        gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
     }
 
@@ -249,7 +242,7 @@ template<typename TBackend, typename TInputBackend, typename TWindowingBackend>
 void Render(RenderingData<TBackend>& renderingData,
             std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
             std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> inputResourceRegions,
-            std::shared_ptr<ImGuiUIProvider<TBackend,TInputBackend,TWindowingBackend>>& uiProvider)
+            std::shared_ptr<ImGuiUIProvider<TBackend, TInputBackend, TWindowingBackend>>& uiProvider)
 {
     auto lastRenderedFrame = renderingData.DeletionSemaphore->GetValue();
     if (lastRenderedFrame > 0)
@@ -269,15 +262,15 @@ void Render(RenderingData<TBackend>& renderingData,
                                                                    static_cast<uint32_t>(surfaceWidth),
                                                                    static_cast<uint32_t>(surfaceHeight));
     {
-        //Setup our context
+        // Setup our context
         auto context = renderingData.GraphicsContext;
         context->BeginFrame();
 
-        //Setup + begin command list
+        // Setup + begin command list
         auto currentCmdList = context->CreateCmdList();
         currentCmdList->Begin();
 
-        //Track new frame rendering
+        // Track new frame rendering
         auto& frameResources =
             renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
 
@@ -322,11 +315,10 @@ void Render(RenderingData<TBackend>& renderingData,
         currentCmdList->CmdDraw(
             static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
-
         // Insert Draw ImGui Commands
         uiProvider->Draw(currentCmdList);
 
-        //End Renderpass
+        // End Renderpass
         currentCmdList->CmdEndRenderPass();
 
         currentCmdList->End();
@@ -351,8 +343,9 @@ void Render(RenderingData<TBackend>& renderingData,
 //         lastRenderedFrame -= 1;
 
 //     imGuiRenderingData.FrameResources.erase(std::remove_if(imGuiRenderingData.FrameResources.begin(),
-//                                                       imGuiRenderingData.FrameResources.end(), [lastRenderedFrame](auto& it)
-//                                                       { return it.frameNumber < lastRenderedFrame; }),
+//                                                       imGuiRenderingData.FrameResources.end(),
+//                                                       [lastRenderedFrame](auto& it) { return it.frameNumber <
+//                                                       lastRenderedFrame; }),
 //                                        imGuiRenderingData.FrameResources.end());
 
 //     auto surface = gfxDevice->GetSurface();
@@ -360,7 +353,8 @@ void Render(RenderingData<TBackend>& renderingData,
 //     float surfaceHeight = surface->GetHeight();
 //     auto swapchainImage = gfxDevice->BeginFrame();
 //     std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
-//     auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData, renderingData.RenderPass,
+//     auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData,
+//     renderingData.RenderPass,
 //                                                                    static_cast<uint32_t>(surfaceWidth),
 //                                                                    static_cast<uint32_t>(surfaceHeight));
 //     {
@@ -412,16 +406,16 @@ void Render(RenderingData<TBackend>& renderingData,
 
 template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
 void HandleClickAction(NovelRT::Input::InputAction& action,
-                    uint32_t& indexNumber,
-                    bool& clicked,
-                    std::shared_ptr<InputProvider<TInputBackend>>& inputProvider,
-                    std::shared_ptr<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>& uiProvider,
-                    NovelRT::Timing::Timestamp::duration delta)
+                       uint32_t& indexNumber,
+                       bool& clicked,
+                       std::shared_ptr<InputProvider<TInputBackend>>& inputProvider,
+                       std::shared_ptr<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>& uiProvider,
+                       NovelRT::Timing::Timestamp::duration delta)
 {
-    //Check Input
+    // Check Input
     NovelRT::Input::KeyStateFrameChangeLog cl = inputProvider->GetCurrentChangeLog(action.actionName);
 
-    //React to Input
+    // React to Input
     if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
     {
         indexNumber++;
@@ -437,15 +431,14 @@ void HandleClickAction(NovelRT::Input::InputAction& action,
 
     ImGui::SetNextWindowSize(ImVec2(612, 200));
     ImGui::SetNextWindowPos(ImVec2(100, 500));
-    ImGui::Begin("Test", NULL,
-                    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+    ImGui::Begin("Test", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
     if (strIndex < arr.size())
     {
         ImGui::Text("%s", arr.at(strIndex).c_str());
     }
 
-    //End UI Frame
+    // End UI Frame
     ImGui::End();
     uiProvider->EndFrame();
 }
@@ -466,17 +459,17 @@ int main()
     // Graphics Setup
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
-    
+
     VulkanGraphicsAdapterSelector selector{};
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
-    //Input Provider Setup + Setting up Actions
+    // Input Provider Setup + Setting up Actions
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
     auto clickAction = inputProvider->AddInputAction("LeftClick", "LeftMouseButton");
 
-    //ImGui Setup
+    // ImGui Setup
     auto uiProvider = std::make_shared<
         ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
                         NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
@@ -496,29 +489,29 @@ int main()
 
     UpdateEvent += [&](auto delta)
     {
-        //On Invocation...
+        // On Invocation...
 
-        //Process all windowing messages
+        // Process all windowing messages
         wndProvider->ProcessAllMessages();
 
-        //Update the input provider to react to input
+        // Update the input provider to react to input
         inputProvider->Update(delta);
 
-        //if the window is visible...
+        // if the window is visible...
         if (wndProvider->IsVisible())
         {
-            //Handle UI Updates
+            // Handle UI Updates
             HandleClickAction(clickAction, strIndex, clicked, inputProvider, uiProvider, delta);
 
-            //Render ImGui
-            //Render the background triangle
+            // Render ImGui
+            // Render the background triangle
             Render(renderingData, gfxDevice, triangleInputResourceRegions, uiProvider);
 
             gfxDevice->WaitForIdle();
         }
     };
 
-    //Setup main loop
+    // Setup main loop
     while (!wndProvider->ShouldClose())
     {
         timer.Tick(UpdateEvent);
@@ -527,238 +520,236 @@ int main()
     return 0;
 }
 
-
 //
 
-    // /// IMGUI
-    // auto uiProvider = std::make_shared<
-    //     ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
-    //                     NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
-    //                                                                      memoryAllocator, true);
-    // /// IMGUI
+// /// IMGUI
+// auto uiProvider = std::make_shared<
+//     ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
+//                     NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
+//                                                                      memoryAllocator, true);
+// /// IMGUI
 
-    // GraphicsBufferCreateInfo bufferCreateInfo{};
-    // bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-    // bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-    // bufferCreateInfo.size = 64 * 1024;
+// GraphicsBufferCreateInfo bufferCreateInfo{};
+// bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+// bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+// bufferCreateInfo.size = 64 * 1024;
 
-    // auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+// auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-    // bufferCreateInfo.size = 64 * 1024 * 4; // need this to be a different size but rest of the values are unchanged.
+// bufferCreateInfo.size = 64 * 1024 * 4; // need this to be a different size but rest of the values are unchanged.
 
-    // auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+// auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-    // bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
-    // bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
-    // bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
-    // bufferCreateInfo.size = 64 * 1024;
+// bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
+// bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
+// bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
+// bufferCreateInfo.size = 64 * 1024;
 
-    // auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
+// auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-    // auto vertShaderData = LoadSpv("vulkanrendervert.spv");
-    // auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
+// auto vertShaderData = LoadSpv("vulkanrendervert.spv");
+// auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
 
-    // gfxContext->BeginFrame();
-    // auto cmdList = gfxContext->CreateCmdList();
+// gfxContext->BeginFrame();
+// auto cmdList = gfxContext->CreateCmdList();
 
-    // std::vector<GraphicsPipelineInputElement> elements{
-    //     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
-    //                                  12),
-    //     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-    //                                  GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
+// std::vector<GraphicsPipelineInputElement> elements{
+//     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
+//                                  12),
+//     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+//                                  GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
 
-    // std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-    // std::vector<GraphicsPipelineResource> resources{
-    //     GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+// std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+// std::vector<GraphicsPipelineResource> resources{
+//     GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
 
-    // std::vector<GraphicsPushConstantRange> dummyData{};
-    // auto signature =
-    //     gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
-    //                                        GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources, dummyData);
-    // auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
-    // auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-    
-    // //create the pipeline and renderpass
-    // GraphicsRenderPassDescription passDesc{};
-    // GraphicsAttachmentDescription attachmentDesc{};
-    
+// std::vector<GraphicsPushConstantRange> dummyData{};
+// auto signature =
+//     gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+//                                        GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources, dummyData);
+// auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
+// auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
 
-    // attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ? 
-    //     TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
-    // attachmentDesc.loadOp = LoadOp::Clear;
-    // attachmentDesc.storeOp = StoreOp::Store;
-    // attachmentDesc.initialLayout = ImageLayout::Undefined;
-    // attachmentDesc.finalLayout = ImageLayout::Present;
+// //create the pipeline and renderpass
+// GraphicsRenderPassDescription passDesc{};
+// GraphicsAttachmentDescription attachmentDesc{};
 
-    // passDesc.attachmentDescriptions.push_back(attachmentDesc);
-    // auto pass = gfxDevice->CreateRenderPass(passDesc);
-    
-    // auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
+// attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ?
+//     TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
+// attachmentDesc.loadOp = LoadOp::Clear;
+// attachmentDesc.storeOp = StoreOp::Store;
+// attachmentDesc.initialLayout = ImageLayout::Undefined;
+// attachmentDesc.finalLayout = ImageLayout::Present;
 
-    // auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-    // auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+// passDesc.attachmentDescriptions.push_back(attachmentDesc);
+// auto pass = gfxDevice->CreateRenderPass(passDesc);
 
-    // auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
+// auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
 
-    // pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-    // pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-    // pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+// auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
+// auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
 
-    // vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-    // cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
+// auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
 
-    // uint32_t textureWidth = 256;
-    // uint32_t textureHeight = 256;
-    // uint32_t texturePixels = textureWidth * textureHeight;
-    // uint32_t cellWidth = textureWidth / 8;
-    // uint32_t cellHeight = textureHeight / 8;
+// pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+// pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+// pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
-    // auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
-    // auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-    // auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-    // auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
+// vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
+// cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-    // for (uint32_t n = 0; n < texturePixels; n++)
-    // {
-    //     auto x = n % textureWidth;
-    //     auto y = n / textureWidth;
+// uint32_t textureWidth = 256;
+// uint32_t textureHeight = 256;
+// uint32_t texturePixels = textureWidth * textureHeight;
+// uint32_t cellWidth = textureWidth / 8;
+// uint32_t cellHeight = textureHeight / 8;
 
-    //     pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
-    // }
+// auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+// auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+// auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
+// auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
 
-    // textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+// for (uint32_t n = 0; n < texturePixels; n++)
+// {
+//     auto x = n % textureWidth;
+//     auto y = n / textureWidth;
 
-    // std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-    //     inputResourceRegions{texture2DRegion};
+//     pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
+// }
 
-    // cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-    // cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-    // cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+// textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
-    // cmdList->End();
-    // gfxContext->EndFrame();
-    // gfxDevice->QueueSubmit(cmdList);
-    // gfxDevice->WaitForIdle();
-    
-    // /// imgui
-    // uint32_t strIndex = 0;
-    // std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
+// std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
+//     inputResourceRegions{texture2DRegion};
 
-    // auto surface = gfxDevice->GetSurface();
-    // bool clicked = false;
-    // NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
-    // auto deletionSemaphore = gfxDevice->CreateSemaphore(0);
-    // //uint64_t renderedFrames{0};
+// cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+// cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+// cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
 
-    // DummyUpdateStuff += [&](auto delta)
-    // {
-    //     wndProvider->ProcessAllMessages();
-    //     inputProvider->Update(delta);
+// cmdList->End();
+// gfxContext->EndFrame();
+// gfxDevice->QueueSubmit(cmdList);
+// gfxDevice->WaitForIdle();
 
-    //     if (wndProvider->IsVisible())
-    //     {
-    //         // auto& frameResources =
-    //         // renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderedFrames});
-    //         auto cl = inputProvider->GetCurrentChangeLog(clickAction.actionName);
+// /// imgui
+// uint32_t strIndex = 0;
+// std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
 
-    //         if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
-    //         {
-    //             strIndex++;
-    //             clicked = true;
-    //         }
-    //         else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
-    //         {
-    //             clicked = false;
-    //         }
+// auto surface = gfxDevice->GetSurface();
+// bool clicked = false;
+// NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
+// auto deletionSemaphore = gfxDevice->CreateSemaphore(0);
+// //uint64_t renderedFrames{0};
 
-    //         // ImGuiiiiiiiiiiiiiiiiiiiiii
-    //         uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
+// DummyUpdateStuff += [&](auto delta)
+// {
+//     wndProvider->ProcessAllMessages();
+//     inputProvider->Update(delta);
 
-    //         ImGui::SetNextWindowSize(ImVec2(612, 200));
-    //         ImGui::SetNextWindowPos(ImVec2(100, 500));
-    //         ImGui::Begin("Test", NULL,
-    //                      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+//     if (wndProvider->IsVisible())
+//     {
+//         // auto& frameResources =
+//         // renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderedFrames});
+//         auto cl = inputProvider->GetCurrentChangeLog(clickAction.actionName);
 
-    //         if (strIndex < arr.size())
-    //         {
-    //             ImGui::Text("%s", arr.at(strIndex).c_str());
-    //         }
+//         if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
+//         {
+//             strIndex++;
+//             clicked = true;
+//         }
+//         else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
+//         {
+//             clicked = false;
+//         }
 
-    //         ImGui::End();
-    //         uiProvider->EndFrame();
+//         // ImGuiiiiiiiiiiiiiiiiiiiiii
+//         uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
 
-    //         auto surface = gfxDevice->GetSurface();
-    //         auto context = gfxDevice->CreateGraphicsContext();
-    //         auto currentCmdList = context->CreateCmdList();
+//         ImGui::SetNextWindowSize(ImVec2(612, 200));
+//         ImGui::SetNextWindowPos(ImVec2(100, 500));
+//         ImGui::Begin("Test", NULL,
+//                      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 
-    //         float surfaceWidth = surface->GetWidth();
-    //         float surfaceHeight = surface->GetHeight();
+//         if (strIndex < arr.size())
+//         {
+//             ImGui::Text("%s", arr.at(strIndex).c_str());
+//         }
 
-    //         auto swapchainImage = gfxDevice->BeginFrame();
-    //         std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
+//         ImGui::End();
+//         uiProvider->EndFrame();
 
-    //         //create the pipeline and renderpass
-    //         GraphicsRenderPassDescription passDesc{};
-    //         GraphicsAttachmentDescription attachmentDesc{};
-            
+//         auto surface = gfxDevice->GetSurface();
+//         auto context = gfxDevice->CreateGraphicsContext();
+//         auto currentCmdList = context->CreateCmdList();
 
-    //         attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ? 
-    //             TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
-    //         attachmentDesc.loadOp = LoadOp::Clear;
-    //         attachmentDesc.storeOp = StoreOp::Store;
-    //         attachmentDesc.initialLayout = ImageLayout::Undefined;
-    //         attachmentDesc.finalLayout = ImageLayout::Present;
+//         float surfaceWidth = surface->GetWidth();
+//         float surfaceHeight = surface->GetHeight();
 
-    //         passDesc.attachmentDescriptions.push_back(attachmentDesc);
-    //         auto renderPass = gfxDevice->CreateRenderPass(passDesc);
+//         auto swapchainImage = gfxDevice->BeginFrame();
+//         std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
 
-    //         auto target = std::make_shared<GraphicsRenderTarget<VulkanGraphicsBackend>>(gfxDevice, imageViewData, renderPass,
-    //                                                                static_cast<uint32_t>(surfaceWidth),
-    //                                                                static_cast<uint32_t>(surfaceHeight));
+//         //create the pipeline and renderpass
+//         GraphicsRenderPassDescription passDesc{};
+//         GraphicsAttachmentDescription attachmentDesc{};
 
-    //         uiProvider->UploadToGPU(currentCmdList);
+//         attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ?
+//             TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
+//         attachmentDesc.loadOp = LoadOp::Clear;
+//         attachmentDesc.storeOp = StoreOp::Store;
+//         attachmentDesc.initialLayout = ImageLayout::Undefined;
+//         attachmentDesc.finalLayout = ImageLayout::Present;
 
-    //         NovelRT::Graphics::ClearValue colourDataStruct{};
-    //         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-    //         colourDataStruct.depth = 0;
-    //         colourDataStruct.stencil = 0;
+//         passDesc.attachmentDescriptions.push_back(attachmentDesc);
+//         auto renderPass = gfxDevice->CreateRenderPass(passDesc);
 
-    //         std::vector<ClearValue> colourData{colourDataStruct};
-    //         currentCmdList->CmdBeginRenderPass(renderPass, target, colourData);
+//         auto target = std::make_shared<GraphicsRenderTarget<VulkanGraphicsBackend>>(gfxDevice, imageViewData,
+//         renderPass,
+//                                                                static_cast<uint32_t>(surfaceWidth),
+//                                                                static_cast<uint32_t>(surfaceHeight));
 
-    //         ViewportInfo viewportInfoStruct{};
-    //         viewportInfoStruct.x = 0;
-    //         viewportInfoStruct.y = surfaceHeight;
-    //         viewportInfoStruct.width = surfaceWidth;
-    //         viewportInfoStruct.height = -surfaceHeight;
-    //         viewportInfoStruct.minDepth = 0.0f;
-    //         viewportInfoStruct.maxDepth = 1.0f;
+//         uiProvider->UploadToGPU(currentCmdList);
 
-    //         currentCmdList->CmdSetViewport(viewportInfoStruct);
+//         NovelRT::Graphics::ClearValue colourDataStruct{};
+//         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+//         colourDataStruct.depth = 0;
+//         colourDataStruct.stencil = 0;
 
-    //         auto descriptorSetData =
-    //             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
-    //                             pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
+//         std::vector<ClearValue> colourData{colourDataStruct};
+//         currentCmdList->CmdBeginRenderPass(renderPass, target, colourData);
 
-    //         uiProvider->Draw(currentCmdList);
+//         ViewportInfo viewportInfoStruct{};
+//         viewportInfoStruct.x = 0;
+//         viewportInfoStruct.y = surfaceHeight;
+//         viewportInfoStruct.width = surfaceWidth;
+//         viewportInfoStruct.height = -surfaceHeight;
+//         viewportInfoStruct.minDepth = 0.0f;
+//         viewportInfoStruct.maxDepth = 1.0f;
 
-    //         currentCmdList->CmdEndRenderPass();
-    //         currentCmdList->End();
+//         currentCmdList->CmdSetViewport(viewportInfoStruct);
 
-    //         // frameResources.descriptorSet = descriptorSetData;
-    //         // frameResources.renderTarget = target;
-    //         // frameResources.commandList = currentCmdList;
+//         auto descriptorSetData =
+//             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
+//                             pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
 
-    //         context->EndFrame();
-    //         swapchainImage->QueueSubmit(currentCmdList);
-    //         gfxDevice->EndFrame();
-    //     }
-    // };
+//         uiProvider->Draw(currentCmdList);
 
-    // while (!wndProvider->ShouldClose())
-    // {
-    //     timer.Tick(DummyUpdateStuff);
-    // }
+//         currentCmdList->CmdEndRenderPass();
+//         currentCmdList->End();
 
-    // return 0;
+//         // frameResources.descriptorSet = descriptorSetData;
+//         // frameResources.renderTarget = target;
+//         // frameResources.commandList = currentCmdList;
+
+//         context->EndFrame();
+//         swapchainImage->QueueSubmit(currentCmdList);
+//         gfxDevice->EndFrame();
+//     }
+// };
+
+// while (!wndProvider->ShouldClose())
+// {
+//     timer.Tick(DummyUpdateStuff);
+// }
+
+// return 0;
 //}

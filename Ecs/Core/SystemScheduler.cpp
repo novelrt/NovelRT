@@ -262,6 +262,8 @@ namespace NovelRT::Ecs
                             });
                     }
 
+                    _ecsTasks->wait();
+
                     for (SystemId systemId : layer)
                     {
                         _ecsTasks->run(
