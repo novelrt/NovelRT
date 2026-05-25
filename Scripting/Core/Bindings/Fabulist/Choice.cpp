@@ -5,7 +5,7 @@
 
 #include <NovelRT/Scripting/Statuses/Branch.hpp>
 
-#include "../Bindings.hpp"
+#include <Bindings/Bindings.hpp>
 
 #include <algorithm>
 #include <format>

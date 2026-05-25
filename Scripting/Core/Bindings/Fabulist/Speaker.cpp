@@ -5,7 +5,7 @@
 
 #include <NovelRT/Scripting/Statuses/SpokenLine.hpp>
 
-#include "../Bindings.hpp"
+#include <Bindings/Bindings.hpp>
 
 struct SpeakerInfo
 {
