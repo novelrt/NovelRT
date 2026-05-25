@@ -63,7 +63,9 @@ luaL_Reg SpeakerFuncs[]{
 void RegisterSpeaker(lua_State* L)
 {
     if (luaL_newmetatable(L, "Speaker") == 0)
-        throw new NovelRT::Exceptions::InvalidOperationException("How did you get here?");
+    {
+        throw NovelRT::Exceptions::InvalidOperationException("How did you get here?");
+    }
 
     luaL_setfuncs(L, SpeakerFuncs, 0);
 }

@@ -3,7 +3,10 @@
 
 #include <cstdlib>
 #include <exception>
+#include <format>
+#include <new>
 #include <random>
+#include <stdexcept>
 
 #include "../Bindings.hpp"
 
@@ -19,19 +22,25 @@ void* AllocMemory(void*, void* pointer, size_t, size_t size)
     return std::realloc(pointer, size);
 }
 
-int Panic(lua_State*)
+int Panic(lua_State* L)
 {
-    // TODO: the error object is on the top of the stack, we should log it.
-    std::terminate();
+    lua_checkstack(L, 1);
+    size_t length;
+    const char* msg = lua_tolstring(L, 1, &length);
+    // Lua would normally call abort(), but if we throw we'll get passed back to whichever stack frame handles runtime_error
+    // TODO: maybe we should introduce a custom exception for this?
+    throw std::runtime_error{std::format("Unexpected error in Lua: {}", std::string(msg, length))};
 }
 
 lua_State* NovelRT::Scripting::Bindings::CreateState()
 {
     std::random_device r;
     lua_State* L = lua_newstate(AllocMemory, nullptr, r());
-    // TODO: probably should handle this
     if (L == nullptr)
-        return nullptr;
+    {
+        // If the allocation failed, make sure we report that up the chain.
+        throw std::bad_alloc{};
+    }
 
     lua_atpanic(L, Panic);
     luaL_openselectedlibs(L, LUA_GLIBK | LUA_STRLIBK | LUA_UTF8LIBK | LUA_TABLIBK | LUA_MATHLIBK, 0);

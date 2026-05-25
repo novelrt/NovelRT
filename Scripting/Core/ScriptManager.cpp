@@ -19,7 +19,8 @@ namespace NovelRT::Scripting
         lua_close(L);
     }
 
-    ScriptManager::ScriptManager() : _state(Bindings::CreateState())
+    ScriptManager::ScriptManager()
+        : _state(Bindings::CreateState())
     {
         lua_pushliteral(GetLuaState(), "_MANAGER");
         lua_pushlightuserdata(GetLuaState(), this);

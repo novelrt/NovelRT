@@ -4,8 +4,6 @@
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
-// #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
-
 #include <NovelRT/Scripting/DecisionTree.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 #include <NovelRT/Scripting/ScriptManager.hpp>
@@ -21,7 +19,6 @@
 #include <iostream>
 #include <vector>
 
-// using namespace NovelRT::ResourceManagement::Desktop;
 using namespace NovelRT::Scripting;
 
 std::vector<uint8_t> LoadData(std::filesystem::path filePath)
@@ -44,7 +41,6 @@ std::vector<uint8_t> LoadData(std::filesystem::path filePath)
 
 int main()
 {
-    // std::shared_ptr<DesktopResourceLoader> resourceLoader = std::make_shared<DesktopResourceLoader>();
     std::shared_ptr<ScriptManager> manager = std::make_shared<ScriptManager>();
 
     std::vector<uint8_t> data = LoadData(NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "sample.lua");
