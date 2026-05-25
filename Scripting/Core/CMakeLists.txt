@@ -13,12 +13,14 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Scripting::Core
       Bindings/Fabulist/Speaker.cpp
       Statuses/Branch.cpp
       Statuses/SpokenLine.cpp
-      Bindings.hpp
       DecisionTree.cpp
       DecisionTreeStatus.cpp
       ScriptManager.cpp
 
   HEADERS
+    PRIVATE
+      Bindings/Bindings.hpp
+
     PUBLIC
       include/NovelRT/Scripting/Statuses/Branch.hpp
       include/NovelRT/Scripting/Statuses/SpokenLine.hpp
