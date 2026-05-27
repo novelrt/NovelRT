@@ -118,7 +118,8 @@ namespace NovelRT::Ecs
          * callback that is executed on the next iteration of the ECS once the work is done.
          *
          * The work functor is executed asynchronously on a separate thread pool and must not interact
-         * with the ECS or capture any references to a Catalogue instance, as the behaviour is undefined.
+         * with ECS memory regions or capture any references to a Catalogue instance, as the behaviour is undefined.
+         * Capturing the this pointer of an IEcsSystem instance is safe and OK to do.
          * The completion functor is executed on the ECS thread pool in the next available iteration,
          * and receives a fresh Catalogue instance with the correct threading context, the current delta time,
          * and the result of the work functor.

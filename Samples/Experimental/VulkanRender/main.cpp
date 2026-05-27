@@ -143,17 +143,9 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     GraphicsRenderPassDescription passDesc{};
     GraphicsAttachmentDescription attachmentDesc{};
 
-    auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
+    attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
 
-    if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
-    {
-        attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
-    }
-    else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
-    {
-        attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
-    }
-    else
+    if (attachmentDesc.texelFormat == TexelFormat::UnknownOrUndefined) 
     {
         throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
     }
@@ -212,7 +204,8 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->End();
 
         gfxContext->EndFrame();
-        gfxDevice->QueueSubmit(cmdList);
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {cmdList};
+        gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
     }
 

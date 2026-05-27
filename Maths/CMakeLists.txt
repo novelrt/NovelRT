@@ -11,6 +11,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Maths
   HEADERS
     PUBLIC
       include/NovelRT/Maths/Constants.hpp
+      include/NovelRT/Maths/GeoMatrix4x4F.hpp
       include/NovelRT/Maths/GeoVector2F.hpp
       include/NovelRT/Maths/GeoVector3F.hpp
       include/NovelRT/Maths/GeoVector4F.hpp
@@ -19,6 +20,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Maths
   COMPILE_DEFINITIONS
     PUBLIC
       GLM_ENABLE_EXPERIMENTAL=1
+      GLM_FORCE_DEPTH_ZERO_TO_ONE
 
   LINK_LIBRARIES
     PUBLIC

@@ -14,13 +14,13 @@ namespace NovelRT::Ecs::Components
 {
     struct TransformComponent
     {
-        Maths::GeoVector3F positionAndLayer = Maths::GeoVector3F::Zero();
+        Maths::GeoVector2F position = Maths::GeoVector2F::Zero();
         Maths::GeoVector2F scale = Maths::GeoVector2F::One();
         float rotationInRadians = 0.0f;
 
         inline TransformComponent& operator+=(const TransformComponent& other)
         {
-            positionAndLayer += other.positionAndLayer;
+            position += other.position;
             rotationInRadians += other.rotationInRadians;
             scale += other.scale;
 
@@ -38,7 +38,7 @@ namespace NovelRT::Ecs::Components
 
         friend inline bool operator==(const TransformComponent& lhs, const TransformComponent& rhs) noexcept
         {
-            return lhs.positionAndLayer == rhs.positionAndLayer && lhs.scale == rhs.scale &&
+            return lhs.position == rhs.position && lhs.scale == rhs.scale &&
                    lhs.rotationInRadians == rhs.rotationInRadians;
         }
 

@@ -18,7 +18,10 @@ namespace NovelRT::Ecs::Graphics::Components
         inline BuiltCommandList& operator+=(const BuiltCommandList& other)
         {
             if (commandList != nullptr)
+            {
                 delete commandList;
+            }
+
             *this = other;
             return *this;
         }

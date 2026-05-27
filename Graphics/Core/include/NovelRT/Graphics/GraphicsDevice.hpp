@@ -83,7 +83,17 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
         void EndFrame();
-        void QueueSubmit(std::shared_ptr<GraphicsCmdList<TBackend>> cmdList);
+
+        void QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<TBackend>>> cmdLists);
+
+        void QueueSubmit(NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<TBackend>>> cmdLists,
+                         NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<TBackend>>, uint64_t>>
+                             semaphoresToSignal);
+        void QueueSubmit(NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<TBackend>>, uint64_t>>
+                             semaphoresToWait,
+                         NovelRT::Utilities::Span<std::shared_ptr<GraphicsCmdList<TBackend>>> cmdLists,
+                         NovelRT::Utilities::Span<std::pair<std::shared_ptr<GraphicsSemaphore<TBackend>>, uint64_t>>
+                             semaphoresToSignal);
 
         void WaitForIdle();
 

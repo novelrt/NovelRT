@@ -6,6 +6,7 @@
 #include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
@@ -39,7 +40,8 @@ namespace NovelRT::Ecs::Graphics
         {
             uint64_t frameNumber;
 
-            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> _frameImage;
+            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> frameImage;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> localContext;
 
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargets{};
             std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>> descriptorSets{};
@@ -114,10 +116,9 @@ namespace NovelRT::Ecs::Graphics
             std::vector<EntityGraphView> roots{};
             std::vector<EntityId> ordered{};
 
-            auto [renderPasses, commandLists, graph] =
-                catalogue.GetComponentViews<Components::RenderPass<TGraphicsBackend>,
-                                            Components::BuiltCommandList<TGraphicsBackend>,
-                                            Ecs::Components::EntityGraphComponent>();
+            auto [renderPasses, commandLists, trackedSemaphores, graph] = catalogue.GetComponentViews<
+                Components::RenderPass<TGraphicsBackend>, Components::BuiltCommandList<TGraphicsBackend>,
+                Components::TrackedSemaphore<TGraphicsBackend>, Ecs::Components::EntityGraphComponent>();
             for (auto [entity, component] : renderPasses)
             {
                 auto [iterator, inserted] = passes.try_emplace(component.renderPassIndex);
@@ -158,7 +159,7 @@ namespace NovelRT::Ecs::Graphics
             context->BeginFrame();
             cmdList->Begin();
 
-            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image});
+            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image, context});
 
             // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
@@ -180,16 +181,23 @@ namespace NovelRT::Ecs::Graphics
 
                 cmdList->CmdBeginRenderPass(pass, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
 
-                // 7. Enumerate over the entities and dispatch their individual command lists
-                for (const auto& entity : entities)
+                for (const auto entity : entities)
                 {
                     if (!commandLists.HasComponent(entity))
                         continue;
 
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
                     auto subCmdList = frameResources.commandLists.emplace_back(*subCmdListPtr);
-                    auto* descriptorSetPtr = renderPasses.GetComponent(entity).descriptorSet;
-                    frameResources.descriptorSets.emplace_back(*descriptorSetPtr);
+                    auto renderPassComponent = renderPasses.GetComponent(entity);
+                    auto* descriptorSetsPtr = renderPassComponent.descriptorSets;
+
+                    for (size_t i = 0; i < renderPassComponent.descriptorSetCount; i++)
+                    {
+                        frameResources.descriptorSets.emplace_back(descriptorSetsPtr[i]);
+                    }
+
+                    delete subCmdListPtr;
+                    delete[] descriptorSetsPtr;
 
                     cmdList->CmdExecuteCommands(subCmdList);
                 }
@@ -198,9 +206,37 @@ namespace NovelRT::Ecs::Graphics
             }
 
             cmdList->End();
-
             context->EndFrame();
-            image->QueueSubmit(cmdList, {_deletionSemaphore, frameResources.frameNumber});
+
+            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
+                waitSemaphores{};
+            waitSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
+
+            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
+                signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.frameNumber)};
+            signalSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
+
+            for (auto&& [entity, trackedSemaLocal] : trackedSemaphores)
+            {
+                if (trackedSemaLocal.isWaitSemaphore)
+                {
+                    waitSemaphores.emplace_back(*trackedSemaLocal.semaphore, trackedSemaLocal.signalValue);
+                }
+                else
+                {
+                    signalSemaphores.emplace_back(*trackedSemaLocal.semaphore, trackedSemaLocal.signalValue);
+                }
+
+                delete trackedSemaLocal.semaphore;
+            }
+
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
+
+            image->QueueSubmit(waitSemaphores, lists, signalSemaphores);
+
+            renderPasses.RemoveAllComponents();
+            commandLists.RemoveAllComponents();
+            trackedSemaphores.RemoveAllComponents();
 
             frameResources.commandLists.emplace_back(cmdList);
 

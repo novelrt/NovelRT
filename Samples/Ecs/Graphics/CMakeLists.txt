@@ -13,6 +13,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::GraphicsEcsTe
   
   RESOURCES
     PUBLIC
-      Resources/Shaders/vulkanrenderfrag.spv
-      Resources/Shaders/vulkanrendervert.spv
+      Resources/Shaders/SpritePixel.spv
+      Resources/Shaders/SpriteVertex.spv
+      Resources/Images/novel-chan.png
 )

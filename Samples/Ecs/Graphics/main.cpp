@@ -8,9 +8,12 @@
 #include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Camera.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
 #include <NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp>
 #include <NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp>
 #include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
+#include <NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp>
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 
@@ -31,6 +34,11 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+
+#include <NovelRT/Maths/GeoMatrix4x4F.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Maths/GeoVector3F.hpp>
+#include <NovelRT/Maths/GeoVector4F.hpp>
 
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
@@ -55,262 +63,93 @@ using namespace NovelRT::Windowing;
 using namespace NovelRT::Utilities;
 using namespace NovelRT::ResourceManagement::Desktop;
 using namespace NovelRT::Timing;
+using namespace NovelRT::Maths;
 
-struct TexturedVertex
-{
-    NovelRT::Maths::GeoVector3F Position;
-    NovelRT::Maths::GeoVector2F UV;
-};
-
-template<typename TBackend>
-struct TrianglePass
-{
-    std::shared_ptr<GraphicsRenderPass<TBackend>> RenderPass;
-    RenderPassId RenderPassId;
-};
-
-template<typename TBackend>
-struct RenderingData
-{
-    std::shared_ptr<GraphicsBuffer<TBackend>> VertexBuffer;
-    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TBackend>> VertexBufferRegion;
-    std::shared_ptr<GraphicsPipeline<TBackend>> RenderPipeline;
-    std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>> TextureRegion;
-};
-
-template<typename TBackend>
-class SampleTriangleRenderingSystem : public IEcsSystem
+class SpriteSetupSystem : public IEcsSystem
 {
 private:
-    std::shared_ptr<DesktopResourceLoader> _resourceLoader; // TODO: This is bad. Too bad! - Matt J.
-    std::shared_ptr<GraphicsDevice<TBackend>> _graphicsDevice;
-    std::shared_ptr<GraphicsSurfaceContext<TBackend>> _surfaceContext;
-    std::shared_ptr<GraphicsMemoryAllocator<TBackend>> _memoryAllocator;
-    TrianglePass<TBackend> _trianglePass;
-    RenderingData<TBackend> _renderingData;
-    std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, TBackend>>> _inputResourceRegions;
-    std::optional<EntityId> _cmdListEntity;
-
-    static RenderingData<TBackend> ComputeRenderingData(DesktopResourceLoader* resourceLoader,
-                                                        GraphicsDevice<TBackend>* graphicsDevice,
-                                                        GraphicsMemoryAllocator<TBackend>* memoryAllocator,
-                                                        TrianglePass<TBackend> trianglePass)
-    {
-        GraphicsBufferCreateInfo bufferCreateInfo{};
-        bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-        bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-        bufferCreateInfo.size = 64 * 1024;
-
-        auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-        bufferCreateInfo.size = 64 * 1024 * 4; // need this to be a different size but rest of the values are unchanged.
-
-        auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-        bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
-        bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
-        bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
-        bufferCreateInfo.size = 64 * 1024;
-
-        auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-        auto vertShaderData = resourceLoader->LoadShaderSource("vulkanrendervert.spv");
-        auto pixelShaderData = resourceLoader->LoadShaderSource("vulkanrenderfrag.spv");
-
-        std::vector<GraphicsPipelineInputElement> elements{
-            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F),
-                                         GraphicsPipelineInputElementKind::Position, 12),
-            GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                         GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
-
-        std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-        std::vector<GraphicsPipelineResource> resources{
-            GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-
-        std::vector<GraphicsPushConstantRange> dummyData{};
-        auto signature = graphicsDevice->CreatePipelineSignature(
-            GraphicsPipelineBlendFactor::SrcAlpha, GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources,
-            NovelRT::Utilities::Span<GraphicsPushConstantRange>(dummyData));
-        auto vertShaderProg =
-            graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData.shaderCode);
-        auto pixelShaderProg =
-            graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData.shaderCode);
-
-        auto pipeline =
-            graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, trianglePass.RenderPass);
-        auto gfxContext = graphicsDevice->CreateGraphicsContext();
-
-        auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-        auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-
-        auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
-
-        pVertexBuffer[0] =
-            TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-        pVertexBuffer[1] =
-            TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-        pVertexBuffer[2] =
-            TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
-
-        vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-
-        uint32_t textureWidth = 256;
-        uint32_t textureHeight = 256;
-        uint32_t texturePixels = textureWidth * textureHeight;
-        uint32_t cellWidth = textureWidth / 8;
-        uint32_t cellHeight = textureHeight / 8;
-
-        auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
-        auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-        auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-        auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);
-
-        for (uint32_t n = 0; n < texturePixels; n++)
-        {
-            auto x = n % textureWidth;
-            auto y = n / textureWidth;
-
-            pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
-        }
-
-        textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
-        {
-            gfxContext->BeginFrame();
-            auto cmdList = gfxContext->CreateCmdList();
-
-            cmdList->Begin();
-            cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
-
-            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-            cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-            cmdList->End();
-
-            gfxContext->EndFrame();
-            graphicsDevice->QueueSubmit(cmdList);
-            graphicsDevice->WaitForIdle();
-        }
-
-        RenderingData<TBackend> renderData{};
-        renderData.RenderPipeline = pipeline;
-        renderData.TextureRegion = texture2DRegion;
-        renderData.VertexBufferRegion = vertexBufferRegion;
-        renderData.VertexBuffer = vertexBuffer;
-
-        return renderData;
-    }
+    std::optional<EntityId> _spriteEntity;
+    std::optional<EntityId> _cameraViewportEntity;
+    std::shared_ptr<DesktopResourceLoader> _resourceLoader;
+    GeoVector2F _viewportSize;
 
 public:
-    SampleTriangleRenderingSystem(std::shared_ptr<GraphicsProvider<TBackend>> provider,
-                                  std::shared_ptr<GraphicsDevice<TBackend>> device,
-                                  std::shared_ptr<GraphicsSurfaceContext<TBackend>> surfaceContext,
-                                  TrianglePass<TBackend> trianglePass)
-        : _resourceLoader(std::make_shared<DesktopResourceLoader>()),
-          _graphicsDevice(std::move(device)),
-          _surfaceContext(std::move(surfaceContext)),
-          _memoryAllocator(std::make_shared<GraphicsMemoryAllocator<TBackend>>(_graphicsDevice, provider)),
-          _trianglePass(std::move(trianglePass)),
-          _renderingData(ComputeRenderingData(_resourceLoader.get(),
-                                              _graphicsDevice.get(),
-                                              _memoryAllocator.get(),
-                                              _trianglePass)),
-          _inputResourceRegions{_renderingData.TextureRegion}
+    explicit SpriteSetupSystem(std::shared_ptr<DesktopResourceLoader> resourceLoader, GeoVector2F viewportSize)
+        : _resourceLoader(std::move(resourceLoader)), _viewportSize(viewportSize)
     {
     }
 
-    void Update(Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
-        float surfaceWidth = _surfaceContext->GetSurface()->GetWidth();
-        float surfaceHeight = _surfaceContext->GetSurface()->GetHeight();
-
-        auto context = _graphicsDevice->CreateGraphicsContext();
-        context->BeginFrame();
-        auto currentCmdList =
-            context->CreateCmdList(std::optional<SecondaryCmdListInfo<TBackend>>({_trianglePass.RenderPass, 0}));
-
-        currentCmdList->Begin();
-
-        NovelRT::Graphics::ClearValue colourDataStruct{};
-        colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-        colourDataStruct.depth = 0;
-        colourDataStruct.stencil = 0;
-
-        std::vector<ClearValue> colourData{colourDataStruct};
-
-        ViewportInfo viewportInfoStruct{};
-        viewportInfoStruct.x = 0;
-        viewportInfoStruct.y = surfaceHeight;
-        viewportInfoStruct.width = surfaceWidth;
-        viewportInfoStruct.height = -surfaceHeight;
-        viewportInfoStruct.minDepth = 0.0f;
-        viewportInfoStruct.maxDepth = 1.0f;
-
-        currentCmdList->CmdSetViewport(viewportInfoStruct);
-        currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                      NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-        currentCmdList->CmdBindPipeline(_renderingData.RenderPipeline);
-
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
-            std::cref(_renderingData.VertexBuffer)};
-        std::array<size_t, 1> offsets{_renderingData.VertexBufferRegion->GetOffset()};
-
-        currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
-
-        auto descriptorSetData = _renderingData.RenderPipeline->CreateDescriptorSet();
-        descriptorSetData->AddMemoryRegionsToInputs(_inputResourceRegions);
-        descriptorSetData->UpdateDescriptorSetData();
-
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
-            std::cref(descriptorSetData)};
-        currentCmdList->CmdBindDescriptorSets(descriptorData);
-
-        currentCmdList->CmdDraw(
-            static_cast<uint32_t>(_renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
-
-        currentCmdList->End();
-
-        context->EndFrame();
-
-        auto [renderPassView, cmdListView, graphComponentView] =
-            catalogue.GetComponentViews<RenderPass<TBackend>, BuiltCommandList<TBackend>, EntityGraphComponent>();
-
-        if (!_cmdListEntity.has_value())
+        if (_spriteEntity.has_value() && _cameraViewportEntity.has_value())
         {
-            _cmdListEntity = catalogue.CreateEntity();
-            auto cmdListEntityLocal = _cmdListEntity.value();
-
-            EntityGraphComponent graphComp{};
-            graphComp.parent = std::numeric_limits<EntityId>::max();
-            graphComp.childrenStartNode = std::numeric_limits<EntityId>::max();
-            graphComponentView.AddComponent(cmdListEntityLocal, graphComp);
-
-            RenderPass<TBackend> passComponent{};
-            passComponent.renderPassIndex = _trianglePass.RenderPassId;
-            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
-            renderPassView.AddComponent(cmdListEntityLocal, passComponent);
-
-            BuiltCommandList<TBackend> cmdListComp{};
-            cmdListComp.commandList = new std::shared_ptr<GraphicsCmdList<TBackend>>(currentCmdList);
-            cmdListView.AddComponent(cmdListEntityLocal, cmdListComp);
+            return;
         }
-        else
-        {
-            RenderPass<TBackend> passComponent{};
-            passComponent.renderPassIndex = _trianglePass.RenderPassId;
-            passComponent.descriptorSet = new std::shared_ptr<GraphicsDescriptorSet<TBackend>>(descriptorSetData);
-            renderPassView.PushComponentUpdateInstruction(_cmdListEntity.value(), passComponent);
 
-            BuiltCommandList<TBackend> cmdListComp{};
-            cmdListComp.commandList = new std::shared_ptr<GraphicsCmdList<TBackend>>(currentCmdList);
-            cmdListView.PushComponentUpdateInstruction(_cmdListEntity.value(), cmdListComp);
-        }
+        auto [spriteView, transformView, graphView, cameraView, viewportView] = catalogue.GetComponentViews<
+            NovelRT::Ecs::Graphics::Components::Sprite, NovelRT::Ecs::Components::TransformComponent,
+            NovelRT::Ecs::Components::EntityGraphComponent, NovelRT::Ecs::Graphics::Components::Camera,
+            NovelRT::Ecs::Graphics::Components::Viewport>();
+
+        auto spriteEntity = catalogue.CreateEntity();
+        _spriteEntity = spriteEntity;
+
+        auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/novel-chan.png").value();
+
+        NovelRT::Ecs::Graphics::Components::Sprite sprite{};
+        sprite.assetId = assetId;
+        spriteView.AddComponent(spriteEntity, sprite);
+
+        NovelRT::Ecs::Components::TransformComponent transform{};
+        transform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
+        transform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+        transform.rotationInRadians = 0.0f;
+        transformView.AddComponent(spriteEntity, transform);
+
+        EntityGraphComponent graphComp{};
+        graphComp.parent = std::numeric_limits<EntityId>::max();
+        graphComp.childrenStartNode = std::numeric_limits<EntityId>::max();
+        graphView.AddComponent(spriteEntity, graphComp);
+
+        auto cameraViewportEntity = catalogue.CreateEntity();
+        _cameraViewportEntity = cameraViewportEntity;
+
+        NovelRT::Ecs::Components::TransformComponent viewportTransform{};
+        viewportTransform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
+        viewportTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+        viewportTransform.rotationInRadians = 0.0f;
+        transformView.AddComponent(cameraViewportEntity, viewportTransform);
+
+        auto size = _viewportSize;
+
+        NovelRT::Ecs::Graphics::Components::Camera camera{};
+        camera.left = -1.0f;
+        camera.right = 1.0f;
+        camera.top = -1.0f;
+        camera.bottom = 1.0f;
+        camera.nearPlane = 0.0f;
+        camera.farPlane = 1.0f;
+        camera.referenceResolutionWidth = 1920;
+        camera.referenceResolutionHeight = 1080;
+
+        cameraView.AddComponent(cameraViewportEntity, camera);
+
+        NovelRT::Ecs::Graphics::Components::Viewport viewport{};
+        viewport.width = size.x;
+        viewport.height = size.y;
+
+        viewportView.AddComponent(cameraViewportEntity, viewport);
     }
 };
 
 int main()
 {
+    auto resourceLoader = std::make_shared<DesktopResourceLoader>();
+    resourceLoader
+        ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
+
     auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1920.0f, 1080.0f) / 2.0f);
 
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
@@ -318,48 +157,42 @@ int main()
     VulkanGraphicsAdapterSelector selector{};
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
-    TrianglePass<VulkanGraphicsBackend> trianglePass{};
+    auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     SystemSchedulerBuilder builder{};
+
+    SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
     AddDefaults(builder);
     AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
         .WithSurfaceContext(gfxSurfaceContext)
         .ConfigureRenderPasses(
-            [gfxDevice, &trianglePass](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
+            [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
             {
                 GraphicsRenderPassDescription passDesc{};
                 GraphicsAttachmentDescription attachmentDesc{};
 
-                auto vulkanFormat = gfxDevice->GetSwapchain()->GetVulkanFormat();
-                if (vulkanFormat == VK_FORMAT_R8G8B8A8_UNORM)
-                {
-                    attachmentDesc.texelFormat = TexelFormat::R8G8B8A8_UNORM;
-                }
-                else if (vulkanFormat == VK_FORMAT_B8G8R8A8_UNORM)
-                {
-                    attachmentDesc.texelFormat = TexelFormat::B8G8R8A8_UNORM;
-                }
-                else
-                {
-                    throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
-                }
-
+                attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
                 attachmentDesc.loadOp = LoadOp::Clear;
                 attachmentDesc.storeOp = StoreOp::Store;
                 attachmentDesc.initialLayout = ImageLayout::Undefined;
                 attachmentDesc.finalLayout = ImageLayout::Present;
 
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                trianglePass.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                trianglePass.RenderPassId = renderPassManager.RegisterRenderPass(trianglePass.RenderPass);
+                passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
+                passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
             })
         .WithDefaultOrchestrator();
 
-    auto triangleSystem = std::make_shared<SampleTriangleRenderingSystem<VulkanGraphicsBackend>>(
-        gfxProvider, gfxDevice, gfxSurfaceContext, trianglePass);
-    builder.Configure([triangleSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(triangleSystem)); });
+    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
+        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
+
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
+
+    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
+                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
+    builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
