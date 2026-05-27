@@ -67,8 +67,8 @@ thirdparty_module(Ogg
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(OpenAL
-  URL https://github.com/kcat/openal-soft/archive/ef44737658313cc0a6394eed7878ad28d36fdca5.zip
-  URL_HASH SHA512=66b1e5a373ab6f5414220b7b22c46a0e0eba7d83e004088be75bb5ec808e4d4e2152fc14989ba182475c4d1d020332bbd9b3deb1b26f8506d40112f995e02206
+  URL https://github.com/kcat/openal-soft/archive/83ea7236c6f23fc98e2b62eb9c5b3abfd4b2be86.zip
+  URL_HASH SHA512=0f803c8ed8aee04f50544396689dc7d2e8c31cad1f579c5de6b1422818de91ce2e3727661d3cf0a199e19c287704ce3de4f9d5aa38e5c201f5bc31da0a5e41e4
   OVERRIDE_FIND_PACKAGE
 )
 thirdparty_module(Opus
@@ -125,7 +125,7 @@ foreach(module
   glm
   GTest
   Opus Ogg FLAC Vorbis SndFile samplerate
-  #OpenAL
+  # OpenAL
   ZLIB PNG
   spdlog
   stduuid
