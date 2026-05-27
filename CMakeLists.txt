@@ -53,6 +53,7 @@ add_subdirectory(Graphics)
 add_subdirectory(Input)
 add_subdirectory(UI)
 add_subdirectory(Windowing)
+add_subdirectory(Scripting)
 
 add_subdirectory(Ecs)
 

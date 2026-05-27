@@ -20,10 +20,6 @@ macro(thirdparty_module name)
 endmacro()
 
 # N.B. Names here must match xConfig.cmake as produced by installation
-thirdparty_module(Fabulist
-  URL https://github.com/novelrt/Fabulist/archive/refs/heads/feature/runtime.zip
-  URL_HASH SHA512=876f781279ecc55a309a7b5a9bae29017f6817893f81f5b943d317aa9f0ec626b264d8cf10c65189722ed612275fc849aa94c1c7553979334f960c2de23a78d9
-)
 thirdparty_module(FLAC
   URL https://github.com/xiph/flac/releases/download/1.3.4/flac-1.3.4.tar.xz
   URL_HASH SHA256=8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737
@@ -55,6 +51,10 @@ thirdparty_module(GTest
 thirdparty_module(imgui
   URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9b.zip
   URL_HASH SHA512=d99bc25165f814dda952e0f4a4cd6c028c1217c1b482e089c3ab04fa460d6fb1062beff7561c8d75998be63c1b514fa25b2ac514881f240d5e62f67f1b097b5e
+)
+thirdparty_module(lua
+  URL https://lua.org/ftp/lua-5.5.0.tar.gz
+  URL_HASH SHA512=3253d2cdc929da6438095a30d66ef16a1abdbb0ada8fee238705b3b38492f14be9553640fdca6b25661e01155ba5582032e0a2ef064e4c283e85efc0a128cabe
 )
 thirdparty_module(nlohmann_json
   URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
@@ -119,8 +119,8 @@ thirdparty_module(ZLIB
 
 # N.B. Order matters here, for dependency searching!
 foreach(module
+  lua
   nlohmann_json
-  Fabulist
   glfw3
   glm
   GTest
@@ -132,7 +132,8 @@ foreach(module
   TBB
   VulkanMemoryAllocator
   # freetype
-  imgui)
+  imgui
+)
   add_subdirectory(${module})
 endforeach()
 
