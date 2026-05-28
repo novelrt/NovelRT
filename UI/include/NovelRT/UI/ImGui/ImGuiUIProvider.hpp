@@ -631,7 +631,8 @@ namespace NovelRT::UI::ImGui
 
             // End Frame
             context->EndFrame();
-            _graphicsDevice->QueueSubmit(cmdList);
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists {cmdList};
+            _graphicsDevice->QueueSubmit(lists);
             _graphicsDevice->WaitForIdle();
 
             _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};

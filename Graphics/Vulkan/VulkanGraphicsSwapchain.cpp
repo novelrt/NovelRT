@@ -262,35 +262,6 @@ namespace NovelRT::Graphics
         return _swapchainImages[_currentImageIndex];
     }
 
-    [[nodiscard]] TexelFormat GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::GetFormat()
-    {
-        auto format = GetVulkanFormat();
-        switch(format)
-        {
-            case VK_FORMAT_R8G8B8A8_UNORM:
-            {
-                return TexelFormat::R8G8B8A8_UNORM;
-            }
-            case VK_FORMAT_B8G8R8A8_UNORM:
-            {
-                return TexelFormat::B8G8R8A8_UNORM;
-            }
-            case VK_FORMAT_R16_SINT:
-            {
-                return TexelFormat::R16_SINT;
-            }
-            case VK_FORMAT_R16G16_UINT:
-            {
-                return TexelFormat::R16G16UINT;
-            }
-            default:
-            {
-                throw new NovelRT::Exceptions::NotSupportedException("The specified VK_FORMAT is not supported: "
-                    + std::to_string(format));
-            }
-        }
-    }
-
     bool GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>::Present()
     {
         // Wait for the acquire fence to complete

@@ -65,6 +65,15 @@ namespace NovelRT::Ecs::UI
                 _uiProvider->UploadFontData();
                 _firstSpin = false;
             }
+
+            _uiProvider->BeginFrame();
+            //do all our imgui calls here
+            _uiProvider->EndFrame();
+
+            //upload data to gpu
+            //call render
+            //_uiProvider->Render();
+
         }
     };
 }
