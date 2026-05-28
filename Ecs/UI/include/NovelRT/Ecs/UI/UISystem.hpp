@@ -14,7 +14,7 @@
 
 namespace NovelRT::Ecs::UI
 {
-    template<typename TGraphicsBackend, typename TWindowingBackend, typename TInputBackend>
+    template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
     class UISystem : public NovelRT::Ecs::IEcsSystem
     {
     private:
@@ -57,6 +57,14 @@ namespace NovelRT::Ecs::UI
         {
         }
 
-        void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override;
+        void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
+        {
+            unused(catalogue);
+            if(_firstSpin)
+            {
+                _uiProvider->UploadFontData();
+                _firstSpin = false;
+            }
+        }
     };
 }

@@ -136,97 +136,7 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
 
-        inline void UploadFontData()
-        {
-            uint8_t* pixels;
-            int32_t width, height;
-            auto& io = ::ImGui::GetIO();
-            io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-
-            GraphicsBufferCreateInfo bufferCreateInfo{};
-            bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-            bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-            bufferCreateInfo.size = 64 * 1024 * 4;
-
-            // Create Texture Staging Buffer
-            auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-            // Load shader files for ImGui
-            auto vertImguiShader = LoadSpv("imgui_vert.spv");
-            auto pixelImguiShader = LoadSpv("imgui_frag.spv");
-
-            auto context = _graphicsDevice->CreateGraphicsContext();
-
-            // Begin commands
-            context->BeginFrame();
-            std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList = context->CreateCmdList();
-
-            // Define elements that make up vertex shader
-            std::vector<GraphicsPipelineInputElement> elements{
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                             GraphicsPipelineInputElementKind::Position, 8),
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                             GraphicsPipelineInputElementKind::Normal, 8),
-                GraphicsPipelineInputElement(typeid(ImU32), GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
-
-            // Because we use push constants, define them here
-            std::vector<GraphicsPushConstantRange> pushConstants{
-                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
-
-            std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-            std::vector<GraphicsPipelineResource> resources{
-                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-            // Create pipeline signature
-            _pipelineSignature = _graphicsDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
-                                                                          GraphicsPipelineBlendFactor::OneMinusSrcAlpha,
-                                                                          inputs, resources, pushConstants);
-            auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
-            auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
-
-            // Create pipeline
-            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
-
-            // Create the texture
-            auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
-                                                               GraphicsTextureKind::TwoDimensional,
-                                                               GraphicsResourceAccess::None,
-                                                               GraphicsResourceAccess::ReadWrite,
-                                                               static_cast<uint32_t>(width),
-                                                               static_cast<uint32_t>(height),
-                                                               1,
-                                                               GraphicsMemoryRegionAllocationFlags::None,
-                                                               TexelFormat::R8G8B8A8_UNORM};
-            auto texture2D = _memoryAllocator->CreateTexture(textureCreateInfo);
-
-            // Allocate region based on size of texture
-            auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-
-            // Create a staging buffer region for texture
-            auto stagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-            auto textureData = textureStagingBuffer->template Map<uint32_t>(stagingBufferRegion);
-
-            // Write the data over before copying
-            memcpy(textureData.data(), pixels, (width * height) * sizeof(char) * 4);
-            textureStagingBuffer->UnmapAndWrite(stagingBufferRegion);
-
-            // Set texture ID so that ImGui can refer back to proper id during render
-            io.Fonts->SetTexID(0);
-
-            // Send the data to GPU
-            cmdList->Begin();
-            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-            cmdList->CmdCopy(texture2D, stagingBufferRegion);
-            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-            cmdList->End();
-
-            // End Frame
-            context->EndFrame();
-            _graphicsDevice->QueueSubmit(cmdList);
-            _graphicsDevice->WaitForIdle();
-
-            _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
-        }
-
+    
         inline void CreateDedicatedRenderPass()
         {
             // Create Render Pass
@@ -309,7 +219,11 @@ namespace NovelRT::UI::ImGui
 
             auto* action = _inputProvider->FindInputActionForKey("LeftMouseButton");
             if (!action)
-                throw std::runtime_error("Missing input action for LMB");
+            {
+                unused(_inputProvider->AddInputAction("LeftClick", "LeftMouseButton"));
+                action = _inputProvider->FindInputActionForKey("LeftMouseButton");
+            }
+             //   throw std::runtime_error("Missing input action for LMB");
 
             _mouseInputAction = *action;
         }
@@ -631,5 +545,97 @@ namespace NovelRT::UI::ImGui
         {
             return _renderpass;
         }
+
+            inline void UploadFontData()
+        {
+            uint8_t* pixels;
+            int32_t width, height;
+            auto& io = ::ImGui::GetIO();
+            io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+
+            GraphicsBufferCreateInfo bufferCreateInfo{};
+            bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+            bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+            bufferCreateInfo.size = 64 * 1024 * 4;
+
+            // Create Texture Staging Buffer
+            auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+            // Load shader files for ImGui
+            auto vertImguiShader = LoadSpv("imgui_vert.spv");
+            auto pixelImguiShader = LoadSpv("imgui_frag.spv");
+
+            auto context = _graphicsDevice->CreateGraphicsContext();
+
+            // Begin commands
+            context->BeginFrame();
+            std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList = context->CreateCmdList();
+
+            // Define elements that make up vertex shader
+            std::vector<GraphicsPipelineInputElement> elements{
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                             GraphicsPipelineInputElementKind::Position, 8),
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                             GraphicsPipelineInputElementKind::Normal, 8),
+                GraphicsPipelineInputElement(typeid(ImU32), GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
+
+            // Because we use push constants, define them here
+            std::vector<GraphicsPushConstantRange> pushConstants{
+                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
+
+            std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+            std::vector<GraphicsPipelineResource> resources{
+                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+            // Create pipeline signature
+            _pipelineSignature = _graphicsDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+                                                                          GraphicsPipelineBlendFactor::OneMinusSrcAlpha,
+                                                                          inputs, resources, pushConstants);
+            auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
+            auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
+
+            // Create pipeline
+            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
+
+            // Create the texture
+            auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
+                                                               GraphicsTextureKind::TwoDimensional,
+                                                               GraphicsResourceAccess::None,
+                                                               GraphicsResourceAccess::ReadWrite,
+                                                               static_cast<uint32_t>(width),
+                                                               static_cast<uint32_t>(height),
+                                                               1,
+                                                               GraphicsMemoryRegionAllocationFlags::None,
+                                                               TexelFormat::R8G8B8A8_UNORM};
+            auto texture2D = _memoryAllocator->CreateTexture(textureCreateInfo);
+
+            // Allocate region based on size of texture
+            auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+
+            // Create a staging buffer region for texture
+            auto stagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
+            auto textureData = textureStagingBuffer->template Map<uint32_t>(stagingBufferRegion);
+
+            // Write the data over before copying
+            memcpy(textureData.data(), pixels, (width * height) * sizeof(char) * 4);
+            textureStagingBuffer->UnmapAndWrite(stagingBufferRegion);
+
+            // Set texture ID so that ImGui can refer back to proper id during render
+            io.Fonts->SetTexID(0);
+
+            // Send the data to GPU
+            cmdList->Begin();
+            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->CmdCopy(texture2D, stagingBufferRegion);
+            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->End();
+
+            // End Frame
+            context->EndFrame();
+            _graphicsDevice->QueueSubmit(cmdList);
+            _graphicsDevice->WaitForIdle();
+
+            _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
+        }
+
     };
 }
