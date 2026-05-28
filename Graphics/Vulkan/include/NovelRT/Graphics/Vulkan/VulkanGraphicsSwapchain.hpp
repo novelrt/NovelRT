@@ -49,6 +49,8 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsSwapchain<Vulkan::VulkanGraphicsBackend>> shared_from_this();
 
+        [[nodiscard]] Graphics::TexelFormat GetFormat();
+
         GraphicsSwapchain(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> graphicsDevice);
         ~GraphicsSwapchain() noexcept final;
 

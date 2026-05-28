@@ -93,6 +93,22 @@ namespace NovelRT::Ecs
         }
 
         /**
+         * @brief Removes all components of the given type from the ECS simulation.
+         *
+         * @param entity The EntityId to remove the component from.
+         *
+         * @exception Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
+         * the same thread.
+         */
+        void RemoveAllComponents()
+        {
+            for (auto&& [entity, component] : *this)
+            {
+                RemoveComponent(entity);
+            }
+        }
+
+        /**
          * @brief Gets the immutable component state for a delete instruction.
          *
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for

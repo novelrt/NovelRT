@@ -25,13 +25,14 @@ namespace NovelRT::Ecs
             [&]()
             {
                 _asyncTasks->run(
-                    [work = std::forward<TWork>(work), completion = std::forward<TCompletion>(completion),
-                     this]() mutable
+                    [work = std::make_shared<std::decay_t<TWork>>(std::forward<TWork>(work)),
+                     completion = std::make_shared<std::decay_t<TCompletion>>(std::forward<TCompletion>(completion)),
+                     this]()
                     {
-                        auto result = work();
-                        _pendingCompletions.push([completion = std::move(completion), result = std::move(result)](
-                                                     Timing::Timestamp delta, Catalogue cat) mutable
-                                                 { completion(delta, cat, std::move(result)); });
+                        auto result = (*work)();
+                        _pendingCompletions.push(
+                            [completion, result = std::move(result)](Timing::Timestamp delta, Catalogue cat) mutable
+                            { (*completion)(delta, cat, std::move(result)); });
                     });
             });
     }

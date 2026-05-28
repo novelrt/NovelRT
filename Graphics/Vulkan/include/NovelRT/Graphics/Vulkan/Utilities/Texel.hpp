@@ -33,4 +33,30 @@ namespace NovelRT::Graphics::Vulkan::Utilities
 
         return returnFormat;
     }
+
+    [[nodiscard]] inline TexelFormat MapInverse(VkFormat vkFormat) noexcept
+    {
+        TexelFormat returnFormat = TexelFormat::R8G8B8A8_UNORM;
+
+        switch (vkFormat)
+        {
+            case VK_FORMAT_R8G8B8A8_UNORM:
+                returnFormat = TexelFormat::R8G8B8A8_UNORM;
+                break;
+            case VK_FORMAT_R16_SINT:
+                returnFormat = TexelFormat::R16_SINT;
+                break;
+            case VK_FORMAT_R16G16_UINT:
+                returnFormat = TexelFormat::R16G16UINT;
+                break;
+            case VK_FORMAT_B8G8R8A8_UNORM:
+                returnFormat = TexelFormat::B8G8R8A8_UNORM;
+                break;
+            default:
+                returnFormat = TexelFormat::UnknownOrUndefined;
+                break;
+        }
+
+        return returnFormat;
+    }
 }

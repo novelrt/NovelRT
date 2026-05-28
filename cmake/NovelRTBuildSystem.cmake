@@ -120,7 +120,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   target_sources(${cmakeSafeName}
     INTERFACE ${declareModule_SOURCES_INTERFACE} ${declareModule_RESOURCES_INTERFACE}
     PUBLIC ${declareModule_SOURCES_PUBLIC} ${declareModule_RESOURCES_PUBLIC}
-    PRIVATE ${declareModule_SOURCES_PRIVATE} ${declareModule_RESOURCES_PRIVATE}
+    PRIVATE ${declareModule_SOURCES_PRIVATE} ${declareModule_HEADERS_PRIVATE} ${declareModule_RESOURCES_PRIVATE}
 
     INTERFACE FILE_SET interface_headers
     TYPE HEADERS
@@ -132,7 +132,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     FILES ${declareModule_HEADERS_PUBLIC}
     PRIVATE FILE_SET private_headers
     TYPE HEADERS
-    BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
+    BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${declareModule_HEADERS_BASE_DIRS}
     FILES ${declareModule_HEADERS_PRIVATE}
 
     INTERFACE FILE_SET interface_resources
@@ -178,8 +178,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     FILE_SET interface_headers DESTINATION include
     FILE_SET public_headers DESTINATION include
 
-    FILE_SET interface_resources DESTINATION bin
-    FILE_SET public_resources DESTINATION bin)
+    FILE_SET interface_resources DESTINATION bin/Resources
+    FILE_SET public_resources DESTINATION bin/Resources)
 endfunction()
 
 endblock()

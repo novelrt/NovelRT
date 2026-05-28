@@ -126,7 +126,7 @@ namespace NovelRT::Graphics
         pipelineColorBlendAttachmentState.srcColorBlendFactor = srcBlendFactor;
         pipelineColorBlendAttachmentState.srcAlphaBlendFactor = srcBlendFactor;
         pipelineColorBlendAttachmentState.dstColorBlendFactor = dstBlendFactor;
-        pipelineColorBlendAttachmentState.srcAlphaBlendFactor = dstBlendFactor;
+        pipelineColorBlendAttachmentState.dstAlphaBlendFactor = dstBlendFactor; // TODO: This is likely wrong
         // pipelineColorBlendAttachmentState.alphaBlendOp = VK_BLEND_OP_SUBTRACT;
 
         VkPipelineColorBlendStateCreateInfo pipelineColorBlendStateCreateInfo{};
@@ -274,12 +274,12 @@ namespace NovelRT::Graphics
     {
     }
 
-    VulkanGraphicsPipeline::~GraphicsPipeline() 
+    VulkanGraphicsPipeline::~GraphicsPipeline()
     {
         if (_vulkanPipeline.HasValue())
         {
             vkDestroyPipeline(_device->GetVulkanDevice(), _vulkanPipeline.Get(), nullptr);
-        } 
+        }
     }
 
     [[nodiscard]] std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsPipeline::GetDevice() const

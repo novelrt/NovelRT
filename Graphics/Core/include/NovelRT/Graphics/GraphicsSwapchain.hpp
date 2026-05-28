@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsDeviceObject.hpp>
+#include <NovelRT/Graphics/TexelFormat.hpp>
 #include <memory>
 
 namespace NovelRT::Graphics
@@ -19,6 +20,8 @@ namespace NovelRT::Graphics
         ~GraphicsSwapchain() = delete;
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsSwapchain<TBackend>> shared_from_this();
+
+        [[nodiscard]] Graphics::TexelFormat GetFormat();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> AcquireNextImage();
         [[nodiscard]] TexelFormat GetFormat();

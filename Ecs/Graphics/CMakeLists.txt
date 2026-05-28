@@ -4,6 +4,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Graphics
   DEPENDS
     NovelRT::Ecs::Core
     NovelRT::Graphics
+    NovelRT::ResourceManagement::Desktop
 
   SOURCES
     PRIVATE
@@ -17,4 +18,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Graphics
       include/NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp
       include/NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp
       include/NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp
+      include/NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp
+      include/NovelRT/Ecs/Graphics/Components/Camera.hpp
+      include/NovelRT/Ecs/Graphics/Components/Viewport.hpp
 )

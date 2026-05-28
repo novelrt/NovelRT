@@ -2,9 +2,11 @@ include(CMakeDependentOption)
 
 cmake_dependent_option(NOVELRT_BUILD_SAMPLES_EXPERIMENTAL "Build NovelRT experimental samples" ON "NOVELRT_BUILD_SAMPLES" OFF)
 cmake_dependent_option(NOVELRT_BUILD_SAMPLES_ECS "Build NovelRT ECS samples" ON "NOVELRT_BUILD_SAMPLES" OFF)
+cmake_dependent_option(NOVELRT_BUILD_SAMPLES_SCRIPTING "Build NovelRT Scripting samples" ON "NOVELRT_BUILD_SAMPLES" OFF)
 
 add_subdirectory(Experimental)
 add_subdirectory(Ecs)
+add_subdirectory(Scripting)
 #add_subdirectory(EcsPipeline)
 #add_subdirectory(InputEcsSample)
 #add_subdirectory(PersistenceSample)
