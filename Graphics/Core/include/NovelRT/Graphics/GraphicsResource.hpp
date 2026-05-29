@@ -75,10 +75,18 @@ namespace NovelRT::Graphics
         {
             return Utilities::SpanCast<const T>(MapBytesForRead());
         }
+
         template<typename T>
         [[nodiscard]] Utilities::Span<const T> MapForRead(size_t rangeOffset, size_t rangeLength)
         {
             return Utilities::SpanCast<const T>(MapBytesForRead(rangeOffset, rangeLength));
+        }
+
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> MapForRead(
+            const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* memoryRegion)
+        {
+            return Utilities::SpanCast<T>(MapBytesForRead(memoryRegion->GetOffset(), memoryRegion->GetSize()));
         }
     };
 }

@@ -12,6 +12,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
       GraphicsPipelineInput.cpp
       GraphicsPipelineInputElement.cpp
       GraphicsPipelineResource.cpp
+      GraphicsResourceMemoryRegion.cpp
 
   HEADERS
     PUBLIC
