@@ -34,6 +34,7 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>> _inputProvider;
         std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>> _wndProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _allocator;
+        
 
         EcsUIBuilder(){}
 
@@ -107,14 +108,15 @@ namespace NovelRT::Ecs::UI
         {
             builder.ConfigureRenderPasses([this](NovelRT::Ecs::Graphics::RenderPassManager<TGraphicsBackend>& renderPassManager)
             {
-                renderPassManager.RegisterRenderPass(_uiProvider->GetDedicatedRenderPass());
+                auto& id = _system->GetAssignedRenderPassId();
+                id = renderPassManager.RegisterRenderPass(_uiProvider->GetDedicatedRenderPass());
             });
             return *this;
         }
 
         EcsUIBuilder& WithDefaultUISystem()
         {
-            return WithUISystem(std::make_shared<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>(_uiProvider));
+            return WithUISystem(std::make_shared<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>(_uiProvider, _gfxDevice));
         }
 
         EcsUIBuilder& AddFont(const std::string& name, const std::string& filePath)

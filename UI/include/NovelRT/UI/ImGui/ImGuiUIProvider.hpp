@@ -135,7 +135,6 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
-
     
         inline void CreateDedicatedRenderPass()
         {
@@ -155,6 +154,35 @@ namespace NovelRT::UI::ImGui
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
                 _renderpass = _graphicsDevice->CreateRenderPass(passDesc);
             }
+
+            // Load shader files for ImGui
+            auto vertImguiShader = LoadSpv("imgui_vert.spv");
+            auto pixelImguiShader = LoadSpv("imgui_frag.spv");
+
+            // Define elements that make up vertex shader
+            std::vector<GraphicsPipelineInputElement> elements{
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                             GraphicsPipelineInputElementKind::Position, 8),
+                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
+                                             GraphicsPipelineInputElementKind::Normal, 8),
+                GraphicsPipelineInputElement(typeid(ImU32), GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
+
+            // Because we use push constants, define them here
+            std::vector<GraphicsPushConstantRange> pushConstants{
+                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
+
+            std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
+            std::vector<GraphicsPipelineResource> resources{
+                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
+            // Create pipeline signature
+            _pipelineSignature = _graphicsDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
+                                                                          GraphicsPipelineBlendFactor::OneMinusSrcAlpha,
+                                                                          inputs, resources, pushConstants);
+            auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
+            auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
+
+            // Create pipeline
+            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
         }
     public:
         ImGuiUIProvider(std::shared_ptr<Windowing::WindowProvider<TWindowingBackend>> windowProvider,
@@ -238,11 +266,11 @@ namespace NovelRT::UI::ImGui
 
         ~ImGuiUIProvider() = default;
 
-        void Initialise()
-        {
-            CreateDedicatedRenderPass();
-            UploadFontData();
-        }
+        // void Initialise()
+        // {
+        //     CreateDedicatedRenderPass();
+        //     //UploadFontData();
+        // }
 
         void AddFontToUpload(const std::string& name, const std::string& filePath)
         {
@@ -323,8 +351,8 @@ namespace NovelRT::UI::ImGui
             }
             _drawEnabled = true;
 
-            auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
-            auto graphicsSurface = _graphicsDevice->GetSurface();
+            //auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
+            //auto graphicsSurface = _graphicsDevice->GetSurface();
 
             size_t vertexSize = drawData->TotalVtxCount * sizeof(ImDrawVert);
             size_t indexSize = drawData->TotalIdxCount * sizeof(ImDrawIdx);
@@ -409,7 +437,7 @@ namespace NovelRT::UI::ImGui
                 return;
             auto drawData = _cachedDrawData;
 
-            auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
+            //auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
             auto graphicsSurface = _graphicsDevice->GetSurface();
             float surfaceWidth = graphicsSurface->GetWidth();
             float surfaceHeight = graphicsSurface->GetHeight();
@@ -546,7 +574,7 @@ namespace NovelRT::UI::ImGui
             return _renderpass;
         }
 
-            inline void UploadFontData()
+        inline void UploadFontData(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList)
         {
             uint8_t* pixels;
             int32_t width, height;
@@ -561,40 +589,8 @@ namespace NovelRT::UI::ImGui
             // Create Texture Staging Buffer
             auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
 
-            // Load shader files for ImGui
-            auto vertImguiShader = LoadSpv("imgui_vert.spv");
-            auto pixelImguiShader = LoadSpv("imgui_frag.spv");
-
-            auto context = _graphicsDevice->CreateGraphicsContext();
-
             // Begin commands
-            context->BeginFrame();
-            std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList = context->CreateCmdList();
-
-            // Define elements that make up vertex shader
-            std::vector<GraphicsPipelineInputElement> elements{
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                             GraphicsPipelineInputElementKind::Position, 8),
-                GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-                                             GraphicsPipelineInputElementKind::Normal, 8),
-                GraphicsPipelineInputElement(typeid(ImU32), GraphicsPipelineInputElementKind::Colour, sizeof(ImU32))};
-
-            // Because we use push constants, define them here
-            std::vector<GraphicsPushConstantRange> pushConstants{
-                GraphicsPushConstantRange{ShaderProgramVisibility::Vertex, 0, sizeof(float) * 4}};
-
-            std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-            std::vector<GraphicsPipelineResource> resources{
-                GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-            // Create pipeline signature
-            _pipelineSignature = _graphicsDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
-                                                                          GraphicsPipelineBlendFactor::OneMinusSrcAlpha,
-                                                                          inputs, resources, pushConstants);
-            auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
-            auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
-
-            // Create pipeline
-            _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
+            
 
             // Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
@@ -630,10 +626,10 @@ namespace NovelRT::UI::ImGui
             cmdList->End();
 
             // End Frame
-            context->EndFrame();
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists {cmdList};
-            _graphicsDevice->QueueSubmit(lists);
-            _graphicsDevice->WaitForIdle();
+            //context->EndFrame();
+            //std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists {cmdList};
+            //_graphicsDevice->QueueSubmit(lists);
+            //_graphicsDevice->WaitForIdle();
 
             _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
         }

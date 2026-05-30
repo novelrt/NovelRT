@@ -20,4 +20,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::UITest
       Resources/Shaders/imgui_vert.spv
       Resources/Shaders/vulkanrenderfrag.spv
       Resources/Shaders/vulkanrendervert.spv
+      Resources/Shaders/SpritePixel.spv
+      Resources/Shaders/SpriteVertex.spv
+      Resources/Images/novel-chan.png
 )

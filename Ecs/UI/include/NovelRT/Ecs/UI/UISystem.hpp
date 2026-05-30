@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/SecondaryCmdListInfo.hpp>
+
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
 #include <NovelRT/Ecs/Catalogue.hpp>
@@ -11,6 +13,9 @@
 #include <NovelRT/Ecs/EntityGraphView.hpp>
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
+#include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
+#include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
+#include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 
 namespace NovelRT::Ecs::UI
 {
@@ -19,61 +24,85 @@ namespace NovelRT::Ecs::UI
     {
     private:
         std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> _uiProvider;
+        std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _gfxDevice; 
+        NovelRT::Ecs::Graphics::Components::RenderPassId _renderPassId;
+        std::optional<EntityId> _submissionSemaphoreEntity;
         bool _firstSpin = true;
 
-        // EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view,
-        //                         Catalogue& catalogue,
-        //                         EntityId entity)
-        // {
-        //     EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
-
-        //     while (it.HasParent())
-        //     {
-        //         it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
-        //     }
-
-        //     return it;
-        // }
-
-        // void EnumerateChildren(EntityGraphView& graph,
-        //                        ComponentView<Components::RenderPass<TGraphicsBackend>>& view,
-        //                        std::vector<EntityId>& inOrder)
-        // {
-        //     if (view.HasComponent(graph.GetRawEntityId()))
-        //         inOrder.push_back(graph.GetRawEntityId());
-
-        //     if (!graph.HasChildren())
-        //         return;
-
-        //     for (const auto& child : graph.GetOriginalChildren())
-        //     {
-        //         EnumerateChildren(child.get(), view, inOrder);
-        //     }
-        // }
-
     public:
-        UISystem(std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> uiProvider)
-            : _uiProvider(std::move(uiProvider))
+        UISystem(std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> uiProvider,
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> gfxDevice)
+            : _uiProvider(std::move(uiProvider)),
+            _gfxDevice(std::move(gfxDevice)),
+            _renderPassId(-1)
         {
         }
 
-        void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
+        void Update(Timing::Timestamp delta, Catalogue catalogue) override
         {
-            unused(catalogue);
-            if(_firstSpin)
+            if (_renderPassId == -1u)
             {
-                _uiProvider->UploadFontData();
-                _firstSpin = false;
+                return;
             }
 
-            _uiProvider->BeginFrame();
+            auto [renderPasses, commandLists, trackedSemaphores, graph] = catalogue.GetComponentViews<
+            Graphics::Components::RenderPass<TGraphicsBackend>, Graphics::Components::BuiltCommandList<TGraphicsBackend>,
+            Graphics::Components::TrackedSemaphore<TGraphicsBackend>, Ecs::Components::EntityGraphComponent>();
+
+            auto uiContext = _gfxDevice->CreateGraphicsContext();
+
+            if(!_submissionSemaphoreEntity.has_value())
+            {
+                _submissionSemaphoreEntity = catalogue.CreateEntity();
+            }
+
+            auto entityId = catalogue.CreateEntity();
+            auto currentCmdList =
+                    uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
+                        {_uiProvider->GetDedicatedRenderPass(), 0}));
+
+            // auto* descriptorSetArray = new std::shared_ptr<
+            //     NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>[1];
+            // size_t descriptorSetIndex = 0;
+
+            if(_firstSpin)
+            {
+                auto uploadEntityId = catalogue.CreateEntity();
+                auto uploadCmdList = uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
+                        {_uiProvider->GetDedicatedRenderPass(), 0}));
+                _uiProvider->UploadFontData(uploadCmdList);
+                _firstSpin = false;
+                Graphics::Components::BuiltCommandList<TGraphicsBackend> uploadCmdListComp{
+                .commandList =
+                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(uploadCmdList)};
+                commandLists.AddComponent(uploadEntityId, uploadCmdListComp);
+            }
+
+            _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
             //do all our imgui calls here
             _uiProvider->EndFrame();
 
             //upload data to gpu
-            //call render
-            //_uiProvider->Render();
+            _uiProvider->UploadToGPU(currentCmdList);
 
+            //call render
+            _uiProvider->Draw(currentCmdList);
+
+            Graphics::Components::RenderPass<TGraphicsBackend> passComponent{};
+            passComponent.renderPassIndex = _renderPassId;
+
+            Graphics::Components::BuiltCommandList<TGraphicsBackend> cmdListComp{
+                .commandList =
+                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(currentCmdList)};
+
+            renderPasses.AddComponent(entityId, passComponent);
+            commandLists.AddComponent(entityId, cmdListComp);
+
+        }
+    
+        NovelRT::Ecs::Graphics::Components::RenderPassId& GetAssignedRenderPassId()
+        {
+            return _renderPassId;
         }
     };
 }
