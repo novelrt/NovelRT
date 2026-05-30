@@ -56,11 +56,6 @@ namespace NovelRT::Ecs::UI
                 _submissionSemaphoreEntity = catalogue.CreateEntity();
             }
 
-            auto entityId = catalogue.CreateEntity();
-            auto currentCmdList =
-                    uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
-                        {_uiProvider->GetDedicatedRenderPass(), 0}));
-
             // auto* descriptorSetArray = new std::shared_ptr<
             //     NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>[1];
             // size_t descriptorSetIndex = 0;
@@ -68,24 +63,42 @@ namespace NovelRT::Ecs::UI
             if(_firstSpin)
             {
                 auto uploadEntityId = catalogue.CreateEntity();
-                auto uploadCmdList = uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
-                        {_uiProvider->GetDedicatedRenderPass(), 0}));
+                auto uploadCmdList = uiContext->CreateCmdList();
                 _uiProvider->UploadFontData(uploadCmdList);
                 _firstSpin = false;
                 Graphics::Components::BuiltCommandList<TGraphicsBackend> uploadCmdListComp{
                 .commandList =
                     new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(uploadCmdList)};
                 commandLists.AddComponent(uploadEntityId, uploadCmdListComp);
+                return;
             }
+            
+            auto currentCmdList =
+                    uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
+                        {_uiProvider->GetDedicatedRenderPass(), 0}));
 
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
             //do all our imgui calls here
             _uiProvider->EndFrame();
 
+            auto uploadCmdList =
+                    uiContext->CreateCmdList();
+
             //upload data to gpu
-            _uiProvider->UploadToGPU(currentCmdList);
+            auto uploadEntityId = catalogue.CreateEntity();
+            _uiProvider->UploadToGPU(uploadCmdList);
+            //Graphics::Components::RenderPass<TGraphicsBackend> uploadPass{};
+            //uploadPass.renderPassIndex = _renderPassId;
+
+            Graphics::Components::BuiltCommandList<TGraphicsBackend> uploadCmdListComp{
+                .commandList =
+                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(uploadCmdList)};
+
+            //renderPasses.AddComponent(uploadEntityId, uploadPass);
+            commandLists.AddComponent(uploadEntityId, uploadCmdListComp);
 
             //call render
+            auto entityId = catalogue.CreateEntity();
             _uiProvider->Draw(currentCmdList);
 
             Graphics::Components::RenderPass<TGraphicsBackend> passComponent{};

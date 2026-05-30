@@ -350,6 +350,7 @@ namespace NovelRT::UI::ImGui
                 return;
             }
             _drawEnabled = true;
+            currentCmdList->Begin();
 
             //auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
             //auto graphicsSurface = _graphicsDevice->GetSurface();
@@ -429,6 +430,7 @@ namespace NovelRT::UI::ImGui
             _currentVertexBuffer = vertexBuffer;
             _currentVertexBufferRegion = vertexBufferRegion;
             _cachedDrawData = drawData;
+            currentCmdList->End();
         }
 
         void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
@@ -462,6 +464,9 @@ namespace NovelRT::UI::ImGui
             viewportInfoStruct.height = surfaceHeight;
             viewportInfoStruct.minDepth = 0.0f;
             viewportInfoStruct.maxDepth = 1.0f;
+
+
+            currentCmdList->Begin();
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
@@ -567,6 +572,8 @@ namespace NovelRT::UI::ImGui
             currentCmdList->CmdSetScissor(
                 NovelRT::Maths::GeoVector2F::Zero(),
                 NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+
+            currentCmdList->End();
         }
     
         std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> GetDedicatedRenderPass()
