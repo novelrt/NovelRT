@@ -34,13 +34,13 @@ namespace NovelRT::Ecs::UI
             std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> gfxDevice)
             : _uiProvider(std::move(uiProvider)),
             _gfxDevice(std::move(gfxDevice)),
-            _renderPassId(-1)
+            _renderPassId(0ULL)
         {
         }
 
         void Update(Timing::Timestamp delta, Catalogue catalogue) override
         {
-            if (_renderPassId == -1u)
+            if (_renderPassId == 0ULL)
             {
                 return;
             }
