@@ -53,12 +53,13 @@ namespace NovelRT::Graphics
         void UnmapBytes();
 
         void UnmapBytesAndWrite();
-
+        
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map();
 
         template<typename T>
         [[nodiscard]] Utilities::Span<const T> MapForRead();
+
 
         [[nodiscard]] VmaVirtualAllocation GetVirtualAllocation() const noexcept;
         [[nodiscard]] VmaVirtualAllocationInfo GetVirtualAllocationInfo() const noexcept;
@@ -109,14 +110,6 @@ namespace NovelRT::Graphics
             return std::static_pointer_cast<TResource<Vulkan::VulkanGraphicsBackend>>(
                 std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>>(original));
         }
-        
-        [[nodiscard]] Utilities::Span<uint8_t> MapBytes();
-
-        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead(); 
-
-        void UnmapBytes();
-
-        void UnmapBytesAndWrite();
 
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map()
