@@ -63,6 +63,7 @@ namespace NovelRT::Graphics
         {
             return Utilities::SpanCast<T>(MapBytes(rangeOffset, rangeLength));
         }
+        
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map(
             const GraphicsResourceMemoryRegion<GraphicsResource, TBackend>* memoryRegion)

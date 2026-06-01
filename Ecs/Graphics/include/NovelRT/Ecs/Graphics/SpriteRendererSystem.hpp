@@ -178,7 +178,7 @@ namespace NovelRT::Ecs::Graphics
                         auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
                         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
-                        auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
+                        auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion.get());
 
                         NovelRT::Utilities::Memory::Copy(std::span<const uint8_t>(textureMetadata.data), pTextureData);
 
@@ -373,11 +373,10 @@ namespace NovelRT::Ecs::Graphics
                         cameraData.camera.top, cameraData.camera.nearPlane, cameraData.camera.farPlane);
 
                     auto& constantBufferRegion = _cameraConstantBuffers.at(cameraData.entityId);
-                    auto pCameraData = constantBufferRegion->GetOwningResource()->template Map<CameraConstantBuffer>(
-                        constantBufferRegion);
+                    auto pCameraData = constantBufferRegion->template Map<CameraConstantBuffer>();
                     pCameraData[0].view = view;
                     pCameraData[0].projection = projection;
-                    constantBufferRegion->GetOwningResource()->UnmapAndWrite(constantBufferRegion);
+                    constantBufferRegion->UnmapBytesAndWrite();
 
                     std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<
                         NovelRT::Graphics::GraphicsResource, TGraphicsBackend>>>
@@ -446,7 +445,7 @@ namespace NovelRT::Ecs::Graphics
             _vertexBufferRegion = _vertexBuffer->Allocate(sizeof(SpriteVertexShaderInputs) * 6, 16);
             auto stagingRegion = stagingBuffer->Allocate(sizeof(SpriteVertexShaderInputs) * 6, 16);
 
-            auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion);
+            auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion.get());
 
             pVertexBuffer[0] =
                 SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, 0.5f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};
