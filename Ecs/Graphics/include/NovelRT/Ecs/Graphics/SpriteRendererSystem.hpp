@@ -178,7 +178,7 @@ namespace NovelRT::Ecs::Graphics
                         auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
                         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
-                        auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion.get());
+                        auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
 
                         NovelRT::Utilities::Memory::Copy(std::span<const uint8_t>(textureMetadata.data), pTextureData);
 
@@ -445,7 +445,7 @@ namespace NovelRT::Ecs::Graphics
             _vertexBufferRegion = _vertexBuffer->Allocate(sizeof(SpriteVertexShaderInputs) * 6, 16);
             auto stagingRegion = stagingBuffer->Allocate(sizeof(SpriteVertexShaderInputs) * 6, 16);
 
-            auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion.get());
+            auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion);
 
             pVertexBuffer[0] =
                 SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, 0.5f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};

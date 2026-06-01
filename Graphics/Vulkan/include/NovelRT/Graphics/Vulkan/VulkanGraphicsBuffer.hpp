@@ -71,7 +71,7 @@ namespace NovelRT::Graphics
 
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map(
-            const GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>*
+            const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, Vulkan::VulkanGraphicsBackend>>&
                 memoryRegion)
         {
             return Utilities::SpanCast<T>(MapBytes(memoryRegion->GetOffset(), memoryRegion->GetSize()));

@@ -57,13 +57,13 @@ namespace NovelRT::Graphics
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map()
         {
-            return GetOwningResource()->template Map<T>(this);
+            return GetOwningResource()->template Map<T>(shared_from_this());
         }
 
         template<typename T>
         [[nodiscard]] Utilities::Span<const T> MapForRead()
         {
-            return GetOwningResource()->template MapForRead<T>(this);
+            return GetOwningResource()->template MapForRead<T>(shared_from_this());
         }
     };
 
