@@ -39,7 +39,7 @@ namespace NovelRT::Graphics
             return GetOwningResource()->MapBytes(GetOffset(), GetSize());
         }
 
-        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead() 
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead()
         {
             return GetOwningResource()->MapBytesForRead(GetOffset(), GetSize());
         }

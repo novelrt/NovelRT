@@ -53,13 +53,12 @@ namespace NovelRT::Graphics
         void UnmapBytes();
 
         void UnmapBytesAndWrite();
-        
+
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map();
 
         template<typename T>
         [[nodiscard]] Utilities::Span<const T> MapForRead();
-
 
         [[nodiscard]] VmaVirtualAllocation GetVirtualAllocation() const noexcept;
         [[nodiscard]] VmaVirtualAllocationInfo GetVirtualAllocationInfo() const noexcept;
@@ -120,7 +119,7 @@ namespace NovelRT::Graphics
         template<typename T>
         [[nodiscard]] Utilities::Span<const T> MapForRead()
         {
-            return GetOwningResource()->template MapForRead<T>(shared_from_this());
+            return GetOwningResource()->template MapForRead<T>(this);
         }
     };
 }

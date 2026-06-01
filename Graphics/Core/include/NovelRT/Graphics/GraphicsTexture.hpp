@@ -50,7 +50,8 @@ namespace NovelRT::Graphics
         void UnmapBytesAndWrite() final;
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
-        void UnmapAndWrite(const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>& memoryRegion);
+        void UnmapAndWrite(
+            const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, TBackend>>& memoryRegion);
 
         template<typename T>
         [[nodiscard]] Utilities::Span<T> Map(
