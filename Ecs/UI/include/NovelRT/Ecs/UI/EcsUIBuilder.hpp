@@ -134,7 +134,7 @@ namespace NovelRT::Ecs::UI
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIClickEvent{}, "NovelRT::Ecs::UI::UIClickEvent");
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIText{}, "NovelRT::Ecs::UI::UIText");
             
-            unused(scheduler.RegisterSystemDependsOnAll(_system));
+            unused(scheduler.RegisterSystem(_system));
         }
     };
 

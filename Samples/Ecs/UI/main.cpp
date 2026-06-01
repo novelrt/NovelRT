@@ -171,7 +171,7 @@ int main()
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
     AddDefaults(builder);
-    auto gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
+    auto& gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
         .WithSurfaceContext(gfxSurfaceContext)
         .ConfigureRenderPasses(
@@ -189,8 +189,7 @@ int main()
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
                 passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
                 passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-            })
-        .WithDefaultOrchestrator();
+            });
 
     AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend, NovelRT::Windowing::Glfw::GlfwWindowingBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
@@ -201,6 +200,8 @@ int main()
         .WithDefaultUISystem()
         .WithGraphicsBuilder(gfxBuilder)
         .AddFont("default", "Raleway-Regular.ttf");
+
+    gfxBuilder.WithDefaultOrchestrator();
 
     auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
