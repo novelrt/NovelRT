@@ -34,19 +34,37 @@ namespace NovelRT::Graphics
         [[nodiscard]] size_t GetOffset() const noexcept;
         [[nodiscard]] size_t GetSize() const noexcept;
 
-        [[nodiscard]] Utilities::Span<uint8_t> MapBytes();
+        [[nodiscard]] Utilities::Span<uint8_t> MapBytes()
+        {
+            return GetOwningResource()->MapBytes(GetOffset(), GetSize());
+        }
 
-        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead();
+        [[nodiscard]] Utilities::Span<const uint8_t> MapBytesForRead()
+        {
+            return GetOwningResource()->MapBytesForRead(GetOffset(), GetSize());
+        }
 
-        void UnmapBytes();
+        void UnmapBytes()
+        {
+            GetOwningResource()->UnmapBytes();
+        }
 
-        void UnmapBytesAndWrite();
+        void UnmapBytesAndWrite()
+        {
+            GetOwningResource()->UnmapBytesAndWrite();
+        }
 
         template<typename T>
-        [[nodiscard]] Utilities::Span<T> Map();
+        [[nodiscard]] Utilities::Span<T> Map()
+        {
+            return GetOwningResource()->template Map<T>(shared_from_this());
+        }
 
         template<typename T>
-        [[nodiscard]] Utilities::Span<const T> MapForRead();
+        [[nodiscard]] Utilities::Span<const T> MapForRead()
+        {
+            return GetOwningResource()->template MapForRead<T>(shared_from_this());
+        }
     };
 
     template<template<typename> typename TResource, typename TBackend>

@@ -109,5 +109,17 @@ namespace NovelRT::Graphics
             return std::static_pointer_cast<TResource<Vulkan::VulkanGraphicsBackend>>(
                 std::shared_ptr<GraphicsResource<Vulkan::VulkanGraphicsBackend>>(original));
         }
+
+        template<typename T>
+        [[nodiscard]] Utilities::Span<T> Map()
+        {
+            return GetOwningResource()->template Map<T>(shared_from_this());
+        }
+
+        template<typename T>
+        [[nodiscard]] Utilities::Span<const T> MapForRead()
+        {
+            return GetOwningResource()->template MapForRead<T>(shared_from_this());
+        }
     };
 }

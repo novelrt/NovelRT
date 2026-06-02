@@ -79,7 +79,8 @@ namespace NovelRT::Graphics
         void UnmapBytesAndWrite(size_t writtenRangeOffset, size_t writtenRangeLength) final;
 
         void UnmapAndWrite(
-            const GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>* memoryRegion);
+            const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>>&
+                memoryRegion);
 
         [[nodiscard]] VkImage GetVulkanImage() const noexcept;
 
