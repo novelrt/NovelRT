@@ -119,7 +119,7 @@ namespace NovelRT::Graphics
         template<typename T>
         [[nodiscard]] Utilities::Span<const T> MapForRead()
         {
-            return GetOwningResource()->template MapForRead<T>(this);
+            return GetOwningResource()->template MapForRead<T>(shared_from_this());
         }
     };
 }
