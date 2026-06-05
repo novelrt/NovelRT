@@ -373,11 +373,10 @@ namespace NovelRT::Ecs::Graphics
                         cameraData.camera.top, cameraData.camera.nearPlane, cameraData.camera.farPlane);
 
                     auto& constantBufferRegion = _cameraConstantBuffers.at(cameraData.entityId);
-                    auto pCameraData = constantBufferRegion->GetOwningResource()->template Map<CameraConstantBuffer>(
-                        constantBufferRegion);
+                    auto pCameraData = constantBufferRegion->template Map<CameraConstantBuffer>();
                     pCameraData[0].view = view;
                     pCameraData[0].projection = projection;
-                    constantBufferRegion->GetOwningResource()->UnmapAndWrite(constantBufferRegion);
+                    constantBufferRegion->UnmapBytesAndWrite();
 
                     std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<
                         NovelRT::Graphics::GraphicsResource, TGraphicsBackend>>>

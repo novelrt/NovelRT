@@ -81,4 +81,24 @@ namespace NovelRT::Graphics
     {
         return _virtualAllocationInfo;
     }
+
+    Utilities::Span<uint8_t> VulkanGraphicsResourceMemoryRegion<GraphicsResource>::MapBytes()
+    {
+        return GetOwningResource()->MapBytes(GetOffset(), GetSize());
+    }
+
+    Utilities::Span<const uint8_t> VulkanGraphicsResourceMemoryRegion<GraphicsResource>::MapBytesForRead()
+    {
+        return GetOwningResource()->MapBytesForRead(GetOffset(), GetSize());
+    }
+
+    void VulkanGraphicsResourceMemoryRegion<GraphicsResource>::UnmapBytes()
+    {
+        GetOwningResource()->UnmapBytes();
+    }
+
+    void VulkanGraphicsResourceMemoryRegion<GraphicsResource>::UnmapBytesAndWrite()
+    {
+        GetOwningResource()->UnmapBytesAndWrite();
+    }
 }
