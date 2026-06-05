@@ -476,7 +476,6 @@ int main()
                                                                          memoryAllocator, true);
 
     unused(uiProvider->AddFontToUpload("default", "Raleway-Regular.ttf"));
-    uiProvider->Initialise();
 
     // Setup Background Triangle + Input Resource Regions for rendering
     auto renderingData = SetupTriangleSample(gfxDevice, memoryAllocator);

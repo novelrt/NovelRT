@@ -31,6 +31,8 @@
 
 #include <imgui.h>
 
+#include<iostream>
+
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Input;
 
@@ -135,7 +137,7 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
-    
+
         inline void CreateDedicatedRenderPass()
         {
             // Create Render Pass
@@ -227,7 +229,7 @@ namespace NovelRT::UI::ImGui
                 provider->SetClipboardText(std::string(text));
             };
             io.BackendRendererName = "NovelRT";
-            
+
 
             ::ImGui::GetMainViewport()->PlatformHandleRaw = (void*)_windowProvider->GetHandle();
             auto windowSize = _windowProvider->GetSize();
@@ -346,6 +348,7 @@ namespace NovelRT::UI::ImGui
 
             if (drawData->TotalVtxCount <= 0)
             {
+                std::cout << "FUCKING EARLY RETURN YIPPIEEEE IMGUI ISNT DOING ANYTHING HERE!!!\n";
                 _drawEnabled = false;
                 return;
             }
@@ -575,7 +578,7 @@ namespace NovelRT::UI::ImGui
 
             currentCmdList->End();
         }
-    
+
         std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> GetDedicatedRenderPass()
         {
             return _renderpass;
@@ -597,7 +600,7 @@ namespace NovelRT::UI::ImGui
             auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
 
             // Begin commands
-            
+
 
             // Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
