@@ -207,24 +207,7 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     }
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
-    {
-        gfxContext->BeginFrame();
-        auto cmdList = gfxContext->CreateCmdList();
 
-        cmdList->Begin();
-        cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
-
-        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-        cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-        cmdList->End();
-
-        gfxContext->EndFrame();
-
-        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
-        gfxDevice->QueueSubmit(lists);
-        gfxDevice->WaitForIdle();
-    }
 
     RenderingData<TBackend> returnStruct{};
     returnStruct.RenderPipeline = pipeline;
@@ -448,9 +431,11 @@ int main()
 
     //Upload Fonts
     auto gfxContext = gfxDevice->CreateGraphicsContext();
-    auto cmdList = gfxContext->CreateCmdList();
     gfxContext->BeginFrame();
+    auto cmdList = gfxContext->CreateCmdList();
+    cmdList->Begin();
     uiProvider->UploadFontData(cmdList);
+    cmdList->End();
     gfxContext->EndFrame();
 
     std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<VulkanGraphicsBackend>>> lists{cmdList};
