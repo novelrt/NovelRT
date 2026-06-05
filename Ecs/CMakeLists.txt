@@ -6,7 +6,9 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs
 
   OPTIONAL_DEPENDS
     NovelRT::Ecs::Graphics
+    NovelRT::Ecs::Scripting
 )
 
 add_subdirectory(Core)
 add_subdirectory(Graphics)
+add_subdirectory(Scripting)
