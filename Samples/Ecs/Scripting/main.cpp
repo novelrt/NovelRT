@@ -9,11 +9,11 @@
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
 #include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
-#include <NovelRT/Ecs/Scripting/Components/DecisionTreeChoice.hpp>
-
-#include <NovelRT/Ecs/Scripting/DecisionTreeStepManager.hpp>
+#include <NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp>
 #include <NovelRT/Ecs/Scripting/DecisionTreeStepSystem.hpp>
 #include <NovelRT/Ecs/Scripting/EcsScriptingBuilder.hpp>
+#include <NovelRT/Ecs/Scripting/StepSystems/BranchStepSystem.hpp>
+#include <NovelRT/Ecs/Scripting/StepSystems/SpokenLineStepSystem.hpp>
 
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 #include <NovelRT/Scripting/Statuses/Branch.hpp>
@@ -33,49 +33,16 @@ int main()
 
     auto scriptManager = std::make_shared<ScriptManager>();
 
-    NovelRT::Ecs::Scripting::DecisionTreeStepKind stepSpokenLine;
-    NovelRT::Ecs::Scripting::DecisionTreeStepKind stepBranch;
-
     AddDefaults(builder);
     AddScripting(builder)
         .WithScriptManager(scriptManager)
-        .WithDecisionTreeStepSystem([](auto&, auto& stepKindManager)
+        .RegisterStepSystem([](auto& manager, auto& scheduler)
         {
-            return std::make_shared<DecisionTreeStepSystem>(stepKindManager);
+            return std::make_shared<BranchStepSystem>(manager, scheduler);
         })
-        .ConfigureStepKinds([&stepSpokenLine, &stepBranch](auto& manager)
+        .RegisterStepSystem([](auto& manager, auto& scheduler)
         {
-            // TODO: we'd ideally have these as some sort of default with the ability to override
-            stepSpokenLine = manager.RegisterStepHandler([](auto& catalogue, auto entityId, auto& status)
-            {
-                auto activeTree = catalogue.template GetComponentView<NovelRT::Ecs::Scripting::Components::ActiveDecisionTree>();
-
-                if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(status.get()))
-                {
-                    activeTree.PushComponentUpdateInstruction(entityId, NovelRT::Ecs::Scripting::Components::ActiveDecisionTree{
-                        new std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>(spokenLine->Continue())
-                    });
-                }
-            });
-
-            stepBranch = manager.RegisterStepHandler([](auto& catalogue, auto entityId, auto& status)
-            {
-                auto [activeTree, choice] = catalogue.template GetComponentViews<NovelRT::Ecs::Scripting::Components::ActiveDecisionTree, NovelRT::Ecs::Scripting::Components::DecisionTreeChoice>();
-
-                if (!choice.HasComponent(entityId))
-                {
-                    return;
-                }
-
-                if (auto* branch = dynamic_cast<NovelRT::Scripting::Statuses::Branch*>(status.get()))
-                {
-                    size_t choiceIndex = choice.GetComponent(entityId).choiceIndex;
-
-                    activeTree.PushComponentUpdateInstruction(entityId, NovelRT::Ecs::Scripting::Components::ActiveDecisionTree{
-                        new std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>(branch->Continue(choiceIndex))
-                    });
-                }
-            });
+            return std::make_shared<SpokenLineStepSystem>(manager, scheduler);
         });
 
     SystemScheduler scheduler = builder.Build();

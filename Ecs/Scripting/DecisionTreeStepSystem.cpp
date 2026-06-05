@@ -1,36 +1,28 @@
-#include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
-#include <NovelRT/Ecs/Scripting/Components/StepDecisionTree.hpp>
-#include <NovelRT/Ecs/Scripting/DecisionTreeStepSystem.hpp>
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
 
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 
-NovelRT::Ecs::Scripting::DecisionTreeStepSystem::DecisionTreeStepSystem(DecisionTreeStepManager stepManager)
-    : _stepManager{std::move(stepManager)}
+#include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
+#include <NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp>
+#include <NovelRT/Ecs/Scripting/DecisionTreeStepSystem.hpp>
+
+#include <NovelRT/Scripting/DecisionTreeStatus.hpp>
+
+NovelRT::Ecs::Scripting::DecisionTreeStepSystem::DecisionTreeStepSystem(DecisionTreeStateManager& stepManager)
+    : _stepManager{stepManager}
 {
 }
 
-void NovelRT::Ecs::Scripting::DecisionTreeStepSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+
+void NovelRT::Ecs::Scripting::DecisionTreeStepSystem::Continue(Catalogue& catalogue, EntityId entity, std::unique_ptr<NovelRT::Scripting::DecisionTreeStatus>&& status)
 {
-    auto [ activeTrees, stepInstructions ] = catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::StepDecisionTree>();
+    auto decisionTrees = catalogue.GetComponentView<Components::ActiveDecisionTree>();
 
-    for (auto [entity, component] : stepInstructions)
-    {
-        if (!activeTrees.HasComponent(entity))
-        {
-            // Ignore any components which don't have an active tree
-            continue;
-        }
-
-        auto& handler = _stepManager.GetStepHandler(component.stepKind);
-        auto* tree = activeTrees.GetComponent(entity).decisionTree;
-
-        // Invoke the user-registered logic for this step instruction.
-        handler(catalogue, entity, *tree);
-    }
-
-    // Remove the step components so that we don't try to step repeatedly.
-    stepInstructions.RemoveAllComponents();
+    auto* ptr = new std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>(std::move(status));
+    decisionTrees.PushComponentUpdateInstruction(entity, Components::ActiveDecisionTree{ ptr });
+    _stepManager.HandleStateChange(catalogue, entity, *ptr);
 }

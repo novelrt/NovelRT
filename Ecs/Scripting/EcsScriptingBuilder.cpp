@@ -12,8 +12,7 @@
 NovelRT::Ecs::Scripting::EcsScriptingBuilder::EcsScriptingBuilder()
     : _scriptManager{nullptr},
       _defaultActiveDecisionTreeComponent{nullptr},
-      _defaultDecisionTreeChoiceComponent{std::numeric_limits<size_t>::max()},
-      _defaultStepDecisionTreeChoiceComponent{std::numeric_limits<DecisionTreeStepKind>::max()}
+      _defaultContinueDecisionTreeChoiceComponent{true}
 { }
 
 NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScriptingBuilder::WithScriptManager(std::shared_ptr<NovelRT::Scripting::ScriptManager>& manager)
@@ -28,15 +27,9 @@ NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScript
     return *this;
 }
 
-NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScriptingBuilder::WithDecisionTreeStepSystem(std::function<std::shared_ptr<DecisionTreeStepSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager> &,DecisionTreeStepManager&)> factory)
+NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScriptingBuilder::RegisterStepSystem(std::function<std::shared_ptr<DecisionTreeStepSystem> (DecisionTreeStateManager &, SystemScheduler &)> factory)
 {
-    _stepSystemFactory = factory;
-    return *this;
-}
-
-NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScriptingBuilder::ConfigureStepKinds(std::function<void(DecisionTreeStepManager&)> configure)
-{
-    configure(_stepManager);
+    _stepSystemFactories.emplace_back(factory);
     return *this;
 }
 
@@ -45,12 +38,15 @@ void NovelRT::Ecs::Scripting::EcsScriptingBuilder::operator()(SystemScheduler& s
     auto& cache = scheduler.GetComponentCache();
 
     cache.RegisterComponentType(_defaultActiveDecisionTreeComponent, "NovelRT::Ecs::Scripting::ActiveDecisionTree");
-    cache.RegisterComponentType(_defaultDecisionTreeChoiceComponent, "NovelRT::Ecs::Scripting::DecisionTreeChoice");
-    cache.RegisterComponentType(_defaultStepDecisionTreeChoiceComponent, "NovelRT::Ecs::Scripting::StepDecisionTree");
+    cache.RegisterComponentType(_defaultContinueDecisionTreeChoiceComponent, "NovelRT::Ecs::Scripting::ContinueDecisionTree");
 
     //auto loadingSystem = scheduler.RegisterSystem(_loadingSystemFactory(_scriptManager));
-    auto stepSystem = scheduler.RegisterSystem(_stepSystemFactory(_scriptManager, _stepManager));//, std::vector<NovelRT::Ecs::SystemId>{ loadingSystem });
-    unused(stepSystem);
+
+    for (const auto& factory : _stepSystemFactories)
+    {
+        auto stepSystem = scheduler.RegisterSystem(factory(_stateManager, scheduler));
+        unused(stepSystem);
+    }
 }
 
 NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::AddScripting(SystemSchedulerBuilder& builder)

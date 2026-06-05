@@ -3,7 +3,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Scripting/DecisionTree.hpp>
+#include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 
 namespace NovelRT::Ecs::Scripting::Components
 {
