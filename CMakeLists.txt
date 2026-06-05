@@ -38,6 +38,16 @@ option(NOVELRT_INSTALL "Generate installation targets" ON)
 option(NOVELRT_USE_STD_SPAN "Alias \"NovelRT::Utilities::Misc:Span\" to \"std::span\" instead of \"gsl::span\"." OFF)
 option(NOVELRT_BUILD_DEPS_WITH_MAX_CPU "Use all available CPU processing power when scaffolding/building the NovelRT internal dependences" OFF)
 
+# This has to be applied to ALL TARGETS under clang. This is the easiest way to do it to get the symbols to be consistent.
+# This is due to how we are using templates currently and how Clang elides debug information even in debug builds that makes it hard to understand anything.
+# As a side note, if you see this message, debugging with LLDB will be able to leverage this properly. GDB cannot. - Matt J.
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(
+        $<$<CXX_COMPILER_ID:Clang>:-fstandalone-debug>
+        $<$<CXX_COMPILER_ID:Clang>:-fno-eliminate-unused-debug-types>
+        $<$<CXX_COMPILER_ID:Clang>:-g3>
+    )
+endif()
 add_subdirectory(ThirdParty)
 
 add_subdirectory(Exceptions)
