@@ -342,15 +342,16 @@ namespace NovelRT::UI::ImGui
             }
         }
 
-        void UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
+        bool UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
         {
+            _logger.logDebugLine("Uploading to GPU...");
             ImDrawData* drawData = ::ImGui::GetDrawData();
 
             if (drawData->TotalVtxCount <= 0)
             {
                 std::cout << "FUCKING EARLY RETURN YIPPIEEEE IMGUI ISNT DOING ANYTHING HERE!!!\n";
                 _drawEnabled = false;
-                return;
+                return false;
             }
             _drawEnabled = true;
             currentCmdList->Begin();
@@ -434,12 +435,16 @@ namespace NovelRT::UI::ImGui
             _currentVertexBufferRegion = vertexBufferRegion;
             _cachedDrawData = drawData;
             currentCmdList->End();
+            return true;
         }
 
         void Draw(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
         {
             if (!_drawEnabled)
                 return;
+
+
+            _logger.logDebugLine("Uploading draw cmds...");
             auto drawData = _cachedDrawData;
 
             //auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
@@ -586,6 +591,7 @@ namespace NovelRT::UI::ImGui
 
         inline void UploadFontData(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList)
         {
+            _logger.logDebugLine("Uploading Font Data...");
             uint8_t* pixels;
             int32_t width, height;
             auto& io = ::ImGui::GetIO();
