@@ -7,9 +7,9 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 
 #include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
-#include <NovelRT/Ecs/Scripting/Components/ContinueDecisionTree.hpp>
 #include <NovelRT/Ecs/Scripting/Components/Branch.hpp>
 #include <NovelRT/Ecs/Scripting/Components/BranchChoice.hpp>
+#include <NovelRT/Ecs/Scripting/Components/ContinueDecisionTree.hpp>
 #include <NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp>
 #include <NovelRT/Ecs/Scripting/StepSystems/BranchStepSystem.hpp>
 
@@ -19,46 +19,49 @@
 #include <algorithm>
 #include <limits>
 
-NovelRT::Ecs::Scripting::BranchStepSystem::BranchStepSystem(DecisionTreeStateManager& stateManager, SystemScheduler& scheduler)
-: NovelRT::Ecs::Scripting::DecisionTreeStepSystem(stateManager)
+NovelRT::Ecs::Scripting::BranchStepSystem::BranchStepSystem(DecisionTreeStateManager& stateManager,
+                                                            SystemScheduler& scheduler)
+    : NovelRT::Ecs::Scripting::DecisionTreeStepSystem(stateManager)
 {
     auto& cache = scheduler.GetComponentCache();
 
     cache.RegisterComponentType(Components::Branch{nullptr, nullptr}, "NovelRT::Ecs::Scripting::Branch");
-    cache.RegisterComponentType(Components::BranchChoice{std::numeric_limits<std::size_t>::max()}, "NovelRT::Ecs::Scripting::BranchChoice");
+    cache.RegisterComponentType(Components::BranchChoice{std::numeric_limits<std::size_t>::max()},
+                                "NovelRT::Ecs::Scripting::BranchChoice");
 
-    stateManager.RegisterStateHandler([](auto& status, auto& catalogue, auto entityId)
-    {
-        // This is just a small helper function to avoid calling GetOptions twice
-        auto makeVector = [](std::span<const std::string> original)
+    stateManager.RegisterStateHandler(
+        [](auto& status, auto& catalogue, auto entityId)
         {
-            return new std::vector<std::string>(original.begin(), original.end());
-        };
+            // This is just a small helper function to avoid calling GetOptions twice
+            auto makeVector = [](std::span<const std::string> original)
+            { return new std::vector<std::string>(original.begin(), original.end()); };
 
-        auto branchComponents = catalogue.template GetComponentView<Components::Branch>();
+            auto branchComponents = catalogue.template GetComponentView<Components::Branch>();
 
-        if (auto* branch = dynamic_cast<NovelRT::Scripting::Statuses::Branch*>(status.get()))
-        {
-            branchComponents.PushComponentUpdateInstruction(entityId, Components::Branch{
-                new std::string(branch->GetPrompt()),
-                makeVector(branch->GetOptions())
-            });
+            if (auto* branch = dynamic_cast<NovelRT::Scripting::Statuses::Branch*>(status.get()))
+            {
+                branchComponents.PushComponentUpdateInstruction(
+                    entityId,
+                    Components::Branch{new std::string(branch->GetPrompt()), makeVector(branch->GetOptions())});
 
-            return true;
-        }
+                return true;
+            }
 
-        return false;
-    });
+            return false;
+        });
 }
 
 void NovelRT::Ecs::Scripting::BranchStepSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
 {
     // TODO: it would be nice to express this query as "has all of these"
-    auto [ decisionTrees, branchComponents, continueComponents, branchChoiceComponents ] = catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::Branch, Components::ContinueDecisionTree, Components::BranchChoice>();
+    auto [decisionTrees, branchComponents, continueComponents, branchChoiceComponents] =
+        catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::Branch,
+                                    Components::ContinueDecisionTree, Components::BranchChoice>();
 
     for (auto [entity, _] : continueComponents)
     {
-        if (!decisionTrees.HasComponent(entity) || !branchComponents.HasComponent(entity) || !branchChoiceComponents.HasComponent(entity))
+        if (!decisionTrees.HasComponent(entity) || !branchComponents.HasComponent(entity) ||
+            !branchChoiceComponents.HasComponent(entity))
         {
             continue;
         }

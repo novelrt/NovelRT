@@ -15,35 +15,38 @@
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 #include <NovelRT/Scripting/Statuses/SpokenLine.hpp>
 
-NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTreeStateManager& stateManager, SystemScheduler& scheduler)
+NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTreeStateManager& stateManager,
+                                                                    SystemScheduler& scheduler)
     : NovelRT::Ecs::Scripting::DecisionTreeStepSystem(stateManager)
 {
     auto& cache = scheduler.GetComponentCache();
 
     cache.RegisterComponentType(Components::SpokenLine{nullptr, nullptr}, "NovelRT::Ecs::Scripting::SpokenLine");
 
-    stateManager.RegisterStateHandler([](auto& status, auto& catalogue, auto entityId)
-    {
-        auto spokenLineComponents = catalogue.template GetComponentView<Components::SpokenLine>();
-
-        if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(status.get()))
+    stateManager.RegisterStateHandler(
+        [](auto& status, auto& catalogue, auto entityId)
         {
-            spokenLineComponents.PushComponentUpdateInstruction(entityId, Components::SpokenLine{
-                new std::string(spokenLine->GetSpeaker()),
-                new std::string(spokenLine->GetText())
-            });
+            auto spokenLineComponents = catalogue.template GetComponentView<Components::SpokenLine>();
 
-            return true;
-        }
+            if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(status.get()))
+            {
+                spokenLineComponents.PushComponentUpdateInstruction(
+                    entityId, Components::SpokenLine{new std::string(spokenLine->GetSpeaker()),
+                                                     new std::string(spokenLine->GetText())});
 
-        return false;
-    });
+                return true;
+            }
+
+            return false;
+        });
 }
 
 void NovelRT::Ecs::Scripting::SpokenLineStepSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
 {
     // TODO: it would be nice to express this query as "has all of these"
-    auto [ decisionTrees, spokenLineComponents, continueComponents ] = catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::SpokenLine, Components::ContinueDecisionTree>();
+    auto [decisionTrees, spokenLineComponents, continueComponents] =
+        catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::SpokenLine,
+                                    Components::ContinueDecisionTree>();
 
     for (auto [entity, _] : continueComponents)
     {

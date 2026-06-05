@@ -17,7 +17,10 @@ void NovelRT::Ecs::Scripting::DecisionTreeStateManager::RegisterStateHandler(Sta
     _stateHandlers.emplace_back(handler);
 }
 
-void NovelRT::Ecs::Scripting::DecisionTreeStateManager::HandleStateChange(NovelRT::Ecs::Catalogue& catalogue, EntityId entity, std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>& state)
+void NovelRT::Ecs::Scripting::DecisionTreeStateManager::HandleStateChange(
+    NovelRT::Ecs::Catalogue& catalogue,
+    EntityId entity,
+    std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>& state)
 {
     for (const auto& handler : _stateHandlers)
     {

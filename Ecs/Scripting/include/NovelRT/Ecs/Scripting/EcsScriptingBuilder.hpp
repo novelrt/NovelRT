@@ -26,8 +26,10 @@ namespace NovelRT::Ecs::Scripting
         DecisionTreeStateManager _stateManager;
 
         std::shared_ptr<NovelRT::Scripting::ScriptManager> _scriptManager;
-        std::function<std::shared_ptr<DecisionTreeLoadingSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)> _loadingSystemFactory;
-        std::vector<std::function<std::shared_ptr<DecisionTreeStepSystem>(DecisionTreeStateManager&,SystemScheduler&)>> _stepSystemFactories;
+        std::function<std::shared_ptr<DecisionTreeLoadingSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)>
+            _loadingSystemFactory;
+        std::vector<std::function<std::shared_ptr<DecisionTreeStepSystem>(DecisionTreeStateManager&, SystemScheduler&)>>
+            _stepSystemFactories;
 
         Components::ActiveDecisionTree _defaultActiveDecisionTreeComponent;
         Components::ContinueDecisionTree _defaultContinueDecisionTreeChoiceComponent;
@@ -35,6 +37,7 @@ namespace NovelRT::Ecs::Scripting
         EcsScriptingBuilder();
 
         friend EcsScriptingBuilder& AddScripting(SystemSchedulerBuilder&);
+
     public:
         EcsScriptingBuilder(const EcsScriptingBuilder& other) = default;
         EcsScriptingBuilder& operator=(const EcsScriptingBuilder& other) = default;
@@ -42,11 +45,13 @@ namespace NovelRT::Ecs::Scripting
         EcsScriptingBuilder& operator=(EcsScriptingBuilder&& other) = default;
         ~EcsScriptingBuilder() = default;
 
-
         EcsScriptingBuilder& WithScriptManager(std::shared_ptr<NovelRT::Scripting::ScriptManager>&);
-        EcsScriptingBuilder& WithDecisionTreeLoadingSystem(std::function<std::shared_ptr<DecisionTreeLoadingSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)>);
+        EcsScriptingBuilder& WithDecisionTreeLoadingSystem(std::function<std::shared_ptr<DecisionTreeLoadingSystem>(
+                                                               std::shared_ptr<NovelRT::Scripting::ScriptManager>&)>);
 
-        EcsScriptingBuilder& RegisterStepSystem(std::function<std::shared_ptr<DecisionTreeStepSystem>(DecisionTreeStateManager&,SystemScheduler&)> factory);
+        EcsScriptingBuilder& RegisterStepSystem(
+            std::function<std::shared_ptr<DecisionTreeStepSystem>(DecisionTreeStateManager&, SystemScheduler&)>
+                factory);
 
         void operator()(SystemScheduler&);
     };

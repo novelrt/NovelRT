@@ -17,12 +17,14 @@ NovelRT::Ecs::Scripting::DecisionTreeStepSystem::DecisionTreeStepSystem(Decision
 {
 }
 
-
-void NovelRT::Ecs::Scripting::DecisionTreeStepSystem::Continue(Catalogue& catalogue, EntityId entity, std::unique_ptr<NovelRT::Scripting::DecisionTreeStatus>&& status)
+void NovelRT::Ecs::Scripting::DecisionTreeStepSystem::Continue(
+    Catalogue& catalogue,
+    EntityId entity,
+    std::unique_ptr<NovelRT::Scripting::DecisionTreeStatus>&& status)
 {
     auto decisionTrees = catalogue.GetComponentView<Components::ActiveDecisionTree>();
 
     auto* ptr = new std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>(std::move(status));
-    decisionTrees.PushComponentUpdateInstruction(entity, Components::ActiveDecisionTree{ ptr });
+    decisionTrees.PushComponentUpdateInstruction(entity, Components::ActiveDecisionTree{ptr});
     _stepManager.HandleStateChange(catalogue, entity, *ptr);
 }

@@ -25,7 +25,9 @@ namespace NovelRT::Ecs::Scripting
     protected:
         DecisionTreeStepSystem(DecisionTreeStateManager&);
 
-        void Continue(Catalogue& catalogue, EntityId entity, std::unique_ptr<NovelRT::Scripting::DecisionTreeStatus>&& status);
+        void Continue(Catalogue& catalogue,
+                      EntityId entity,
+                      std::unique_ptr<NovelRT::Scripting::DecisionTreeStatus>&& status);
 
     public:
         virtual ~DecisionTreeStepSystem() override = default;

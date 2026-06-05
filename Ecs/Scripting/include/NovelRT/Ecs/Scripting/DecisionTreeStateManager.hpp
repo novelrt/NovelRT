@@ -29,7 +29,8 @@ namespace NovelRT::Ecs::Scripting
     {
     public:
         // Handler for binding a state to ECS
-        using StateHandler = std::function<bool(std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>&, NovelRT::Ecs::Catalogue&, EntityId)>;
+        using StateHandler = std::function<
+            bool(std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>&, NovelRT::Ecs::Catalogue&, EntityId)>;
 
     private:
         std::vector<StateHandler> _stateHandlers;
@@ -47,6 +48,8 @@ namespace NovelRT::Ecs::Scripting
 
         void RegisterStateHandler(StateHandler handler);
 
-        void HandleStateChange(NovelRT::Ecs::Catalogue& catalogue, EntityId entity, std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>& state);
+        void HandleStateChange(NovelRT::Ecs::Catalogue& catalogue,
+                               EntityId entity,
+                               std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>& state);
     };
 }

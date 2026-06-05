@@ -14,7 +14,7 @@ namespace NovelRT::Ecs::Scripting
     class BranchStepSystem final : public NovelRT::Ecs::Scripting::DecisionTreeStepSystem
     {
     public:
-        BranchStepSystem(DecisionTreeStateManager&,SystemScheduler&);
+        BranchStepSystem(DecisionTreeStateManager&, SystemScheduler&);
         ~BranchStepSystem() override = default;
 
         void Update(Timing::Timestamp delta, Catalogue catalogue) override;
