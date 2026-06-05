@@ -433,9 +433,9 @@ int main()
     auto gfxContext = gfxDevice->CreateGraphicsContext();
     gfxContext->BeginFrame();
     auto cmdList = gfxContext->CreateCmdList();
-    cmdList->Begin();
+    //cmdList->Begin();
     uiProvider->UploadFontData(cmdList);
-    cmdList->End();
+    //cmdList->End();
     gfxContext->EndFrame();
 
     std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<VulkanGraphicsBackend>>> lists{cmdList};
