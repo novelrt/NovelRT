@@ -5,6 +5,11 @@
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
+#include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
+#include <NovelRT/Ecs/Scripting/Components/DecisionTreeChoice.hpp>
+#include <NovelRT/Ecs/Scripting/Components/StepDecisionTree.hpp>
+#include <NovelRT/Ecs/Scripting/DecisionTreeStepManager.hpp>
+
 #include <NovelRT/Scripting/ScriptManager.hpp>
 
 #include <functional>
@@ -18,18 +23,32 @@ namespace NovelRT::Ecs::Scripting
     class EcsScriptingBuilder
     {
     private:
+        DecisionTreeStepManager _stepManager;
+
         std::shared_ptr<NovelRT::Scripting::ScriptManager> _scriptManager;
         std::function<std::shared_ptr<DecisionTreeLoadingSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)> _loadingSystemFactory;
-        std::function<std::shared_ptr<DecisionTreeStepSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)> _stepSystemFactory;
+        std::function<std::shared_ptr<DecisionTreeStepSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&,DecisionTreeStepManager&)> _stepSystemFactory;
+
+        Components::ActiveDecisionTree _defaultActiveDecisionTreeComponent;
+        Components::DecisionTreeChoice _defaultDecisionTreeChoiceComponent;
+        Components::StepDecisionTree _defaultStepDecisionTreeChoiceComponent;
 
         EcsScriptingBuilder();
 
         friend EcsScriptingBuilder& AddScripting(SystemSchedulerBuilder&);
     public:
+        EcsScriptingBuilder(const EcsScriptingBuilder& other) = default;
+        EcsScriptingBuilder& operator=(const EcsScriptingBuilder& other) = default;
+        EcsScriptingBuilder(EcsScriptingBuilder&& other) = default;
+        EcsScriptingBuilder& operator=(EcsScriptingBuilder&& other) = default;
+        ~EcsScriptingBuilder() = default;
+
 
         EcsScriptingBuilder& WithScriptManager(std::shared_ptr<NovelRT::Scripting::ScriptManager>&);
         EcsScriptingBuilder& WithDecisionTreeLoadingSystem(std::function<std::shared_ptr<DecisionTreeLoadingSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)>);
-        EcsScriptingBuilder& WithDecisionTreeStepSystem(std::function<std::shared_ptr<DecisionTreeStepSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&)>);
+        EcsScriptingBuilder& WithDecisionTreeStepSystem(std::function<std::shared_ptr<DecisionTreeStepSystem>(std::shared_ptr<NovelRT::Scripting::ScriptManager>&,DecisionTreeStepManager&)>);
+
+        EcsScriptingBuilder& ConfigureStepKinds(std::function<void(DecisionTreeStepManager&)> configure);
 
         void operator()(SystemScheduler&);
     };

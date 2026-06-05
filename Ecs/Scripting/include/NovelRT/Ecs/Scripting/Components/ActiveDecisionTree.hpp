@@ -9,7 +9,7 @@ namespace NovelRT::Ecs::Scripting::Components
 {
     struct ActiveDecisionTree
     {
-        std::shared_ptr<NovelRT::Scripting::DecisionTree>* decisionTree;
+        std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>* decisionTree;
 
         inline ActiveDecisionTree& operator+=(const ActiveDecisionTree& other)
         {

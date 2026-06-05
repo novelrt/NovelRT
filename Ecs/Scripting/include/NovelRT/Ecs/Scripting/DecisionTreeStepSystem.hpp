@@ -5,13 +5,23 @@
 
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 
+#include <NovelRT/Ecs/Scripting/DecisionTreeStepManager.hpp>
+
 #include <NovelRT/Scripting/ScriptManager.hpp>
+
+#include <unordered_map>
 
 namespace NovelRT::Ecs::Scripting
 {
     class DecisionTreeStepSystem : public NovelRT::Ecs::IEcsSystem
     {
+        DecisionTreeStepManager _stepManager;
+
     public:
-        void Update(Timing::Timestamp, Catalogue);
+        DecisionTreeStepSystem(DecisionTreeStepManager);
+
+        ~DecisionTreeStepSystem() override = default;
+
+        void Update(Timing::Timestamp, Catalogue) override;
     };
 }
