@@ -64,7 +64,7 @@ namespace NovelRT::Graphics
     };
 
     template<typename TBackend>
-    class GraphicsCmdList : std::enable_shared_from_this<GraphicsCmdList<TBackend>>
+    class GraphicsCmdList
     {
     public:
         GraphicsCmdList() = delete;

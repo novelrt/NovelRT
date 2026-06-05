@@ -23,7 +23,7 @@ namespace NovelRT::Graphics
 {
     template<>
     class GraphicsCmdList<Vulkan::VulkanGraphicsBackend>
-        : std::enable_shared_from_this<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>
+        : public std::enable_shared_from_this<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>
     {
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
