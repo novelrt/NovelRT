@@ -14,7 +14,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     NovelRT::Utilities
 
     NovelRT::Graphics::Core
-
+  
   SOURCES
     PRIVATE
       VulkanGraphicsAdapter.cpp
@@ -75,7 +75,42 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp
-
+    
+  PRECOMPILE_HEADERS
+    INTERFACE 
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/Support.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/Texel.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp$<ANGLE-R>>
+      
   LINK_LIBRARIES
     PUBLIC
       Vulkan::Vulkan
