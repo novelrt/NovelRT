@@ -474,7 +474,7 @@ namespace NovelRT::UI::ImGui
             viewportInfoStruct.maxDepth = 1.0f;
 
 
-            currentCmdList->Begin();
+            //currentCmdList->Begin();
 
             currentCmdList->CmdSetViewport(viewportInfoStruct);
 
@@ -581,7 +581,7 @@ namespace NovelRT::UI::ImGui
                 NovelRT::Maths::GeoVector2F::Zero(),
                 NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
 
-            currentCmdList->End();
+            //currentCmdList->End();
         }
 
         std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> GetDedicatedRenderPass()
@@ -606,7 +606,7 @@ namespace NovelRT::UI::ImGui
             auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
 
             // Begin commands
-
+            //context->BeginFrame();
 
             // Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
@@ -643,9 +643,9 @@ namespace NovelRT::UI::ImGui
 
             // End Frame
             //context->EndFrame();
-            //std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists {cmdList};
-            //_graphicsDevice->QueueSubmit(lists);
-            //_graphicsDevice->WaitForIdle();
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists {cmdList};
+            _graphicsDevice->QueueSubmit(lists);
+            _graphicsDevice->WaitForIdle();
 
             _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
         }

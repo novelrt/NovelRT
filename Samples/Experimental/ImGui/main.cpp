@@ -108,6 +108,7 @@ struct RenderingData
     std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
 
     std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> DeletionSemaphore;
+    std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> UploadSemaphore;
     std::deque<PerFrameResources<TBackend>> FrameResources;
     uint64_t RenderedFrames{0};
 };
@@ -217,6 +218,7 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     returnStruct.RenderPass = pass;
     returnStruct.GraphicsContext = gfxContext;
     returnStruct.DeletionSemaphore = gfxDevice->CreateSemaphore(0);
+    returnStruct.UploadSemaphore = gfxDevice->CreateSemaphore(0);
 
     return returnStruct;
 }
@@ -251,15 +253,24 @@ void Render(RenderingData<TBackend>& renderingData,
 
         // Setup + begin command list
         auto currentCmdList = context->CreateCmdList();
-        currentCmdList->Begin();
+        //currentCmdList->Begin();
 
         // Track new frame rendering
         auto& frameResources =
+            renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
+        auto& frameResources2 =
             renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
 
         // Upload ImGui verts + indices to GPU
         if(uiProvider->UploadToGPU(currentCmdList))
         {
+
+            //upload gpu -> transfer queue
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {currentCmdList};
+            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>>, uint64_t>> semaLists {{renderingData.UploadSemaphore, frameResources.frameNumber}};
+            gfxDevice->QueueSubmit(lists, semaLists);
+            auto innerCmdList = context->CreateCmdList();
+            innerCmdList->Begin();
 
             NovelRT::Graphics::ClearValue colourDataStruct{};
             colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
@@ -267,7 +278,7 @@ void Render(RenderingData<TBackend>& renderingData,
             colourDataStruct.stencil = 0;
 
             std::vector<ClearValue> colourData{colourDataStruct};
-            currentCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
+            innerCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
 
             ViewportInfo viewportInfoStruct{};
             viewportInfoStruct.x = 0;
@@ -277,16 +288,16 @@ void Render(RenderingData<TBackend>& renderingData,
             viewportInfoStruct.minDepth = 0.0f;
             viewportInfoStruct.maxDepth = 1.0f;
 
-            currentCmdList->CmdSetViewport(viewportInfoStruct);
-            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+            innerCmdList->CmdSetViewport(viewportInfoStruct);
+            innerCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
                                         NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-            currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
+            innerCmdList->CmdBindPipeline(renderingData.RenderPipeline);
 
             std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
                 std::cref(renderingData.VertexBuffer)};
             std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
 
-            currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+            innerCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
 
             auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
             descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
@@ -294,26 +305,40 @@ void Render(RenderingData<TBackend>& renderingData,
 
             std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
                 std::cref(descriptorSetData)};
-            currentCmdList->CmdBindDescriptorSets(descriptorData);
+            innerCmdList->CmdBindDescriptorSets(descriptorData);
 
-            currentCmdList->CmdDraw(
+            innerCmdList->CmdDraw(
                 static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
             // Insert Draw ImGui Commands
-            uiProvider->Draw(currentCmdList);
+            uiProvider->Draw(innerCmdList);
 
             frameResources.descriptorSet = descriptorSetData;
             frameResources.renderTarget = target;
-            frameResources.commandList = currentCmdList;
-        }
-        // End Renderpass
-            currentCmdList->CmdEndRenderPass();
+            frameResources.commandList = innerCmdList;
 
-            currentCmdList->End();
+            frameResources2.descriptorSet = descriptorSetData;
+            frameResources2.renderTarget = target;
+            frameResources2.commandList = currentCmdList;
+            
+            // End Renderpass
+            innerCmdList->CmdEndRenderPass();
+            innerCmdList->End();
+            context->EndFrame();
+            swapchainImage->QueueSubmit({ renderingData.UploadSemaphore, frameResources.frameNumber}, 
+                innerCmdList, 
+                {renderingData.DeletionSemaphore, frameResources.frameNumber});
+        }
+        else
+        {
+            context->EndFrame();
+        }
 
             
-        context->EndFrame();
-        swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
+
+            
+        // context->EndFrame();
+        // swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
         
     }
 
@@ -431,16 +456,9 @@ int main()
 
     //Upload Fonts
     auto gfxContext = gfxDevice->CreateGraphicsContext();
-    gfxContext->BeginFrame();
     auto cmdList = gfxContext->CreateCmdList();
-    //cmdList->Begin();
     uiProvider->UploadFontData(cmdList);
-    //cmdList->End();
-    gfxContext->EndFrame();
 
-    std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<VulkanGraphicsBackend>>> lists{cmdList};
-    gfxDevice->QueueSubmit(lists);
-    gfxDevice->WaitForIdle();
 
     // Setup main loop
     while (!wndProvider->ShouldClose())
