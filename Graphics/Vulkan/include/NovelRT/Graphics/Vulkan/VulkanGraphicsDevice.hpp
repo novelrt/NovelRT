@@ -84,7 +84,7 @@ namespace NovelRT::Graphics
             std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> vertexShader,
             std::shared_ptr<ShaderProgram<Vulkan::VulkanGraphicsBackend>> pixelShader,
             std::shared_ptr<GraphicsRenderPass<Vulkan::VulkanGraphicsBackend>> renderPass,
-            bool imguiRenderMode);
+            bool imguiRenderMode = false);
 
         [[nodiscard]] std::shared_ptr<GraphicsPipelineSignature<Vulkan::VulkanGraphicsBackend>> CreatePipelineSignature(
             GraphicsPipelineBlendFactor srcBlendFactor,
