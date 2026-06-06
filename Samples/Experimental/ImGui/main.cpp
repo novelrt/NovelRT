@@ -208,6 +208,23 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     }
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+    {
+        gfxContext->BeginFrame();
+        auto cmdList = gfxContext->CreateCmdList();
+
+        cmdList->Begin();
+        cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
+
+        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->End();
+
+        gfxContext->EndFrame();
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {cmdList};
+        gfxDevice->QueueSubmit(lists);
+        gfxDevice->WaitForIdle();
+    }
 
 
     RenderingData<TBackend> returnStruct{};
@@ -310,9 +327,21 @@ void Render(RenderingData<TBackend>& renderingData,
             innerCmdList->CmdDraw(
                 static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
-            // Insert Draw ImGui Commands
-            uiProvider->Draw(innerCmdList);
 
+            
+            // End Renderpass
+            innerCmdList->CmdEndRenderPass();
+            // Insert Draw ImGui Commands
+            innerCmdList->CmdBeginRenderPass(uiProvider->GetDedicatedRenderPass(), target, {});
+            uiProvider->Draw(innerCmdList);
+            innerCmdList->CmdEndRenderPass();
+            innerCmdList->End();
+            context->EndFrame();
+            swapchainImage->QueueSubmit({ renderingData.UploadSemaphore, frameResources.frameNumber}, 
+                innerCmdList, 
+                {renderingData.DeletionSemaphore, frameResources.frameNumber});
+
+            
             frameResources.descriptorSet = descriptorSetData;
             frameResources.renderTarget = target;
             frameResources.commandList = innerCmdList;
@@ -320,14 +349,6 @@ void Render(RenderingData<TBackend>& renderingData,
             frameResources2.descriptorSet = descriptorSetData;
             frameResources2.renderTarget = target;
             frameResources2.commandList = currentCmdList;
-            
-            // End Renderpass
-            innerCmdList->CmdEndRenderPass();
-            innerCmdList->End();
-            context->EndFrame();
-            swapchainImage->QueueSubmit({ renderingData.UploadSemaphore, frameResources.frameNumber}, 
-                innerCmdList, 
-                {renderingData.DeletionSemaphore, frameResources.frameNumber});
         }
         else
         {

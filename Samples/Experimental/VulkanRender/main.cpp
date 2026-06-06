@@ -192,6 +192,8 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
     {
+        // TODO: This is technically legacy but I can't be bothered cleaning it up even though
+        // we are doing extra work for transfer queue usage, for no reason. - Matt J.
         gfxContext->BeginFrame();
         auto cmdList = gfxContext->CreateCmdList();
 

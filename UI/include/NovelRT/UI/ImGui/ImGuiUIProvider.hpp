@@ -148,9 +148,9 @@ namespace NovelRT::UI::ImGui
 
                 attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
 
-                attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
+                attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Load;
                 attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
-                attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
+                attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Present;
                 attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
 
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
@@ -344,7 +344,7 @@ namespace NovelRT::UI::ImGui
 
         bool UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
         {
-            _logger.logDebugLine("Uploading to GPU...");
+            //_logger.logDebugLine("Uploading to GPU...");
             ImDrawData* drawData = ::ImGui::GetDrawData();
 
             if (drawData->TotalVtxCount <= 0)
@@ -444,7 +444,7 @@ namespace NovelRT::UI::ImGui
                 return;
 
 
-            _logger.logDebugLine("Uploading draw cmds...");
+            //_logger.logDebugLine("Uploading draw cmds...");
             auto drawData = _cachedDrawData;
 
             //auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
@@ -572,6 +572,7 @@ namespace NovelRT::UI::ImGui
                                                        drawCommand->VtxOffset + globalVertexOffset, 0);
                     }
                 }
+                
                 globalIndexOffset += list->IdxBuffer.Size;
                 globalVertexOffset += list->VtxBuffer.Size;
             }
