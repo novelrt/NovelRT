@@ -324,7 +324,7 @@ int main()
 
     VulkanGraphicsAdapterSelector selector{};
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
-    auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
+    std::shared_ptr<GraphicsDevice<VulkanGraphicsBackend>> gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     auto renderingData = SetupTriangleSample(gfxDevice, memoryAllocator);
