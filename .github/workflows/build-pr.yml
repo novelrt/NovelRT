@@ -92,6 +92,17 @@ jobs:
       - name: Preinstall dependencies
         if: ${{ runner.os == 'Linux' }}
         run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo tee /etc/apt/sources.list.d/llvm-toolchain.list <<EOF
+          deb http://apt.llvm.org/noble/ llvm-toolchain-noble main
+          deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble main
+          # 21
+          deb http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main
+          deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main
+          # 22
+          deb http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main
+          deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main
+          EOF
           sudo apt-get update
           sudo apt-get install libglm-dev cmake libxcb-dri3-0 libxcb-present0 \
             libpciaccess0 libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev \
@@ -100,7 +111,10 @@ jobs:
             libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
             libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            clang-format qtbase5-dev qt6-base-dev
+            qtbase5-dev qt6-base-dev clang-format clang-tidy clang-tools \
+            clang clangd libc++-dev libc++1 libc++abi-dev libc++abi1 \
+            libclang-dev libclang1 liblldb-dev libllvm-ocaml-dev libomp-dev \
+            libomp5 lld lldb llvm-dev llvm-runtime llvm python3-clang
 
           sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
