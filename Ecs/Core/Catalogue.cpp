@@ -4,8 +4,8 @@
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
-#include <NovelRT/Ecs/UnsafeComponentView.hpp>
 #include <NovelRT/Ecs/SystemScheduler.hpp>
+#include <NovelRT/Ecs/UnsafeComponentView.hpp>
 
 #include <algorithm>
 
