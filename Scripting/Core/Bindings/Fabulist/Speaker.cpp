@@ -26,7 +26,7 @@ struct SpeakerInfo
 int FieldTypeError(lua_State* L, int arg, const char* field, const char* tname)
 {
     // This logic is the same as luaL_typeerror
-    const char *typearg;
+    const char* typearg;
     if (luaL_getmetafield(L, arg, "__name") == LUA_TSTRING)
     {
         typearg = lua_tostring(L, -1);
@@ -74,7 +74,8 @@ std::unordered_map<std::string, PoseInfo> ReadPoses(lua_State* L, int arg, int i
 
         if (lua_type(L, -2) != LUA_TSTRING)
         {
-            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s", luaL_tolstring(L, -2, nullptr)), lua_typename(L, LUA_TTABLE));
+            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s", luaL_tolstring(L, -2, nullptr)),
+                           lua_typename(L, LUA_TTABLE));
         }
 
         std::size_t length;
@@ -106,7 +107,6 @@ int SetSpeakerAdditionalProps(lua_State* L)
         return FieldTypeError(L, 1, "poses", lua_typename(L, LUA_TTABLE));
     }
 
-
     lua_getfield(L, 1, "pose");
     if (lua_type(L, -1) == LUA_TSTRING)
     {
@@ -114,7 +114,7 @@ int SetSpeakerAdditionalProps(lua_State* L)
         const char* p = luaL_tolstring(L, -1, &pLength);
         std::string pose(p, pLength);
 
-        if(auto search = it->poses.find(pose); search == it->poses.end())
+        if (auto search = it->poses.find(pose); search == it->poses.end())
         {
             const char* msg = lua_pushfstring(L, "bad field %q (unknown pose %q)", "default_pose", p);
             return luaL_argerror(L, 1, msg);
@@ -176,11 +176,7 @@ int ProduceSpeakerLine(lua_State* L)
     if (it->activePose.has_value())
     {
         auto info = it->poses.at(it->activePose.value());
-        pose = NovelRT::Scripting::Statuses::SpokenLine::Pose
-        {
-            .Name = it->activePose.value(),
-            .Sprite = info.sprite
-        };
+        pose = NovelRT::Scripting::Statuses::SpokenLine::Pose{.Name = it->activePose.value(), .Sprite = info.sprite};
     }
 
     auto* data = new NovelRT::Scripting::Statuses::SpokenLine(it->name, pose, text, L, manager->shared_from_this());
@@ -196,7 +192,7 @@ int SetSpeakerPose(lua_State* L)
     const char* p = luaL_checklstring(L, 2, &pLength);
     std::string pose(p, pLength);
 
-    if(auto search = it->poses.find(pose); search == it->poses.end())
+    if (auto search = it->poses.find(pose); search == it->poses.end())
     {
         const char* msg = lua_pushfstring(L, "unknown pose %q", p);
         return luaL_argerror(L, 2, msg);

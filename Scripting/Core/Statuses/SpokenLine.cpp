@@ -17,7 +17,10 @@ NovelRT::Scripting::Statuses::SpokenLine::SpokenLine(const std::string& speaker,
                                                      const std::string& text,
                                                      lua_State* L,
                                                      const std::shared_ptr<ScriptManager>& manager)
-    : DecisionTreeStatus(L, std::move(manager)), _speaker(std::move(speaker)), _pose(std::move(pose)), _text(std::move(text))
+    : DecisionTreeStatus(L, std::move(manager)),
+      _speaker(std::move(speaker)),
+      _pose(std::move(pose)),
+      _text(std::move(text))
 {
 }
 
