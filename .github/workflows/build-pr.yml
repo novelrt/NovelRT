@@ -43,7 +43,7 @@ jobs:
           legacySrcDir="$(pwd)/LegacySrc"
           artefactsDir="$(pwd)/artefacts"
           find "$(pwd)" \( -path "$buildDir" -o -path "$legacySrcDir" -o -path "$artefactsDir" \) -prune -o \
-            \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format -i --verbose --dry-run --Werror --style=file '{}' \+
+            \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format-21 -i --verbose --dry-run --Werror --style=file '{}' \+
 
       - name: Preinstall dependencies
         if: ${{ runner.os == 'Linux' }}
@@ -58,11 +58,11 @@ jobs:
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
             clang-21 clang-tidy-21 qtbase5-dev qt6-base-dev
 
-          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
-          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-21 20
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-21 10
 
-          sudo update-alternatives --set cc /usr/bin/clang
-          sudo update-alternatives --set c++ /usr/bin/clang++
+          sudo update-alternatives --set cc /usr/bin/clang-21
+          sudo update-alternatives --set c++ /usr/bin/clang++-21
 
       - uses: novelrt/setup-vulkan@v2
         with:
@@ -110,11 +110,11 @@ jobs:
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
             clang-21 qtbase5-dev qt6-base-dev
 
-          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
-          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-21 20
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-21 10
 
-          sudo update-alternatives --set cc /usr/bin/clang
-          sudo update-alternatives --set c++ /usr/bin/clang++
+          sudo update-alternatives --set cc /usr/bin/clang-21
+          sudo update-alternatives --set c++ /usr/bin/clang++-21
 
       - uses: actions/checkout@v4
 
