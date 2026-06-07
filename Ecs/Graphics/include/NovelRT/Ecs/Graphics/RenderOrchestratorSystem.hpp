@@ -161,8 +161,7 @@ namespace NovelRT::Ecs::Graphics
 
             auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image, context});
 
-
-                cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
+            cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
             // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
             {
