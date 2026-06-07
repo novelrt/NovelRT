@@ -27,7 +27,8 @@ int Panic(lua_State* L)
     lua_checkstack(L, 1);
     size_t length;
     const char* msg = lua_tolstring(L, 1, &length);
-    // Lua would normally call abort(), but if we throw we'll get passed back to whichever stack frame handles runtime_error
+    // Lua would normally call abort(), but if we throw we'll get passed back to whichever stack frame handles
+    // runtime_error
     // TODO: maybe we should introduce a custom exception for this?
     throw std::runtime_error{std::format("Unexpected error in Lua: {}", std::string(msg, length))};
 }

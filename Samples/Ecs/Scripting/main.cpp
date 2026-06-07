@@ -37,13 +37,9 @@ int main()
     AddScripting(builder)
         .WithScriptManager(scriptManager)
         .RegisterStepSystem([](auto& manager, auto& scheduler)
-        {
-            return std::make_shared<BranchStepSystem>(manager, scheduler);
-        })
+                            { return std::make_shared<BranchStepSystem>(manager, scheduler); })
         .RegisterStepSystem([](auto& manager, auto& scheduler)
-        {
-            return std::make_shared<SpokenLineStepSystem>(manager, scheduler);
-        });
+                            { return std::make_shared<SpokenLineStepSystem>(manager, scheduler); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};

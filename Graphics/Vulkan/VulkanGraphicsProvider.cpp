@@ -9,8 +9,8 @@
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <NovelRT/Utilities/Strings.hpp>
 
-#include <atomic>
 #include <algorithm>
+#include <atomic>
 
 using namespace NovelRT::Logging;
 
