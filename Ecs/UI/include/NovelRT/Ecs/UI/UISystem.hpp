@@ -75,11 +75,11 @@ namespace NovelRT::Ecs::UI
                 std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{uploadCmdList};
 
                 // create the semaphore to signal when uploading
-                std::vector<
-                    std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
-                    signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
+                std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
+                                    uint64_t>>
+                    uploadSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
 
-                _gfxDevice->QueueSubmit(lists, signalSemaphores);
+                _gfxDevice->QueueSubmit(lists, uploadSemaphores);
 
                 // Create a tracked semaphore that will wait on the upload semaphore
                 Graphics::Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
@@ -90,9 +90,8 @@ namespace NovelRT::Ecs::UI
                 // Create unique id for tracking upload
                 auto uploadId = catalogue.CreateEntity();
 
-                // add upload semaphore to tracked catalogue
-                catalogue.GetComponentView<Graphics::Components::TrackedSemaphore<TGraphicsBackend>>().AddComponent(
-                    uploadId, newUploadTracker);
+                //add upload semaphore to tracked catalogue
+                trackedSemaphores.AddComponent(uploadId, newUploadTracker);
 
                 // create entity id for drawing
                 auto entityId = catalogue.CreateEntity();
