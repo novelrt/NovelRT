@@ -34,6 +34,8 @@ namespace NovelRT::Graphics
     class GraphicsPipelineSignature;
     template<template<typename> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion;
+    template<typename TBackend>
+    class GraphicsSwapchainImage;
 
     // TODO: MOVE THIS
     struct ViewportInfo
@@ -114,6 +116,9 @@ namespace NovelRT::Graphics
 
         void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
         void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
+        
+        void CmdInitialSwapchainImageBarrierLegacyVersion(
+            const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage);
 
         void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<TBackend>>& pipeline);
 

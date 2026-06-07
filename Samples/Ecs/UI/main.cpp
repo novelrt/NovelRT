@@ -183,7 +183,7 @@ int main()
                 attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
                 attachmentDesc.loadOp = LoadOp::Clear;
                 attachmentDesc.storeOp = StoreOp::Store;
-                attachmentDesc.initialLayout = ImageLayout::Undefined;
+                attachmentDesc.initialLayout = ImageLayout::Present;
                 attachmentDesc.finalLayout = ImageLayout::Present;
 
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
