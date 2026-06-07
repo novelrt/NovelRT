@@ -116,7 +116,7 @@ namespace NovelRT::Graphics
 
         void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
         void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
-        
+
         void CmdInitialSwapchainImageBarrierLegacyVersion(
             const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage);
 

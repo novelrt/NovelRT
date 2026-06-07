@@ -14,10 +14,10 @@ namespace NovelRT::Ecs::UI::Components
     {
         EntityId entity = std::numeric_limits<EntityId>::max();
         const char* label = "";
-        NovelRT::Graphics::RGBAColour bgColour = NovelRT::Graphics::RGBAColour(0,0,0,255);
-        NovelRT::Graphics::RGBAColour activeColour = NovelRT::Graphics::RGBAColour(0,0,0,255);
-        NovelRT::Graphics::RGBAColour hoveredColour = NovelRT::Graphics::RGBAColour(0,0,0,255);
-        NovelRT::Graphics::RGBAColour textColour = NovelRT::Graphics::RGBAColour(255,255,255,255);
+        NovelRT::Graphics::RGBAColour bgColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
+        NovelRT::Graphics::RGBAColour activeColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
+        NovelRT::Graphics::RGBAColour hoveredColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
+        NovelRT::Graphics::RGBAColour textColour = NovelRT::Graphics::RGBAColour(255, 255, 255, 255);
 
         inline UIButton& operator+=(const UIButton& other)
         {
@@ -27,11 +27,8 @@ namespace NovelRT::Ecs::UI::Components
 
         [[nodiscard]] inline bool operator==(const UIButton& other) const noexcept
         {
-            return label == other.label
-                && bgColour == other.bgColour
-                && activeColour == other.activeColour
-                && hoveredColour == other.hoveredColour
-                && textColour == other.textColour;
+            return label == other.label && bgColour == other.bgColour && activeColour == other.activeColour &&
+                   hoveredColour == other.hoveredColour && textColour == other.textColour;
         }
 
         [[nodiscard]] inline bool operator!=(const UIButton& other) const noexcept
