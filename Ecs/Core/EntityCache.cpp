@@ -66,7 +66,8 @@ namespace NovelRT::Ecs
             auto rootIt = _registeredEntities.begin();
             std::advance(rootIt, oldSize);
             std::copy_if(vector.begin(), vector.end(), rootIt,
-                         [&](auto entity) -> bool {
+                         [&](auto entity) -> bool
+                         {
                              return std::find(_registeredEntities.begin(), _registeredEntities.end(), entity) ==
                                     _registeredEntities.end();
                          });

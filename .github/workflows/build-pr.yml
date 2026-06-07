@@ -33,7 +33,7 @@ jobs:
           deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main
           EOF
           sudo apt-get update
-          sudo apt-get install clang-format
+          sudo apt-get install clang-format-21
 
       - name: Check formatting via clang-format
         shell: bash
@@ -56,10 +56,7 @@ jobs:
             libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
             libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            clang-tidy clang-tools clang clangd libc++-dev libc++1 \
-            libc++abi-dev libc++abi1 libclang-dev libclang1 liblldb-dev \
-            libllvm-ocaml-dev libomp-dev libomp5 lld lldb llvm-dev \
-            llvm-runtime llvm python3-clang qtbase5-dev qt6-base-dev
+            clang-21 clang-tidy-21 qtbase5-dev qt6-base-dev
 
           sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
@@ -111,10 +108,7 @@ jobs:
             libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
             libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            qtbase5-dev qt6-base-dev clang-format clang-tidy clang-tools \
-            clang clangd libc++-dev libc++1 libc++abi-dev libc++abi1 \
-            libclang-dev libclang1 liblldb-dev libllvm-ocaml-dev libomp-dev \
-            libomp5 lld lldb llvm-dev llvm-runtime llvm python3-clang
+            clang-21 qtbase5-dev qt6-base-dev
 
           sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 20
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 10
