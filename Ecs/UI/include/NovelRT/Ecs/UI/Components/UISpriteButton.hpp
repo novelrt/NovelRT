@@ -1,8 +1,8 @@
 #pragma once
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
-#include <NovelRT/Graphics/RGBAColour.hpp>
 #include <NovelRT/Ecs/UI/Components/UIButton.hpp>
+#include <NovelRT/Graphics/RGBAColour.hpp>
 
 #include <limits>
 
