@@ -63,9 +63,9 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
 
   if(NOVELRT_CLANG_TIDY)
-    find_program(NovelRTBuildSystem_clangTidy NAMES clang-tidy HINTS "${NOVELRT_CLANG_TIDY_PATH}" DOC "Location of clang-tidy used in debug builds.")
-    if(NovelRTBuildSystem_clangTidy)
-      set(clangTidyCommandLine ${NovelRTBuildSystem_clangTidy} --config-file=${PROJECT_SOURCE_DIR}/.clang-tidy -p ${CMAKE_BINARY_DIR})
+    find_program(NOVELRT_CLANG_TIDY_PATH NAMES clang-tidy HINTS "${NOVELRT_CLANG_TIDY_PATH}" DOC "Location of clang-tidy used in debug builds.")
+    if(NOVELRT_CLANG_TIDY_PATH)
+      set(clangTidyCommandLine ${NOVELRT_CLANG_TIDY_PATH} --config-file=${PROJECT_SOURCE_DIR}/.clang-tidy -p ${CMAKE_BINARY_DIR})
     endif()
   endif()
 
