@@ -26,10 +26,12 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> _uiProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _gfxDevice;
         NovelRT::Ecs::Graphics::Components::RenderPassId _renderPassId;
-        std::optional<EntityId> _submissionSemaphoreEntity;
+        std::optional<EntityId> _drawSemaphoreEntity;
         bool _firstSpin = true;
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _uploadSemaphore;
+        std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _drawSemaphore;
         uint64_t _submittedUploads;
+        uint64_t _frameCounter{0};
 
     public:
         UISystem(std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>> uiProvider,
@@ -38,8 +40,8 @@ namespace NovelRT::Ecs::UI
             _gfxDevice(std::move(gfxDevice)),
             _renderPassId(0ULL),
             _uploadSemaphore(_gfxDevice->CreateSemaphore(0)),
+            _drawSemaphore(_gfxDevice->CreateSemaphore(0)),
             _submittedUploads(0)
-
         {
         }
 
@@ -56,76 +58,82 @@ namespace NovelRT::Ecs::UI
 
             auto uiContext = _gfxDevice->CreateGraphicsContext();
 
-            if(!_submissionSemaphoreEntity.has_value())
-            {
-                _submissionSemaphoreEntity = catalogue.CreateEntity();
-            }
-
-            // auto* descriptorSetArray = new std::shared_ptr<
-            //     NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>[1];
-            // size_t descriptorSetIndex = 0;
-
-            if(_firstSpin)
-            {
-                auto uploadEntityId = catalogue.CreateEntity();
-                auto uploadCmdList = uiContext->CreateCmdList();
-                _uiProvider->UploadFontData(uploadCmdList);
-                _firstSpin = false;
-                Graphics::Components::BuiltCommandList<TGraphicsBackend> uploadCmdListComp{
-                .commandList =
-                    new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(uploadCmdList)};
-                commandLists.AddComponent(uploadEntityId, uploadCmdListComp);
-                return;
-            }
-
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
             //do all our imgui calls here
             _uiProvider->EndFrame();
 
-            auto uploadCmdList =
-                    uiContext->CreateCmdList();
+            auto uploadCmdList = uiContext->CreateCmdList();
 
             //upload data to gpu
             if(_uiProvider->UploadToGPU(uploadCmdList))
             {
-                //Graphics::Components::RenderPass<TGraphicsBackend> uploadPass{};
-                //uploadPass.renderPassIndex = _renderPassId;
                 std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{
                     uploadCmdList};
-
-                auto currentCmdList =
-                        uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
-                            {_uiProvider->GetDedicatedRenderPass(), 0}));
-
+                
+                // create the semaphore to signal when uploading
                 std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
                                     uint64_t>>
                     signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
 
                 _gfxDevice->QueueSubmit(lists, signalSemaphores);
+
+                //Create a tracked semaphore that will wait on the upload semaphore
                 Graphics::Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
                     .semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
                         _uploadSemaphore),
                     .signalValue = _submittedUploads};
+                
+                //Create unique id for tracking upload
+                auto uploadId = catalogue.CreateEntity();
 
-                auto id = catalogue.CreateEntity();
-
+                //add upload semaphore to tracked catalogue
                 catalogue.GetComponentView<Graphics::Components::TrackedSemaphore<TGraphicsBackend>>()
-                    .AddComponent(id, newUploadTracker);
+                   .AddComponent(uploadId, newUploadTracker);
 
-                //call render
+                 //create entity id for drawing
                 auto entityId = catalogue.CreateEntity();
-                _uiProvider->Draw(currentCmdList);
 
+                //check if draw semaphore has value
+                //if not, create one
+                if (!_drawSemaphoreEntity.has_value())
+                {
+                    _drawSemaphoreEntity = catalogue.CreateEntity();
+                }
+
+                // create the tracked (signal) semaphore component for the draw semaphore
+                Graphics::Components::TrackedSemaphore<TGraphicsBackend> signalSemaComponent{};
+                signalSemaComponent.isWaitSemaphore = false;
+                signalSemaComponent.semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(_drawSemaphore);
+                signalSemaComponent.signalValue = ++_frameCounter;
+
+                //add it to the catalogue
+                trackedSemaphores.AddComponent(_drawSemaphoreEntity.value(), signalSemaComponent);
+
+
+                //create the draw cmdList
+                auto drawCmdList =
+                        uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
+                            {_uiProvider->GetDedicatedRenderPass(), 0}));
+
+                
+                //call render
+                _uiProvider->Draw(drawCmdList);
+
+                //Create renderpass component
                 Graphics::Components::RenderPass<TGraphicsBackend> passComponent{};
                 passComponent.renderPassIndex = _renderPassId;
 
-                Graphics::Components::BuiltCommandList<TGraphicsBackend> cmdListComp{
+                //create draw lists
+                Graphics::Components::BuiltCommandList<TGraphicsBackend> drawLists{
                     .commandList =
-                        new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(currentCmdList)};
+                        new std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>(drawCmdList)};
 
+                //add to the catalogue
                 renderPasses.AddComponent(entityId, passComponent);
-                commandLists.AddComponent(entityId, cmdListComp);
+                commandLists.AddComponent(entityId, drawLists);
             }
+        
+        
         }
 
         NovelRT::Ecs::Graphics::Components::RenderPassId& GetAssignedRenderPassId()

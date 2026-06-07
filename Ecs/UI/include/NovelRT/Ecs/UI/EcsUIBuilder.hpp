@@ -116,6 +116,13 @@ namespace NovelRT::Ecs::UI
 
         EcsUIBuilder& WithDefaultUISystem()
         {
+            //By default, we will upload the font data when creating the default UI system.
+            //This is the user's responsibility if using a non-default UI system.
+            auto gfxContext = _gfxDevice->CreateGraphicsContext();
+            auto cmdList = gfxContext->CreateCmdList();
+            _uiProvider->UploadFontData(cmdList);
+
+
             return WithUISystem(std::make_shared<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>(_uiProvider, _gfxDevice));
         }
 

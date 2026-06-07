@@ -197,9 +197,10 @@ int main()
         .WithWindowProvider(wndProvider)
         .WithInputProvider(inputProvider)
         .WithDefaultUIProvider(true)
+        .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
-        .WithGraphicsBuilder(gfxBuilder)
-        .AddFont("default", "Raleway-Regular.ttf");
+        .WithGraphicsBuilder(gfxBuilder);
+        
 
     gfxBuilder.WithDefaultOrchestrator();
 

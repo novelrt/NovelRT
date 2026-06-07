@@ -649,6 +649,7 @@ namespace NovelRT::UI::ImGui
             _graphicsDevice->WaitForIdle();
 
             _textureMap[0] = {std::move(texture2D), std::move(texture2DRegion)};
+            _logger.logDebug("Uploaded font data to GPU successfully.");
         }
 
     };
