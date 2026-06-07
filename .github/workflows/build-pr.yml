@@ -21,6 +21,7 @@ jobs:
       - name: Check formatting via clang-format
         shell: bash
         run: |
+          clang-format --version
           buildDir="$(pwd)/build"
           legacySrcDir="$(pwd)/LegacySrc"
           artefactsDir="$(pwd)/artefacts"
