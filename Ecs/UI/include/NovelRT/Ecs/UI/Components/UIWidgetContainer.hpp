@@ -13,7 +13,7 @@ namespace NovelRT::Ecs::UI::Components
     {
         EntityId entity = std::numeric_limits<EntityId>::max();
         const char* title = "";
-        //imgui window flags
+        // imgui window flags
         bool closeable = false;
 
         inline UIWidgetContainer& operator+=(const UIWidgetContainer& other)
