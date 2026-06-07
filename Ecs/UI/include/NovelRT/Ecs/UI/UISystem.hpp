@@ -115,10 +115,10 @@ namespace NovelRT::Ecs::UI
                         uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
                             {_uiProvider->GetDedicatedRenderPass(), 0}));
 
-                
+                drawCmdList->Begin();
                 //call render
                 _uiProvider->Draw(drawCmdList);
-
+                drawCmdList->End();
                 //Create renderpass component
                 Graphics::Components::RenderPass<TGraphicsBackend> passComponent{};
                 passComponent.renderPassIndex = _renderPassId;

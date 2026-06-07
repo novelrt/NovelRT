@@ -344,7 +344,7 @@ namespace NovelRT::UI::ImGui
 
         bool UploadToGPU(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> currentCmdList)
         {
-            //_logger.logDebugLine("Uploading to GPU...");
+            _logger.logDebugLine("Uploading to GPU...");
             ImDrawData* drawData = ::ImGui::GetDrawData();
 
             if (drawData->TotalVtxCount <= 0)
@@ -444,7 +444,7 @@ namespace NovelRT::UI::ImGui
                 return;
 
 
-            //_logger.logDebugLine("Uploading draw cmds...");
+            _logger.logDebugLine("Uploading draw cmds...");
             auto drawData = _cachedDrawData;
 
             //auto graphicsContext = _graphicsDevice->CreateGraphicsContext();
