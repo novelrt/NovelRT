@@ -1,4 +1,12 @@
 speaker "narrator"
+speaker "character" {
+  pose = "happy",
+  poses = {
+    happy = { sprite = "happy.png" },
+    angry = { sprite = "angry.png" },
+    sad = { sprite = "sad.png" }
+  }
+}
 
 while true do
   narrator
@@ -13,3 +21,9 @@ while true do
     break
   end
 end
+
+character "Wowee!"
+character:pose "sad"
+character "I'm sad now."
+character:pose "angry"
+character "Why would you make me angry?!"

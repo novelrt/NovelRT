@@ -53,7 +53,15 @@ int main()
     {
         if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(state.get()))
         {
-            std::cout << spokenLine->GetSpeaker() << ": " << spokenLine->GetText();
+            if (spokenLine->GetPose().has_value())
+            {
+                auto pose = spokenLine->GetPose().value();
+                std::cout << spokenLine->GetSpeaker() << " [" << pose.Name << " - " << pose.Sprite << "]: " << spokenLine->GetText();
+            }
+            else
+            {
+                std::cout << spokenLine->GetSpeaker() << ": " << spokenLine->GetText();
+            }
             std::cin.get();
             state = spokenLine->Continue();
         }
