@@ -23,6 +23,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Utilities
       include/NovelRT/Utilities/Paths.hpp
       include/NovelRT/Utilities/Span.hpp
       include/NovelRT/Utilities/Strings.hpp
+      include/NovelRT/Utilities/MoveOnlyFunction.hpp
 
   LINK_LIBRARIES
     PUBLIC

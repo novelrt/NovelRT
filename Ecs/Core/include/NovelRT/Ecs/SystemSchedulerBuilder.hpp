@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/SystemScheduler.hpp>
+#include <NovelRT/Utilities/MoveOnlyFunction.hpp>
 
 #include <cstdint>
 #include <functional>
@@ -21,9 +22,14 @@ namespace NovelRT::Ecs
     {
     private:
         std::optional<uint32_t> _threadCount;
-        std::vector<std::function<void(SystemScheduler&)>> _configureCallbacks;
+        std::vector<NovelRT::Utilities::MoveOnlyFunction<void(SystemScheduler&)>> _configureCallbacks;
 
     public:
+        SystemSchedulerBuilder() = default;
+        SystemSchedulerBuilder(const SystemSchedulerBuilder& other) = delete;
+        SystemSchedulerBuilder& operator=(const SystemSchedulerBuilder& other) = delete;
+        SystemSchedulerBuilder(SystemSchedulerBuilder&& other) = default;
+        SystemSchedulerBuilder& operator=(SystemSchedulerBuilder&& other) = default;
         /**
          * @brief Defines how many worker threads should be configured for this ECS instance.
          *
