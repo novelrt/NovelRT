@@ -247,7 +247,7 @@ namespace NovelRT::Graphics
             GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(),
             semaphore->GetVulkanSemaphore(), _fence->GetVulkanFence(), &_currentImageIndex);
 
-        if (acquireNextImageResult != VK_SUCCESS)
+        if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR)
         {
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));

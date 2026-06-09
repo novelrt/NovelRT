@@ -34,44 +34,21 @@ namespace NovelRT::Ecs::UI
         uint64_t _submittedUploads;
         uint64_t _frameCounter{0};
 
-    public:
-        UISystem(
-            std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
-                uiProvider,
-            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> gfxDevice)
-            : _uiProvider(std::move(uiProvider)),
-              _gfxDevice(std::move(gfxDevice)),
-              _renderPassId(0ULL),
-              _uploadSemaphore(_gfxDevice->CreateSemaphore(0)),
-              _drawSemaphore(_gfxDevice->CreateSemaphore(0)),
-              _submittedUploads(0)
+        void Render(Catalogue catalogue)
         {
-        }
-
-        void Update(Timing::Timestamp delta, Catalogue catalogue) override
-        {
-            if (_renderPassId == 0ULL)
-            {
-                return;
-            }
-
-            auto [renderPasses, commandLists, trackedSemaphores, graph] =
+            auto [renderPasses, commandLists, trackedSemaphores] =
                 catalogue.GetComponentViews<Graphics::Components::RenderPass<TGraphicsBackend>,
                                             Graphics::Components::BuiltCommandList<TGraphicsBackend>,
-                                            Graphics::Components::TrackedSemaphore<TGraphicsBackend>,
-                                            Ecs::Components::EntityGraphComponent>();
+                                            Graphics::Components::TrackedSemaphore<TGraphicsBackend>>();
 
+            //create upload command list
             auto uiContext = _gfxDevice->CreateGraphicsContext();
-
-            _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
-            // do all our imgui calls here
-            _uiProvider->EndFrame();
-
             auto uploadCmdList = uiContext->CreateCmdList();
 
             // upload data to gpu
             if (_uiProvider->UploadToGPU(uploadCmdList))
             {
+                //if we have data to upload to the gpu, then submit the commands.
                 std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{uploadCmdList};
 
                 // create the semaphore to signal when uploading
@@ -136,6 +113,47 @@ namespace NovelRT::Ecs::UI
                 commandLists.AddComponent(entityId, drawLists);
             }
         }
+
+        void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
+        {
+            unused(catalogue);
+            //auto [graph] = catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent>();
+
+
+            _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
+            // do all our imgui calls here
+            _uiProvider->EndFrame();
+
+        }
+
+    public:
+        UISystem(
+            std::shared_ptr<NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
+                uiProvider,
+            std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> gfxDevice)
+            : _uiProvider(std::move(uiProvider)),
+              _gfxDevice(std::move(gfxDevice)),
+              _renderPassId(0ULL),
+              _uploadSemaphore(_gfxDevice->CreateSemaphore(0)),
+              _drawSemaphore(_gfxDevice->CreateSemaphore(0)),
+              _submittedUploads(0)
+        {
+        }
+
+        void Update(Timing::Timestamp delta, Catalogue catalogue) override
+        {
+            // if the renderpass' Id is not assigned, don't perform any updates.
+            if (_renderPassId == 0ULL)
+            {
+                return;
+            }
+
+            ProcessComponents(delta, catalogue);
+            
+            Render(catalogue);            
+        }
+
+        
 
         NovelRT::Ecs::Graphics::Components::RenderPassId& GetAssignedRenderPassId()
         {

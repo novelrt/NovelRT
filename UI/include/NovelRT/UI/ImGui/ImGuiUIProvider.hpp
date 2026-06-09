@@ -145,6 +145,10 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
+        NovelRT::Maths::GeoVector2F _previousSize = NovelRT::Maths::GeoVector2F::Zero();
+        float _overallScale = 0.0f;
+        const int32_t _logicalDisplayX = 1920;
+        const int32_t _logicalDisplayY = 1080;
 
         inline void CreateDedicatedRenderPass()
         {
@@ -285,12 +289,25 @@ namespace NovelRT::UI::ImGui
         {
             auto& io = ::ImGui::GetIO();
             auto windowSize = _windowProvider->GetSize();
-            io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
 
-            if ((windowSize.x > 0) && (windowSize.y > 0))
+            if (_previousSize == NovelRT::Maths::GeoVector2F::Zero())
             {
-                io.DisplayFramebufferScale = ImVec2(1, 1);
+                _previousSize = windowSize;
+                _overallScale = 1.0f;
+                io.DisplayFramebufferScale = ImVec2(_overallScale, _overallScale);
             }
+            if(_previousSize.x != windowSize.x || _previousSize.y != windowSize.y)
+            {   
+                io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
+                if ((windowSize.x > 0) && (windowSize.y > 0))
+                {
+                    float x = windowSize.x / _previousSize.x;
+                    float y = windowSize.y / _previousSize.y;
+                    _overallScale = x > y ? x : y;
+                }
+                _previousSize = windowSize;
+            }
+
 
             io.DeltaTime = deltaTime;
 
