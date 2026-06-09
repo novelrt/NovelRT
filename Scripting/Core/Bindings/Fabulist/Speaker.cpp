@@ -16,8 +16,8 @@ struct PoseInfo
     std::string sprite;
     double xPos;
     double yPos;
-    double xScale;
-    double yScale;
+    double xScale = 1;
+    double yScale = 1;
 };
 
 struct SpeakerInfo
