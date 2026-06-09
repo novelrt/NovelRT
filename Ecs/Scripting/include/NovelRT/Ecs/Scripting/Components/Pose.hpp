@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Maths/GeoVector2F.hpp>
+
 #include <string>
 
 namespace NovelRT::Ecs::Scripting::Components
@@ -11,6 +13,8 @@ namespace NovelRT::Ecs::Scripting::Components
     {
         std::string* name;
         std::string* sprite;
+        NovelRT::Maths::GeoVector2F position;
+        NovelRT::Maths::GeoVector2F scale;
 
         inline Pose& operator+=(const Pose& other)
         {
@@ -23,7 +27,8 @@ namespace NovelRT::Ecs::Scripting::Components
 
         [[nodiscard]] inline bool operator==(const Pose& other) const noexcept
         {
-            return name == other.name && sprite == other.sprite;
+            // TODO: is comparing the position/scale by value correct here?
+            return name == other.name && sprite == other.sprite && position == other.position && scale == other.scale;
         }
     };
 }

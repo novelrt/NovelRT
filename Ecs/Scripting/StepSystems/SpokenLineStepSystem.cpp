@@ -27,7 +27,8 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
     stateManager.RegisterStateHandler(
         [](auto& status, auto& catalogue, auto entityId)
         {
-            auto [spokenLineComponents, poseComponents] = catalogue.template GetComponentViews<Components::SpokenLine, Components::Pose>();
+            auto [spokenLineComponents, poseComponents] =
+                catalogue.template GetComponentViews<Components::SpokenLine, Components::Pose>();
 
             if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(status.get()))
             {
@@ -37,7 +38,8 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
 
                 poseComponents.PushComponentUpdateInstruction(
                     entityId, Components::Pose{new std::string(spokenLine->GetPose()->Name),
-                                               new std::string(spokenLine->GetPose()->Sprite)});
+                                               new std::string(spokenLine->GetPose()->Sprite),
+                                               spokenLine->GetPose()->Position, spokenLine->GetPose()->Scale});
 
                 return true;
             }

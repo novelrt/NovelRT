@@ -3,6 +3,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Scripting/DecisionTreeStatus.hpp>
 #include <NovelRT/Scripting/ScriptManager.hpp>
 
@@ -19,6 +20,8 @@ namespace NovelRT::Scripting::Statuses
         {
             std::string Name;
             std::string Sprite;
+            NovelRT::Maths::GeoVector2F Position;
+            NovelRT::Maths::GeoVector2F Scale;
         };
 
     private:

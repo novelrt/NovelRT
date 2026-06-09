@@ -4,7 +4,9 @@ speaker "character" {
   poses = {
     happy = { sprite = "happy.png" },
     angry = { sprite = "angry.png" },
-    sad = { sprite = "sad.png" }
+    angry_left = { sprite = "angry.png", position = { -100, 0 } },
+    sad = { sprite = "sad.png", scale = { 1, 1 } },
+    sad_flip = { sprite = "sad.png", scale = { -1, 1 } }
   }
 }
 
