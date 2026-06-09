@@ -11,10 +11,10 @@ namespace NovelRT::Ecs::Scripting::Components
 {
     struct Pose
     {
-        std::string* name;
-        std::string* sprite;
-        NovelRT::Maths::GeoVector2F position;
-        NovelRT::Maths::GeoVector2F scale;
+        std::string* name = nullptr;
+        std::string* sprite = nullptr;
+        NovelRT::Maths::GeoVector2F position{0, 0};
+        NovelRT::Maths::GeoVector2F scale{1, 1};
 
         inline Pose& operator+=(const Pose& other)
         {
@@ -27,7 +27,6 @@ namespace NovelRT::Ecs::Scripting::Components
 
         [[nodiscard]] inline bool operator==(const Pose& other) const noexcept
         {
-            // TODO: is comparing the position/scale by value correct here?
             return name == other.name && sprite == other.sprite && position == other.position && scale == other.scale;
         }
     };

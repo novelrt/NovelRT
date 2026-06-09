@@ -14,8 +14,8 @@
 struct PoseInfo
 {
     std::string sprite;
-    double xPos;
-    double yPos;
+    double xPos = 0;
+    double yPos = 0;
     double xScale = 1;
     double yScale = 1;
 };
