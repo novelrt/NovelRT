@@ -7,24 +7,27 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting
 
   SOURCES
     PRIVATE
+      StepSystems/BranchStepSystem.cpp
+      StepSystems/SpokenLineStepSystem.cpp
+
       DecisionTreeStateManager.cpp
       DecisionTreeStepSystem.cpp
       EcsScriptingBuilder.cpp
 
-      StepSystems/BranchStepSystem.cpp
-      StepSystems/SpokenLineStepSystem.cpp
-
   HEADERS
     PUBLIC
       include/NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp
+      include/NovelRT/Ecs/Scripting/Components/Branch.hpp
+      include/NovelRT/Ecs/Scripting/Components/BranchChoice.hpp
       include/NovelRT/Ecs/Scripting/Components/ContinueDecisionTree.hpp
-      include/NovelRT/Ecs/Scripting/Components/DecisionTreeChoice.hpp
+      include/NovelRT/Ecs/Scripting/Components/Pose.hpp
+      include/NovelRT/Ecs/Scripting/Components/SpokenLine.hpp
+
+      include/NovelRT/Ecs/Scripting/StepSystems/BranchStepSystem.hpp
+      include/NovelRT/Ecs/Scripting/StepSystems/SpokenLineStepSystem.hpp
 
       include/NovelRT/Ecs/Scripting/DecisionTreeLoadingSystem.hpp
       include/NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp
       include/NovelRT/Ecs/Scripting/DecisionTreeStepSystem.hpp
       include/NovelRT/Ecs/Scripting/EcsScriptingBuilder.hpp
-
-      include/NovelRT/Ecs/Scripting/StepSystems/BranchStepSystem.hpp
-      include/NovelRT/Ecs/Scripting/StepSystems/SpokenLineStepSystem.hpp
 )
