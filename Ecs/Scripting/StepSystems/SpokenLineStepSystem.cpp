@@ -8,6 +8,7 @@
 
 #include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
 #include <NovelRT/Ecs/Scripting/Components/ContinueDecisionTree.hpp>
+#include <NovelRT/Ecs/Scripting/Components/Pose.hpp>
 #include <NovelRT/Ecs/Scripting/Components/SpokenLine.hpp>
 #include <NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp>
 #include <NovelRT/Ecs/Scripting/StepSystems/SpokenLineStepSystem.hpp>
@@ -26,13 +27,19 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
     stateManager.RegisterStateHandler(
         [](auto& status, auto& catalogue, auto entityId)
         {
-            auto spokenLineComponents = catalogue.template GetComponentView<Components::SpokenLine>();
+            auto [spokenLineComponents, poseComponents] =
+                catalogue.template GetComponentViews<Components::SpokenLine, Components::Pose>();
 
             if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(status.get()))
             {
                 spokenLineComponents.PushComponentUpdateInstruction(
                     entityId, Components::SpokenLine{new std::string(spokenLine->GetSpeaker()),
                                                      new std::string(spokenLine->GetText())});
+
+                poseComponents.PushComponentUpdateInstruction(
+                    entityId, Components::Pose{new std::string(spokenLine->GetPose()->Name),
+                                               new std::string(spokenLine->GetPose()->Sprite),
+                                               spokenLine->GetPose()->Position, spokenLine->GetPose()->Scale});
 
                 return true;
             }
@@ -62,6 +69,7 @@ void NovelRT::Ecs::Scripting::SpokenLineStepSystem::Update(Timing::Timestamp /* 
             Continue(catalogue, entity, spokenLine->Continue());
         }
 
+        // Note: we intentionally leave the Pose component here
         spokenLineComponents.RemoveComponent(entity);
         continueComponents.RemoveComponent(entity);
     }

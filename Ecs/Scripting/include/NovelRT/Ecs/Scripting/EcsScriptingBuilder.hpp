@@ -7,7 +7,6 @@
 
 #include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
 #include <NovelRT/Ecs/Scripting/Components/ContinueDecisionTree.hpp>
-#include <NovelRT/Ecs/Scripting/Components/DecisionTreeChoice.hpp>
 #include <NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp>
 
 #include <NovelRT/Scripting/ScriptManager.hpp>

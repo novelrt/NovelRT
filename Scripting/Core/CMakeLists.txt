@@ -3,6 +3,7 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Scripting::Core
   DEPENDS
     NovelRT::Exceptions
+    NovelRT::Maths
     lua::lua
 
   SOURCES
