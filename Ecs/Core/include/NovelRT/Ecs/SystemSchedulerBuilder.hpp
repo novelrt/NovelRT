@@ -3,8 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <NovelRT/Utilities/MoveOnlyFunction.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
 
 #include <cstdint>
 #include <functional>
@@ -52,7 +52,7 @@ namespace NovelRT::Ecs
         T& Configure(T&& configure) noexcept
         {
             auto& fn = _configureCallbacks.emplace_back(std::forward<T>(configure));
-            return *(fn.template target<T>());
+            return *(fn.template Target<T>());
         }
 
         /**

@@ -15,15 +15,15 @@ namespace NovelRT::Utilities
         struct Callable
         {
             virtual ~Callable() = default;
-            virtual R call(Args...) = 0;
-            virtual const void* target() = 0;
+            virtual R Call(Args...) = 0;
+            virtual const void* Target() = 0;
         };
         template <typename F>
         struct SpecificCallable : Callable
         {
             template <typename T, typename = std::enable_if_t<!std::is_same_v<std::decay_t<T>, SpecificCallable>>>
             explicit SpecificCallable(T&& func) : func(std::forward<T>(func)) {};
-        R call(Args... args) override
+        R Call(Args... args) override
             {
                 if constexpr(std::is_void_v<R>)
                 { std::invoke(func, std::forward<Args>(args)...); }
@@ -31,7 +31,7 @@ namespace NovelRT::Utilities
                 { return std::invoke(func, std::forward<Args>(args)...); }
             }
             
-            const void* target() override
+            const void* Target() override
             {
                 return std::addressof(func);
             }
@@ -54,14 +54,14 @@ namespace NovelRT::Utilities
 
         R operator()(Args... args) 
         {
-            return _ptr->call(std::forward<Args>(args)...);
+            return _ptr->Call(std::forward<Args>(args)...);
             
         }; 
 
         template <typename F>
-        F* target() noexcept
+        F* Target() noexcept
         {
-            return reinterpret_cast<F*>(const_cast<void*>(_ptr->target()));
+            return reinterpret_cast<F*>(const_cast<void*>(_ptr->Target()));
         };
 
     };
