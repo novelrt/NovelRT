@@ -117,7 +117,11 @@ namespace NovelRT::Ecs::UI
         void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
         {
             unused(catalogue);
-            //auto [graph] = catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent>();
+            auto [graph, containers, buttons, textView] 
+                = catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent,
+                    Ecs::UI::Components::UIWidgetContainer,
+                    Ecs::UI::Components::UIButton,
+                    Ecs::UI::Components::UIText>();
 
 
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
