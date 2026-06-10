@@ -99,7 +99,7 @@ struct RenderingData
 
 template<typename TBackend>
 RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBackend>>& gfxDevice,
-                                    std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
+                                            std::shared_ptr<GraphicsMemoryAllocator<TBackend>>& memoryAllocator)
 {
     GraphicsBufferCreateInfo bufferCreateInfo{};
     bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
@@ -139,13 +139,13 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
     auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
 
-    //create the render pass and pipeline
+    // create the render pass and pipeline
     GraphicsRenderPassDescription passDesc{};
     GraphicsAttachmentDescription attachmentDesc{};
 
     attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
 
-    if (attachmentDesc.texelFormat == TexelFormat::UnknownOrUndefined) 
+    if (attachmentDesc.texelFormat == TexelFormat::UnknownOrUndefined)
     {
         throw NovelRT::Exceptions::InitialisationFailureException("How did you get here?");
     }
@@ -204,7 +204,7 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->End();
 
         gfxContext->EndFrame();
-        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {cmdList};
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
         gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
     }

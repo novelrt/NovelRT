@@ -341,7 +341,8 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsTexture::UnmapAndWrite(
-        const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>>& memoryRegion)
+        const std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsTexture, Vulkan::VulkanGraphicsBackend>>&
+            memoryRegion)
     {
         return UnmapBytesAndWrite(memoryRegion->GetOffset(), memoryRegion->GetSize());
     }

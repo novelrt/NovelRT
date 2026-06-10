@@ -40,7 +40,6 @@ namespace NovelRT::Windowing
                     "The specified window mode is either not valid or not supported.");
         }
 
-
         auto window = glfwCreateWindow(static_cast<int32_t>(floor(desiredWindowSize.x)),
                                        static_cast<int32_t>(floor(desiredWindowSize.y)), "NovelRT", monitor, nullptr);
         // TODO: EngineConfig was here

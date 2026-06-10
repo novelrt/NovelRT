@@ -138,8 +138,9 @@ namespace NovelRT::ResourceManagement::Desktop
             "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
 #else
         cFile = fopen(filePathStr.c_str(), "rb");
-        _logger.throwIfNullPtr(
-            cFile, "Image file cannot be opened! Please ensure the path is correct and that the file is not locked. File path: " + filePathStr);
+        _logger.throwIfNullPtr(cFile, "Image file cannot be opened! Please ensure the path is correct and that the "
+                                      "file is not locked. File path: " +
+                                          filePathStr);
 #endif
 
         auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr,

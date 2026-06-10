@@ -112,7 +112,7 @@ namespace NovelRT::Ecs
         _systems.emplace(id, systemUpdatePtr);
         _systemIds.emplace_back(id);
         _systemDependencies.emplace(id, std::vector<SystemId>(dependencies.begin(), dependencies.end()));
-        
+
         return id;
     }
 
