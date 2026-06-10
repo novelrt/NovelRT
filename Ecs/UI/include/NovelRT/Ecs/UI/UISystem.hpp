@@ -11,11 +11,23 @@
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
 #include <NovelRT/Ecs/EntityGraphView.hpp>
+#include <NovelRT/Ecs/IEcsSystem.hpp>
+#include <NovelRT/Ecs/SparseSet.hpp>
+#include <NovelRT/Ecs/Components/TransformComponent.hpp>
+
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
-#include <NovelRT/Ecs/IEcsSystem.hpp>
-#include <NovelRT/Ecs/SparseSet.hpp>
+
+#include <NovelRT/Ecs/UI/Components/UIElement.hpp>
+#include <NovelRT/Ecs/UI/UIComponentType.hpp>
+
+#include <algorithm>
+#include <deque>
+#include <map>
+#include <set>
+#include <utility>
+#include <vector>
 
 namespace NovelRT::Ecs::UI
 {
@@ -33,6 +45,68 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _drawSemaphore;
         uint64_t _submittedUploads;
         uint64_t _frameCounter{0};
+
+        EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view,
+                                Catalogue& catalogue,
+                                EntityId entity)
+        {
+            EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
+
+            while (it.HasParent())
+            {
+                it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
+            }
+
+            return it;
+        }
+
+        void ParseElementCommands(Catalogue catalogue, Ecs::UI::Components::UIElement& element)
+        {
+            auto [containers, buttons, textView, transforms] 
+                = catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer,
+                    Ecs::UI::Components::UIButton,
+                    Ecs::UI::Components::UIText,
+                    Ecs::Components::TransformComponent>();
+
+            switch(element.Type)
+            {
+                case Ecs::UI::UIComponentType::Container:
+                {
+                    Ecs::Components::TransformComponent transform{};
+                    Ecs::UI::Components::UIWidgetContainer container{};
+
+                    if(containers.TryGetComponent(element.entity, container) 
+                        && TryGetComponent(element.entity, transform))
+                    {
+                        ImGui::SetNextWindowSize(ImVec2(transform.scale.x, transform.scale.y));
+                        ImGui::SetNextWindowPos(ImVec2(transform.position.x, transform.position.y));
+                        ImGui::Begin(container.title, NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+                    }
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+
+        }
+
+        void EnumerateChildren(EntityGraphView& graph,
+                               ComponentView<Ecs::UI::Components::UIElement>& view,
+                               std::vector<EntityId>& inOrder)
+        {
+            if (view.HasComponent(graph.GetRawEntityId()))
+                inOrder.push_back(graph.GetRawEntityId());
+
+            if (!graph.HasChildren())
+                return;
+
+            for (const auto& child : graph.GetOriginalChildren())
+            {
+                EnumerateChildren(child.get(), view, inOrder);
+            }
+        }
 
         void Render(Catalogue catalogue)
         {
@@ -116,16 +190,53 @@ namespace NovelRT::Ecs::UI
 
         void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
         {
-            unused(catalogue);
-            auto [graph, containers, buttons, textView] 
+            auto [graph, elementView] 
                 = catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent,
-                    Ecs::UI::Components::UIWidgetContainer,
-                    Ecs::UI::Components::UIButton,
-                    Ecs::UI::Components::UIText>();
+                    Ecs::UI::Components::UIElement>();
 
+            // 2. Determine the order in which we should enumerate the entities based on... something?
+            std::map<EntityId, Ecs::UI::Components::UIElement> elements{};
+            std::set<EntityId> rootEntities{};
+            std::vector<EntityGraphView> roots{};
+            std::vector<EntityId> ordered{};
 
+            for (auto [entity, element] : elementView)
+            {
+                auto [iterator, inserted] = elements.try_emplace(entity);
+                iterator->second = element;
+
+                if (graph.HasComponent(entity))
+                {
+                    auto root = GetRoot(graph, catalogue, entity);
+                    auto [it, insertedTwo] = rootEntities.insert(root.GetRawEntityId());
+                    if (insertedTwo)
+                        roots.emplace_back(std::move(root));
+                }
+            }
+
+            if (elements.empty())
+            {
+                return;
+            }
+            //3. Enumerate the child elements
+            for (auto& root : roots)
+            {
+                EnumerateChildren(root, elementView, ordered);
+            }
+
+            //4. Prepare imgui commands
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
-            // do all our imgui calls here
+            
+            for (auto& entity : ordered)
+            {
+                auto element = elements.find(entity);
+
+                if(element != elements.end())
+                {
+                    ParseElementCommands(catalogue, element->second);
+                }
+            }
+                
             _uiProvider->EndFrame();
 
         }

@@ -16,7 +16,7 @@ namespace NovelRT::Ecs::UI::Components
 
         public:
             EntityId entity = std::numeric_limits<EntityId>::max();
-            NovelRT::Ecs::UI::UIComponentType Type = NovelRT::Ecs::UI::UIComponentType::Text;
+            NovelRT::Ecs::UI::UIComponentType Type = NovelRT::Ecs::UI::UIComponentType::Unknown;
             
             inline UIElement& operator+=(const UIElement& other)
             {

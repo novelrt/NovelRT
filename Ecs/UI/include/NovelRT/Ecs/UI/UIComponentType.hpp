@@ -9,6 +9,7 @@ namespace NovelRT::Ecs::UI
 {
     enum class UIComponentType : int32_t
     {
+        Unknown = -1,
         Container = 0,
         Button = 1,
         Text = 2
