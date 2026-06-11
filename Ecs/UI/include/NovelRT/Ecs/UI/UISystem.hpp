@@ -259,6 +259,9 @@ namespace NovelRT::Ecs::UI
 
         void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
         {
+            //1. Start frame unanimously - this is for debug/metric windows
+            _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
+
             auto [graph, elementView] 
                 = catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent,
                     Ecs::UI::Components::UIElement>();
@@ -285,6 +288,8 @@ namespace NovelRT::Ecs::UI
 
             if (elements.empty())
             {
+                //end the frame now so at least debug stuff displays
+                _uiProvider->EndFrame();
                 return;
             }
 
@@ -294,8 +299,7 @@ namespace NovelRT::Ecs::UI
                 EnumerateChildren(root, elementView, ordered);
             }
 
-            //4. Prepare imgui commands
-            _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
+            
             
             //4a - SCALE EVERYTHING
             // This lets us make sure that imgui tracks with the screen properly - otherwise it does not adjust

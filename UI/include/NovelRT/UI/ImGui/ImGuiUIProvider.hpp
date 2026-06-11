@@ -359,7 +359,7 @@ namespace NovelRT::UI::ImGui
         {
             ImDrawData* drawData = ::ImGui::GetDrawData();
 
-            if (drawData->TotalVtxCount <= 0)
+            if (drawData == nullptr || drawData->TotalVtxCount <= 0)
             {
                 _drawEnabled = false;
                 return false;

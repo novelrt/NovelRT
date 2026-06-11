@@ -152,6 +152,7 @@ namespace NovelRT::Ecs::UI
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIButton{}, "NovelRT::Ecs::UI::UIButton");
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIClickEvent{}, "NovelRT::Ecs::UI::UIClickEvent");
             cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIText{}, "NovelRT::Ecs::UI::UIText");
+            cache.RegisterComponentType(NovelRT::Ecs::UI::Components::UIElement{}, "NovelRT::Ecs::UI::UIElement");
 
             unused(scheduler.RegisterSystem(_system));
         }
