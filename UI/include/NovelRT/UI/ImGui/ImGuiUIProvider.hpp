@@ -289,26 +289,11 @@ namespace NovelRT::UI::ImGui
         {
             auto& io = ::ImGui::GetIO();
             auto windowSize = _windowProvider->GetSize();
+            auto windowScale = _windowProvider->GetWindowScale();
 
-            if (_previousSize == NovelRT::Maths::GeoVector2F::Zero())
-            {
-                _previousSize = windowSize;
-                _overallScale = 1.0f;
-                io.DisplayFramebufferScale = ImVec2(_overallScale, _overallScale);
-            }
-            if(_previousSize.x != windowSize.x || _previousSize.y != windowSize.y)
-            {   
-                io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
-                if ((windowSize.x > 0) && (windowSize.y > 0))
-                {
-                    float x = windowSize.x / _previousSize.x;
-                    float y = windowSize.y / _previousSize.y;
-                    _overallScale = x > y ? x : y;
-                }
-                _previousSize = windowSize;
-            }
-
-
+            io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
+            io.DisplayFramebufferScale = ImVec2(windowScale.x, windowScale.y);
+            io.FontGlobalScale = (windowScale.x + windowScale.y) / 2.0f;  //This works? lol ok
             io.DeltaTime = deltaTime;
 
             auto mousePos = _inputProvider->GetRawMousePosition();
