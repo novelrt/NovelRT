@@ -217,7 +217,7 @@ int main()
     StepTimer timer{};
     Event<Timestamp::duration> TimerCallback{};
 
-    TimerCallback += [&timer, &scheduler](auto /* delta */) { scheduler.ExecuteIteration(timer.getTotalTime()); };
+    TimerCallback += [&scheduler](auto delta ) { scheduler.ExecuteIteration(Timestamp{delta}); };
 
     while (!wndProvider->ShouldClose())
     {
