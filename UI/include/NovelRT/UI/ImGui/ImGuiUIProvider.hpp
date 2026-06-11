@@ -145,11 +145,7 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
-        NovelRT::Maths::GeoVector2F _previousSize = NovelRT::Maths::GeoVector2F::Zero();
-        float _overallScale = 0.0f;
-        const int32_t _logicalDisplayX = 1920;
-        const int32_t _logicalDisplayY = 1080;
-
+        
         inline void CreateDedicatedRenderPass()
         {
             // Create Render Pass
