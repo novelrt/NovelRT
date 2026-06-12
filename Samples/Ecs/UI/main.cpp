@@ -38,8 +38,15 @@
 #include <NovelRT/Input/Glfw/GlfwInputProvider.hpp>
 
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
+
+#include <NovelRT/Ecs/UI/Components/UIButton.hpp>
+#include <NovelRT/Ecs/UI/Components/UIClickEvent.hpp>
+#include <NovelRT/Ecs/UI/Components/UIElement.hpp>
+#include <NovelRT/Ecs/UI/Components/UIText.hpp>
+#include <NovelRT/Ecs/UI/Components/UIWidgetContainer.hpp>
 #include <NovelRT/Ecs/UI/EcsUIBuilder.hpp>
 #include <NovelRT/Ecs/UI/UISystem.hpp>
+#include <NovelRT/Ecs/UI/UIComponentType.hpp>
 
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
@@ -67,6 +74,7 @@ using namespace NovelRT::Timing;
 using namespace NovelRT::Maths;
 using namespace NovelRT::UI::ImGui;
 using namespace NovelRT::Ecs::UI;
+using namespace NovelRT::Ecs::UI::Components;
 using namespace NovelRT::Input;
 
 
@@ -147,6 +155,39 @@ public:
     }
 };
 
+class UISetupSystem : public IEcsSystem
+{
+private:
+    bool _firstPass = true;
+
+
+public:
+
+    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    {
+        if (!_firstPass)
+        {
+            return;
+        }
+        _firstPass = false;
+
+        auto [elementView, containerView, buttonView, textView, transformView, graphView]
+            = catalogue.GetComponentViews<UIElement, UIWidgetContainer, UIButton, UIText,
+                                          TransformComponent, EntityGraphComponent>();
+
+        //container - this is the "box" for the textbox
+        auto rootId = catalogue.CreateEntity();
+
+        elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
+        containerView.AddComponent(rootId, UIWidgetContainer{rootId, "NarrativeTextbox", false});
+        transformView.AddComponent(rootId, TransformComponent{GeoVector2F(100.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
+        graphView.AddComponent(rootId, EntityGraphComponent{});
+
+        EntityGraphView rootView{catalogue, rootId, EntityGraphComponent{}};
+        unused(rootView);
+    }
+};
+
 int main()
 {
     auto resourceLoader = std::make_shared<DesktopResourceLoader>();
@@ -208,10 +249,13 @@ int main()
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
     auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
+    auto uiSetupSystem = std::make_shared<UISetupSystem>(); //add system
 
     builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
                       { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
+    builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
+
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
