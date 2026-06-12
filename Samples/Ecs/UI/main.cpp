@@ -107,7 +107,7 @@ public:
         auto spriteEntity = catalogue.CreateEntity();
         _spriteEntity = spriteEntity;
 
-        auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/novel-chan.png").value();
+        auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/milk-carton-hi.png").value();
 
         NovelRT::Ecs::Graphics::Components::Sprite sprite{};
         sprite.assetId = assetId;
@@ -230,7 +230,8 @@ int main()
                 passDesc.attachmentDescriptions.push_back(attachmentDesc);
                 passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
                 passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-            });
+            })
+        .WithDefaultBackgroundColour(0,0,0,255);
 
     AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend, NovelRT::Windowing::Glfw::GlfwWindowingBackend>(builder)
         .WithGraphicsDevice(gfxDevice)

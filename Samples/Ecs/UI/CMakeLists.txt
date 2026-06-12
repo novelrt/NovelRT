@@ -22,5 +22,5 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::UITest
       Resources/Shaders/vulkanrendervert.spv
       Resources/Shaders/SpritePixel.spv
       Resources/Shaders/SpriteVertex.spv
-      Resources/Images/novel-chan.png
+      Resources/Images/milk-carton-hi.png
 )
