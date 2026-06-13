@@ -1,6 +1,12 @@
 include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::UI
+DEPENDS
+    NovelRT::Exceptions
+    NovelRT::Graphics::Core
+    NovelRT::Input
+    NovelRT::Logging
+    
   SOURCES
     PRIVATE
       empty.cpp

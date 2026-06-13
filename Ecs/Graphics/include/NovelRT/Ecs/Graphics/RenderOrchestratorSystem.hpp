@@ -54,6 +54,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _deletionSemaphore;
         std::deque<PerFrameResources> _frameResources;
         uint64_t _renderedFrames{0};
+        NovelRT::Graphics::RGBAColour _backgroundColour{0,0,255,255};
 
         RenderPassManager<TGraphicsBackend> _renderPassManager;
 
@@ -96,6 +97,11 @@ namespace NovelRT::Ecs::Graphics
               _deletionSemaphore(_graphicsDevice->CreateSemaphore(0)),
               _renderPassManager(renderPassManager)
         {
+        }
+
+        void SetBackgroundColour(NovelRT::Graphics::RGBAColour& colour)
+        {
+            _backgroundColour = colour;
         }
 
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
@@ -161,6 +167,7 @@ namespace NovelRT::Ecs::Graphics
 
             auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image, context});
 
+            cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
             // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
             {
@@ -175,7 +182,7 @@ namespace NovelRT::Ecs::Graphics
                         static_cast<uint32_t>(surface->GetHeight())));
 
                 NovelRT::Graphics::ClearValue colourDataStruct{};
-                colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+                colourDataStruct.colour = _backgroundColour;
                 colourDataStruct.depth = 0;
                 colourDataStruct.stencil = 0;
 

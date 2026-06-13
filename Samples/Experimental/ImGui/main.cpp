@@ -108,6 +108,7 @@ struct RenderingData
     std::shared_ptr<GraphicsContext<TBackend>> GraphicsContext;
 
     std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> DeletionSemaphore;
+    std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>> UploadSemaphore;
     std::deque<PerFrameResources<TBackend>> FrameResources;
     uint64_t RenderedFrames{0};
 };
@@ -208,6 +209,8 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
 
     textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
     {
+        // TODO: This is technically legacy but I can't be bothered cleaning it up even though
+        // we are doing extra work for transfer queue usage, for no reason. - Matt J.
         gfxContext->BeginFrame();
         auto cmdList = gfxContext->CreateCmdList();
 
@@ -220,11 +223,11 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->End();
 
         gfxContext->EndFrame();
-
-        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {cmdList};
         gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
     }
+
 
     RenderingData<TBackend> returnStruct{};
     returnStruct.RenderPipeline = pipeline;
@@ -234,6 +237,7 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     returnStruct.RenderPass = pass;
     returnStruct.GraphicsContext = gfxContext;
     returnStruct.DeletionSemaphore = gfxDevice->CreateSemaphore(0);
+    returnStruct.UploadSemaphore = gfxDevice->CreateSemaphore(0);
 
     return returnStruct;
 }
@@ -268,141 +272,101 @@ void Render(RenderingData<TBackend>& renderingData,
 
         // Setup + begin command list
         auto currentCmdList = context->CreateCmdList();
-        currentCmdList->Begin();
+        //currentCmdList->Begin();
 
         // Track new frame rendering
         auto& frameResources =
             renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
+        auto& frameResources2 =
+            renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
 
         // Upload ImGui verts + indices to GPU
-        uiProvider->UploadToGPU(currentCmdList);
+        if(uiProvider->UploadToGPU(currentCmdList))
+        {
 
-        NovelRT::Graphics::ClearValue colourDataStruct{};
-        colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-        colourDataStruct.depth = 0;
-        colourDataStruct.stencil = 0;
+            //upload gpu -> transfer queue
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {currentCmdList};
+            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>>, uint64_t>> semaLists {{renderingData.UploadSemaphore, frameResources.frameNumber}};
+            gfxDevice->QueueSubmit(lists, semaLists);
+            auto innerCmdList = context->CreateCmdList();
+            innerCmdList->Begin();
 
-        std::vector<ClearValue> colourData{colourDataStruct};
-        currentCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
+            NovelRT::Graphics::ClearValue colourDataStruct{};
+            colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
+            colourDataStruct.depth = 0;
+            colourDataStruct.stencil = 0;
 
-        ViewportInfo viewportInfoStruct{};
-        viewportInfoStruct.x = 0;
-        viewportInfoStruct.y = surfaceHeight;
-        viewportInfoStruct.width = surfaceWidth;
-        viewportInfoStruct.height = -surfaceHeight;
-        viewportInfoStruct.minDepth = 0.0f;
-        viewportInfoStruct.maxDepth = 1.0f;
+            std::vector<ClearValue> colourData{colourDataStruct};
+            innerCmdList->CmdBeginRenderPass(renderingData.RenderPass, target, colourData);
 
-        currentCmdList->CmdSetViewport(viewportInfoStruct);
-        currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
-                                      NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
-        currentCmdList->CmdBindPipeline(renderingData.RenderPipeline);
+            ViewportInfo viewportInfoStruct{};
+            viewportInfoStruct.x = 0;
+            viewportInfoStruct.y = surfaceHeight;
+            viewportInfoStruct.width = surfaceWidth;
+            viewportInfoStruct.height = -surfaceHeight;
+            viewportInfoStruct.minDepth = 0.0f;
+            viewportInfoStruct.maxDepth = 1.0f;
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
-            std::cref(renderingData.VertexBuffer)};
-        std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
+            innerCmdList->CmdSetViewport(viewportInfoStruct);
+            innerCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                        NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+            innerCmdList->CmdBindPipeline(renderingData.RenderPipeline);
 
-        currentCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TBackend>>>, 1> buffers{
+                std::cref(renderingData.VertexBuffer)};
+            std::array<size_t, 1> offsets{renderingData.VertexBufferRegion->GetOffset()};
 
-        auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
-        descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
-        descriptorSetData->UpdateDescriptorSetData();
+            innerCmdList->CmdBindVertexBuffers(0, 1, buffers, offsets);
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
-            std::cref(descriptorSetData)};
-        currentCmdList->CmdBindDescriptorSets(descriptorData);
+            auto descriptorSetData = renderingData.RenderPipeline->CreateDescriptorSet();
+            descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
+            descriptorSetData->UpdateDescriptorSetData();
 
-        currentCmdList->CmdDraw(
-            static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
+                std::cref(descriptorSetData)};
+            innerCmdList->CmdBindDescriptorSets(descriptorData);
 
-        // Insert Draw ImGui Commands
-        uiProvider->Draw(currentCmdList);
+            innerCmdList->CmdDraw(
+                static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
-        // End Renderpass
-        currentCmdList->CmdEndRenderPass();
 
-        currentCmdList->End();
+            
+            // End Renderpass
+            innerCmdList->CmdEndRenderPass();
+            // Insert Draw ImGui Commands
+            innerCmdList->CmdBeginRenderPass(uiProvider->GetDedicatedRenderPass(), target, {});
+            uiProvider->Draw(innerCmdList);
+            innerCmdList->CmdEndRenderPass();
+            innerCmdList->End();
+            context->EndFrame();
+            swapchainImage->QueueSubmit({ renderingData.UploadSemaphore, frameResources.frameNumber}, 
+                innerCmdList, 
+                {renderingData.DeletionSemaphore, frameResources.frameNumber});
 
-        frameResources.descriptorSet = descriptorSetData;
-        frameResources.renderTarget = target;
-        frameResources.commandList = currentCmdList;
+            
+            frameResources.descriptorSet = descriptorSetData;
+            frameResources.renderTarget = target;
+            frameResources.commandList = innerCmdList;
 
-        context->EndFrame();
-        swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
+            frameResources2.descriptorSet = descriptorSetData;
+            frameResources2.renderTarget = target;
+            frameResources2.commandList = currentCmdList;
+        }
+        else
+        {
+            context->EndFrame();
+        }
+
+            
+
+            
+        // context->EndFrame();
+        // swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
+        
     }
 
     gfxDevice->EndFrame();
 }
-
-// template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
-// void RenderImGuiWindows(RenderingData<TGraphicsBackend>& imGuiRenderingData,
-//                     std::shared_ptr<GraphicsDevice<TGraphicsBackend>>& gfxDevice)
-// {
-//     auto lastRenderedFrame = imGuiRenderingData.DeletionSemaphore->GetValue();
-//     if (lastRenderedFrame > 0)
-//         lastRenderedFrame -= 1;
-
-//     imGuiRenderingData.FrameResources.erase(std::remove_if(imGuiRenderingData.FrameResources.begin(),
-//                                                       imGuiRenderingData.FrameResources.end(),
-//                                                       [lastRenderedFrame](auto& it) { return it.frameNumber <
-//                                                       lastRenderedFrame; }),
-//                                        imGuiRenderingData.FrameResources.end());
-
-//     auto surface = gfxDevice->GetSurface();
-//     float surfaceWidth = surface->GetWidth();
-//     float surfaceHeight = surface->GetHeight();
-//     auto swapchainImage = gfxDevice->BeginFrame();
-//     std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
-//     auto target = std::make_shared<GraphicsRenderTarget<TBackend>>(gfxDevice, imageViewData,
-//     renderingData.RenderPass,
-//                                                                    static_cast<uint32_t>(surfaceWidth),
-//                                                                    static_cast<uint32_t>(surfaceHeight));
-//     {
-//         auto context = imGuiRenderingData.GraphicsContext;
-//         context->BeginFrame();
-//         auto currentCmdList = context->BeginFrame();
-//         auto renderPass = gfxDevice->GetRenderPass();
-
-//         //Begin commands here
-//         currentCmdList->Begin();
-
-//         // Indicate new frame rendering
-//         auto& frameResources =
-//             renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
-
-//         // Upload ImGui verts + indices to GPU
-//         uiProvider->UploadToGPU(currentCmdList);
-
-//         NovelRT::Graphics::ClearValue colourDataStruct{};
-//         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-//         colourDataStruct.depth = 0;
-//         colourDataStruct.stencil = 0;
-
-//         std::vector<ClearValue> colourData{colourDataStruct};
-//         currentCmdList->CmdBeginRenderPass(renderPass, colourData);
-
-//         ViewportInfo viewportInfoStruct{};
-//         viewportInfoStruct.x = 0;
-//         viewportInfoStruct.y = surfaceHeight;
-//         viewportInfoStruct.width = surfaceWidth;
-//         viewportInfoStruct.height = -surfaceHeight;
-//         viewportInfoStruct.minDepth = 0.0f;
-//         viewportInfoStruct.maxDepth = 1.0f;
-
-//         currentCmdList->CmdSetViewport(viewportInfoStruct);
-
-//         auto descriptorSetData =
-//             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
-//                             pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
-
-//         uiProvider->Draw(currentCmdList);
-
-//         currentCmdList->CmdEndRenderPass();
-//         context->EndFrame();
-//         context->RegisterDescriptorSetForFrame(std::weak_ptr(signature), descriptorSetData);
-//         gfxDevice->EndFrame();
-//     }
-// }
 
 template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
 void HandleClickAction(NovelRT::Input::InputAction& action,
@@ -475,6 +439,8 @@ int main()
                         NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
                                                                          memoryAllocator, true);
 
+    unused(uiProvider->AddFontToUpload("default", "Raleway-Regular.ttf"));
+
     // Setup Background Triangle + Input Resource Regions for rendering
     auto renderingData = SetupTriangleSample(gfxDevice, memoryAllocator);
     std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
@@ -511,6 +477,12 @@ int main()
         }
     };
 
+    //Upload Fonts
+    auto gfxContext = gfxDevice->CreateGraphicsContext();
+    auto cmdList = gfxContext->CreateCmdList();
+    uiProvider->UploadFontData(cmdList);
+
+
     // Setup main loop
     while (!wndProvider->ShouldClose())
     {
@@ -519,237 +491,3 @@ int main()
 
     return 0;
 }
-
-//
-
-// /// IMGUI
-// auto uiProvider = std::make_shared<
-//     ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
-//                     NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
-//                                                                      memoryAllocator, true);
-// /// IMGUI
-
-// GraphicsBufferCreateInfo bufferCreateInfo{};
-// bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-// bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-// bufferCreateInfo.size = 64 * 1024;
-
-// auto vertexStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-// bufferCreateInfo.size = 64 * 1024 * 4; // need this to be a different size but rest of the values are unchanged.
-
-// auto textureStagingBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-// bufferCreateInfo.bufferKind = GraphicsBufferKind::Vertex;
-// bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::None;
-// bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Write;
-// bufferCreateInfo.size = 64 * 1024;
-
-// auto vertexBuffer = memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-// auto vertShaderData = LoadSpv("vulkanrendervert.spv");
-// auto pixelShaderData = LoadSpv("vulkanrenderfrag.spv");
-
-// gfxContext->BeginFrame();
-// auto cmdList = gfxContext->CreateCmdList();
-
-// std::vector<GraphicsPipelineInputElement> elements{
-//     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector3F), GraphicsPipelineInputElementKind::Position,
-//                                  12),
-//     GraphicsPipelineInputElement(typeid(NovelRT::Maths::GeoVector2F),
-//                                  GraphicsPipelineInputElementKind::TextureCoordinate, 8)};
-
-// std::vector<GraphicsPipelineInput> inputs{GraphicsPipelineInput(elements)};
-// std::vector<GraphicsPipelineResource> resources{
-//     GraphicsPipelineResource(GraphicsPipelineResourceKind::Texture, ShaderProgramVisibility::Pixel)};
-
-// std::vector<GraphicsPushConstantRange> dummyData{};
-// auto signature =
-//     gfxDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
-//                                        GraphicsPipelineBlendFactor::OneMinusSrcAlpha, inputs, resources, dummyData);
-// auto vertShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertShaderData);
-// auto pixelShaderProg = gfxDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelShaderData);
-
-// //create the pipeline and renderpass
-// GraphicsRenderPassDescription passDesc{};
-// GraphicsAttachmentDescription attachmentDesc{};
-
-// attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ?
-//     TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
-// attachmentDesc.loadOp = LoadOp::Clear;
-// attachmentDesc.storeOp = StoreOp::Store;
-// attachmentDesc.initialLayout = ImageLayout::Undefined;
-// attachmentDesc.finalLayout = ImageLayout::Present;
-
-// passDesc.attachmentDescriptions.push_back(attachmentDesc);
-// auto pass = gfxDevice->CreateRenderPass(passDesc);
-
-// auto pipeline = gfxDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, pass);
-
-// auto vertexBufferRegion = vertexBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-// auto stagingBufferRegion = vertexStagingBuffer->Allocate(sizeof(TexturedVertex) * 3, 16);
-
-// auto pVertexBuffer = vertexStagingBuffer->Map<TexturedVertex>(vertexBufferRegion);
-
-// pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-// pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-// pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
-
-// vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
-// cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
-
-// uint32_t textureWidth = 256;
-// uint32_t textureHeight = 256;
-// uint32_t texturePixels = textureWidth * textureHeight;
-// uint32_t cellWidth = textureWidth / 8;
-// uint32_t cellHeight = textureHeight / 8;
-
-// auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
-// auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-// auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-// auto pTextureData = textureStagingBuffer->Map<uint32_t>(textureStagingBufferRegion);
-
-// for (uint32_t n = 0; n < texturePixels; n++)
-// {
-//     auto x = n % textureWidth;
-//     auto y = n / textureWidth;
-
-//     pTextureData[n] = (x / cellWidth % 2) == (y / cellHeight % 2) ? 0xFF000000 : 0xFFFFFFFF;
-// }
-
-// textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
-
-// std::vector<std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsResource, VulkanGraphicsBackend>>>
-//     inputResourceRegions{texture2DRegion};
-
-// cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-// cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-// cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-
-// cmdList->End();
-// gfxContext->EndFrame();
-// gfxDevice->QueueSubmit(cmdList);
-// gfxDevice->WaitForIdle();
-
-// /// imgui
-// uint32_t strIndex = 0;
-// std::vector<std::string> arr{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
-
-// auto surface = gfxDevice->GetSurface();
-// bool clicked = false;
-// NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
-// auto deletionSemaphore = gfxDevice->CreateSemaphore(0);
-// //uint64_t renderedFrames{0};
-
-// DummyUpdateStuff += [&](auto delta)
-// {
-//     wndProvider->ProcessAllMessages();
-//     inputProvider->Update(delta);
-
-//     if (wndProvider->IsVisible())
-//     {
-//         // auto& frameResources =
-//         // renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderedFrames});
-//         auto cl = inputProvider->GetCurrentChangeLog(clickAction.actionName);
-
-//         if (cl.GetCurrentState() == KeyState::KeyDown && !clicked)
-//         {
-//             strIndex++;
-//             clicked = true;
-//         }
-//         else if (cl.GetCurrentState() == KeyState::KeyUp && clicked)
-//         {
-//             clicked = false;
-//         }
-
-//         // ImGuiiiiiiiiiiiiiiiiiiiiii
-//         uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
-
-//         ImGui::SetNextWindowSize(ImVec2(612, 200));
-//         ImGui::SetNextWindowPos(ImVec2(100, 500));
-//         ImGui::Begin("Test", NULL,
-//                      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-
-//         if (strIndex < arr.size())
-//         {
-//             ImGui::Text("%s", arr.at(strIndex).c_str());
-//         }
-
-//         ImGui::End();
-//         uiProvider->EndFrame();
-
-//         auto surface = gfxDevice->GetSurface();
-//         auto context = gfxDevice->CreateGraphicsContext();
-//         auto currentCmdList = context->CreateCmdList();
-
-//         float surfaceWidth = surface->GetWidth();
-//         float surfaceHeight = surface->GetHeight();
-
-//         auto swapchainImage = gfxDevice->BeginFrame();
-//         std::vector<VkImageView> imageViewData{swapchainImage->GetVulkanImageView()};
-
-//         //create the pipeline and renderpass
-//         GraphicsRenderPassDescription passDesc{};
-//         GraphicsAttachmentDescription attachmentDesc{};
-
-//         attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetVulkanFormat() == VK_FORMAT_R8G8B8A8_UNORM ?
-//             TexelFormat::R8G8B8A8_UNORM : TexelFormat::B8G8R8A8_UNORM;
-//         attachmentDesc.loadOp = LoadOp::Clear;
-//         attachmentDesc.storeOp = StoreOp::Store;
-//         attachmentDesc.initialLayout = ImageLayout::Undefined;
-//         attachmentDesc.finalLayout = ImageLayout::Present;
-
-//         passDesc.attachmentDescriptions.push_back(attachmentDesc);
-//         auto renderPass = gfxDevice->CreateRenderPass(passDesc);
-
-//         auto target = std::make_shared<GraphicsRenderTarget<VulkanGraphicsBackend>>(gfxDevice, imageViewData,
-//         renderPass,
-//                                                                static_cast<uint32_t>(surfaceWidth),
-//                                                                static_cast<uint32_t>(surfaceHeight));
-
-//         uiProvider->UploadToGPU(currentCmdList);
-
-//         NovelRT::Graphics::ClearValue colourDataStruct{};
-//         colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-//         colourDataStruct.depth = 0;
-//         colourDataStruct.stencil = 0;
-
-//         std::vector<ClearValue> colourData{colourDataStruct};
-//         currentCmdList->CmdBeginRenderPass(renderPass, target, colourData);
-
-//         ViewportInfo viewportInfoStruct{};
-//         viewportInfoStruct.x = 0;
-//         viewportInfoStruct.y = surfaceHeight;
-//         viewportInfoStruct.width = surfaceWidth;
-//         viewportInfoStruct.height = -surfaceHeight;
-//         viewportInfoStruct.minDepth = 0.0f;
-//         viewportInfoStruct.maxDepth = 1.0f;
-
-//         currentCmdList->CmdSetViewport(viewportInfoStruct);
-
-//         auto descriptorSetData =
-//             regularDrawCmds(gfxContext, currentCmdList, renderPass, surfaceWidth, surfaceHeight, signature,
-//                             pipeline, vertexBuffer, vertexBufferRegion, inputResourceRegions);
-
-//         uiProvider->Draw(currentCmdList);
-
-//         currentCmdList->CmdEndRenderPass();
-//         currentCmdList->End();
-
-//         // frameResources.descriptorSet = descriptorSetData;
-//         // frameResources.renderTarget = target;
-//         // frameResources.commandList = currentCmdList;
-
-//         context->EndFrame();
-//         swapchainImage->QueueSubmit(currentCmdList);
-//         gfxDevice->EndFrame();
-//     }
-// };
-
-// while (!wndProvider->ShouldClose())
-// {
-//     timer.Tick(DummyUpdateStuff);
-// }
-
-// return 0;
-//}

@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <span>
+#include <cstdint>
 
 typedef struct lua_State lua_State;
 

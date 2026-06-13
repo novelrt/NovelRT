@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Texel.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
@@ -246,7 +247,7 @@ namespace NovelRT::Graphics
             GetDevice()->GetVulkanDevice(), _swapchain.Get(), std::numeric_limits<uint64_t>::max(),
             semaphore->GetVulkanSemaphore(), _fence->GetVulkanFence(), &_currentImageIndex);
 
-        if (acquireNextImageResult != VK_SUCCESS)
+        if (acquireNextImageResult != VK_SUCCESS && acquireNextImageResult != VK_SUBOPTIMAL_KHR)
         {
             throw std::runtime_error("Failed to acquire next VkImage! Reason: " +
                                      std::to_string(acquireNextImageResult));
