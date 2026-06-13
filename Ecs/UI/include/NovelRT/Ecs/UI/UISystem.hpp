@@ -90,11 +90,9 @@ namespace NovelRT::Ecs::UI
                 {
                     Ecs::UI::Components::UIButton button{};
                     Ecs::Components::TransformComponent transform{};
-                    Ecs::UI::Components::UIClickEvent clickEvent{};
 
                     if (buttons.TryGetComponent(element.entity, button) 
-                        && transforms.TryGetComponent(element.entity, transform)
-                        && clickEvents.TryGetComponent(element.entity, clickEvent))
+                        && transforms.TryGetComponent(element.entity, transform))
                     {
                         //Gotta push styling first, then call button
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(
@@ -121,10 +119,12 @@ namespace NovelRT::Ecs::UI
                             button.textColour.getBScalar(), 
                             button.textColour.getAScalar()));
 
+                        ImGui::SetCursorPos(ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
+
                         if (ImGui::Button(button.label, ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale)))
                         {
                             Ecs::UI::Components::UIClickEvent clickEvent{};
-                            clickEvent.eventId = clickEvent.eventId;
+                            clickEvent.eventId = button.eventId;
                             clickEvents.AddComponent(element.entity, clickEvent);
                         }
 

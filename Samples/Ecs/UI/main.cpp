@@ -160,7 +160,6 @@ class UISetupSystem : public IEcsSystem
 private:
     bool _firstPass = true;
 
-
 public:
 
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
@@ -184,12 +183,130 @@ public:
         graphView.AddComponent(rootId, EntityGraphComponent{});
 
         EntityGraphView rootView{catalogue, rootId, EntityGraphComponent{}};
-        unused(rootView);
+        
+        // Now the text
+        auto textId = catalogue.CreateEntity();
+
+        elementView.AddComponent(textId, UIElement{textId, UIComponentType::Text});
+        textView.AddComponent(textId, UIText{textId, "", RGBAColour(255, 255, 255, 255)});
+        graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
+        rootView.AddInsertChildInstruction(textId);
+
+        // Now the button - ordering is important!
+        auto buttonId = catalogue.CreateEntity();
+        uint64_t clickEventId = 1;  // any number for this example will do, but you should be very explicit on event Ids in real systems
+        elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
+        buttonView.AddComponent(buttonId, UIButton{
+            "Next", 
+            clickEventId,
+            NovelRT::Graphics::RGBAColour{0, 102, 204, 255},   // bg 
+            NovelRT::Graphics::RGBAColour{0, 82, 163, 255},   // active
+            NovelRT::Graphics::RGBAColour{0, 119, 255, 255},   // hovered
+            NovelRT::Graphics::RGBAColour{255, 255, 255, 255},   // text   
+        });
+        transformView.AddComponent(buttonId, TransformComponent{GeoVector2F(500.0f, 150.0f), GeoVector2F(80.0f, 30.0f), 0.0f});
+        graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId});
+        rootView.AddInsertChildInstruction(buttonId);
+
     }
 };
 
+class UIInteractionSystem : public IEcsSystem
+{
+private:
+    std::optional<EntityId> _button;
+    std::optional<EntityId> _text;
+    uint32_t _strIndex = 0;
+
+    std::vector<std::string> _story{
+        "Hello!",
+        "I'm going to get milk, now...",
+        "...",
+        "...",
+        "*30 years later*",
+        "..."
+    };
+
+public:
+    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    {
+        auto [elementView, clickEvents, textView, buttonView, spriteView]
+            = catalogue.GetComponentViews<UIElement, UIClickEvent, UIText, UIButton, Sprite>();
+
+        // You may want to cache these entities for now, but I'm not
+        // so we're going to search for them since there's a singular button and text object.
+        if (!_button.has_value() || !_text.has_value())
+        {
+            for (auto [id, element] : elementView)
+            {
+                if (!_button.has_value() && element.Type == UIComponentType::Button)
+                {
+                    _button = id;
+                }
+                if (!_text.has_value() && element.Type == UIComponentType::Text)
+                {
+                    _text = id;
+                    UIText initialText{};
+                    if(textView.TryGetComponent(id, initialText))
+                    {
+                        textView.PushComponentUpdateInstruction(id, UIText{id, _story[_strIndex].c_str(), initialText.colour});
+                    }
+                }
+            }
+        }
+
+        if (_button.has_value())
+        {
+            //Click events can have event "id"s but there's only one here.
+            UIClickEvent click{};
+            if (clickEvents.TryGetComponent(_button.value(), click))
+            {
+                _strIndex++;
+
+                if (_text.has_value())
+                {
+                    UIText text{};
+                    if (textView.TryGetComponent(_text.value(), text))
+                    {
+                        if (_strIndex < _story.size())
+                        {
+                            text.textValue = _story[_strIndex].c_str();
+                        }
+                        else
+                        {
+                            text.textValue = "...";
+
+                            //slightly fade the milk away...
+                            for(auto [spriteId, component] : spriteView)
+                            {
+                                RGBAColour tinted = component.tint;
+                                if (tinted.a > 5)
+                                {
+                                    tinted.a -= 25;
+                                    spriteView.PushComponentUpdateInstruction(spriteId, Sprite{component.assetId, tinted});
+                                }
+                                else
+                                {
+                                    tinted.a = 0;
+                                    spriteView.PushComponentUpdateInstruction(spriteId, Sprite{component.assetId, tinted});
+                                }
+                            }
+                        }
+                        textView.PushComponentUpdateInstruction(_text.value(), text);
+                    }
+                }
+
+                //remove the event
+                clickEvents.RemoveComponent(_button.value());
+            }
+        }
+    }
+};
+
+
 int main()
 {
+    //Setup your providers, etc.
     auto resourceLoader = std::make_shared<DesktopResourceLoader>();
     resourceLoader
         ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
@@ -211,6 +328,8 @@ int main()
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
+
+    //Build your default systems
     AddDefaults(builder);
     auto& gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
@@ -238,7 +357,7 @@ int main()
         .WithGraphicsMemoryAllocator(memoryAllocator)
         .WithWindowProvider(wndProvider)
         .WithInputProvider(inputProvider)
-        .WithDefaultUIProvider(true)
+        .WithDefaultUIProvider(false)
         .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
         .WithGraphicsBuilder(gfxBuilder);
@@ -249,13 +368,16 @@ int main()
     auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
+    //Add your systems and configure them
     auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
-    auto uiSetupSystem = std::make_shared<UISetupSystem>(); //add system
+    auto uiSetupSystem = std::make_shared<UISetupSystem>();
+    auto clickSystem = std::make_shared<UIInteractionSystem>();
 
     builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
                       { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
+    builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
 
 
     SystemScheduler scheduler = builder.Build();

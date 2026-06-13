@@ -12,12 +12,13 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIButton
     {
-        EntityId entity = std::numeric_limits<EntityId>::max();
         const char* label = "";
+        uint64_t eventId = std::numeric_limits<uint64_t>::max();
         NovelRT::Graphics::RGBAColour bgColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
         NovelRT::Graphics::RGBAColour activeColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
         NovelRT::Graphics::RGBAColour hoveredColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
         NovelRT::Graphics::RGBAColour textColour = NovelRT::Graphics::RGBAColour(255, 255, 255, 255);
+        
 
         inline UIButton& operator+=(const UIButton& other)
         {
