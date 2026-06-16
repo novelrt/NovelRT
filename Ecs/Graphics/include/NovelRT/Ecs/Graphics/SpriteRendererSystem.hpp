@@ -329,20 +329,20 @@ namespace NovelRT::Ecs::Graphics
                 for (auto& cameraData : worldSpaceCameras)
                 {
 
-                    auto finalScale = Maths::GeoVector2F(
+                    auto finalScale = cameraData.camera.ToVector2F(
                         (texture.textureSize.x / static_cast<float>(cameraData.camera.referenceResolutionWidth)) *
                             transform.scale.x,
                         (texture.textureSize.y / static_cast<float>(cameraData.camera.referenceResolutionHeight)) *
                             transform.scale.y);
 
-                    auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
-                    model.Translate(Maths::GeoVector3F(transform.position.x, transform.position.y, 0.0f));
+                    auto model = cameraData.camera.GetDefaultIdentity();
+                    model.Translate(cameraData.camera.ToVector3F(transform, 0.0f));
                     model.Rotate(transform.rotationInRadians);
                     model.Scale(finalScale);
 
                     SpritePushConstant pushConstant{
                         .model = model,
-                        .tintColour = Maths::GeoVector4F(sprite.tint.getRScalar(), sprite.tint.getGScalar(),
+                        .tintColour = cameraData.camera.ToVector4F(sprite.tint.getRScalar(), sprite.tint.getGScalar(),
                                                          sprite.tint.getBScalar(), sprite.tint.getAScalar())};
 
                     currentCmdList->CmdPushConstants(
@@ -360,17 +360,15 @@ namespace NovelRT::Ecs::Graphics
 
                     currentCmdList->CmdSetViewport(viewportInfoStruct);
                     currentCmdList->CmdSetScissor(
-                        Maths::GeoVector2F(cameraData.viewport.x, cameraData.viewport.y),
-                        Maths::GeoVector2F(cameraData.viewport.width, cameraData.viewport.height));
+                        cameraData.camera.ToVector2F(cameraData.viewport),
+                        cameraData.camera.ToVector2F(cameraData.viewport));
 
-                    auto view = Maths::GeoMatrix4x4F::CreateFromLookAt(
-                        Maths::GeoVector3F(cameraData.transform.position.x, cameraData.transform.position.y, -1.0f),
-                        Maths::GeoVector3F(cameraData.transform.position.x, cameraData.transform.position.y, 0.0f),
-                        Maths::GeoVector3F(0.0f, -1.0f, 0.0f));
+                    auto view = cameraData.camera.CreateFromLookAt(
+                        cameraData.camera.ToVector3F(cameraData.transform, -1.0f),
+                        cameraData.camera.ToVector3F(cameraData.transform, 0.0f),
+                        cameraData.camera.ToVector3F(0.0f, -1.0f, 0.0f));
 
-                    auto projection = Maths::GeoMatrix4x4F::CreateOrthographic(
-                        cameraData.camera.left, cameraData.camera.right, cameraData.camera.bottom,
-                        cameraData.camera.top, cameraData.camera.nearPlane, cameraData.camera.farPlane);
+                    auto projection = cameraData.camera.ToOrthographic(cameraData.camera);
 
                     auto& constantBufferRegion = _cameraConstantBuffers.at(cameraData.entityId);
                     auto pCameraData = constantBufferRegion->template Map<CameraConstantBuffer>();
