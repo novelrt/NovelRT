@@ -99,7 +99,7 @@ namespace NovelRT::Ecs::Graphics
         {
         }
 
-        void SetBackgroundColour(NovelRT::Graphics::RGBAColour& colour)
+        void SetBackgroundColour(const NovelRT::Graphics::RGBAColour& colour)
         {
             _backgroundColour = colour;
         }
