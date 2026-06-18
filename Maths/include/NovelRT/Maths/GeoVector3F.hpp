@@ -60,10 +60,11 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a GeoVector3F based on an already existing GeoVector2F.
          *
-         * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector3F's X and Y components. Optional Z value.
-         * @return A new GeoVector3F with the given GeoVector2F X and Y components, with the Z component set to zero if no value is passed.
+         * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector3F's X and Y components.
+         * @param z The value to use for the z component of the vector. Defaults to 0 if none is specified.
+         * @return A new GeoVector3F with the given GeoVector2F X and Y components, with the Z components.
          */
-        GeoVector3F(GeoVector2F vec2Value, float z = 0.f) noexcept : x(vec2Value.x), y(vec2Value.y), z(z)
+        GeoVector3F(GeoVector2F vec2Value, float z = 0.0f) noexcept : x(vec2Value.x), y(vec2Value.y), z(z)
         {
         }
 
