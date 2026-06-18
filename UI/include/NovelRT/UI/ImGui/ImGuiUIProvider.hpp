@@ -18,6 +18,7 @@
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
+#include <NovelRT/Utilities/Memory.hpp>
 #include <NovelRT/Utilities/Paths.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 #include <NovelRT/Windowing/WindowProvider.hpp>
@@ -633,10 +634,12 @@ namespace NovelRT::UI::ImGui
 
             // Create a staging buffer region for texture
             auto stagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-            auto textureData = textureStagingBuffer->template Map<uint32_t>(stagingBufferRegion);
+            auto textureData = textureStagingBuffer->template Map<uint8_t>(stagingBufferRegion);
 
             // Write the data over before copying
-            memcpy(textureData.data(), pixels, (width * height) * sizeof(char) * 4);
+            auto pixelSpan = NovelRT::Utilities::Span<const uint8_t>(pixels, width * height * 4);
+            //memcpy(textureData.data(), pixels, (width * height) * sizeof(char) * 4);
+            NovelRT::Utilities::Memory::Copy(pixelSpan, textureData);
             textureStagingBuffer->UnmapAndWrite(stagingBufferRegion);
 
             // Set texture ID so that ImGui can refer back to proper id during render

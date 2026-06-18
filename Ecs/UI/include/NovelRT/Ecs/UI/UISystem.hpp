@@ -365,7 +365,7 @@ namespace NovelRT::Ecs::UI
             Render(catalogue);
         }
 
-        NovelRT::Ecs::Graphics::Components::RenderPassId GetAssignedRenderPassId() const
+        NovelRT::Ecs::Graphics::Components::RenderPassId& GetAssignedRenderPassId()
         {
             return _renderPassId;
         }

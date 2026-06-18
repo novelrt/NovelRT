@@ -50,6 +50,6 @@ namespace NovelRT::Utilities::Memory
             throw Exceptions::InvalidOperationException("The destination span is not large enough");
         }
 
-        memcpy(destination.data(), source.data(), source.size());
+        memcpy(destination.data(), source.data(), source.size_bytes());
     }
 }

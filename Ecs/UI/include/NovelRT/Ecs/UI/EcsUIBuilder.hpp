@@ -117,7 +117,7 @@ namespace NovelRT::Ecs::UI
             builder.ConfigureRenderPasses(
                 [this](NovelRT::Ecs::Graphics::RenderPassManager<TGraphicsBackend>& renderPassManager)
                 {
-                    auto id = _system->GetAssignedRenderPassId();
+                    auto& id = _system->GetAssignedRenderPassId();
                     id = renderPassManager.RegisterRenderPass(_uiProvider->GetDedicatedRenderPass());
                 });
             return *this;
