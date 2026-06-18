@@ -54,8 +54,8 @@ namespace NovelRT::Ecs::Graphics::Components
         [[nodiscard]] static Maths::GeoMatrix4x4F CreateViewMatrix(const NovelRT::Ecs::Components::TransformComponent& transform)
         {
             return Maths::GeoMatrix4x4F::CreateFromLookAt(
-                transform.TransformToVector3F(transform, -1.0f),
-                transform.TransformToVector3F(transform, 0.0f),
+                NovelRT::Ecs::Components::TransformComponent::TransformToVector3F(transform, -1.0f),
+                NovelRT::Ecs::Components::TransformComponent::TransformToVector3F(transform, 0.0f),
                 Maths::GeoVector3F(0.0f, -1.0f, 0.0f));
         }
     };
