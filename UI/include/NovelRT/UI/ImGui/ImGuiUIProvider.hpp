@@ -600,7 +600,8 @@ namespace NovelRT::UI::ImGui
         inline void UploadFontData(std::shared_ptr<Graphics::GraphicsCmdList<TGraphicsBackend>> cmdList)
         {
             uint8_t* pixels;
-            int32_t width, height;
+            int32_t width;
+            int32_t height;
             auto& io = ::ImGui::GetIO();
             io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
