@@ -75,22 +75,22 @@ namespace NovelRT::Maths
         /**
          * @brief Creates a GeoVector4F with the given GeoVector2F.
          *
-         * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector4F's X and Y components.
+         * @param vec2Value The GeoVector2F whose X and Y components are used for this GeoVector4F's X and Y components. Optional Z and W values. 
          * @return A new GeoVector4F with the given GeoVector2F X and Y components, with the Z and W components set to
-         * zero.
+         * zero if no values are passed.
          */
-        GeoVector4F(GeoVector2F vec2Value) noexcept : x(vec2Value.x), y(vec2Value.y), z(0.0f), w(0.0f)
+        GeoVector4F(GeoVector2F vec2Value, float z = 0.f, float w = 0.f) noexcept : x(vec2Value.x), y(vec2Value.y), z(z), w(w)
         {
         }
 
         /**
          * @brief Creates a GeoVector4F with the given GeoVector3F.
          *
-         * @param vec3Value The GeoVector2F whose X, Y and Z components are used for this GeoVector4F X, Y and Z
+         * @param vec3Value The GeoVector2F whose X, Y and Z components are used for this GeoVector4F X, Y and Z. Optional W values
          * components.
-         * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero.
+         * @return A new GeoVector4F with the given GeoVector3F X, Y and Z components, with the W component set to zero if no value is passed. 
          */
-        GeoVector4F(const GeoVector3F& vec3Value) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(0.f)
+        GeoVector4F(const GeoVector3F& vec3Value, float w = 0.f) noexcept : x(vec3Value.x), y(vec3Value.y), z(vec3Value.z), w(w)
         {
         }
 
