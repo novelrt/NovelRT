@@ -44,50 +44,29 @@ namespace NovelRT::Ecs::Graphics::Components
             return !(*this == other);
         }
 
-        [[nodiscard]] static Maths::GeoVector2F ToVector2F(float x , float y)
-        {
-            return Maths::GeoVector2F(x, y);
-        }
-
-        [[nodiscard]] static Maths::GeoVector2F ToVector2F(Components::Viewport &viewport)
+        [[nodiscard]] static Maths::GeoVector2F ViewportToVector2F(Components::Viewport &viewport)
         {
             return Maths::GeoVector2F(viewport.x, viewport.y);
         }
 
-        [[nodiscard]] static Maths::GeoVector3F ToVector3F(float x, float y, float z)
-        {
-            return Maths::GeoVector3F(x, y, z);
-        }
-
-        [[nodiscard]] static Maths::GeoVector3F ToVector3F(NovelRT::Ecs::Components::TransformComponent transform, float z)
+        [[nodiscard]] static Maths::GeoVector3F TransformToVector3F(NovelRT::Ecs::Components::TransformComponent transform, float z)
         {
             return Maths::GeoVector3F(transform.position.x , transform.position.y, z);
         }
 
-        [[nodiscard]] static Maths::GeoVector4F ToVector4F(float x, float y, float z, float w)
-        {
-            return Maths::GeoVector4F(x,y,z,w);
-        }
-
-        [[nodiscard]] static Maths::GeoMatrix4x4F ToOrthographic(Camera &camera)
+        [[nodiscard]] static Maths::GeoMatrix4x4F CreateProjectionMatrix(Camera &camera)
         {
             return Maths::GeoMatrix4x4F::CreateOrthographic(
                         camera.left, camera.right, camera.bottom,
                         camera.top, camera.nearPlane, camera.farPlane);
         }
 
-        [[nodiscard]] static Maths::GeoMatrix4x4F GetDefaultIdentity()
-        {
-            return Maths::GeoMatrix4x4F::GetDefaultIdentity();
-        }
-
-        [[nodiscard]] static Maths::GeoMatrix4x4F CreateFromLookAt(Maths::GeoVector3F eye, Maths::GeoVector3F centre, Maths::GeoVector3F up)
+        [[nodiscard]] static Maths::GeoMatrix4x4F CreateViewMatrix(NovelRT::Ecs::Components::TransformComponent &transform)
         {
             return Maths::GeoMatrix4x4F::CreateFromLookAt(
-                eye,
-                centre,
-                up
-            );
+                TransformToVector3F(transform, -1.0f),
+                TransformToVector3F(transform, 0.0f),
+                Maths::GeoVector3F(0.0f, -1.0f, 0.0f));
         }
     };
 }

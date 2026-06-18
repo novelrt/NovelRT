@@ -329,20 +329,20 @@ namespace NovelRT::Ecs::Graphics
                 for (auto& cameraData : worldSpaceCameras)
                 {
 
-                    auto finalScale = cameraData.camera.ToVector2F(
+                    auto finalScale = Maths::GeoVector2F(
                         (texture.textureSize.x / static_cast<float>(cameraData.camera.referenceResolutionWidth)) *
                             transform.scale.x,
                         (texture.textureSize.y / static_cast<float>(cameraData.camera.referenceResolutionHeight)) *
                             transform.scale.y);
 
-                    auto model = cameraData.camera.GetDefaultIdentity();
-                    model.Translate(cameraData.camera.ToVector3F(transform, 0.0f));
+                    auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
+                    model.Translate(cameraData.camera.TransformToVector3F(transform, 0.0f));
                     model.Rotate(transform.rotationInRadians);
                     model.Scale(finalScale);
 
                     SpritePushConstant pushConstant{
                         .model = model,
-                        .tintColour = cameraData.camera.ToVector4F(sprite.tint.getRScalar(), sprite.tint.getGScalar(),
+                        .tintColour = Maths::GeoVector4F(sprite.tint.getRScalar(), sprite.tint.getGScalar(),
                                                          sprite.tint.getBScalar(), sprite.tint.getAScalar())};
 
                     currentCmdList->CmdPushConstants(
@@ -360,15 +360,12 @@ namespace NovelRT::Ecs::Graphics
 
                     currentCmdList->CmdSetViewport(viewportInfoStruct);
                     currentCmdList->CmdSetScissor(
-                        cameraData.camera.ToVector2F(cameraData.viewport),
-                        cameraData.camera.ToVector2F(cameraData.viewport));
+                        cameraData.camera.ViewportToVector2F(cameraData.viewport),
+                        cameraData.camera.ViewportToVector2F(cameraData.viewport));
 
-                    auto view = cameraData.camera.CreateFromLookAt(
-                        cameraData.camera.ToVector3F(cameraData.transform, -1.0f),
-                        cameraData.camera.ToVector3F(cameraData.transform, 0.0f),
-                        cameraData.camera.ToVector3F(0.0f, -1.0f, 0.0f));
+                    auto view = cameraData.camera.CreateViewMatrix(cameraData.transform);
 
-                    auto projection = cameraData.camera.ToOrthographic(cameraData.camera);
+                    auto projection = cameraData.camera.CreateProjectionMatrix(cameraData.camera);
 
                     auto& constantBufferRegion = _cameraConstantBuffers.at(cameraData.entityId);
                     auto pCameraData = constantBufferRegion->template Map<CameraConstantBuffer>();
