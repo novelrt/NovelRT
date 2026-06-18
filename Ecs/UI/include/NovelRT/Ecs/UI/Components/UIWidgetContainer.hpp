@@ -11,9 +11,7 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIWidgetContainer
     {
-        EntityId entity = std::numeric_limits<EntityId>::max();
         const char* title = "";
-        // imgui window flags
         bool closeable = false;
 
         inline UIWidgetContainer& operator+=(const UIWidgetContainer& other)
@@ -25,11 +23,6 @@ namespace NovelRT::Ecs::UI::Components
         [[nodiscard]] inline bool operator==(const UIWidgetContainer& other) const noexcept
         {
             return title == other.title && closeable == other.closeable; // && flags == other.flags;
-        }
-
-        [[nodiscard]] inline bool operator!=(const UIWidgetContainer& other) const noexcept
-        {
-            return !(*this == other);
         }
     };
 }

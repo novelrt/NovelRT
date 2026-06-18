@@ -12,7 +12,6 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIText
     {
-        EntityId entity = std::numeric_limits<EntityId>::max();
         const char* textValue = "";
         NovelRT::Graphics::RGBAColour colour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
 
@@ -26,11 +25,6 @@ namespace NovelRT::Ecs::UI::Components
         {
             return textValue == other.textValue && colour.r == other.colour.r && colour.g == other.colour.g &&
                    colour.b == other.colour.b && colour.a == other.colour.a;
-        }
-
-        [[nodiscard]] inline bool operator!=(const UIText& other) const noexcept
-        {
-            return !(*this == other);
         }
     };
 }

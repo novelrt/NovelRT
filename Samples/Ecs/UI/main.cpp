@@ -176,7 +176,7 @@ public:
         auto rootId = catalogue.CreateEntity();
 
         elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
-        containerView.AddComponent(rootId, UIWidgetContainer{rootId, "NarrativeTextbox", false});
+        containerView.AddComponent(rootId, UIWidgetContainer{"NarrativeTextbox", false});
         transformView.AddComponent(rootId,
                                    TransformComponent{GeoVector2F(100.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
@@ -187,7 +187,7 @@ public:
         auto textId = catalogue.CreateEntity();
 
         elementView.AddComponent(textId, UIElement{textId, UIComponentType::Text});
-        textView.AddComponent(textId, UIText{textId, "", RGBAColour(255, 255, 255, 255)});
+        textView.AddComponent(textId, UIText{"", RGBAColour(255, 255, 255, 255)});
         graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
         rootView.AddInsertChildInstruction(textId);
 
@@ -198,7 +198,9 @@ public:
         elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
         buttonView.AddComponent(buttonId,
                                 UIButton{
-                                    "Next", clickEventId, NovelRT::Graphics::RGBAColour{0, 102, 204, 255}, // bg
+                                    "Next",
+                                    clickEventId,
+                                    NovelRT::Graphics::RGBAColour{0, 102, 204, 255}, // bg
                                     NovelRT::Graphics::RGBAColour{0, 82, 163, 255},                        // active
                                     NovelRT::Graphics::RGBAColour{0, 119, 255, 255},                       // hovered
                                     NovelRT::Graphics::RGBAColour{255, 255, 255, 255},                     // text
@@ -242,7 +244,7 @@ public:
                     if (textView.TryGetComponent(id, initialText))
                     {
                         textView.PushComponentUpdateInstruction(
-                            id, UIText{id, _story[_strIndex].c_str(), initialText.colour});
+                            id, UIText{_story[_strIndex].c_str(), initialText.colour});
                     }
                 }
             }

@@ -22,10 +22,5 @@ namespace NovelRT::Ecs::UI::Components
         {
             return eventId == other.eventId;
         }
-
-        [[nodiscard]] inline bool operator!=(const UIClickEvent& other) const noexcept
-        {
-            return !(*this == other);
-        }
     };
 }

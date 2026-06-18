@@ -27,10 +27,5 @@ namespace NovelRT::Ecs::UI::Components
         {
             return Type == other.Type;
         }
-
-        [[nodiscard]] inline bool operator!=(const UIElement& other) const noexcept
-        {
-            return !(*this == other);
-        }
     };
 }

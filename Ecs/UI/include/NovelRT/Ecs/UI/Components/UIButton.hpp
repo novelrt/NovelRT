@@ -30,10 +30,5 @@ namespace NovelRT::Ecs::UI::Components
             return label == other.label && bgColour == other.bgColour && activeColour == other.activeColour &&
                    hoveredColour == other.hoveredColour && textColour == other.textColour;
         }
-
-        [[nodiscard]] inline bool operator!=(const UIButton& other) const noexcept
-        {
-            return !(*this == other);
-        }
     };
 }
