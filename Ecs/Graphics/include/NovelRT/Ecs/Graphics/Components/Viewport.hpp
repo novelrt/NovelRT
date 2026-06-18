@@ -26,5 +26,16 @@ namespace NovelRT::Ecs::Graphics::Components
         {
             return !(*this == other);
         }
+
+
+        [[nodiscard]] static Maths::GeoVector2F ViewportDimensionsToVector2F(const Components::Viewport& viewport)
+        {
+            return Maths::GeoVector2F(viewport.width, viewport.height);
+        }
+
+        [[nodiscard]] static Maths::GeoVector2F ViewportLocationToVector2F(const Components::Viewport& viewport)
+        {
+            return Maths::GeoVector2F(viewport.x, viewport.y);
+        }
     };
 }
