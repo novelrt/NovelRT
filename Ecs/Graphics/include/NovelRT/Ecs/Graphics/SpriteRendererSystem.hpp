@@ -336,7 +336,7 @@ namespace NovelRT::Ecs::Graphics
                             transform.scale.y);
 
                     auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
-                    model.Translate(cameraData.camera.TransformToVector3F(transform, 0.0f));
+                    model.Translate(cameraData.transform.TransformToVector3F(transform, 0.0f));
                     model.Rotate(transform.rotationInRadians);
                     model.Scale(finalScale);
 
@@ -360,8 +360,8 @@ namespace NovelRT::Ecs::Graphics
 
                     currentCmdList->CmdSetViewport(viewportInfoStruct);
                     currentCmdList->CmdSetScissor(
-                        cameraData.camera.ViewportToVector2F(cameraData.viewport),
-                        cameraData.camera.ViewportToVector2F(cameraData.viewport));
+                        cameraData.viewport.ViewportLocationToVector2F(cameraData.viewport),
+                        cameraData.viewport.ViewportDimensionsToVector2F(cameraData.viewport));
 
                     auto view = cameraData.camera.CreateViewMatrix(cameraData.transform);
 

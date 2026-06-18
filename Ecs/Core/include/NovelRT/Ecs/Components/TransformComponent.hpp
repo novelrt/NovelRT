@@ -46,5 +46,10 @@ namespace NovelRT::Ecs::Components
         {
             return !(lhs == rhs);
         }
+
+        [[nodiscard]] static Maths::GeoVector3F TransformToVector3F(const NovelRT::Ecs::Components::TransformComponent& transform, float z)
+        {
+            return Maths::GeoVector3F(transform.position.x, transform.position.y, z);
+        }
     };
 }

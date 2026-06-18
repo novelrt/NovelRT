@@ -3,10 +3,11 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Maths/GeoVector3F.hpp>
-#include <NovelRT/Maths/GeoMatrix4x4F.hpp>
-#include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
 #include <NovelRT/Ecs/Components/TransformComponent.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
+
+#include <NovelRT/Maths/GeoMatrix4x4F.hpp>
+#include <NovelRT/Maths/GeoVector3F.hpp>
 
 namespace NovelRT::Ecs::Graphics::Components
 {
@@ -44,28 +45,18 @@ namespace NovelRT::Ecs::Graphics::Components
             return !(*this == other);
         }
 
-        [[nodiscard]] static Maths::GeoVector2F ViewportToVector2F(Components::Viewport &viewport)
-        {
-            return Maths::GeoVector2F(viewport.x, viewport.y);
-        }
-
-        [[nodiscard]] static Maths::GeoVector3F TransformToVector3F(NovelRT::Ecs::Components::TransformComponent transform, float z)
-        {
-            return Maths::GeoVector3F(transform.position.x , transform.position.y, z);
-        }
-
-        [[nodiscard]] static Maths::GeoMatrix4x4F CreateProjectionMatrix(Camera &camera)
+        [[nodiscard]] static Maths::GeoMatrix4x4F CreateProjectionMatrix(const Camera& camera)
         {
             return Maths::GeoMatrix4x4F::CreateOrthographic(
                         camera.left, camera.right, camera.bottom,
                         camera.top, camera.nearPlane, camera.farPlane);
         }
 
-        [[nodiscard]] static Maths::GeoMatrix4x4F CreateViewMatrix(NovelRT::Ecs::Components::TransformComponent &transform)
+        [[nodiscard]] static Maths::GeoMatrix4x4F CreateViewMatrix(const NovelRT::Ecs::Components::TransformComponent& transform)
         {
             return Maths::GeoMatrix4x4F::CreateFromLookAt(
-                TransformToVector3F(transform, -1.0f),
-                TransformToVector3F(transform, 0.0f),
+                transform.TransformToVector3F(transform, -1.0f),
+                transform.TransformToVector3F(transform, 0.0f),
                 Maths::GeoVector3F(0.0f, -1.0f, 0.0f));
         }
     };
