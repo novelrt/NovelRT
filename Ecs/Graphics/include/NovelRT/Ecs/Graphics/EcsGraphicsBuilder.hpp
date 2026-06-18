@@ -44,8 +44,7 @@ namespace NovelRT::Ecs::Graphics
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
-        NovelRT::Graphics::RGBAColour _backgroundColour{0,0,255,255};
-
+        NovelRT::Graphics::RGBAColour _backgroundColour{0, 0, 0, 255};
 
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
@@ -110,14 +109,14 @@ namespace NovelRT::Ecs::Graphics
 
         EcsGraphicsBuilder& WithDefaultBackgroundColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         {
-            _backgroundColour = NovelRT::Graphics::RGBAColour(r,g,b,a);
+            _backgroundColour = NovelRT::Graphics::RGBAColour(r, g, b, a);
             return *this;
         }
 
-
         EcsGraphicsBuilder& WithDefaultOrchestrator()
         {
-            auto orchestrator = std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager);
+            auto orchestrator =
+                std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager);
             orchestrator->SetBackgroundColour(_backgroundColour);
             return WithOrchestrator(orchestrator);
         }

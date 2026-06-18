@@ -4,4 +4,3 @@
 #include <NovelRT/Ecs/UI/Components/UIText.hpp>
 #include <NovelRT/Ecs/UI/Components/UIWidgetContainer.hpp>
 #include <NovelRT/Ecs/UI/UISystem.hpp>
-

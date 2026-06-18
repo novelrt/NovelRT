@@ -10,10 +10,10 @@
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/Components/TransformComponent.hpp>
 #include <NovelRT/Ecs/EntityGraphView.hpp>
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
-#include <NovelRT/Ecs/Components/TransformComponent.hpp>
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
@@ -63,26 +63,27 @@ namespace NovelRT::Ecs::UI
 
         void ParseElementCommands(Catalogue catalogue, Ecs::UI::Components::UIElement& element, float elementScale)
         {
-            auto [containers, buttons, textView, transforms, clickEvents] 
-                = catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer,
-                    Ecs::UI::Components::UIButton,
-                    Ecs::UI::Components::UIText,
-                    Ecs::Components::TransformComponent,
-                    Ecs::UI::Components::UIClickEvent>();
+            auto [containers, buttons, textView, transforms, clickEvents] =
+                catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer, Ecs::UI::Components::UIButton,
+                                            Ecs::UI::Components::UIText, Ecs::Components::TransformComponent,
+                                            Ecs::UI::Components::UIClickEvent>();
 
-            switch(element.Type)
+            switch (element.Type)
             {
                 case Ecs::UI::UIComponentType::Container:
                 {
                     Ecs::Components::TransformComponent transform{};
                     Ecs::UI::Components::UIWidgetContainer container{};
 
-                    if(containers.TryGetComponent(element.entity, container) 
-                        && transforms.TryGetComponent(element.entity, transform))
+                    if (containers.TryGetComponent(element.entity, container) &&
+                        transforms.TryGetComponent(element.entity, transform))
                     {
-                        ImGui::SetNextWindowSize(ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale));
-                        ImGui::SetNextWindowPos(ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
-                        ImGui::Begin(container.title, NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+                        ImGui::SetNextWindowSize(
+                            ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale));
+                        ImGui::SetNextWindowPos(
+                            ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
+                        ImGui::Begin(container.title, NULL,
+                                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
                     }
                     break;
                 }
@@ -91,37 +92,33 @@ namespace NovelRT::Ecs::UI
                     Ecs::UI::Components::UIButton button{};
                     Ecs::Components::TransformComponent transform{};
 
-                    if (buttons.TryGetComponent(element.entity, button) 
-                        && transforms.TryGetComponent(element.entity, transform))
+                    if (buttons.TryGetComponent(element.entity, button) &&
+                        transforms.TryGetComponent(element.entity, transform))
                     {
-                        //Gotta push styling first, then call button
-                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(
-                            button.bgColour.getRScalar(), 
-                            button.bgColour.getGScalar(), 
-                            button.bgColour.getBScalar(), 
-                            button.bgColour.getAScalar()));
+                        // Gotta push styling first, then call button
+                        ImGui::PushStyleColor(ImGuiCol_Button,
+                                              ImVec4(button.bgColour.getRScalar(), button.bgColour.getGScalar(),
+                                                     button.bgColour.getBScalar(), button.bgColour.getAScalar()));
 
-                        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(
-                            button.hoveredColour.getRScalar(),
-                            button.hoveredColour.getGScalar(),
-                            button.hoveredColour.getBScalar(),
-                            button.hoveredColour.getAScalar()));
+                        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(button.hoveredColour.getRScalar(),
+                                                                             button.hoveredColour.getGScalar(),
+                                                                             button.hoveredColour.getBScalar(),
+                                                                             button.hoveredColour.getAScalar()));
 
-                        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(
-                            button.activeColour.getRScalar(),
-                            button.activeColour.getGScalar(),
-                            button.activeColour.getBScalar(), 
-                            button.activeColour.getAScalar()));
+                        ImGui::PushStyleColor(ImGuiCol_ButtonActive,
+                                              ImVec4(button.activeColour.getRScalar(), button.activeColour.getGScalar(),
+                                                     button.activeColour.getBScalar(),
+                                                     button.activeColour.getAScalar()));
 
-                        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(
-                            button.textColour.getRScalar(), 
-                            button.textColour.getGScalar(),
-                            button.textColour.getBScalar(), 
-                            button.textColour.getAScalar()));
+                        ImGui::PushStyleColor(ImGuiCol_Text,
+                                              ImVec4(button.textColour.getRScalar(), button.textColour.getGScalar(),
+                                                     button.textColour.getBScalar(), button.textColour.getAScalar()));
 
-                        ImGui::SetCursorPos(ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
+                        ImGui::SetCursorPos(
+                            ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
 
-                        if (ImGui::Button(button.label, ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale)))
+                        if (ImGui::Button(button.label,
+                                          ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale)))
                         {
                             Ecs::UI::Components::UIClickEvent clickEvent{};
                             clickEvent.eventId = button.eventId;
@@ -139,12 +136,10 @@ namespace NovelRT::Ecs::UI
 
                     if (textView.TryGetComponent(element.entity, text))
                     {
-                        //same pattern - push style, write, pop style;
-                        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(
-                            text.colour.getRScalar(),
-                            text.colour.getGScalar(),
-                            text.colour.getBScalar(), 
-                            text.colour.getAScalar()));
+                        // same pattern - push style, write, pop style;
+                        ImGui::PushStyleColor(ImGuiCol_Text,
+                                              ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
+                                                     text.colour.getBScalar(), text.colour.getAScalar()));
 
                         ImGui::Text("%s", text.textValue);
 
@@ -157,7 +152,6 @@ namespace NovelRT::Ecs::UI
                     break;
                 }
             }
-
         }
 
         void EnumerateChildren(EntityGraphView& graph,
@@ -184,19 +178,19 @@ namespace NovelRT::Ecs::UI
                                             Graphics::Components::BuiltCommandList<TGraphicsBackend>,
                                             Graphics::Components::TrackedSemaphore<TGraphicsBackend>>();
 
-            //create upload command list
+            // create upload command list
             auto uiContext = _gfxDevice->CreateGraphicsContext();
             auto uploadCmdList = uiContext->CreateCmdList();
 
             // upload data to gpu
             if (_uiProvider->UploadToGPU(uploadCmdList))
             {
-                //if we have data to upload to the gpu, then submit the commands.
+                // if we have data to upload to the gpu, then submit the commands.
                 std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{uploadCmdList};
 
                 // create the semaphore to signal when uploading
-                std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
-                                    uint64_t>>
+                std::vector<
+                    std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
                     uploadSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
 
                 _gfxDevice->QueueSubmit(lists, uploadSemaphores);
@@ -210,7 +204,7 @@ namespace NovelRT::Ecs::UI
                 // Create unique id for tracking upload
                 auto uploadId = catalogue.CreateEntity();
 
-                //add upload semaphore to tracked catalogue
+                // add upload semaphore to tracked catalogue
                 trackedSemaphores.AddComponent(uploadId, newUploadTracker);
 
                 // create entity id for drawing
@@ -259,12 +253,11 @@ namespace NovelRT::Ecs::UI
 
         void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
         {
-            //1. Start frame unanimously - this is for debug/metric windows
+            // 1. Start frame unanimously - this is for debug/metric windows
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
 
-            auto [graph, elementView] 
-                = catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent,
-                    Ecs::UI::Components::UIElement>();
+            auto [graph, elementView] =
+                catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent, Ecs::UI::Components::UIElement>();
 
             // 2. Determine the order in which we should enumerate the entities based on... something?
             std::map<EntityId, Ecs::UI::Components::UIElement> elements{};
@@ -288,32 +281,30 @@ namespace NovelRT::Ecs::UI
 
             if (elements.empty())
             {
-                //end the frame now so at least debug stuff displays
+                // end the frame now so at least debug stuff displays
                 _uiProvider->EndFrame();
                 return;
             }
 
-            //3. Enumerate the child elements
+            // 3. Enumerate the child elements
             for (auto& root : roots)
             {
                 EnumerateChildren(root, elementView, ordered);
             }
 
-            
-            
-            //4a - SCALE EVERYTHING
-            // This lets us make sure that imgui tracks with the screen properly - otherwise it does not adjust
-            // with other elements.
+            // 4a - SCALE EVERYTHING
+            //  This lets us make sure that imgui tracks with the screen properly - otherwise it does not adjust
+            //  with other elements.
             auto& io = ::ImGui::GetIO();
             if (_startingDisplaySize.x == 0.0f)
                 _startingDisplaySize = Maths::GeoVector2F(io.DisplaySize.x, io.DisplaySize.y);
 
-            //hack to resize the font scale properly but w.e.
-            float resizeScale = ((io.DisplaySize.x / _startingDisplaySize.x)
-                               + (io.DisplaySize.y / _startingDisplaySize.y)) * 0.5f;
+            // hack to resize the font scale properly but w.e.
+            float resizeScale =
+                ((io.DisplaySize.x / _startingDisplaySize.x) + (io.DisplaySize.y / _startingDisplaySize.y)) * 0.5f;
             io.FontGlobalScale *= resizeScale;
 
-            //4b. write Imgui commands
+            // 4b. write Imgui commands
             std::vector<std::pair<EntityId, int32_t>> containers;
 
             for (auto& [entity, depth] : ordered)
@@ -342,10 +333,9 @@ namespace NovelRT::Ecs::UI
                 ImGui::End();
                 containers.pop_back();
             }
-            
-            //5. End imgui frame so all items are writen to draw data
-            _uiProvider->EndFrame();
 
+            // 5. End imgui frame so all items are writen to draw data
+            _uiProvider->EndFrame();
         }
 
     public:
@@ -371,11 +361,9 @@ namespace NovelRT::Ecs::UI
             }
 
             ProcessComponents(delta, catalogue);
-            
-            Render(catalogue);            
-        }
 
-        
+            Render(catalogue);
+        }
 
         NovelRT::Ecs::Graphics::Components::RenderPassId& GetAssignedRenderPassId()
         {

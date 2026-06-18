@@ -54,7 +54,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _deletionSemaphore;
         std::deque<PerFrameResources> _frameResources;
         uint64_t _renderedFrames{0};
-        NovelRT::Graphics::RGBAColour _backgroundColour{0,0,255,255};
+        NovelRT::Graphics::RGBAColour _backgroundColour{0, 0, 255, 255};
 
         RenderPassManager<TGraphicsBackend> _renderPassManager;
 

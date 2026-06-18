@@ -12,26 +12,25 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIElement
     {
-        private:
+    private:
+    public:
+        EntityId entity = std::numeric_limits<EntityId>::max();
+        NovelRT::Ecs::UI::UIComponentType Type = NovelRT::Ecs::UI::UIComponentType::Unknown;
 
-        public:
-            EntityId entity = std::numeric_limits<EntityId>::max();
-            NovelRT::Ecs::UI::UIComponentType Type = NovelRT::Ecs::UI::UIComponentType::Unknown;
-            
-            inline UIElement& operator+=(const UIElement& other)
-            {
-                *this = other;
-                return *this;
-            }
+        inline UIElement& operator+=(const UIElement& other)
+        {
+            *this = other;
+            return *this;
+        }
 
-            [[nodiscard]] inline bool operator==(const UIElement& other) const noexcept
-            {
-                return Type == other.Type;
-            }
+        [[nodiscard]] inline bool operator==(const UIElement& other) const noexcept
+        {
+            return Type == other.Type;
+        }
 
-            [[nodiscard]] inline bool operator!=(const UIElement& other) const noexcept
-            {
-                return !(*this == other);
-            }
+        [[nodiscard]] inline bool operator!=(const UIElement& other) const noexcept
+        {
+            return !(*this == other);
+        }
     };
 }

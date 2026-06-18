@@ -18,7 +18,6 @@ namespace NovelRT::Ecs::UI::Components
         NovelRT::Graphics::RGBAColour activeColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
         NovelRT::Graphics::RGBAColour hoveredColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
         NovelRT::Graphics::RGBAColour textColour = NovelRT::Graphics::RGBAColour(255, 255, 255, 255);
-        
 
         inline UIButton& operator+=(const UIButton& other)
         {

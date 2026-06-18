@@ -223,11 +223,10 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->End();
 
         gfxContext->EndFrame();
-        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {cmdList};
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
         gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
     }
-
 
     RenderingData<TBackend> returnStruct{};
     returnStruct.RenderPipeline = pipeline;
@@ -272,7 +271,7 @@ void Render(RenderingData<TBackend>& renderingData,
 
         // Setup + begin command list
         auto currentCmdList = context->CreateCmdList();
-        //currentCmdList->Begin();
+        // currentCmdList->Begin();
 
         // Track new frame rendering
         auto& frameResources =
@@ -281,12 +280,13 @@ void Render(RenderingData<TBackend>& renderingData,
             renderingData.FrameResources.emplace_back(PerFrameResources<TBackend>{++renderingData.RenderedFrames});
 
         // Upload ImGui verts + indices to GPU
-        if(uiProvider->UploadToGPU(currentCmdList))
+        if (uiProvider->UploadToGPU(currentCmdList))
         {
 
-            //upload gpu -> transfer queue
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists {currentCmdList};
-            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>>, uint64_t>> semaLists {{renderingData.UploadSemaphore, frameResources.frameNumber}};
+            // upload gpu -> transfer queue
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{currentCmdList};
+            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TBackend>>, uint64_t>> semaLists{
+                {renderingData.UploadSemaphore, frameResources.frameNumber}};
             gfxDevice->QueueSubmit(lists, semaLists);
             auto innerCmdList = context->CreateCmdList();
             innerCmdList->Begin();
@@ -322,15 +322,13 @@ void Render(RenderingData<TBackend>& renderingData,
             descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
             descriptorSetData->UpdateDescriptorSetData();
 
-            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
-                std::cref(descriptorSetData)};
+            std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1>
+                descriptorData{std::cref(descriptorSetData)};
             innerCmdList->CmdBindDescriptorSets(descriptorData);
 
             innerCmdList->CmdDraw(
                 static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
 
-
-            
             // End Renderpass
             innerCmdList->CmdEndRenderPass();
             // Insert Draw ImGui Commands
@@ -339,11 +337,9 @@ void Render(RenderingData<TBackend>& renderingData,
             innerCmdList->CmdEndRenderPass();
             innerCmdList->End();
             context->EndFrame();
-            swapchainImage->QueueSubmit({ renderingData.UploadSemaphore, frameResources.frameNumber}, 
-                innerCmdList, 
-                {renderingData.DeletionSemaphore, frameResources.frameNumber});
+            swapchainImage->QueueSubmit({renderingData.UploadSemaphore, frameResources.frameNumber}, innerCmdList,
+                                        {renderingData.DeletionSemaphore, frameResources.frameNumber});
 
-            
             frameResources.descriptorSet = descriptorSetData;
             frameResources.renderTarget = target;
             frameResources.commandList = innerCmdList;
@@ -357,12 +353,8 @@ void Render(RenderingData<TBackend>& renderingData,
             context->EndFrame();
         }
 
-            
-
-            
         // context->EndFrame();
         // swapchainImage->QueueSubmit(currentCmdList, {renderingData.DeletionSemaphore, frameResources.frameNumber});
-        
     }
 
     gfxDevice->EndFrame();
@@ -477,11 +469,10 @@ int main()
         }
     };
 
-    //Upload Fonts
+    // Upload Fonts
     auto gfxContext = gfxDevice->CreateGraphicsContext();
     auto cmdList = gfxContext->CreateCmdList();
     uiProvider->UploadFontData(cmdList);
-
 
     // Setup main loop
     while (!wndProvider->ShouldClose())

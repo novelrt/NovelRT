@@ -45,8 +45,8 @@
 #include <NovelRT/Ecs/UI/Components/UIText.hpp>
 #include <NovelRT/Ecs/UI/Components/UIWidgetContainer.hpp>
 #include <NovelRT/Ecs/UI/EcsUIBuilder.hpp>
-#include <NovelRT/Ecs/UI/UISystem.hpp>
 #include <NovelRT/Ecs/UI/UIComponentType.hpp>
+#include <NovelRT/Ecs/UI/UISystem.hpp>
 
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
@@ -76,7 +76,6 @@ using namespace NovelRT::UI::ImGui;
 using namespace NovelRT::Ecs::UI;
 using namespace NovelRT::Ecs::UI::Components;
 using namespace NovelRT::Input;
-
 
 class SpriteSetupSystem : public IEcsSystem
 {
@@ -161,7 +160,6 @@ private:
     bool _firstPass = true;
 
 public:
-
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
         if (!_firstPass)
@@ -170,20 +168,21 @@ public:
         }
         _firstPass = false;
 
-        auto [elementView, containerView, buttonView, textView, transformView, graphView]
-            = catalogue.GetComponentViews<UIElement, UIWidgetContainer, UIButton, UIText,
-                                          TransformComponent, EntityGraphComponent>();
+        auto [elementView, containerView, buttonView, textView, transformView, graphView] =
+            catalogue.GetComponentViews<UIElement, UIWidgetContainer, UIButton, UIText, TransformComponent,
+                                        EntityGraphComponent>();
 
-        //container - this is the "box" for the textbox
+        // container - this is the "box" for the textbox
         auto rootId = catalogue.CreateEntity();
 
         elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
         containerView.AddComponent(rootId, UIWidgetContainer{rootId, "NarrativeTextbox", false});
-        transformView.AddComponent(rootId, TransformComponent{GeoVector2F(100.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
+        transformView.AddComponent(rootId,
+                                   TransformComponent{GeoVector2F(100.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
 
         EntityGraphView rootView{catalogue, rootId, EntityGraphComponent{}};
-        
+
         // Now the text
         auto textId = catalogue.CreateEntity();
 
@@ -194,20 +193,20 @@ public:
 
         // Now the button - ordering is important!
         auto buttonId = catalogue.CreateEntity();
-        uint64_t clickEventId = 1;  // any number for this example will do, but you should be very explicit on event Ids in real systems
+        uint64_t clickEventId =
+            1; // any number for this example will do, but you should be very explicit on event Ids in real systems
         elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
-        buttonView.AddComponent(buttonId, UIButton{
-            "Next", 
-            clickEventId,
-            NovelRT::Graphics::RGBAColour{0, 102, 204, 255},   // bg 
-            NovelRT::Graphics::RGBAColour{0, 82, 163, 255},   // active
-            NovelRT::Graphics::RGBAColour{0, 119, 255, 255},   // hovered
-            NovelRT::Graphics::RGBAColour{255, 255, 255, 255},   // text   
-        });
-        transformView.AddComponent(buttonId, TransformComponent{GeoVector2F(500.0f, 150.0f), GeoVector2F(80.0f, 30.0f), 0.0f});
+        buttonView.AddComponent(buttonId,
+                                UIButton{
+                                    "Next", clickEventId, NovelRT::Graphics::RGBAColour{0, 102, 204, 255}, // bg
+                                    NovelRT::Graphics::RGBAColour{0, 82, 163, 255},                        // active
+                                    NovelRT::Graphics::RGBAColour{0, 119, 255, 255},                       // hovered
+                                    NovelRT::Graphics::RGBAColour{255, 255, 255, 255},                     // text
+                                });
+        transformView.AddComponent(buttonId,
+                                   TransformComponent{GeoVector2F(500.0f, 150.0f), GeoVector2F(80.0f, 30.0f), 0.0f});
         graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId});
         rootView.AddInsertChildInstruction(buttonId);
-
     }
 };
 
@@ -218,20 +217,13 @@ private:
     std::optional<EntityId> _text;
     uint32_t _strIndex = 0;
 
-    std::vector<std::string> _story{
-        "Hello!",
-        "I'm going to get milk, now...",
-        "...",
-        "...",
-        "*30 years later*",
-        "..."
-    };
+    std::vector<std::string> _story{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
 
 public:
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
-        auto [elementView, clickEvents, textView, buttonView, spriteView]
-            = catalogue.GetComponentViews<UIElement, UIClickEvent, UIText, UIButton, Sprite>();
+        auto [elementView, clickEvents, textView, buttonView, spriteView] =
+            catalogue.GetComponentViews<UIElement, UIClickEvent, UIText, UIButton, Sprite>();
 
         // You may want to cache these entities for now, but I'm not
         // so we're going to search for them since there's a singular button and text object.
@@ -247,9 +239,10 @@ public:
                 {
                     _text = id;
                     UIText initialText{};
-                    if(textView.TryGetComponent(id, initialText))
+                    if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(id, UIText{id, _story[_strIndex].c_str(), initialText.colour});
+                        textView.PushComponentUpdateInstruction(
+                            id, UIText{id, _story[_strIndex].c_str(), initialText.colour});
                     }
                 }
             }
@@ -257,7 +250,7 @@ public:
 
         if (_button.has_value())
         {
-            //Click events can have event "id"s but there's only one here.
+            // Click events can have event "id"s but there's only one here.
             UIClickEvent click{};
             if (clickEvents.TryGetComponent(_button.value(), click))
             {
@@ -276,19 +269,21 @@ public:
                         {
                             text.textValue = "...";
 
-                            //slightly fade the milk away...
-                            for(auto [spriteId, component] : spriteView)
+                            // slightly fade the milk away...
+                            for (auto [spriteId, component] : spriteView)
                             {
                                 RGBAColour tinted = component.tint;
                                 if (tinted.a > 5)
                                 {
                                     tinted.a -= 25;
-                                    spriteView.PushComponentUpdateInstruction(spriteId, Sprite{component.assetId, tinted});
+                                    spriteView.PushComponentUpdateInstruction(spriteId,
+                                                                              Sprite{component.assetId, tinted});
                                 }
                                 else
                                 {
                                     tinted.a = 0;
-                                    spriteView.PushComponentUpdateInstruction(spriteId, Sprite{component.assetId, tinted});
+                                    spriteView.PushComponentUpdateInstruction(spriteId,
+                                                                              Sprite{component.assetId, tinted});
                                 }
                             }
                         }
@@ -296,17 +291,16 @@ public:
                     }
                 }
 
-                //remove the event
+                // remove the event
                 clickEvents.RemoveComponent(_button.value());
             }
         }
     }
 };
 
-
 int main()
 {
-    //Setup your providers, etc.
+    // Setup your providers, etc.
     auto resourceLoader = std::make_shared<DesktopResourceLoader>();
     resourceLoader
         ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
@@ -323,36 +317,35 @@ int main()
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
-    
 
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
-
-    //Build your default systems
+    // Build your default systems
     AddDefaults(builder);
     auto& gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
-        .WithGraphicsDevice(gfxDevice)
-        .WithSurfaceContext(gfxSurfaceContext)
-        .ConfigureRenderPasses(
-            [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
-            {
-                GraphicsRenderPassDescription passDesc{};
-                GraphicsAttachmentDescription attachmentDesc{};
+                           .WithGraphicsDevice(gfxDevice)
+                           .WithSurfaceContext(gfxSurfaceContext)
+                           .ConfigureRenderPasses(
+                               [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
+                               {
+                                   GraphicsRenderPassDescription passDesc{};
+                                   GraphicsAttachmentDescription attachmentDesc{};
 
-                attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                attachmentDesc.loadOp = LoadOp::Clear;
-                attachmentDesc.storeOp = StoreOp::Store;
-                attachmentDesc.initialLayout = ImageLayout::Present;
-                attachmentDesc.finalLayout = ImageLayout::Present;
+                                   attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
+                                   attachmentDesc.loadOp = LoadOp::Clear;
+                                   attachmentDesc.storeOp = StoreOp::Store;
+                                   attachmentDesc.initialLayout = ImageLayout::Present;
+                                   attachmentDesc.finalLayout = ImageLayout::Present;
 
-                passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-            })
-        .WithDefaultBackgroundColour(0,0,0,255);
+                                   passDesc.attachmentDescriptions.push_back(attachmentDesc);
+                                   passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
+                                   passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
+                               })
+                           .WithDefaultBackgroundColour(0, 0, 0, 255);
 
-    AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend, NovelRT::Windowing::Glfw::GlfwWindowingBackend>(builder)
+    AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
+          NovelRT::Windowing::Glfw::GlfwWindowingBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
         .WithGraphicsMemoryAllocator(memoryAllocator)
         .WithWindowProvider(wndProvider)
@@ -361,14 +354,13 @@ int main()
         .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
         .WithGraphicsBuilder(gfxBuilder);
-        
 
     gfxBuilder.WithDefaultOrchestrator();
 
     auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
-    //Add your systems and configure them
+    // Add your systems and configure them
     auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
     auto uiSetupSystem = std::make_shared<UISetupSystem>();
     auto clickSystem = std::make_shared<UIInteractionSystem>();
@@ -379,12 +371,11 @@ int main()
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
 
-
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
     Event<Timestamp::duration> TimerCallback{};
 
-    TimerCallback += [&scheduler](auto delta ) { scheduler.ExecuteIteration(Timestamp{delta}); };
+    TimerCallback += [&scheduler](auto delta) { scheduler.ExecuteIteration(Timestamp{delta}); };
 
     while (!wndProvider->ShouldClose())
     {
