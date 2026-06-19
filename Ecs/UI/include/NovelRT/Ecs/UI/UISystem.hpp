@@ -18,6 +18,7 @@
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Camera.hpp>
 
 #include <NovelRT/Ecs/UI/Components/UIElement.hpp>
 #include <NovelRT/Ecs/UI/UIComponentType.hpp>
@@ -45,7 +46,6 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _drawSemaphore;
         uint64_t _submittedUploads;
         uint64_t _frameCounter{0};
-        NovelRT::Maths::GeoVector2F _startingDisplaySize = NovelRT::Maths::GeoVector2F::Zero();
 
         EntityGraphView GetRoot(ComponentView<Ecs::Components::EntityGraphComponent>& view,
                                 Catalogue& catalogue,
@@ -61,7 +61,7 @@ namespace NovelRT::Ecs::UI
             return it;
         }
 
-        void ParseElementCommands(Catalogue catalogue, Ecs::UI::Components::UIElement& element, float elementScale)
+        void ParseElementCommands(Catalogue catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
         {
             auto [containers, buttons, textView, transforms, clickEvents] =
                 catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer, Ecs::UI::Components::UIButton,
@@ -79,9 +79,9 @@ namespace NovelRT::Ecs::UI
                         transforms.TryGetComponent(element.entity, transform))
                     {
                         ImGui::SetNextWindowSize(
-                            ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale));
+                            ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
                         ImGui::SetNextWindowPos(
-                            ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
+                            ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
                         ImGui::Begin(container.title, NULL,
                                      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
                     }
@@ -115,10 +115,10 @@ namespace NovelRT::Ecs::UI
                                                      button.textColour.getBScalar(), button.textColour.getAScalar()));
 
                         ImGui::SetCursorPos(
-                            ImVec2(transform.position.x * elementScale, transform.position.y * elementScale));
+                            ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
 
                         if (ImGui::Button(button.label,
-                                          ImVec2(transform.scale.x * elementScale, transform.scale.y * elementScale)))
+                                          ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY)))
                         {
                             Ecs::UI::Components::UIClickEvent clickEvent{};
                             clickEvent.eventId = button.eventId;
@@ -256,8 +256,8 @@ namespace NovelRT::Ecs::UI
             // 1. Start frame unanimously - this is for debug/metric windows
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
 
-            auto [graph, elementView] =
-                catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent, Ecs::UI::Components::UIElement>();
+            auto [graph, elementView, camView] =
+                catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent, Ecs::UI::Components::UIElement, Graphics::Components::Camera>();
 
             // 2. Determine the order in which we should enumerate the entities based on... something?
             std::map<EntityId, Ecs::UI::Components::UIElement> elements{};
@@ -296,13 +296,24 @@ namespace NovelRT::Ecs::UI
             //  This lets us make sure that imgui tracks with the screen properly - otherwise it does not adjust
             //  with other elements.
             auto& io = ::ImGui::GetIO();
-            if (_startingDisplaySize.x == 0.0f)
-                _startingDisplaySize = Maths::GeoVector2F(io.DisplaySize.x, io.DisplaySize.y);
 
-            // hack to resize the font scale properly but w.e.
-            float resizeScale =
-                ((io.DisplaySize.x / _startingDisplaySize.x) + (io.DisplaySize.y / _startingDisplaySize.y)) * 0.5f;
-            io.FontGlobalScale *= resizeScale;
+            float refWidth = io.DisplaySize.x;
+            float refHeight = io.DisplaySize.y;
+
+            for (auto [entity, camera]: camView)
+            {
+                if (camera.isScreenSpace)
+                {
+                    refWidth = static_cast<float>(camera.referenceResolutionWidth);
+                    refHeight = static_cast<float>(camera.referenceResolutionHeight);
+                    break;
+                }
+            }
+
+            float scaleX = io.DisplaySize.x / refWidth;
+            float scaleY = io.DisplaySize.y / refHeight;
+            //float avgScale = (scaleX + scaleY) * 0.5f;
+            //io.FontGlobalScale *= avgScale;  // font scaling
 
             // 4b. write Imgui commands
             std::vector<std::pair<EntityId, int32_t>> containers;
@@ -319,7 +330,7 @@ namespace NovelRT::Ecs::UI
 
                 if (element != elements.end())
                 {
-                    ParseElementCommands(catalogue, element->second, resizeScale);
+                    ParseElementCommands(catalogue, element->second, scaleX, scaleY);
 
                     if (element->second.Type == UIComponentType::Container)
                     {

@@ -290,7 +290,7 @@ namespace NovelRT::UI::ImGui
 
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
             io.DisplayFramebufferScale = ImVec2(windowScale.x, windowScale.y);
-            io.FontGlobalScale = (windowScale.x + windowScale.y) / 2.0f;  //This works? lol ok
+            io.FontGlobalScale = (windowScale.x + windowScale.y) / 2.0f;
             io.DeltaTime = deltaTime;
 
             auto mousePos = _inputProvider->GetRawMousePosition();

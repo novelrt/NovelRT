@@ -168,9 +168,17 @@ public:
         }
         _firstPass = false;
 
-        auto [elementView, containerView, buttonView, textView, transformView, graphView] =
+        auto [elementView, containerView, buttonView, textView, transformView, graphView, camView] =
             catalogue.GetComponentViews<UIElement, UIWidgetContainer, UIButton, UIText, TransformComponent,
-                                        EntityGraphComponent>();
+                                        EntityGraphComponent, Camera>();
+
+        // setup the screen space camera
+        auto cameraId = catalogue.CreateEntity();
+        NovelRT::Ecs::Graphics::Components::Camera camera{};
+        camera.isScreenSpace = true;
+        camera.referenceResolutionWidth = 1920;
+        camera.referenceResolutionHeight = 1080;
+        camView.AddComponent(cameraId, camera);
 
         // container - this is the "box" for the textbox
         auto rootId = catalogue.CreateEntity();
@@ -300,6 +308,45 @@ public:
     }
 };
 
+class ViewportUpdateSystem : public IEcsSystem
+{
+private:
+    NovelRT::Maths::GeoVector2F _size{};
+    bool _changedSize = false;
+
+public:
+    ViewportUpdateSystem(std::shared_ptr<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>> provider)
+    {
+        provider->SizeChanged += [this](auto eventArgs)
+        {
+            _size = eventArgs;
+            _changedSize = true;
+        };
+
+    }
+
+    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    {
+        if(!_changedSize)
+        {
+            return;
+        }
+
+        _changedSize = false;
+
+        auto [viewports] = catalogue.GetComponentViews<Viewport>();
+
+        for(auto [entity, viewport] : viewports)
+        {
+            unused(viewport);
+            NovelRT::Ecs::Graphics::Components::Viewport newViewport{};
+            newViewport.width = _size.x;
+            newViewport.height = _size.y;
+            viewports.PushComponentUpdateInstruction(entity, newViewport);
+        }
+    }
+};
+
 int main()
 {
     // Setup your providers, etc.
@@ -322,6 +369,7 @@ int main()
 
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
+    std::shared_ptr<ViewportUpdateSystem> viewportUpdater = std::make_shared<ViewportUpdateSystem>(wndProvider);
 
     // Build your default systems
     AddDefaults(builder);
@@ -372,6 +420,7 @@ int main()
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
+    builder.Configure([viewportUpdater](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(viewportUpdater)); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
