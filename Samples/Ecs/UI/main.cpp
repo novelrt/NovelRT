@@ -194,7 +194,7 @@ public:
         elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
         containerView.AddComponent(rootId, UIWidgetContainer{"NarrativeTextbox", false});
         transformView.AddComponent(rootId,
-                                   TransformComponent{GeoVector2F(100.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
+                                   TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
 
         EntityGraphView rootView{catalogue, rootId, EntityGraphComponent{}};
@@ -362,7 +362,7 @@ int main()
     resourceLoader
         ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
 
-    auto windowSize = NovelRT::Maths::GeoVector2F(800, 800);
+    auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
         NovelRT::Windowing::WindowMode::Windowed, windowSize);
 
@@ -420,7 +420,7 @@ int main()
         gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
     // Add your systems and configure them
-    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, windowSize);
     auto uiSetupSystem = std::make_shared<UISetupSystem>(windowSize);
     auto clickSystem = std::make_shared<UIInteractionSystem>();
 

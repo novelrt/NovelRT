@@ -146,6 +146,8 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
+
+        NovelRT::Maths::GeoVector2F _initialWindowSize;
         
         inline void CreateDedicatedRenderPass()
         {
@@ -242,6 +244,7 @@ namespace NovelRT::UI::ImGui
 
             ::ImGui::GetMainViewport()->PlatformHandleRaw = (void*)_windowProvider->GetHandle();
             auto windowSize = _windowProvider->GetSize();
+            _initialWindowSize = windowSize;
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
 
             NovelRT::Maths::GeoVector2F scale = _windowProvider->GetWindowScale();
@@ -287,11 +290,16 @@ namespace NovelRT::UI::ImGui
             auto& io = ::ImGui::GetIO();
             auto windowSize = _windowProvider->GetSize();
             auto windowScale = _windowProvider->GetWindowScale();
-
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
             io.DisplayFramebufferScale = ImVec2(windowScale.x, windowScale.y);
-            io.FontGlobalScale = (windowScale.x + windowScale.y) / 2.0f;
             io.DeltaTime = deltaTime;
+
+
+            float scaleX = windowSize.x / _initialWindowSize.x;
+            float scaleY = windowSize.y / _initialWindowSize.y;
+
+            io.FontGlobalScale = (scaleX + scaleY) / 2.0f;
+            
 
             auto mousePos = _inputProvider->GetRawMousePosition();
             io.AddMousePosEvent(mousePos.x, mousePos.y);
