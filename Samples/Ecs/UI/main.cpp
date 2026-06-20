@@ -158,8 +158,16 @@ class UISetupSystem : public IEcsSystem
 {
 private:
     bool _firstPass = true;
+    int32_t _initialWidth;
+    int32_t _initialHeight;
 
 public:
+    UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize):
+        _initialWidth(initialSize.x),
+        _initialHeight(initialSize.y)
+    {
+    }
+
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
         if (!_firstPass)
@@ -176,8 +184,8 @@ public:
         auto cameraId = catalogue.CreateEntity();
         NovelRT::Ecs::Graphics::Components::Camera camera{};
         camera.isScreenSpace = true;
-        camera.referenceResolutionWidth = 1920;
-        camera.referenceResolutionHeight = 1080;
+        camera.referenceResolutionWidth = _initialWidth;
+        camera.referenceResolutionHeight = _initialHeight;
         camView.AddComponent(cameraId, camera);
 
         // container - this is the "box" for the textbox
@@ -354,8 +362,9 @@ int main()
     resourceLoader
         ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
 
+    auto windowSize = NovelRT::Maths::GeoVector2F(800, 800);
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(800, 800));
+        NovelRT::Windowing::WindowMode::Windowed, windowSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -412,7 +421,7 @@ int main()
 
     // Add your systems and configure them
     auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
-    auto uiSetupSystem = std::make_shared<UISetupSystem>();
+    auto uiSetupSystem = std::make_shared<UISetupSystem>(windowSize);
     auto clickSystem = std::make_shared<UIInteractionSystem>();
 
     builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
