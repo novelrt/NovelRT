@@ -6,6 +6,7 @@
 
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
+#include <cstdint>
 #include <cstdlib>
 #include <format>
 #include <random>

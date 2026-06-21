@@ -129,7 +129,7 @@ namespace NovelRT::Ecs
           _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
           _hasExecutedAtLeastOnce(false)
     {
-        _workerThreadCount = _ecsArena->max_concurrency();
+        _workerThreadCount = static_cast<uint32_t>(_ecsArena->max_concurrency());
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
     }

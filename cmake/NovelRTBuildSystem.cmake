@@ -83,12 +83,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     $<$<CXX_COMPILER_ID:GNU>:-Wextra>
     $<$<CXX_COMPILER_ID:GNU>:-Wpedantic>
     $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
+    $<$<CXX_COMPILER_ID:GNU>:-Wconversion>
 
     $<$<CXX_COMPILER_ID:Clang>:-Wall>
     $<$<CXX_COMPILER_ID:Clang>:-Werror>
     $<$<CXX_COMPILER_ID:Clang>:-Wextra>
     $<$<CXX_COMPILER_ID:Clang>:-Wpedantic>
     $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
+    $<$<CXX_COMPILER_ID:Clang>:-Wconversion>
 
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>

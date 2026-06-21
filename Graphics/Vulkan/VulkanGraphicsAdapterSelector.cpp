@@ -37,7 +37,7 @@ namespace NovelRT::Graphics::Vulkan
             std::count_if(availableDeviceExtensions.begin(), availableDeviceExtensions.end(), isOptionalExtension);
 
         const float percentageStep = (1.0f / static_cast<float>(optionalDeviceExtensions.size())) * 100;
-        return static_cast<int32_t>(foundOptionalExtensions * percentageStep);
+        return static_cast<int32_t>(static_cast<float>(foundOptionalExtensions) * percentageStep);
     }
 
     static bool CheckRequiredExtensionSupport(const std::vector<std::string>& availableDeviceExtensions,

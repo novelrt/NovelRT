@@ -70,7 +70,7 @@ namespace NovelRT::Ecs
 
             inline void MoveNext()
             {
-                _iteratorAtValue += _sizeOfObject;
+                _iteratorAtValue += std::vector<std::byte>::difference_type(_sizeOfObject);
             }
         };
 
@@ -112,7 +112,7 @@ namespace NovelRT::Ecs
 
             inline void MoveNext()
             {
-                _iteratorAtValue += _sizeOfObject;
+                _iteratorAtValue += std::vector<std::byte>::difference_type(_sizeOfObject);
             }
         };
 

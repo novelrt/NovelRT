@@ -314,6 +314,36 @@ namespace NovelRT::ResourceManagement::Desktop
         return LoadShaderSource(GetGuidsToFilePathsMap().at(assetId));
     }
 
+    FontMetadata DesktopResourceLoader::LoadFont(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Fonts" / filePath.filename();
+        }
+
+        std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()), std::streamsize(fileSize));
+        file.close();
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        return FontMetadata{buffer, fileSize, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    FontMetadata DesktopResourceLoader::LoadFont(uuids::uuid assetId)
+    {
+        return LoadFont(GetGuidsToFilePathsMap().at(assetId));
+    }
+
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
@@ -449,8 +479,10 @@ namespace NovelRT::ResourceManagement::Desktop
             SRC_DATA conversionInfo = SRC_DATA{};
             conversionInfo.data_in = data.data();
             conversionInfo.data_out = resampledData.data();
-            conversionInfo.input_frames =
-                static_cast<long>(info.channels == 1 ? data.size() : data.size() / info.channels); // lmao
+            conversionInfo.input_frames = static_cast<long>(
+                info.channels == 1
+                    ? data.size()
+                    : data.size() / static_cast<size_t>(info.channels)); // This is a mess, good lord. - Matt J.
             conversionInfo.output_frames = conversionInfo.input_frames;
             double rate = 44100.0 / static_cast<double>(info.samplerate);
             _logger.logDebug("Scaling by ratio of {0:f}", rate);

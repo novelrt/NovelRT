@@ -18,7 +18,8 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wmissing-field-initializers"
 #pragma clang diagnostic ignored "-Wnullability-completeness"
-#pragma clang diagnostic ignored "-Wnullability-extension" // Enable nullability clang extension
+#pragma clang diagnostic ignored "-Wnullability-extension" // Enable nullability clang Wnullability-extension
+#pragma clang diagnostic ignored "-Wconversion"            // clang is really stupid sometimes. :)
 #endif
 
 #include <vk_mem_alloc.h>

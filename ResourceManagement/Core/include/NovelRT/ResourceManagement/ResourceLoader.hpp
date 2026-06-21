@@ -10,6 +10,7 @@
 
 #include <NovelRT/ResourceManagement/AudioMetadata.hpp>
 #include <NovelRT/ResourceManagement/BinaryPackage.hpp>
+#include <NovelRT/ResourceManagement/FontMetadata.hpp>
 #include <NovelRT/ResourceManagement/ShaderMetadata.hpp>
 #include <NovelRT/ResourceManagement/TextureMetadata.hpp>
 #include <NovelRT/Utilities/Paths.hpp>
@@ -102,6 +103,10 @@ namespace NovelRT::ResourceManagement
         [[nodiscard]] virtual ShaderMetadata LoadShaderSource(std::filesystem::path filePath) = 0;
 
         [[nodiscard]] virtual ShaderMetadata LoadShaderSource(uuids::uuid assetId) = 0;
+
+        [[nodiscard]] virtual FontMetadata LoadFont(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] virtual FontMetadata LoadFont(uuids::uuid assetId) = 0;
 
         [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
 

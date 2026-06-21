@@ -84,10 +84,11 @@ namespace NovelRT::Ecs
         size_t indexCutoff = _sparse[key];
         auto byteIndex = GetStartingByteIndexForDenseIndex(indexCutoff);
 
-        _data.erase(_data.begin() + byteIndex, _data.begin() + (byteIndex + _sizeOfDataTypeInBytes));
+        _data.erase(_data.begin() + std::vector<std::byte>::difference_type(byteIndex),
+                    _data.begin() + std::vector<std::byte>::difference_type(byteIndex + _sizeOfDataTypeInBytes));
 
         // the rest should be exception-free. :D
-        _dense.erase(_dense.begin() + indexCutoff);
+        _dense.erase(_dense.begin() + std::vector<size_t>::difference_type(indexCutoff));
 
         _sparse[key] = 0;
 
@@ -180,29 +181,33 @@ namespace NovelRT::Ecs
             throw std::out_of_range("denseIndex exceeds the range of the dense data.");
         }
 
-        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex),
-                                                          _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ByteIteratorView(
+            _data.begin() + std::vector<std::byte>::difference_type(GetStartingByteIndexForDenseIndex(denseIndex)),
+            _sizeOfDataTypeInBytes);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndex(
         size_t denseIndex) const
     {
         return SparseSetMemoryContainer::ConstByteIteratorView(
-            _data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+            _data.cbegin() + std::vector<std::byte>::difference_type(GetStartingByteIndexForDenseIndex(denseIndex)),
+            _sizeOfDataTypeInBytes);
     }
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::GetByteIteratorViewBasedOnDenseIndexUnsafe(
         size_t denseIndex) noexcept
     {
-        return SparseSetMemoryContainer::ByteIteratorView(_data.begin() + GetStartingByteIndexForDenseIndex(denseIndex),
-                                                          _sizeOfDataTypeInBytes);
+        return SparseSetMemoryContainer::ByteIteratorView(
+            _data.begin() + std::vector<std::byte>::difference_type(GetStartingByteIndexForDenseIndex(denseIndex)),
+            _sizeOfDataTypeInBytes);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::
         GetByteIteratorViewBasedOnDenseIndexUnsafe(size_t denseIndex) const noexcept
     {
         return SparseSetMemoryContainer::ConstByteIteratorView(
-            _data.cbegin() + GetStartingByteIndexForDenseIndex(denseIndex), _sizeOfDataTypeInBytes);
+            _data.cbegin() + std::vector<std::byte>::difference_type(GetStartingByteIndexForDenseIndex(denseIndex)),
+            _sizeOfDataTypeInBytes);
     }
 
     size_t SparseSetMemoryContainer::Length() const noexcept
