@@ -6,6 +6,7 @@ DEPENDS
     NovelRT::Graphics::Core
     NovelRT::Input
     NovelRT::Logging
+    NovelRT::ResourceManagement::Core
     
   SOURCES
     PRIVATE
