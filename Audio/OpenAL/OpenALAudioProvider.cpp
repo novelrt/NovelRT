@@ -217,7 +217,7 @@ namespace NovelRT::Audio
         GetALError(_logger);
         _buffers.emplace_back(static_cast<uint32_t>(alBuffer));
         uint32_t sourceId = OpenSource(context);
-        alSourcei(sourceId, AL_BUFFER, alBuffer);
+        alSourcei(sourceId, AL_BUFFER, static_cast<ALint>(alBuffer));
         GetALError(_logger);
         return sourceId;
     }
