@@ -60,7 +60,7 @@ std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget)
     size_t fileSize = static_cast<size_t>(file.tellg());
     std::vector<uint8_t> buffer(fileSize);
     file.seekg(0);
-    file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
+    file.read(reinterpret_cast<char*>(buffer.data()), std::streamsize(fileSize));
     file.close();
 
     return buffer;
