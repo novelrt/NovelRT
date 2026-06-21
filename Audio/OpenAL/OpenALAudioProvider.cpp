@@ -56,7 +56,7 @@ namespace NovelRT::Audio
     static void LogMessage(void* userptr, char level, const char* msg, int length) noexcept
     {
         const Logging::LoggingService& logger = *static_cast<Logging::LoggingService*>(userptr);
-        std::string message(msg, length);
+        std::string message(msg, static_cast<size_t>(length));
 
         switch (level)
         {
