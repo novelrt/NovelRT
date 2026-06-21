@@ -32,7 +32,6 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>> _wndProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _allocator;
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
-        
 
         EcsUIBuilder()
         {
@@ -79,40 +78,41 @@ namespace NovelRT::Ecs::UI
         }
 
         EcsUIBuilder& WithUISystem(
-            const std::shared_ptr<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>
+            const std::shared_ptr<NovelRT::Ecs::UI::UISystem<TGraphicsBackend, TInputBackend, TWindowingBackend>>&
                 system)
         {
             _system = system;
             return *this;
         }
 
-        EcsUIBuilder& WithGraphicsDevice(std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
+        EcsUIBuilder& WithGraphicsDevice(
+            const std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& device)
         {
             _gfxDevice = device;
             return *this;
         }
 
         EcsUIBuilder& WithGraphicsMemoryAllocator(
-            std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>>& allocator)
+            const std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>>& allocator)
         {
             _allocator = allocator;
             return *this;
         }
 
         EcsUIBuilder& WithWindowProvider(
-            std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>>& provider)
+            const std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>>& provider)
         {
             _wndProvider = provider;
             return *this;
         }
 
-        EcsUIBuilder& WithInputProvider(std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>>& provider)
+        EcsUIBuilder& WithInputProvider(const std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>>& provider)
         {
             _inputProvider = provider;
             return *this;
         }
 
-        EcsUIBuilder& WithResourceLoader(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& provider)
+        EcsUIBuilder& WithResourceLoader(const std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& provider)
         {
             _resourceLoader = provider;
             return *this;

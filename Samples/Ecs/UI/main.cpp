@@ -165,9 +165,8 @@ private:
     std::string _nextButtonText = "Next";
 
 public:
-    UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize):
-        _initialWidth(initialSize.x),
-        _initialHeight(initialSize.y)
+    UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
+        : _initialWidth(initialSize.x), _initialHeight(initialSize.y)
     {
     }
 
@@ -215,15 +214,14 @@ public:
         uint64_t clickEventId =
             1; // any number for this example will do, but you should be very explicit on event Ids in real systems
         elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
-        buttonView.AddComponent(buttonId,
-                                UIButton{
-                                    &_nextButtonText,
-                                    clickEventId,
-                                    NovelRT::Graphics::RGBAColour{0, 102, 204, 255}, // bg
-                                    NovelRT::Graphics::RGBAColour{0, 82, 163, 255},                        // active
-                                    NovelRT::Graphics::RGBAColour{0, 119, 255, 255},                       // hovered
-                                    NovelRT::Graphics::RGBAColour{255, 255, 255, 255},                     // text
-                                });
+        buttonView.AddComponent(buttonId, UIButton{
+                                              &_nextButtonText,
+                                              clickEventId,
+                                              NovelRT::Graphics::RGBAColour{0, 102, 204, 255},   // bg
+                                              NovelRT::Graphics::RGBAColour{0, 82, 163, 255},    // active
+                                              NovelRT::Graphics::RGBAColour{0, 119, 255, 255},   // hovered
+                                              NovelRT::Graphics::RGBAColour{255, 255, 255, 255}, // text
+                                          });
         transformView.AddComponent(buttonId,
                                    TransformComponent{GeoVector2F(500.0f, 150.0f), GeoVector2F(80.0f, 30.0f), 0.0f});
         graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId});
@@ -263,8 +261,7 @@ public:
                     UIText initialText{};
                     if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(
-                            id, UIText{&_story[_strIndex], initialText.colour});
+                        textView.PushComponentUpdateInstruction(id, UIText{&_story[_strIndex], initialText.colour});
                     }
                 }
             }
@@ -334,12 +331,11 @@ public:
             _size = eventArgs;
             _changedSize = true;
         };
-
     }
 
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
-        if(!_changedSize)
+        if (!_changedSize)
         {
             return;
         }
@@ -348,7 +344,7 @@ public:
 
         auto [viewports] = catalogue.GetComponentViews<Viewport>();
 
-        for(auto [entity, viewport] : viewports)
+        for (auto [entity, viewport] : viewports)
         {
             unused(viewport);
             NovelRT::Ecs::Graphics::Components::Viewport newViewport{};
@@ -364,7 +360,6 @@ int main()
     // Setup your providers, etc.
     auto desktopResourceLoader = std::make_shared<DesktopResourceLoader>();
     desktopResourceLoader->InitAssetDatabase();
-    auto resourceLoaderPtr = desktopResourceLoader->shared_from_this();
 
     auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
@@ -413,7 +408,7 @@ int main()
         .WithGraphicsMemoryAllocator(memoryAllocator)
         .WithWindowProvider(wndProvider)
         .WithInputProvider(inputProvider)
-        .WithResourceLoader(resourceLoaderPtr)
+        .WithResourceLoader(desktopResourceLoader)
         .WithDefaultUIProvider(false)
         .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
@@ -434,7 +429,8 @@ int main()
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
-    builder.Configure([viewportUpdater](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(viewportUpdater)); });
+    builder.Configure([viewportUpdater](SystemScheduler& scheduler)
+                      { unused(scheduler.RegisterSystem(viewportUpdater)); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
