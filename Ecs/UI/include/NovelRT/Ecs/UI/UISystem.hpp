@@ -63,7 +63,7 @@ namespace NovelRT::Ecs::UI
             return it;
         }
 
-        void ParseElementCommands(Catalogue catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        void ParseElementCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
         {
             auto [containers, buttons, textView, transforms, clickEvents] =
                 catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer, Ecs::UI::Components::UIButton,
