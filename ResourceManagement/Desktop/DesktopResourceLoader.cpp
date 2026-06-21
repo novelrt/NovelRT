@@ -339,7 +339,6 @@ namespace NovelRT::ResourceManagement::Desktop
         return FontMetadata{buffer, fileSize, RegisterAsset(relativePathForAssetDatabase)};
     }
 
-
     FontMetadata DesktopResourceLoader::LoadFont(uuids::uuid assetId)
     {
         return LoadFont(GetGuidsToFilePathsMap().at(assetId));
@@ -480,8 +479,10 @@ namespace NovelRT::ResourceManagement::Desktop
             SRC_DATA conversionInfo = SRC_DATA{};
             conversionInfo.data_in = data.data();
             conversionInfo.data_out = resampledData.data();
-            conversionInfo.input_frames =
-                static_cast<long>(info.channels == 1 ? data.size() : data.size() / info.channels); // lmao
+            conversionInfo.input_frames = static_cast<long>(
+                info.channels == 1
+                    ? data.size()
+                    : data.size() / static_cast<size_t>(info.channels)); // This is a mess, good lord. - Matt J.
             conversionInfo.output_frames = conversionInfo.input_frames;
             double rate = 44100.0 / static_cast<double>(info.samplerate);
             _logger.logDebug("Scaling by ratio of {0:f}", rate);

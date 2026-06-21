@@ -49,7 +49,8 @@ int ProduceChoices(lua_State* L)
     std::vector<std::string> choices(lua_rawlen(L, 2));
     for (size_t n = 0; n < choices.size(); n++)
     {
-        int type = lua_rawgeti(L, 2, n + 1);
+        int type = lua_rawgeti(
+            L, 2, static_cast<lua_Integer>(static_cast<lua_Integer>(n) + 1)); // Hi monica, I am sorry. - Matt J.
         if (type != LUA_TSTRING)
         {
             const char* msg =
@@ -57,7 +58,7 @@ int ProduceChoices(lua_State* L)
             return luaL_argerror(L, 2, msg);
         }
 
-        size_t length;
+        size_t length = 0ULL;
         const char* text = luaL_tolstring(L, -1, &length);
 
         choices[n] = std::string(text, length);

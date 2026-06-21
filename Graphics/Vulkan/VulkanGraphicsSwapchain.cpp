@@ -235,7 +235,7 @@ namespace NovelRT::Graphics
     {
         auto index =
             std::distance(_swapchainImages.begin(), std::find(_swapchainImages.begin(), _swapchainImages.end(), image));
-        return _activeSemaphores[index];
+        return _activeSemaphores[static_cast<size_t>(index)];
     }
 
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> GraphicsSwapchain<

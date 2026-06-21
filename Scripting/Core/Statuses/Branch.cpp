@@ -36,6 +36,6 @@ auto NovelRT::Scripting::Statuses::Branch::Continue(size_t index) -> std::unique
         throw NovelRT::Exceptions::InvalidOperationException(
             std::format("Index {} was outside the range of the array", index));
 
-    lua_pushinteger(_state, index);
+    lua_pushinteger(_state, static_cast<lua_Integer>(index));
     return DoContinue(1);
 }
