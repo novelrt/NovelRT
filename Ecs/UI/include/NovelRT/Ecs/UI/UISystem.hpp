@@ -316,7 +316,7 @@ namespace NovelRT::Ecs::UI
             //io.FontGlobalScale *= avgScale;  // font scaling
 
             // 4b. write Imgui commands
-            std::vector<std::pair<EntityId, int32_t>> containers;
+            std::vector<std::pair<EntityId, int32_t>> containers{};
 
             for (auto& [entity, depth] : ordered)
             {
