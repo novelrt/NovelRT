@@ -31,7 +31,7 @@ std::vector<uint8_t> LoadData(std::filesystem::path filePath)
     }
 
     auto filesize = file.tellg();
-    std::vector<uint8_t> data(filesize);
+    std::vector<uint8_t> data(static_cast<size_t>(filesize));
     file.seekg(0);
     file.read(reinterpret_cast<char*>(data.data()), filesize);
     file.close();
