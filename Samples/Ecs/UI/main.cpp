@@ -158,15 +158,14 @@ class UISetupSystem : public IEcsSystem
 {
 private:
     bool _firstPass = true;
-    int32_t _initialWidth;
-    int32_t _initialHeight;
-    std::string _emptyText = "";
-    std::string _containerLabel = "NarrativeTextbox";
-    std::string _nextButtonText = "Next";
+    NovelRT::Maths::GeoVector2F _initialSize;
+    std::string _emptyText;
+    std::string _containerLabel;
+    std::string _nextButtonText;
 
 public:
     UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
-        : _initialWidth(initialSize.x), _initialHeight(initialSize.y)
+        : _initialSize(initialSize), _emptyText(""), _containerLabel("NarrativeTextbox"), _nextButtonText("Next")
     {
     }
 
@@ -186,8 +185,8 @@ public:
         auto cameraId = catalogue.CreateEntity();
         NovelRT::Ecs::Graphics::Components::Camera camera{};
         camera.isScreenSpace = true;
-        camera.referenceResolutionWidth = _initialWidth;
-        camera.referenceResolutionHeight = _initialHeight;
+        camera.referenceResolutionWidth = static_cast<int32_t>(_initialSize.x);
+        camera.referenceResolutionHeight = static_cast<int32_t>(_initialSize.y);
         camView.AddComponent(cameraId, camera);
 
         // container - this is the "box" for the textbox
