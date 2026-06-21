@@ -60,8 +60,8 @@ namespace NovelRT::Ecs::Graphics
         friend EcsGraphicsBuilder<T>& AddGraphics(SystemSchedulerBuilder&);
 
     public:
-        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = default;
-        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = default;
+        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = delete;
+        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = delete;
         EcsGraphicsBuilder(EcsGraphicsBuilder&& other) = default;
         EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = default;
         ~EcsGraphicsBuilder() = default;

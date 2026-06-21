@@ -38,8 +38,8 @@ namespace NovelRT::Ecs::Scripting
         friend EcsScriptingBuilder& AddScripting(SystemSchedulerBuilder&);
 
     public:
-        EcsScriptingBuilder(const EcsScriptingBuilder& other) = default;
-        EcsScriptingBuilder& operator=(const EcsScriptingBuilder& other) = default;
+        EcsScriptingBuilder(const EcsScriptingBuilder& other) = delete;
+        EcsScriptingBuilder& operator=(const EcsScriptingBuilder& other) = delete;
         EcsScriptingBuilder(EcsScriptingBuilder&& other) = default;
         EcsScriptingBuilder& operator=(EcsScriptingBuilder&& other) = default;
         ~EcsScriptingBuilder() = default;
