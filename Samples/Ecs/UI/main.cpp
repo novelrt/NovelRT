@@ -358,9 +358,9 @@ public:
 int main()
 {
     // Setup your providers, etc.
-    auto resourceLoader = std::make_shared<DesktopResourceLoader>();
-    resourceLoader
-        ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
+    auto desktopResourceLoader = std::make_shared<DesktopResourceLoader>();
+    desktopResourceLoader->InitAssetDatabase();
+    auto resourceLoaderPtr = desktopResourceLoader->shared_from_this();
 
     auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
@@ -409,6 +409,7 @@ int main()
         .WithGraphicsMemoryAllocator(memoryAllocator)
         .WithWindowProvider(wndProvider)
         .WithInputProvider(inputProvider)
+        .WithResourceLoader(resourceLoaderPtr)
         .WithDefaultUIProvider(false)
         .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
@@ -417,10 +418,10 @@ int main()
     gfxBuilder.WithDefaultOrchestrator();
 
     auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
+        gfxDevice, passData, desktopResourceLoader, memoryAllocator, gfxSurfaceContext);
 
     // Add your systems and configure them
-    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, windowSize);
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(desktopResourceLoader, windowSize);
     auto uiSetupSystem = std::make_shared<UISetupSystem>(windowSize);
     auto clickSystem = std::make_shared<UIInteractionSystem>();
 

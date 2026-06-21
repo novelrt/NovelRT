@@ -20,9 +20,6 @@
 
 namespace NovelRT::Ecs::UI
 {
-    // template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
-    // class UISystem;
-
     template<typename TGraphicsBackend, typename TInputBackend, typename TWindowingBackend>
     class EcsUIBuilder
     {
@@ -34,6 +31,8 @@ namespace NovelRT::Ecs::UI
         std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>> _inputProvider;
         std::shared_ptr<NovelRT::Windowing::WindowProvider<TWindowingBackend>> _wndProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _allocator;
+        std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
+        
 
         EcsUIBuilder()
         {
@@ -62,11 +61,12 @@ namespace NovelRT::Ecs::UI
             std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>>& inputProvider,
             std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>>& graphicsDevice,
             std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>>& memoryAllocator,
+            std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& resourceLoader,
             bool debugMode = false)
         {
             _uiProvider = std::make_shared<
                 NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>(
-                windowProvider, inputProvider, graphicsDevice, memoryAllocator, debugMode);
+                windowProvider, inputProvider, graphicsDevice, memoryAllocator, resourceLoader, debugMode);
             return *this;
         }
 
@@ -74,7 +74,7 @@ namespace NovelRT::Ecs::UI
         {
             _uiProvider = std::make_shared<
                 NovelRT::UI::ImGui::ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>(
-                _wndProvider, _inputProvider, _gfxDevice, _allocator, debugMode);
+                _wndProvider, _inputProvider, _gfxDevice, _allocator, _resourceLoader, debugMode);
             return *this;
         }
 
@@ -109,6 +109,12 @@ namespace NovelRT::Ecs::UI
         EcsUIBuilder& WithInputProvider(std::shared_ptr<NovelRT::Input::InputProvider<TInputBackend>>& provider)
         {
             _inputProvider = provider;
+            return *this;
+        }
+
+        EcsUIBuilder& WithResourceLoader(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& provider)
+        {
+            _resourceLoader = provider;
             return *this;
         }
 

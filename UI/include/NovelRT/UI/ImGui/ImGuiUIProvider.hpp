@@ -17,6 +17,7 @@
 #include <NovelRT/Input/InputProvider.hpp>
 #include <NovelRT/Logging/LoggingService.hpp>
 #include <NovelRT/Logging/BuiltInLogSections.hpp>
+#include <NovelRT/ResourceManagement/ResourceLoader.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 #include <NovelRT/Utilities/Memory.hpp>
 #include <NovelRT/Utilities/Paths.hpp>
@@ -25,6 +26,7 @@
 
 #include <array>
 #include <fstream>
+#include<iostream>
 #include <map>
 #include <memory>
 #include <unordered_map>
@@ -32,10 +34,9 @@
 
 #include <imgui.h>
 
-#include<iostream>
-
 using namespace NovelRT::Graphics;
 using namespace NovelRT::Input;
+using namespace NovelRT::ResourceManagement;
 
 namespace NovelRT::UI::ImGui
 {
@@ -44,47 +45,14 @@ namespace NovelRT::UI::ImGui
         : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
     {
     private:
-        std::vector<uint8_t> LoadSpv(std::filesystem::path relativeTarget) const
-        {
-            std::filesystem::path finalPath =
-                NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "Shaders" / relativeTarget;
-            std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
-
-            if (!file.is_open())
-            {
-                throw NovelRT::Exceptions::FileNotFoundException(finalPath.string());
-            }
-
-            size_t fileSize = static_cast<size_t>(file.tellg());
-            std::vector<uint8_t> buffer(fileSize);
-            file.seekg(0);
-            file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
-            file.close();
-
-            return buffer;
-        }
-
         inline void LoadFontFile(const std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
         {
-            std::filesystem::path finalPath =
-                NovelRT::Utilities::GetExecutableDirPath() / "Resources" / "Fonts" / relativeFontTarget;
-            std::ifstream file(finalPath.string(), std::ios::ate | std::ios::binary);
-
-            if (!file.is_open())
-            {
-                throw NovelRT::Exceptions::FileNotFoundException(finalPath.string());
-            }
-
-            size_t fileSize = static_cast<size_t>(file.tellg());
-            std::vector<uint8_t> buffer(fileSize);
-            file.seekg(0);
-            file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
-            file.close();
+            auto metadata = _resourceLoader->LoadFont(relativeFontTarget);
 
             ImFontConfig config{};
             config.FontDataOwnedByAtlas = false;
-            config.FontData = buffer.data();
-            config.FontDataSize = static_cast<int>(fileSize);
+            config.FontData = metadata.fontData.data();
+            config.FontDataSize = static_cast<int>(metadata.fontDataSize);
             config.SizePixels = static_cast<float>(pixelSize);
             name.copy(config.Name, std::string::npos, 0);
 
@@ -121,6 +89,7 @@ namespace NovelRT::UI::ImGui
         std::shared_ptr<Input::InputProvider<TInputBackend>> _inputProvider;
         std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
+        std::shared_ptr<ResourceManagement::ResourceLoader> _resourceLoader;
         bool _showMetricsWindow;
 
         std::map<std::string, ImFont*> _fontCache;
@@ -138,16 +107,16 @@ namespace NovelRT::UI::ImGui
         uint32_t _defaultFramePersistenceCount = 5u;
 
         NovelRT::Input::InputAction _mouseInputAction;
+        NovelRT::Maths::GeoVector2F _initialWindowSize;
 
         std::shared_ptr<GraphicsPipeline<TGraphicsBackend>> _pipeline;
         std::shared_ptr<GraphicsPipelineSignature<TGraphicsBackend>> _pipelineSignature;
         std::shared_ptr<GraphicsRenderPass<TGraphicsBackend>> _renderpass;
-
         std::shared_ptr<GraphicsBuffer<TGraphicsBackend>> _currentVertexBuffer;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentVertexBufferRegion;
         std::shared_ptr<GraphicsResourceMemoryRegion<GraphicsBuffer, TGraphicsBackend>> _currentIndexBufferRegion;
 
-        NovelRT::Maths::GeoVector2F _initialWindowSize;
+        
         
         inline void CreateDedicatedRenderPass()
         {
@@ -169,8 +138,8 @@ namespace NovelRT::UI::ImGui
             }
 
             // Load shader files for ImGui
-            auto vertImguiShader = LoadSpv("imgui_vert.spv");
-            auto pixelImguiShader = LoadSpv("imgui_frag.spv");
+            auto vertImguiShader = _resourceLoader->LoadShaderSource("imgui_vert.spv");
+            auto pixelImguiShader = _resourceLoader->LoadShaderSource("imgui_frag.spv");
 
             // Define elements that make up vertex shader
             std::vector<GraphicsPipelineInputElement> elements{
@@ -191,8 +160,8 @@ namespace NovelRT::UI::ImGui
             _pipelineSignature = _graphicsDevice->CreatePipelineSignature(GraphicsPipelineBlendFactor::SrcAlpha,
                                                                           GraphicsPipelineBlendFactor::OneMinusSrcAlpha,
                                                                           inputs, resources, pushConstants);
-            auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader);
-            auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader);
+            auto imVertProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Vertex, vertImguiShader.shaderCode);
+            auto imPixProg = _graphicsDevice->CreateShaderProgram("main", ShaderProgramKind::Pixel, pixelImguiShader.shaderCode);
 
             // Create pipeline
             _pipeline = _graphicsDevice->CreatePipeline(_pipelineSignature, imVertProg, imPixProg, _renderpass, true);
@@ -202,12 +171,14 @@ namespace NovelRT::UI::ImGui
                         std::shared_ptr<Input::InputProvider<TInputBackend>> inputProvider,
                         std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
                         std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator,
+                        std::shared_ptr<ResourceManagement::ResourceLoader> resourceLoader,
                         std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> renderPass,
                         bool debugMode = false)
             : _windowProvider(std::move(windowProvider)),
               _inputProvider(std::move(inputProvider)),
               _graphicsDevice(std::move(graphicsDevice)),
               _memoryAllocator(std::move(memoryAllocator)),
+              _resourceLoader(std::move(resourceLoader)),
               _showMetricsWindow(debugMode),
 
               _fontCache(),
@@ -274,8 +245,9 @@ namespace NovelRT::UI::ImGui
                         std::shared_ptr<Input::InputProvider<TInputBackend>> inputProvider,
                         std::shared_ptr<Graphics::GraphicsDevice<TGraphicsBackend>> graphicsDevice,
                         std::shared_ptr<Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> memoryAllocator,
+                        std::shared_ptr<ResourceManagement::ResourceLoader> resourceLoader,
                         bool debugMode = false)
-            : ImGuiUIProvider(windowProvider, inputProvider, graphicsDevice, memoryAllocator, nullptr, debugMode)
+            : ImGuiUIProvider(windowProvider, inputProvider, graphicsDevice, memoryAllocator, resourceLoader, nullptr, debugMode)
         {}
 
         ~ImGuiUIProvider() = default;

@@ -29,6 +29,8 @@ namespace NovelRT::ResourceManagement::Desktop
         [[nodiscard]] TextureMetadata LoadTexture(uuids::uuid assetId) final;
         [[nodiscard]] ShaderMetadata LoadShaderSource(std::filesystem::path filePath) final;
         [[nodiscard]] ShaderMetadata LoadShaderSource(uuids::uuid assetId) final;
+        [[nodiscard]] FontMetadata LoadFont(std::filesystem::path filePath) final;
+        [[nodiscard]] FontMetadata LoadFont(uuids::uuid assetId) final;
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
         [[nodiscard]] BinaryPackage LoadPackage(uuids::uuid assetId) final;
         void SavePackage(std::filesystem::path filePath, const BinaryPackage& package) final;
