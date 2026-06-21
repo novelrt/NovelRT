@@ -8,6 +8,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::ImGu
     NovelRT::Input
     NovelRT::UI
     NovelRT::Windowing
+    NovelRT::ResourceManagement::Desktop
 
   SOURCES
     PRIVATE

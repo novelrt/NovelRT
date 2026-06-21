@@ -3,7 +3,6 @@
 
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
-#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Graphics/GraphicsBuffer.hpp>
@@ -19,6 +18,7 @@
 #include <NovelRT/Graphics/GraphicsPipelineInputElementKind.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineResource.hpp>
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 #include <NovelRT/Graphics/GraphicsResourceMemoryRegion.hpp>
 #include <NovelRT/Graphics/GraphicsTexture.hpp>
 
@@ -29,6 +29,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp>
+
+#include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 
 #include <NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp>
 
@@ -412,6 +414,9 @@ int main()
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
         NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
+    auto desktopResourceLoader = std::make_shared<NovelRT::ResourceManagement::Desktop::DesktopResourceLoader>();
+    desktopResourceLoader->InitAssetDatabase();
+
     // Graphics Setup
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
@@ -429,7 +434,7 @@ int main()
     auto uiProvider = std::make_shared<
         ImGuiUIProvider<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
                         NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(wndProvider, inputProvider, gfxDevice,
-                                                                         memoryAllocator, true);
+                                                                         memoryAllocator, desktopResourceLoader, true);
 
     unused(uiProvider->AddFontToUpload("default", "Raleway-Regular.ttf"));
 
