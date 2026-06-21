@@ -82,7 +82,7 @@ namespace NovelRT::Ecs::UI
                             ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
                         ImGui::SetNextWindowPos(
                             ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
-                        ImGui::Begin(container.title, NULL,
+                        ImGui::Begin(container.title->c_str(), NULL,
                                      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
                     }
                     break;
@@ -117,7 +117,7 @@ namespace NovelRT::Ecs::UI
                         ImGui::SetCursorPos(
                             ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
 
-                        if (ImGui::Button(button.label,
+                        if (ImGui::Button(button.label->c_str(),
                                           ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY)))
                         {
                             Ecs::UI::Components::UIClickEvent clickEvent{};
@@ -141,7 +141,7 @@ namespace NovelRT::Ecs::UI
                                               ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
                                                      text.colour.getBScalar(), text.colour.getAScalar()));
 
-                        ImGui::Text("%s", text.textValue);
+                        ImGui::Text("%s", text.textValue->c_str());
 
                         ImGui::PopStyleColor();
                     }

@@ -160,6 +160,9 @@ private:
     bool _firstPass = true;
     int32_t _initialWidth;
     int32_t _initialHeight;
+    std::string _emptyText = "";
+    std::string _containerLabel = "NarrativeTextbox";
+    std::string _nextButtonText = "Next";
 
 public:
     UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize):
@@ -192,7 +195,7 @@ public:
         auto rootId = catalogue.CreateEntity();
 
         elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
-        containerView.AddComponent(rootId, UIWidgetContainer{"NarrativeTextbox", false});
+        containerView.AddComponent(rootId, UIWidgetContainer{&_containerLabel, false});
         transformView.AddComponent(rootId,
                                    TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
@@ -203,7 +206,7 @@ public:
         auto textId = catalogue.CreateEntity();
 
         elementView.AddComponent(textId, UIElement{textId, UIComponentType::Text});
-        textView.AddComponent(textId, UIText{"", RGBAColour(255, 255, 255, 255)});
+        textView.AddComponent(textId, UIText{&_emptyText, RGBAColour(255, 255, 255, 255)});
         graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
         rootView.AddInsertChildInstruction(textId);
 
@@ -214,7 +217,7 @@ public:
         elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
         buttonView.AddComponent(buttonId,
                                 UIButton{
-                                    "Next",
+                                    &_nextButtonText,
                                     clickEventId,
                                     NovelRT::Graphics::RGBAColour{0, 102, 204, 255}, // bg
                                     NovelRT::Graphics::RGBAColour{0, 82, 163, 255},                        // active
@@ -233,6 +236,7 @@ class UIInteractionSystem : public IEcsSystem
 private:
     std::optional<EntityId> _button;
     std::optional<EntityId> _text;
+    std::string _endingText = "...";
     uint32_t _strIndex = 0;
 
     std::vector<std::string> _story{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
@@ -260,7 +264,7 @@ public:
                     if (textView.TryGetComponent(id, initialText))
                     {
                         textView.PushComponentUpdateInstruction(
-                            id, UIText{_story[_strIndex].c_str(), initialText.colour});
+                            id, UIText{&_story[_strIndex], initialText.colour});
                     }
                 }
             }
@@ -281,11 +285,11 @@ public:
                     {
                         if (_strIndex < _story.size())
                         {
-                            text.textValue = _story[_strIndex].c_str();
+                            text.textValue = &_story[_strIndex];
                         }
                         else
                         {
-                            text.textValue = "...";
+                            text.textValue = &_endingText;
 
                             // slightly fade the milk away...
                             for (auto [spriteId, component] : spriteView)

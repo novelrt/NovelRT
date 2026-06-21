@@ -11,7 +11,7 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIWidgetContainer
     {
-        const char* title = "";
+        std::string* title;
         bool closeable = false;
 
         inline UIWidgetContainer& operator+=(const UIWidgetContainer& other)

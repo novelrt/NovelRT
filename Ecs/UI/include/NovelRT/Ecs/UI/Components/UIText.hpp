@@ -12,7 +12,7 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIText
     {
-        const char* textValue = "";
+        std::string* textValue;
         NovelRT::Graphics::RGBAColour colour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
 
         inline UIText& operator+=(const UIText& other)

@@ -12,7 +12,7 @@ namespace NovelRT::Ecs::UI::Components
 {
     struct UIButton
     {
-        const char* label = "";
+        std::string* label;
         uint64_t eventId = std::numeric_limits<uint64_t>::max();
         NovelRT::Graphics::RGBAColour bgColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
         NovelRT::Graphics::RGBAColour activeColour = NovelRT::Graphics::RGBAColour(0, 0, 0, 255);
