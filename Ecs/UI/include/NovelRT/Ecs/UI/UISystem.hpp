@@ -7,6 +7,8 @@
 
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
+
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
@@ -72,84 +74,24 @@ namespace NovelRT::Ecs::UI
             {
                 case Ecs::UI::UIComponentType::Container:
                 {
-                    Ecs::Components::TransformComponent transform{};
-                    Ecs::UI::Components::UIWidgetContainer container{};
-
-                    if (containers.TryGetComponent(element.entity, container) &&
-                        transforms.TryGetComponent(element.entity, transform))
-                    {
-                        ImGui::SetNextWindowSize(
-                            ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
-                        ImGui::SetNextWindowPos(
-                            ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
-                        ImGui::Begin(container.title->c_str(), NULL,
-                                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-                    }
+                    GenerateContainerCommands(catalogue, element, scaleX, scaleY);
                     break;
                 }
                 case Ecs::UI::UIComponentType::Button:
                 {
-                    Ecs::UI::Components::UIButton button{};
-                    Ecs::Components::TransformComponent transform{};
-
-                    if (buttons.TryGetComponent(element.entity, button) &&
-                        transforms.TryGetComponent(element.entity, transform))
-                    {
-                        // Gotta push styling first, then call button
-                        ImGui::PushStyleColor(ImGuiCol_Button,
-                                              ImVec4(button.bgColour.getRScalar(), button.bgColour.getGScalar(),
-                                                     button.bgColour.getBScalar(), button.bgColour.getAScalar()));
-
-                        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(button.hoveredColour.getRScalar(),
-                                                                             button.hoveredColour.getGScalar(),
-                                                                             button.hoveredColour.getBScalar(),
-                                                                             button.hoveredColour.getAScalar()));
-
-                        ImGui::PushStyleColor(ImGuiCol_ButtonActive,
-                                              ImVec4(button.activeColour.getRScalar(), button.activeColour.getGScalar(),
-                                                     button.activeColour.getBScalar(),
-                                                     button.activeColour.getAScalar()));
-
-                        ImGui::PushStyleColor(ImGuiCol_Text,
-                                              ImVec4(button.textColour.getRScalar(), button.textColour.getGScalar(),
-                                                     button.textColour.getBScalar(), button.textColour.getAScalar()));
-
-                        ImGui::SetCursorPos(
-                            ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
-
-                        if (ImGui::Button(button.label->c_str(),
-                                          ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY)))
-                        {
-                            Ecs::UI::Components::UIClickEvent clickEvent{};
-                            clickEvent.eventId = button.eventId;
-                            clickEvents.AddComponent(element.entity, clickEvent);
-                        }
-
-                        // Remove the styling lest there be demons ahead... or oddities.
-                        ImGui::PopStyleColor(4);
-                    }
+                    GenerateButtonCommands(catalogue, element, scaleX, scaleY);
                     break;
                 }
                 case Ecs::UI::UIComponentType::Text:
                 {
-                    Ecs::UI::Components::UIText text{};
-
-                    if (textView.TryGetComponent(element.entity, text))
-                    {
-                        // same pattern - push style, write, pop style;
-                        ImGui::PushStyleColor(ImGuiCol_Text,
-                                              ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
-                                                     text.colour.getBScalar(), text.colour.getAScalar()));
-
-                        ImGui::Text("%s", text.textValue->c_str());
-
-                        ImGui::PopStyleColor();
-                    }
+                    GenerateTextLineCommands(catalogue, element);
                     break;
                 }
                 default:
                 {
-                    break;
+                    std::stringstream exceptionValue;
+                    exceptionValue << "The UI Component type is undefined for the current element at entity " << element.entity << ".";
+                    throw NovelRT::Exceptions::InvalidOperationException(exceptionValue.str());
                 }
             }
         }
@@ -170,6 +112,94 @@ namespace NovelRT::Ecs::UI
                 EnumerateChildren(child.get(), view, inOrder, currentDepth + 1);
             }
         }
+
+        void GenerateContainerCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        {
+            auto [containers, transforms] =
+                catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer,Ecs::Components::TransformComponent>();
+
+            Ecs::Components::TransformComponent transform{};
+            Ecs::UI::Components::UIWidgetContainer container{};
+
+            if (containers.TryGetComponent(element.entity, container) &&
+                transforms.TryGetComponent(element.entity, transform))
+            {
+                ImGui::SetNextWindowSize(
+                    ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
+                ImGui::SetNextWindowPos(
+                    ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
+                ImGui::Begin(container.title->c_str(), NULL,
+                                ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+            }
+        }
+
+        void GenerateButtonCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        {
+            auto [buttons, transforms, clickEvents] =
+                catalogue.GetComponentViews<Ecs::UI::Components::UIButton,
+                                            Ecs::Components::TransformComponent,
+                                            Ecs::UI::Components::UIClickEvent>();
+
+            Ecs::UI::Components::UIButton button{};
+            Ecs::Components::TransformComponent transform{};
+
+            if (buttons.TryGetComponent(element.entity, button) &&
+                transforms.TryGetComponent(element.entity, transform))
+            {
+                // Gotta push styling first, then call button
+                ImGui::PushStyleColor(ImGuiCol_Button,
+                                        ImVec4(button.bgColour.getRScalar(), button.bgColour.getGScalar(),
+                                                button.bgColour.getBScalar(), button.bgColour.getAScalar()));
+
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(button.hoveredColour.getRScalar(),
+                                                                        button.hoveredColour.getGScalar(),
+                                                                        button.hoveredColour.getBScalar(),
+                                                                        button.hoveredColour.getAScalar()));
+
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive,
+                                        ImVec4(button.activeColour.getRScalar(), button.activeColour.getGScalar(),
+                                                button.activeColour.getBScalar(),
+                                                button.activeColour.getAScalar()));
+
+                ImGui::PushStyleColor(ImGuiCol_Text,
+                                        ImVec4(button.textColour.getRScalar(), button.textColour.getGScalar(),
+                                                button.textColour.getBScalar(), button.textColour.getAScalar()));
+
+                ImGui::SetCursorPos(
+                    ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
+
+                if (ImGui::Button(button.label->c_str(),
+                                    ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY)))
+                {
+                    Ecs::UI::Components::UIClickEvent clickEvent{};
+                    clickEvent.eventId = button.eventId;
+                    clickEvents.AddComponent(element.entity, clickEvent);
+                }
+
+                // Remove the styling lest there be demons ahead... or oddities.
+                ImGui::PopStyleColor(4);
+            }
+        }
+
+        void GenerateTextLineCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element)
+        {
+            auto [textView] = catalogue.GetComponentViews<Ecs::UI::Components::UIText>();
+
+            Ecs::UI::Components::UIText text{};
+
+            if (textView.TryGetComponent(element.entity, text))
+            {
+                // same pattern - push style, write, pop style;
+                ImGui::PushStyleColor(ImGuiCol_Text,
+                                        ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
+                                                text.colour.getBScalar(), text.colour.getAScalar()));
+
+                ImGui::Text("%s", text.textValue->c_str());
+
+                ImGui::PopStyleColor();
+            }
+        }
+
 
         void Render(Catalogue catalogue)
         {
