@@ -28,7 +28,7 @@ struct NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::LoadResult
 
 auto NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::GetLoadRequests(ComponentView<Components::DecisionTreeLoadRequest>& requests) -> std::vector<LoadRequest>
 {
-    std::vector<LoadRequest> result;
+    std::vector<LoadRequest> result{};
 
     for (const auto& [entity, component] : requests)
     {
