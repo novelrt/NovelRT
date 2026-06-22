@@ -49,8 +49,13 @@ NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::DecisionTreeLoadingSystem(
 void NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
 {
     auto loadRequests = catalogue.GetComponentView<Components::DecisionTreeLoadRequest>();
+    if (loadRequests.begin() == loadRequests.end()) return;
+
+    auto requests = GetLoadRequests(loadRequests);
+    loadRequests.RemoveAllComponents();
+
     catalogue.ScheduleWithCompletion(
-        [requests = GetLoadRequests(loadRequests), loader = _resourceLoader]()
+        [requests = std::move(requests), loader = _resourceLoader]()
         {
             std::vector<LoadResult> results(requests.size());
             std::transform(requests.begin(), requests.end(), results.begin(), [&loader](const auto& request)
