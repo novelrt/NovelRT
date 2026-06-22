@@ -9,7 +9,9 @@
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 #include <NovelRT/ResourceManagement/Desktop/ImageData.hpp>
 #include <NovelRT/Utilities/Strings.hpp>
+#include <algorithm>
 #include <fstream>
+#include <iterator>
 #include <nlohmann/json.hpp>
 #include <png.h>
 #include <samplerate.h>
@@ -312,6 +314,46 @@ namespace NovelRT::ResourceManagement::Desktop
     ShaderMetadata DesktopResourceLoader::LoadShaderSource(uuids::uuid assetId)
     {
         return LoadShaderSource(GetGuidsToFilePathsMap().at(assetId));
+    }
+
+    ScriptMetadata DesktopResourceLoader::LoadScript(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Script" / filePath.filename();
+        }
+
+        std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()),
+                  std::streamsize(fileSize));
+        file.close();
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        bool is_precompiled = buffer.size() >= 4 &&
+            std::all_of(buffer.begin(), std::next(buffer.begin(), 4), [i = 0](const auto c) mutable
+            {
+                // Precompiled Lua code always starts with '<esc>Lua'
+                constexpr const char signature[] = "\x1bLua";
+
+                return c == signature[i++];
+            });
+
+        return ScriptMetadata{is_precompiled, buffer, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    ScriptMetadata DesktopResourceLoader::LoadScript(uuids::uuid assetId)
+    {
+        return LoadScript(GetGuidsToFilePathsMap().at(assetId));
     }
 
     FontMetadata DesktopResourceLoader::LoadFont(std::filesystem::path filePath)

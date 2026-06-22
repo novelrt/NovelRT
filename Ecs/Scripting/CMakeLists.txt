@@ -3,6 +3,7 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting
   DEPENDS
     NovelRT::Ecs::Core
+    NovelRT::ResourceManagement::Desktop
     NovelRT::Scripting
 
   SOURCES
@@ -10,6 +11,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting
       StepSystems/BranchStepSystem.cpp
       StepSystems/SpokenLineStepSystem.cpp
 
+      DecisionTreeLoadingSystem.cpp
       DecisionTreeStateManager.cpp
       DecisionTreeStepSystem.cpp
       EcsScriptingBuilder.cpp
@@ -20,6 +22,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting
       include/NovelRT/Ecs/Scripting/Components/Branch.hpp
       include/NovelRT/Ecs/Scripting/Components/BranchChoice.hpp
       include/NovelRT/Ecs/Scripting/Components/ContinueDecisionTree.hpp
+      include/NovelRT/Ecs/Scripting/Components/DecisionTreeLoadRequest.hpp
+      include/NovelRT/Ecs/Scripting/Components/LoadedDecisionTree.hpp
       include/NovelRT/Ecs/Scripting/Components/Pose.hpp
       include/NovelRT/Ecs/Scripting/Components/SpokenLine.hpp
 
