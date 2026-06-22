@@ -9,6 +9,7 @@ namespace NovelRT::Ecs::Scripting::Graphics
 {
     class PoseToSpriteTranslationSystem : public NovelRT::Ecs::IEcsSystem
     {
+    public:
         void Update(Timing::Timestamp, Catalogue);
     };
 }

@@ -6,9 +6,13 @@
 #include <NovelRT/Ecs/ComponentView.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 
+#include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
 #include <NovelRT/Ecs/Scripting/Components/Pose.hpp>
 
-void PoseToSpriteTranslationSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
-{
+#include <NovelRT/Ecs/Scripting/Graphics/PoseToSpriteTranslationSystem.hpp>
 
+void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+{
+    auto it = catalogue.GetComponentView<Components::Pose>();
 }
+
