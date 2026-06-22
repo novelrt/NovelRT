@@ -49,7 +49,10 @@ NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::DecisionTreeLoadingSystem(
 void NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
 {
     auto loadRequests = catalogue.GetComponentView<Components::DecisionTreeLoadRequest>();
-    if (loadRequests.begin() == loadRequests.end()) return;
+    if (loadRequests.begin() == loadRequests.end())
+    {
+        return;
+    }
 
     auto requests = GetLoadRequests(loadRequests);
     loadRequests.RemoveAllComponents();
