@@ -8,4 +8,4 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting
     NovelRT::Ecs::Scripting::Graphics)
 
 add_subdirectory(Core)
-# add_subdirectory(Graphics)
+add_subdirectory(Graphics)
