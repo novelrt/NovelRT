@@ -192,7 +192,7 @@ public:
         // container - this is the "box" for the textbox
         auto rootId = catalogue.CreateEntity();
 
-        elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
+        elementView.AddComponent(rootId, UIElement{UIComponentType::Container});
         containerView.AddComponent(rootId, UIWidgetContainer{&_containerLabel, false});
         transformView.AddComponent(rootId,
                                    TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
@@ -203,7 +203,7 @@ public:
         // Now the text
         auto textId = catalogue.CreateEntity();
 
-        elementView.AddComponent(textId, UIElement{textId, UIComponentType::Text});
+        elementView.AddComponent(textId, UIElement{UIComponentType::Text});
         textView.AddComponent(textId, UIText{&_emptyText, RGBAColour(255, 255, 255, 255)});
         graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
         rootView.AddInsertChildInstruction(textId);
@@ -212,7 +212,7 @@ public:
         auto buttonId = catalogue.CreateEntity();
         uint64_t clickEventId =
             1; // any number for this example will do, but you should be very explicit on event Ids in real systems
-        elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
+        elementView.AddComponent(buttonId, UIElement{UIComponentType::Button});
         buttonView.AddComponent(buttonId, UIButton{
                                               &_nextButtonText,
                                               clickEventId,
