@@ -591,17 +591,6 @@ namespace NovelRT::UI::ImGui
             auto& io = ::ImGui::GetIO();
             io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
-            GraphicsBufferCreateInfo bufferCreateInfo{};
-            bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
-            bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
-            bufferCreateInfo.size = 64 * 1024 * 4;
-
-            // Create Texture Staging Buffer
-            auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-            // Begin commands
-            // context->BeginFrame();
-
             // Create the texture
             auto textureCreateInfo = GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat,
                                                                GraphicsTextureKind::TwoDimensional,
@@ -613,6 +602,17 @@ namespace NovelRT::UI::ImGui
                                                                GraphicsMemoryRegionAllocationFlags::None,
                                                                TexelFormat::R8G8B8A8_UNORM};
             auto texture2D = _memoryAllocator->CreateTexture(textureCreateInfo);
+
+            GraphicsBufferCreateInfo bufferCreateInfo{};
+            bufferCreateInfo.cpuAccessKind = GraphicsResourceAccess::Write;
+            bufferCreateInfo.gpuAccessKind = GraphicsResourceAccess::Read;
+            bufferCreateInfo.size = texture2D->GetSize();
+
+            // Create Texture Staging Buffer
+            auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+            // Begin commands
+            // context->BeginFrame();
 
             // Allocate region based on size of texture
             auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
