@@ -12,5 +12,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs
 
 add_subdirectory(Core)
 add_subdirectory(Graphics)
-add_subdirectory(UI)
 add_subdirectory(Scripting)
+add_subdirectory(UI)
