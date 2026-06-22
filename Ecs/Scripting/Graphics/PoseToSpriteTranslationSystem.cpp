@@ -38,6 +38,7 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::CleanupIn
     {
         if (trees.HasComponent(it->first))
         {
+            ++it;
             continue;
         }
 
@@ -46,7 +47,7 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::CleanupIn
             catalogue.DeleteEntity(character.sprite);
         }
 
-        ++it;
+        it = _activeTrees.erase(it);
     }
 }
 
