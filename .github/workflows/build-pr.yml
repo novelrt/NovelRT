@@ -7,7 +7,7 @@ on:
       - '**.cpp'
       - '**.hpp'
       - '**/*.cmake'
-      - '**/CMakelists.txt'
+      - '**/CMakeLists.txt'
 
 jobs:
   Formatting:
