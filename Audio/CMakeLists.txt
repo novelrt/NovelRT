@@ -9,9 +9,6 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Audio
 
 add_subdirectory(Core)
 
-find_package(OpenAL "1.23.1")
-if(OpenAL_FOUND)
-  add_subdirectory(OpenAL)
-endif()
+add_subdirectory(OpenAL)
 
 # TODO: XAudio, AVAudioEngine
