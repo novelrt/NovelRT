@@ -71,7 +71,7 @@ namespace NovelRT::Ecs
         template<typename TWork, typename TCompletion>
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
-            TCompletion&& completion) noexcept;
+            TCompletion&& completion);
 
         void RebuildSystemDependencyTreeLayers();
 

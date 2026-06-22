@@ -11,7 +11,7 @@ namespace NovelRT::Ecs
     template<typename TWork, typename TCompletion>
     requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void Catalogue::ScheduleWithCompletion(
         TWork&& work,
-        TCompletion&& completion) noexcept
+        TCompletion&& completion)
     {
         _scheduler.ScheduleWithCompletion(std::forward<TWork>(work), std::forward<TCompletion>(completion));
     }
@@ -19,7 +19,7 @@ namespace NovelRT::Ecs
     template<typename TWork, typename TCompletion>
     requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void SystemScheduler::ScheduleWithCompletion(
         TWork&& work,
-        TCompletion&& completion) noexcept
+        TCompletion&& completion)
     {
         _asyncArena->execute(
             [&]()
