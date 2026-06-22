@@ -5,6 +5,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting::Graphics
     NovelRT::Ecs::Core
     NovelRT::Ecs::Scripting::Core
     NovelRT::Ecs::Graphics
+    NovelRT::ResourceManagement
 
   SOURCES
     PRIVATE

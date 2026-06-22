@@ -5,11 +5,34 @@
 
 #include <NovelRT/Ecs/IEcsSystem.hpp>
 
+#include <NovelRT/ResourceManagement/ResourceLoader.hpp>
+#include <NovelRT/Scripting/DecisionTreeStatus.hpp>
+
+#include <memory>
+#include <unordered_map>
+
 namespace NovelRT::Ecs::Scripting::Graphics
 {
     class PoseToSpriteTranslationSystem : public NovelRT::Ecs::IEcsSystem
     {
+    private:
+        struct TreeInfo;
+
+        std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
+
+        std::unordered_map<EntityId, TreeInfo> _activeTrees;
+
+        void CleanupInactiveTrees(Catalogue& catalogue);
+        void IdentifyNewTrees(Catalogue& catalogue);
+
+        void UpdateCharacterInformation(Catalogue& catalogue);
+
+        void ApplySpriteUpdates(Catalogue& catalogue);
+
     public:
+        PoseToSpriteTranslationSystem(
+            const std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& resourceLoader);
+
         void Update(Timing::Timestamp, Catalogue);
     };
 }
