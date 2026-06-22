@@ -94,7 +94,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
-    $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+    $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+    $<$<CXX_COMPILER_ID:MSVC>:/Zc:lambda>)
 
   # CMake doesn't like static libraries with no sources, so we add the dependencies as private sources to silence it.
   # This PROBABLY leads to some duplication but fortunately the linker is really good at de-duplicating code
