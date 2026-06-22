@@ -47,11 +47,11 @@ void NovelRT::Ecs::Scripting::EcsScriptingBuilder::operator()(SystemScheduler& s
     cache.RegisterComponentType(_defaultContinueDecisionTreeChoiceComponent,
                                 "NovelRT::Ecs::Scripting::ContinueDecisionTree");
 
-    // auto loadingSystem = scheduler.RegisterSystem(_loadingSystemFactory(_scriptManager));
+    auto loadingSystem = scheduler.RegisterSystem(_loadingSystemFactory(_scriptManager));
 
     for (const auto& factory : _stepSystemFactories)
     {
-        auto stepSystem = scheduler.RegisterSystem(factory(_stateManager, scheduler));
+        auto stepSystem = scheduler.RegisterSystem(factory(_stateManager, scheduler), std::vector<SystemId>{ loadingSystem });
         unused(stepSystem);
     }
 }
