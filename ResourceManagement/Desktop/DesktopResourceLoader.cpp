@@ -339,11 +339,12 @@ namespace NovelRT::ResourceManagement::Desktop
 
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
-        // Precompiled Lua code always starts with '<esc>Lua'
-        constexpr const char signature[] = "\x1bLua";
         bool is_precompiled = buffer.size() >= 4 &&
             std::all_of(buffer.begin(), std::next(buffer.begin(), 4), [i = 0](const auto c) mutable
             {
+                // Precompiled Lua code always starts with '<esc>Lua'
+                constexpr const char signature[] = "\x1bLua";
+
                 return c == signature[i++];
             });
 
