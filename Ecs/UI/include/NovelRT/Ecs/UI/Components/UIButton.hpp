@@ -21,6 +21,8 @@ namespace NovelRT::Ecs::UI::Components
 
         inline UIButton& operator+=(const UIButton& other)
         {
+            delete label;
+
             *this = other;
             return *this;
         }

@@ -43,8 +43,7 @@ NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::DecisionTreeLoadingSystem(
     const std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& resourceLoader)
     : _scriptManager{manager},
       _resourceLoader{resourceLoader}
-{
-}
+{}
 
 void NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
 {

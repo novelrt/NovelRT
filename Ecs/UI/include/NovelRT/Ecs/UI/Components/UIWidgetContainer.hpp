@@ -16,6 +16,8 @@ namespace NovelRT::Ecs::UI::Components
 
         inline UIWidgetContainer& operator+=(const UIWidgetContainer& other)
         {
+            delete title;
+
             *this = other;
             return *this;
         }

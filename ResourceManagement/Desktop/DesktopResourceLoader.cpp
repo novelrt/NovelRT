@@ -320,7 +320,7 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         if (filePath.is_relative())
         {
-            filePath = _resourcesRootDirectory / "Script" / filePath.filename();
+            filePath = _resourcesRootDirectory / "Scripts" / filePath.filename();
         }
 
         std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);

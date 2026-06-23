@@ -54,16 +54,15 @@ namespace NovelRT::Ecs::UI
                                 EntityId entity)
         {
             EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
-
-            while (it.HasParent())
+            if (!it.HasParent())
             {
-                it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
+                return it;
             }
 
-            return it;
+            return GetRoot(view, catalogue, it.GetRawComponentData().parent);
         }
 
-        void ParseElementCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        void ParseElementCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
         {
             auto [containers, buttons, textView, transforms, clickEvents] =
                 catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer, Ecs::UI::Components::UIButton,
@@ -74,23 +73,23 @@ namespace NovelRT::Ecs::UI
             {
                 case Ecs::UI::UIComponentType::Container:
                 {
-                    GenerateContainerCommands(catalogue, element, scaleX, scaleY);
+                    GenerateContainerCommands(catalogue, entity, element, scaleX, scaleY);
                     break;
                 }
                 case Ecs::UI::UIComponentType::Button:
                 {
-                    GenerateButtonCommands(catalogue, element, scaleX, scaleY);
+                    GenerateButtonCommands(catalogue, entity, element, scaleX, scaleY);
                     break;
                 }
                 case Ecs::UI::UIComponentType::Text:
                 {
-                    GenerateTextLineCommands(catalogue, element);
+                    GenerateTextLineCommands(catalogue, entity, element);
                     break;
                 }
                 default:
                 {
                     std::stringstream exceptionValue;
-                    exceptionValue << "The UI Component type is undefined for the current element at entity " << element.entity << ".";
+                    exceptionValue << "The UI Component type is undefined for the current element at entity " << entity << ".";
                     throw NovelRT::Exceptions::InvalidOperationException(exceptionValue.str());
                 }
             }
@@ -113,7 +112,7 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void GenerateContainerCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        void GenerateContainerCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement&, float scaleX, float scaleY)
         {
             auto [containers, transforms] =
                 catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer,Ecs::Components::TransformComponent>();
@@ -121,8 +120,8 @@ namespace NovelRT::Ecs::UI
             Ecs::Components::TransformComponent transform{};
             Ecs::UI::Components::UIWidgetContainer container{};
 
-            if (containers.TryGetComponent(element.entity, container) &&
-                transforms.TryGetComponent(element.entity, transform))
+            if (containers.TryGetComponent(entity, container) &&
+                transforms.TryGetComponent(entity, transform))
             {
                 ImGui::SetNextWindowSize(
                     ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
@@ -133,7 +132,7 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void GenerateButtonCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        void GenerateButtonCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement&, float scaleX, float scaleY)
         {
             auto [buttons, transforms, clickEvents] =
                 catalogue.GetComponentViews<Ecs::UI::Components::UIButton,
@@ -143,8 +142,8 @@ namespace NovelRT::Ecs::UI
             Ecs::UI::Components::UIButton button{};
             Ecs::Components::TransformComponent transform{};
 
-            if (buttons.TryGetComponent(element.entity, button) &&
-                transforms.TryGetComponent(element.entity, transform))
+            if (buttons.TryGetComponent(entity, button) &&
+                transforms.TryGetComponent(entity, transform))
             {
                 // Gotta push styling first, then call button
                 ImGui::PushStyleColor(ImGuiCol_Button,
@@ -173,7 +172,7 @@ namespace NovelRT::Ecs::UI
                 {
                     Ecs::UI::Components::UIClickEvent clickEvent{};
                     clickEvent.eventId = button.eventId;
-                    clickEvents.AddComponent(element.entity, clickEvent);
+                    clickEvents.AddComponent(entity, clickEvent);
                 }
 
                 // Remove the styling lest there be demons ahead... or oddities.
@@ -181,13 +180,13 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void GenerateTextLineCommands(Catalogue& catalogue, Ecs::UI::Components::UIElement& element)
+        void GenerateTextLineCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement&)
         {
             auto [textView] = catalogue.GetComponentViews<Ecs::UI::Components::UIText>();
 
             Ecs::UI::Components::UIText text{};
 
-            if (textView.TryGetComponent(element.entity, text))
+            if (textView.TryGetComponent(entity, text))
             {
                 // same pattern - push style, write, pop style;
                 ImGui::PushStyleColor(ImGuiCol_Text,
@@ -201,7 +200,7 @@ namespace NovelRT::Ecs::UI
         }
 
 
-        void Render(Catalogue catalogue)
+        void Render(Catalogue& catalogue)
         {
             auto [renderPasses, commandLists, trackedSemaphores] =
                 catalogue.GetComponentViews<Graphics::Components::RenderPass<TGraphicsBackend>,
@@ -281,7 +280,7 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
+        void ProcessComponents(Timing::Timestamp delta, Catalogue& catalogue)
         {
             // 1. Start frame unanimously - this is for debug/metric windows
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
@@ -360,7 +359,7 @@ namespace NovelRT::Ecs::UI
 
                 if (element != elements.end())
                 {
-                    ParseElementCommands(catalogue, element->second, scaleX, scaleY);
+                    ParseElementCommands(catalogue, entity, element->second, scaleX, scaleY);
 
                     if (element->second.Type == UIComponentType::Container)
                     {

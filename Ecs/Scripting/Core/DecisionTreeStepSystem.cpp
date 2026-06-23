@@ -24,7 +24,14 @@ void NovelRT::Ecs::Scripting::DecisionTreeStepSystem::Continue(
 {
     auto decisionTrees = catalogue.GetComponentView<Components::ActiveDecisionTree>();
 
-    auto* ptr = new std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>(std::move(status));
-    decisionTrees.PushComponentUpdateInstruction(entity, Components::ActiveDecisionTree{ptr});
-    _stepManager.HandleStateChange(catalogue, entity, *ptr);
+    if (status != nullptr)
+    {
+        auto* ptr = new std::shared_ptr<NovelRT::Scripting::DecisionTreeStatus>(std::move(status));
+        decisionTrees.PushComponentUpdateInstruction(entity, Components::ActiveDecisionTree{ptr});
+        _stepManager.HandleStateChange(catalogue, entity, *ptr);
+    }
+    else
+    {
+        decisionTrees.RemoveComponent(entity);
+    }
 }
