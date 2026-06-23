@@ -81,7 +81,7 @@ public:
 
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
-        if (/*_spriteEntity.has_value() && _cameraViewportEntity.has_value()*/ true)
+        if (_spriteEntity.has_value() && _cameraViewportEntity.has_value())
         {
             return;
         }
