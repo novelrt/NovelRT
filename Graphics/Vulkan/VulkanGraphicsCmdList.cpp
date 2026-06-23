@@ -25,7 +25,6 @@
 
 namespace NovelRT::Graphics
 {
-
     using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsCmdList = GraphicsCmdList<Vulkan::VulkanGraphicsBackend>;
@@ -479,7 +478,7 @@ namespace NovelRT::Graphics
         vkCmdPipelineBarrier(_commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
     }
 
-    void VulkanGraphicsCmdList::CmdClearDepthAndColourSwapchainImage(
+    void VulkanGraphicsCmdList::CmdClearColourSwapchainImage(
         const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
         ClearValue clearData)
     {
@@ -502,16 +501,5 @@ namespace NovelRT::Graphics
 
         vkCmdClearColorImage(_commandBuffer, swapchainImage->GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                              &colourValue, 1, &subresourceColourRange);
-        /*
-
-                VkImageSubresourceRange subresourceDepthRange{};
-                subresourceDepthRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-                subresourceDepthRange.levelCount = 1;
-                subresourceDepthRange.layerCount = 1;
-
-                vkCmdClearDepthStencilImage(_commandBuffer, swapchainImage->GetVulkanImage(),
-                                            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &depthValue, 1,
-           &subresourceDepthRange);
-                                            */
     }
 }

@@ -140,8 +140,7 @@ namespace NovelRT::Graphics
                                            ImageLayout oldLayout,
                                            ImageLayout newLayout);
 
-        void CmdClearDepthAndColourSwapchainImage(
-            const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
-            ClearValue clearData);
+        void CmdClearColourSwapchainImage(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
+                                          ClearValue clearData);
     };
 }

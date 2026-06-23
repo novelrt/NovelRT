@@ -161,7 +161,7 @@ namespace NovelRT::Ecs::Graphics
                 cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::Undefined,
                                                        NovelRT::Graphics::ImageLayout::DstTransfer);
 
-                cmdList->CmdClearDepthAndColourSwapchainImage(image, colourDataStruct);
+                cmdList->CmdClearColourSwapchainImage(image, colourDataStruct);
 
                 cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
                                                        NovelRT::Graphics::ImageLayout::Present);

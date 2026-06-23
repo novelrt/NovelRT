@@ -120,7 +120,7 @@ namespace NovelRT::Graphics
             ImageLayout oldLayout,
             ImageLayout newLayout);
 
-        void CmdClearDepthAndColourSwapchainImage(
+        void CmdClearColourSwapchainImage(
             const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
             ClearValue clearData);
     };
