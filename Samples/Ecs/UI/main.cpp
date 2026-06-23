@@ -390,7 +390,7 @@ int main()
                                    GraphicsAttachmentDescription attachmentDesc{};
 
                                    attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                                   attachmentDesc.loadOp = LoadOp::Clear;
+                                   attachmentDesc.loadOp = LoadOp::Load;
                                    attachmentDesc.storeOp = StoreOp::Store;
                                    attachmentDesc.initialLayout = ImageLayout::Present;
                                    attachmentDesc.finalLayout = ImageLayout::Present;
