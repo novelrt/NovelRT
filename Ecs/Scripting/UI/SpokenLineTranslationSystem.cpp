@@ -75,7 +75,7 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(
         });
         transforms.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::Components::TransformComponent{
             .position = {500.0f, 150.0f},
-            .scale = {80.0f, 30.0f},
+            .scale = {82.0f, 30.0f},
             .rotationInRadians = 0.0f
         });
 
@@ -112,9 +112,9 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
                 .colour = {255, 255, 255, 255}
             });
 
-            std::string speaker = *spokenLines.GetComponent(entity).speaker;
+            //std::string speaker = *spokenLines.GetComponent(entity).speaker;
             uiWidgetContainers.PushComponentUpdateInstruction(info.container, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string(speaker)
+                .title = new std::string("Message")
             });
         }
         else

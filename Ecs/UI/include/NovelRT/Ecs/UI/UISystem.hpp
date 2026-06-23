@@ -54,13 +54,12 @@ namespace NovelRT::Ecs::UI
                                 EntityId entity)
         {
             EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
-
-            while (it.HasParent())
+            if (!it.HasParent())
             {
-                it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
+                return it;
             }
 
-            return it;
+            return GetRoot(view, catalogue, it.GetRawComponentData().parent); //{catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
         }
 
         void ParseElementCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
@@ -201,7 +200,7 @@ namespace NovelRT::Ecs::UI
         }
 
 
-        void Render(Catalogue catalogue)
+        void Render(Catalogue& catalogue)
         {
             auto [renderPasses, commandLists, trackedSemaphores] =
                 catalogue.GetComponentViews<Graphics::Components::RenderPass<TGraphicsBackend>,
@@ -281,7 +280,7 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void ProcessComponents(Timing::Timestamp delta, Catalogue catalogue)
+        void ProcessComponents(Timing::Timestamp delta, Catalogue& catalogue)
         {
             // 1. Start frame unanimously - this is for debug/metric windows
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));

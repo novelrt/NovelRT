@@ -72,8 +72,8 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::IdentifyNewTrees(Cata
         });
 
         transforms.PushComponentUpdateInstruction(it->second.choiceContainer, NovelRT::Ecs::Components::TransformComponent{
-            .position = {350.0f, 200.0f},
-            .scale = {612.0f, 400.0f},
+            .position = {350.0f, 20.0f},
+            .scale = {612.0f, 450.0f},
             .rotationInRadians = 0.0f
         });
 
@@ -105,8 +105,12 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                 .Type = NovelRT::Ecs::UI::UIComponentType::Container
             });
 
+            uiWidgetContainers.PushComponentUpdateInstruction(info.choiceContainer, NovelRT::Ecs::UI::Components::UIWidgetContainer {
+                .title = new std::string("Choices")
+            });
+
             uiWidgetContainers.PushComponentUpdateInstruction(info.messageContainer, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string("Choice")
+                .title = new std::string("Prompt")
             });
 
             std::string prompt = *branch.prompt;
@@ -125,16 +129,23 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                 info.choices.resize(branch.choices->size());
             }
 
-            NovelRT::Ecs::EntityGraphView choiceRelations{catalogue, info.choiceContainer, NovelRT::Ecs::Components::EntityGraphComponent{}};
+
+            NovelRT::Ecs::EntityGraphView choiceRelations = graphComponents.HasComponent(info.choiceContainer)
+                ? NovelRT::Ecs::EntityGraphView{catalogue, info.choiceContainer, graphComponents.GetComponent(info.choiceContainer)}
+                : NovelRT::Ecs::EntityGraphView{catalogue, info.choiceContainer, NovelRT::Ecs::Components::EntityGraphComponent{}};
             for (size_t i = 0; i < info.choices.size(); i++)
             {
                 uiElements.PushComponentUpdateInstruction(info.choices[i], NovelRT::Ecs::UI::Components::UIElement {
                     .Type = NovelRT::Ecs::UI::UIComponentType::Button
                 });
 
-                uiTexts.PushComponentUpdateInstruction(info.choices[i], NovelRT::Ecs::UI::Components::UIText {
-                    .textValue = new std::string(branch.choices->at(i)),
-                    .colour = {255, 255, 255, 255}
+                uiButtons.PushComponentUpdateInstruction(info.choices[i], NovelRT::Ecs::UI::Components::UIButton {
+                    .label = new std::string(branch.choices->at(i)),
+                    .eventId = i,
+                    .bgColour = {0, 102, 204, 255},
+                    .activeColour = {0, 82, 163, 255},
+                    .hoveredColour = {0, 119, 255, 255},
+                    .textColour = {255, 255, 255, 255},
                 });
 
                 //choiceRelations.AddInsertChildInstruction(info.choices[i]);
@@ -160,8 +171,8 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                 });
 
                 transforms.PushComponentUpdateInstruction(button, NovelRT::Ecs::Components::TransformComponent{
-                    .position = {350.0f, 35.0f * i},
-                    .scale = {612.0f, 30.0f},
+                    .position = {32.0f, 20.0f + 35.0f * i},
+                    .scale = {548.0f, 30.0f},
                     .rotationInRadians = 0.0f
                 });
 
@@ -186,8 +197,10 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
             if (uiClickEvents.HasComponent(info.choices[i]))
             {
                 uiClickEvents.RemoveComponent(info.choices[i]);
-                // TODO: this
-                //continues.PushComponentUpdateInstruction(entity, Components::ContinueDecisionTree{});
+
+                branchChoices.PushComponentUpdateInstruction(entity, Components::BranchChoice{ .choiceIndex = i });
+                continues.PushComponentUpdateInstruction(entity, Components::ContinueDecisionTree{});
+                break;
             }
         }
     }

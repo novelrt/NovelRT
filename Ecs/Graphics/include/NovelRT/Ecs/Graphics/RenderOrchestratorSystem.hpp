@@ -63,13 +63,12 @@ namespace NovelRT::Ecs::Graphics
                                 EntityId entity)
         {
             EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
-
-            while (it.HasParent())
+            if (!it.HasParent())
             {
-                it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
+                return it;
             }
 
-            return it;
+            return GetRoot(view, catalogue, it.GetRawComponentData().parent);
         }
 
         void EnumerateChildren(EntityGraphView& graph,

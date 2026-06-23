@@ -17,6 +17,8 @@ namespace NovelRT::Ecs::UI::Components
 
         inline UIText& operator+=(const UIText& other)
         {
+            delete textValue;
+
             *this = other;
             return *this;
         }
