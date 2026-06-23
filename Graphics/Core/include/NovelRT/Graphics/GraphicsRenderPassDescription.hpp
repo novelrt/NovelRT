@@ -25,7 +25,9 @@ namespace NovelRT::Graphics
     {
         Undefined,
         Optimal,
-        Present
+        Present,
+        SrcTransfer,
+        DstTransfer,
     };
 
     struct GraphicsAttachmentDescription
