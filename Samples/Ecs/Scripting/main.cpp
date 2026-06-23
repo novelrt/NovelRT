@@ -20,9 +20,9 @@
 #include <NovelRT/Ecs/Scripting/Components/ActiveDecisionTree.hpp>
 #include <NovelRT/Ecs/Scripting/Components/DecisionTreeLoadRequest.hpp>
 #include <NovelRT/Ecs/Scripting/Components/LoadedDecisionTree.hpp>
+#include <NovelRT/Ecs/Scripting/DecisionTreeLoadingSystem.hpp>
 #include <NovelRT/Ecs/Scripting/DecisionTreeStateManager.hpp>
 #include <NovelRT/Ecs/Scripting/DecisionTreeStepSystem.hpp>
-#include <NovelRT/Ecs/Scripting/DecisionTreeLoadingSystem.hpp>
 #include <NovelRT/Ecs/Scripting/EcsScriptingBuilder.hpp>
 #include <NovelRT/Ecs/Scripting/StepSystems/BranchStepSystem.hpp>
 #include <NovelRT/Ecs/Scripting/StepSystems/SpokenLineStepSystem.hpp>
@@ -105,8 +105,7 @@ private:
 public:
     InitialisationSystem(const std::shared_ptr<ResourceLoader>& resourceLoader,
                          const std::shared_ptr<ScriptManager>& scriptManager)
-        : _resourceLoader(resourceLoader),
-          _scriptManager(scriptManager)
+        : _resourceLoader(resourceLoader), _scriptManager(scriptManager)
     {
     }
 
@@ -119,32 +118,32 @@ public:
 
         _initialized = true;
 
-        auto [ cameras, viewports, transforms, loadRequests ] = catalogue.GetComponentViews<NovelRT::Ecs::Graphics::Components::Camera, NovelRT::Ecs::Graphics::Components::Viewport, NovelRT::Ecs::Components::TransformComponent, NovelRT::Ecs::Scripting::Components::DecisionTreeLoadRequest>();
+        auto [cameras, viewports, transforms, loadRequests] =
+            catalogue.GetComponentViews<NovelRT::Ecs::Graphics::Components::Camera,
+                                        NovelRT::Ecs::Graphics::Components::Viewport,
+                                        NovelRT::Ecs::Components::TransformComponent,
+                                        NovelRT::Ecs::Scripting::Components::DecisionTreeLoadRequest>();
         auto cameraEntity = catalogue.CreateEntity();
 
-        transforms.PushComponentUpdateInstruction(cameraEntity, NovelRT::Ecs::Components::TransformComponent{
-            .position = GeoVector2F{0.0f, 0.0f},
-            .scale = GeoVector2F{1.0f, 1.0f},
-            .rotationInRadians = 0.0f
-        });
+        transforms.PushComponentUpdateInstruction(
+            cameraEntity, NovelRT::Ecs::Components::TransformComponent{.position = GeoVector2F{0.0f, 0.0f},
+                                                                       .scale = GeoVector2F{1.0f, 1.0f},
+                                                                       .rotationInRadians = 0.0f});
 
-        cameras.PushComponentUpdateInstruction(cameraEntity, NovelRT::Ecs::Graphics::Components::Camera{
-            .left = -1.0f,
-            .right = 1.0f,
-            .bottom = 1.0f,
-            .top = -1.0f,
-            .nearPlane = 0.0f,
-            .farPlane = 1.0f,
-            .referenceResolutionWidth = 1280,
-            .referenceResolutionHeight = 720,
+        cameras.PushComponentUpdateInstruction(
+            cameraEntity, NovelRT::Ecs::Graphics::Components::Camera{.left = -1.0f,
+                                                                     .right = 1.0f,
+                                                                     .bottom = 1.0f,
+                                                                     .top = -1.0f,
+                                                                     .nearPlane = 0.0f,
+                                                                     .farPlane = 1.0f,
+                                                                     .referenceResolutionWidth = 1280,
+                                                                     .referenceResolutionHeight = 720,
 
-            .isScreenSpace = true
-        });
+                                                                     .isScreenSpace = true});
 
-        viewports.PushComponentUpdateInstruction(cameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{
-            .width = 1280,
-            .height = 720
-        });
+        viewports.PushComponentUpdateInstruction(
+            cameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1280, .height = 720});
 
         auto scriptEntity = catalogue.CreateEntity();
         auto scriptAsset = _resourceLoader->TryGetAssetIdBasedOnFilePath("Scripts/Sample.lua");
@@ -152,22 +151,23 @@ public:
         if (!scriptAsset.has_value())
             throw NovelRT::Exceptions::InitialisationFailureException{"Failed to find script asset"};
 
-        loadRequests.PushComponentUpdateInstruction(scriptEntity, NovelRT::Ecs::Scripting::Components::DecisionTreeLoadRequest{
-            .assetId = scriptAsset.value()
-        });
+        loadRequests.PushComponentUpdateInstruction(
+            scriptEntity, NovelRT::Ecs::Scripting::Components::DecisionTreeLoadRequest{.assetId = scriptAsset.value()});
     }
 };
 
 class BeginDecisionTreeSystem : public DecisionTreeStepSystem
 {
 public:
-    BeginDecisionTreeSystem(DecisionTreeStateManager& stateManager)
-        : DecisionTreeStepSystem(stateManager)
-    { }
+    BeginDecisionTreeSystem(DecisionTreeStateManager& stateManager) : DecisionTreeStepSystem(stateManager)
+    {
+    }
 
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
-        auto [ loadedTrees, activeTrees ] = catalogue.GetComponentViews<NovelRT::Ecs::Scripting::Components::LoadedDecisionTree, NovelRT::Ecs::Scripting::Components::ActiveDecisionTree>();
+        auto [loadedTrees, activeTrees] =
+            catalogue.GetComponentViews<NovelRT::Ecs::Scripting::Components::LoadedDecisionTree,
+                                        NovelRT::Ecs::Scripting::Components::ActiveDecisionTree>();
 
         for (const auto& [entity, tree] : loadedTrees)
         {
@@ -210,10 +210,8 @@ public:
 
         for (auto [entity, _] : viewports)
         {
-            viewports.PushComponentUpdateInstruction(entity, NovelRT::Ecs::Graphics::Components::Viewport{
-                .width = _size.x,
-                .height = _size.y
-            });
+            viewports.PushComponentUpdateInstruction(
+                entity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _size.x, .height = _size.y});
         }
     }
 };
@@ -224,7 +222,7 @@ int main()
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{ 1280, 720 });
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1280, 720});
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -247,25 +245,25 @@ int main()
     AddDefaults(builder);
 
     auto& gfx = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
-        .WithGraphicsDevice(gfxDevice)
-        .WithSurfaceContext(gfxSurfaceContext)
-        .ConfigureRenderPasses(
-            [gfxDevice, &passData](auto& manager)
-            {
-                GraphicsRenderPassDescription passDesc{};
-                GraphicsAttachmentDescription attachmentDesc{};
+                    .WithGraphicsDevice(gfxDevice)
+                    .WithSurfaceContext(gfxSurfaceContext)
+                    .ConfigureRenderPasses(
+                        [gfxDevice, &passData](auto& manager)
+                        {
+                            GraphicsRenderPassDescription passDesc{};
+                            GraphicsAttachmentDescription attachmentDesc{};
 
-                attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                attachmentDesc.loadOp = LoadOp::Clear;
-                attachmentDesc.storeOp = StoreOp::Store;
-                attachmentDesc.initialLayout = ImageLayout::Present;
-                attachmentDesc.finalLayout = ImageLayout::Present;
+                            attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
+                            attachmentDesc.loadOp = LoadOp::Load;
+                            attachmentDesc.storeOp = StoreOp::Store;
+                            attachmentDesc.initialLayout = ImageLayout::Present;
+                            attachmentDesc.finalLayout = ImageLayout::Present;
 
-                passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                passData.RenderPassId = manager.RegisterRenderPass(passData.RenderPass);
-            })
-        .WithDefaultBackgroundColour(0, 0, 0, 255);
+                            passDesc.attachmentDescriptions.push_back(attachmentDesc);
+                            passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
+                            passData.RenderPassId = manager.RegisterRenderPass(passData.RenderPass);
+                        })
+                    .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddScripting(builder)
         .WithScriptManager(scriptManager)
@@ -275,11 +273,10 @@ int main()
                             { return std::make_shared<BranchStepSystem>(manager, scheduler); })
         .RegisterStepSystem([](auto& manager, auto& scheduler)
                             { return std::make_shared<SpokenLineStepSystem>(manager, scheduler); })
-        .RegisterStepSystem([](auto& manager, auto&)
-                            { return std::make_shared<BeginDecisionTreeSystem>(manager); });
+        .RegisterStepSystem([](auto& manager, auto&) { return std::make_shared<BeginDecisionTreeSystem>(manager); });
 
     AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
-        NovelRT::Windowing::Glfw::GlfwWindowingBackend>(builder)
+          NovelRT::Windowing::Glfw::GlfwWindowingBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
         .WithGraphicsMemoryAllocator(memoryAllocator)
         .WithWindowProvider(wndProvider)
@@ -293,15 +290,17 @@ int main()
     gfx.WithDefaultOrchestrator();
 
     builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-        { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
+                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
 
-    builder.Configure([&wndProvider, &resourceLoader, &scriptManager](SystemScheduler& scheduler){
-        unused(scheduler.RegisterSystem(std::make_shared<ViewportUpdateSystem>(wndProvider)));
-        unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>(resourceLoader, scriptManager)));
-        unused(scheduler.RegisterSystem(std::make_shared<PoseToSpriteTranslationSystem>(resourceLoader)));
-        unused(scheduler.RegisterSystem(std::make_shared<BranchTranslationSystem>()));
-        unused(scheduler.RegisterSystem(std::make_shared<SpokenLineTranslationSystem>()));
-    });
+    builder.Configure(
+        [&wndProvider, &resourceLoader, &scriptManager](SystemScheduler& scheduler)
+        {
+            unused(scheduler.RegisterSystem(std::make_shared<ViewportUpdateSystem>(wndProvider)));
+            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>(resourceLoader, scriptManager)));
+            unused(scheduler.RegisterSystem(std::make_shared<PoseToSpriteTranslationSystem>(resourceLoader)));
+            unused(scheduler.RegisterSystem(std::make_shared<BranchTranslationSystem>()));
+            unused(scheduler.RegisterSystem(std::make_shared<SpokenLineTranslationSystem>()));
+        });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};

@@ -155,15 +155,15 @@ namespace NovelRT::Ecs::Graphics
             colourDataStruct.depth = 0;
             colourDataStruct.stencil = 0;
 
+            cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::Undefined,
+                                                   NovelRT::Graphics::ImageLayout::DstTransfer);
+
+            cmdList->CmdClearColourSwapchainImage(image, colourDataStruct);
+
+            cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
+                                                   NovelRT::Graphics::ImageLayout::Present);
             if (passes.empty())
             {
-                cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::Undefined,
-                                                       NovelRT::Graphics::ImageLayout::DstTransfer);
-
-                cmdList->CmdClearColourSwapchainImage(image, colourDataStruct);
-
-                cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
-                                                       NovelRT::Graphics::ImageLayout::Present);
                 cmdList->End();
                 context->EndFrame();
 
