@@ -18,12 +18,14 @@ namespace NovelRT::Ecs
     class EntityGraphView
     {
     private:
-        Catalogue* _catalogue;
+        Catalogue& _catalogue;
         EntityId _owningEntity;
         Components::EntityGraphComponent _component;
-        Utilities::Lazy<LinkedEntityListView> _childrenChanges;
+        std::optional<LinkedEntityListView> _childrenChanges;
         std::map<EntityId, EntityGraphView> _externalChanges;
         bool _hasBeenCommitted;
+
+        LinkedEntityListView& GetChildrenChanges();
 
     public:
         EntityGraphView(Catalogue& catalogue,
@@ -31,7 +33,7 @@ namespace NovelRT::Ecs
                         Components::EntityGraphComponent component) noexcept;
 
         EntityGraphView(EntityGraphView&& other) noexcept = default;
-        EntityGraphView& operator=(EntityGraphView&& other) noexcept = default;
+        EntityGraphView& operator=(EntityGraphView&& other) noexcept = delete;
 
         ~EntityGraphView();
 

@@ -16,20 +16,6 @@
 
 #include <algorithm>
 
-struct CharacterInfo
-{
-    std::unordered_map<std::string, uuids::uuid> knownPoses;
-    uuids::uuid activePose;
-    NovelRT::Maths::GeoVector2F position{0, 0};
-    NovelRT::Maths::GeoVector2F scale{1, 1};
-    NovelRT::Ecs::EntityId sprite;
-};
-
-struct NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::TreeInfo
-{
-    std::unordered_map<std::string, CharacterInfo> knownCharacters;
-};
-
 void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::CleanupInactiveTrees(Catalogue& catalogue)
 {
     auto trees = catalogue.GetComponentView<Components::ActiveDecisionTree>();

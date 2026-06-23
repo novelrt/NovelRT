@@ -66,16 +66,16 @@ void NovelRT::Ecs::Scripting::BranchStepSystem::Update(Timing::Timestamp /* delt
             continue;
         }
 
+        branchComponents.RemoveComponent(entity);
+        branchChoiceComponents.RemoveComponent(entity);
+
         auto* decisionTree = decisionTrees.GetComponent(entity).decisionTree;
         auto choice = branchChoiceComponents.GetComponent(entity).choiceIndex;
-
         if (auto* branch = dynamic_cast<NovelRT::Scripting::Statuses::Branch*>(decisionTree->get()))
         {
             Continue(catalogue, entity, branch->Continue(choice));
         }
 
-        branchComponents.RemoveComponent(entity);
         continueComponents.RemoveComponent(entity);
-        branchChoiceComponents.RemoveComponent(entity);
     }
 }
