@@ -23,6 +23,7 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
     auto& cache = scheduler.GetComponentCache();
 
     cache.RegisterComponentType(Components::SpokenLine{nullptr, nullptr}, "NovelRT::Ecs::Scripting::SpokenLine");
+    cache.RegisterComponentType(Components::Pose{nullptr, nullptr}, "NovelRT::Ecs::Scripting::Pose");
 
     stateManager.RegisterStateHandler(
         [](auto& status, auto& catalogue, auto entityId)
@@ -36,10 +37,15 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
                     entityId, Components::SpokenLine{new std::string(spokenLine->GetSpeaker()),
                                                      new std::string(spokenLine->GetText())});
 
-                poseComponents.PushComponentUpdateInstruction(
-                    entityId, Components::Pose{new std::string(spokenLine->GetPose()->Name),
-                                               new std::string(spokenLine->GetPose()->Sprite),
-                                               spokenLine->GetPose()->Position, spokenLine->GetPose()->Scale});
+                auto pose = spokenLine->GetPose();
+                if (pose.has_value())
+                {
+                    poseComponents.PushComponentUpdateInstruction(
+                        entityId, Components::Pose{new std::string(pose->Name),
+                                                   new std::string(pose->Sprite),
+                                                   pose->Position,
+                                                   pose->Scale});
+                }
 
                 return true;
             }
@@ -51,9 +57,8 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
 void NovelRT::Ecs::Scripting::SpokenLineStepSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
 {
     // TODO: it would be nice to express this query as "has all of these"
-    auto [decisionTrees, spokenLineComponents, continueComponents] =
-        catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::SpokenLine,
-                                    Components::ContinueDecisionTree>();
+    auto [decisionTrees, spokenLineComponents, poseComponents, continueComponents] =
+        catalogue.GetComponentViews<Components::ActiveDecisionTree, Components::SpokenLine, Components::Pose, Components::ContinueDecisionTree>();
 
     for (auto [entity, _] : continueComponents)
     {
@@ -62,15 +67,15 @@ void NovelRT::Ecs::Scripting::SpokenLineStepSystem::Update(Timing::Timestamp /* 
             continue;
         }
 
-        auto* decisionTree = decisionTrees.GetComponent(entity).decisionTree;
+        spokenLineComponents.RemoveComponent(entity);
+        poseComponents.RemoveComponent(entity);
 
+        auto* decisionTree = decisionTrees.GetComponent(entity).decisionTree;
         if (auto* spokenLine = dynamic_cast<NovelRT::Scripting::Statuses::SpokenLine*>(decisionTree->get()))
         {
             Continue(catalogue, entity, spokenLine->Continue());
         }
 
-        // Note: we intentionally leave the Pose component here
-        spokenLineComponents.RemoveComponent(entity);
         continueComponents.RemoveComponent(entity);
     }
 }

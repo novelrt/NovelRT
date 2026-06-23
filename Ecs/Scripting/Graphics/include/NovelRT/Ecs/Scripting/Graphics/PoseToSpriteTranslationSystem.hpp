@@ -16,7 +16,19 @@ namespace NovelRT::Ecs::Scripting::Graphics
     class PoseToSpriteTranslationSystem : public NovelRT::Ecs::IEcsSystem
     {
     private:
-        struct TreeInfo;
+        struct CharacterInfo
+        {
+            std::unordered_map<std::string, uuids::uuid> knownPoses;
+            uuids::uuid activePose;
+            NovelRT::Maths::GeoVector2F position{0, 0};
+            NovelRT::Maths::GeoVector2F scale{1, 1};
+            NovelRT::Ecs::EntityId sprite;
+        };
+
+        struct TreeInfo
+        {
+            std::unordered_map<std::string, CharacterInfo> knownCharacters;
+        };
 
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
 
