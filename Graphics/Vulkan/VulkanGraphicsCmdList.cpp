@@ -3,6 +3,7 @@
 
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
+#include <NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp>
@@ -20,6 +21,7 @@
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics
 {
@@ -35,6 +37,43 @@ namespace NovelRT::Graphics
     template<template<typename> typename TResource>
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
+
+    [[nodiscard]] std::pair<VkAccessFlags, VkPipelineStageFlags> GetAccessAndStageMasksForLayout(VkImageLayout layout,
+                                                                                                 bool isSource)
+    {
+        VkAccessFlags accessMask = 0;
+        VkPipelineStageFlags stageMask = 0;
+
+        switch (layout)
+        {
+            case VK_IMAGE_LAYOUT_UNDEFINED:
+                accessMask = 0;
+                stageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+                break;
+            case VK_IMAGE_LAYOUT_GENERAL:
+                accessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+                stageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+                break;
+            case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+                accessMask = isSource ? VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT : 0;
+                stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+                break;
+            case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+                accessMask = VK_ACCESS_TRANSFER_READ_BIT;
+                stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT;
+                break;
+            case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+                accessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+                stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT;
+                break;
+            default:
+                accessMask = 0;
+                stageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+                break;
+        }
+
+        return {accessMask, stageMask};
+    }
 
     VulkanGraphicsCmdList::GraphicsCmdList(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
@@ -407,5 +446,60 @@ namespace NovelRT::Graphics
     {
         auto vkCmdList = cmdList->GetVkCommandBuffer();
         vkCmdExecuteCommands(_commandBuffer, 1, &vkCmdList);
+    }
+
+    void VulkanGraphicsCmdList::CmdTransitionSwapchainImageTo(
+        const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
+        ImageLayout oldLayout,
+        ImageLayout newLayout)
+    {
+        VkImageLayout vkOldLayout = Vulkan::GetVulkanImageLayout(oldLayout);
+        VkImageLayout vkNewLayout = Vulkan::GetVulkanImageLayout(newLayout);
+
+        VkImageSubresourceRange subresourceRange{};
+        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresourceRange.levelCount = 1;
+        subresourceRange.layerCount = 1;
+
+        const auto [srcAccessMask, srcStageMask] = GetAccessAndStageMasksForLayout(vkOldLayout, true);
+        const auto [dstAccessMask, dstStageMask] = GetAccessAndStageMasksForLayout(vkNewLayout, false);
+
+        VkImageMemoryBarrier barrier{};
+        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        barrier.srcAccessMask = srcAccessMask;
+        barrier.dstAccessMask = dstAccessMask;
+        barrier.oldLayout = vkOldLayout;
+        barrier.newLayout = vkNewLayout;
+        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.image = swapchainImage->GetVulkanImage();
+        barrier.subresourceRange = subresourceRange;
+
+        vkCmdPipelineBarrier(_commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+    }
+
+    void VulkanGraphicsCmdList::CmdClearColourSwapchainImage(
+        const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
+        ClearValue clearData)
+    {
+        // TODO: This assumes layout is in transfer optimal. Is this correct? - Matt J.
+        VkClearColorValue colourValue{};
+        colourValue.float32[0] = clearData.colour.getRScalar();
+        colourValue.float32[1] = clearData.colour.getGScalar();
+        colourValue.float32[2] = clearData.colour.getBScalar();
+        colourValue.float32[3] = clearData.colour.getAScalar();
+
+        VkClearDepthStencilValue depthValue{};
+
+        depthValue.depth = clearData.depth;
+        depthValue.stencil = clearData.stencil;
+
+        VkImageSubresourceRange subresourceColourRange{};
+        subresourceColourRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresourceColourRange.levelCount = 1;
+        subresourceColourRange.layerCount = 1;
+
+        vkCmdClearColorImage(_commandBuffer, swapchainImage->GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                             &colourValue, 1, &subresourceColourRange);
     }
 }

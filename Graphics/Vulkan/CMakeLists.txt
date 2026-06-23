@@ -14,7 +14,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     NovelRT::Utilities
 
     NovelRT::Graphics::Core
-  
+
   SOURCES
     PRIVATE
       VulkanGraphicsAdapter.cpp
@@ -68,6 +68,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
       include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp
+      include/NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp
@@ -75,9 +76,9 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
       include/NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp
-    
+
   PRECOMPILE_HEADERS
-    INTERFACE 
+    INTERFACE
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp$<ANGLE-R>>
@@ -103,6 +104,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp$<ANGLE-R>>
+      $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp$<ANGLE-R>>
@@ -110,7 +112,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/Support.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/Texel.hpp$<ANGLE-R>>
       $<BUILD_INTERFACE:<NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp$<ANGLE-R>>
-      
+
   LINK_LIBRARIES
     PUBLIC
       Vulkan::Vulkan

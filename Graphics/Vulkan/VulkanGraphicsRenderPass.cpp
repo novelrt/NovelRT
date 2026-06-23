@@ -2,6 +2,7 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
+#include <NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
@@ -71,36 +72,6 @@ namespace NovelRT::Graphics
                                stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                            }
 
-                           VkImageLayout initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-                           switch (x.initialLayout)
-                           {
-                               case ImageLayout::Undefined:
-                                   initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                                   break;
-                               case ImageLayout::Optimal:
-                                   initialLayout = VK_IMAGE_LAYOUT_GENERAL;
-                                   break;
-                               case ImageLayout::Present:
-                                   initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                                   break;
-                           }
-
-                           VkImageLayout finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-                           switch (x.finalLayout)
-                           {
-                               case ImageLayout::Undefined:
-                                   finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                                   break;
-                               case ImageLayout::Optimal:
-                                   finalLayout = VK_IMAGE_LAYOUT_GENERAL;
-                                   break;
-                               case ImageLayout::Present:
-                                   finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                                   break;
-                           }
-
                            VkAttachmentDescription attachmentDescription{};
                            attachmentDescription.format = Vulkan::Utilities::Map(x.texelFormat);
                            attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -108,8 +79,9 @@ namespace NovelRT::Graphics
                            attachmentDescription.storeOp = storeOp;
                            attachmentDescription.stencilLoadOp = stencilLoadOp;
                            attachmentDescription.stencilStoreOp = stencilStoreOp;
-                           attachmentDescription.initialLayout = initialLayout;
-                           attachmentDescription.finalLayout = finalLayout;
+                           attachmentDescription.initialLayout = Vulkan::GetVulkanImageLayout(x.initialLayout);
+                           attachmentDescription.finalLayout = Vulkan::GetVulkanImageLayout(x.finalLayout);
+                           ;
 
                            return attachmentDescription;
                        });
