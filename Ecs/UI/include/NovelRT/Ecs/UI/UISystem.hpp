@@ -59,7 +59,7 @@ namespace NovelRT::Ecs::UI
                 return it;
             }
 
-            return GetRoot(view, catalogue, it.GetRawComponentData().parent); //{catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
+            return GetRoot(view, catalogue, it.GetRawComponentData().parent);
         }
 
         void ParseElementCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
