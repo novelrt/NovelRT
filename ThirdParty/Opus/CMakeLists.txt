@@ -16,7 +16,7 @@ target_compile_options(opus
     $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-align>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-cast-align>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-cast-align>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-#pragma-messages>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-#pragma-messages>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-#pragma-messages>
+    "$<$<CXX_COMPILER_ID:GNU>:-Wno-#pragma-messages>"
+    "$<$<CXX_COMPILER_ID:Clang>:-Wno-#pragma-messages>"
+    "$<$<CXX_COMPILER_ID:AppleClang>:-Wno-#pragma-messages>"
 )
