@@ -62,6 +62,7 @@ target_compile_options(alcommon
 
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-literal-operator>
 
     $<$<CXX_COMPILER_ID:MSVC>:/FI ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
     $<$<CXX_COMPILER_ID:GNU>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
