@@ -167,6 +167,7 @@ int SetSpeakerAdditionalProps(lua_State* L)
         return FieldTypeError(L, 1, "pose", lua_typename(L, LUA_TSTRING));
     }
 
+    lua_pushvalue(L, lua_upvalueindex(1));
     return 1;
 }
 

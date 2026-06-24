@@ -14,6 +14,8 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::ScriptingEcsT
   RESOURCES
     PUBLIC
       Resources/Fonts/Raleway-Regular.ttf
+      Resources/Images/Milk.png
+      Resources/Images/novel-chan.png
       Resources/Scripts/Sample.lua
       Resources/Shaders/imgui_frag.spv
       Resources/Shaders/imgui_vert.spv
