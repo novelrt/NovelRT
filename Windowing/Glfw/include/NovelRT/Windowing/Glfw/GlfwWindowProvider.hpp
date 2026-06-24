@@ -70,5 +70,6 @@ namespace NovelRT::Windowing
         [[nodiscard]] const char* GetClipboardText() const;
         void SetClipboardText(const std::string& text) const;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
+        void Close();
     };
 }

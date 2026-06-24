@@ -27,6 +27,7 @@ namespace NovelRT::Windowing
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
         void SetClipboardText(const std::string& text) const;
         void SetWindowTitle(const std::string& newTitle);
+        void Close();
 
         template<typename TGraphicsBackend>
         std::shared_ptr<Graphics::GraphicsProvider<TGraphicsBackend>> CreateGraphicsProvider(bool enableDebugMode);

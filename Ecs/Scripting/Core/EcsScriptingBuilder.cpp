@@ -36,7 +36,7 @@ NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScript
 }
 
 NovelRT::Ecs::Scripting::EcsScriptingBuilder& NovelRT::Ecs::Scripting::EcsScriptingBuilder::RegisterStepSystem(
-    std::function<std::shared_ptr<DecisionTreeStepSystem>(DecisionTreeStateManager&,SystemScheduler&)> factory)
+    std::function<std::shared_ptr<DecisionTreeStepSystem>(DecisionTreeStateManager&, SystemScheduler&)> factory)
 {
     _stepSystemFactories.emplace_back(factory);
     return *this;
@@ -47,15 +47,19 @@ void NovelRT::Ecs::Scripting::EcsScriptingBuilder::operator()(SystemScheduler& s
     auto& cache = scheduler.GetComponentCache();
 
     cache.RegisterComponentType(_defaultActiveDecisionTreeComponent, "NovelRT::Ecs::Scripting::ActiveDecisionTree");
-    cache.RegisterComponentType(_defaultContinueDecisionTreeChoiceComponent, "NovelRT::Ecs::Scripting::ContinueDecisionTree");
-    cache.RegisterComponentType(Components::DecisionTreeLoadRequest{}, "NovelRT::Ecs::Scripting::DecisionTreeLoadRequest");
-    cache.RegisterComponentType(Components::LoadedDecisionTree{{}, nullptr}, "NovelRT::Ecs::Scripting::LoadedDecisionTree");
+    cache.RegisterComponentType(_defaultContinueDecisionTreeChoiceComponent,
+                                "NovelRT::Ecs::Scripting::ContinueDecisionTree");
+    cache.RegisterComponentType(Components::DecisionTreeLoadRequest{},
+                                "NovelRT::Ecs::Scripting::DecisionTreeLoadRequest");
+    cache.RegisterComponentType(Components::LoadedDecisionTree{{}, nullptr},
+                                "NovelRT::Ecs::Scripting::LoadedDecisionTree");
 
     auto loadingSystem = scheduler.RegisterSystem(_loadingSystemFactory(_scriptManager));
 
     for (const auto& factory : _stepSystemFactories)
     {
-        auto stepSystem = scheduler.RegisterSystem(factory(_stateManager, scheduler), std::vector<SystemId>{ loadingSystem });
+        auto stepSystem =
+            scheduler.RegisterSystem(factory(_stateManager, scheduler), std::vector<SystemId>{loadingSystem});
         unused(stepSystem);
     }
 }

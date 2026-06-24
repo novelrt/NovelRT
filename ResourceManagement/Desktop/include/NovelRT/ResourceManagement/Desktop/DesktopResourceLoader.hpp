@@ -31,6 +31,8 @@ namespace NovelRT::ResourceManagement::Desktop
         [[nodiscard]] ShaderMetadata LoadShaderSource(uuids::uuid assetId) final;
         [[nodiscard]] ScriptMetadata LoadScript(std::filesystem::path filePath) final;
         [[nodiscard]] ScriptMetadata LoadScript(uuids::uuid assetId) final;
+        [[nodiscard]] PlaintextAsset LoadPlaintextAsset(std::filesystem::path filePath) final;
+        [[nodiscard]] PlaintextAsset LoadPlaintextAsset(uuids::uuid assetId) final;
         [[nodiscard]] FontMetadata LoadFont(std::filesystem::path filePath) final;
         [[nodiscard]] FontMetadata LoadFont(uuids::uuid assetId) final;
         [[nodiscard]] BinaryPackage LoadPackage(std::filesystem::path filePath) final;
