@@ -60,6 +60,10 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${cmakeSafeName}> $<TARGET_RUNTIME_DLLS:${cmakeSafeName}>
       COMMAND_EXPAND_LISTS)
+
+    add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_SOURCE_DIR}/LICENCE-DIST.md
+      $<TARGET_FILE_DIR:${cmakeSafeName}>/LICENCE-DIST.md)
   endif()
 
   if(NOVELRT_CLANG_TIDY)
@@ -185,6 +189,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
     FILE_SET interface_resources DESTINATION bin/Resources
     FILE_SET public_resources DESTINATION bin/Resources)
+  
+  install(
+    FILES ${CMAKE_SOURCE_DIR}/LICENCE-DIST.md
+    DESTINATION "$<TARGET_FILE_DIR:${cmakeSafeName}>/"
+  )
 endfunction()
 
 endblock()
