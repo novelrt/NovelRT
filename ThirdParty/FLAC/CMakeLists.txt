@@ -33,7 +33,7 @@ target_compile_options(FLAC
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-non-prototype>
 )
 
-target_compile_definitions(getopt
+target_compile_options(getopt
   PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-non-prototype>
 
@@ -42,11 +42,13 @@ target_compile_definitions(getopt
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-non-prototype>
 )
 
-target_compile_definitions(benchmark_residual
-  PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-declaration-after-statement>
+if(TARGET benchmark_residual)
+  target_compile_options(benchmark_residual
+    PRIVATE
+      $<$<CXX_COMPILER_ID:GNU>:-Wno-declaration-after-statement>
 
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-declaration-after-statement>
+      $<$<CXX_COMPILER_ID:Clang>:-Wno-declaration-after-statement>
 
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-declaration-after-statement>
-)
+      $<$<CXX_COMPILER_ID:AppleClang>:-Wno-declaration-after-statement>
+  )
+endif()
