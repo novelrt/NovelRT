@@ -1,4 +1,30 @@
-speaker "narrator"
+local narrator = speaker "narrator" { }
+local novelchan = speaker "Novel-chan" {
+  pose = 'default',
+  poses = {
+    default = {
+      sprite = "Images/novel-chan.png",
+      position = { 0, 0 },
+      scale = { 1, 1 }
+    },
+    startled = {
+      sprite = "Images/novel-chan.png",
+      position = { -0.5, 0 },
+      scale = { 1, 1 }
+    }
+  }
+}
+
+local milk = speaker "Milk" {
+  pose = 'default',
+  poses = {
+    default = {
+      sprite = "Images/Milk.png",
+      position = { 0.5, 0 },
+      scale = { 2, 2 }
+    }
+  }
+}
 
 while true do
   narrator
@@ -13,3 +39,8 @@ while true do
     break
   end
 end
+
+novelchan "Hi! I'm Novel-chan!"
+milk "Moooooo...."
+novelchan:pose 'startled'
+novelchan "Goodness! I didn't know high quality artwork could speak!"

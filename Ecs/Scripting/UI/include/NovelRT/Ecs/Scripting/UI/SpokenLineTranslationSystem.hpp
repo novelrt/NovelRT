@@ -19,6 +19,7 @@ namespace NovelRT::Ecs::Scripting::UI
         struct TreeInfo
         {
             EntityId container;
+            EntityId speaker;
             EntityId message;
             EntityId next;
         };

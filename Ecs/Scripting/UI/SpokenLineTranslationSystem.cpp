@@ -33,6 +33,7 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::CleanupInactiveTr
         }
 
         catalogue.DeleteEntity(it->second.container);
+        catalogue.DeleteEntity(it->second.speaker);
         catalogue.DeleteEntity(it->second.message);
         catalogue.DeleteEntity(it->second.next);
 
@@ -54,11 +55,12 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(
 
         it = _activeTrees.emplace_hint(it, entity, TreeInfo{
             .container = catalogue.CreateEntity(),
+            .speaker = catalogue.CreateEntity(),
             .message = catalogue.CreateEntity(),
             .next = catalogue.CreateEntity()
         });
 
-        uiButtons.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::UI::Components::UIButton {
+        uiButtons.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::UI::Components::UIButton{
             .label = new std::string("Next"),
             .eventId = 0,
             .bgColour = {0, 102, 204, 255},
@@ -69,17 +71,18 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(
 
         // TODO: this should be set elsewhere
         transforms.PushComponentUpdateInstruction(it->second.container, NovelRT::Ecs::Components::TransformComponent{
-            .position = {350.0f, 500.0f},
-            .scale = {612.0f, 200.0f},
+            .position = {320.0f, 860.0f},
+            .scale = {1280.0f, 200.0f},
             .rotationInRadians = 0.0f
         });
         transforms.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::Components::TransformComponent{
-            .position = {500.0f, 150.0f},
-            .scale = {82.0f, 30.0f},
+            .position = {1180.0f, 150.0f},
+            .scale = {80.0f, 30.0f},
             .rotationInRadians = 0.0f
         });
 
         NovelRT::Ecs::EntityGraphView relations{catalogue, it->second.container, NovelRT::Ecs::Components::EntityGraphComponent{}};
+        relations.AddInsertChildInstruction(it->second.speaker);
         relations.AddInsertChildInstruction(it->second.message);
         relations.AddInsertChildInstruction(it->second.next);
         relations.Commit();
@@ -98,6 +101,10 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
                 .Type = NovelRT::Ecs::UI::UIComponentType::Container
             });
 
+            uiElements.PushComponentUpdateInstruction(info.speaker, NovelRT::Ecs::UI::Components::UIElement {
+                .Type = NovelRT::Ecs::UI::UIComponentType::Text
+            });
+
             uiElements.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIElement {
                 .Type = NovelRT::Ecs::UI::UIComponentType::Text
             });
@@ -106,13 +113,18 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
                 .Type = NovelRT::Ecs::UI::UIComponentType::Button
             });
 
+            std::string speaker = *spokenLines.GetComponent(entity).speaker;
+            uiTexts.PushComponentUpdateInstruction(info.speaker, NovelRT::Ecs::UI::Components::UIText {
+                .textValue = new std::string(speaker),
+                .colour = {255, 255, 255, 255}
+            });
+
             std::string message = *spokenLines.GetComponent(entity).message;
             uiTexts.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIText {
                 .textValue = new std::string(message),
                 .colour = {255, 255, 255, 255}
             });
 
-            //std::string speaker = *spokenLines.GetComponent(entity).speaker;
             uiWidgetContainers.PushComponentUpdateInstruction(info.container, NovelRT::Ecs::UI::Components::UIWidgetContainer {
                 .title = new std::string("Message")
             });
@@ -120,6 +132,7 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
         else
         {
             uiElements.RemoveComponent(info.container);
+            uiElements.RemoveComponent(info.speaker);
             uiElements.RemoveComponent(info.message);
             uiElements.RemoveComponent(info.next);
         }

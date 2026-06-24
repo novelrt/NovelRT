@@ -66,14 +66,14 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::IdentifyNewTrees(Cata
 
         // TODO: this should be set elsewhere
         transforms.PushComponentUpdateInstruction(it->second.messageContainer, NovelRT::Ecs::Components::TransformComponent{
-            .position = {350.0f, 500.0f},
-            .scale = {612.0f, 200.0f},
+            .position = {320.0f, 860.0f},
+            .scale = {1280.0f, 200.0f},
             .rotationInRadians = 0.0f
         });
 
         transforms.PushComponentUpdateInstruction(it->second.choiceContainer, NovelRT::Ecs::Components::TransformComponent{
-            .position = {350.0f, 20.0f},
-            .scale = {612.0f, 450.0f},
+            .position = {320.0f, 20.0f},
+            .scale = {1280.0f, 820.0f},
             .rotationInRadians = 0.0f
         });
 
@@ -171,8 +171,8 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                 });
 
                 transforms.PushComponentUpdateInstruction(button, NovelRT::Ecs::Components::TransformComponent{
-                    .position = {32.0f, 20.0f + 35.0f * i},
-                    .scale = {548.0f, 30.0f},
+                    .position = {20.0f, 20.0f + 35.0f * i},
+                    .scale = {1240.0f, 30.0f},
                     .rotationInRadians = 0.0f
                 });
 

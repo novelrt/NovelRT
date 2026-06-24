@@ -123,27 +123,39 @@ public:
                                         NovelRT::Ecs::Graphics::Components::Viewport,
                                         NovelRT::Ecs::Components::TransformComponent,
                                         NovelRT::Ecs::Scripting::Components::DecisionTreeLoadRequest>();
-        auto cameraEntity = catalogue.CreateEntity();
+
+        auto worldCameraEntity = catalogue.CreateEntity();
+        auto screenCameraEntity = catalogue.CreateEntity();
 
         transforms.PushComponentUpdateInstruction(
-            cameraEntity, NovelRT::Ecs::Components::TransformComponent{.position = GeoVector2F{0.0f, 0.0f},
-                                                                       .scale = GeoVector2F{1.0f, 1.0f},
-                                                                       .rotationInRadians = 0.0f});
+            worldCameraEntity, NovelRT::Ecs::Components::TransformComponent{.position = GeoVector2F{0.0f, 0.0f},
+                                                                            .scale = GeoVector2F{1.0f, 1.0f},
+                                                                            .rotationInRadians = 0.0f});
 
         cameras.PushComponentUpdateInstruction(
-            cameraEntity, NovelRT::Ecs::Graphics::Components::Camera{.left = -1.0f,
-                                                                     .right = 1.0f,
-                                                                     .bottom = 1.0f,
-                                                                     .top = -1.0f,
-                                                                     .nearPlane = 0.0f,
-                                                                     .farPlane = 1.0f,
-                                                                     .referenceResolutionWidth = 1280,
-                                                                     .referenceResolutionHeight = 720,
-
-                                                                     .isScreenSpace = true});
+            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Camera{.left = -1.0f,
+                                                                          .right = 1.0f,
+                                                                          .bottom = 1.0f,
+                                                                          .top = -1.0f,
+                                                                          .nearPlane = 0.0f,
+                                                                          .farPlane = 1.0f,
+                                                                          .referenceResolutionWidth = 1920,
+                                                                          .referenceResolutionHeight = 1080});
+        cameras.PushComponentUpdateInstruction(
+            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Camera{.left = -1.0f,
+                                                                           .right = 1.0f,
+                                                                           .bottom = 1.0f,
+                                                                           .top = -1.0f,
+                                                                           .nearPlane = 0.0f,
+                                                                           .farPlane = 1.0f,
+                                                                           .referenceResolutionWidth = 1920,
+                                                                           .referenceResolutionHeight = 1080,
+                                                                           .isScreenSpace = true});
 
         viewports.PushComponentUpdateInstruction(
-            cameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1280, .height = 720});
+            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1920, .height = 1080});
+        viewports.PushComponentUpdateInstruction(
+            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1920, .height = 1080});
 
         auto scriptEntity = catalogue.CreateEntity();
         auto scriptAsset = _resourceLoader->TryGetAssetIdBasedOnFilePath("Scripts/Sample.lua");
@@ -222,7 +234,7 @@ int main()
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
     auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1280, 720});
+        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1920, 1080});
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -238,9 +250,6 @@ int main()
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     resourceLoader->InitAssetDatabase();
-
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
     AddDefaults(builder);
 
@@ -288,6 +297,9 @@ int main()
         .WithGraphicsBuilder(gfx);
 
     gfx.WithDefaultOrchestrator();
+
+    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
+        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
     builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
                       { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });

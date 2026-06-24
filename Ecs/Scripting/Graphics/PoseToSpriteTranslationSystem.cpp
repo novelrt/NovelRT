@@ -111,10 +111,21 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::ApplySpri
                 .assetId = character.activePose
             });
 
-            transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent{
-                .position = character.position,
-                .scale = character.scale
-            });
+            if (transforms.HasComponent(character.sprite))
+            {
+                transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent::negate(transforms.GetComponent(character.sprite)));
+                transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent{
+                    .position = character.position,
+                    .scale = character.scale
+                });
+            }
+            else
+            {
+                transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent{
+                    .position = character.position,
+                    .scale = character.scale
+                });
+            }
         }
     }
 }
