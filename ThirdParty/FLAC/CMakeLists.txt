@@ -28,5 +28,5 @@ target_compile_options(FLAC
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-declaration-after-statement>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-non-prototype>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-non-prototype>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-eprecated-non-prototypet>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-non-prototype>
 )
