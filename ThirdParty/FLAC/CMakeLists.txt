@@ -21,12 +21,32 @@ set_target_properties(FLAC
 target_compile_options(FLAC
   PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-align>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-cast-align>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-cast-align>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-declaration-after-statement>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-declaration-after-statement>
-    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-declaration-after-statement>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-non-prototype>
+
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-cast-align>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-declaration-after-statement>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-non-prototype>
+
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-cast-align>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-declaration-after-statement>
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-non-prototype>
+)
+
+target_compile_definitions(getopt
+  PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-non-prototype>
+
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-non-prototype>
+
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-non-prototype>
+)
+
+target_compile_definitions(benchmark_residual
+  PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-declaration-after-statement>
+
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-declaration-after-statement>
+
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-declaration-after-statement>
 )

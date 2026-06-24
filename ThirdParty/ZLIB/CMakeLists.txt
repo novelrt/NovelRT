@@ -11,6 +11,14 @@ set_target_properties(zlib
   PROPERTIES
     POSITION_INDEPENDENT_CODE ON)
 
+target_compile_options(zlib
+  PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-macro-redefined>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-macro-redefined>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-macro-redefined>
+)
+
+
 install(
   TARGETS zlib
   EXPORT ZLIBExports
