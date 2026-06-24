@@ -18,7 +18,6 @@ target_compile_options(zlib
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-macro-redefined>
 )
 
-
 install(
   TARGETS zlib
   EXPORT ZLIBExports
