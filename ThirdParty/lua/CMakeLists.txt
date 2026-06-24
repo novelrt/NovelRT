@@ -108,6 +108,7 @@ target_compile_options(lua
     $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # compiler will insert spectre mitigation for memory load
     $<$<CXX_COMPILER_ID:MSVC>:/wd4334> # result of 32-bit shift implicitly converted to 64-bits
     $<$<CXX_COMPILER_ID:MSVC>:/wd4774> # format string expected in argument 2 is not a string literal
+    $<$<CXX_COMPILER_ID:MSVC>:/wd4005> # macro redefinition
 )
 
 install(
