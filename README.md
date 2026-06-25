@@ -30,7 +30,7 @@ If you wish to attempt to build a basic visual novel with the existing C++ API, 
 
 These instructions are based on the CMake build system generator. You can download the latest version here [here.](https://cmake.org/download/)
 
-**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang 21+ instead. We will gladly accept contributions towards making GCC compatible, but until support is guaranteed we will _only_ officially support first-party compilers as described in our CI builds found** [here.](https://github.com/novelrt/NovelRT/blob/main/.github/workflows/build-pr.yml)
+**If you are compiling on Linux, please note - we do not support GCC at this time. Please use Clang 20+ instead. We will gladly accept contributions towards making GCC compatible, but until support is guaranteed we will _only_ officially support first-party compilers as described in our CI builds found** [here.](https://github.com/novelrt/NovelRT/blob/main/.github/workflows/build-pr.yml)
 
 
 #### Linux
