@@ -110,7 +110,7 @@ namespace NovelRT::Ecs::Audio
                     }
                     case AudioEmitterState::ToFadeOut:
                     {
-                        if (_mixer->GetSourceState(emitter.handle) == NovelRT::Audio::AudioSourceState::SOURCE_STOPPED)
+                        if (_mixer->GetSourceState(emitter.handle) == NovelRT::Audio::AudioSourceState::SourceStopped)
                         {
                             states.PushComponentUpdateInstruction(
                                 entity, AudioEmitterStateComponent{AudioEmitterState::Stopped, 0.0f, 0.0f});
@@ -168,7 +168,7 @@ namespace NovelRT::Ecs::Audio
                     }
                     case AudioEmitterState::ToFadeIn:
                     {
-                        if (_mixer->GetSourceState(emitter.handle) == NovelRT::Audio::AudioSourceState::SOURCE_STOPPED)
+                        if (_mixer->GetSourceState(emitter.handle) == NovelRT::Audio::AudioSourceState::SourceStopped)
                         {
                             _mixer->SetSourceVolume(emitter.handle, 0.0f);
                             _mixer->PlaySource(emitter.handle);
@@ -238,7 +238,7 @@ namespace NovelRT::Ecs::Audio
                             _logger.logDebug("Entity ID {} - Emitter Volume {} -> {}", entity, soundContext.Volume,
                                             emitter.volume);
                         }
-                        if (_mixer->GetSourceState(emitter.handle) != NovelRT::Audio::AudioSourceState::SOURCE_PLAYING)
+                        if (_mixer->GetSourceState(emitter.handle) != NovelRT::Audio::AudioSourceState::SourcePlaying)
                         {
                             states.PushComponentUpdateInstruction(
                                 entity, AudioEmitterStateComponent{AudioEmitterState::ToStop, 0.0f, 0.0f});

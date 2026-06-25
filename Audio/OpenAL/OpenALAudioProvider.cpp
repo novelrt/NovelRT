@@ -239,17 +239,17 @@ namespace NovelRT::Audio
         {
             case AL_PLAYING:
             {
-                return AudioSourceState::SOURCE_PLAYING;
+                return AudioSourceState::SourcePlaying;
             }
             case AL_PAUSED:
             {
-                return AudioSourceState::SOURCE_PAUSED;
+                return AudioSourceState::SourcePaused;
             }
             case AL_STOPPED:
             case AL_INITIAL:
             default:
             {
-                return AudioSourceState::SOURCE_STOPPED;
+                return AudioSourceState::SourceStopped;
             }
         }
     }
