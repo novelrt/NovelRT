@@ -1,9 +1,9 @@
 #pragma once
 
-#include <NovelRT/Ecs/Audio/AudioEmitterState.hpp>
-
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
+
+#include <NovelRT/Ecs/Audio/AudioEmitterState.hpp>
 
 namespace NovelRT::Ecs::Audio::Components
 {

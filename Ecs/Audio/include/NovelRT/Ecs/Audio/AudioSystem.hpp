@@ -1,5 +1,8 @@
 #pragma once
 
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
+
 #include <cstdint>
 
 #include <NovelRT/Audio/AudioMixer.hpp>
@@ -21,9 +24,6 @@
 
 #include <NovelRT/ResourceManagement/ResourceLoader.hpp>
 #include <NovelRT/Utilities/Span.hpp>
-
-// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
-// for more information.
 
 using namespace NovelRT::Ecs::Audio::Components;
 

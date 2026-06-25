@@ -3,7 +3,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Ecs/Audio/AudioSystem.hpp>
 #include <NovelRT/Ecs/Audio/Components/AudioEmitterComponent.hpp>
