@@ -17,15 +17,16 @@ namespace NovelRT::Ecs::UI::Components
 
         inline UIText& operator+=(const UIText& other)
         {
-            delete textValue;
-
             *this = other;
             return *this;
         }
 
         [[nodiscard]] inline bool operator==(const UIText& other) const noexcept
         {
-            return textValue == other.textValue && colour.r == other.colour.r && colour.g == other.colour.g &&
+            if (textValue == nullptr || other.textValue == nullptr) {
+                return false;
+            }
+            return *textValue == *other.textValue && colour.r == other.colour.r && colour.g == other.colour.g &&
                    colour.b == other.colour.b && colour.a == other.colour.a;
         }
     };

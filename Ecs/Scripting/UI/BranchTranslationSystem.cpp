@@ -61,7 +61,9 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::IdentifyNewTrees(Cata
             .messageContainer = catalogue.CreateEntity(),
             .message = catalogue.CreateEntity(),
             .choiceContainer = catalogue.CreateEntity(),
-            .choices = {}
+            .choices = {},
+            .prompt{},
+            .choiceLabels{}
         });
 
         // TODO: this should be set elsewhere
@@ -93,6 +95,8 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
         {
             auto branch = branches.GetComponent(entity);
 
+            info.choiceLabels.reserve(branch.choices->size());
+
             uiElements.PushComponentUpdateInstruction(info.messageContainer, NovelRT::Ecs::UI::Components::UIElement {
                 .Type = NovelRT::Ecs::UI::UIComponentType::Container
             });
@@ -106,16 +110,16 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
             });
 
             uiWidgetContainers.PushComponentUpdateInstruction(info.choiceContainer, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string("Choices")
+                .title = &_choicesText
             });
 
             uiWidgetContainers.PushComponentUpdateInstruction(info.messageContainer, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string("Prompt")
+                .title = &_promptText
             });
 
-            std::string prompt = *branch.prompt;
+            info.prompt = *branch.prompt;
             uiTexts.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIText {
-                .textValue = new std::string(prompt),
+                .textValue = &info.prompt,
                 .colour = {255, 255, 255, 255}
             });
 
@@ -139,8 +143,14 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                     .Type = NovelRT::Ecs::UI::UIComponentType::Button
                 });
 
+                info.choiceLabels[i] = branch.choices->at(i);
+                if (info.choiceLabels[i].empty())
+                {
+                    info.choiceLabels[i] = "Choice " + std::to_string(i);
+                }
+
                 uiButtons.PushComponentUpdateInstruction(info.choices[i], NovelRT::Ecs::UI::Components::UIButton {
-                    .label = new std::string(branch.choices->at(i)),
+                    .label = &info.choiceLabels[i],
                     .eventId = i,
                     .bgColour = {0, 102, 204, 255},
                     .activeColour = {0, 82, 163, 255},
@@ -156,13 +166,19 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                 auto button = catalogue.CreateEntity();
                 info.choices.push_back(button);
 
+                std::string label = branch.choices->at(i);
+                if(label.empty())
+                {
+                    label = "Choice " + std::to_string(i);
+                }
+                info.choiceLabels.push_back(branch.choices->at(i));
+
                 uiElements.PushComponentUpdateInstruction(button, NovelRT::Ecs::UI::Components::UIElement {
                     .Type = NovelRT::Ecs::UI::UIComponentType::Button
                 });
 
-                std::string text = branch.choices->at(i);
                 uiButtons.PushComponentUpdateInstruction(button, NovelRT::Ecs::UI::Components::UIButton {
-                    .label = new std::string(text),
+                    .label = &info.choiceLabels.back(),
                     .eventId = i,
                     .bgColour = {0, 102, 204, 255},
                     .activeColour = {0, 82, 163, 255},

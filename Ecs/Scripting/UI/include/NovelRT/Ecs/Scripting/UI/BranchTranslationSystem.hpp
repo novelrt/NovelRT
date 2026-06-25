@@ -23,7 +23,13 @@ namespace NovelRT::Ecs::Scripting::UI
 
             EntityId choiceContainer;
             std::vector<EntityId> choices;
+
+            std::string prompt;
+            std::vector<std::string> choiceLabels;
         };
+
+        std::string _choicesText = "Choices";
+        std::string _promptText = "Prompt";
 
         std::unordered_map<EntityId, TreeInfo> _activeTrees;
 

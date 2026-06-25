@@ -21,15 +21,16 @@ namespace NovelRT::Ecs::UI::Components
 
         inline UIButton& operator+=(const UIButton& other)
         {
-            delete label;
-
             *this = other;
             return *this;
         }
 
         [[nodiscard]] inline bool operator==(const UIButton& other) const noexcept
         {
-            return label == other.label && bgColour == other.bgColour && activeColour == other.activeColour &&
+            if (label == nullptr || other.label == nullptr) {
+                return false;
+            }
+            return *label == *other.label && bgColour == other.bgColour && activeColour == other.activeColour &&
                    hoveredColour == other.hoveredColour && textColour == other.textColour;
         }
     };

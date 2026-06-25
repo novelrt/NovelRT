@@ -22,7 +22,13 @@ namespace NovelRT::Ecs::Scripting::UI
             EntityId speaker;
             EntityId message;
             EntityId next;
+
+            std::string speakerText;
+            std::string messageText;
         };
+
+        std::string _messageText = "Message";
+        std::string _nextText = "Next";
 
         std::unordered_map<EntityId, TreeInfo> _activeTrees;
 
