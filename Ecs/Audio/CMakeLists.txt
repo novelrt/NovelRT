@@ -17,4 +17,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Audio
       include/NovelRT/Ecs/Audio/Components/AudioEmitterStateComponent.hpp
       include/NovelRT/Ecs/Audio/Components/AudioEmitterComponent.hpp
       include/NovelRT/Ecs/Audio/AudioSystem.hpp
+      include/NovelRT/Ecs/Audio/EcsAudioBuilder.hpp
 )
