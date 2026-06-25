@@ -261,7 +261,7 @@ public:
         auto [emitterView, emitterStateView] =
             catalogue.GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
 
-        std::string backgroundMusicName = _sndDirectory / "light-rain.wav";
+        std::string backgroundMusicName = (_sndDirectory / "light-rain.wav").string();
         auto bgHandle = _system->RegisterSound(backgroundMusicName);
 
         auto bgMusicEntityId = catalogue.CreateEntity();
