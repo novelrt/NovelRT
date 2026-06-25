@@ -1,7 +1,6 @@
 set(RESOURCES_FILES
   novel-chan.icns
   
-  Fonts/Gayathri-Regular.ttf
   Fonts/Raleway-Regular.ttf
 
   Images/novel-chan.png
