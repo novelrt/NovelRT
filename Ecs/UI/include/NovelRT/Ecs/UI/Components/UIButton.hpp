@@ -30,6 +30,7 @@ namespace NovelRT::Ecs::UI::Components
             if (label == nullptr || other.label == nullptr) {
                 return false;
             }
+            
             return *label == *other.label && bgColour == other.bgColour && activeColour == other.activeColour &&
                    hoveredColour == other.hoveredColour && textColour == other.textColour;
         }

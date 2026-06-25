@@ -25,6 +25,7 @@ namespace NovelRT::Ecs::UI::Components
             if (title == nullptr || other.title == nullptr) {
                 return false;
             }
+            
             return *title == *other.title && closeable == other.closeable; // && flags == other.flags;
         }
     };

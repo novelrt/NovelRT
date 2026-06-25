@@ -26,6 +26,7 @@ namespace NovelRT::Ecs::UI::Components
             if (textValue == nullptr || other.textValue == nullptr) {
                 return false;
             }
+            
             return *textValue == *other.textValue && colour.r == other.colour.r && colour.g == other.colour.g &&
                    colour.b == other.colour.b && colour.a == other.colour.a;
         }
