@@ -24,7 +24,7 @@ namespace NovelRT::Ecs::Audio::Components
             return *this;
         };
 
-        [[nodiscard]] inline bool operator==(const AudioEmitterComponent& rhs) noexcept
+        [[nodiscard]] inline bool operator==(const AudioEmitterComponent& rhs) const noexcept
         {
             return handle == rhs.handle && isMusic == rhs.isMusic && numberOfLoops == rhs.numberOfLoops &&
                    volume == rhs.volume;

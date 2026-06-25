@@ -23,6 +23,7 @@ namespace NovelRT::Ecs::Audio
     private:
         std::shared_ptr<NovelRT::Ecs::Audio::AudioSystem<TAudioBackend>> _system;
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
+        std::shared_ptr<NovelRT::Audio::AudioProvider<TAudioBackend>> _provider;
 
         EcsAudioBuilder()
         {
@@ -38,11 +39,15 @@ namespace NovelRT::Ecs::Audio
         EcsAudioBuilder& operator=(EcsAudioBuilder&& other) = default;
         ~EcsAudioBuilder() = default;
 
-        EcsAudioBuilder& WithAudioSystem(
-            const std::shared_ptr<NovelRT::Ecs::Audio::AudioSystem<TAudioBackend>>&
-                system)
+        EcsAudioBuilder& WithAudioSystem(const std::shared_ptr<NovelRT::Ecs::Audio::AudioSystem<TAudioBackend>>& system)
         {
             _system = system;
+            return *this;
+        }
+
+        EcsAudioBuilder& WithAudioProvider(const std::shared_ptr<NovelRT::Audio::AudioProvider<TAudioBackend>>& provider)
+        {
+            _provider = provider;
             return *this;
         }
 
@@ -54,7 +59,7 @@ namespace NovelRT::Ecs::Audio
         
         EcsAudioBuilder& WithDefaultAudioSystem()
         {
-            return WithAudioSystem(std::make_shared<NovelRT::Ecs::Audio::AudioSystem<TAudioBackend>>(_resourceLoader));
+            return WithAudioSystem(std::make_shared<NovelRT::Ecs::Audio::AudioSystem<TAudioBackend>>(_resourceLoader, _provider));
         }
 
         void operator()(SystemScheduler& scheduler)
@@ -66,6 +71,11 @@ namespace NovelRT::Ecs::Audio
             cache.RegisterComponentType(NovelRT::Ecs::Audio::Components::AudioEmitterStateComponent{}, "NovelRT::Ecs::Audio::AudioEmitterStateComponent");
 
             unused(scheduler.RegisterSystem(_system));
+        }
+
+        [[nodiscard]] std::shared_ptr<NovelRT::Ecs::Audio::AudioSystem<TAudioBackend>> GetEcsAudioSystem()
+        {
+            return _system;
         }
     };
 

@@ -48,16 +48,15 @@ namespace NovelRT::Ecs::Audio
         }
 
     public:
-        AudioSystem(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader):
+        AudioSystem(std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> resourceLoader, std::shared_ptr<NovelRT::Audio::AudioProvider<TAudioBackend>> provider):
             _counter(1),
             _logger(NovelRT::Logging::CONSOLE_LOG_AUDIO),
-            _mixer(std::make_shared<NovelRT::Audio::AudioMixer<TAudioBackend>>()),
             _soundCache(std::map<uint32_t, NovelRT::ResourceManagement::AudioMetadata>()),
             _fadeCache(std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>>()),
+            _mixer(std::make_shared<NovelRT::Audio::AudioMixer<TAudioBackend>>(provider)),
             _systemTime{},
             _resourceLoader(std::move(resourceLoader))
         {
-            _mixer->Initialise();
         }
         
         ~AudioSystem() noexcept
