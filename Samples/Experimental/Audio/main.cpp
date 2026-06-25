@@ -24,8 +24,8 @@ int main()
     std::generate(samples.begin(), samples.end(),
                   [rate = samples.size(), freq = 440, n = 0]() mutable
                   {
-                      float t = float(n++) / rate;
-                      return std::sin(freq * 2.f * PI * t);
+                      float t = float(n++) / static_cast<float>(rate);
+                      return std::sin(static_cast<float>(freq) * 2.f * PI * t);
                   });
 
     AudioSourceContext sineWave{};

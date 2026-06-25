@@ -9,6 +9,9 @@ namespace NovelRT::Ecs
 {
     class Catalogue;
 
+    template <typename TComponent>
+    class ComponentView;
+
     /**
      * @brief An interface declaration allowing for systems to be defined as C++ types.
      */

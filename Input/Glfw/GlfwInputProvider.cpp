@@ -44,6 +44,11 @@ namespace NovelRT::Input
                 NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y));
             ProcessCursorMovement(nativePos);
         };
+        _windowProvider->SizeChanged += [this](auto eventArgs)
+        {
+            _windowDimensions = eventArgs;
+        };
+
 
         MapAllGlfwKeysToNovelKeys();
 

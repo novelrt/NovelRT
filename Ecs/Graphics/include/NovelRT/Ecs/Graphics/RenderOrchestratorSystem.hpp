@@ -17,6 +17,7 @@
 
 #include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
+#include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 #include <NovelRT/Graphics/GraphicsRenderTarget.hpp>
 #include <NovelRT/Graphics/GraphicsSemaphore.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
@@ -54,6 +55,7 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _deletionSemaphore;
         std::deque<PerFrameResources> _frameResources;
         uint64_t _renderedFrames{0};
+        NovelRT::Graphics::RGBAColour _backgroundColour{0, 0, 255, 255};
 
         RenderPassManager<TGraphicsBackend> _renderPassManager;
 
@@ -62,13 +64,12 @@ namespace NovelRT::Ecs::Graphics
                                 EntityId entity)
         {
             EntityGraphView it{catalogue, entity, view.GetComponent(entity)};
-
-            while (it.HasParent())
+            if (!it.HasParent())
             {
-                it = {catalogue, it.GetRawComponentData().parent, view.GetComponent(it.GetRawComponentData().parent)};
+                return it;
             }
 
-            return it;
+            return GetRoot(view, catalogue, it.GetRawComponentData().parent);
         }
 
         void EnumerateChildren(EntityGraphView& graph,
@@ -96,6 +97,11 @@ namespace NovelRT::Ecs::Graphics
               _deletionSemaphore(_graphicsDevice->CreateSemaphore(0)),
               _renderPassManager(renderPassManager)
         {
+        }
+
+        void SetBackgroundColour(const NovelRT::Graphics::RGBAColour& colour)
+        {
+            _backgroundColour = colour;
         }
 
         void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
@@ -133,10 +139,58 @@ namespace NovelRT::Ecs::Graphics
                 }
             }
 
+            // 3. Prepare to render a frame
+            auto image = _graphicsDevice->BeginFrame();
+            auto surface = _surfaceContext->GetSurface();
+            auto context = _graphicsDevice->CreateGraphicsContext();
+            std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
+            auto cmdList = context->CreateCmdList();
+            context->BeginFrame();
+            cmdList->Begin();
+
+            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image, context});
+
+            NovelRT::Graphics::ClearValue colourDataStruct{};
+            colourDataStruct.colour = _backgroundColour;
+            colourDataStruct.depth = 0;
+            colourDataStruct.stencil = 0;
+
+            cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::Undefined,
+                                                   NovelRT::Graphics::ImageLayout::DstTransfer);
+
+            cmdList->CmdClearColourSwapchainImage(image, colourDataStruct);
+
+            cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
+                                                   NovelRT::Graphics::ImageLayout::Present);
             if (passes.empty())
             {
+                cmdList->End();
+                context->EndFrame();
+
+                std::vector<
+                    std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
+                    signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.frameNumber)};
+                signalSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
+                frameResources.commandLists.emplace_back(cmdList);
+
+                std::vector<
+                    std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
+                    waitSemaphores{}; // TODO: I don't remember if we had an API to handle not having any of these,
+                                      //  but we shouldn't have any, because we aren't rendering anything. :) - Matt J.
+
+                std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
+
+                image->QueueSubmit(waitSemaphores, lists, signalSemaphores);
+
+                frameResources.commandLists.emplace_back(cmdList);
+
+                // TODO: should this be in ECS?
+                _graphicsDevice->EndFrame();
+
                 return;
             }
+
+            cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
 
             for (auto& root : roots)
             {
@@ -150,17 +204,6 @@ namespace NovelRT::Ecs::Graphics
                 return leftPos < rightPos;
             };
 
-            // 3. Prepare to render a frame
-            auto image = _graphicsDevice->BeginFrame();
-            auto surface = _surfaceContext->GetSurface();
-            auto context = _graphicsDevice->CreateGraphicsContext();
-            std::vector<VkImageView> imageViewData{image->GetVulkanImageView()};
-            auto cmdList = context->CreateCmdList();
-            context->BeginFrame();
-            cmdList->Begin();
-
-            auto& frameResources = _frameResources.emplace_back(PerFrameResources{++_renderedFrames, image, context});
-
             // 4. Enumerate all render passes in order
             for (auto& [passId, entities] : passes)
             {
@@ -173,11 +216,6 @@ namespace NovelRT::Ecs::Graphics
                     std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(
                         _graphicsDevice, imageViewData, pass, static_cast<uint32_t>(surface->GetWidth()),
                         static_cast<uint32_t>(surface->GetHeight())));
-
-                NovelRT::Graphics::ClearValue colourDataStruct{};
-                colourDataStruct.colour = NovelRT::Graphics::RGBAColour(0, 0, 255, 255);
-                colourDataStruct.depth = 0;
-                colourDataStruct.stencil = 0;
 
                 cmdList->CmdBeginRenderPass(pass, target, std::vector<NovelRT::Graphics::ClearValue>{colourDataStruct});
 

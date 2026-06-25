@@ -34,6 +34,9 @@ namespace NovelRT::Graphics
     class GraphicsPipelineSignature;
     template<template<typename> typename TResource, typename TBackend>
     class GraphicsResourceMemoryRegion;
+    template<typename TBackend>
+    class GraphicsSwapchainImage;
+    enum class ImageLayout : uint32_t;
 
     // TODO: MOVE THIS
     struct ViewportInfo
@@ -115,6 +118,9 @@ namespace NovelRT::Graphics
         void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
         void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
 
+        void CmdInitialSwapchainImageBarrierLegacyVersion(
+            const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage);
+
         void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<TBackend>>& pipeline);
 
         void CmdPushConstants(const std::shared_ptr<GraphicsPipelineSignature<TBackend>>& pipelineSignature,
@@ -129,5 +135,12 @@ namespace NovelRT::Graphics
                                       GraphicsPipelineVisibility destinationStageFlag);
 
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<TBackend>>& cmdList);
+
+        void CmdTransitionSwapchainImageTo(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
+                                           ImageLayout oldLayout,
+                                           ImageLayout newLayout);
+
+        void CmdClearColourSwapchainImage(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
+                                          ClearValue clearData);
     };
 }

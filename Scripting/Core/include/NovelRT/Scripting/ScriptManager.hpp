@@ -35,6 +35,6 @@ namespace NovelRT::Scripting
 
         lua_State* GetLuaState() const;
 
-        std::unique_ptr<DecisionTree> LoadDecisionTree(std::span<uint8_t> byteData);
+        std::unique_ptr<DecisionTree> LoadDecisionTree(std::span<const uint8_t> byteData);
     };
 }

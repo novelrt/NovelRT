@@ -44,6 +44,8 @@ namespace NovelRT::Ecs::Graphics
 
         RenderPassManager<TGraphicsBackend> _passManager;
 
+        NovelRT::Graphics::RGBAColour _backgroundColour{0, 0, 0, 255};
+
         EcsGraphicsBuilder()
             : _defaultBuiltCommandListComponent{nullptr},
               _defaultRenderPassComponent{std::numeric_limits<Components::RenderPassId>::max(), nullptr},
@@ -58,8 +60,8 @@ namespace NovelRT::Ecs::Graphics
         friend EcsGraphicsBuilder<T>& AddGraphics(SystemSchedulerBuilder&);
 
     public:
-        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = default;
-        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = default;
+        EcsGraphicsBuilder(const EcsGraphicsBuilder& other) = delete;
+        EcsGraphicsBuilder& operator=(const EcsGraphicsBuilder& other) = delete;
         EcsGraphicsBuilder(EcsGraphicsBuilder&& other) = default;
         EcsGraphicsBuilder& operator=(EcsGraphicsBuilder&& other) = default;
         ~EcsGraphicsBuilder() = default;
@@ -105,10 +107,18 @@ namespace NovelRT::Ecs::Graphics
             return *this;
         }
 
+        EcsGraphicsBuilder& WithDefaultBackgroundColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+        {
+            _backgroundColour = NovelRT::Graphics::RGBAColour(r, g, b, a);
+            return *this;
+        }
+
         EcsGraphicsBuilder& WithDefaultOrchestrator()
         {
-            return WithOrchestrator(
-                std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager));
+            auto orchestrator =
+                std::make_shared<RenderOrchestratorSystem<TGraphicsBackend>>(_graphicsDevice, _context, _passManager);
+            orchestrator->SetBackgroundColour(_backgroundColour);
+            return WithOrchestrator(orchestrator);
         }
 
         void operator()(SystemScheduler& scheduler)

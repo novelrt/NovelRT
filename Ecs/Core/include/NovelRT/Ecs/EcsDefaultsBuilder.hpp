@@ -23,8 +23,8 @@ namespace NovelRT::Ecs
 
     public:
         // Intentionally disallow moving/copying
-        EcsDefaultsBuilder(const EcsDefaultsBuilder& other) = default;
-        EcsDefaultsBuilder& operator=(const EcsDefaultsBuilder& other) = default;
+        EcsDefaultsBuilder(const EcsDefaultsBuilder& other) = delete;
+        EcsDefaultsBuilder& operator=(const EcsDefaultsBuilder& other) = delete;
         EcsDefaultsBuilder(EcsDefaultsBuilder&& other) = default;
         EcsDefaultsBuilder& operator=(EcsDefaultsBuilder&& other) = default;
         ~EcsDefaultsBuilder() = default;

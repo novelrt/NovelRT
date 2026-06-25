@@ -1,0 +1,30 @@
+#pragma once
+
+#include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/UI/UIComponentType.hpp>
+
+#include <limits>
+
+// Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
+// for more information.
+
+namespace NovelRT::Ecs::UI::Components
+{
+    struct UIElement
+    {
+    private:
+    public:
+        NovelRT::Ecs::UI::UIComponentType Type = NovelRT::Ecs::UI::UIComponentType::Unknown;
+
+        inline UIElement& operator+=(const UIElement& other)
+        {
+            *this = other;
+            return *this;
+        }
+
+        [[nodiscard]] inline bool operator==(const UIElement& other) const noexcept
+        {
+            return Type == other.Type;
+        }
+    };
+}

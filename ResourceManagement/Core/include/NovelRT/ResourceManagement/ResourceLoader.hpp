@@ -10,6 +10,9 @@
 
 #include <NovelRT/ResourceManagement/AudioMetadata.hpp>
 #include <NovelRT/ResourceManagement/BinaryPackage.hpp>
+#include <NovelRT/ResourceManagement/FontMetadata.hpp>
+#include <NovelRT/ResourceManagement/PlaintextAsset.hpp>
+#include <NovelRT/ResourceManagement/ScriptMetadata.hpp>
 #include <NovelRT/ResourceManagement/ShaderMetadata.hpp>
 #include <NovelRT/ResourceManagement/TextureMetadata.hpp>
 #include <NovelRT/Utilities/Paths.hpp>
@@ -102,6 +105,37 @@ namespace NovelRT::ResourceManagement
         [[nodiscard]] virtual ShaderMetadata LoadShaderSource(std::filesystem::path filePath) = 0;
 
         [[nodiscard]] virtual ShaderMetadata LoadShaderSource(uuids::uuid assetId) = 0;
+
+        /**
+         * @brief Loads a Fabulist script from a file on a given path.
+         *
+         * The path can be either relative or absolute.
+         * When using a relative path it will look in the Resources/Scripts directory.
+         *
+         * @param filePath Relative or absolute path to the script.
+         * @returns ScriptMetadata instance containing metadata about the script.
+         * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
+         */
+        [[nodiscard]] virtual ScriptMetadata LoadScript(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] virtual ScriptMetadata LoadScript(uuids::uuid assetId) = 0;
+
+        /**
+         * @brief Loads a plaintext file from a file on a given path.
+         *
+         * The path can be either relative or absolute.
+         *
+         * @param filePath Relative or absolute path to the script.
+         * @returns PlaintextAsset instance containing the raw text as bytes.
+         * @exception NovelRT::Exceptions::FileNotFoundException if there is no file at the specified location.
+         */
+        [[nodiscard]] virtual PlaintextAsset LoadPlaintextAsset(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] virtual PlaintextAsset LoadPlaintextAsset(uuids::uuid assetId) = 0;
+
+        [[nodiscard]] virtual FontMetadata LoadFont(std::filesystem::path filePath) = 0;
+
+        [[nodiscard]] virtual FontMetadata LoadFont(uuids::uuid assetId) = 0;
 
         [[nodiscard]] virtual BinaryPackage LoadPackage(std::filesystem::path fileName) = 0;
 

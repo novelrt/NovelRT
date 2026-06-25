@@ -148,7 +148,7 @@ namespace NovelRT::Maths::Utilities
     [[nodiscard]] inline constexpr uint32_t LeadingZeroCount32(uint32_t value) noexcept
     {
 #if __cpp_lib_bitops
-        return std::countl_zero(value);
+        return static_cast<uint32_t>(std::countl_zero(value));
 #else
         if (value == 0)
         {
@@ -174,7 +174,7 @@ namespace NovelRT::Maths::Utilities
     [[nodiscard]] inline constexpr uint64_t LeadingZeroCount64(uint64_t value) noexcept
     {
 #if __cpp_lib_bitops
-        return std::countl_zero(value);
+        return static_cast<uint64_t>(std::countl_zero(value));
 #else
         uint32_t hi = static_cast<uint32_t>(value >> 32);
 

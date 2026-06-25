@@ -30,6 +30,8 @@ namespace NovelRT::Graphics
         uint32_t _width;
         uint32_t _height;
 
+        VkFormat _imageFormat;
+
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> shared_from_this();
@@ -48,6 +50,7 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkImageView GetVulkanImageView() const noexcept;
         [[nodiscard]] uint32_t GetWidth() const noexcept;
         [[nodiscard]] uint32_t GetHeight() const noexcept;
+        [[nodiscard]] VkFormat GetVulkanFormat() const noexcept;
 
         void QueueSubmit(std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>> cmdList);
         void QueueSubmit(

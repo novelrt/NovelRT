@@ -129,7 +129,7 @@ namespace NovelRT::Ecs
           _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
           _hasExecutedAtLeastOnce(false)
     {
-        _workerThreadCount = _ecsArena->max_concurrency();
+        _workerThreadCount = static_cast<uint32_t>(_ecsArena->max_concurrency());
         _entityCache = EntityCache(_workerThreadCount);
         _componentCache = ComponentCache(_workerThreadCount);
     }
@@ -252,8 +252,11 @@ namespace NovelRT::Ecs
                 {
                     std::function<void(Timing::Timestamp, Catalogue)> completion{};
 
+                    bool hadCompletions = false;
+
                     while (_pendingCompletions.try_pop(completion))
                     {
+                        hadCompletions = true;
                         _ecsTasks->run(
                             [completion = std::move(completion), this]()
                             {
@@ -263,6 +266,14 @@ namespace NovelRT::Ecs
                     }
 
                     _ecsTasks->wait();
+
+                    if (hadCompletions)
+                    {
+                        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
+                        _entityCache.ProcessEntityRegistrationRequestsFromThreads();
+                        _entityCache.ProcessEntityDeletionRequestsFromThreads();
+                        _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
+                    }
 
                     for (SystemId systemId : layer)
                     {

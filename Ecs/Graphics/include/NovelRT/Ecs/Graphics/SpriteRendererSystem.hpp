@@ -336,7 +336,7 @@ namespace NovelRT::Ecs::Graphics
                             transform.scale.y);
 
                     auto model = Maths::GeoMatrix4x4F::GetDefaultIdentity();
-                    model.Translate(Maths::GeoVector3F(transform.position.x, transform.position.y, 0.0f));
+                    model.Translate(NovelRT::Ecs::Components::TransformComponent::TransformToVector3F(transform, 0.0f));
                     model.Rotate(transform.rotationInRadians);
                     model.Scale(finalScale);
 
@@ -360,17 +360,12 @@ namespace NovelRT::Ecs::Graphics
 
                     currentCmdList->CmdSetViewport(viewportInfoStruct);
                     currentCmdList->CmdSetScissor(
-                        Maths::GeoVector2F(cameraData.viewport.x, cameraData.viewport.y),
-                        Maths::GeoVector2F(cameraData.viewport.width, cameraData.viewport.height));
+                        Components::Viewport::ViewportLocationToVector2F(cameraData.viewport),
+                        Components::Viewport::ViewportDimensionsToVector2F(cameraData.viewport));
 
-                    auto view = Maths::GeoMatrix4x4F::CreateFromLookAt(
-                        Maths::GeoVector3F(cameraData.transform.position.x, cameraData.transform.position.y, -1.0f),
-                        Maths::GeoVector3F(cameraData.transform.position.x, cameraData.transform.position.y, 0.0f),
-                        Maths::GeoVector3F(0.0f, -1.0f, 0.0f));
+                    auto view = cameraData.camera.CreateViewMatrix(cameraData.transform);
 
-                    auto projection = Maths::GeoMatrix4x4F::CreateOrthographic(
-                        cameraData.camera.left, cameraData.camera.right, cameraData.camera.bottom,
-                        cameraData.camera.top, cameraData.camera.nearPlane, cameraData.camera.farPlane);
+                    auto projection = cameraData.camera.CreateProjectionMatrix(cameraData.camera);
 
                     auto& constantBufferRegion = _cameraConstantBuffers.at(cameraData.entityId);
                     auto pCameraData = constantBufferRegion->template Map<CameraConstantBuffer>();
@@ -448,17 +443,17 @@ namespace NovelRT::Ecs::Graphics
             auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion);
 
             pVertexBuffer[0] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, 0.5f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-1.f, 1.f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};
             pVertexBuffer[1] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, 0.5f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(1.f, 1.f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
             pVertexBuffer[2] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, -0.5f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-1.f, -1.f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
             pVertexBuffer[3] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, -0.5f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-1.f, -1.f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
             pVertexBuffer[4] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, 0.5f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(1.f, 1.f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
             pVertexBuffer[5] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, -0.5f, 0.0f), Maths::GeoVector2F(1.0f, 1.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(1.f, -1.f, 0.0f), Maths::GeoVector2F(1.0f, 1.0f)};
 
             stagingBuffer->UnmapAndWrite(stagingRegion);
 

@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "GLFW/glfw3.h"
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/NotSupportedException.hpp>
 
@@ -121,10 +122,15 @@ namespace NovelRT::Windowing
         return _currentTitle;
     }
 
-    inline void GlfwWindowProvider::SetWindowTitle(const std::string& newTitle)
+    void GlfwWindowProvider::SetWindowTitle(const std::string& newTitle)
     {
         _currentTitle = newTitle;
         glfwSetWindowTitle(_window, _currentTitle.c_str());
+    }
+
+    void GlfwWindowProvider::Close()
+    {
+        glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
 
     Maths::GeoVector2F GlfwWindowProvider::GetSize() const noexcept
@@ -159,5 +165,23 @@ namespace NovelRT::Windowing
     Graphics::GraphicsSurfaceKind GlfwWindowProvider::GetKind() const noexcept
     {
         return Graphics::GraphicsSurfaceKind::Glfw;
+    }
+
+    const char* GlfwWindowProvider::GetClipboardText() const
+    {
+        return glfwGetClipboardString(_window);
+    }
+
+    void GlfwWindowProvider::SetClipboardText(const std::string& text) const
+    {
+        glfwSetClipboardString(_window, text.c_str());
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowScale() const noexcept
+    {
+        float x = 1;
+        float y = 1;
+        glfwGetWindowContentScale(_window, &x, &y);
+        return NovelRT::Maths::GeoVector2F(x, y);
     }
 }

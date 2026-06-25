@@ -6,6 +6,7 @@
 
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
+#include <cstdint>
 #include <cstdlib>
 #include <format>
 #include <random>
@@ -31,7 +32,7 @@ namespace NovelRT::Scripting
         return _state.get();
     }
 
-    std::unique_ptr<DecisionTree> ScriptManager::LoadDecisionTree(std::span<uint8_t> byteData)
+    std::unique_ptr<DecisionTree> ScriptManager::LoadDecisionTree(std::span<const uint8_t> byteData)
     {
         auto status = lua_load(
             _state.get(),

@@ -9,7 +9,9 @@
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 #include <NovelRT/ResourceManagement/Desktop/ImageData.hpp>
 #include <NovelRT/Utilities/Strings.hpp>
+#include <algorithm>
 #include <fstream>
+#include <iterator>
 #include <nlohmann/json.hpp>
 #include <png.h>
 #include <samplerate.h>
@@ -314,6 +316,107 @@ namespace NovelRT::ResourceManagement::Desktop
         return LoadShaderSource(GetGuidsToFilePathsMap().at(assetId));
     }
 
+    ScriptMetadata DesktopResourceLoader::LoadScript(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Scripts" / filePath.filename();
+        }
+
+        std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()), std::streamsize(fileSize));
+        file.close();
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        bool is_precompiled = buffer.size() >= 4 && std::all_of(buffer.begin(), std::next(buffer.begin(), 4),
+                                                                [i = 0](const auto c) mutable
+                                                                {
+                                                                    // Precompiled Lua code always starts with
+                                                                    // '<esc>Lua'
+                                                                    constexpr const char signature[] = "\x1bLua";
+
+                                                                    return c == signature[i++];
+                                                                });
+
+        return ScriptMetadata{is_precompiled, buffer, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    ScriptMetadata DesktopResourceLoader::LoadScript(uuids::uuid assetId)
+    {
+        return LoadScript(GetGuidsToFilePathsMap().at(assetId));
+    }
+
+    PlaintextAsset DesktopResourceLoader::LoadPlaintextAsset(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / filePath.filename();
+        }
+
+        std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()),
+                  std::streamsize(fileSize)); // TODO: Why on earth do we have to cast to char*?!
+        file.close();
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        return PlaintextAsset{buffer, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    PlaintextAsset DesktopResourceLoader::LoadPlaintextAsset(uuids::uuid assetId)
+    {
+        return LoadPlaintextAsset(GetGuidsToFilePathsMap().at(assetId));
+    }
+
+    FontMetadata DesktopResourceLoader::LoadFont(std::filesystem::path filePath)
+    {
+        if (filePath.is_relative())
+        {
+            filePath = _resourcesRootDirectory / "Fonts" / filePath.filename();
+        }
+
+        std::ifstream file(filePath.string(), std::ios::ate | std::ios::binary);
+
+        if (!file.is_open())
+        {
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
+        }
+
+        size_t fileSize = static_cast<size_t>(file.tellg());
+        std::vector<uint8_t> buffer(fileSize);
+        file.seekg(0);
+        file.read(reinterpret_cast<char*>(buffer.data()), std::streamsize(fileSize));
+        file.close();
+
+        auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
+
+        return FontMetadata{buffer, fileSize, RegisterAsset(relativePathForAssetDatabase)};
+    }
+
+    FontMetadata DesktopResourceLoader::LoadFont(uuids::uuid assetId)
+    {
+        return LoadFont(GetGuidsToFilePathsMap().at(assetId));
+    }
+
     BinaryPackage DesktopResourceLoader::LoadPackage(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
@@ -449,8 +552,10 @@ namespace NovelRT::ResourceManagement::Desktop
             SRC_DATA conversionInfo = SRC_DATA{};
             conversionInfo.data_in = data.data();
             conversionInfo.data_out = resampledData.data();
-            conversionInfo.input_frames =
-                static_cast<long>(info.channels == 1 ? data.size() : data.size() / info.channels); // lmao
+            conversionInfo.input_frames = static_cast<long>(
+                info.channels == 1
+                    ? data.size()
+                    : data.size() / static_cast<size_t>(info.channels)); // This is a mess, good lord. - Matt J.
             conversionInfo.output_frames = conversionInfo.input_frames;
             double rate = 44100.0 / static_cast<double>(info.samplerate);
             _logger.logDebug("Scaling by ratio of {0:f}", rate);
