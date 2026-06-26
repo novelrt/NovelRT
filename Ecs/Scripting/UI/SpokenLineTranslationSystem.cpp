@@ -57,13 +57,11 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(
             .container = catalogue.CreateEntity(),
             .speaker = catalogue.CreateEntity(),
             .message = catalogue.CreateEntity(),
-            .next = catalogue.CreateEntity(),
-            .speakerText{},
-            .messageText{}
+            .next = catalogue.CreateEntity()
         });
 
         uiButtons.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::UI::Components::UIButton{
-            .label = &_nextText,
+            .label = new std::string("Next"),
             .eventId = 0,
             .bgColour = {0, 102, 204, 255},
             .activeColour = {0, 82, 163, 255},
@@ -115,20 +113,20 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
                 .Type = NovelRT::Ecs::UI::UIComponentType::Button
             });
 
-            info.speakerText = *spokenLines.GetComponent(entity).speaker;
+            std::string speaker = *spokenLines.GetComponent(entity).speaker;
             uiTexts.PushComponentUpdateInstruction(info.speaker, NovelRT::Ecs::UI::Components::UIText {
-                .textValue = &info.speakerText,
+                .textValue = new std::string(speaker),
                 .colour = {255, 255, 255, 255}
             });
 
-            info.messageText = *spokenLines.GetComponent(entity).message;
+            std::string message = *spokenLines.GetComponent(entity).message;
             uiTexts.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIText {
-                .textValue = &info.messageText,
+                .textValue = new std::string(message),
                 .colour = {255, 255, 255, 255}
             });
 
             uiWidgetContainers.PushComponentUpdateInstruction(info.container, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = &_messageText
+                .title = new std::string("Message")
             });
         }
         else

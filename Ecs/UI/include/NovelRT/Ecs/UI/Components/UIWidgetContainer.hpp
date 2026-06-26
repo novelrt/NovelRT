@@ -16,17 +16,15 @@ namespace NovelRT::Ecs::UI::Components
 
         inline UIWidgetContainer& operator+=(const UIWidgetContainer& other)
         {
+            delete title;
+
             *this = other;
             return *this;
         }
 
         [[nodiscard]] inline bool operator==(const UIWidgetContainer& other) const noexcept
         {
-            if (title == nullptr || other.title == nullptr) {
-                return false;
-            }
-            
-            return *title == *other.title && closeable == other.closeable; // && flags == other.flags;
+            return title == other.title && closeable == other.closeable; // && flags == other.flags;
         }
     };
 }
