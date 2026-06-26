@@ -9,8 +9,8 @@ namespace NovelRT::Audio
 {
     enum class AudioSourceState : int32_t
     {
-        SOURCE_STOPPED = 0,
-        SOURCE_PAUSED = 1,
-        SOURCE_PLAYING = 2
+        SourceStopped = 0,
+        SourcePaused = 1,
+        SourcePlaying = 2
     };
 }
