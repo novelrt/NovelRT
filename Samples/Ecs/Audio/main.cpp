@@ -167,13 +167,10 @@ class UISetupSystem : public IEcsSystem
 private:
     bool _firstPass = true;
     NovelRT::Maths::GeoVector2F _initialSize;
-    std::string _emptyText;
-    std::string _containerLabel;
-    std::string _nextButtonText;
 
 public:
-    UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
-        : _initialSize(initialSize), _emptyText(""), _containerLabel("NarrativeTextbox"), _nextButtonText("Next")
+    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
+        : _initialSize(initialSize)
     {
     }
 
@@ -201,7 +198,7 @@ public:
         auto rootId = catalogue.CreateEntity();
 
         elementView.AddComponent(rootId, UIElement{UIComponentType::Container});
-        containerView.AddComponent(rootId, UIWidgetContainer{&_containerLabel, false});
+        containerView.AddComponent(rootId, UIWidgetContainer{new std::string("NarrativeTextbox"), false});
         transformView.AddComponent(rootId,
                                    TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
@@ -212,7 +209,7 @@ public:
         auto textId = catalogue.CreateEntity();
 
         elementView.AddComponent(textId, UIElement{UIComponentType::Text});
-        textView.AddComponent(textId, UIText{&_emptyText, RGBAColour(255, 255, 255, 255)});
+        textView.AddComponent(textId, UIText{new std::string(""), RGBAColour(255, 255, 255, 255)});
         graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
         rootView.AddInsertChildInstruction(textId);
 
@@ -222,7 +219,7 @@ public:
             1; // any number for this example will do, but you should be very explicit on event Ids in real systems
         elementView.AddComponent(buttonId, UIElement{UIComponentType::Button});
         buttonView.AddComponent(buttonId, UIButton{
-                                              &_nextButtonText,
+                                              new std::string("Next"),
                                               clickEventId,
                                               NovelRT::Graphics::RGBAColour{0, 102, 204, 255},   // bg
                                               NovelRT::Graphics::RGBAColour{0, 82, 163, 255},    // active
@@ -302,7 +299,7 @@ public:
                     UIText initialText{};
                     if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(id, UIText{&_story[_strIndex], initialText.colour});
+                        textView.PushComponentUpdateInstruction(id, UIText{new std::string(_story[_strIndex]), initialText.colour});
                     }
                 }
             }
@@ -323,11 +320,11 @@ public:
                     {
                         if (_strIndex < _story.size())
                         {
-                            text.textValue = &_story[_strIndex];
+                            text.textValue = new std::string(_story[_strIndex]);
                         }
                         else
                         {
-                            text.textValue = &_endingText;
+                            text.textValue = new std::string(_endingText);
 
                             // slightly fade the milk away...
                             for (auto [spriteId, component] : spriteView)
