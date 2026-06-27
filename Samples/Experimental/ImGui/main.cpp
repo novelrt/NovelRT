@@ -418,7 +418,7 @@ int main()
     desktopResourceLoader->InitAssetDatabase();
 
     // Graphics Setup
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(false);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
 
     VulkanGraphicsAdapterSelector selector{};
