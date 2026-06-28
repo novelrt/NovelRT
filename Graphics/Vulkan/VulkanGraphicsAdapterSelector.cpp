@@ -58,10 +58,11 @@ namespace NovelRT::Graphics::Vulkan
                requiredDeviceExtensions.size();
     }
 
-    static int32_t RateDeviceSuitability(const VulkanGraphicsAdapter& adapter,
-                                         const VulkanGraphicsSurfaceContext& surfaceContext,
-                                         const std::vector<std::string>& requiredDeviceExtensions,
-                                         const std::vector<std::string>& optionalDeviceExtensions)
+    int32_t VulkanGraphicsAdapterSelector::RateDeviceSuitability(
+        const VulkanGraphicsAdapter& adapter,
+        const VulkanGraphicsSurfaceContext& surfaceContext,
+        const std::vector<std::string>& requiredDeviceExtensions,
+        const std::vector<std::string>& optionalDeviceExtensions) const
     {
         uint32_t extensionCount = 0;
         vkEnumerateDeviceExtensionProperties(adapter.GetPhysicalDevice(), nullptr, &extensionCount, nullptr);
@@ -77,6 +78,28 @@ namespace NovelRT::Graphics::Vulkan
         // If we're missing required extensions, the adapter is useless.
         if (!CheckRequiredExtensionSupport(extensionNames, requiredDeviceExtensions))
         {
+            _logger.logWarningLine("Rejecting adapater " + adapter.GetName() + "Due to missing required extensions:");
+
+            for (const auto& ext : requiredDeviceExtensions)
+            {
+                bool skip = false;
+                for (const auto& foundExt : extensionNames)
+                {
+                    if (ext == foundExt)
+                    {
+                        skip = true;
+                        break;
+                    }
+                }
+
+                if (skip)
+                {
+                    continue;
+                }
+
+                _logger.logWarningLine(ext);
+            }
+
             return -1;
         }
 
@@ -88,6 +111,8 @@ namespace NovelRT::Graphics::Vulkan
         // If we can't render graphics, present or create a swapchain, the adapter is useless.
         if (!indices.IsComplete() || supportDetails.formats.empty() || supportDetails.presentModes.empty())
         {
+            _logger.logWarningLine("Rejecting adapter " + adapter.GetName() +
+                                   " because it is unable to render anything to the screen.");
             return -1;
         }
 
