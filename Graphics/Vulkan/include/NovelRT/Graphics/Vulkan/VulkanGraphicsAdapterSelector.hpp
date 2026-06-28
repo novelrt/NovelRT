@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Graphics/IGraphicsAdapterSelector.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Logging/LoggingService.hpp>
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan
@@ -12,6 +14,14 @@ namespace NovelRT::Graphics::Vulkan
 
     class VulkanGraphicsAdapterSelector
     {
+    private:
+        Logging::LoggingService _logger = Logging::LoggingService("GFX");
+
+        int32_t RateDeviceSuitability(const GraphicsAdapter<Vulkan::VulkanGraphicsBackend>& adapter,
+                                      const GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>& surfaceContext,
+                                      const std::vector<std::string>& requiredDeviceExtensions,
+                                      const std::vector<std::string>& optionalDeviceExtensions) const;
+
     public:
         // NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this is intentionally non-static
         [[nodiscard]] std::shared_ptr<GraphicsAdapter<VulkanGraphicsBackend>> GetDefaultRecommendedAdapter(
