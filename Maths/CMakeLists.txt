@@ -3,14 +3,17 @@ include(NovelRTBuildSystem)
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Maths
   DEPENDS
     NovelRT::Utilities
+    NovelRT::Exceptions
 
   SOURCES
     PRIVATE
-      empty.cpp
+      GeoBounds.cpp
+      QuadTree.cpp
 
   HEADERS
     PUBLIC
       include/NovelRT/Maths/Constants.hpp
+      include/NovelRT/Maths/GeoBounds.hpp
       include/NovelRT/Maths/GeoMatrix4x4F.hpp
       include/NovelRT/Maths/GeoVector2F.hpp
       include/NovelRT/Maths/GeoVector3F.hpp

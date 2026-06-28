@@ -1,9 +1,10 @@
 #ifndef NOVELRT_MATHS_QUADTREE_H
 #define NOVELRT_MATHS_QUADTREE_H
 
-#ifndef NOVELRT_MATHS_H
-#error NovelRT does not support including types explicitly by default. Please include Maths.h instead for the Maths namespace subset.
-#endif
+#include <NovelRT/Maths/QuadTreePoint.hpp>
+#include <NovelRT/Maths/GeoBounds.hpp>
+#include <array>
+#include <memory>
 
 namespace NovelRT::Maths
 {
