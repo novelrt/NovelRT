@@ -78,7 +78,9 @@ namespace NovelRT::Graphics::Vulkan
         // If we're missing required extensions, the adapter is useless.
         if (!CheckRequiredExtensionSupport(extensionNames, requiredDeviceExtensions))
         {
-            _logger.logWarningLine("Rejecting adapater " + adapter.GetName() + "Due to missing required extensions:");
+            _logger.logWarningLine("Rejecting adapater " + adapter.GetName() + " due to missing required extensions:");
+
+            std::string finalStringOutput{};
 
             for (const auto& ext : requiredDeviceExtensions)
             {
@@ -97,8 +99,21 @@ namespace NovelRT::Graphics::Vulkan
                     continue;
                 }
 
-                _logger.logWarningLine(ext);
+                finalStringOutput += (ext + "\n");
             }
+
+            _logger.logWarningLine(finalStringOutput);
+
+            _logger.logWarningLine("Available extensions are:");
+
+            finalStringOutput = "";
+
+            for (const auto& ext : requiredDeviceExtensions)
+            {
+                finalStringOutput += (ext + "\n");
+            }
+
+            _logger.logWarningLine(finalStringOutput);
 
             return -1;
         }
