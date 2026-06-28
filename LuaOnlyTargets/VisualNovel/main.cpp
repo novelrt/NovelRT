@@ -382,7 +382,7 @@ int main()
         .WithWindowProvider(wndProvider)
         .WithInputProvider(inputProvider)
         .WithResourceLoader(resourceLoader)
-        .WithDefaultUIProvider(true)
+        .WithDefaultUIProvider(false)
         .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
         .WithGraphicsBuilder(gfx);
