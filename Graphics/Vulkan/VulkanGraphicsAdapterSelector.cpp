@@ -80,8 +80,6 @@ namespace NovelRT::Graphics::Vulkan
         {
             _logger.logWarningLine("Rejecting adapater " + adapter.GetName() + " due to missing required extensions:");
 
-            std::string finalStringOutput{};
-
             for (const auto& ext : requiredDeviceExtensions)
             {
                 bool skip = false;
@@ -99,21 +97,15 @@ namespace NovelRT::Graphics::Vulkan
                     continue;
                 }
 
-                finalStringOutput += (ext + "\n");
+                _logger.logWarningLine("  " + ext);
             }
-
-            _logger.logWarningLine(finalStringOutput);
 
             _logger.logWarningLine("Available extensions are:");
 
-            finalStringOutput = "";
-
-            for (const auto& ext : requiredDeviceExtensions)
+            for (const auto& ext : extensionNames)
             {
-                finalStringOutput += (ext + "\n");
+                _logger.logWarningLine("  " + ext);
             }
-
-            _logger.logWarningLine(finalStringOutput);
 
             return -1;
         }

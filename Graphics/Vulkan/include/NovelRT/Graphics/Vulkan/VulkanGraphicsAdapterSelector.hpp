@@ -17,10 +17,11 @@ namespace NovelRT::Graphics::Vulkan
     private:
         Logging::LoggingService _logger = Logging::LoggingService("GFX");
 
-        int32_t RateDeviceSuitability(const GraphicsAdapter<Vulkan::VulkanGraphicsBackend>& adapter,
-                                      const GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>& surfaceContext,
-                                      const std::vector<std::string>& requiredDeviceExtensions,
-                                      const std::vector<std::string>& optionalDeviceExtensions) const;
+        [[nodiscard]] int32_t RateDeviceSuitability(
+            const GraphicsAdapter<Vulkan::VulkanGraphicsBackend>& adapter,
+            const GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>& surfaceContext,
+            const std::vector<std::string>& requiredDeviceExtensions,
+            const std::vector<std::string>& optionalDeviceExtensions) const;
 
     public:
         // NOLINTNEXTLINE(readability-convert-member-functions-to-static) - this is intentionally non-static
