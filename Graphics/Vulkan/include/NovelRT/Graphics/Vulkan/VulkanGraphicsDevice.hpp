@@ -5,6 +5,7 @@
 
 #include <oneapi/tbb/mutex.h>
 
+#include <NovelRT/Graphics/FeatureProviderExtensionGroup.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsSwapchain.hpp>
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
@@ -54,16 +55,16 @@ namespace NovelRT::Graphics
         void OnGraphicsSurfaceSizeChanged(Maths::GeoVector2F newSize);
 
         [[nodiscard]] std::vector<std::string> GetFinalPhysicalDeviceExtensionSet(
-            std::vector<std::string> requiredDeviceExtensions,
-            std::vector<std::string> optionalDeviceExtensions) const;
-        VkDevice CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions,
-                                     std::vector<std::string> optionalDeviceExtensions);
+            std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+            std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions) const;
+        VkDevice CreateLogicalDevice(std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+                                     std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions);
 
     public:
         GraphicsDevice(std::shared_ptr<GraphicsAdapter<Vulkan::VulkanGraphicsBackend>> adapter,
                        std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>> surfaceContext,
-                       std::vector<std::string> requiredDeviceExtensions,
-                       std::vector<std::string> optionalDeviceExtensions);
+                       std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+                       std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions);
 
         ~GraphicsDevice();
 

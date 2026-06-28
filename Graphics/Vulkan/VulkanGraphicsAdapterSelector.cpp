@@ -99,9 +99,10 @@ namespace NovelRT::Graphics::Vulkan
 
                 for (const auto& extStr : ext.extensionNames)
                 {
-                    if (firstRun)
+                    if (!firstRun)
                     {
                         extensionGroupOutput += "OR ";
+                        firstRun = false;
                     }
 
                     extensionGroupOutput += extStr;
