@@ -859,3 +859,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+Light Rain
+------------------------
+Resources/Sounds/light-rain.wav
+========================
+Sound Effect: [Light rain loop] via [Mixkit](https://mixkit.co/)
+under the [Mixkit Sound Effects Free License](https://mixkit.co/license/#sfxFree)
