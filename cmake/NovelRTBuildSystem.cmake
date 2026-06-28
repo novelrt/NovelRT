@@ -99,7 +99,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     $<$<CXX_COMPILER_ID:Clang>:-Wconversion>
 
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    $<$<CXX_COMPILER_ID:MSVC>:/Z7>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 
@@ -198,9 +197,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     DESTINATION "$<TARGET_FILE_DIR:${cmakeSafeName}>/"
   )
   if(WIN32 AND MSVC)
-    if(moduleKind STREQUAL "LIBRARY")
-        install(FILES $<TARGET_FILE_DIR:${cmakeSafeName}>/${cmakeSafeName}.pdb DESTINATION lib OPTIONAL)
-    endif()
+    install(FILES $<TARGET_FILE_DIR:${cmakeSafeName}>/${cmakeSafeName}.pdb DESTINATION lib OPTIONAL)
   endif()
 endfunction()
 
