@@ -1,16 +1,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/Ecs/Graphics/Components/Sprite.hpp"
-#include "NovelRT/Ecs/IEcsSystem.hpp"
-#include "NovelRT/Exceptions/FileNotFoundException.hpp"
-#include "nlohmann/json_fwd.hpp"
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
 #include <NovelRT/Ecs/EcsDefaultsBuilder.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
+#include <NovelRT/Ecs/IEcsSystem.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
+#include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <nlohmann/json_fwd.hpp>
 
 #include <NovelRT/Ecs/Components/TransformComponent.hpp>
 
@@ -382,7 +382,7 @@ int main()
         .WithWindowProvider(wndProvider)
         .WithInputProvider(inputProvider)
         .WithResourceLoader(resourceLoader)
-        .WithDefaultUIProvider(false)
+        .WithDefaultUIProvider(true)
         .AddFont("default", "Raleway-Regular.ttf")
         .WithDefaultUISystem()
         .WithGraphicsBuilder(gfx);
