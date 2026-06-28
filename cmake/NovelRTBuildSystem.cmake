@@ -76,6 +76,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   set_target_properties(${cmakeSafeName} PROPERTIES
     EXPORT_NAME ${moduleName}
     OUTPUT_NAME ${moduleOutputName}
+		COMPILE_PDB_NAME ${cmakeSafeName}
+		PDB_NAME ${cmakeSafeName}
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     CXX_CLANG_TIDY "${clangTidyCommandLine}")
 
@@ -97,6 +99,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     $<$<CXX_COMPILER_ID:Clang>:-Wconversion>
 
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
+    $<$<CXX_COMPILER_ID:MSVC>:/Z7>
     $<$<CXX_COMPILER_ID:MSVC>:/WX>
     $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
 
@@ -194,6 +197,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     FILES ${CMAKE_SOURCE_DIR}/LICENCE-DIST.md
     DESTINATION "$<TARGET_FILE_DIR:${cmakeSafeName}>/"
   )
+  if(WIN32 AND MSVC)
+    if(BUILD_SHARED_LIBS)
+        install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION bin OPTIONAL)
+    else()
+        # For static libraries
+        install(FILES $<TARGET_FILE_DIR:${cmakeSafeName}>/${cmakeSafeName}.pdb DESTINATION lib OPTIONAL)
+    endif()
+  endif()
 endfunction()
 
 endblock()
