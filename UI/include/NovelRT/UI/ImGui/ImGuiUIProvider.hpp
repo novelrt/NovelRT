@@ -452,7 +452,7 @@ namespace NovelRT::UI::ImGui
             int32_t globalIndexOffset = 0;
 
             ImVec2 clippingOffset = drawData->DisplayPos;
-            ImVec2 clippingScale = drawData->FramebufferScale;
+            // ImVec2 clippingScale = drawData->FramebufferScale;
 
             // Bind the Vertex Buffers and the index buffer region
             std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{
@@ -507,10 +507,10 @@ namespace NovelRT::UI::ImGui
                     {
 
                         // Project scissor/clipping rectangles into framebuffer space
-                        ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
-                                           (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
-                        ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * clippingScale.x,
-                                           (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
+                        ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * 1,  //* clippingScale.x,
+                                           (drawCommand->ClipRect.y - clippingOffset.y) * 1); //* clippingScale.y);
+                        ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * 1,  //* clippingScale.x,
+                                           (drawCommand->ClipRect.w - clippingOffset.y) * 1); //* clippingScale.y);
 
                         // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
                         if (clippingMin.x < 0.0f)
