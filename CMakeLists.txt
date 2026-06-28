@@ -69,6 +69,7 @@ add_subdirectory(Ecs)
 
 add_subdirectory(Samples)
 add_subdirectory(LuaOnlyTargets)
+add_subdirectory(Tests)
 
 if(NOVELRT_INSTALL)
   install(
