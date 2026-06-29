@@ -230,7 +230,7 @@ namespace NovelRT::ResourceManagement::Desktop
         std::vector<uint8_t> pixels(bytesPerRow * data.height);
         std::vector<png_bytep> rowPointers(data.height);
         std::generate(rowPointers.begin(), rowPointers.end(),
-                      [base = pixels.data(), rowSize = bytesPerRow, offset = 0]() mutable
+                      [base = pixels.data(), rowSize = bytesPerRow, offset = 0ULL]() mutable
                       { return base + (offset++ * rowSize); });
 
         png_read_image(png, rowPointers.data());
