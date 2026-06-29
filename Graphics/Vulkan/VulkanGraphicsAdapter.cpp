@@ -5,6 +5,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
 
+#include <NovelRT/Graphics/FeatureProviderExtensionGroup.hpp>
 #include <NovelRT/Graphics/GraphicsDevice.hpp>
 #include <NovelRT/Graphics/GraphicsRenderPass.hpp>
 
@@ -87,26 +88,32 @@ namespace NovelRT::Graphics
     {
         return CreateDevice(
             surfaceContext,
-            std::vector<std::string>{VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_KHR_MAINTENANCE_7_EXTENSION_NAME},
-            std::vector<std::string>{VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME});
+            std::vector<FeatureProviderExtensionGroup>{
+                {.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}},
+                {.extensionNames = {VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME, VK_KHR_MAINTENANCE_7_EXTENSION_NAME}}},
+            std::vector<FeatureProviderExtensionGroup>{});
     }
 
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsAdapter::CreateDevice(
         const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
-        std::vector<std::string> requiredDeviceExtensions,
-        std::vector<std::string> optionalDeviceExtensions)
+        std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+        std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions)
     {
         // Add VK_KHR_swapchain as a required extension if it's not already there
-        auto requiredSwapchainExtension = std::find(requiredDeviceExtensions.begin(), requiredDeviceExtensions.end(),
-                                                    VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+        auto requiredSwapchainExtension =
+            std::find(requiredDeviceExtensions.begin(), requiredDeviceExtensions.end(),
+                      FeatureProviderExtensionGroup{.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}});
+
         if (requiredSwapchainExtension == requiredDeviceExtensions.end())
         {
             // To avoid weird behavior, make sure that optionalDeviceExtensions doesn't contain it
-            optionalDeviceExtensions.erase(std::remove(optionalDeviceExtensions.begin(), optionalDeviceExtensions.end(),
-                                                       VK_KHR_SWAPCHAIN_EXTENSION_NAME),
-                                           optionalDeviceExtensions.end());
+            optionalDeviceExtensions.erase(
+                std::remove(optionalDeviceExtensions.begin(), optionalDeviceExtensions.end(),
+                            FeatureProviderExtensionGroup{.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}}),
+                optionalDeviceExtensions.end());
 
-            requiredDeviceExtensions.emplace_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+            requiredDeviceExtensions.emplace_back(
+                FeatureProviderExtensionGroup{.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}});
         }
 
         return std::make_shared<VulkanGraphicsDevice>(shared_from_this(), surfaceContext, requiredDeviceExtensions,
