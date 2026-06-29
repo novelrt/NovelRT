@@ -44,12 +44,13 @@ foreach(file IN LISTS source_files header_files)
 
   # This is necessary as CMake doesn't automatically pass this flag for
   # whatever reason
+  # FIXME: When upgrading to CMake 3.30 change these to $<CXX_COMPILER_FRONTEND_VARIANT:xxx>
   set_property(
     SOURCE "${file}"
     PROPERTY COMPILE_OPTIONS
-      "$<$<CXX_COMPILER_ID:AppleClang>:--language=c++>"
-      "$<$<CXX_COMPILER_ID:Clang>:--language=c++>"
-      "$<$<CXX_COMPILER_ID:GNU>:--language=c++>"
+      "$<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},AppleClang>:--language=c++>"
+      "$<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:--language=c++>"
+      "$<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:--language=c++>"
   )
 endforeach()
 
@@ -95,6 +96,10 @@ target_compile_options(lua
     $<$<CXX_COMPILER_ID:Clang>:-Wno-misleading-indentation>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-misleading-indentation>
     # $<$<CXX_COMPILER_ID:MSVC>:/wd4390> # no msvc error for this?
+
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-macro-redefined>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-macro-redefined>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-macro-redefined>
 
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-conversion>
     $<$<CXX_COMPILER_ID:Clang>:-Wno-conversion>

@@ -82,25 +82,32 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     CXX_CLANG_TIDY "${clangTidyCommandLine}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
+  # FIXME: When upgrading to CMake 3.30 change these to $<CXX_COMPILER_FRONTEND_VARIANT:xxx>
   target_compile_options(${cmakeSafeName} PRIVATE
-    $<$<CXX_COMPILER_ID:GNU>:-Wall>
-    $<$<CXX_COMPILER_ID:GNU>:-Wabi>
-    $<$<CXX_COMPILER_ID:GNU>:-Werror>
-    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
-    $<$<CXX_COMPILER_ID:GNU>:-Wpedantic>
-    $<$<CXX_COMPILER_ID:GNU>:-pedantic-errors>
-    $<$<CXX_COMPILER_ID:GNU>:-Wconversion>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Wall>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Wall>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Wabi>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Werror>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Wextra>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Wpedantic>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-pedantic-errors>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-Wconversion>
 
-    $<$<CXX_COMPILER_ID:Clang>:-Wall>
-    $<$<CXX_COMPILER_ID:Clang>:-Werror>
-    $<$<CXX_COMPILER_ID:Clang>:-Wextra>
-    $<$<CXX_COMPILER_ID:Clang>:-Wpedantic>
-    $<$<CXX_COMPILER_ID:Clang>:-pedantic-errors>
-    $<$<CXX_COMPILER_ID:Clang>:-Wconversion>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-Wall>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-Werror>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-Wextra>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-Wpedantic>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-pedantic-errors>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-Wconversion>
 
-    $<$<CXX_COMPILER_ID:MSVC>:/W4>
-    $<$<CXX_COMPILER_ID:MSVC>:/WX>
-    $<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${NOVELRT_ENABLE_UBSAN}>>:-fsanitize=undefined>
+
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>:/W4>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>:/WX>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>:/permissive->
+
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Debug,RelWithDebInfo>>:-fstandalone-debug>
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Debug,RelWithDebInfo>>:-fno-eliminate-unused-debug-types>)
 
   # CMake doesn't like static libraries with no sources, so we add the dependencies as private sources to silence it.
   # This PROBABLY leads to some duplication but fortunately the linker is really good at de-duplicating code
