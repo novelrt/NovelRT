@@ -32,31 +32,7 @@ namespace NovelRT::Graphics
 
         bool operator==(const FeatureProviderExtensionGroup& other) const noexcept
         {
-            if (extensionNames.size() != other.extensionNames.size())
-            {
-                return false;
-            }
-
-            for (const auto& ext : extensionNames)
-            {
-                bool match = false;
-
-                for (const auto& otherExt : other.extensionNames)
-                {
-                    if (ext == otherExt)
-                    {
-                        match = true;
-                        break;
-                    }
-                }
-
-                if (!match)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return std::ranges::equal(extensionNames, other.extensionNames);
         }
     };
 }
