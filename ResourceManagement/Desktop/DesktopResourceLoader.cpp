@@ -4,8 +4,6 @@
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
 #include <NovelRT/Exceptions/IOException.hpp>
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
-#include <NovelRT/Exceptions/NotSupportedException.hpp>
-#include <NovelRT/Exceptions/OutOfMemoryException.hpp>
 #include <NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp>
 #include <NovelRT/ResourceManagement/Desktop/ImageData.hpp>
 #include <NovelRT/Utilities/Strings.hpp>
@@ -131,34 +129,40 @@ namespace NovelRT::ResourceManagement::Desktop
             filePath = _resourcesRootDirectory / "Images" / filePath.filename();
         }
 
-        std::string filePathStr = filePath.string();
-        FILE* cFile;
-#if defined(__STDC_LIB_EXT1__) || defined(_MSC_VER)
-        // todo: replace with file not found exc
-        _logger.throwIfNotZero(
-            fopen_s(&cFile, filePathStr.c_str(), "rb"),
-            "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-#else
-        cFile = fopen(filePathStr.c_str(), "rb");
-        _logger.throwIfNullPtr(cFile, "Image file cannot be opened! Please ensure the path is correct and that the "
-                                      "file is not locked. File path: " +
-                                          filePathStr);
-#endif
-
-        auto png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr,
-                                          nullptr); // TODO: Figure out how the error function ptr works
-
-        if (png == nullptr)
+        std::ifstream file(filePath.string(), std::ios::binary);
+        if (!file.is_open())
         {
-            _logger.logError(
-                "Image file cannot be opened! Please ensure the path is correct and that the file is not locked.");
-            throw Exceptions::FileNotFoundException(filePath.string(),
-                                                    "Unable to continue! File failed to load for texture. Please "
-                                                    "ensure the path is correct and that the file is not locked.");
+            throw NovelRT::Exceptions::FileNotFoundException(filePath.string());
         }
 
-        auto info = png_create_info_struct(png);
+        auto handle_error = [](png_structp png, png_const_charp message)
+        {
+            auto* logger = static_cast<NovelRT::Logging::LoggingService*>(png_get_error_ptr(png));
+            logger->logError("libpng error: {}", message);
+            throw Exceptions::InvalidOperationException("LibPNG error occured");
+        };
 
+        auto handle_warning = [](png_structp png, png_const_charp message)
+        {
+            auto* logger = static_cast<NovelRT::Logging::LoggingService*>(png_get_error_ptr(png));
+            logger->logWarning("libpng warning: {}", message);
+        };
+
+        auto* png = png_create_read_struct(PNG_LIBPNG_VER_STRING, &_logger, handle_error, handle_warning);
+        if (png == nullptr)
+        {
+            throw Exceptions::InvalidOperationException("Failed to create libpng read struct");
+        }
+
+        auto read = [](png_structp png, png_bytep data, size_t length)
+        {
+            auto* stream = static_cast<std::ifstream*>(png_get_io_ptr(png));
+            stream->read(reinterpret_cast<char*>(data), std::streamsize(length));
+        };
+
+        png_set_read_fn(png, &file, read);
+
+        auto* info = png_create_info_struct(png);
         if (info == nullptr)
         {
             _logger.logError("Image at path {} failed to provide an info struct! Aborting...", filePath.string());
@@ -166,117 +170,76 @@ namespace NovelRT::ResourceManagement::Desktop
                                           "Unable to continue! File failed to provide an info struct.");
         }
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4611)
-#endif
-        if (setjmp(png_jmpbuf(png)))
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-        { // This is how libpng does error handling.
-            _logger.logError("Image at path {} appears to be corrupted! Aborting...", filePath.string());
-            throw Exceptions::IOException(filePath.string(), "Unable to continue! File appears to be corrupted.");
-        }
-
-        png_init_io(png, cFile);
         png_read_info(png, info);
 
-        ImageData data;
-        data.width = png_get_image_width(png, info);
-        data.height = png_get_image_height(png, info);
-        data.colourType = png_get_color_type(png, info);
-        data.bitDepth = png_get_bit_depth(png, info);
+        struct
+        {
+            uint32_t width;
+            uint32_t height;
+            png_byte colourType;
+            png_byte bitDepth;
+            png_byte interlaceType;
+            int interlacePasses;
+        } data = {
+            .width = png_get_image_width(png, info),
+            .height = png_get_image_height(png, info),
+            .colourType = png_get_color_type(png, info),
+            .bitDepth = png_get_bit_depth(png, info),
+            .interlaceType = png_get_interlace_type(png, info),
+            .interlacePasses = 0
+        };
 
         if (data.bitDepth == 16)
+        {
             png_set_strip_16(png);
+        }
 
         if (data.colourType == PNG_COLOR_TYPE_PALETTE)
+        {
             png_set_palette_to_rgb(png);
-
-        if (data.colourType == PNG_COLOR_TYPE_GRAY && data.bitDepth < 8)
+        }
+        else if (data.colourType == PNG_COLOR_TYPE_GRAY && data.bitDepth < 8)
+        {
             png_set_expand_gray_1_2_4_to_8(png);
+        }
+        else if (data.colourType == PNG_COLOR_TYPE_GRAY || data.colourType == PNG_COLOR_TYPE_GRAY_ALPHA)
+        {
+            png_set_gray_to_rgb(png);
+        }
 
-        if (png_get_valid(png, info, PNG_INFO_tRNS))
-            png_set_tRNS_to_alpha(png);
-
-        if (data.colourType == PNG_COLOR_TYPE_RGB || data.colourType == PNG_COLOR_TYPE_GRAY ||
+        if (data.colourType == PNG_COLOR_TYPE_RGB ||
+            data.colourType == PNG_COLOR_TYPE_GRAY ||
             data.colourType == PNG_COLOR_TYPE_PALETTE)
-        { // id one line this but it looks ugly
+        {
             png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
         }
 
-        if (data.colourType == PNG_COLOR_TYPE_GRAY || data.colourType == PNG_COLOR_TYPE_GRAY_ALPHA)
-            png_set_gray_to_rgb(png);
+        if (png_get_valid(png, info, PNG_INFO_tRNS))
+        {
+            png_set_tRNS_to_alpha(png);
+        }
+
+        if (data.interlaceType != PNG_INTERLACE_NONE)
+        {
+            data.interlacePasses = png_set_interlace_handling(png);
+        }
 
         png_read_update_info(png, info);
 
-        auto rowBytes = png_get_rowbytes(png, info);
-        auto bpp = static_cast<uint32_t>(rowBytes) / data.width;
+        auto bytesPerRow = png_get_rowbytes(png, info);
+        std::vector<uint8_t> pixels(bytesPerRow * data.height);
+        std::vector<png_bytep> rowPointers(data.height);
+        std::generate(rowPointers.begin(), rowPointers.end(),
+                      [base = pixels.data(), rowSize = bytesPerRow, offset = 0]() mutable
+                      { return base + (offset++ * rowSize); });
 
-        // Allows us to get the final image data, not interlaced.
-        png_set_interlace_handling(png);
-
-        // Props to Kenny for debugging this without asking me and saving me the mental strain lmao
-        auto pixelBufferAmount = (data.width * data.height * bpp);
-        auto rawImage = new unsigned char[pixelBufferAmount]; // We allocate the pixel buffer here.
-
-        if (rawImage == nullptr)
-        {
-            png_destroy_read_struct(&png, &info, nullptr);
-            fclose(cFile);
-            throw Exceptions::OutOfMemoryException(
-                std::string("Couldn't allocate space for PNG, file: \"").append(filePath.string()).append("\"."));
-        }
-
-        data.rowPointers = new png_bytep[data.height]; // Setup row pointer array and set it into the pixel buffer.
-        uint8_t* p = reinterpret_cast<uint8_t*>(rawImage);
-
-        // TODO: Proper error check on data.rowPointers
-        if (data.rowPointers == nullptr)
-        {
-            _logger.logError("Unable to continue! Couldn't allocate memory for the PNG pixel data! Aborting...");
-            throw Exceptions::OutOfMemoryException(std::string("Could not allocate memory for pixel data from \"")
-                                                       .append(filePath.string())
-                                                       .append("\"."));
-        }
-
-        for (uint32_t i = 0; i < data.height; i++)
-        {
-            data.rowPointers[i] = p;
-            p += data.width * bpp;
-        }
-
-        // Read all the rows (data will flow into the pixel buffer)
-        png_read_image(png, data.rowPointers);
-        png_read_end(png, info); // Finish reading the file - this will also check for corruption
-
-        fclose(cFile);
-
-        std::vector<uint8_t> returnImage{};
-
-        size_t finalLength = data.width * data.height;
-
-        returnImage.reserve(finalLength * 4);
-
-        for (size_t i = 0; i < finalLength * 4; ++i)
-        {
-            returnImage.emplace_back(rawImage[i]);
-        }
-
-        delete[] rawImage;
-        delete[] data.rowPointers;
-
-        if (data.colourType != PNG_COLOR_TYPE_RGBA)
-        {
-            throw Exceptions::NotSupportedException("Colour type is in an unsupported format.");
-        }
+        png_read_image(png, rowPointers.data());
+        png_read_end(png, info);
 
         png_destroy_read_struct(&png, &info, nullptr);
-
         auto relativePathForAssetDatabase = std::filesystem::relative(filePath, _resourcesRootDirectory);
 
-        return TextureMetadata{returnImage, data.width, data.height, finalLength,
+        return TextureMetadata{pixels, data.width, data.height, pixels.size(),
                                RegisterAsset(relativePathForAssetDatabase)};
     }
 
