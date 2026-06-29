@@ -25,6 +25,7 @@
 #include <NovelRT/Utilities/Strings.hpp>
 
 #include <algorithm>
+#include <ranges>
 #include <set>
 #include <vulkan/vulkan_core.h>
 
@@ -56,8 +57,8 @@ namespace NovelRT::Graphics
     }
 
     std::vector<std::string> VulkanGraphicsDevice::GetFinalPhysicalDeviceExtensionSet(
-        std::vector<std::string> requiredDeviceExtensions,
-        std::vector<std::string> optionalDeviceExtensions) const
+        std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+        std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions) const
     {
         uint32_t extensionCount = 0;
         auto adapter = GetAdapter();
@@ -66,7 +67,7 @@ namespace NovelRT::Graphics
         vkEnumerateDeviceExtensionProperties(adapter->GetPhysicalDevice(), nullptr, &extensionCount,
                                              extensionProperties.data());
 
-        _logger.logInfoLine("Found the following available physical device extensions:");
+        _logger.logInfoLine("Found the following available physical device extensions as part of VkDevice setup:");
 
         for (auto&& extensionProperty : extensionProperties)
         {
@@ -74,45 +75,97 @@ namespace NovelRT::Graphics
                                 "  Spec Version: " + std::to_string(extensionProperty.specVersion));
         }
 
+        std::vector<std::string> cppNames{};
+
+        std::ranges::transform(extensionProperties, std::back_inserter(cppNames),
+                               [&](const auto& x) -> std::string { return std::string(x.extensionName); });
+
+        size_t groupCounter = 0ULL;
+
+        std::vector<std::string> finalRequiredDeviceExtensions{};
+
         // TODO: EngineConfig was here
         for (auto&& requestedRequiredExt : requiredDeviceExtensions)
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x)
-                                       { return strcmp(requestedRequiredExt.c_str(), x.extensionName) == 0; });
+            auto result = requestedRequiredExt.FindFirstAvailableExtension(cppNames);
 
-            if (result == extensionProperties.end())
+            if (!result.has_value())
             {
+                std::string missingExtensions{};
+
+                bool firstRun = true;
+
+                for (const auto& extStr : requestedRequiredExt.extensionNames)
+                {
+                    if (!firstRun)
+                    {
+                        missingExtensions += "OR ";
+                        firstRun = false;
+                    }
+
+                    missingExtensions += extStr;
+                }
+
                 throw Exceptions::InitialisationFailureException(
-                    "The required Vulkan extension " + requestedRequiredExt + " is not available on this device.");
+                    "None of the required Vulkan extensions in group " + std::to_string(groupCounter) +
+                    " are available on this device. Extensions missing:\n" + missingExtensions);
             }
+
+            finalRequiredDeviceExtensions.emplace_back(*result);
+
+            groupCounter += 1ULL;
         }
+
+        size_t groupCounterOptionals = 0ULL;
 
         std::vector<std::string> finalOptionalExtensions{};
 
         // TODO: EngineConfig was here
         for (auto&& requestedOptionalExt : optionalDeviceExtensions)
         {
-            auto result = std::find_if(extensionProperties.begin(), extensionProperties.end(), [&](auto& x)
-                                       { return strcmp(requestedOptionalExt.c_str(), x.extensionName) == 0; });
 
-            if (result == extensionProperties.end())
+            auto result = requestedOptionalExt.FindFirstAvailableExtension(cppNames);
+
+            if (!result.has_value())
             {
-                _logger.logWarningLine("The optional Vulkan extension " + requestedOptionalExt +
-                                       " is not available on this device. Vulkan may not behave as you expect.");
+                std::string missingExtensions{};
+
+                bool firstRun = true;
+
+                for (const auto& extStr : requestedOptionalExt.extensionNames)
+                {
+                    if (!firstRun)
+                    {
+                        missingExtensions += "OR ";
+                        firstRun = false;
+                    }
+
+                    missingExtensions += extStr;
+                }
+
+                _logger.logWarningLine("The optional Vulkan extensions in group " +
+                                       std::to_string(groupCounterOptionals) +
+                                       " are not available on this device. Vulkan may not behave as you expect. "
+                                       "Optionally requested was one of the following:");
+
+                _logger.logWarningLine(missingExtensions);
                 continue;
             }
 
-            finalOptionalExtensions.emplace_back(requestedOptionalExt);
+            finalOptionalExtensions.emplace_back(*result);
+
+            groupCounter += 1ULL;
         }
 
-        // TODO: EngineConfig was here
-        std::vector<std::string> allExtensions{requiredDeviceExtensions};
+        // TODO: EngineConfig was here}
+        std::vector<std::string> allExtensions{finalRequiredDeviceExtensions};
         allExtensions.insert(allExtensions.end(), finalOptionalExtensions.begin(), finalOptionalExtensions.end());
         return allExtensions;
     }
 
-    VkDevice VulkanGraphicsDevice::CreateLogicalDevice(std::vector<std::string> requiredDeviceExtensions,
-                                                       std::vector<std::string> optionalDeviceExtensions)
+    VkDevice VulkanGraphicsDevice::CreateLogicalDevice(
+        std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+        std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions)
     {
         _indicesData = Vulkan::Utilities::FindQueueFamilies(_adapter->GetPhysicalDevice(), _surface);
 
@@ -198,8 +251,8 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsDevice::GraphicsDevice(std::shared_ptr<VulkanGraphicsAdapter> adapter,
                                          std::shared_ptr<VulkanGraphicsSurfaceContext> surfaceContext,
-                                         std::vector<std::string> requiredDeviceExtensions,
-                                         std::vector<std::string> optionalDeviceExtensions)
+                                         std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+                                         std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions)
         : _adapter(std::move(adapter)),
           _surfaceContext(std::move(surfaceContext)),
           _logger(NovelRT::Logging::CONSOLE_LOG_GFX),

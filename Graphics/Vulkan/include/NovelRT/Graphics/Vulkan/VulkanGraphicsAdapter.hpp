@@ -3,6 +3,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Graphics/FeatureProviderExtensionGroup.hpp>
 #include <NovelRT/Graphics/GraphicsAdapter.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
@@ -51,7 +52,7 @@ namespace NovelRT::Graphics
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> CreateDevice(
             const std::shared_ptr<GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>>& surfaceContext,
-            std::vector<std::string> requiredDeviceExtensions,
-            std::vector<std::string> optionalDeviceExtensions);
+            std::vector<FeatureProviderExtensionGroup> requiredDeviceExtensions,
+            std::vector<FeatureProviderExtensionGroup> optionalDeviceExtensions);
     };
 }

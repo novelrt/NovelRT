@@ -15,6 +15,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Core
 
   HEADERS
     PUBLIC
+      include/NovelRT/Graphics/FeatureProviderExtensionGroup.hpp
       include/NovelRT/Graphics/GraphicsAdapter.hpp
       include/NovelRT/Graphics/GraphicsBuffer.hpp
       include/NovelRT/Graphics/GraphicsBufferCreateInfo.hpp
