@@ -6,6 +6,7 @@
 #include <NovelRT/Graphics/GraphicsSurfaceKind.hpp>
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Utilities/Event.hpp>
+#include <NovelRT/Windowing/VideoModeData.hpp>
 #include <NovelRT/Windowing/WindowMode.hpp>
 #include <NovelRT/Windowing/WindowProvider.hpp>
 
@@ -49,11 +50,16 @@ namespace NovelRT::Windowing
         Maths::GeoVector2F _currentSize;
 
     public:
-        WindowProvider(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize);
+        WindowProvider();
         ~WindowProvider() noexcept final;
 
+        [[nodiscard]] std::vector<VideoModeData> GetAllVideoModeData();
+
+        void CreateWindow(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize);
+
         template<typename TBackend>
-        std::shared_ptr<Graphics::GraphicsProvider<TBackend>> CreateGraphicsProvider(bool enableDebugMode);
+        [[nodiscard]] std::shared_ptr<Graphics::GraphicsProvider<TBackend>> CreateGraphicsProvider(
+            bool enableDebugMode);
 
         void ProcessAllMessages();
 

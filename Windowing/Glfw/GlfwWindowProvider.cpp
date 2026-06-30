@@ -1,7 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/NotSupportedException.hpp>
 
@@ -13,14 +13,32 @@ namespace NovelRT::Windowing
 {
     using GlfwWindowProvider = WindowProvider<Glfw::GlfwWindowingBackend>;
 
-    GlfwWindowProvider::WindowProvider(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize)
+    std::vector<VideoModeData> GlfwWindowProvider::GetAllVideoModeData()
     {
+        GLFWmonitor* primary = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(primary);
+
+        std::vector<VideoModeData> returnData{};
+
+        returnData.emplace_back(Maths::GeoVector2F(static_cast<float>(mode->width), static_cast<float>(mode->height)));
+
+        return returnData;
+    }
+
+    GlfwWindowProvider::WindowProvider() : _window(nullptr)
+    {
+
         if (glfwInit() == GLFW_FALSE)
         {
             const char* output = nullptr;
             glfwGetError(&output);
             throw Exceptions::InitialisationFailureException("GLFW3 failed to initialise.", std::string(output));
         }
+    }
+
+    void GlfwWindowProvider::CreateWindow(NovelRT::Windowing::WindowMode windowMode,
+                                          Maths::GeoVector2F desiredWindowSize)
+    {
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         GLFWmonitor* monitor = nullptr;

@@ -10,6 +10,7 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
 #include <nlohmann/json_fwd.hpp>
 
 #include <NovelRT/Ecs/Components/TransformComponent.hpp>
@@ -204,8 +205,14 @@ class InitialisationSystem : public IEcsSystem
 {
 private:
     bool _initialized = false;
+    NovelRT::Maths::GeoVector2F _dimensions;
 
 public:
+    explicit InitialisationSystem(NovelRT::Maths::GeoVector2F initialDimensions) noexcept
+        : _dimensions(initialDimensions)
+    {
+    }
+
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
         if (_initialized)
@@ -331,8 +338,11 @@ int main()
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1920, 1080});
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+
+    auto finalSize = wndProvider->GetAllVideoModeData().at(0).displayDimensions * 0.75f;
+
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, finalSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -403,10 +413,10 @@ int main()
                       { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
 
     builder.Configure(
-        [&wndProvider, &resourceLoader](SystemScheduler& scheduler)
+        [&wndProvider, &resourceLoader, finalSize = finalSize](SystemScheduler& scheduler)
         {
             unused(scheduler.RegisterSystem(std::make_shared<ViewportUpdateSystem>(wndProvider)));
-            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>()));
+            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>(finalSize)));
             unused(scheduler.RegisterSystem(std::make_shared<PoseToSpriteTranslationSystem>(resourceLoader)));
             unused(scheduler.RegisterSystem(std::make_shared<BranchTranslationSystem>()));
             unused(scheduler.RegisterSystem(std::make_shared<SpokenLineTranslationSystem>()));
