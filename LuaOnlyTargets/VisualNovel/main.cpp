@@ -1,7 +1,6 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/Maths/GeoVector2F.hpp"
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
@@ -11,6 +10,7 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
 #include <nlohmann/json_fwd.hpp>
 
 #include <NovelRT/Ecs/Components/TransformComponent.hpp>
