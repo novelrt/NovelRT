@@ -12,7 +12,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        configuration: [RelWithDebInfo]
         os: [windows-2025, ubuntu-24.04, macos-15, macos-26]
         vulkan: [1.4.313.0]
         include:
@@ -68,16 +67,17 @@ jobs:
           version: ${{ matrix.vulkan }}
 
       - name: Generate build system
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
 
       - name: Build NovelRT
-        run: cmake --build build --config ${{ matrix.configuration }} --parallel
+        run: cmake --build build --config RelWithDebInfo --parallel
       - name: Install NovelRT
-        run: cmake --install build --config ${{ matrix.configuration }} --prefix artefacts
+        run: cmake --install build --config RelWithDebInfo --prefix artefacts
 
       - name: Publish build artefacts
+        shell: bash
         run: |
-          find artefacts -print | zip "${{ matrix.os }}-${{ matrix.configuration }}.zip" -@
-          gh release upload ${{ github.event.release.tag_name }} "${{ matrix.os }}-${{ matrix.configuration }}.zip#${{ matrix.title }}" --repo "${{ github.repository }}"
+          (cd artefacts && zip -r "../${{ matrix.os }}.zip" .)
+          gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name}} - ${{ matrix.title }}" --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
