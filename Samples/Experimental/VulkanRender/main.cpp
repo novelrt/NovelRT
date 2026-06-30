@@ -318,8 +318,8 @@ int main()
     LoggingService logger{};
     logger.setLogLevel(LogLevel::Info);
 
-    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(false);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);

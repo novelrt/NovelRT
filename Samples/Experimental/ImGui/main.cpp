@@ -411,8 +411,8 @@ int main()
     logger.setLogLevel(LogLevel::Info);
 
     // Windowing Setup
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
     auto desktopResourceLoader = std::make_shared<NovelRT::ResourceManagement::Desktop::DesktopResourceLoader>();
     desktopResourceLoader->InitAssetDatabase();

@@ -161,8 +161,7 @@ private:
     NovelRT::Maths::GeoVector2F _initialSize;
 
 public:
-    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
-        : _initialSize(initialSize)
+    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize) : _initialSize(initialSize)
     {
     }
 
@@ -257,7 +256,8 @@ public:
                     UIText initialText{};
                     if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(id, UIText{new std::string(_story[_strIndex]), initialText.colour});
+                        textView.PushComponentUpdateInstruction(
+                            id, UIText{new std::string(_story[_strIndex]), initialText.colour});
                     }
                 }
             }
@@ -365,8 +365,8 @@ int main()
     desktopResourceLoader->InitAssetDatabase();
 
     auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, windowSize);
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, windowSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
