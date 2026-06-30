@@ -14,7 +14,7 @@ if(WIN32)
 endif()
 
 project(NovelRT
-  VERSION 2026.0.0
+  VERSION 2026.0.1
   DESCRIPTION "NovelRT game engine"
   HOMEPAGE_URL "https://novelrt.dev"
   LANGUAGES C CXX
