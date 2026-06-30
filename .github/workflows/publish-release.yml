@@ -77,7 +77,7 @@ jobs:
 
       - name: Publish build artefacts
         run: |
-          find artefacts -print | ziip "${{ matrix.os }}-${{ matrix.configuration }}.zip" -@
+          find artefacts -print | zip "${{ matrix.os }}-${{ matrix.configuration }}.zip" -@
           gh release upload ${{ github.event.release.tag_name }} "${{ matrix.os }}-${{ matrix.configuration }}.zip#${{ matrix.title }}" --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
