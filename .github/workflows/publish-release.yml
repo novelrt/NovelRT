@@ -75,9 +75,9 @@ jobs:
         run: cmake --install build --config RelWithDebInfo --prefix artefacts
 
       - name: Publish build artefacts
-        shell: bash
+        shell: pwsh
         run: |
-          (cd artefacts && zip -r "../novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip" .)
+          Compress-Archive -Path $(Get-ChildItem artefacts/*) -DestinationPath "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip"
           gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name }} - ${{ matrix.title }}" --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
