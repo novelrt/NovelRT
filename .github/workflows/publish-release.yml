@@ -78,6 +78,6 @@ jobs:
         shell: bash
         run: |
           (cd artefacts && zip -r "../${{ matrix.os }}.zip" .)
-          gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name}} - ${{ matrix.title }}" --repo "${{ github.repository }}"
+          gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name }} - ${{ matrix.title }}" --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
