@@ -78,8 +78,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   set_target_properties(${cmakeSafeName} PROPERTIES
     EXPORT_NAME ${moduleName}
     OUTPUT_NAME ${moduleOutputName}
-		COMPILE_PDB_NAME ${cmakeSafeName}
-		PDB_NAME ${cmakeSafeName}
+		COMPILE_PDB_NAME ${moduleOutputName}
+		PDB_NAME ${moduleOutputName}
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     CXX_CLANG_TIDY "${clangTidyCommandLine}"
     MACOSX_BUNDLE "${declareModule_MACOSX_BUNDLE}"
@@ -214,7 +214,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       FILE_SET public_resources DESTINATION bin/Resources)
 
     if(WIN32 AND moduleKind STREQUAL "EXECUTABLE")
-      install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION lib OPTIONAL)
+      install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION bin OPTIONAL)
     endif()
   endif()
 endfunction()
