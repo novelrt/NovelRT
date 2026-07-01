@@ -197,7 +197,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
-      install(CODE "include(BundleUtilities) fixup_bundle(\"$<TARGET_BUNDLE_DIR:${cmakeSafeName}>\")")
+      install(CODE "include(BundleUtilities)\nfixup_bundle(\"$<TARGET_BUNDLE_DIR:${cmakeSafeName}>\")")
     endif()
 
     install(
@@ -213,7 +213,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       FILE_SET interface_resources DESTINATION bin/Resources
       FILE_SET public_resources DESTINATION bin/Resources)
 
-    if(WIN32)
+    if(WIN32 AND moduleKind STREQUAL "EXECUTABLE")
       install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION lib OPTIONAL)
     endif()
   endif()
