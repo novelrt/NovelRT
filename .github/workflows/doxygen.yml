@@ -50,7 +50,7 @@ jobs:
             libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
             libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
             pkg-config libxml2-dev wayland-protocols python3-jsonschema \
-            clang-21 clang-tidy-21 qtbase5-dev qt6-base-dev
+            clang-21 clang-tidy-21 qtbase5-dev qt6-base-dev doxygen graphviz
 
           sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-21 20
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-21 10
