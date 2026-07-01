@@ -71,6 +71,13 @@ add_subdirectory(Samples)
 add_subdirectory(LuaOnlyTargets)
 add_subdirectory(Tests)
 
+if(NOVELRT_BUILD_DOCUMENTATION)
+  find_package(Doxygen COMPONENTS dot)
+  if(DOXYGEN_FOUND)
+    add_subdirectory(Doxygen)
+  endif()
+endif()
+
 if(NOVELRT_INSTALL)
   install(
     EXPORT NovelRTConfig
