@@ -257,9 +257,9 @@ public:
                                                                            .isScreenSpace = true});
 
         viewports.PushComponentUpdateInstruction(
-            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1920, .height = 1080});
+            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _dimensions.x, .height = _dimensions.y});
         viewports.PushComponentUpdateInstruction(
-            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1920, .height = 1080});
+            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _dimensions.x, .height = _dimensions.y});
     }
 };
 
