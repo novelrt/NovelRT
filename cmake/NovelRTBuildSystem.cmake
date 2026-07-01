@@ -197,7 +197,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
-      install(CODE "include(BundleUtilities)\nfixup_bundle(\"$<TARGET_BUNDLE_DIR:${cmakeSafeName}>\")")
+      install(CODE "include(BundleUtilities)\nfixup_bundle(\"$<TARGET_BUNDLE_DIR:${cmakeSafeName}>\" \"\" \"$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin\")")
     endif()
 
     install(
