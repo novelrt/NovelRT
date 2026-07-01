@@ -1,6 +1,8 @@
 include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::LuaOnlyTargets::VisualNovel
+  MACOSX_BUNDLE
+
   DEPENDS
     NovelRT::Ecs
     NovelRT::Ecs::Graphics

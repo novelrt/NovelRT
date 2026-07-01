@@ -25,7 +25,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   string(TOLOWER "${moduleName}" moduleNameLower)
   set(savedDetailsPropertyName "_NovelRTBuildSystem_declaredModules_${moduleNameLower}")
 
-  cmake_parse_arguments(PARSE_ARGV 1 "declareModule" "" "" "DEPENDS;OPTIONAL_DEPENDS;SOURCES;HEADERS;RESOURCES;COMPILE_FEATURES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;PRECOMPILE_HEADERS;INCLUDE_DIRECTORIES;LINK_LIBRARIES")
+  cmake_parse_arguments(PARSE_ARGV 2 "declareModule" "MACOSX_BUNDLE;WIN32_EXECUTABLE" "" "DEPENDS;OPTIONAL_DEPENDS;SOURCES;HEADERS;RESOURCES;COMPILE_FEATURES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;PRECOMPILE_HEADERS;INCLUDE_DIRECTORIES;LINK_LIBRARIES")
   set(dependsClosure ${declareModule_DEPENDS} ${declareModule_OPTIONAL_DEPENDS})
   set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_DEPENDS ${dependsClosure})
   set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_OPTIONAL_DEPENDS ${declareModule_OPTIONAL_DEPENDS})
@@ -43,6 +43,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endforeach()
 
   string(REGEX REPLACE "::" "-" cmakeSafeName ${moduleName})
+  string(REGEX REPLACE "::" "." macosx_bundle_identifier ${moduleName})
+  string(TOLOWER "${macosx_bundle_identifier}" macosx_bundle_identifier)
   if(moduleKind STREQUAL "LIBRARY")
     # N.B. Static is important here so that target_link_libraries works as expected
     add_library(${cmakeSafeName} STATIC)
@@ -79,7 +81,13 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 		COMPILE_PDB_NAME ${cmakeSafeName}
 		PDB_NAME ${cmakeSafeName}
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
-    CXX_CLANG_TIDY "${clangTidyCommandLine}")
+    CXX_CLANG_TIDY "${clangTidyCommandLine}"
+    MACOSX_BUNDLE "${declareModule_MACOSX_BUNDLE}"
+    MACOSX_BUNDLE_NAME "${moduleName}"
+    MACOSX_BUNDLE_VERSION "${PROJECT_VERSION}"
+    MACOSX_BUNDLE_COPYRIGHT "NovelRT Contributors"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "${macosx_bundle_identifier}"
+    WIN32_EXECUTABLE "${declareModule_WIN32_EXECUTABLE}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
   # FIXME: When upgrading to CMake 3.30 change these to $<CXX_COMPILER_FRONTEND_VARIANT:xxx>
@@ -187,24 +195,27 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_link_libraries(${cmakeSafeName} ${declareModule_LINK_LIBRARIES})
   endif()
 
-  install(
-    TARGETS ${cmakeSafeName}
-    EXPORT NovelRTConfig
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    FILE_SET interface_headers DESTINATION include
-    FILE_SET public_headers DESTINATION include
+  if(NOVELRT_INSTALL)
+    if(APPLE AND declareModule_MACOSX_BUNDLE)
+      install(CODE "include(BundleUtilities) fixup_bundle(\"$<TARGET_BUNDLE_DIR:${cmakeSafeName}>\")")
+    endif()
 
-    FILE_SET interface_resources DESTINATION bin/Resources
-    FILE_SET public_resources DESTINATION bin/Resources)
-  
-  install(
-    FILES ${CMAKE_SOURCE_DIR}/LICENCE-DIST.md
-    DESTINATION "$<TARGET_FILE_DIR:${cmakeSafeName}>/"
-  )
-  if(WIN32 AND MSVC)
-    install(FILES $<TARGET_FILE_DIR:${cmakeSafeName}>/${cmakeSafeName}.pdb DESTINATION lib OPTIONAL)
+    install(
+      TARGETS ${cmakeSafeName}
+      EXPORT NovelRTConfig
+      ARCHIVE DESTINATION lib
+      LIBRARY DESTINATION lib
+      RUNTIME DESTINATION bin
+      BUNDLE DESTINATION apps
+      FILE_SET interface_headers DESTINATION include
+      FILE_SET public_headers DESTINATION include
+
+      FILE_SET interface_resources DESTINATION bin/Resources
+      FILE_SET public_resources DESTINATION bin/Resources)
+
+    if(WIN32)
+      install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION lib OPTIONAL)
+    endif()
   endif()
 endfunction()
 
