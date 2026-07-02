@@ -11,7 +11,7 @@ function(append_string_to_first_list_element APPEND_ARGS_INPUT APPEND_ARGS_APPEN
 endfunction()
 
 if (NOT DEFINED DOXYGEN_OUTPUT_DIRECTORY)
-  set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/doxygen)
+  set(DOXYGEN_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Doxygen)
 else()
   message("Doxygen output directory defined as: ${DOXYGEN_OUTPUT_DIRECTORY}")
   set(DOXYGEN_HTML_OUTPUT ${DOXYGEN_OUTPUT_DIRECTORY})
@@ -20,6 +20,7 @@ endif()
 set(DOCS_MAINPAGE
         ${PROJECT_SOURCE_DIR}/README.md
         ${PROJECT_SOURCE_DIR}/LICENCE.md
+        ${PROJECT_SOURCE_DIR}/LICENCE-DIST.md
         ${PROJECT_SOURCE_DIR}/CODE_OF_CONDUCT.md
         )
 
@@ -32,12 +33,16 @@ foreach(docFile ${DOCS_MAINPAGE})
     append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#mainpage}" TEMP_DOC_FILE_CONTENTS)
     string(REPLACE "(CODE_OF_CONDUCT.md)" "(@ref conduct)" TEMP_DOC_FILE_CONTENTS ${TEMP_DOC_FILE_CONTENTS})
     string(REPLACE "(LICENCE.md)" "(@ref licence)" TEMP_DOC_FILE_CONTENTS ${TEMP_DOC_FILE_CONTENTS})
+    string(REPLACE "(LICENCE-DIST.md)" "(@ref licenceDist)" TEMP_DOC_FILE_CONTENTS ${TEMP_DOC_FILE_CONTENTS})
   endif()
   if(${TEMP_DOC_FILE_NAME} STREQUAL "CODE_OF_CONDUCT.md")
     append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#conduct}" TEMP_DOC_FILE_CONTENTS)
   endif()
   if(${TEMP_DOC_FILE_NAME} STREQUAL "LICENCE.md")
     append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#licence}" TEMP_DOC_FILE_CONTENTS)
+  endif()
+  if(${TEMP_DOC_FILE_NAME} STREQUAL "LICENCE-DIST.md")
+    append_string_to_first_list_element("${TEMP_DOC_FILE_CONTENTS}" "{#licenceDist}" TEMP_DOC_FILE_CONTENTS)
   endif()
 
   file(WRITE ${DOXYGEN_OUTPUT_DIRECTORY}/${TEMP_DOC_FILE_NAME} "${TEMP_DOC_FILE_CONTENTS}")
@@ -64,7 +69,7 @@ set(DOXYGEN_MATHJAX_VERSION MathJax_3)
 set(DOXYGEN_MATHJAX_EXTENSIONS ams)
 set(DOXYGEN_HTML_EXTRA_STYLESHEET left-align-mathjax.css)
 
-set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md CODE_OF_CONDUCT.md LICENCE.md")
+set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "README.md CODE_OF_CONDUCT.md LICENCE.md LICENCE-DIST.md")
 
 doxygen_add_docs(Doxygen
         ALL
@@ -72,5 +77,31 @@ doxygen_add_docs(Doxygen
         ${DOXYGEN_OUTPUT_DIRECTORY}/README.md
         ${DOXYGEN_OUTPUT_DIRECTORY}/CODE_OF_CONDUCT.md
         ${DOXYGEN_OUTPUT_DIRECTORY}/LICENCE.md
-        ${PROJECT_SOURCE_DIR}/include
+        ${DOXYGEN_OUTPUT_DIRECTORY}/LICENCE-DIST.md
+        ${PROJECT_SOURCE_DIR}/Audio/Core/include
+        ${PROJECT_SOURCE_DIR}/Audio/OpenAL/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Audio/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Core/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Graphics/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Scripting/Core/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Scripting/Graphics/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Scripting/UI/include
+        ${PROJECT_SOURCE_DIR}/Ecs/UI/include
+        ${PROJECT_SOURCE_DIR}/Exceptions/include
+        ${PROJECT_SOURCE_DIR}/Graphics/Core/include
+        ${PROJECT_SOURCE_DIR}/Graphics/Vulkan/include
+        ${PROJECT_SOURCE_DIR}/Input/Core/include
+        ${PROJECT_SOURCE_DIR}/Input/Glfw/include
+        ${PROJECT_SOURCE_DIR}/Logging/include
+        ${PROJECT_SOURCE_DIR}/Maths/include
+        ${PROJECT_SOURCE_DIR}/ResourceManagement/Core/include
+        ${PROJECT_SOURCE_DIR}/ResourceManagement/Desktop/include
+        ${PROJECT_SOURCE_DIR}/Scripting/Core/include
+        ${PROJECT_SOURCE_DIR}/Threading/include
+        ${PROJECT_SOURCE_DIR}/Timing/include
+        ${PROJECT_SOURCE_DIR}/UI/include
+        ${PROJECT_SOURCE_DIR}/Utilities/include
+        ${PROJECT_SOURCE_DIR}/Windowing/Core/include
+        ${PROJECT_SOURCE_DIR}/Windowing/Glfw/include
+        DOXYGEN_SHOW_NAMESPACES NO
         )

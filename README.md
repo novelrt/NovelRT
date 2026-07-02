@@ -148,7 +148,7 @@ If this doesn't answer any questions that you have, feel free to reach out to us
 ## Licence
 Unless otherwise specified, all files are copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT).
 
-See [LICENCE](LICENCE.md) in the repository root for more information.
+See [LICENCE](LICENCE.md) in the repository root for more information, and [LICENCE-DIST](LICENCE-DIST.md) for all third-party licence attributions.
 
 
 ## Questions?
