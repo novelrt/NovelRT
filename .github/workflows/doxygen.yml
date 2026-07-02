@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Set Environment Variable
         run: |
-          # If triggered by push, inputs.environment is empty, so it falls back to 'staging'
+          # If triggered by push, inputs.environment is empty, so it falls back to '1.4.313.0'
           VULKAN_VERSION="${{ inputs.vulkanVersion || '1.4.313.0' }}"
           echo "vulkanVersion=$VULKAN_VERSION" >> $GITHUB_ENV
 
@@ -66,16 +66,16 @@ jobs:
       
       - uses: novelrt/setup-vulkan@v2
         with:
-          version: ${{ inputs.vulkanVersion }}
+          version: ${{ env.vulkanVersion }}
 
       - name: Restore incremental build artefacts
         id: cache
         uses: actions/cache@v4
         with:
           path: build
-          key: ${{runner.os}}-RelWithDebInfo-vk${{ inputs.vulkanVersion }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-docs
+          key: ${{runner.os}}-RelWithDebInfo-vk${{ env.vulkanVersion }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-docs
           restore-keys: | 
-            ${{runner.os}}-RelWithDebInfo-vk${{ inputs.vulkanVersion }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-
+            ${{runner.os}}-RelWithDebInfo-vk${{ env.vulkanVersion }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-
 
       - name: Create documentation branch
         run: git checkout -b gh-pages
