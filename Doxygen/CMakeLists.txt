@@ -103,4 +103,5 @@ doxygen_add_docs(Doxygen
         ${PROJECT_SOURCE_DIR}/Utilities/include
         ${PROJECT_SOURCE_DIR}/Windowing/Core/include
         ${PROJECT_SOURCE_DIR}/Windowing/Glfw/include
+        DOXYGEN_SHOW_NAMESPACES NO
         )
