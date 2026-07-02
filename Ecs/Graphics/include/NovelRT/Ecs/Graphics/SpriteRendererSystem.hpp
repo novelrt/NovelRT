@@ -443,17 +443,17 @@ namespace NovelRT::Ecs::Graphics
             auto pVertexBuffer = stagingBuffer->template Map<SpriteVertexShaderInputs>(stagingRegion);
 
             pVertexBuffer[0] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, 0.5f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-1.f, 1.f, 0.0f), Maths::GeoVector2F(0.0f, 0.0f)};
             pVertexBuffer[1] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, 0.5f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(1.f, 1.f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
             pVertexBuffer[2] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, -0.5f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-1.f, -1.f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
             pVertexBuffer[3] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(-0.5f, -0.5f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(-1.f, -1.f, 0.0f), Maths::GeoVector2F(0.0f, 1.0f)};
             pVertexBuffer[4] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, 0.5f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(1.f, 1.f, 0.0f), Maths::GeoVector2F(1.0f, 0.0f)};
             pVertexBuffer[5] =
-                SpriteVertexShaderInputs{Maths::GeoVector3F(0.5f, -0.5f, 0.0f), Maths::GeoVector2F(1.0f, 1.0f)};
+                SpriteVertexShaderInputs{Maths::GeoVector3F(1.f, -1.f, 0.0f), Maths::GeoVector2F(1.0f, 1.0f)};
 
             stagingBuffer->UnmapAndWrite(stagingRegion);
 

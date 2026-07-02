@@ -5,19 +5,77 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      vulkanVersion:
+        description: 'Vulkan Version'
+        required: true
+        default: '1.4.313.0'
+        type: string
 
 jobs:
   Build_and_Publish_Documentation:
     name: Build and Publish Documentation
     runs-on: ubuntu-latest
-    container:
-      image: novelrt/novelrt-build:latest
     steps:
+      - name: Set Environment Variable
+        run: |
+          # If triggered by push, inputs.environment is empty, so it falls back to '1.4.313.0'
+          VULKAN_VERSION="${{ inputs.vulkanVersion || '1.4.313.0' }}"
+          echo "vulkanVersion=$VULKAN_VERSION" >> $GITHUB_ENV
+
       - name: Allow Repository Changes
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Checkout Code
         uses: actions/checkout@v4
+      
+      - name: Preinstall dependencies
+        run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo tee /etc/apt/sources.list.d/llvm-toolchain.list <<EOF
+          deb http://apt.llvm.org/noble/ llvm-toolchain-noble main
+          deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble main
+          # 21
+          deb http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main
+          deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-21 main
+          # 22
+          deb http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main
+          deb-src http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main
+          EOF
+          sudo apt-get update
+          sudo apt-get install libglm-dev cmake libxcb-dri3-0 libxcb-present0 \
+            libpciaccess0 libpng-dev libxcb-keysyms1-dev libxcb-dri3-dev \
+            libx11-dev libwayland-dev libxrandr-dev libxcb-randr0-dev \
+            libxcb-ewmh-dev git python-is-python3 bison libx11-xcb-dev \
+            libxcursor-dev libxi-dev libxinerama-dev libxkbcommon-dev \
+            libxext-dev liblz4-dev libzstd-dev ocaml-core ninja-build \
+            pkg-config libxml2-dev wayland-protocols python3-jsonschema \
+            clang-21 clang-tidy-21 qtbase5-dev qt6-base-dev doxygen graphviz
+
+          sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang-21 20
+          sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++-21 10
+
+          sudo update-alternatives --set cc /usr/bin/clang-21
+          sudo update-alternatives --set c++ /usr/bin/clang++-21
+
+      - uses: novelrt/setup-cpp@v2
+        id: setup-cpp
+        with:
+          compiler-id: ${{ (runner.os == 'Windows' && 'MSVC') || 'Clang' }}
+
+      
+      - uses: novelrt/setup-vulkan@v2
+        with:
+          version: ${{ env.vulkanVersion }}
+
+      - name: Restore incremental build artefacts
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{runner.os}}-RelWithDebInfo-vk${{ env.vulkanVersion }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-docs
+          restore-keys: | 
+            ${{runner.os}}-RelWithDebInfo-vk${{ env.vulkanVersion }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-
 
       - name: Create documentation branch
         run: git checkout -b gh-pages
@@ -32,11 +90,13 @@ jobs:
           git config user.name "Novel-chan"
           git config user.email "admin@novelrt.dev"
 
-      - name: Generate Documentation
-        run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs -DNOVELRT_BUILD_DOCUMENTATION=ON
-          cmake --build build --config Release --target Doxygen
 
+      - name: Generate Build System
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DDOXYGEN_OUTPUT_DIRECTORY=$GITHUB_WORKSPACE/docs -DNOVELRT_BUILD_DOCUMENTATION=ON
+
+      - name: Generate Documentation
+        run: cmake --build build --config RelWithDebInfo --target Doxygen --parallel
+      
       - name: Commit Documentation Updates
         if: ${{ success() }}
         run: |

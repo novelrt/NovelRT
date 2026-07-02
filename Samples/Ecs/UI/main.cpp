@@ -159,13 +159,9 @@ class UISetupSystem : public IEcsSystem
 private:
     bool _firstPass = true;
     NovelRT::Maths::GeoVector2F _initialSize;
-    std::string _emptyText;
-    std::string _containerLabel;
-    std::string _nextButtonText;
 
 public:
-    UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
-        : _initialSize(initialSize), _emptyText(""), _containerLabel("NarrativeTextbox"), _nextButtonText("Next")
+    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize) : _initialSize(initialSize)
     {
     }
 
@@ -192,8 +188,8 @@ public:
         // container - this is the "box" for the textbox
         auto rootId = catalogue.CreateEntity();
 
-        elementView.AddComponent(rootId, UIElement{rootId, UIComponentType::Container});
-        containerView.AddComponent(rootId, UIWidgetContainer{&_containerLabel, false});
+        elementView.AddComponent(rootId, UIElement{UIComponentType::Container});
+        containerView.AddComponent(rootId, UIWidgetContainer{new std::string("NarrativeTextbox"), false});
         transformView.AddComponent(rootId,
                                    TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
@@ -203,8 +199,8 @@ public:
         // Now the text
         auto textId = catalogue.CreateEntity();
 
-        elementView.AddComponent(textId, UIElement{textId, UIComponentType::Text});
-        textView.AddComponent(textId, UIText{&_emptyText, RGBAColour(255, 255, 255, 255)});
+        elementView.AddComponent(textId, UIElement{UIComponentType::Text});
+        textView.AddComponent(textId, UIText{new std::string(""), RGBAColour(255, 255, 255, 255)});
         graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
         rootView.AddInsertChildInstruction(textId);
 
@@ -212,9 +208,9 @@ public:
         auto buttonId = catalogue.CreateEntity();
         uint64_t clickEventId =
             1; // any number for this example will do, but you should be very explicit on event Ids in real systems
-        elementView.AddComponent(buttonId, UIElement{buttonId, UIComponentType::Button});
+        elementView.AddComponent(buttonId, UIElement{UIComponentType::Button});
         buttonView.AddComponent(buttonId, UIButton{
-                                              &_nextButtonText,
+                                              new std::string("Next"),
                                               clickEventId,
                                               NovelRT::Graphics::RGBAColour{0, 102, 204, 255},   // bg
                                               NovelRT::Graphics::RGBAColour{0, 82, 163, 255},    // active
@@ -260,7 +256,8 @@ public:
                     UIText initialText{};
                     if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(id, UIText{&_story[_strIndex], initialText.colour});
+                        textView.PushComponentUpdateInstruction(
+                            id, UIText{new std::string(_story[_strIndex]), initialText.colour});
                     }
                 }
             }
@@ -281,11 +278,11 @@ public:
                     {
                         if (_strIndex < _story.size())
                         {
-                            text.textValue = &_story[_strIndex];
+                            text.textValue = new std::string(_story[_strIndex]);
                         }
                         else
                         {
-                            text.textValue = &_endingText;
+                            text.textValue = new std::string(_endingText);
 
                             // slightly fade the milk away...
                             for (auto [spriteId, component] : spriteView)
@@ -327,6 +324,13 @@ public:
     {
         provider->SizeChanged += [this](auto eventArgs)
         {
+            // it doesn't actually matter what the viewport sizes are if we are minimising.
+            // This is a Windows 11 specific fix. - Matt J.
+            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
+            {
+                return;
+            }
+
             _size = eventArgs;
             _changedSize = true;
         };
@@ -361,12 +365,12 @@ int main()
     desktopResourceLoader->InitAssetDatabase();
 
     auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, windowSize);
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, windowSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(false);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
 
     VulkanGraphicsAdapterSelector selector{};
@@ -390,7 +394,7 @@ int main()
                                    GraphicsAttachmentDescription attachmentDesc{};
 
                                    attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                                   attachmentDesc.loadOp = LoadOp::Clear;
+                                   attachmentDesc.loadOp = LoadOp::Load;
                                    attachmentDesc.storeOp = StoreOp::Store;
                                    attachmentDesc.initialLayout = ImageLayout::Present;
                                    attachmentDesc.finalLayout = ImageLayout::Present;

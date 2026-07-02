@@ -50,7 +50,7 @@ namespace NovelRT::Ecs
         ComponentBuffer(size_t poolSize, T deleteInstructionState, const std::string& serialisedTypeName) noexcept
             : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(
                   poolSize,
-                  &deleteInstructionState,
+                  reinterpret_cast<const std::byte*>(&deleteInstructionState),
                   sizeof(T),
                   [](auto rootComponent, auto updateComponent, auto)
                   { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); },

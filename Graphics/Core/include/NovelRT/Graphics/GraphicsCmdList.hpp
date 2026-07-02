@@ -36,6 +36,7 @@ namespace NovelRT::Graphics
     class GraphicsResourceMemoryRegion;
     template<typename TBackend>
     class GraphicsSwapchainImage;
+    enum class ImageLayout : uint32_t;
 
     // TODO: MOVE THIS
     struct ViewportInfo
@@ -134,5 +135,12 @@ namespace NovelRT::Graphics
                                       GraphicsPipelineVisibility destinationStageFlag);
 
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<TBackend>>& cmdList);
+
+        void CmdTransitionSwapchainImageTo(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
+                                           ImageLayout oldLayout,
+                                           ImageLayout newLayout);
+
+        void CmdClearColourSwapchainImage(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
+                                          ClearValue clearData);
     };
 }

@@ -51,5 +51,14 @@ namespace NovelRT::Ecs::Components
         {
             return Maths::GeoVector3F(transform.position, z);
         }
+
+        [[nodiscard]] static TransformComponent negate(TransformComponent input)
+        {
+            return TransformComponent{
+                .position = -input.position,
+                .scale = -input.scale,
+                .rotationInRadians = -input.rotationInRadians
+            };
+        }
     };
 }

@@ -69,7 +69,8 @@ namespace NovelRT::Graphics
           _image(image),
           _imageView(CreateVulkanSwapChainImageView(_swapchain, _image, imageFormat)),
           _width(width),
-          _height(height)
+          _height(height),
+          _imageFormat(imageFormat)
     {
     }
 
@@ -108,6 +109,11 @@ namespace NovelRT::Graphics
     uint32_t GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetHeight() const noexcept
     {
         return _height;
+    }
+
+    VkFormat GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::GetVulkanFormat() const noexcept
+    {
+        return _imageFormat;
     }
 
     void GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>::QueueSubmit(

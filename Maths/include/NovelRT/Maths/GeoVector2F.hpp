@@ -328,6 +328,33 @@ namespace NovelRT::Maths
         }
 
         /**
+         * @brief Returns the negation of this GeoVector2F.
+         *
+         * @details
+         * An example of an entrywise subtraction using two-dimensional dimensional vectors: \f{align*}{
+         *      -
+         *      \begin{pmatrix}
+         *      4\\
+         *      7
+         *      \end{pmatrix}
+         *      &=
+         *      \begin{pmatrix}
+         *      -4\\
+         *      -7
+         *      \end{pmatrix}
+         * \f}
+         *
+         * This is a pure method. Calling this without using the result has no effect and can introduce overhead for
+         * calling the method.
+         *
+         * @return A GeoVector2F where the components consist of the negation of this GeoVector2F.
+         */
+        [[nodiscard]] inline GeoVector2F operator-() const noexcept
+        {
+            return GeoVector2F(-*reinterpret_cast<const glm::vec2*>(this));
+        }
+
+        /**
          * @brief Calculates the entrywise difference of this GeoVector2F and another GeoVector2F.
          *
          * @details

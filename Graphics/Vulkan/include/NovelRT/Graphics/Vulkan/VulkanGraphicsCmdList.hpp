@@ -114,5 +114,14 @@ namespace NovelRT::Graphics
                                       GraphicsPipelineVisibility destinationStageFlag);
 
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList);
+
+        void CmdTransitionSwapchainImageTo(
+            const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
+            ImageLayout oldLayout,
+            ImageLayout newLayout);
+
+        void CmdClearColourSwapchainImage(
+            const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
+            ClearValue clearData);
     };
 }

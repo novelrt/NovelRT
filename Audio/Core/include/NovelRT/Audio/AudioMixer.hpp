@@ -41,6 +41,7 @@ namespace NovelRT::Audio
 
             uint32_t id = _audioProvider->SubmitAudioBuffer(buffer, context);
             _sourceContextCache.emplace(id, context);
+            return id;
         }
 
         void PlaySource(uint32_t id)
@@ -85,7 +86,7 @@ namespace NovelRT::Audio
 
         AudioSourceState GetSourceState(uint32_t id)
         {
-            return _audioProvider.GetSourceState(id);
+            return _audioProvider->GetSourceState(id);
         }
     };
 }

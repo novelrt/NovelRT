@@ -60,6 +60,10 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${cmakeSafeName}> $<TARGET_RUNTIME_DLLS:${cmakeSafeName}>
       COMMAND_EXPAND_LISTS)
+
+    add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_SOURCE_DIR}/LICENCE-DIST.md
+      $<TARGET_FILE_DIR:${cmakeSafeName}>/LICENCE-DIST.md)
   endif()
 
   if(NOVELRT_CLANG_TIDY)
@@ -72,6 +76,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   set_target_properties(${cmakeSafeName} PROPERTIES
     EXPORT_NAME ${moduleName}
     OUTPUT_NAME ${moduleOutputName}
+		COMPILE_PDB_NAME ${cmakeSafeName}
+		PDB_NAME ${cmakeSafeName}
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
     CXX_CLANG_TIDY "${clangTidyCommandLine}")
 
@@ -185,6 +191,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
     FILE_SET interface_resources DESTINATION bin/Resources
     FILE_SET public_resources DESTINATION bin/Resources)
+  
+  install(
+    FILES ${CMAKE_SOURCE_DIR}/LICENCE-DIST.md
+    DESTINATION "$<TARGET_FILE_DIR:${cmakeSafeName}>/"
+  )
+  if(WIN32 AND MSVC)
+    install(FILES $<TARGET_FILE_DIR:${cmakeSafeName}>/${cmakeSafeName}.pdb DESTINATION lib OPTIONAL)
+  endif()
 endfunction()
 
 endblock()

@@ -3,6 +3,7 @@
 
 // TODO: clean this up good grief
 #include <NovelRT/Exceptions/NotSupportedException.hpp>
+#include <NovelRT/Graphics/IGraphicsAdapterSelector.hpp>
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
 #include <NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp>
 #include <NovelRT/Graphics/Vulkan/Utilities/Support.hpp>
@@ -12,8 +13,10 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
 
 #include <algorithm>
+#include <ranges>
 #include <string>
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -22,8 +25,9 @@ namespace NovelRT::Graphics::Vulkan
     using VulkanGraphicsSurfaceContext = GraphicsSurfaceContext<Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsProvider = GraphicsProvider<Vulkan::VulkanGraphicsBackend>;
 
-    static int32_t GetOptionalExtensionSupportScore(const std::vector<std::string>& availableDeviceExtensions,
-                                                    const std::vector<std::string>& optionalDeviceExtensions)
+    static int32_t GetOptionalExtensionSupportScore(
+        const std::vector<std::string>& availableDeviceExtensions,
+        const std::vector<FeatureProviderExtensionGroup>& optionalDeviceExtensions)
     {
         // If the user didn't request any optional extensions, don't give them a score.
         if (optionalDeviceExtensions.empty())
@@ -31,17 +35,21 @@ namespace NovelRT::Graphics::Vulkan
             return 0;
         }
 
-        auto isOptionalExtension = [begin = optionalDeviceExtensions.begin(), end = optionalDeviceExtensions.end()](
-                                       const auto& it) { return std::find(begin, end, it) != end; };
         auto foundOptionalExtensions =
-            std::count_if(availableDeviceExtensions.begin(), availableDeviceExtensions.end(), isOptionalExtension);
+            optionalDeviceExtensions |
+            std::views::transform([&](const auto& x)
+                                  { return x.FindFirstAvailableExtension(availableDeviceExtensions); }) |
+            std::views::filter([](const auto& opt) { return opt.has_value(); }) |
+            std::views::transform([](const auto& opt) -> const std::string& { return *opt; });
 
         const float percentageStep = (1.0f / static_cast<float>(optionalDeviceExtensions.size())) * 100;
-        return static_cast<int32_t>(static_cast<float>(foundOptionalExtensions) * percentageStep);
+        return static_cast<int32_t>(static_cast<float>(std::ranges::distance(foundOptionalExtensions)) *
+                                    percentageStep);
     }
 
-    static bool CheckRequiredExtensionSupport(const std::vector<std::string>& availableDeviceExtensions,
-                                              const std::vector<std::string>& requiredDeviceExtensions)
+    static bool CheckRequiredExtensionSupport(
+        const std::vector<std::string>& availableDeviceExtensions,
+        const std::vector<FeatureProviderExtensionGroup>& requiredDeviceExtensions)
     {
         // If the user didn't request any required extensions, pass immediately.
         if (requiredDeviceExtensions.empty())
@@ -49,19 +57,15 @@ namespace NovelRT::Graphics::Vulkan
             return true;
         }
 
-        auto isRequiredExtension = [begin = requiredDeviceExtensions.begin(), end = requiredDeviceExtensions.end()](
-                                       const auto& it) { return std::find(begin, end, it) != end; };
-        auto foundRequiredExtensions =
-            std::count_if(availableDeviceExtensions.begin(), availableDeviceExtensions.end(), isRequiredExtension);
-
-        return static_cast<decltype(requiredDeviceExtensions.size())>(foundRequiredExtensions) ==
-               requiredDeviceExtensions.size();
+        return std::ranges::all_of(requiredDeviceExtensions, [&](const auto& x)
+                                   { return x.FindFirstAvailableExtension(availableDeviceExtensions).has_value(); });
     }
 
-    static int32_t RateDeviceSuitability(const VulkanGraphicsAdapter& adapter,
-                                         const VulkanGraphicsSurfaceContext& surfaceContext,
-                                         const std::vector<std::string>& requiredDeviceExtensions,
-                                         const std::vector<std::string>& optionalDeviceExtensions)
+    int32_t VulkanGraphicsAdapterSelector::RateDeviceSuitability(
+        const VulkanGraphicsAdapter& adapter,
+        const VulkanGraphicsSurfaceContext& surfaceContext,
+        const std::vector<FeatureProviderExtensionGroup>& requiredDeviceExtensions,
+        const std::vector<FeatureProviderExtensionGroup>& optionalDeviceExtensions) const
     {
         uint32_t extensionCount = 0;
         vkEnumerateDeviceExtensionProperties(adapter.GetPhysicalDevice(), nullptr, &extensionCount, nullptr);
@@ -77,6 +81,43 @@ namespace NovelRT::Graphics::Vulkan
         // If we're missing required extensions, the adapter is useless.
         if (!CheckRequiredExtensionSupport(extensionNames, requiredDeviceExtensions))
         {
+            _logger.logWarningLine("Rejecting adapater " + adapter.GetName() + " due to missing required extensions:");
+
+            size_t groupCounter = 0ULL;
+
+            for (const auto& ext : requiredDeviceExtensions)
+            {
+
+                if (ext.FindFirstAvailableExtension(extensionNames).has_value())
+                {
+                    continue;
+                }
+
+                std::string extensionGroupOutput{};
+
+                bool firstRun = true;
+
+                for (const auto& extStr : ext.extensionNames)
+                {
+                    if (!firstRun)
+                    {
+                        extensionGroupOutput += "OR ";
+                        firstRun = false;
+                    }
+
+                    extensionGroupOutput += extStr;
+                }
+
+                _logger.logWarningLine("GROUP " + std::to_string(groupCounter) + ": " + extensionGroupOutput);
+            }
+
+            _logger.logWarningLine("Available extensions are:");
+
+            for (const auto& ext : extensionNames)
+            {
+                _logger.logWarningLine("  " + ext);
+            }
+
             return -1;
         }
 
@@ -88,6 +129,8 @@ namespace NovelRT::Graphics::Vulkan
         // If we can't render graphics, present or create a swapchain, the adapter is useless.
         if (!indices.IsComplete() || supportDetails.formats.empty() || supportDetails.presentModes.empty())
         {
+            _logger.logWarningLine("Rejecting adapter " + adapter.GetName() +
+                                   " because it is unable to render anything to the screen.");
             return -1;
         }
 
@@ -115,8 +158,8 @@ namespace NovelRT::Graphics::Vulkan
     std::shared_ptr<VulkanGraphicsAdapter> VulkanGraphicsAdapterSelector::GetDefaultRecommendedAdapter(
         const std::shared_ptr<VulkanGraphicsProvider>& provider,
         const std::shared_ptr<VulkanGraphicsSurfaceContext>& surfaceContext,
-        const std::vector<std::string>& requiredDeviceExtensions,
-        const std::vector<std::string>& optionalDeviceExtensions) const
+        const std::vector<FeatureProviderExtensionGroup>& requiredDeviceExtensions,
+        const std::vector<FeatureProviderExtensionGroup>& optionalDeviceExtensions) const
     {
         std::weak_ptr<VulkanGraphicsAdapter> adapter;
         int32_t highestScore = -1;
@@ -142,7 +185,9 @@ namespace NovelRT::Graphics::Vulkan
     {
         return GetDefaultRecommendedAdapter(
             provider, surfaceContext,
-            std::vector<std::string>{VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME},
-            std::vector<std::string>{VK_KHR_MAINTENANCE_7_EXTENSION_NAME});
+            std::vector<FeatureProviderExtensionGroup>{
+                {.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}},
+                {.extensionNames = {VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME, VK_KHR_MAINTENANCE_7_EXTENSION_NAME}}},
+            std::vector<FeatureProviderExtensionGroup>{});
     }
 } // namespace NovelRT::Graphics::Vulkan

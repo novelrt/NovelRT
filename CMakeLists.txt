@@ -14,7 +14,7 @@ if(WIN32)
 endif()
 
 project(NovelRT
-  VERSION 1.0.0 #MVP Version
+  VERSION 2026.0.1
   DESCRIPTION "NovelRT game engine"
   HOMEPAGE_URL "https://novelrt.dev"
   LANGUAGES C CXX
@@ -68,6 +68,15 @@ add_subdirectory(Scripting)
 add_subdirectory(Ecs)
 
 add_subdirectory(Samples)
+add_subdirectory(LuaOnlyTargets)
+add_subdirectory(Tests)
+
+if(NOVELRT_BUILD_DOCUMENTATION)
+  find_package(Doxygen COMPONENTS dot)
+  if(DOXYGEN_FOUND)
+    add_subdirectory(Doxygen)
+  endif()
+endif()
 
 if(NOVELRT_INSTALL)
   install(
