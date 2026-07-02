@@ -11,6 +11,21 @@
 #include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
+#include <NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp>
+#include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
+
+
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
+#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
 #include <NovelRT/Utilities/Macros.hpp>
@@ -34,6 +49,9 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>> _orchestrator;
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _context;
+        std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
+        std::shared_ptr<NovelRT::ResourceManagement::Desktop::DesktopResourceLoader> _resourceLoader;
+        std::shared_ptr<SpriteRendererSystem<TGraphicsBackend>> _defaultSpriteRenderer;
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         Components::RenderPass<TGraphicsBackend> _defaultRenderPassComponent;
@@ -72,6 +90,21 @@ namespace NovelRT::Ecs::Graphics
             _graphicsDevice = device;
             return *this;
         }
+
+        EcsGraphicsBuilder& WithResourceLoader(
+            std::shared_ptr<NovelRT::ResourceManagement::Desktop::DesktopResourceLoader>& resourceLoader)
+        {
+            _resourceLoader = resourceLoader;
+            return *this;
+        }
+
+        EcsGraphicsBuilder& WithMemoryAllocator(
+             std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>& memoryAllocator)
+        {
+            _memoryAllocator = memoryAllocator;
+            return *this;
+        }
+
 
         EcsGraphicsBuilder& WithSurfaceContext(
             std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>>& context)
@@ -133,7 +166,35 @@ namespace NovelRT::Ecs::Graphics
             cache.RegisterComponentType(_defaultCameraComponent, "NovelRT::Ecs::Graphics::Camera");
             cache.RegisterComponentType(_defaultViewportComponent, "NovelRT::Ecs::Graphics::Viewport");
 
+            unused(scheduler.RegisterSystem(_defaultSpriteRenderer));
             unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
+        }
+        
+        EcsGraphicsBuilder& WithDefaultSpriteRendering() 
+        {
+           typename SpriteRendererSystem<TGraphicsBackend>::SpritePass pass{};
+
+            ConfigureRenderPasses(
+                [&](RenderPassManager<TGraphicsBackend>& renderPassManager)
+                {
+                    NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
+                    NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
+
+                    attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
+                    attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
+                    attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
+                    attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
+                    attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
+
+                    passDesc.attachmentDescriptions.push_back(attachmentDesc);
+                    pass.RenderPass = _graphicsDevice->CreateRenderPass(passDesc);
+                    pass.RenderPassId = renderPassManager.RegisterRenderPass(pass.RenderPass);
+                });
+            
+                _defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<TGraphicsBackend>>( 
+                _graphicsDevice, pass, _resourceLoader, _memoryAllocator, _context);
+
+                return *this;
         }
     };
 
