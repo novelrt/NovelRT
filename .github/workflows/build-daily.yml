@@ -1,6 +1,9 @@
 name: Daily Build
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     paths:
       - '.github/workflows/build-daily.yml'
