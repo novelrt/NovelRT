@@ -9,22 +9,8 @@
 #include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 #include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
-#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
-
 #include <NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp>
-#include <NovelRT/Ecs/Graphics/RenderPassManager.hpp>
-
-
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp>
-#include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
+#include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 
