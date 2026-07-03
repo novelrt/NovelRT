@@ -11,6 +11,8 @@ This module defines the core interface for the NovelRT build system.
 block(SCOPE_FOR POLICIES)
 cmake_policy(VERSION 3.29..3.31)
 
+define_property(TARGET PROPERTY NOVELRT_DYNAMIC_LIBRARIES)
+
 #[=======================================================================[.rst:
 .. command:: NovelRTBuildSystem_DeclareModule
 
@@ -25,7 +27,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   string(TOLOWER "${moduleName}" moduleNameLower)
   set(savedDetailsPropertyName "_NovelRTBuildSystem_declaredModules_${moduleNameLower}")
 
-  cmake_parse_arguments(PARSE_ARGV 2 "declareModule" "MACOSX_BUNDLE;WIN32_EXECUTABLE" "" "DEPENDS;OPTIONAL_DEPENDS;SOURCES;HEADERS;RESOURCES;COMPILE_FEATURES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;PRECOMPILE_HEADERS;INCLUDE_DIRECTORIES;LINK_LIBRARIES")
+  cmake_parse_arguments(PARSE_ARGV 2 "declareModule" "MACOSX_BUNDLE;WIN32_EXECUTABLE" "" "DEPENDS;OPTIONAL_DEPENDS;SOURCES;HEADERS;RESOURCES;COMPILE_FEATURES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;PRECOMPILE_HEADERS;INCLUDE_DIRECTORIES;LINK_LIBRARIES;DYNAMIC_LIBRARIES")
   set(dependsClosure ${declareModule_DEPENDS} ${declareModule_OPTIONAL_DEPENDS})
   set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_DEPENDS ${dependsClosure})
   set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_OPTIONAL_DEPENDS ${declareModule_OPTIONAL_DEPENDS})
@@ -55,14 +57,22 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     string(REGEX REPLACE "^.+::(.*)$" "\\1" moduleOutputName ${moduleName})
 
     # N.B. This is needed so that Windows gets the correct DLLs in dev.
-    add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${cmakeSafeName}> $<TARGET_RUNTIME_DLLS:${cmakeSafeName}>
-      COMMAND_EXPAND_LISTS)
-
-    add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_SOURCE_DIR}/LICENCE-DIST.md
-      $<TARGET_FILE_DIR:${cmakeSafeName}>/LICENCE-DIST.md)
+    if(WIN32)
+      add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:${cmakeSafeName}> $<TARGET_RUNTIME_DLLS:${cmakeSafeName}>
+        COMMAND_EXPAND_LISTS)
+    endif()
   endif()
+
+  if(declareModule_DYNAMIC_LIBRARIES)
+    file(GENERATE
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.local.txt"
+      CONTENT "${declareModule_DYNAMIC_LIBRARIES}")
+  endif()
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt"
+    CONTENT "$<LIST:REMOVE_DUPLICATES,$<GENEX_EVAL:$<TARGET_PROPERTY:NOVELRT_DYNAMIC_LIBRARIES>>>"
+    TARGET ${cmakeSafeName})
 
   if(NOVELRT_CLANG_TIDY)
     find_program(NOVELRT_CLANG_TIDY_PATH NAMES clang-tidy HINTS "${NOVELRT_CLANG_TIDY_PATH}" DOC "Location of clang-tidy used in debug builds.")
@@ -84,7 +94,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     OUTPUT_NAME "${moduleOutputName}"
     PDB_NAME "${moduleOutputName}"
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
-    RESOURCES "${declareModule_RESOURCES}"
     WIN32_EXECUTABLE "${declareModule_WIN32_EXECUTABLE}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
@@ -124,6 +133,23 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_sources(${cmakeSafeName} PRIVATE $<$<TARGET_EXISTS:${depends}>:$<TARGET_OBJECTS:${depends}>>)
   endforeach()
 
+  foreach(file IN LISTS declareModule_HEADERS)
+    string(REGEX REPLACE "^include/" "" headerLoc "${file}")
+    set_source_files_properties("${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "Headers/${headerLoc}")
+  endforeach()
+
+  foreach(file IN LISTS declareModule_RESOURCES)
+    # Copy the resources to their output directory.
+    add_custom_command(
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${file}"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "${CMAKE_CURRENT_BINARY_DIR}/${file}"
+      MAIN_DEPENDENCY "${file}"
+      COMMENT "Copying resource ${file}"
+      DEPENDS_EXPLICIT_ONLY)
+    set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "${file}" HEADER_FILE_ONLY ON)
+  endforeach()
+
+
   target_sources(${cmakeSafeName}
     PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${declareModule_RESOURCES}
 
@@ -136,19 +162,9 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     BASE_DIRS Resources
     FILES ${declareModule_RESOURCES})
 
-  foreach(file IN LISTS declareModule_RESOURCES)
-    # Copy the resources to their output directory.
-    add_custom_command(
-      OUTPUT "${file}"
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "$<TARGET_FILE_DIR:${cmakeSafeName}>/${file}"
-      MAIN_DEPENDENCY "${file}"
-      COMMENT "Copying resource ${file}"
-      DEPENDS_EXPLICIT_ONLY)
-  endforeach()
-
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
-    target_link_libraries(${cmakeSafeName} PUBLIC $<$<TARGET_EXISTS:${depends}>:${depends}>)
+    target_link_libraries(${cmakeSafeName} PUBLIC $<TARGET_NAME_IF_EXISTS:${depends}>)
   endforeach()
 
   if(declareModule_COMPILE_FEATURES)
@@ -170,9 +186,36 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_link_libraries(${cmakeSafeName} ${declareModule_LINK_LIBRARIES})
   endif()
 
+  set(dynamicLibs)
+  if(declareModule_DYNAMIC_LIBRARIES)
+    list(APPEND dynamicLibs "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.local.txt")
+  endif()
+  foreach(depends IN LISTS declareModule_DEPENDS)
+    list(APPEND dynamicLibs $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_DYNAMIC_LIBRARIES>>)
+  endforeach()
+  foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
+    list(APPEND dynamicLibs $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_DYNAMIC_LIBRARIES>>>)
+  endforeach()
+  list(REMOVE_DUPLICATES dynamicLibs)
+  set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_DYNAMIC_LIBRARIES "${dynamicLibs}")
+
+
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
-      install(CODE "include(BundleUtilities)\nfixup_bundle(\"$<TARGET_BUNDLE_DIR:${cmakeSafeName}>\" \"\" \"$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin\")")
+      set(fixupStr "include(BundleUtilities)\n")
+      string(APPEND fixupStr [[  file(READ paths "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[")]] "\n"
+                             [[  set(dynamicLibs)]] "\n"
+                             [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
+                             [[    if(EXISTS "${dynamicLibPath}")]] "\n"
+                             [[      file(READ libs "${dynamicLibPath}")]] "\n"
+                             [[      list(APPEND dynamicLibs ${libs})]] "\n"
+                             [[    endif()]] "\n"
+                             [[  endforeach()]] "\n"
+                             [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
+                             [[  list(FILTER dynamicLibs EXCLUDE "^$")]] "\n"
+                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
+
+      install(CODE "${fixupStr}")
     endif()
 
     install(

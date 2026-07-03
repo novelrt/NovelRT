@@ -3,7 +3,7 @@ include(NovelRTBuildSystem)
 find_package(Vulkan "1.2" REQUIRED
   OPTIONAL_COMPONENTS MoltenVK)
 if(APPLE AND NOT Vulkan_MoltenVK_FOUND)
-  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+#  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
 endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
@@ -114,6 +114,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
   LINK_LIBRARIES
     PUBLIC
       Vulkan::Vulkan
-      $<$<TARGET_EXISTS:Vulkan::MoltenVK>:Vulkan::MoltenVK>
       GPUOpen::VulkanMemoryAllocator
+
+  DYNAMIC_LIBRARIES
+    $<$<TARGET_EXISTS:Vulkan::MoltenVK>:$<TARGET_FILE:Vulkan::MoltenVK>>
 )
