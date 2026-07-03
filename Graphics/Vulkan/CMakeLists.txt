@@ -3,8 +3,9 @@ include(NovelRTBuildSystem)
 find_package(Vulkan "1.2" REQUIRED
   OPTIONAL_COMPONENTS MoltenVK)
 if(APPLE AND NOT Vulkan_MoltenVK_FOUND)
-#  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
 endif()
+message(STATUS "CI test: ${Vulkan_MoltenVK_LIBRARY}")
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
   DEPENDS
