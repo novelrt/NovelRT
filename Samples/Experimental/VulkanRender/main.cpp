@@ -321,7 +321,7 @@ int main()
     auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>();
     wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(400, 400));
 
-    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(false);
+    auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(true);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
 
     VulkanGraphicsAdapterSelector selector{};
