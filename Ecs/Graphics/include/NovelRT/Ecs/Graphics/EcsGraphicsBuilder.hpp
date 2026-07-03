@@ -152,7 +152,9 @@ namespace NovelRT::Ecs::Graphics
             cache.RegisterComponentType(_defaultCameraComponent, "NovelRT::Ecs::Graphics::Camera");
             cache.RegisterComponentType(_defaultViewportComponent, "NovelRT::Ecs::Graphics::Viewport");
 
-            unused(scheduler.RegisterSystem(_defaultSpriteRenderer));
+            if(_defaultSpriteRenderer != nullptr) {
+                unused(scheduler.RegisterSystem(_defaultSpriteRenderer));
+            }
             unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
         }
         

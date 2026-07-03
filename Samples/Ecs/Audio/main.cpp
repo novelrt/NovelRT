@@ -433,22 +433,9 @@ int main()
     auto& gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
                            .WithGraphicsDevice(gfxDevice)
                            .WithSurfaceContext(gfxSurfaceContext)
-                           .ConfigureRenderPasses(
-                               [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
-                               {
-                                   GraphicsRenderPassDescription passDesc{};
-                                   GraphicsAttachmentDescription attachmentDesc{};
-
-                                   attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                                   attachmentDesc.loadOp = LoadOp::Load;
-                                   attachmentDesc.storeOp = StoreOp::Store;
-                                   attachmentDesc.initialLayout = ImageLayout::Present;
-                                   attachmentDesc.finalLayout = ImageLayout::Present;
-
-                                   passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                                   passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                                   passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-                               })
+                           .WithResourceLoader(desktopResourceLoader)
+                           .WithMemoryAllocator(memoryAllocator)
+                           .WithDefaultSpriteRendering()
                            .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
@@ -470,9 +457,6 @@ int main()
                              .WithAudioProvider(audioProvider)
                              .WithDefaultAudioSystem();
 
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, desktopResourceLoader, memoryAllocator, gfxSurfaceContext);
-
     // Add your systems and configure them
     auto setupSystem = std::make_shared<SpriteSetupSystem>(desktopResourceLoader, windowSize);
     auto uiSetupSystem = std::make_shared<UISetupSystem>(windowSize);
@@ -482,8 +466,6 @@ int main()
     auto audioSetupSystem =
         std::make_shared<AudioSetupSystem<OpenAL::OpenALAudioBackend>>(soundsDir, audioBuilder.GetEcsAudioSystem());
 
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
