@@ -1,6 +1,9 @@
 include(NovelRTBuildSystem)
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Exceptions
+  SOURCES
+    empty.cpp
+
   HEADERS
     include/NovelRT/Exceptions/DuplicateKeyException.hpp
     include/NovelRT/Exceptions/FileNotFoundException.hpp

@@ -8,6 +8,9 @@ DEPENDS
     NovelRT::Logging
     NovelRT::ResourceManagement::Core
 
+  SOURCES
+    empty.cpp
+
   HEADERS
     include/NovelRT/UI/ImGui/ImGuiUIProvider.hpp
 
