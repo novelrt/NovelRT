@@ -203,7 +203,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr [[  file(READ paths "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[")]] "\n"
+      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
                              [[    if(EXISTS "${dynamicLibPath}")]] "\n"
