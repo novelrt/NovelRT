@@ -8,12 +8,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Audio::OpenAL
     NovelRT::Audio::Core
 
   SOURCES
-    PRIVATE
-      OpenALAudioProvider.cpp
+    OpenALAudioProvider.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp
+    include/NovelRT/Audio/OpenAL/OpenALAudioProvider.hpp
 
   LINK_LIBRARIES
     PUBLIC

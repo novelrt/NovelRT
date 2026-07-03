@@ -8,19 +8,17 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::ScriptingEcsT
     NovelRT::ResourceManagement::Desktop
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
 
   RESOURCES
-    PUBLIC
-      Resources/Fonts/Raleway-Regular.ttf
-      Resources/Images/Milk.png
-      Resources/Images/novel-chan.png
-      Resources/Scripts/Sample.lua
-      Resources/Shaders/imgui_frag.spv
-      Resources/Shaders/imgui_vert.spv
-      Resources/Shaders/vulkanrenderfrag.spv
-      Resources/Shaders/vulkanrendervert.spv
-      Resources/Shaders/SpritePixel.spv
-      Resources/Shaders/SpriteVertex.spv
+    Resources/Fonts/Raleway-Regular.ttf
+    Resources/Images/Milk.png
+    Resources/Images/novel-chan.png
+    Resources/Scripts/Sample.lua
+    Resources/Shaders/imgui_frag.spv
+    Resources/Shaders/imgui_vert.spv
+    Resources/Shaders/vulkanrenderfrag.spv
+    Resources/Shaders/vulkanrendervert.spv
+    Resources/Shaders/SpritePixel.spv
+    Resources/Shaders/SpriteVertex.spv
 )

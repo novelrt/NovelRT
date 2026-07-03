@@ -6,13 +6,11 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Logging
     NovelRT::Utilities
 
   SOURCES
-    PRIVATE
-      LoggingService.cpp
+    LoggingService.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Logging/BuiltInLogSections.hpp
-      include/NovelRT/Logging/LoggingService.hpp
+    include/NovelRT/Logging/BuiltInLogSections.hpp
+    include/NovelRT/Logging/LoggingService.hpp
 
   LINK_LIBRARIES
     PUBLIC

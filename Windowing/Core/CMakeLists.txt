@@ -5,8 +5,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Windowing::Core
     NovelRT::Graphics::Core
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Windowing/VideoModeData.hpp
-      include/NovelRT/Windowing/WindowMode.hpp
-      include/NovelRT/Windowing/WindowProvider.hpp
+    include/NovelRT/Windowing/VideoModeData.hpp
+    include/NovelRT/Windowing/WindowMode.hpp
+    include/NovelRT/Windowing/WindowProvider.hpp
 )

@@ -11,14 +11,12 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::ImGu
     NovelRT::ResourceManagement::Desktop
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
 
   RESOURCES
-    PRIVATE
-      Resources/Fonts/Raleway-Regular.ttf
-      Resources/Shaders/imgui_frag.spv
-      Resources/Shaders/imgui_vert.spv
-      Resources/Shaders/vulkanrenderfrag.spv
-      Resources/Shaders/vulkanrendervert.spv
+    Resources/Fonts/Raleway-Regular.ttf
+    Resources/Shaders/imgui_frag.spv
+    Resources/Shaders/imgui_vert.spv
+    Resources/Shaders/vulkanrenderfrag.spv
+    Resources/Shaders/vulkanrendervert.spv
 )

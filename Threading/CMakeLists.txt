@@ -5,12 +5,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Threading
     NovelRT::Exceptions
 
   SOURCES
-    PRIVATE
-      VolatileState.cpp
+    VolatileState.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Threading/VolatileState.hpp
+    include/NovelRT/Threading/VolatileState.hpp
 
   LINK_LIBRARIES
     PUBLIC

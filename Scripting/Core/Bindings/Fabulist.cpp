@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include <Bindings/Bindings.hpp>
+#include "Bindings.hpp"
 
 int CreateSpeaker(lua_State* L);
 int CreateChoice(lua_State* L);

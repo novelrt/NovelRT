@@ -7,12 +7,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting::UI
     NovelRT::Ecs::UI
 
   SOURCES
-    PRIVATE
-      BranchTranslationSystem.cpp
-      SpokenLineTranslationSystem.cpp
+    BranchTranslationSystem.cpp
+    SpokenLineTranslationSystem.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Ecs/Scripting/UI/BranchTranslationSystem.hpp
-      include/NovelRT/Ecs/Scripting/UI/SpokenLineTranslationSystem.hpp
+    include/NovelRT/Ecs/Scripting/UI/BranchTranslationSystem.hpp
+    include/NovelRT/Ecs/Scripting/UI/SpokenLineTranslationSystem.hpp
 )

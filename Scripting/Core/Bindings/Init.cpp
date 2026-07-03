@@ -8,7 +8,7 @@
 #include <random>
 #include <stdexcept>
 
-#include <Bindings/Bindings.hpp>
+#include "Bindings.hpp"
 
 // It may be worth implementing some sort of tracking here so we can limit the amount of memory used by Lua
 void* AllocMemory(void*, void* pointer, size_t, size_t size)

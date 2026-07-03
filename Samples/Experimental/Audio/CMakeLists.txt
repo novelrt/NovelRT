@@ -5,6 +5,5 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::Audi
     NovelRT::Audio
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
 )

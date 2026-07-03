@@ -72,11 +72,15 @@ if(NOVELRT_BUILD_DOCUMENTATION)
 endif()
 
 if(NOVELRT_INSTALL)
-  install(FILES LICENCE-DIST.md TYPE INFO)
+  install(
+    FILES LICENCE-DIST.md
+    RENAME LICENSE.md
+    DESTINATION share/doc/NovelRT
+  )
   install(
     EXPORT NovelRTConfig
     EXPORT_LINK_INTERFACE_LIBRARIES
     NAMESPACE NovelRT::
-    DESTINATION lib
+    DESTINATION lib/cmake/NovelRT
   )
 endif()

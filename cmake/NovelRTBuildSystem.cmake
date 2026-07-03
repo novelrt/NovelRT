@@ -38,13 +38,9 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     return()
   endif()
 
-  foreach(kind SOURCES HEADERS RESOURCES)
-    cmake_parse_arguments(declareModule_${kind} "" "" "BASE_DIRS;INTERFACE;PUBLIC;PRIVATE" ${declareModule_${kind}})
-  endforeach()
-
   string(REGEX REPLACE "::" "-" cmakeSafeName ${moduleName})
-  string(REGEX REPLACE "::" "." macosx_bundle_identifier ${moduleName})
-  string(TOLOWER "${macosx_bundle_identifier}" macosx_bundle_identifier)
+  string(REGEX REPLACE "::" "." macosxBundleIdentifier ${moduleName})
+  string(TOLOWER "${macosx_bundle_identifier}" macosxBundleIdentifier)
   if(moduleKind STREQUAL "LIBRARY")
     # N.B. Static is important here so that target_link_libraries works as expected
     add_library(${cmakeSafeName} STATIC)
@@ -76,17 +72,19 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
 
   set_target_properties(${cmakeSafeName} PROPERTIES
-    EXPORT_NAME ${moduleName}
-    OUTPUT_NAME ${moduleOutputName}
-		COMPILE_PDB_NAME ${moduleOutputName}
-		PDB_NAME ${moduleOutputName}
-    POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
+    COMPILE_PDB_NAME "${moduleOutputName}"
     CXX_CLANG_TIDY "${clangTidyCommandLine}"
+    EXPORT_NAME "${moduleName}"
+    LINKER_LANGUAGE CXX
     MACOSX_BUNDLE "${declareModule_MACOSX_BUNDLE}"
+    MACOSX_BUNDLE_COPYRIGHT "Copyright (C) NovelRT Contributors"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "${macosxBundleIdentifier}"
     MACOSX_BUNDLE_NAME "${moduleName}"
     MACOSX_BUNDLE_VERSION "${PROJECT_VERSION}"
-    MACOSX_BUNDLE_COPYRIGHT "NovelRT Contributors"
-    MACOSX_BUNDLE_GUI_IDENTIFIER "${macosx_bundle_identifier}"
+    OUTPUT_NAME "${moduleOutputName}"
+    PDB_NAME "${moduleOutputName}"
+    POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
+    RESOURCES "${declareModule_RESOURCES}"
     WIN32_EXECUTABLE "${declareModule_WIN32_EXECUTABLE}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
@@ -126,50 +124,27 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_sources(${cmakeSafeName} PRIVATE $<$<TARGET_EXISTS:${depends}>:$<TARGET_OBJECTS:${depends}>>)
   endforeach()
 
-  set(resx ${declareModule_RESOURCES_INTERFACE} ${declareModule_RESOURCES_PUBLIC} ${declareModule_RESOURCES_PRIVATE})
-  foreach(file IN LISTS resx)
-    # Copy the resources to their output directory. In the future we may do something more advanced like compiling shaders.
+  target_sources(${cmakeSafeName}
+    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${declareModule_RESOURCES}
+
+    PUBLIC FILE_SET HEADERS
+    BASE_DIRS include
+    FILES ${declareModule_HEADERS}
+
+    PUBLIC FILE_SET resources
+    TYPE HEADERS
+    BASE_DIRS Resources
+    FILES ${declareModule_RESOURCES})
+
+  foreach(file IN LISTS declareModule_RESOURCES)
+    # Copy the resources to their output directory.
     add_custom_command(
-      OUTPUT ${file}
+      OUTPUT "${file}"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "$<TARGET_FILE_DIR:${cmakeSafeName}>/${file}"
-      MAIN_DEPENDENCY ${file}
+      MAIN_DEPENDENCY "${file}"
       COMMENT "Copying resource ${file}"
       DEPENDS_EXPLICIT_ONLY)
   endforeach()
-
-  list(TRANSFORM declareModule_RESOURCES_INTERFACE REPLACE "^(.+)$" "$<BUILD_INTERFACE:\\1>")
-  list(TRANSFORM declareModule_RESOURCES_PUBLIC REPLACE "^(.+)$" "$<BUILD_INTERFACE:\\1>")
-
-  target_sources(${cmakeSafeName}
-    INTERFACE ${declareModule_SOURCES_INTERFACE} ${declareModule_RESOURCES_INTERFACE}
-    PUBLIC ${declareModule_SOURCES_PUBLIC} ${declareModule_RESOURCES_PUBLIC}
-    PRIVATE ${declareModule_SOURCES_PRIVATE} ${declareModule_HEADERS_PRIVATE} ${declareModule_RESOURCES_PRIVATE}
-
-    INTERFACE FILE_SET interface_headers
-    TYPE HEADERS
-    BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
-    FILES ${declareModule_HEADERS_INTERFACE}
-    PUBLIC FILE_SET public_headers
-    TYPE HEADERS
-    BASE_DIRS include ${declareModule_HEADERS_BASE_DIRS}
-    FILES ${declareModule_HEADERS_PUBLIC}
-    PRIVATE FILE_SET private_headers
-    TYPE HEADERS
-    BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${declareModule_HEADERS_BASE_DIRS}
-    FILES ${declareModule_HEADERS_PRIVATE}
-
-    INTERFACE FILE_SET interface_resources
-    TYPE HEADERS
-    BASE_DIRS Resources ${declareModule_RESOURCES_BASE_DIRS}
-    FILES ${declareModule_RESOURCES_INTERFACE}
-    PUBLIC FILE_SET public_resources
-    TYPE HEADERS
-    BASE_DIRS Resources ${declareModule_RESOURCES_BASE_DIRS}
-    FILES ${declareModule_RESOURCES_PUBLIC}
-    PRIVATE FILE_SET private_resources
-    TYPE HEADERS
-    BASE_DIRS Resources ${declareModule_RESOURCES_BASE_DIRS}
-    FILES ${declareModule_RESOURCES_PRIVATE})
 
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
@@ -204,14 +179,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       TARGETS ${cmakeSafeName}
       EXPORT NovelRTConfig
       ARCHIVE DESTINATION lib
-      LIBRARY DESTINATION lib
-      RUNTIME DESTINATION bin
       BUNDLE DESTINATION apps
-      FILE_SET interface_headers DESTINATION include
-      FILE_SET public_headers DESTINATION include
-
-      FILE_SET interface_resources DESTINATION bin/Resources
-      FILE_SET public_resources DESTINATION bin/Resources)
+      FILE_SET HEADERS DESTINATION include
+      FILE_SET resources DESTINATION bin/Resources
+      LIBRARY DESTINATION lib
+      RUNTIME DESTINATION bin)
 
     if(WIN32 AND moduleKind STREQUAL "EXECUTABLE")
       install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION bin OPTIONAL)
