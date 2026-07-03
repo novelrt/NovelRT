@@ -181,19 +181,19 @@ namespace NovelRT::Ecs::Graphics
             
                 if(_graphicsDevice == nullptr) 
                 {
-                    throw std::invalid_argument("_resourceLoader is a nullPtr. Call WithGraphicsDevice to set it");
+                    throw std::invalid_argument("A graphics device has not been provided. Call WithGraphicsDevice to provide one.");
                 } 
                 else if( _resourceLoader == nullptr) 
                 {
-                    throw std::invalid_argument("_resourceLoader is a nullPtr. Call WithResourceLoader to set it");
+                    throw std::invalid_argument("A desktop resource loader has not been provided. Call WithResourceLoader to provide one.");
                 } 
                 else if(_memoryAllocator == nullptr) 
                 {
-                    throw std::invalid_argument("_memoryAllocator is a nullPtr. Call WithMemoryAllocator to set it");
+                    throw std::invalid_argument("A graphics memory allocator has not been provided. Call WithMemoryAllocator to provide one.");
                 } 
                 else if (_context == nullptr) 
                 {
-                    throw std::invalid_argument("_context is a nullPtr. Call WithSurfaceContext to set it");
+                    throw std::invalid_argument("A graphics surface context has not been provided. Call WithSurfaceContext to provide one.");
                 }
                 else {
                     _defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<TGraphicsBackend>>( 
