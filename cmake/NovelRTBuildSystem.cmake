@@ -212,7 +212,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[    endif()]] "\n"
                              [[  endforeach()]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
-                             [[  list(FILTER dynamicLibs EXCLUDE "^$")]] "\n"
+                             [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
 
       install(CODE "${fixupStr}")
