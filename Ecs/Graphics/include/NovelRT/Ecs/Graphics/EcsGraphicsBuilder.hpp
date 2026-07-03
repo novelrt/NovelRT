@@ -9,6 +9,7 @@
 #include <NovelRT/Ecs/Graphics/Components/Sprite.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 #include <NovelRT/Ecs/Graphics/Components/Viewport.hpp>
+#include <NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp>
 #include <NovelRT/Graphics/GraphicsSurfaceContext.hpp>
 
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
@@ -34,6 +35,9 @@ namespace NovelRT::Ecs::Graphics
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<RenderOrchestratorSystem<TGraphicsBackend>> _orchestrator;
         std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>> _context;
+        std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
+        std::shared_ptr<NovelRT::ResourceManagement::Desktop::DesktopResourceLoader> _resourceLoader;
+        std::shared_ptr<SpriteRendererSystem<TGraphicsBackend>> _defaultSpriteRenderer;
 
         Components::BuiltCommandList<TGraphicsBackend> _defaultBuiltCommandListComponent;
         Components::RenderPass<TGraphicsBackend> _defaultRenderPassComponent;
@@ -72,6 +76,21 @@ namespace NovelRT::Ecs::Graphics
             _graphicsDevice = device;
             return *this;
         }
+
+        EcsGraphicsBuilder& WithResourceLoader(
+            std::shared_ptr<NovelRT::ResourceManagement::Desktop::DesktopResourceLoader>& resourceLoader)
+        {
+            _resourceLoader = resourceLoader;
+            return *this;
+        }
+
+        EcsGraphicsBuilder& WithMemoryAllocator(
+             std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>& memoryAllocator)
+        {
+            _memoryAllocator = memoryAllocator;
+            return *this;
+        }
+
 
         EcsGraphicsBuilder& WithSurfaceContext(
             std::shared_ptr<NovelRT::Graphics::GraphicsSurfaceContext<TGraphicsBackend>>& context)
@@ -133,7 +152,55 @@ namespace NovelRT::Ecs::Graphics
             cache.RegisterComponentType(_defaultCameraComponent, "NovelRT::Ecs::Graphics::Camera");
             cache.RegisterComponentType(_defaultViewportComponent, "NovelRT::Ecs::Graphics::Viewport");
 
+            if(_defaultSpriteRenderer != nullptr) {
+                unused(scheduler.RegisterSystem(_defaultSpriteRenderer));
+            }
             unused(scheduler.RegisterSystemDependsOnAll(_orchestrator));
+        }
+        
+        EcsGraphicsBuilder& WithDefaultSpriteRendering() 
+        {
+           typename SpriteRendererSystem<TGraphicsBackend>::SpritePass pass{};
+
+            ConfigureRenderPasses(
+                [&](RenderPassManager<TGraphicsBackend>& renderPassManager)
+                {
+                    NovelRT::Graphics::GraphicsRenderPassDescription passDesc{};
+                    NovelRT::Graphics::GraphicsAttachmentDescription attachmentDesc{};
+
+                    attachmentDesc.texelFormat = _graphicsDevice->GetSwapchain()->GetFormat();
+                    attachmentDesc.loadOp = NovelRT::Graphics::LoadOp::Clear;
+                    attachmentDesc.storeOp = NovelRT::Graphics::StoreOp::Store;
+                    attachmentDesc.initialLayout = NovelRT::Graphics::ImageLayout::Undefined;
+                    attachmentDesc.finalLayout = NovelRT::Graphics::ImageLayout::Present;
+
+                    passDesc.attachmentDescriptions.push_back(attachmentDesc);
+                    pass.RenderPass = _graphicsDevice->CreateRenderPass(passDesc);
+                    pass.RenderPassId = renderPassManager.RegisterRenderPass(pass.RenderPass);
+                });
+            
+                if(_graphicsDevice == nullptr) 
+                {
+                    throw std::invalid_argument("A graphics device has not been provided. Call WithGraphicsDevice to provide one.");
+                } 
+                else if( _resourceLoader == nullptr) 
+                {
+                    throw std::invalid_argument("A desktop resource loader has not been provided. Call WithResourceLoader to provide one.");
+                } 
+                else if(_memoryAllocator == nullptr) 
+                {
+                    throw std::invalid_argument("A graphics memory allocator has not been provided. Call WithMemoryAllocator to provide one.");
+                } 
+                else if (_context == nullptr) 
+                {
+                    throw std::invalid_argument("A graphics surface context has not been provided. Call WithSurfaceContext to provide one.");
+                }
+                else {
+                    _defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<TGraphicsBackend>>( 
+                    _graphicsDevice, pass, _resourceLoader, _memoryAllocator, _context);
+                }
+
+                return *this;
         }
     };
 

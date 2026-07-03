@@ -364,22 +364,9 @@ int main()
     auto& gfx = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
                     .WithGraphicsDevice(gfxDevice)
                     .WithSurfaceContext(gfxSurfaceContext)
-                    .ConfigureRenderPasses(
-                        [gfxDevice, &passData](auto& manager)
-                        {
-                            GraphicsRenderPassDescription passDesc{};
-                            GraphicsAttachmentDescription attachmentDesc{};
-
-                            attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                            attachmentDesc.loadOp = LoadOp::Load;
-                            attachmentDesc.storeOp = StoreOp::Store;
-                            attachmentDesc.initialLayout = ImageLayout::Present;
-                            attachmentDesc.finalLayout = ImageLayout::Present;
-
-                            passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                            passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                            passData.RenderPassId = manager.RegisterRenderPass(passData.RenderPass);
-                        })
+                    .WithResourceLoader(resourceLoader)
+                    .WithMemoryAllocator(memoryAllocator)
+                    .WithDefaultSpriteRendering()
                     .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddScripting(builder)
@@ -405,12 +392,6 @@ int main()
         .WithGraphicsBuilder(gfx);
 
     gfx.WithDefaultOrchestrator();
-
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
-
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
 
     builder.Configure(
         [&wndProvider, &resourceLoader, finalSize = finalSize](SystemScheduler& scheduler)
