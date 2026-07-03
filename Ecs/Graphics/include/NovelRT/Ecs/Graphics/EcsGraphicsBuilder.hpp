@@ -179,9 +179,23 @@ namespace NovelRT::Ecs::Graphics
                     pass.RenderPassId = renderPassManager.RegisterRenderPass(pass.RenderPass);
                 });
             
-                if(_graphicsDevice == nullptr || _resourceLoader == nullptr|| _memoryAllocator == nullptr || _context == nullptr ) {
-                    throw std::invalid_argument("WithMemoryAllocator, WithResourceLoader,WithSurfaceContext or WithGraphicsDevice have not been called");
-                } else {
+                if(_graphicsDevice == nullptr) 
+                {
+                    throw std::invalid_argument("_resourceLoader is a nullPtr. Call WithGraphicsDevice to set it");
+                } 
+                else if( _resourceLoader == nullptr) 
+                {
+                    throw std::invalid_argument("_resourceLoader is a nullPtr. Call WithResourceLoader to set it");
+                } 
+                else if(_memoryAllocator == nullptr) 
+                {
+                    throw std::invalid_argument("_memoryAllocator is a nullPtr. Call WithMemoryAllocator to set it");
+                } 
+                else if (_context == nullptr) 
+                {
+                    throw std::invalid_argument("_context is a nullPtr. Call WithSurfaceContext to set it");
+                }
+                else {
                     _defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<TGraphicsBackend>>( 
                     _graphicsDevice, pass, _resourceLoader, _memoryAllocator, _context);
                 }
