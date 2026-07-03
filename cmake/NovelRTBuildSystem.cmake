@@ -207,7 +207,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
                              [[    if(EXISTS "${dynamicLibPath}")]] "\n"
-                             [[      file(READ libs "${dynamicLibPath}")]] "\n"
+                             [[      file(READ "${dynamicLibPath}" libs)]] "\n"
                              [[      list(APPEND dynamicLibs ${libs})]] "\n"
                              [[    endif()]] "\n"
                              [[  endforeach()]] "\n"
