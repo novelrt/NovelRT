@@ -8,7 +8,6 @@ if(APPLE)
   endif()
 
   cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
-  message(STATUS "Looking in: ${libRoot}")
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 endif()
@@ -130,7 +129,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
 
 # On apple we need to provide an ICD for Vulkan to work, but only in the bundle.
 if(APPLE)
-  target_sources(NovelRT-Graphics-Vulkan PUBLIC
+  target_sources(NovelRT-Graphics-Vulkan PRIVATE
     FILE_SET resources
     BASE_DIRS Apple
     FILES Apple/vulkan/icd.d/MoltenVK_icd.json)
