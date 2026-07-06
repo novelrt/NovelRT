@@ -127,3 +127,17 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
   DYNAMIC_LIBRARIES
     $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
 )
+
+# On apple we need to provide an ICD for Vulkan to work, but only in the bundle.
+if(APPLE)
+  target_sources(NovelRT-Graphics-Vulkan PRIVATE
+    FILE_SET icd
+    BASE_DIRS Apple
+    FILES
+      Apple/vulkan/icd.d/MoltenVK_icd.json)
+
+  set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json
+    PROPERTIES
+      MACOSX_PACKAGE_LOCATION "vulkan/icd.d/MoltenVK_icd.json"
+      HEADER_FILE_ONLY ON)
+endif()
