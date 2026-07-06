@@ -224,7 +224,12 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
                              [[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
-                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
+                             [[  set(installedDynamicLibs)]] "\n"
+                             [[  foreach(dynamicLibPath IN LISTS dynamicLibs)]] "\n"
+                             [[    get_filename_component(dynamicLibName "${dynamicLibPath}" NAME)]] "\n"
+                             [[    list(APPEND installedDynamicLibs "${dynamicLibName}")]] "\n"
+                             [[  endforeach()]] "\n"
+                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
 
       install(CODE "${fixupStr}")
     endif()
