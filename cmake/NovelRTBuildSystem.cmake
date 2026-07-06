@@ -204,12 +204,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       string(TOLOWER "${CMAKE_OSX_SYSROOT}" sysroot)
       set(systemVariant)
-      if(sysroot MATCHES "^(appletvsimulator|iphonesimulator|watchsimulator|xrsimulator)")
+      if("${sysroot}" MATCHES "^(appletvsimulator|iphonesimulator|watchsimulator|xrsimulator)")
         set(systemVariant "simulator")
-      elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" AND NOT sysroot MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
+      endif()
+      if("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" AND NOT "${sysroot}" MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
         set(systemVariant "catalyst")
-      else()
-        set(systemVariant "none")
       endif()
       set(fixupStr "include(BundleUtilities)\n")
       string(APPEND fixupStr [[  include(]] "${CMAKE_CURRENT_FUNCTION_LIST_DIR}" [[/XCFrameworkUtilities.cmake)]] "\n"
@@ -227,7 +226,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER xcframeworks INCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  foreach(xcframework IN LISTS xcframeworks)]] "\n"
-                             [[    xcframework_select_libraries("${xcframework}" selectedLibraries]] "${CMAKE_SYSTEM_NAME}" [[ ]] "${systemVariant}" [[)]] "\n"
+                             [[    xcframework_select_libraries("${xcframework}" selectedLibraries "]] "${CMAKE_SYSTEM_NAME}" [[" "]] "${systemVariant}" [[")]] "\n"
                              [[    list(APPEND dynamicLibs ${selectedLibraries})]] "\n"
                              [[  endforeach()]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
