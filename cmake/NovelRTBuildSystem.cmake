@@ -211,8 +211,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
         set(systemVariant "catalyst")
       endif()
       set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr [[  include(]] "${CMAKE_CURRENT_FUNCTION_LIST_DIR}" [[/XCFrameworkUtilities.cmake)]] "\n"
-                             [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
+      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
                              [[    if(EXISTS "${dynamicLibPath}")]] "\n"
