@@ -211,7 +211,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
         set(systemVariant "catalyst")
       endif()
       set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr # [[  include(XCFrameworkUtilities)]] "\n"
+      string(APPEND fixupStr [[  include(]] "${CMAKE_CURRENT_FUNCTION_LIST_DIR}" [[/XCFrameworkUtilities)]] "\n"
                              [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
@@ -226,7 +226,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER xcframeworks INCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  foreach(xcframework IN LISTS xcframeworks)]] "\n"
-                             # [[    xcframework_select_libraries("${xcframework}" selectedLibraries]] "${CMAKE_SYSTEM_NAME}" [[ ]] "${variant}" [[)]] "\n"
+                             [[    xcframework_select_libraries("${xcframework}" selectedLibraries]] "${CMAKE_SYSTEM_NAME}" [[ ]] "${variant}" [[)]] "\n"
                              [[    list(APPEND dynamicLibs ${selectedLibraries})]] "\n"
                              [[  endforeach()]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
