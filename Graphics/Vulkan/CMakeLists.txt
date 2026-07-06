@@ -1,5 +1,7 @@
 include(NovelRTBuildSystem)
 
+set(previousFindFramework "${CMAKE_FIND_FRAMEWORK}")
+set(CMAKE_FIND_FRAMEWORK LAST)
 find_package(Vulkan "1.2" REQUIRED
   OPTIONAL_COMPONENTS MoltenVK)
 if(APPLE)
@@ -7,6 +9,8 @@ if(APPLE)
     message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
   endif()
 endif()
+set(CMAKE_FIND_FRAMEWORK "${previousFindFramework}")
+
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
   DEPENDS
@@ -119,5 +123,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       GPUOpen::VulkanMemoryAllocator
 
   DYNAMIC_LIBRARIES
-    $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
+    $<$<TARGET_EXISTS:Vulkan::MoltenVK>:$<TARGET_FILE:Vulkan::MoltenVK>>
 )
