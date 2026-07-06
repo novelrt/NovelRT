@@ -202,8 +202,17 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
-      set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
+      string(TOLOWER "${CMAKE_OSX_SYSROOT}" sysroot)
+      set(systemVariant)
+      if(sysroot MATCHES "^(appletvsimulator|iphonesimulator|watchsimulator|xrsimulator)")
+        set(systemVariant "simulator")
+      endif()
+      if(CMAKE_SYSTEM_NAME STREQUAL "iOS" NOT sysroot MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
+        set(systemVariant "catalyst")
+      endif()
+      set(fixupStr "include(XCFrameworkUtilities)")
+      string(APPEND fixupStr [[  include(BundleUtilities)]] "\n"
+                             [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
                              [[    if(EXISTS "${dynamicLibPath}")]] "\n"
@@ -213,6 +222,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  endforeach()]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
+                             [[  set(xcframeworks ${dynamicLibs})]] "\n"
+                             [[  list(FILTER xcframeworks INCLUDE REGEX "\.xcframework$")]] "\n"
+                             [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
+                             [[  foreach(xcframework IN LISTS xcframeworks)]] "\n"
+                             # [[    xcframework_select_libraries("${xcframework}" selectedLibraries]] "${CMAKE_SYSTEM_NAME}" [[ ]] "${variant}" [[)]] "\n"
+                             [[    list(APPEND dynamicLibs ${selectedLibraries})]] "\n"
+                             [[  endforeach()]] "\n"
+                             [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
                              [[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
 
