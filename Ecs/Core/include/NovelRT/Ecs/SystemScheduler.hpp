@@ -4,21 +4,22 @@
 // for more information.
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/EcsUtils.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/ImplDetail.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 #include <NovelRT/Timing/Timestamp.hpp>
-#include <NovelRT/Utilities/Atom.hpp>
 
+#include <atomic>
 #include <functional>
 #include <memory>
 #include <span>
-#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 #include <oneapi/tbb/concurrent_queue.h>
+#include <oneapi/tbb/concurrent_unordered_map.h>
 #include <oneapi/tbb/task_arena.h>
 #include <oneapi/tbb/task_group.h>
 
@@ -28,8 +29,6 @@ namespace NovelRT::Ecs
     class ComponentCache;
     class EntityCache;
     class IEcsSystem;
-
-    using SystemId = Atom;
 
     /**
      * @brief Handles all thread and system scheduling related tasks. In a normal ECS instance, this is your root
@@ -41,6 +40,17 @@ namespace NovelRT::Ecs
         friend class Catalogue;
 
     private:
+        struct SystemJobInfo
+        {
+            std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr;
+            std::atomic_bool isDone{false};
+
+            explicit SystemJobInfo(std::function<bool(Timing::Timestamp, Catalogue)> job) noexcept
+                : jobFnPtr(std::move(job))
+            {
+            }
+        };
+
         std::vector<SystemId> _systemIds;
 
         static constexpr uint32_t DefaultBlindThreadLimit = 8;
@@ -61,6 +71,8 @@ namespace NovelRT::Ecs
         std::unique_ptr<tbb::task_group> _ecsTasks;
         std::unique_ptr<tbb::task_group> _asyncTasks;
         tbb::concurrent_queue<std::function<void(Timing::Timestamp, Catalogue)>> _pendingCompletions;
+        tbb::concurrent_unordered_map<SystemId, SystemJobInfo> _systemJobs;
+        tbb::concurrent_queue<SystemId> _jobCancellations;
 
         Timing::Timestamp _currentDelta;
 
@@ -72,6 +84,9 @@ namespace NovelRT::Ecs
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
             TCompletion&& completion) noexcept;
+
+        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr);
+        void CancelSystemJob(SystemId jobId);
 
         void RebuildSystemDependencyTreeLayers();
 

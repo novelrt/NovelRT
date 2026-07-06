@@ -12,6 +12,16 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
 
 FetchContent_MakeAvailable(TBB)
 
+# OneTBB is being stupid, and is setting off our compiler warnings in its own headers.
+# This shuts it up by making them system includes, basically.
+# God is dead. - Matt J.
+get_target_property(tbb_include_dirs tbb INTERFACE_INCLUDE_DIRECTORIES)
+if(tbb_include_dirs)
+  set_target_properties(tbb PROPERTIES
+    INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${tbb_include_dirs}"
+  )
+endif()
+
 # Unset the output directories for TBB so that they are generated in the correct location.
 foreach(output_type LIBRARY ARCHIVE PDB RUNTIME)
   if(CMAKE_BUILD_TYPE)

@@ -8,7 +8,6 @@
 #include <NovelRT/Ecs/ImplDetail.hpp>
 
 #include <cstddef>
-#include <cstdint>
 #include <tuple>
 #include <vector>
 
@@ -140,6 +139,9 @@ namespace NovelRT::Ecs
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
             TCompletion&& completion) noexcept;
+
+        [[nodiscard]] SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr);
+        void CancelSystemJob(SystemId jobId);
     };
 }
 
