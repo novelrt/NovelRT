@@ -207,11 +207,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       if(sysroot MATCHES "^(appletvsimulator|iphonesimulator|watchsimulator|xrsimulator)")
         set(systemVariant "simulator")
       endif()
-      if(CMAKE_SYSTEM_NAME STREQUAL "iOS" NOT sysroot MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
+      if("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" AND NOT sysroot MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
         set(systemVariant "catalyst")
       endif()
-      set(fixupStr "include(XCFrameworkUtilities)")
-      string(APPEND fixupStr [[  include(BundleUtilities)]] "\n"
+      set(fixupStr "include(BundleUtilities)\n")
+      string(APPEND fixupStr # [[  include(XCFrameworkUtilities)]] "\n"
                              [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
