@@ -229,7 +229,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[    get_filename_component(dynamicLibName "${dynamicLibPath}" NAME)]] "\n"
                              [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks/${dynamicLibName}")]] "\n"
                              [[  endforeach()]] "\n"
-                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
+                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]]
+      )
 
       install(CODE "${fixupStr}")
     endif()
