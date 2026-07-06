@@ -132,6 +132,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
 if(APPLE)
   target_sources(NovelRT-Graphics-Vulkan PRIVATE
     FILE_SET icd
+    TYPE HEADERS
     BASE_DIRS Apple
     FILES
       Apple/vulkan/icd.d/MoltenVK_icd.json)
