@@ -202,6 +202,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
+      find_package(Vulkan "1.2" REQUIRED COMPONENTS MoltenVK)
+
       set(fixupStr "include(BundleUtilities)\n")
       string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
@@ -214,6 +216,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
                              [[  message(STATUS "Dynamic libraries: ${dynamicLibs}")]] "\n"
+                             [[  message(STATUS "MoltenVK location: ]] "${Vulkan_MoltenVK_LIBRARY}" [[")]] "\n"
                              # [[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
 
