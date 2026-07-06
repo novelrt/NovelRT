@@ -7,7 +7,7 @@ if(APPLE)
     message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
   endif()
 
-  cmake_path(GET "${Vulkan_MoltenVK_LIBRARY}" PARENT_PATH libRoot)
+  cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK HINTS "${libRoot}" REQUIRED)
 endif()
