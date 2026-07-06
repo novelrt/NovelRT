@@ -94,6 +94,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     OUTPUT_NAME "${moduleOutputName}"
     PDB_NAME "${moduleOutputName}"
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
+    RESOURCE "${declareModule_RESOURCES}"
     WIN32_EXECUTABLE "${declareModule_WIN32_EXECUTABLE}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
@@ -157,7 +158,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     BASE_DIRS include
     FILES ${declareModule_HEADERS}
 
-    PRIVATE FILE_SET resources
+    PUBLIC FILE_SET resources
     TYPE HEADERS
     BASE_DIRS Resources
     FILES ${declareModule_RESOURCES})
@@ -199,17 +200,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   list(REMOVE_DUPLICATES dynamicLibs)
   set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_DYNAMIC_LIBRARIES "${dynamicLibs}")
 
-
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
-      string(TOLOWER "${CMAKE_OSX_SYSROOT}" sysroot)
-      set(systemVariant)
-      if("${sysroot}" MATCHES "^(appletvsimulator|iphonesimulator|watchsimulator|xrsimulator)")
-        set(systemVariant "simulator")
-      endif()
-      if("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" AND NOT "${sysroot}" MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
-        set(systemVariant "catalyst")
-      endif()
       set(fixupStr "include(BundleUtilities)\n")
       string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
@@ -240,8 +232,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       ARCHIVE DESTINATION lib
       BUNDLE DESTINATION apps
       FILE_SET HEADERS DESTINATION include
+      FILE_SET resources DESTINATION bin/Resources
       LIBRARY DESTINATION lib
-      RESOURCE DESTINATION bin/Resources
       RUNTIME DESTINATION bin)
 
     if(WIN32 AND moduleKind STREQUAL "EXECUTABLE")
