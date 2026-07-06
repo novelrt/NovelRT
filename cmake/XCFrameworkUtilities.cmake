@@ -52,3 +52,5 @@ function(xcframework_select_libraries framework outputVariable platform variant)
 
   set("${outputVariable}" "" PARENT_SCOPE)
 endfunction()
+
+endblock()
