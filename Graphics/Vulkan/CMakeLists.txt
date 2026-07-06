@@ -117,5 +117,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
       GPUOpen::VulkanMemoryAllocator
 
   DYNAMIC_LIBRARIES
-    $<$<TARGET_EXISTS:Vulkan::MoltenVK>:$<TARGET_FILE:Vulkan::MoltenVK>>
+    $<$<TARGET_EXISTS:Vulkan::MoltenVK>:$<TARGET_FILE_DIR:Vulkan::MoltenVK>>
 )
