@@ -19,6 +19,11 @@ cmake_policy(VERSION 3.29..3.31)
 #]=======================================================================]
 function(xcframework_select_libraries framework outputVariable platform variant)
   message(STATUS "Selecting library from ${framework}...")
+
+  get_filename_component(name "${framework}" NAME_WE)
+  find_library(lib NAMES "${name}" PATHS "${framework}")
+  message(STATUS "test: ${lib}")
+
   # This mostly mirrors the logic in cmXcFramework.cpp used for parsing xcframework info plists.
   execute_process(
     COMMAND "/usr/bin/plutil" "-convert" "json" "-o" "-" "${framework}/Info.plist"
@@ -33,6 +38,7 @@ function(xcframework_select_libraries framework outputVariable platform variant)
 
   string(JSON availableLibraries GET "${infoJson}" "AvailableLibraries")
   string(JSON numberOfLibraries LENGTH "${availableLibraries}")
+  math(EXPR numberOfLibraries "${numberOfLibraries} - 1")
   foreach(libraryIndex RANGE "${numberOfLibraries}")
     string(JSON library GET "${availableLibraries}" "${libraryIndex}")
 

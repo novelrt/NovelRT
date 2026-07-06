@@ -6,8 +6,6 @@ if(APPLE)
   if(NOT Vulkan_MoltenVK_FOUND)
     message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
   endif()
-
-
 endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
