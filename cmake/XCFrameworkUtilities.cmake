@@ -39,7 +39,7 @@ function(xcframework_select_libraries framework outputVariable platform variant)
     string(JSON libraryPath GET "${library}" "LibraryPath")
     string(JSON headersPath ERROR_VARIABLE optional GET "${library}" "HeadersPath")
     string(JSON supportedArchitectures GET "${library}" "SupportedArchitectures")
-    string(JSON supportedPlatforms GET "${library}" "SupportedPlatforms")
+    string(JSON supportedPlatform GET "${library}" "SupportedPlatform")
     string(JSON supportedPlatformVariants ERROR_VARIABLE optional GET "${library}" "SupportedPlatformVariant")
 
     message(STATUS "LIBRARY: ${libraryIdentifier}")
