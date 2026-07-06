@@ -157,7 +157,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     BASE_DIRS include
     FILES ${declareModule_HEADERS}
 
-    PUBLIC FILE_SET resources
+    PRIVATE FILE_SET resources
     TYPE HEADERS
     BASE_DIRS Resources
     FILES ${declareModule_RESOURCES})
@@ -240,8 +240,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       ARCHIVE DESTINATION lib
       BUNDLE DESTINATION apps
       FILE_SET HEADERS DESTINATION include
-      FILE_SET resources DESTINATION bin/Resources
       LIBRARY DESTINATION lib
+      RESOURCE DESTINATION bin/Resources
       RUNTIME DESTINATION bin)
 
     if(WIN32 AND moduleKind STREQUAL "EXECUTABLE")

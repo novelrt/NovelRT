@@ -130,12 +130,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
 
 # On apple we need to provide an ICD for Vulkan to work, but only in the bundle.
 if(APPLE)
-  target_sources(NovelRT-Graphics-Vulkan PRIVATE
-    FILE_SET icd
-    TYPE HEADERS
+  target_sources(NovelRT-Graphics-Vulkan PUBLIC
+    FILE_SET resources
     BASE_DIRS Apple
-    FILES
-      Apple/vulkan/icd.d/MoltenVK_icd.json)
+    FILES Apple/vulkan/icd.d/MoltenVK_icd.json)
 
   set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json
     PROPERTIES
