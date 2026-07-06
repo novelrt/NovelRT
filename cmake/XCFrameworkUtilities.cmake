@@ -18,6 +18,7 @@ cmake_policy(VERSION 3.29..3.31)
   given platform/variant combination.
 #]=======================================================================]
 function(xcframework_select_libraries framework outputVariable platform variant)
+  message(STATUS "Selecting library from ${framework}...")
   # This mostly mirrors the logic in cmXcFramework.cpp used for parsing xcframework info plists.
   execute_process(
     COMMAND "/usr/bin/plutil" "-convert" "json" "-o" "-" "${framework}/Info.plist"
@@ -40,14 +41,14 @@ function(xcframework_select_libraries framework outputVariable platform variant)
     string(JSON headersPath ERROR_VARIABLE optional GET "${library}" "HeadersPath")
     string(JSON supportedArchitectures GET "${library}" "SupportedArchitectures")
     string(JSON supportedPlatform GET "${library}" "SupportedPlatform")
-    string(JSON supportedPlatformVariants ERROR_VARIABLE optional GET "${library}" "SupportedPlatformVariant")
+    string(JSON supportedPlatformVariant ERROR_VARIABLE optional GET "${library}" "SupportedPlatformVariant")
 
     message(STATUS "LIBRARY: ${libraryIdentifier}")
     message(STATUS "  PATH: ${libraryPath}")
     message(STATUS "  HEADERS: ${headersPath}")
     message(STATUS "  ARCHITECTURES: ${supportedArchitectures}")
-    message(STATUS "  PLATFORMS: ${supportedPlatforms}")
-    message(STATUS "  VARIANTS: ${supportedPlatformVariants}")
+    message(STATUS "  PLATFORMS: ${supportedPlatform}")
+    message(STATUS "  VARIANTS: ${supportedPlatformVariant}")
   endforeach()
 
   set("${outputVariable}" "" PARENT_SCOPE)
