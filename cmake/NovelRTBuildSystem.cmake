@@ -203,16 +203,17 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr #[[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
+      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
-                             #[[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
-                             #[[    if(EXISTS "${dynamicLibPath}")]] "\n"
-                             #[[      file(READ "${dynamicLibPath}" libs)]] "\n"
-                             #[[      list(APPEND dynamicLibs ${libs})]] "\n"
-                             #[[    endif()]] "\n"
-                             #[[  endforeach()]] "\n"
-                             #[[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
-                             #[[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
+                             [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
+                             [[    if(EXISTS "${dynamicLibPath}")]] "\n"
+                             [[      file(READ "${dynamicLibPath}" libs)]] "\n"
+                             [[      list(APPEND dynamicLibs ${libs})]] "\n"
+                             [[    endif()]] "\n"
+                             [[  endforeach()]] "\n"
+                             [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
+                             [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
+                             [[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
 
       install(CODE "${fixupStr}")
@@ -221,7 +222,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     install(
       TARGETS ${cmakeSafeName}
       EXPORT NovelRTConfig
-      RUNTIME_DEPENDENCIES
       ARCHIVE DESTINATION lib
       BUNDLE DESTINATION apps
       FILE_SET HEADERS DESTINATION include
