@@ -210,6 +210,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       if("${CMAKE_SYSTEM_NAME}" STREQUAL "iOS" AND NOT sysroot MATCHES "^(appletvos|appletvsimulator|iphoneos|iphonesimulator|watchos|watchsimulator|xros|xrsimulator)")
         set(systemVariant "catalyst")
       endif()
+      message(STATUS "whoop: ${systemVariant} ${CMAKE_OSX_SYSROOT}")
       set(fixupStr "include(BundleUtilities)\n")
       string(APPEND fixupStr [[  include(]] "${CMAKE_CURRENT_FUNCTION_LIST_DIR}" [[/XCFrameworkUtilities.cmake)]] "\n"
                              [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
@@ -226,7 +227,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER xcframeworks INCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  foreach(xcframework IN LISTS xcframeworks)]] "\n"
-                             [[    xcframework_select_libraries("${xcframework}" selectedLibraries]] "${CMAKE_SYSTEM_NAME}" [[ ]] "${variant}" [[)]] "\n"
+                             [[    xcframework_select_libraries("${xcframework}" selectedLibraries]] "${CMAKE_SYSTEM_NAME}" [[ ]] "${systemVariant}" [[)]] "\n"
                              [[    list(APPEND dynamicLibs ${selectedLibraries})]] "\n"
                              [[  endforeach()]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
