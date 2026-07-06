@@ -214,7 +214,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
                              [[  message(STATUS "Dynamic libraries: ${dynamicLibs}")]] "\n"
-                             #[[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
+                             # [[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${dynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
 
       install(CODE "${fixupStr}")
