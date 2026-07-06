@@ -8,8 +8,9 @@ if(APPLE)
   endif()
 
   cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
+  message(STATUS "Looking in: ${libRoot}")
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
-  find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK HINTS "${libRoot}" REQUIRED)
+  find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 endif()
 
 
