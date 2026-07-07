@@ -12,6 +12,7 @@ block(SCOPE_FOR POLICIES)
 cmake_policy(VERSION 3.29..3.31)
 
 define_property(TARGET PROPERTY NOVELRT_DYNAMIC_LIBRARIES)
+define_property(TARGET PROPERTY NOVELRT_RESOURCES)
 
 #[=======================================================================[.rst:
 .. command:: NovelRTBuildSystem_DeclareModule
@@ -132,10 +133,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   # CMake doesn't like static libraries with no sources, so we add the dependencies as private sources to silence it.
   # This PROBABLY leads to some duplication but fortunately the linker is really good at de-duplicating code
   foreach(depends IN LISTS declareModule_DEPENDS)
-    target_sources(${cmakeSafeName} PRIVATE $<TARGET_OBJECTS:${depends}>)
+    target_sources(${cmakeSafeName} PRIVATE
+      $<TARGET_OBJECTS:${depends}>
+      $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>)
   endforeach()
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
-    target_sources(${cmakeSafeName} PRIVATE $<$<TARGET_EXISTS:${depends}>:$<TARGET_OBJECTS:${depends}>>)
+    target_sources(${cmakeSafeName} PRIVATE
+        $<$<TARGET_EXISTS:${depends}>:$<TARGET_OBJECTS:${depends}>>
+        $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>>)
   endforeach()
 
   foreach(file IN LISTS declareModule_HEADERS)
@@ -156,7 +161,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
 
   target_sources(${cmakeSafeName}
-    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS}
+    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${declareModule_RESOURCES}
 
     PUBLIC FILE_SET HEADERS
     BASE_DIRS include
@@ -203,6 +208,19 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endforeach()
   list(REMOVE_DUPLICATES dynamicLibs)
   set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_DYNAMIC_LIBRARIES "${dynamicLibs}")
+
+  set(resources)
+  foreach(resource IN LISTS declareModule_RESOURCES)
+    list(APPEND resources "$<PATH:ABSOLUTE_PATH,NORMALIZE,${resource},${CMAKE_CURRENT_SOURCE_DIR}>")
+  endforeach()
+  foreach(depends IN LISTS declareModule_DEPENDS)
+    list(APPEND resources $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>)
+  endforeach()
+  foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
+    list(APPEND resources $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>>)
+  endforeach()
+  list(REMOVE_DUPLICATES resources)
+  set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_RESOURCES "${resources}")
 
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
