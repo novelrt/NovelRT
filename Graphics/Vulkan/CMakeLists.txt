@@ -133,6 +133,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
 if(APPLE)
   target_sources(NovelRT-Graphics-Vulkan PUBLIC FILE_SET resources BASE_DIRS Apple)
 
-  set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json PROPERTIES
-    MACOSX_PACKAGE_LOCATION "vulkan/icd.d")
+  set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json
+    DIRECTORY "${CMAKE_SOURCE_DIR}"
+    PROPERTIES
+      MACOSX_PACKAGE_LOCATION "vulkan/icd.d")
 endif()
