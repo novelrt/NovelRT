@@ -287,9 +287,7 @@ void Render(RenderingData<TBackend>& renderingData,
         descriptorSetData->AddMemoryRegionsToInputs(inputResourceRegions);
         descriptorSetData->UpdateDescriptorSetData();
 
-        std::array<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>, 1> descriptorData{
-            std::cref(descriptorSetData)};
-        currentCmdList->CmdBindDescriptorSets(descriptorData);
+        currentCmdList->CmdBindDescriptorSet(descriptorSetData);
 
         currentCmdList->CmdDraw(
             static_cast<uint32_t>(renderingData.VertexBufferRegion->GetSize() / sizeof(TexturedVertex)), 1, 0, 0);
