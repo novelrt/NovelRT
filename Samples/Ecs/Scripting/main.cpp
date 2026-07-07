@@ -204,6 +204,13 @@ public:
     {
         provider->SizeChanged += [this](auto eventArgs)
         {
+            // it doesn't actually matter what the viewport sizes are if we are minimising.
+            // This is a Windows 11 specific fix. - Matt J.
+            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
+            {
+                return;
+            }
+
             _size = eventArgs;
             _changedSize = true;
         };
@@ -233,8 +240,8 @@ int main()
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1920, 1080});
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1920, 1080});
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -256,22 +263,9 @@ int main()
     auto& gfx = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
                     .WithGraphicsDevice(gfxDevice)
                     .WithSurfaceContext(gfxSurfaceContext)
-                    .ConfigureRenderPasses(
-                        [gfxDevice, &passData](auto& manager)
-                        {
-                            GraphicsRenderPassDescription passDesc{};
-                            GraphicsAttachmentDescription attachmentDesc{};
-
-                            attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                            attachmentDesc.loadOp = LoadOp::Load;
-                            attachmentDesc.storeOp = StoreOp::Store;
-                            attachmentDesc.initialLayout = ImageLayout::Present;
-                            attachmentDesc.finalLayout = ImageLayout::Present;
-
-                            passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                            passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                            passData.RenderPassId = manager.RegisterRenderPass(passData.RenderPass);
-                        })
+                    .WithResourceLoader(resourceLoader)
+                    .WithMemoryAllocator(memoryAllocator)
+                    .WithDefaultSpriteRendering()
                     .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddScripting(builder)
@@ -297,12 +291,6 @@ int main()
         .WithGraphicsBuilder(gfx);
 
     gfx.WithDefaultOrchestrator();
-
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
-
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
 
     builder.Configure(
         [&wndProvider, &resourceLoader, &scriptManager](SystemScheduler& scheduler)

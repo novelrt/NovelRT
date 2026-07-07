@@ -1,27 +1,28 @@
-name: Daily Build
+name: Publish Release
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    paths:
-      - '.github/workflows/build-daily.yml'
-
-  schedule:
-    - cron: '0 0 * * *'
+  release:
+    types: [published]
 
 jobs:
   Build:
-    name: ${{ matrix.os }} - ${{ matrix.configuration }} - Vulkan ${{ matrix.vulkan }}
+    name: ${{ matrix.os }} - Vulkan ${{ matrix.vulkan }}
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        configuration: [Debug, RelWithDebInfo]
         os: [windows-2025, ubuntu-24.04, macos-15, macos-26]
         vulkan: [1.4.313.0]
+        include:
+        - os: windows-2025
+          title: Windows
+        - os: ubuntu-24.04
+          title: Ubuntu 24.04
+        - os: macos-15
+          title: MacOS 15
+        - os: macos-26
+          title: MacOS 26
 
     steps:
       - name: Preinstall dependencies
@@ -65,23 +66,18 @@ jobs:
         with:
           version: ${{ matrix.vulkan }}
 
-      - name: Restore incremental build artefacts
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: build
-          key: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}-${{ steps.setup-cpp.outputs.compiler-id }}${{ steps.setup-cpp.outputs.compiler-version }}-main
-
       - name: Generate build system
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
 
       - name: Build NovelRT
-        run: cmake --build build --config ${{ matrix.configuration }} --parallel
+        run: cmake --build build --config RelWithDebInfo --parallel
       - name: Install NovelRT
-        run: cmake --install build --config ${{ matrix.configuration }} --prefix artefacts
+        run: cmake --install build --config RelWithDebInfo --prefix artefacts
 
       - name: Publish build artefacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}-${{ matrix.configuration }}-vk${{ matrix.vulkan }}
-          path: artefacts
+        shell: pwsh
+        run: |
+          Compress-Archive -Path $(Get-ChildItem artefacts/*) -DestinationPath "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip"
+          gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name }} - ${{ matrix.title }}" --repo "${{ github.repository }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

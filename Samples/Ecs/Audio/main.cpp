@@ -41,8 +41,8 @@
 
 #include <NovelRT/UI/ImGui/ImGuiUIProvider.hpp>
 
-#include <NovelRT/Ecs/Audio/EcsAudioBuilder.hpp>
 #include <NovelRT/Ecs/Audio/AudioSystem.hpp>
+#include <NovelRT/Ecs/Audio/EcsAudioBuilder.hpp>
 
 #include <NovelRT/Ecs/UI/Components/UIButton.hpp>
 #include <NovelRT/Ecs/UI/Components/UIClickEvent.hpp>
@@ -169,8 +169,7 @@ private:
     NovelRT::Maths::GeoVector2F _initialSize;
 
 public:
-    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
-        : _initialSize(initialSize)
+    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize) : _initialSize(initialSize)
     {
     }
 
@@ -233,7 +232,7 @@ public:
     }
 };
 
-template <typename TAudioBackend>
+template<typename TAudioBackend>
 class AudioSetupSystem : public IEcsSystem
 {
 private:
@@ -242,7 +241,8 @@ private:
     std::shared_ptr<Audio::AudioSystem<TAudioBackend>> _system;
 
 public:
-    AudioSetupSystem(std::filesystem::path soundDirectory, std::shared_ptr<Audio::AudioSystem<TAudioBackend>> audioSystem)
+    AudioSetupSystem(std::filesystem::path soundDirectory,
+                     std::shared_ptr<Audio::AudioSystem<TAudioBackend>> audioSystem)
         : _sndDirectory(soundDirectory), _system(std::move(audioSystem))
     {
     }
@@ -263,7 +263,8 @@ public:
 
         auto bgMusicEntityId = catalogue.CreateEntity();
         emitterView.AddComponent(bgMusicEntityId, AudioEmitterComponent{bgHandle, true, -1, 0.75f});
-        emitterStateView.AddComponent(bgMusicEntityId, AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 4.0f, 0.75f});        
+        emitterStateView.AddComponent(bgMusicEntityId,
+                                      AudioEmitterStateComponent{AudioEmitterState::ToFadeIn, 4.0f, 0.75f});
     }
 };
 
@@ -299,7 +300,8 @@ public:
                     UIText initialText{};
                     if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(id, UIText{new std::string(_story[_strIndex]), initialText.colour});
+                        textView.PushComponentUpdateInstruction(
+                            id, UIText{new std::string(_story[_strIndex]), initialText.colour});
                     }
                 }
             }
@@ -366,6 +368,13 @@ public:
     {
         provider->SizeChanged += [this](auto eventArgs)
         {
+            // it doesn't actually matter what the viewport sizes are if we are minimising.
+            // This is a Windows 11 specific fix. - Matt J.
+            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
+            {
+                return;
+            }
+
             _size = eventArgs;
             _changedSize = true;
         };
@@ -402,8 +411,8 @@ int main()
     auto audioProvider = std::make_shared<AudioProvider<OpenAL::OpenALAudioBackend>>();
 
     auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, windowSize);
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, windowSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -424,22 +433,9 @@ int main()
     auto& gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
                            .WithGraphicsDevice(gfxDevice)
                            .WithSurfaceContext(gfxSurfaceContext)
-                           .ConfigureRenderPasses(
-                               [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
-                               {
-                                   GraphicsRenderPassDescription passDesc{};
-                                   GraphicsAttachmentDescription attachmentDesc{};
-
-                                   attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                                   attachmentDesc.loadOp = LoadOp::Load;
-                                   attachmentDesc.storeOp = StoreOp::Store;
-                                   attachmentDesc.initialLayout = ImageLayout::Present;
-                                   attachmentDesc.finalLayout = ImageLayout::Present;
-
-                                   passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                                   passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                                   passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-                               })
+                           .WithResourceLoader(desktopResourceLoader)
+                           .WithMemoryAllocator(memoryAllocator)
+                           .WithDefaultSpriteRendering()
                            .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
@@ -457,12 +453,9 @@ int main()
     gfxBuilder.WithDefaultOrchestrator();
 
     auto& audioBuilder = AddAudio<OpenAL::OpenALAudioBackend>(builder)
-                            .WithResourceLoader(desktopResourceLoader)
-                            .WithAudioProvider(audioProvider)
-                            .WithDefaultAudioSystem();
-
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, desktopResourceLoader, memoryAllocator, gfxSurfaceContext);
+                             .WithResourceLoader(desktopResourceLoader)
+                             .WithAudioProvider(audioProvider)
+                             .WithDefaultAudioSystem();
 
     // Add your systems and configure them
     auto setupSystem = std::make_shared<SpriteSetupSystem>(desktopResourceLoader, windowSize);
@@ -470,16 +463,16 @@ int main()
     auto clickSystem = std::make_shared<UIInteractionSystem>();
 
     auto soundsDir = desktopResourceLoader->ResourcesRootDirectory() / "Sounds";
-    auto audioSetupSystem = std::make_shared<AudioSetupSystem<OpenAL::OpenALAudioBackend>>(soundsDir, audioBuilder.GetEcsAudioSystem());
+    auto audioSetupSystem =
+        std::make_shared<AudioSetupSystem<OpenAL::OpenALAudioBackend>>(soundsDir, audioBuilder.GetEcsAudioSystem());
 
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
     builder.Configure([viewportUpdater](SystemScheduler& scheduler)
                       { unused(scheduler.RegisterSystem(viewportUpdater)); });
-    builder.Configure([audioSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(audioSetupSystem)); });
+    builder.Configure([audioSetupSystem](SystemScheduler& scheduler)
+                      { unused(scheduler.RegisterSystem(audioSetupSystem)); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};

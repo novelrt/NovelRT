@@ -161,8 +161,7 @@ private:
     NovelRT::Maths::GeoVector2F _initialSize;
 
 public:
-    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize)
-        : _initialSize(initialSize)
+    explicit UISetupSystem(NovelRT::Maths::GeoVector2F& initialSize) : _initialSize(initialSize)
     {
     }
 
@@ -257,7 +256,8 @@ public:
                     UIText initialText{};
                     if (textView.TryGetComponent(id, initialText))
                     {
-                        textView.PushComponentUpdateInstruction(id, UIText{new std::string(_story[_strIndex]), initialText.colour});
+                        textView.PushComponentUpdateInstruction(
+                            id, UIText{new std::string(_story[_strIndex]), initialText.colour});
                     }
                 }
             }
@@ -324,6 +324,13 @@ public:
     {
         provider->SizeChanged += [this](auto eventArgs)
         {
+            // it doesn't actually matter what the viewport sizes are if we are minimising.
+            // This is a Windows 11 specific fix. - Matt J.
+            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
+            {
+                return;
+            }
+
             _size = eventArgs;
             _changedSize = true;
         };
@@ -358,8 +365,8 @@ int main()
     desktopResourceLoader->InitAssetDatabase();
 
     auto windowSize = NovelRT::Maths::GeoVector2F(1280, 720);
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, windowSize);
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, windowSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -380,22 +387,9 @@ int main()
     auto& gfxBuilder = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
                            .WithGraphicsDevice(gfxDevice)
                            .WithSurfaceContext(gfxSurfaceContext)
-                           .ConfigureRenderPasses(
-                               [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
-                               {
-                                   GraphicsRenderPassDescription passDesc{};
-                                   GraphicsAttachmentDescription attachmentDesc{};
-
-                                   attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                                   attachmentDesc.loadOp = LoadOp::Load;
-                                   attachmentDesc.storeOp = StoreOp::Store;
-                                   attachmentDesc.initialLayout = ImageLayout::Present;
-                                   attachmentDesc.finalLayout = ImageLayout::Present;
-
-                                   passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                                   passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                                   passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-                               })
+                           .WithResourceLoader(desktopResourceLoader)
+                           .WithMemoryAllocator(memoryAllocator)
+                           .WithDefaultSpriteRendering()
                            .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddUI<Vulkan::VulkanGraphicsBackend, NovelRT::Input::Glfw::GlfwInputBackend,
@@ -412,16 +406,11 @@ int main()
 
     gfxBuilder.WithDefaultOrchestrator();
 
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, desktopResourceLoader, memoryAllocator, gfxSurfaceContext);
-
     // Add your systems and configure them
     auto setupSystem = std::make_shared<SpriteSetupSystem>(desktopResourceLoader, windowSize);
     auto uiSetupSystem = std::make_shared<UISetupSystem>(windowSize);
     auto clickSystem = std::make_shared<UIInteractionSystem>();
 
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });

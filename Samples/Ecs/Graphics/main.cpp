@@ -148,8 +148,9 @@ int main()
     resourceLoader
         ->InitAssetDatabase(); // TODO: Hack because this was originally called by the legacy plugin provider stuff.
 
-    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F(1920.0f, 1080.0f) / 2.0f);
+    auto wndProvider = std::make_shared<WindowProvider<Glfw::GlfwWindowingBackend>>();
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed,
+                              NovelRT::Maths::GeoVector2F(1920.0f, 1080.0f) / 2.0f);
 
     auto gfxProvider = wndProvider->CreateGraphicsProvider<VulkanGraphicsBackend>(false);
     auto gfxSurfaceContext = std::make_shared<GraphicsSurfaceContext<VulkanGraphicsBackend>>(wndProvider, gfxProvider);
@@ -161,37 +162,18 @@ int main()
 
     SystemSchedulerBuilder builder{};
 
-    SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
     AddDefaults(builder);
     AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
         .WithGraphicsDevice(gfxDevice)
         .WithSurfaceContext(gfxSurfaceContext)
-        .ConfigureRenderPasses(
-            [gfxDevice, &passData](RenderPassManager<VulkanGraphicsBackend>& renderPassManager)
-            {
-                GraphicsRenderPassDescription passDesc{};
-                GraphicsAttachmentDescription attachmentDesc{};
-
-                attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                attachmentDesc.loadOp = LoadOp::Load;
-                attachmentDesc.storeOp = StoreOp::Store;
-                attachmentDesc.initialLayout = ImageLayout::Present;
-                attachmentDesc.finalLayout = ImageLayout::Present;
-
-                passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                passData.RenderPassId = renderPassManager.RegisterRenderPass(passData.RenderPass);
-            })
+        .WithResourceLoader(resourceLoader)
+        .WithMemoryAllocator(memoryAllocator)
+        .WithDefaultSpriteRendering()
         .WithDefaultOrchestrator();
-
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
 
     auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
 
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
 
     SystemScheduler scheduler = builder.Build();

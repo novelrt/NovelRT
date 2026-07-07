@@ -5,7 +5,8 @@ NovelRT is a cross-platform, flexible Visual Novel and 2D game engine. It is aim
 
 [![Latest Nightly Build](https://img.shields.io/github/actions/workflow/status/novelrt/NovelRT/build-daily.yml?branch=main&color=blueviolet&label=Nightly%20Build&style=plastic)](https://github.com/novelrt/NovelRT/actions/workflows/build-daily.yml)
 
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/novelrt/NovelRT?color=blueviolet&label=Latest%20Release&style=plastic)
+![GitHub Release](https://img.shields.io/github/v/release/novelrt/novelrt?display_name=release&style=plastic&logoSize=auto&label=Latest%20Release&color=blueviolet&link=https%3A%2F%2Fwww.github.com%2FNovelRT%2Fnovelrt%2Freleases%2Flatest)
+
 
 [![Discord](https://discordapp.com/api/guilds/543898968380145675/widget.png?style=banner2)](https://discord.novelrt.dev/)
 
@@ -148,7 +149,7 @@ If this doesn't answer any questions that you have, feel free to reach out to us
 ## Licence
 Unless otherwise specified, all files are copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT).
 
-See [LICENCE](LICENCE.md) in the repository root for more information.
+See [LICENCE](LICENCE.md) in the repository root for more information, and [LICENCE-DIST](LICENCE-DIST.md) for all third-party licence attributions.
 
 
 ## Questions?

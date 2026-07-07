@@ -10,6 +10,7 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 #include <NovelRT/Ecs/SystemSchedulerBuilder.hpp>
 #include <NovelRT/Exceptions/FileNotFoundException.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
 #include <nlohmann/json_fwd.hpp>
 
 #include <NovelRT/Ecs/Components/TransformComponent.hpp>
@@ -204,8 +205,14 @@ class InitialisationSystem : public IEcsSystem
 {
 private:
     bool _initialized = false;
+    NovelRT::Maths::GeoVector2F _dimensions;
 
 public:
+    explicit InitialisationSystem(NovelRT::Maths::GeoVector2F initialDimensions) noexcept
+        : _dimensions(initialDimensions)
+    {
+    }
+
     void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
     {
         if (_initialized)
@@ -250,9 +257,9 @@ public:
                                                                            .isScreenSpace = true});
 
         viewports.PushComponentUpdateInstruction(
-            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1920, .height = 1080});
+            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _dimensions.x, .height = _dimensions.y});
         viewports.PushComponentUpdateInstruction(
-            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = 1920, .height = 1080});
+            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _dimensions.x, .height = _dimensions.y});
     }
 };
 
@@ -295,6 +302,13 @@ public:
     {
         provider->SizeChanged += [this](auto eventArgs)
         {
+            // it doesn't actually matter what the viewport sizes are if we are minimising.
+            // This is a Windows 11 specific fix. - Matt J.
+            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
+            {
+                return;
+            }
+
             _size = eventArgs;
             _changedSize = true;
         };
@@ -324,8 +338,11 @@ int main()
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
 
-    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>(
-        NovelRT::Windowing::WindowMode::Windowed, NovelRT::Maths::GeoVector2F{1920, 1080});
+    auto wndProvider = std::make_shared<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>>();
+
+    auto finalSize = wndProvider->GetAllVideoModeData().at(0).displayDimensions * 0.75f;
+
+    wndProvider->CreateWindow(NovelRT::Windowing::WindowMode::Windowed, finalSize);
 
     auto inputProvider = std::make_shared<InputProvider<NovelRT::Input::Glfw::GlfwInputBackend>>(wndProvider);
 
@@ -347,22 +364,9 @@ int main()
     auto& gfx = AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)
                     .WithGraphicsDevice(gfxDevice)
                     .WithSurfaceContext(gfxSurfaceContext)
-                    .ConfigureRenderPasses(
-                        [gfxDevice, &passData](auto& manager)
-                        {
-                            GraphicsRenderPassDescription passDesc{};
-                            GraphicsAttachmentDescription attachmentDesc{};
-
-                            attachmentDesc.texelFormat = gfxDevice->GetSwapchain()->GetFormat();
-                            attachmentDesc.loadOp = LoadOp::Load;
-                            attachmentDesc.storeOp = StoreOp::Store;
-                            attachmentDesc.initialLayout = ImageLayout::Present;
-                            attachmentDesc.finalLayout = ImageLayout::Present;
-
-                            passDesc.attachmentDescriptions.push_back(attachmentDesc);
-                            passData.RenderPass = gfxDevice->CreateRenderPass(passDesc);
-                            passData.RenderPassId = manager.RegisterRenderPass(passData.RenderPass);
-                        })
+                    .WithResourceLoader(resourceLoader)
+                    .WithMemoryAllocator(memoryAllocator)
+                    .WithDefaultSpriteRendering()
                     .WithDefaultBackgroundColour(0, 0, 0, 255);
 
     AddScripting(builder)
@@ -389,17 +393,11 @@ int main()
 
     gfx.WithDefaultOrchestrator();
 
-    auto defaultSpriteRenderer = std::make_shared<SpriteRendererSystem<VulkanGraphicsBackend>>(
-        gfxDevice, passData, resourceLoader, memoryAllocator, gfxSurfaceContext);
-
-    builder.Configure([defaultSpriteRenderer](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(defaultSpriteRenderer)); });
-
     builder.Configure(
-        [&wndProvider, &resourceLoader](SystemScheduler& scheduler)
+        [&wndProvider, &resourceLoader, finalSize = finalSize](SystemScheduler& scheduler)
         {
             unused(scheduler.RegisterSystem(std::make_shared<ViewportUpdateSystem>(wndProvider)));
-            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>()));
+            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>(finalSize)));
             unused(scheduler.RegisterSystem(std::make_shared<PoseToSpriteTranslationSystem>(resourceLoader)));
             unused(scheduler.RegisterSystem(std::make_shared<BranchTranslationSystem>()));
             unused(scheduler.RegisterSystem(std::make_shared<SpokenLineTranslationSystem>()));

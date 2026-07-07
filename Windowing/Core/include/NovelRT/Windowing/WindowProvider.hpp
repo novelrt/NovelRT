@@ -5,23 +5,29 @@
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Windowing/VideoModeData.hpp>
+#include <NovelRT/Windowing/WindowMode.hpp>
 
 #include <string>
+#include <vector>
 
 namespace NovelRT::Windowing
 {
     template<typename TBackend>
-    class WindowProvider : public Graphics::IGraphicsSurface
+    class WindowProvider final : public Graphics::IGraphicsSurface
     {
     public:
         WindowProvider() = delete;
-        ~WindowProvider() = default;
+        ~WindowProvider() noexcept final = default;
+
+        [[nodiscard]] std::vector<VideoModeData> GetAllVideoModeData();
+
+        void CreateWindow(NovelRT::Windowing::WindowMode windowMode, Maths::GeoVector2F desiredWindowSize);
 
         void ProcessAllMessages();
 
         [[nodiscard]] bool IsVisible() const noexcept;
         [[nodiscard]] bool ShouldClose() const noexcept;
-
         [[nodiscard]] std::string GetWindowTitle() const noexcept;
         [[nodiscard]] const char* GetClipboardText() const;
         [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
