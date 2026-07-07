@@ -65,9 +65,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
 
   if(declareModule_DYNAMIC_LIBRARIES)
+    set(filepaths)
+    foreach(library IN LISTS declareModule_DYNAMIC_LIBRARIES)
+      list(APPEND filepaths "$<PATH:ABSOLUTE_PATH,NORMALIZE,${library},${CMAKE_CURRENT_SOURCE_DIR}>")
+    endforeach()
+
     file(GENERATE
       OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.local.txt"
-      CONTENT "${declareModule_DYNAMIC_LIBRARIES}")
+      CONTENT "${filepaths}")
   endif()
   file(GENERATE
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt"
@@ -135,33 +140,28 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endforeach()
 
   foreach(file IN LISTS declareModule_HEADERS)
-    string(REGEX REPLACE "^include/" "" headerLoc "${file}")
-    set_source_files_properties("${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "Headers/${headerLoc}")
+    cmake_PATH(GET file PARENT_PATH location)
+    string(REGEX REPLACE "^include/" "" location "${location}")
+    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "Headers/${location}" HEADER_FILE_ONLY ON)
   endforeach()
 
   foreach(file IN LISTS declareModule_RESOURCES)
-    # Copy the resources to their output directory.
-    add_custom_command(
-      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${file}"
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/${file}" "${CMAKE_CURRENT_BINARY_DIR}/${file}"
-      MAIN_DEPENDENCY "${file}"
-      COMMENT "Copying resource ${file}"
-      DEPENDS_EXPLICIT_ONLY)
-    set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "${file}" HEADER_FILE_ONLY ON)
+    cmake_PATH(GET file PARENT_PATH location)
+    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "${location}" HEADER_FILE_ONLY ON)
   endforeach()
 
+  if(APPLE AND declareModule_MACOSX_BUNDLE)
+    set(targetLoc "$<TARGET_BUNDLE_DIR:${cmakeSafeName}>$<$<PLATFORM_ID:Darwin>:/Contents>")
+  else()
+    set(targetLoc "$<TARGET_FILE_DIR:${cmakeSafeName}>")
+  endif()
 
   target_sources(${cmakeSafeName}
     PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${declareModule_RESOURCES}
 
     PUBLIC FILE_SET HEADERS
     BASE_DIRS include
-    FILES ${declareModule_HEADERS}
-
-    PUBLIC FILE_SET resources
-    TYPE HEADERS
-    BASE_DIRS Resources
-    FILES ${declareModule_RESOURCES})
+    FILES ${declareModule_HEADERS})
 
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
@@ -203,9 +203,9 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" paths)]] "\n"
+      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" dynamicLibPaths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
-                             [[  foreach(dynamicLibPath IN LISTS paths)]] "\n"
+                             [[  foreach(dynamicLibPath IN LISTS dynamicLibPaths)]] "\n"
                              [[    if(EXISTS "${dynamicLibPath}")]] "\n"
                              [[      file(READ "${dynamicLibPath}" libs)]] "\n"
                              [[      list(APPEND dynamicLibs ${libs})]] "\n"
@@ -232,7 +232,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       ARCHIVE DESTINATION lib
       BUNDLE DESTINATION apps
       FILE_SET HEADERS DESTINATION include
-      FILE_SET resources DESTINATION bin/Resources
+      RESOURCE DESTINATION share/NovelRT
       LIBRARY DESTINATION lib
       RUNTIME DESTINATION bin)
 

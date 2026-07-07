@@ -3,13 +3,13 @@ include(NovelRTBuildSystem)
 find_package(Vulkan "1.2" REQUIRED
   OPTIONAL_COMPONENTS MoltenVK)
 if(APPLE)
-  if(NOT Vulkan_MoltenVK_FOUND)
-    message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
-  endif()
+  #if(NOT Vulkan_MoltenVK_FOUND)
+  #  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+  #endif()
 
-  cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
-  unset(Vulkan_MoltenVK_LIBRARY CACHE)
-  find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
+  #cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
+  #unset(Vulkan_MoltenVK_LIBRARY CACHE)
+  #find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 endif()
 
 
@@ -125,19 +125,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
 
   DYNAMIC_LIBRARIES
     $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
+
+  RESOURCES
+    $<$<BOOL:${APPLE}>:Apple/vulkan/icd.d/MoltenVK_icd.json>
 )
 
-# On apple we need to provide an ICD for Vulkan to work, but only in the bundle.
-if(APPLE)
-  target_sources(NovelRT-Graphics-Vulkan PUBLIC
-    FILE_SET resources
-    BASE_DIRS Apple
-    FILES Apple/vulkan/icd.d/MoltenVK_icd.json)
-
-  set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json
-    PROPERTIES
-      MACOSX_PACKAGE_LOCATION "vulkan/icd.d/MoltenVK_icd.json"
-      HEADER_FILE_ONLY ON)
-
-  set_property(TARGET NovelRT-Graphics-Vulkan APPEND PROPERTY RESOURCE Apple/vulkan/icd.d/MoltenVK_icd.json)
-endif()
+set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json PROPERTIES
+  MACOSX_PACKAGE_LOCATION "vulkan/icd.d")
