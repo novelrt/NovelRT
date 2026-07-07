@@ -192,6 +192,16 @@ namespace NovelRT::Graphics
         vkCmdEndRenderPass(_commandBuffer);
     }
 
+    void VulkanGraphicsCmdList::CmdBindDescriptorSet(
+        const std::shared_ptr<VulkanGraphicsDescriptorSet> set)
+    {
+            VkDescriptorSet handle = set->GetVulkanDescriptorSet();
+            auto pipeline = set->GetPipeline();
+            auto signature = pipeline->GetSignature();
+            vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                    signature->GetVulkanPipelineLayout(), 0, 1, &handle, 0, nullptr);
+    }
+
     void VulkanGraphicsCmdList::CmdBindDescriptorSets(
         NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<VulkanGraphicsDescriptorSet>>> sets)
     {

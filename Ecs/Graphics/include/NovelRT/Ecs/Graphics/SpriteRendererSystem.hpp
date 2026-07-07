@@ -383,12 +383,10 @@ namespace NovelRT::Ecs::Graphics
 
                     descriptorSetArray[descriptorSetIndex] = descriptorSet;
 
-                    std::array<std::reference_wrapper<
-                                   const std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>>,
-                               1>
+                    const std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>
                         descriptorData{std::cref(descriptorSetArray[descriptorSetIndex])};
 
-                    currentCmdList->CmdBindDescriptorSets(descriptorData);
+                    currentCmdList->CmdBindDescriptorSet(descriptorData);
 
                     descriptorSetIndex++;
 
