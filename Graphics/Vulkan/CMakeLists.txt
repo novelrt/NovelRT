@@ -125,10 +125,14 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
 
   DYNAMIC_LIBRARIES
     $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
-
-  RESOURCES
-    $<$<BOOL:${APPLE}>:Apple/vulkan/icd.d/MoltenVK_icd.json>
 )
 
-set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json PROPERTIES
-  MACOSX_PACKAGE_LOCATION "vulkan/icd.d")
+if(APPLE)
+  target_sources(NovelRT-Graphics-Vulkan
+    PUBLIC FILE_SET resources
+    BASE_DIRS Apple
+    FILES Apple/vulkan/icd.d/MoltenVK_icd.json)
+
+  set_source_files_properties(Apple/vulkan/icd.d/MoltenVK_icd.json PROPERTIES
+    MACOSX_PACKAGE_LOCATION "vulkan/icd.d")
+endif()

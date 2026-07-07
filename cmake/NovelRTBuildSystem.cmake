@@ -99,7 +99,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     OUTPUT_NAME "${moduleOutputName}"
     PDB_NAME "${moduleOutputName}"
     POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS}
-    RESOURCE "${declareModule_RESOURCES}"
     WIN32_EXECUTABLE "${declareModule_WIN32_EXECUTABLE}")
 
   target_compile_features(${cmakeSafeName} PUBLIC cxx_std_20)
@@ -140,13 +139,13 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endforeach()
 
   foreach(file IN LISTS declareModule_HEADERS)
-    cmake_PATH(GET file PARENT_PATH location)
+    cmake_path(GET file PARENT_PATH location)
     string(REGEX REPLACE "^include/" "" location "${location}")
     set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "Headers/${location}" HEADER_FILE_ONLY ON)
   endforeach()
 
   foreach(file IN LISTS declareModule_RESOURCES)
-    cmake_PATH(GET file PARENT_PATH location)
+    cmake_path(GET file PARENT_PATH location)
     set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "${location}" HEADER_FILE_ONLY ON)
   endforeach()
 
@@ -157,11 +156,16 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   endif()
 
   target_sources(${cmakeSafeName}
-    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${declareModule_RESOURCES}
+    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS}
 
     PUBLIC FILE_SET HEADERS
     BASE_DIRS include
-    FILES ${declareModule_HEADERS})
+    FILES ${declareModule_HEADERS}
+
+    PUBLIC FILE_SET resources
+    TYPE HEADERS
+    BASE_DIRS Resources
+    FILES ${declareModule_RESOURCES})
 
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
@@ -232,7 +236,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       ARCHIVE DESTINATION lib
       BUNDLE DESTINATION apps
       FILE_SET HEADERS DESTINATION include
-      RESOURCE DESTINATION share/NovelRT
+      FILE_SET resources DESTINATION share/NovelRT
       LIBRARY DESTINATION lib
       RUNTIME DESTINATION bin)
 
