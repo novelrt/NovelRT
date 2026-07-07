@@ -139,7 +139,8 @@ namespace NovelRT::ResourceManagement::Desktop
         {
             auto* logger = static_cast<NovelRT::Logging::LoggingService*>(png_get_error_ptr(png));
             logger->logError("libpng error: {}", message);
-            throw Exceptions::InvalidOperationException("LibPNG error occured");
+            throw Exceptions::InvalidOperationException(
+                std::format("An illegal operation was attempted inside of libpng. Reason: {}", std::string(message)));
         };
 
         auto handle_warning = [](png_structp png, png_const_charp message)
@@ -180,14 +181,12 @@ namespace NovelRT::ResourceManagement::Desktop
             png_byte bitDepth;
             png_byte interlaceType;
             int interlacePasses;
-        } data = {
-            .width = png_get_image_width(png, info),
-            .height = png_get_image_height(png, info),
-            .colourType = png_get_color_type(png, info),
-            .bitDepth = png_get_bit_depth(png, info),
-            .interlaceType = png_get_interlace_type(png, info),
-            .interlacePasses = 0
-        };
+        } data = {.width = png_get_image_width(png, info),
+                  .height = png_get_image_height(png, info),
+                  .colourType = png_get_color_type(png, info),
+                  .bitDepth = png_get_bit_depth(png, info),
+                  .interlaceType = png_get_interlace_type(png, info),
+                  .interlacePasses = 0};
 
         if (data.bitDepth == 16)
         {
@@ -207,8 +206,7 @@ namespace NovelRT::ResourceManagement::Desktop
             png_set_gray_to_rgb(png);
         }
 
-        if (data.colourType == PNG_COLOR_TYPE_RGB ||
-            data.colourType == PNG_COLOR_TYPE_GRAY ||
+        if (data.colourType == PNG_COLOR_TYPE_RGB || data.colourType == PNG_COLOR_TYPE_GRAY ||
             data.colourType == PNG_COLOR_TYPE_PALETTE)
         {
             png_set_filler(png, 0xFF, PNG_FILLER_AFTER);
