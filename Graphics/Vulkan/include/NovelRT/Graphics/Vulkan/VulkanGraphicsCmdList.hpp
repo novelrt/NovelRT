@@ -56,7 +56,7 @@ namespace NovelRT::Graphics
 
         
         void CmdBindDescriptorSet(
-                const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>
+                const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>&
                 set);
 
         void CmdBindDescriptorSets(

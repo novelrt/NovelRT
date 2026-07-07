@@ -23,6 +23,8 @@
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
 
+#include <functional>
+
 namespace NovelRT::Graphics
 {
     using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
@@ -193,13 +195,14 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsCmdList::CmdBindDescriptorSet(
-        const std::shared_ptr<VulkanGraphicsDescriptorSet> set)
+        const std::shared_ptr<VulkanGraphicsDescriptorSet>& set)
     {
-            VkDescriptorSet handle = set->GetVulkanDescriptorSet();
-            auto pipeline = set->GetPipeline();
-            auto signature = pipeline->GetSignature();
-            vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    signature->GetVulkanPipelineLayout(), 0, 1, &handle, 0, nullptr);
+        std::array<std::reference_wrapper<
+                    const std::shared_ptr<NovelRT::Graphics::VulkanGraphicsDescriptorSet>>,
+                1>
+            descriptorData{std::cref(set)};
+
+        CmdBindDescriptorSets(descriptorData);
     }
 
     void VulkanGraphicsCmdList::CmdBindDescriptorSets(

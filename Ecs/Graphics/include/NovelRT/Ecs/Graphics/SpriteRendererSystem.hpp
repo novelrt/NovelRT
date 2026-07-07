@@ -324,6 +324,7 @@ namespace NovelRT::Ecs::Graphics
 
                 auto* descriptorSetArray = new std::shared_ptr<
                     NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>[worldSpaceCameras.size()];
+                size_t descriptorSetIndex = 0;
 
                 for (auto& cameraData : worldSpaceCameras)
                 {
@@ -380,7 +381,11 @@ namespace NovelRT::Ecs::Graphics
                     descriptorSet->AddMemoryRegionsToInputs(inputRegions);
                     descriptorSet->UpdateDescriptorSetData();
 
+                    descriptorSetArray[descriptorSetIndex] = descriptorSet;
+
                     currentCmdList->CmdBindDescriptorSet(descriptorSet);
+
+                    descriptorSetIndex++;
 
                     currentCmdList->CmdDraw(6, 1, 0, 0);
                 }
