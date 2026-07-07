@@ -28,19 +28,32 @@ target_compile_options(OpenAL
     $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
 
     $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-literal-operator>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-switch>
-
     $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-literal-operator>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-switch>
-
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
 
-    $<$<CXX_COMPILER_ID:MSVC>:/FI ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
-    $<$<CXX_COMPILER_ID:GNU>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
-    $<$<CXX_COMPILER_ID:Clang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
-    $<$<CXX_COMPILER_ID:AppleClang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-declarations>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-declarations>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-literal-operator>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-literal-operator>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-literal-operator>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-invalid-offsetof>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-invalid-offsetof>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-invalid-offsetof>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-switch>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-switch>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-function>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-unused-function>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-unused-function>
+
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>:/FI ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},AppleClang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
 )
 target_compile_options(alcommon
   PRIVATE
@@ -48,17 +61,30 @@ target_compile_options(alcommon
     $<$<CXX_COMPILER_ID:MSVC>:/wd4834>
 
     $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-copy>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-literal-operator>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-switch>
-
     $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-copy>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-literal-operator>
-    $<$<CXX_COMPILER_ID:Clang>:-Wno-switch>
-
     $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-copy>
 
-    $<$<CXX_COMPILER_ID:MSVC>:/FI ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
-    $<$<CXX_COMPILER_ID:GNU>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
-    $<$<CXX_COMPILER_ID:Clang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
-    $<$<CXX_COMPILER_ID:AppleClang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-declarations>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-declarations>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-declarations>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-literal-operator>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-literal-operator>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-deprecated-literal-operator>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-invalid-offsetof>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-invalid-offsetof>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-invalid-offsetof>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-switch>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-switch>
+
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-unused-function>
+    $<$<CXX_COMPILER_ID:Clang>:-Wno-unused-function>
+    $<$<CXX_COMPILER_ID:AppleClang>:-Wno-unused-function>
+
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>:/FI ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},Clang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
+    $<$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},AppleClang>:-include ${CMAKE_CURRENT_BINARY_DIR}/novelrt-cstdint-include.hpp>
 )

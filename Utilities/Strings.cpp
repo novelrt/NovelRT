@@ -58,10 +58,10 @@ namespace NovelRT::Utilities
         auto lengthInUtf16{CFStringGetLength(input)};
         auto maxLengthInUtf8{CFStringGetMaximumSizeForEncoding(lengthInUtf16, kCFStringEncodingUTF8) +
                              1}; // <-- leave room for null terminator
-        std::vector<char> localBuffer(maxLengthInUtf8);
+        std::vector<char> localBuffer(static_cast<size_t>(maxLengthInUtf8));
 
-        if (CFStringGetCString(input, localBuffer.data(), maxLengthInUtf8, maxLengthInUtf8))
-            return localBuffer.data();
+        if (CFStringGetCString(input, localBuffer.data(), maxLengthInUtf8, kCFStringEncodingUTF8))
+            return std::string(localBuffer.data(), localBuffer.size());
 
         return {};
     }
