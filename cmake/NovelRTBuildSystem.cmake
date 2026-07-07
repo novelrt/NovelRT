@@ -13,6 +13,7 @@ cmake_policy(VERSION 3.29..3.31)
 
 define_property(TARGET PROPERTY NOVELRT_DYNAMIC_LIBRARIES)
 define_property(TARGET PROPERTY NOVELRT_RESOURCES)
+define_property(TARGET PROPERTY NOVELRT_RESOURCES_DESTINATIONS)
 
 #[=======================================================================[.rst:
 .. command:: NovelRTBuildSystem_DeclareModule
@@ -22,16 +23,7 @@ define_property(TARGET PROPERTY NOVELRT_RESOURCES)
 #]=======================================================================]
 function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
 
-  #cmake_language(DEFER DIRECTORY ${CMAKE_SOURCE_DIR} CANCEL_CALL novelRTDeferredGeneration)
-  #cmake_language(DEFER DIRECTORY ${CMAKE_SOURCE_DIR} ID novelRTDeferredGeneration CALL __NovelRTBuildSystem_includeModules)
-
-  string(TOLOWER "${moduleName}" moduleNameLower)
-  set(savedDetailsPropertyName "_NovelRTBuildSystem_declaredModules_${moduleNameLower}")
-
   cmake_parse_arguments(PARSE_ARGV 2 "declareModule" "MACOSX_BUNDLE;WIN32_EXECUTABLE" "" "DEPENDS;OPTIONAL_DEPENDS;SOURCES;HEADERS;RESOURCES;COMPILE_FEATURES;COMPILE_DEFINITIONS;COMPILE_OPTIONS;PRECOMPILE_HEADERS;INCLUDE_DIRECTORIES;LINK_LIBRARIES;DYNAMIC_LIBRARIES")
-  set(dependsClosure ${declareModule_DEPENDS} ${declareModule_OPTIONAL_DEPENDS})
-  set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_DEPENDS ${dependsClosure})
-  set_property(GLOBAL PROPERTY ${savedDetailsPropertyName}_OPTIONAL_DEPENDS ${declareModule_OPTIONAL_DEPENDS})
 
   set(validKinds "LIBRARY;EXECUTABLE")
   if(NOT (moduleKind IN_LIST validKinds))
@@ -146,31 +138,63 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   foreach(file IN LISTS declareModule_HEADERS)
     cmake_path(GET file PARENT_PATH location)
     string(REGEX REPLACE "^include/" "" location "${location}")
-    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTIES MACOSX_PACKAGE_LOCATION "Headers/${location}")
+    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" PROPERTIES MACOSX_PACKAGE_LOCATION "Headers/${location}")
   endforeach()
 
-  foreach(file IN LISTS declareModule_RESOURCES)
-    cmake_path(GET file PARENT_PATH location)
-    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${file}" DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTIES MACOSX_PACKAGE_LOCATION "${location}")
-  endforeach()
-
-  if(APPLE AND declareModule_MACOSX_BUNDLE)
-    set(targetLoc "$<TARGET_BUNDLE_DIR:${cmakeSafeName}>$<$<PLATFORM_ID:Darwin>:/Contents>")
-  else()
-    set(targetLoc "$<TARGET_FILE_DIR:${cmakeSafeName}>")
+  set(dynamicLibs)
+  if(declareModule_DYNAMIC_LIBRARIES)
+    list(APPEND dynamicLibs "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.local.txt")
   endif()
+  foreach(depends IN LISTS declareModule_DEPENDS)
+    list(APPEND dynamicLibs $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_DYNAMIC_LIBRARIES>>)
+  endforeach()
+  foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
+    list(APPEND dynamicLibs $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_DYNAMIC_LIBRARIES>>>)
+  endforeach()
+  list(REMOVE_DUPLICATES dynamicLibs)
+  set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_DYNAMIC_LIBRARIES "${dynamicLibs}")
+
+  set(localResources)
+  set(resourceClosure)
+  set(resourceDestinations)
+  set(isDestinationArgument OFF)
+  foreach(keyword IN LISTS declareModule_RESOURCES)
+
+    if(keyword STREQUAL "DESTINATION")
+      set(isDestinationArgument ON)
+    elseif(isDestinationArgument)
+      set(isDestinationArgument OFF)
+
+      list(POP_BACK resourceDestinations)
+      list(APPEND resourceDestinations "${keyword}")
+    else()
+      string(GENEX_STRIP "${keyword}" resource)
+      cmake_path(GET resource PARENT_PATH location)
+
+      list(APPEND localResources "${keyword}")
+      list(APPEND resourceClosure "$<PATH:ABSOLUTE_PATH,NORMALIZE,${keyword},${CMAKE_CURRENT_SOURCE_DIR}>")
+      list(APPEND resourceDestinations "${location}")
+    endif()
+  endforeach()
+  foreach(depends IN LISTS declareModule_DEPENDS)
+    list(APPEND resourceClosure $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>)
+    list(APPEND resourceDestinations $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES_DESTINATIONS>>)
+  endforeach()
+  foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
+    list(APPEND resourceClosure $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>>)
+    list(APPEND resourceDestinations $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES_DESTINATIONS>>>)
+  endforeach()
+
+  set_target_properties(${cmakeSafeName} PROPERTIES
+    NOVELRT_RESOURCES "${resourceClosure}"
+    NOVELRT_RESOURCES_DESTINATIONS "${resourceDestinations}")
 
   target_sources(${cmakeSafeName}
-    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${declareModule_RESOURCES}
+    PRIVATE ${declareModule_SOURCES} ${declareModule_HEADERS} ${localResources}
 
     PUBLIC FILE_SET HEADERS
     BASE_DIRS include
-    FILES ${declareModule_HEADERS}
-
-    PUBLIC FILE_SET resources
-    TYPE HEADERS
-    BASE_DIRS Resources
-    FILES ${declareModule_RESOURCES})
+    FILES ${declareModule_HEADERS})
 
   target_link_libraries(${cmakeSafeName} PUBLIC ${declareModule_DEPENDS})
   foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
@@ -196,32 +220,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_link_libraries(${cmakeSafeName} ${declareModule_LINK_LIBRARIES})
   endif()
 
-  set(dynamicLibs)
-  if(declareModule_DYNAMIC_LIBRARIES)
-    list(APPEND dynamicLibs "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.local.txt")
-  endif()
-  foreach(depends IN LISTS declareModule_DEPENDS)
-    list(APPEND dynamicLibs $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_DYNAMIC_LIBRARIES>>)
-  endforeach()
-  foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
-    list(APPEND dynamicLibs $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_DYNAMIC_LIBRARIES>>>)
-  endforeach()
-  list(REMOVE_DUPLICATES dynamicLibs)
-  set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_DYNAMIC_LIBRARIES "${dynamicLibs}")
-
-  set(resources)
-  foreach(resource IN LISTS declareModule_RESOURCES)
-    list(APPEND resources "$<PATH:ABSOLUTE_PATH,NORMALIZE,${resource},${CMAKE_CURRENT_SOURCE_DIR}>")
-  endforeach()
-  foreach(depends IN LISTS declareModule_DEPENDS)
-    list(APPEND resources $<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>)
-  endforeach()
-  foreach(depends IN LISTS declareModule_OPTIONAL_DEPENDS)
-    list(APPEND resources $<$<TARGET_EXISTS:${depends}>:$<GENEX_EVAL:$<TARGET_PROPERTY:${depends},NOVELRT_RESOURCES>>>)
-  endforeach()
-  list(REMOVE_DUPLICATES resources)
-  set_target_properties(${cmakeSafeName} PROPERTIES NOVELRT_RESOURCES "${resources}")
-
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       set(fixupStr "include(BundleUtilities)\n")
@@ -237,16 +235,42 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
-                             [[  file(COPY ${dynamicLibs} DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" FOLLOW_SYMLINK_CHAIN)]] "\n"
+                             [[  file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" TYPE FILE FILES ${dynamicLibs} USE_SOURCE_PERMISSIONS FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  set(installedDynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS dynamicLibs)]] "\n"
                              [[    get_filename_component(dynamicLibName "${dynamicLibPath}" NAME)]] "\n"
                              [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks/${dynamicLibName}")]] "\n"
                              [[  endforeach()]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
-
       install(CODE "${fixupStr}")
+
+      set(resourcesStr "set(resources \";$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>\")\n")
+      string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
+                                 [[  list(LENGTH resources resourceCount)]] "\n"
+                                 [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
+                                 [[  set(seen)]]
+                                 [[  foreach(index RANGE "${resourceCount}")]] "\n"
+                                 [[    list(GET resources "${index}" resource)]] "\n"
+                                 [[    list(GET destinations "${index}" destination)]] "\n"
+                                 [[    if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
+                                 [[      file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
+                                 [[    endif()]] "\n"
+                                 [[  endforeach()]])
+    install(CODE "${resourcesStr}")
     endif()
+
+    set(resourcesStr "set(resources \";$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>\")\n")
+    string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
+                               [[  list(LENGTH resources resourceCount)]] "\n"
+                               [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
+                               [[  foreach(index RANGE "${resourceCount}")]] "\n"
+                               [[    list(GET resources "${index}" resource)]] "\n"
+                               [[    list(GET destinations "${index}" destination)]] "\n"
+                               [[    if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
+                               [[      file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
+                               [[    endif()]] "\n"
+                               [[  endforeach()]])
+    install(CODE "${resourcesStr}")
 
     install(
       TARGETS ${cmakeSafeName}
@@ -254,7 +278,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       ARCHIVE DESTINATION lib
       BUNDLE DESTINATION apps
       FILE_SET HEADERS DESTINATION include
-      FILE_SET resources DESTINATION share/NovelRT
       LIBRARY DESTINATION lib
       RUNTIME DESTINATION bin)
 
