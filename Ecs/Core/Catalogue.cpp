@@ -59,7 +59,7 @@ namespace NovelRT::Ecs
         return _scheduler.ScheduleSystemJob(std::move(jobFnPtr));
     }
 
-    void Catalogue::CancelSystemJob(SystemId jobId)
+    void Catalogue::CancelSystemJob(SystemId jobId) noexcept
     {
         _scheduler.CancelSystemJob(jobId);
     }
