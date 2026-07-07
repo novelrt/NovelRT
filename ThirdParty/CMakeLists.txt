@@ -149,7 +149,7 @@ function(enumerate_targets dir handler)
 endfunction()
 
 function(skip_linting target)
-  set_target_properties("${target}" PROPERTIES SKIP_LINTING ON)
+  set_target_properties("${target}" PROPERTIES SKIP_LINTING ON SYSTEM ON)
   get_property(sources TARGET "${target}" PROPERTY SOURCES)
   foreach(source IN LISTS sources)
     set_property(SOURCE "${source}" PROPERTY SKIP_LINTING ON)
