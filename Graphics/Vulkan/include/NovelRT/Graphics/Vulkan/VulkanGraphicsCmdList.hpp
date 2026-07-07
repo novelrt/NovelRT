@@ -54,6 +54,11 @@ namespace NovelRT::Graphics
 
         void CmdEndRenderPass();
 
+        
+        void CmdBindDescriptorSet(
+                const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>&
+                set);
+
         void CmdBindDescriptorSets(
             NovelRT::Utilities::Span<
                 std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>>>

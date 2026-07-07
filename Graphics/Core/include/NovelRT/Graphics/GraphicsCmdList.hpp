@@ -84,6 +84,10 @@ namespace NovelRT::Graphics
 
         void CmdEndRenderPass();
 
+        void CmdBindDescriptorSet(
+            const std::shared_ptr<GraphicsDescriptorSet<TBackend>>&
+                set);
+
         void CmdBindDescriptorSets(
             NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>>
                 sets);

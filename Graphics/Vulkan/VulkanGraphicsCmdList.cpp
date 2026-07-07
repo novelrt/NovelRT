@@ -23,6 +23,8 @@
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
 
+#include <functional>
+
 namespace NovelRT::Graphics
 {
     using VulkanGraphicsAdapter = GraphicsAdapter<Vulkan::VulkanGraphicsBackend>;
@@ -190,6 +192,17 @@ namespace NovelRT::Graphics
     void VulkanGraphicsCmdList::CmdEndRenderPass()
     {
         vkCmdEndRenderPass(_commandBuffer);
+    }
+
+    void VulkanGraphicsCmdList::CmdBindDescriptorSet(
+        const std::shared_ptr<VulkanGraphicsDescriptorSet>& set)
+    {
+        std::array<std::reference_wrapper<
+                    const std::shared_ptr<NovelRT::Graphics::VulkanGraphicsDescriptorSet>>,
+                1>
+            descriptorData{std::cref(set)};
+
+        CmdBindDescriptorSets(descriptorData);
     }
 
     void VulkanGraphicsCmdList::CmdBindDescriptorSets(
