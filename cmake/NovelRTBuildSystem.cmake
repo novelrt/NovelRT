@@ -248,7 +248,6 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
                                  [[  list(LENGTH resources resourceCount)]] "\n"
                                  [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
-                                 [[  set(seen)]]
                                  [[  foreach(index RANGE "${resourceCount}")]] "\n"
                                  [[    list(GET resources "${index}" resource)]] "\n"
                                  [[    list(GET destinations "${index}" destination)]] "\n"
