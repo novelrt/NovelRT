@@ -10,7 +10,15 @@ if(APPLE)
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 
-  find_file(Vulkan_MoltenVK_ICD NAMES "MoltenVK_icd.json" HINTS ENV VK_ICD_FILENAMES REQUIRED)
+  set(icdFiles "${VK_ICD_FILENAMES};${VK_DRIVER_FILES}")
+  list(TRANSFORM icdFiles REPLACE ":" ";")
+  set(icds)
+  foreach(file IN LISTS icdFiles)
+    cmake_path(GET file PARENT_PATH dir)
+    list(APPEND icds "${dir}")
+  endforeach()
+
+  find_file(Vulkan_MoltenVK_ICD NAMES "MoltenVK_icd.json" HINTS ${icds} REQUIRED)
   file(READ "${Vulkan_MoltenVK_ICD}" icd)
   string(JSON icd SET "${icd}" "ICD" "library_path" [["$<$<PLATFORM_ID:Darwin>:../>../../Frameworks/libMoltenVK.dylib"]])
 
