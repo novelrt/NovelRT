@@ -13,6 +13,7 @@ namespace NovelRT::Ecs
 {
     using EntityId = NovelRT::Atom;
     using ComponentTypeId = NovelRT::Atom;
+    using SystemId = NovelRT::Atom;
 
     std::unordered_map<std::type_index, ComponentTypeId>& GetComponentTypeIds() noexcept;
 

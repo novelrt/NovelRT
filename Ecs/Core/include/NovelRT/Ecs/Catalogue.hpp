@@ -8,7 +8,6 @@
 #include <NovelRT/Ecs/ImplDetail.hpp>
 
 #include <cstddef>
-#include <cstdint>
 #include <tuple>
 #include <vector>
 
@@ -140,6 +139,23 @@ namespace NovelRT::Ecs
         requires Detail::ValidScheduleWithCompletion<TWork, TCompletion> void ScheduleWithCompletion(
             TWork&& work,
             TCompletion&& completion) noexcept;
+
+        /**
+         * @brief Schedules a system-based job to run over one or more update cycles.
+         *
+         * @param jobFnptr a bound function, lambda, etc. that matches the signature of a regular system,
+         * which returns a boolean to indicate if the work is finished (true) or if it is ongoing (false).
+         *
+         * @return The SystemId that represents this system-based job.
+         */
+        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr);
+
+        /**
+         * @brief Cancels a currently running system-based job based on the given ID.
+         *
+         * @param The ID of the system-based job to cancel.
+         */
+        void CancelSystemJob(SystemId jobId) noexcept;
     };
 }
 

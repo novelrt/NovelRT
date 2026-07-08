@@ -8,6 +8,7 @@
 #include <NovelRT/Ecs/UnsafeComponentView.hpp>
 
 #include <algorithm>
+#include <utility>
 
 namespace NovelRT::Ecs
 {
@@ -51,5 +52,15 @@ namespace NovelRT::Ecs
     UnsafeComponentView Catalogue::GetComponentViewById(ComponentTypeId componentTypeId)
     {
         return UnsafeComponentView(_poolId, _componentCache.GetComponentBufferById(componentTypeId));
+    }
+
+    SystemId Catalogue::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr)
+    {
+        return _scheduler.ScheduleSystemJob(std::move(jobFnPtr));
+    }
+
+    void Catalogue::CancelSystemJob(SystemId jobId) noexcept
+    {
+        _scheduler.CancelSystemJob(jobId);
     }
 } // namespace NovelRT::Ecs

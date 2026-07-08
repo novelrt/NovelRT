@@ -48,6 +48,7 @@
 
 #include <NovelRT/Utilities/Macros.hpp>
 
+#include <iostream>
 #include <memory>
 #include <optional>
 
@@ -85,6 +86,13 @@ public:
         {
             return;
         }
+
+        unused(catalogue.ScheduleSystemJob(
+            [](auto, auto)
+            {
+                std::cout << "HELLO FROM JOB!\n";
+                return true;
+            }));
 
         auto [spriteView, transformView, graphView, cameraView, viewportView] = catalogue.GetComponentViews<
             NovelRT::Ecs::Graphics::Components::Sprite, NovelRT::Ecs::Components::TransformComponent,
@@ -161,7 +169,6 @@ int main()
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 
     SystemSchedulerBuilder builder{};
-
 
     AddDefaults(builder);
     AddGraphics<Vulkan::VulkanGraphicsBackend>(builder)

@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "NovelRT/Timing/Timestamp.hpp"
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
@@ -9,12 +10,30 @@
 #include <NovelRT/Maths/Utilities.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 
+#include <atomic>
 #include <cassert>
 #include <functional>
 #include <unordered_map>
+#include <utility>
 
 namespace NovelRT::Ecs
 {
+    SystemId SystemScheduler::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr)
+    {
+        static AtomFactory& systemIdFactory = AtomFactoryDatabase::GetFactory("SystemId");
+        SystemId id = systemIdFactory.GetNext();
+
+        _systemJobs.emplace(std::piecewise_construct, std::forward_as_tuple(id),
+                            std::forward_as_tuple(std::move(jobFnPtr)));
+
+        return id;
+    }
+
+    void SystemScheduler::CancelSystemJob(SystemId jobId)
+    {
+        _jobCancellations.emplace(jobId);
+    }
+
     void SystemScheduler::RebuildSystemDependencyTreeLayers()
     {
         // Special casing terminal systems e.g. the render orchestrator with this. - Matt J.
@@ -126,6 +145,8 @@ namespace NovelRT::Ecs
           _ecsTasks(std::make_unique<tbb::task_group>()),
           _asyncTasks(std::make_unique<tbb::task_group>()),
           _pendingCompletions(),
+          _systemJobs(),
+          _jobCancellations(),
           _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
           _hasExecutedAtLeastOnce(false)
     {
@@ -146,6 +167,8 @@ namespace NovelRT::Ecs
           _ecsTasks(std::move(other._ecsTasks)),
           _asyncTasks(std::move(other._asyncTasks)),
           _pendingCompletions(std::move(other._pendingCompletions)),
+          _systemJobs(std::move(other._systemJobs)),
+          _jobCancellations(std::move(other._jobCancellations)),
           _currentDelta(other._currentDelta),
           _hasExecutedAtLeastOnce(other._hasExecutedAtLeastOnce)
     {
@@ -163,8 +186,10 @@ namespace NovelRT::Ecs
         _asyncArena = std::move(other._asyncArena);
         _ecsTasks = std::move(other._ecsTasks);
         _asyncTasks = std::move(other._asyncTasks);
-        _currentDelta = other._currentDelta;
         _pendingCompletions = std::move(other._pendingCompletions);
+        _systemJobs = std::move(other._systemJobs);
+        _jobCancellations = std::move(other._jobCancellations);
+        _currentDelta = other._currentDelta;
         _hasExecutedAtLeastOnce = other._hasExecutedAtLeastOnce;
 
         return *this;
@@ -275,12 +300,57 @@ namespace NovelRT::Ecs
                         _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
                     }
 
+                    for (auto& [_, systemJob] : _systemJobs)
+                    {
+                        unused(_);
+
+                        _ecsTasks->run(
+                            [&systemJob, this]()
+                            {
+                                auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
+                                systemJob.isDone = systemJob.jobFnPtr(_currentDelta, Catalogue(poolId, *this));
+                            });
+                    }
+
+                    _ecsTasks->wait();
+
+                    bool hadTombstones = false;
+
+                    // a bit ugly, but couldn't think of a better way to do it right now - Matt J.
+                    for (auto it = _systemJobs.begin(); it != _systemJobs.end();)
+                    {
+                        if (it->second.isDone)
+                        {
+                            hadTombstones = true;
+                            it = _systemJobs.unsafe_erase(it);
+                        }
+                        else
+                        {
+                            it++;
+                        }
+                    }
+
+                    SystemId cancellationId = 0ULL;
+
+                    while (_jobCancellations.try_pop(cancellationId))
+                    {
+                        _systemJobs.unsafe_erase(cancellationId);
+                    }
+
+                    if (hadTombstones)
+                    {
+                        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
+                        _entityCache.ProcessEntityRegistrationRequestsFromThreads();
+                        _entityCache.ProcessEntityDeletionRequestsFromThreads();
+                        _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
+                    }
+
                     for (SystemId systemId : layer)
                     {
                         _ecsTasks->run(
                             [&, systemId]()
                             {
-                                size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
+                                auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
                                 _systems[systemId](_currentDelta, Catalogue(poolId, *this));
                             });
                     }
