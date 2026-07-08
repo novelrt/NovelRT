@@ -257,11 +257,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
-                             [[  file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks" TYPE FILE FILES ${dynamicLibs} USE_SOURCE_PERMISSIONS FOLLOW_SYMLINK_CHAIN)]] "\n"
+                             [[  file(INSTALL DESTINATION "$<TARGET_BUNDLE_CONTENTS_DIR:]] "${cmakeSafeName}" [[>/Frameworks" TYPE FILE FILES ${dynamicLibs} USE_SOURCE_PERMISSIONS FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  set(installedDynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS dynamicLibs)]] "\n"
                              [[    get_filename_component(dynamicLibName "${dynamicLibPath}" NAME)]] "\n"
-                             [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/Frameworks/${dynamicLibName}")]] "\n"
+                             [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_CONTENTS_DIR:]] "${cmakeSafeName}" [[>/Frameworks/${dynamicLibName}")]] "\n"
                              [[  endforeach()]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
       install(CODE "${fixupStr}")
@@ -277,7 +277,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                                  [[      list(GET resources "${index}" resource)]] "\n"
                                  [[      list(GET destinations "${index}" destination)]] "\n"
                                  [[      if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
-                                 [[        file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
+                                 [[        file(INSTALL DESTINATION "$<TARGET_BUNDLE_CONTENTS_DIR:]] "${cmakeSafeName}" [[>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
                                  [[      endif()]] "\n"
                                  [[    endforeach()]] "\n"
                                  [[  endif()]] "\n"
@@ -311,6 +311,24 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       FILE_SET HEADERS DESTINATION include
       LIBRARY DESTINATION lib
       RUNTIME DESTINATION bin)
+
+    if(APPLE AND declareModule_MACOSX_BUNDLE)
+      set(resourcesStr "cmake_policy(PUSH)\n")
+      string(APPEND resourcesStr [[  cmake_policy(SET CMP0007 NEW)]] "\n"
+                                 [[  set(destinations "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
+                                 [[  list(LENGTH destinations destinationCount)]] "\n"
+                                 [[  if("${destinationCount}" GREATER "0")]] "\n"
+                                 [[    math(EXPR destinationCount "${destinationCount} - 1")]] "\n"
+                                 [[    foreach(index RANGE "${destinationCount}")]] "\n"
+                                 [[      list(GET destinations "${index}" destination)]] "\n"
+                                 [[      if(NOT "${destination}" STREQUAL "")]] "\n"
+                                 [[        file(REMOVE_RECURSE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/apps/$<TARGET_BUNDLE_DIR_NAME:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents/MacOS>/${destination}")]] "\n"
+                                 [[      endif()]] "\n"
+                                 [[    endforeach()]] "\n"
+                                 [[  endif()]] "\n"
+                                 [[  cmake_policy(POP)]])
+      install(CODE "${resourcesStr}")
+    endif()
 
     if(WIN32 AND moduleKind STREQUAL "EXECUTABLE")
       install(FILES $<TARGET_PDB_FILE:${cmakeSafeName}> DESTINATION bin OPTIONAL)
