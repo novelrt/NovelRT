@@ -126,5 +126,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
 
   RESOURCES
-    $<$<BOOL:${APPLE}>:Apple/vulkan/icd.d/MoltenVK_icd.json> DESTINATION "vulkan/icd.d"
+    $<$<BOOL:${APPLE}>:Apple/vulkan/icd.d/MoltenVK_icd.json> DESTINATION "$<$<PLATFORM_ID:Darwin>:Resources/>vulkan/icd.d"
 )
