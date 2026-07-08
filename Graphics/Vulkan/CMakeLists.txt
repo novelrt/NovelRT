@@ -25,8 +25,6 @@ if(APPLE)
   file(READ "${Vulkan_MoltenVK_ICD}" icd)
   string(JSON icd SET "${icd}" "ICD" "library_path" [["$<$<PLATFORM_ID:Darwin>:../>../../Frameworks/libMoltenVK.dylib"]])
   file(GENERATE OUTPUT "MoltenVK_icd.json" CONTENT "${icd}")
-
-  message(STATUS "ICD content:" ${icd})
 endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan

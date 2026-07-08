@@ -220,6 +220,28 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
     target_link_libraries(${cmakeSafeName} ${declareModule_LINK_LIBRARIES})
   endif()
 
+  set(resourcesStr "cmake_policy(PUSH)\n")
+  string(APPEND resourcesStr [[  cmake_policy(SET CMP0007 NEW)]] "\n"
+                             [[  set(resources "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES>>")]] "\n"
+                             [[  set(destinations "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
+                             [[  list(LENGTH resources resourceCount)]] "\n"
+                             [[  if("${resourceCount}" GREATER "0")]] "\n"
+                             [[    math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
+                             [[    foreach(index RANGE "${resourceCount}")]] "\n"
+                             [[      list(GET resources "${index}" resource)]] "\n"
+                             [[      list(GET destinations "${index}" destination)]] "\n"
+                             [[      if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
+                             [[        file(COPY "${resource}" DESTINATION "$<TARGET_FILE_DIR:]] "${cmakeSafeName}" [[>/${destination}" USE_SOURCE_PERMISSIONS)]] "\n"
+                             [[      endif()]] "\n"
+                             [[    endforeach()]] "\n"
+                             [[  endif()]] "\n"
+                             [[  cmake_policy(POP)]])
+  file(GENERATE OUTPUT "NovelRT_CopyResources.cmake" CONTENT "${resourcesStr}")
+
+  add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_CopyResources.cmake"
+    COMMAND_EXPAND_LISTS)
+
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       set(fixupStr "include(BundleUtilities)\n")
