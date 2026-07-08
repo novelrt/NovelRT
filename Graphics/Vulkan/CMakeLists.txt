@@ -9,8 +9,13 @@ if(APPLE)
   cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
-endif()
 
+  find_file(Vulkan_MoltenVK_ICD NAMES "MoltenVK_icd.json" HINTS ENV VK_ICD_FILENAMES REQUIRED)
+  file(READ "${Vulkan_MoltenVK_ICD}" icd)
+  string(JSON icd SET "${icd}" "ICD" "library_path" [["$<$<PLATFORM_ID:Darwin>:../>../../Frameworks/libMoltenVK.dylib"]])
+
+  file(GENERATE OUTPUT "MoltenVK_icd.json" CONTENT "${icd}")
+endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
   DEPENDS
@@ -126,5 +131,5 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
 
   RESOURCES
-    $<$<BOOL:${APPLE}>:Apple/vulkan/icd.d/MoltenVK_icd.json> DESTINATION "$<$<PLATFORM_ID:Darwin>:Resources/>vulkan/icd.d"
+    $<$<BOOL:${APPLE}>:${CMAKE_CURRENT_BINARY_DIR}/MoltenVK_icd.json> DESTINATION "$<$<PLATFORM_ID:Darwin>:Resources/>vulkan/icd.d"
 )
