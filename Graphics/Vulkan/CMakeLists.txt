@@ -10,7 +10,7 @@ if(APPLE)
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 
-  set(icdFiles "${VK_ICD_FILENAMES};${VK_DRIVER_FILES}")
+  set(icdFiles "$ENV{VK_ICD_FILENAMES};$ENV{VK_DRIVER_FILES}")
   message(STATUS "ICD files: " ${icdFiles})
 
   list(TRANSFORM icdFiles REPLACE ":" ";")
