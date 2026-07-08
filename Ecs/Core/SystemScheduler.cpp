@@ -308,8 +308,7 @@ namespace NovelRT::Ecs
                             [&systemJob, this]()
                             {
                                 auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
-                                systemJob.isDone.store(systemJob.jobFnPtr(_currentDelta, Catalogue(poolId, *this)),
-                                                       std::memory_order_relaxed);
+                                systemJob.isDone = systemJob.jobFnPtr(_currentDelta, Catalogue(poolId, *this));
                             });
                     }
 
@@ -320,7 +319,7 @@ namespace NovelRT::Ecs
                     // a bit ugly, but couldn't think of a better way to do it right now - Matt J.
                     for (auto it = _systemJobs.begin(); it != _systemJobs.end();)
                     {
-                        if (it->second.isDone.load(std::memory_order_relaxed))
+                        if (it->second.isDone)
                         {
                             hadTombstones = true;
                             it = _systemJobs.unsafe_erase(it);

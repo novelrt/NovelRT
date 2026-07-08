@@ -10,7 +10,6 @@
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 #include <NovelRT/Timing/Timestamp.hpp>
 
-#include <atomic>
 #include <functional>
 #include <memory>
 #include <span>
@@ -43,7 +42,7 @@ namespace NovelRT::Ecs
         struct SystemJobInfo
         {
             std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr;
-            std::atomic_bool isDone{false};
+            bool isDone = false;
 
             explicit SystemJobInfo(std::function<bool(Timing::Timestamp, Catalogue)> job) noexcept
                 : jobFnPtr(std::move(job))
