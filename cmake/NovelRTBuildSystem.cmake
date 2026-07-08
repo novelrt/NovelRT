@@ -247,6 +247,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
       set(resourcesStr "set(resources \";$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>\")\n")
       string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
                                  [[  list(LENGTH resources resourceCount)]] "\n"
+                                 [[  message(STATUS "Resources to bundle (${resourceCount}): ${resources}")]] "\n"
+                                 [[  message(STATUS "Resource destinations: ${destinations}")]] "\n"
                                  [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
                                  [[  foreach(index RANGE "${resourceCount}")]] "\n"
                                  [[    list(GET resources "${index}" resource)]] "\n"
@@ -255,12 +257,14 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                                  [[      file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
                                  [[    endif()]] "\n"
                                  [[  endforeach()]])
-    install(CODE "${resourcesStr}")
+      install(CODE "${resourcesStr}")
     endif()
 
     set(resourcesStr "set(resources \";$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>\")\n")
     string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
                                [[  list(LENGTH resources resourceCount)]] "\n"
+                               [[  message(STATUS "Resources to install (${resourceCount}): ${resources}")]] "\n"
+                               [[  message(STATUS "Resource destinations: ${destinations}")]] "\n"
                                [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
                                [[  foreach(index RANGE "${resourceCount}")]] "\n"
                                [[    list(GET resources "${index}" resource)]] "\n"
