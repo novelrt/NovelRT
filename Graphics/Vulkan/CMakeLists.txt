@@ -11,12 +11,16 @@ if(APPLE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 
   set(icdFiles "${VK_ICD_FILENAMES};${VK_DRIVER_FILES}")
+  message(STATUS "ICD files: " ${icdFiles})
+
   list(TRANSFORM icdFiles REPLACE ":" ";")
   set(icds)
   foreach(file IN LISTS icdFiles)
     cmake_path(GET file PARENT_PATH dir)
     list(APPEND icds "${dir}")
   endforeach()
+
+  message(STATUS "Vulkan ICD locations: " ${icds})
 
   find_file(Vulkan_MoltenVK_ICD NAMES "MoltenVK_icd.json" HINTS ${icds} REQUIRED)
   file(READ "${Vulkan_MoltenVK_ICD}" icd)
