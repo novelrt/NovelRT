@@ -244,35 +244,41 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
       install(CODE "${fixupStr}")
 
-      set(resourcesStr "set(resources \";$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>\")\n")
-      string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
+      set(resourcesStr "cmake_policy(PUSH)\n")
+      string(APPEND resourcesStr [[  cmake_policy(SET CMP0007 NEW)]] "\n"
+                                 [[  set(resources "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES>>")]] "\n"
+                                 [[  set(destinations "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
                                  [[  list(LENGTH resources resourceCount)]] "\n"
-                                 [[  message(STATUS "Resources to bundle (${resourceCount}): ${resources}")]] "\n"
-                                 [[  message(STATUS "Resource destinations: ${destinations}")]] "\n"
-                                 [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
-                                 [[  foreach(index RANGE "${resourceCount}")]] "\n"
-                                 [[    list(GET resources "${index}" resource)]] "\n"
-                                 [[    list(GET destinations "${index}" destination)]] "\n"
-                                 [[    if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
-                                 [[      file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
-                                 [[    endif()]] "\n"
-                                 [[  endforeach()]])
+                                 [[  if("${resourceCount}" GREATER "0")]] "\n"
+                                 [[    math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
+                                 [[    foreach(index RANGE "${resourceCount}")]] "\n"
+                                 [[      list(GET resources "${index}" resource)]] "\n"
+                                 [[      list(GET destinations "${index}" destination)]] "\n"
+                                 [[      if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
+                                 [[        file(INSTALL DESTINATION "$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>$<$<PLATFORM_ID:Darwin>:/Contents>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
+                                 [[      endif()]] "\n"
+                                 [[    endforeach()]] "\n"
+                                 [[  endif()]] "\n"
+                                 [[  cmake_policy(POP)]])
       install(CODE "${resourcesStr}")
     endif()
 
-    set(resourcesStr "set(resources \";$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>\")\n")
-    string(APPEND resourcesStr [[  set(destinations ";$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
+    set(resourcesStr "cmake_policy(PUSH)\n")
+    string(APPEND resourcesStr [[  cmake_policy(SET CMP0007 NEW)]] "\n"
+                               [[  set(resources "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES>>")]] "\n"
+                               [[  set(destinations "$<GENEX_EVAL:$<TARGET_PROPERTY:]] "${cmakeSafeName}" [[,NOVELRT_RESOURCES_DESTINATIONS>>")]] "\n"
                                [[  list(LENGTH resources resourceCount)]] "\n"
-                               [[  message(STATUS "Resources to install (${resourceCount}): ${resources}")]] "\n"
-                               [[  message(STATUS "Resource destinations: ${destinations}")]] "\n"
-                               [[  math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
-                               [[  foreach(index RANGE "${resourceCount}")]] "\n"
-                               [[    list(GET resources "${index}" resource)]] "\n"
-                               [[    list(GET destinations "${index}" destination)]] "\n"
-                               [[    if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
-                               [[      file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
-                               [[    endif()]] "\n"
-                               [[  endforeach()]])
+                               [[  if("${resourceCount}" GREATER "0")]] "\n"
+                               [[    math(EXPR resourceCount "${resourceCount} - 1")]] "\n"
+                               [[    foreach(index RANGE "${resourceCount}")]] "\n"
+                               [[      list(GET resources "${index}" resource)]] "\n"
+                               [[      list(GET destinations "${index}" destination)]] "\n"
+                               [[      if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
+                               [[        file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
+                               [[      endif()]] "\n"
+                               [[    endforeach()]] "\n"
+                               [[  endif()]] "\n"
+                               [[  cmake_policy(POP)]])
     install(CODE "${resourcesStr}")
 
     install(
