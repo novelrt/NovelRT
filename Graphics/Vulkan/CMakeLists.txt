@@ -10,9 +10,10 @@ if(APPLE)
   unset(Vulkan_MoltenVK_LIBRARY CACHE)
   find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
 
-  set(icdFiles "$ENV{VK_ICD_FILENAMES};$ENV{VK_DRIVER_FILES}")
-  message(STATUS "ICD files: " ${icdFiles})
+  # Create a vulkan ICD based on MoltenVK's, which is available on the path.
+  # This is necessary for bundling.
 
+  set(icdFiles "$ENV{VK_ICD_FILENAMES};$ENV{VK_DRIVER_FILES}")
   list(TRANSFORM icdFiles REPLACE ":" ";")
   set(icds)
   foreach(file IN LISTS icdFiles)
@@ -20,13 +21,12 @@ if(APPLE)
     list(APPEND icds "${dir}")
   endforeach()
 
-  message(STATUS "Vulkan ICD locations: " ${icds})
-
   find_file(Vulkan_MoltenVK_ICD NAMES "MoltenVK_icd.json" HINTS ${icds} REQUIRED)
   file(READ "${Vulkan_MoltenVK_ICD}" icd)
   string(JSON icd SET "${icd}" "ICD" "library_path" [["$<$<PLATFORM_ID:Darwin>:../>../../Frameworks/libMoltenVK.dylib"]])
-
   file(GENERATE OUTPUT "MoltenVK_icd.json" CONTENT "${icd}")
+
+  message(STATUS "ICD content:" ${icd})
 endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
