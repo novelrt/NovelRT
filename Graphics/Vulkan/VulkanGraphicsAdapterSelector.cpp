@@ -101,9 +101,10 @@ namespace NovelRT::Graphics::Vulkan
                 {
                     if (!firstRun)
                     {
-                        extensionGroupOutput += "OR ";
-                        firstRun = false;
+                        extensionGroupOutput += " OR ";
                     }
+
+                    firstRun = false;
 
                     extensionGroupOutput += extStr;
                 }
