@@ -257,11 +257,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "^$")]] "\n"
                              [[  list(FILTER dynamicLibs EXCLUDE REGEX "\.xcframework$")]] "\n"
                              [[  list(REMOVE_DUPLICATES dynamicLibs)]] "\n"
-                             [[  file(INSTALL DESTINATION "$<TARGET_BUNDLE_CONTENTS_DIR:]] "${cmakeSafeName}" [[>/Frameworks" TYPE FILE FILES ${dynamicLibs} USE_SOURCE_PERMISSIONS FOLLOW_SYMLINK_CHAIN)]] "\n"
+                             [[  file(INSTALL DESTINATION "$<TARGET_BUNDLE_CONTENT_DIR:]] "${cmakeSafeName}" [[>/Frameworks" TYPE FILE FILES ${dynamicLibs} USE_SOURCE_PERMISSIONS FOLLOW_SYMLINK_CHAIN)]] "\n"
                              [[  set(installedDynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS dynamicLibs)]] "\n"
                              [[    get_filename_component(dynamicLibName "${dynamicLibPath}" NAME)]] "\n"
-                             [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_CONTENTS_DIR:]] "${cmakeSafeName}" [[>/Frameworks/${dynamicLibName}")]] "\n"
+                             [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_CONTENT_DIR:]] "${cmakeSafeName}" [[>/Frameworks/${dynamicLibName}")]] "\n"
                              [[  endforeach()]] "\n"
                              [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
       install(CODE "${fixupStr}")
@@ -277,7 +277,7 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                                  [[      list(GET resources "${index}" resource)]] "\n"
                                  [[      list(GET destinations "${index}" destination)]] "\n"
                                  [[      if(NOT ("${resource}" STREQUAL "" OR "${destination}" STREQUAL ""))]] "\n"
-                                 [[        file(INSTALL DESTINATION "$<TARGET_BUNDLE_CONTENTS_DIR:]] "${cmakeSafeName}" [[>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
+                                 [[        file(INSTALL DESTINATION "$<TARGET_BUNDLE_CONTENT_DIR:]] "${cmakeSafeName}" [[>/${destination}" TYPE FILE FILES "${resource}" USE_SOURCE_PERMISSIONS)]] "\n"
                                  [[      endif()]] "\n"
                                  [[    endforeach()]] "\n"
                                  [[  endif()]] "\n"
