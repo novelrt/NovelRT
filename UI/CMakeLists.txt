@@ -7,14 +7,12 @@ DEPENDS
     NovelRT::Input
     NovelRT::Logging
     NovelRT::ResourceManagement::Core
-    
+
   SOURCES
-    PRIVATE
-      empty.cpp
+    empty.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/UI/ImGui/ImGuiUIProvider.hpp
+    include/NovelRT/UI/ImGui/ImGuiUIProvider.hpp
 
   LINK_LIBRARIES
     PUBLIC

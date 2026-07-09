@@ -12,18 +12,16 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::AudioTest
     NovelRT::Audio::OpenAL
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
   
   RESOURCES
-    PUBLIC
-      Resources/Fonts/Raleway-Regular.ttf
-      Resources/Shaders/imgui_frag.spv
-      Resources/Shaders/imgui_vert.spv
-      Resources/Shaders/vulkanrenderfrag.spv
-      Resources/Shaders/vulkanrendervert.spv
-      Resources/Shaders/SpritePixel.spv
-      Resources/Shaders/SpriteVertex.spv
-      Resources/Images/milk-carton-hi.png
-      Resources/Sounds/light-rain.wav
+    Resources/Fonts/Raleway-Regular.ttf
+    Resources/Shaders/imgui_frag.spv
+    Resources/Shaders/imgui_vert.spv
+    Resources/Shaders/vulkanrenderfrag.spv
+    Resources/Shaders/vulkanrendervert.spv
+    Resources/Shaders/SpritePixel.spv
+    Resources/Shaders/SpriteVertex.spv
+    Resources/Images/milk-carton-hi.png
+    Resources/Sounds/light-rain.wav
 )

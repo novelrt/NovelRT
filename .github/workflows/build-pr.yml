@@ -50,7 +50,7 @@ jobs:
 
       - uses: novelrt/setup-vulkan@v2
         with:
-          version: 1.4.313.0
+          version: 1.4.350.0
 
       - name: Generate build system
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -67,7 +67,7 @@ jobs:
       matrix:
         configuration: [Debug, RelWithDebInfo]
         os: [windows-2025, ubuntu-24.04, macos-15, macos-26]
-        vulkan: [1.4.313.0]
+        vulkan: [1.4.350.0]
 
     steps:
       - name: Preinstall dependencies

@@ -24,8 +24,10 @@ In both cases it is recommended you use the designated releases, please see the 
 If you wish to attempt to build a basic visual novel with the existing C++ API, you must first install the following dependencies:
 
 - [CMake](https://cmake.org/download/) >= 3.24
-- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.4.313.0
+- [Vulkan SDK](https://vulkan.lunarg.com) >= 1.4.313.0 [^1]
 - [Python](https://www.python.org/downloads/) >= 3.11
+
+[^1]: Due to a bug in MoltenVK on Mac, you may need a newer version. We have tested 1.4.350.0 successfully.
 
 ### Build instructions
 

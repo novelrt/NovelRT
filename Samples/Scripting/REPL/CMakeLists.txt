@@ -6,10 +6,8 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Scripting::REPL
     NovelRT::Scripting
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
 
   RESOURCES
-    PUBLIC
-      Resources/sample.lua
+    Resources/sample.lua
 )

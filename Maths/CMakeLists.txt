@@ -6,19 +6,17 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Maths
     NovelRT::Exceptions
 
   SOURCES
-    PRIVATE
-      GeoBounds.cpp
-      QuadTree.cpp
+    GeoBounds.cpp
+    QuadTree.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Maths/Constants.hpp
-      include/NovelRT/Maths/GeoBounds.hpp
-      include/NovelRT/Maths/GeoMatrix4x4F.hpp
-      include/NovelRT/Maths/GeoVector2F.hpp
-      include/NovelRT/Maths/GeoVector3F.hpp
-      include/NovelRT/Maths/GeoVector4F.hpp
-      include/NovelRT/Maths/Utilities.hpp
+    include/NovelRT/Maths/Constants.hpp
+    include/NovelRT/Maths/GeoBounds.hpp
+    include/NovelRT/Maths/GeoMatrix4x4F.hpp
+    include/NovelRT/Maths/GeoVector2F.hpp
+    include/NovelRT/Maths/GeoVector3F.hpp
+    include/NovelRT/Maths/GeoVector4F.hpp
+    include/NovelRT/Maths/Utilities.hpp
 
   COMPILE_DEFINITIONS
     PUBLIC

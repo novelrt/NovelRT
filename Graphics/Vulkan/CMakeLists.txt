@@ -2,8 +2,29 @@ include(NovelRTBuildSystem)
 
 find_package(Vulkan "1.2" REQUIRED
   OPTIONAL_COMPONENTS MoltenVK)
-if(APPLE AND NOT Vulkan_MoltenVK_FOUND)
-  message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+if(APPLE)
+  if(NOT Vulkan_MoltenVK_FOUND)
+    message(SEND_ERROR "Could not find MoltenVK, which is required for graphics support")
+  endif()
+  cmake_path(GET Vulkan_MoltenVK_LIBRARY PARENT_PATH libRoot)
+  unset(Vulkan_MoltenVK_LIBRARY CACHE)
+  find_library(Vulkan_MoltenVK_LIBRARY NAMES libMoltenVK.dylib HINTS "${libRoot}" REQUIRED)
+
+  # Create a vulkan ICD based on MoltenVK's, which is available on the path.
+  # This is necessary for bundling.
+
+  set(icdFiles "$ENV{VK_ICD_FILENAMES};$ENV{VK_DRIVER_FILES}")
+  list(TRANSFORM icdFiles REPLACE ":" ";")
+  set(icds)
+  foreach(file IN LISTS icdFiles)
+    cmake_path(GET file PARENT_PATH dir)
+    list(APPEND icds "${dir}")
+  endforeach()
+
+  find_file(Vulkan_MoltenVK_ICD NAMES "MoltenVK_icd.json" HINTS ${icds} REQUIRED)
+  file(READ "${Vulkan_MoltenVK_ICD}" icd)
+  string(JSON icd SET "${icd}" "ICD" "library_path" [["$<$<PLATFORM_ID:Darwin>:../>../../Frameworks/libMoltenVK.dylib"]])
+  file(GENERATE OUTPUT "MoltenVK_icd.json" CONTENT "${icd}")
 endif()
 
 NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
@@ -16,66 +37,64 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     NovelRT::Graphics::Core
 
   SOURCES
-    PRIVATE
-      VulkanGraphicsAdapter.cpp
-      VulkanGraphicsAdapterSelector.cpp
-      VulkanGraphicsBackendTraits.cpp
-      VulkanGraphicsBuffer.cpp
-      VulkanGraphicsCmdList.cpp
-      VulkanGraphicsContext.cpp
-      VulkanGraphicsDescriptorSet.cpp
-      VulkanGraphicsDevice.cpp
-      VulkanGraphicsFence.cpp
-      VulkanGraphicsMemoryAllocator.cpp
-      VulkanGraphicsPipeline.cpp
-      VulkanGraphicsPipelineSignature.cpp
-      VulkanGraphicsProvider.cpp
-      VulkanGraphicsRenderPass.cpp
-      VulkanGraphicsRenderTarget.cpp
-      VulkanGraphicsResource.cpp
-      VulkanGraphicsResourceMemoryRegion.cpp
-      VulkanGraphicsSurfaceContext.cpp
-      VulkanGraphicsSemaphore.cpp
-      VulkanGraphicsSwapchain.cpp
-      VulkanGraphicsSwapchainImage.cpp
-      VulkanGraphicsTexture.cpp
-      VulkanShaderProgram.cpp
+    VulkanGraphicsAdapter.cpp
+    VulkanGraphicsAdapterSelector.cpp
+    VulkanGraphicsBackendTraits.cpp
+    VulkanGraphicsBuffer.cpp
+    VulkanGraphicsCmdList.cpp
+    VulkanGraphicsContext.cpp
+    VulkanGraphicsDescriptorSet.cpp
+    VulkanGraphicsDevice.cpp
+    VulkanGraphicsFence.cpp
+    VulkanGraphicsMemoryAllocator.cpp
+    VulkanGraphicsPipeline.cpp
+    VulkanGraphicsPipelineSignature.cpp
+    VulkanGraphicsProvider.cpp
+    VulkanGraphicsRenderPass.cpp
+    VulkanGraphicsRenderTarget.cpp
+    VulkanGraphicsResource.cpp
+    VulkanGraphicsResourceMemoryRegion.cpp
+    VulkanGraphicsSurfaceContext.cpp
+    VulkanGraphicsSemaphore.cpp
+    VulkanGraphicsSwapchain.cpp
+    VulkanGraphicsSwapchainImage.cpp
+    VulkanGraphicsTexture.cpp
+    VulkanShaderProgram.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp
-      include/NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
-      include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
-      include/NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp
+    include/NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp
+    include/NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapter.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsAdapterSelector.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsBuffer.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsCmdList.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsContext.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsDescriptorSet.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsDevice.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsFence.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsMemoryAllocator.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipeline.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsPipelineSignature.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsProvider.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsRenderTarget.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsResourceMemoryRegion.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsSurfaceContext.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsSemaphore.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchain.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsSwapchainImage.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp
+    include/NovelRT/Graphics/Vulkan/VulkanShaderProgram.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/BufferUsageKind.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/MemoryAccessMode.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/PipelineBlendFactor.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/PipelineVisibility.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/ShaderProgramVisibility.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/Support.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/Texel.hpp
+    include/NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp
 
   PRECOMPILE_HEADERS
     INTERFACE
@@ -117,4 +136,10 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Graphics::Vulkan
     PUBLIC
       Vulkan::Vulkan
       GPUOpen::VulkanMemoryAllocator
+
+  DYNAMIC_LIBRARIES
+    $<$<TARGET_EXISTS:Vulkan::MoltenVK>:${Vulkan_MoltenVK_LIBRARY}>
+
+  RESOURCES
+    $<$<BOOL:${APPLE}>:${CMAKE_CURRENT_BINARY_DIR}/MoltenVK_icd.json> DESTINATION "$<$<PLATFORM_ID:Darwin>:Resources/>vulkan/icd.d"
 )

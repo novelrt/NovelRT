@@ -8,12 +8,10 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Ecs::GraphicsEcsTe
     NovelRT::ResourceManagement::Desktop
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
   
   RESOURCES
-    PUBLIC
-      Resources/Shaders/SpritePixel.spv
-      Resources/Shaders/SpriteVertex.spv
-      Resources/Images/novel-chan.png
+    Resources/Shaders/SpritePixel.spv
+    Resources/Shaders/SpriteVertex.spv
+    Resources/Images/novel-chan.png
 )

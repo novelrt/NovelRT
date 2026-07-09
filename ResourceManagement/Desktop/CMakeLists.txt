@@ -8,16 +8,14 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::ResourceManagement::Desktop
       NovelRT::Utilities
       NovelRT::Logging
 
-    SOURCES
-    PRIVATE
-      DesktopResourceLoader.cpp
-      DesktopResourceManagementPluginProvider.cpp
+  SOURCES
+    DesktopResourceLoader.cpp
+    DesktopResourceManagementPluginProvider.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp
-      include/NovelRT/ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.hpp
-      include/NovelRT/ResourceManagement/Desktop/ImageData.hpp
+    include/NovelRT/ResourceManagement/Desktop/DesktopResourceLoader.hpp
+    include/NovelRT/ResourceManagement/Desktop/DesktopResourceManagementPluginProvider.hpp
+    include/NovelRT/ResourceManagement/Desktop/ImageData.hpp
       
   LINK_LIBRARIES
     PUBLIC

@@ -11,7 +11,7 @@
 #include <format>
 #include <random>
 
-#include <Bindings/Bindings.hpp>
+#include "Bindings/Bindings.hpp"
 
 namespace NovelRT::Scripting
 {

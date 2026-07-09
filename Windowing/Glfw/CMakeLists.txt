@@ -12,13 +12,11 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Windowing::Glfw
     NovelRT::Graphics::Vulkan
 
   SOURCES
-    PRIVATE
-      GlfwWindowProvider.cpp
-      $<$<TARGET_EXISTS:NovelRT::Graphics::Vulkan>:Vulkan/GlfwWindowProviderVulkanGraphicsProvider.cpp>
+    GlfwWindowProvider.cpp
+    $<$<TARGET_EXISTS:NovelRT::Graphics::Vulkan>:Vulkan/GlfwWindowProviderVulkanGraphicsProvider.cpp>
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp
+    include/NovelRT/Windowing/Glfw/GlfwWindowProvider.hpp
 
   LINK_LIBRARIES
     PUBLIC

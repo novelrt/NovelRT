@@ -8,14 +8,12 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Audio
     NovelRT::Logging
 
   SOURCES
-    PRIVATE
-      AudioSystem.cpp
+    AudioSystem.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Ecs/Audio/AudioEmitterState.hpp
-      include/NovelRT/Ecs/Audio/Components/AudioEmitterStateComponent.hpp
-      include/NovelRT/Ecs/Audio/Components/AudioEmitterComponent.hpp
-      include/NovelRT/Ecs/Audio/AudioSystem.hpp
-      include/NovelRT/Ecs/Audio/EcsAudioBuilder.hpp
+    include/NovelRT/Ecs/Audio/AudioEmitterState.hpp
+    include/NovelRT/Ecs/Audio/Components/AudioEmitterStateComponent.hpp
+    include/NovelRT/Ecs/Audio/Components/AudioEmitterComponent.hpp
+    include/NovelRT/Ecs/Audio/AudioSystem.hpp
+    include/NovelRT/Ecs/Audio/EcsAudioBuilder.hpp
 )

@@ -8,11 +8,9 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Samples::Experimental::Vulk
     NovelRT::ResourceManagement
 
   SOURCES
-    PRIVATE
-      main.cpp
+    main.cpp
 
   RESOURCES
-    PRIVATE
-      Resources/Shaders/vulkanrenderfrag.spv
-      Resources/Shaders/vulkanrendervert.spv
+    Resources/Shaders/vulkanrenderfrag.spv
+    Resources/Shaders/vulkanrendervert.spv
 )

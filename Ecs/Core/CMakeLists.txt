@@ -7,41 +7,39 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
     NovelRT::Utilities
 
   SOURCES
-    PRIVATE
-      Catalogue.cpp
-      ComponentBufferMemoryContainer.cpp
-      ComponentCache.cpp
-      EcsDefaultsBuilder.cpp
-      EcsUtils.cpp
-      EntityCache.cpp
-      EntityGraphView.cpp
-      LinkedEntityListView.cpp
-      SparseSetMemoryContainer.cpp
-      SystemScheduler.cpp
-      UnsafeComponentView.cpp
+    Catalogue.cpp
+    ComponentBufferMemoryContainer.cpp
+    ComponentCache.cpp
+    EcsDefaultsBuilder.cpp
+    EcsUtils.cpp
+    EntityCache.cpp
+    EntityGraphView.cpp
+    LinkedEntityListView.cpp
+    SparseSetMemoryContainer.cpp
+    SystemScheduler.cpp
+    UnsafeComponentView.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Ecs/Components/EntityGraphComponent.hpp
-      include/NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp
-      include/NovelRT/Ecs/Components/TransformComponent.hpp
-      include/NovelRT/Ecs/Catalogue.hpp
-      include/NovelRT/Ecs/ComponentBuffer.hpp
-      include/NovelRT/Ecs/ComponentBufferMemoryContainer.hpp
-      include/NovelRT/Ecs/ComponentCache.hpp
-      include/NovelRT/Ecs/ComponentView.hpp
-      include/NovelRT/Ecs/EcsDefaultsBuilder.hpp
-      include/NovelRT/Ecs/EcsUtils.hpp
-      include/NovelRT/Ecs/EntityCache.hpp
-      include/NovelRT/Ecs/EntityGraphView.hpp
-      include/NovelRT/Ecs/ExecutionContext.hpp
-      include/NovelRT/Ecs/IEcsSystem.hpp
-      include/NovelRT/Ecs/ImplDetail.hpp
-      include/NovelRT/Ecs/LinkedEntityListView.hpp
-      include/NovelRT/Ecs/MiscTemplateImpls.hpp
-      include/NovelRT/Ecs/SparseSet.hpp
-      include/NovelRT/Ecs/SparseSetMemoryContainer.hpp
-      include/NovelRT/Ecs/SystemScheduler.hpp
-      include/NovelRT/Ecs/SystemSchedulerBuilder.hpp
-      include/NovelRT/Ecs/UnsafeComponentView.hpp
+    include/NovelRT/Ecs/Components/EntityGraphComponent.hpp
+    include/NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp
+    include/NovelRT/Ecs/Components/TransformComponent.hpp
+    include/NovelRT/Ecs/Catalogue.hpp
+    include/NovelRT/Ecs/ComponentBuffer.hpp
+    include/NovelRT/Ecs/ComponentBufferMemoryContainer.hpp
+    include/NovelRT/Ecs/ComponentCache.hpp
+    include/NovelRT/Ecs/ComponentView.hpp
+    include/NovelRT/Ecs/EcsDefaultsBuilder.hpp
+    include/NovelRT/Ecs/EcsUtils.hpp
+    include/NovelRT/Ecs/EntityCache.hpp
+    include/NovelRT/Ecs/EntityGraphView.hpp
+    include/NovelRT/Ecs/ExecutionContext.hpp
+    include/NovelRT/Ecs/IEcsSystem.hpp
+    include/NovelRT/Ecs/ImplDetail.hpp
+    include/NovelRT/Ecs/LinkedEntityListView.hpp
+    include/NovelRT/Ecs/MiscTemplateImpls.hpp
+    include/NovelRT/Ecs/SparseSet.hpp
+    include/NovelRT/Ecs/SparseSetMemoryContainer.hpp
+    include/NovelRT/Ecs/SystemScheduler.hpp
+    include/NovelRT/Ecs/SystemSchedulerBuilder.hpp
+    include/NovelRT/Ecs/UnsafeComponentView.hpp
 )

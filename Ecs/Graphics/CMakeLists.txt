@@ -7,18 +7,16 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Graphics
     NovelRT::ResourceManagement::Desktop
 
   SOURCES
-    PRIVATE
-      RenderOrchestratorSystem.cpp
+    RenderOrchestratorSystem.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp
-      include/NovelRT/Ecs/Graphics/Components/RenderPass.hpp
-      include/NovelRT/Ecs/Graphics/Components/Sprite.hpp
-      include/NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp
-      include/NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp
-      include/NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp
-      include/NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp
-      include/NovelRT/Ecs/Graphics/Components/Camera.hpp
-      include/NovelRT/Ecs/Graphics/Components/Viewport.hpp
+    include/NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp
+    include/NovelRT/Ecs/Graphics/Components/RenderPass.hpp
+    include/NovelRT/Ecs/Graphics/Components/Sprite.hpp
+    include/NovelRT/Ecs/Graphics/EcsGraphicsBuilder.hpp
+    include/NovelRT/Ecs/Graphics/RenderOrchestratorSystem.hpp
+    include/NovelRT/Ecs/Graphics/SpriteRendererSystem.hpp
+    include/NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp
+    include/NovelRT/Ecs/Graphics/Components/Camera.hpp
+    include/NovelRT/Ecs/Graphics/Components/Viewport.hpp
 )

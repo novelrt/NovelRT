@@ -8,10 +8,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Scripting::Graphics
     NovelRT::ResourceManagement
 
   SOURCES
-    PRIVATE
-      PoseToSpriteTranslationSystem.cpp
+    PoseToSpriteTranslationSystem.cpp
 
   HEADERS
-    PUBLIC
-      include/NovelRT/Ecs/Scripting/Graphics/PoseToSpriteTranslationSystem.hpp
+    include/NovelRT/Ecs/Scripting/Graphics/PoseToSpriteTranslationSystem.hpp
 )
