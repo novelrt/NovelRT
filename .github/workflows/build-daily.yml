@@ -21,7 +21,7 @@ jobs:
       matrix:
         configuration: [Debug, RelWithDebInfo]
         os: [windows-2025, ubuntu-24.04, macos-15, macos-26]
-        vulkan: [1.4.313.0]
+        vulkan: [1.4.350.0]
 
     steps:
       - name: Preinstall dependencies
