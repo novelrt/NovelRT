@@ -167,14 +167,17 @@ namespace NovelRT::Ecs::Graphics
                     [this, assetId = sprite.assetId](Timing::Timestamp /*delta*/, Catalogue completionCatalogue,
                                                      ResourceManagement::TextureMetadata textureMetadata)
                     {
+
+                        auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
+                                                                                             textureMetadata.height);
+
                         NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
                             .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
                             .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
-                            .size = (static_cast<size_t>(textureMetadata.width) * textureMetadata.height * 4) * 2};
+                            .size = texture2D->GetSize()};
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-                        auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
-                                                                                             textureMetadata.height);
+
                         auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
                         auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
