@@ -1,0 +1,29 @@
+<map id="NovelRT::Maths::GeoVector2F::GeoVector2F" name="NovelRT::Maths::GeoVector2F::GeoVector2F">
+<area shape="rect" id="Node000001" title="Creates a GeoVector2F with all components set to zero." alt="" coords="515,325,721,365"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abc8b3cf36d2e3cb5291ce76668cef380" title="Constructs a unit GeoVector2F with a magnitude of one by normalising this vector." alt="" coords="260,5,467,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="606,313,588,258,560,189,519,119,494,87,465,59,447,48,450,43,468,55,498,84,523,116,565,187,593,256,611,311"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a92be5a5d7b33ab4e3658521cbe07f8d2" title="Calculates the Hadamard product of this GeoVector2F and the provided scalar." alt="" coords="260,69,467,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="601,314,580,271,550,219,512,168,465,123,445,112,448,107,468,119,516,164,555,216,585,268,606,312"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abd69be91e2ab2f8abb246a088e5107bc" title="Calculates the Hadamard product of this GeoVector2F and another GeoVector2F." alt="" coords="260,133,467,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="593,315,539,251,504,217,465,188,442,176,445,171,468,183,508,213,543,247,597,312"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#adeff3b2d8de6558dd9c0286116d09492" title="Calculates the entrywise sum of this GeoVector2F and the provided scalar." alt="" coords="260,197,467,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="577,319,525,285,466,252,436,240,438,235,468,247,528,280,580,315"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a5ec66ddc983579f8b1b902ed7300895a" title="Calculates the entrywise sum of this GeoVector2F and another GeoVector2F." alt="" coords="260,261,467,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="524,324,443,304,444,299,525,319"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#ada415fb1c69d279b4b9a35771235aaa9" title="Returns the negation of this GeoVector2F." alt="" coords="260,325,467,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="501,348,467,348,467,343,501,343"/>
+<area shape="rect" id="Node000008" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#ace35cb2ea1807a4ba24fc090f16d18dd" title="Calculates the entrywise difference of this GeoVector2F and the provided scalar." alt="" coords="260,389,467,429"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="525,371,444,392,443,387,524,366"/>
+<area shape="rect" id="Node000009" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#aea0753252c5e644b35298d904fbf5259" title="Calculates the entrywise difference of this GeoVector2F and another GeoVector2F." alt="" coords="260,453,467,493"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="580,376,528,411,468,444,438,456,436,451,466,439,525,406,577,371"/>
+<area shape="rect" id="Node000010" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a435bb977bbc1b468407b95c060b7c29e" title="Calculates the quotients of a Hadamard division using this GeoVector2F and the provided scalar." alt="" coords="260,517,467,557"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="597,379,543,444,508,478,468,508,445,520,442,515,465,503,504,474,539,440,593,375"/>
+<area shape="rect" id="Node000011" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a7fef303bbdcd24c7e3e770775c6c30d1" title="Calculates the quotients of a Hadamard division using this GeoVector2F and another GeoVector2F." alt="" coords="260,581,467,621"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="606,379,585,423,555,474,516,527,468,571,448,583,445,579,465,567,512,523,550,471,580,420,601,377"/>
+<area shape="rect" id="Node000012" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a427236c81f4d34a918b51f21627fc631" title="Creates a new uniform GeoVector2F based on the specified value." alt="" coords="260,645,467,685"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="611,379,593,435,565,504,523,574,498,607,468,635,450,647,447,643,465,631,494,603,519,571,560,501,588,433,606,378"/>
+<area shape="rect" id="Node000013" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abf898074f7af706bc34ed1fa6094cf56" title="Creates a new GeoVector2F instance with a uniform value of one." alt="" coords="5,613,212,653"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="246,653,212,649,213,644,247,648"/>
+<area shape="rect" id="Node000014" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a5540d825c67846782b34f1be08c98385" title="Creates a new GeoVector2F instance with a uniform value of zero." alt="" coords="5,677,212,717"/>
+<area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="247,683,213,687,212,682,246,677"/>
+</map>

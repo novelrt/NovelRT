@@ -1,0 +1,21 @@
+<map id="NovelRT::Maths::QuadTree::GetIntersectingPoints" name="NovelRT::Maths::QuadTree::GetIntersectingPoints">
+<area shape="rect" id="Node000001" title="Gets a set of points that intersect with the given bounds." alt="" coords="5,229,197,269"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a687a20ecd55b09c4b1265939c67a0738" title="Gets a set of points that intersect with the given bounds and stores it in the given vector." alt="" coords="245,229,437,269"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,247,232,247,232,252,197,252"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac3d65f7bf62e520e36de3b2c0d2040ba" title="Returns the child QuadTree node for the bottom left area." alt="" coords="492,5,684,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="350,228,370,191,399,145,438,97,484,55,493,49,496,54,487,59,442,100,404,148,374,194,355,230"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#aa705bdcdf91e91895000f2f147026b97" title="Returns the child QuadTree node for the bottom right area." alt="" coords="492,69,684,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="358,227,411,174,446,144,484,119,497,112,499,117,487,124,449,149,415,178,362,231"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac8b506602d31301d9058d0e93cd2b246" title="Returns the bounds this QuadTree covers." alt="" coords="492,133,684,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="383,227,484,183,505,175,507,180,486,188,385,232"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ade69f4c3968935749d447714e139ca78" title="Returns the point instance under the specified index." alt="" coords="492,197,684,237"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="437,234,478,229,478,234,438,240"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a38ef70ac34e8975f62a49beb14fabb6b" title="Returns the amount of points stored in this QuadTree instance." alt="" coords="492,261,684,301"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="438,259,478,264,478,270,437,264"/>
+<area shape="rect" id="Node000008" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#aa2c3c2c7f02d2b67362f671e73d7d384" title="Returns the child QuadTree node for the top left area." alt="" coords="492,325,684,365"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="385,267,486,311,507,318,505,323,484,316,383,272"/>
+<area shape="rect" id="Node000009" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac3827c3d58b62d74a6353a497e293b70" title="Returns the child QuadTree node for the top right area." alt="" coords="492,389,684,429"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="362,268,415,321,449,350,487,375,499,381,497,386,484,380,446,354,411,325,358,271"/>
+<area shape="rect" id="Node000010" href="$class_novel_r_t_1_1_maths_1_1_geo_bounds.html#a5ef3372cf9be18b6fee412dd3b1d0117" title="Determines if a given GeoVector2F is within the confines of this bounding box." alt="" coords="485,453,691,493"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="355,268,374,305,404,351,442,398,487,439,496,445,493,449,484,443,438,402,399,354,370,308,350,271"/>
+</map>

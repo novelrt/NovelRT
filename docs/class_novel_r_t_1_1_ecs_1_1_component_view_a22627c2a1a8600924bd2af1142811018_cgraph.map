@@ -1,0 +1,9 @@
+<map id="NovelRT::Ecs::ComponentView::TryGetComponent" name="NovelRT::Ecs::ComponentView::TryGetComponent">
+<area shape="rect" id="Node000001" title="Attempts to get the component instance attached to this entity." alt="" coords="5,37,225,77"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#ad1ac5926fab49a4378f791825072e953" title="Attempts to get the component instance attached to this entity." alt="" coords="273,37,500,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,55,260,55,260,60,226,60"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#aaf1b64c5514d251039336b71c71cd8f6" title="Gets a copy of the component instance attached to this entity." alt="" coords="548,5,775,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="500,41,534,37,535,43,501,47"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a5e0afee7bdd935cab3669c46ee65ea1a" title="Verifies if a given entity has a component." alt="" coords="548,69,775,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="501,68,535,72,534,77,500,73"/>
+</map>

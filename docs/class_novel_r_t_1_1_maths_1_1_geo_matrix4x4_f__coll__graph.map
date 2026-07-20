@@ -1,0 +1,5 @@
+<map id="NovelRT::Maths::GeoMatrix4x4F" name="NovelRT::Maths::GeoMatrix4x4F">
+<area shape="rect" id="Node000001" title="A 4x4 float&#45;based Matrix." alt="" coords="5,137,236,163"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html" title="Represents a vector with four components." alt="" coords="13,5,228,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,44,123,137,118,137,118,44"/>
+</map>

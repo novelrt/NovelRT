@@ -1,0 +1,5 @@
+<map id="NovelRT::Scripting::Statuses::Branch" name="NovelRT::Scripting::Statuses::Branch">
+<area shape="rect" id="Node000001" title=" " alt="" coords="13,93,153,133"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_scripting_1_1_decision_tree_status.html" title=" " alt="" coords="5,5,160,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,59,85,93,80,93,80,59"/>
+</map>

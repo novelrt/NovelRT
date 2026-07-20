@@ -1,0 +1,7 @@
+<map id="NovelRT::ResourceManagement::ResourceLoader" name="NovelRT::ResourceManagement::ResourceLoader">
+<area shape="rect" id="Node000001" title=" " alt="" coords="16,93,245,133"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_resource_management_1_1_desktop_1_1_desktop_resource_loader.html" title=" " alt="" coords="5,181,256,221"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,147,133,181,128,181,128,147"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="18,5,243,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,59,133,93,128,93,128,59"/>
+</map>

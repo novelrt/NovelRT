@@ -1,0 +1,33 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,461,144,486"/>
+<area shape="rect" id="Node000001" href="$class_novel_r_t_1_1_exceptions_1_1_character_not_found_exception.html" title=" " alt="" coords="192,5,411,45"/>
+<area shape="poly" id="edge68_Node000000_Node000001" title=" " alt="" coords="73,447,75,371,90,266,104,209,125,154,153,102,190,55,206,43,209,48,194,59,158,105,130,156,109,211,95,267,80,371,78,447"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_exceptions_1_1_compilation_error_exception.html" title=" " alt="" coords="199,69,403,109"/>
+<area shape="poly" id="edge69_Node000000_Node000002" title=" " alt="" coords="74,447,80,381,98,294,112,247,132,200,158,157,190,119,206,107,210,111,194,123,162,160,137,203,117,248,103,295,86,382,79,447"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_exceptions_1_1_duplicate_key_exception.html" title=" " alt="" coords="211,133,391,173"/>
+<area shape="poly" id="edge70_Node000000_Node000003" title=" " alt="" coords="76,446,86,391,106,321,121,283,140,247,163,213,190,183,209,170,212,174,194,187,167,216,144,250,126,286,111,322,91,393,82,447"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_exceptions_1_1_file_not_found_exception.html" title=" " alt="" coords="212,197,391,237"/>
+<area shape="poly" id="edge71_Node000000_Node000004" title=" " alt="" coords="80,446,93,403,115,349,147,295,167,269,190,247,211,234,213,239,194,251,171,273,152,298,120,352,98,405,85,448"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_exceptions_1_1_function_not_found_exception.html" title=" " alt="" coords="196,261,407,301"/>
+<area shape="poly" id="edge72_Node000000_Node000005" title=" " alt="" coords="85,446,126,379,155,342,190,311,212,299,215,304,194,316,159,346,130,382,90,449"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_exceptions_1_1_i_o_exception.html" title=" " alt="" coords="224,325,379,365"/>
+<area shape="poly" id="edge73_Node000000_Node000006" title=" " alt="" coords="96,449,138,411,191,375,222,361,225,366,193,380,141,415,100,452"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_exceptions_1_1_initialisation_failure_exception.html" title=" " alt="" coords="192,389,411,429"/>
+<area shape="poly" id="edge74_Node000000_Node000007" title=" " alt="" coords="133,454,229,427,230,432,134,459"/>
+<area shape="rect" id="Node000008" href="$class_novel_r_t_1_1_exceptions_1_1_invalid_operation_exception.html" title=" " alt="" coords="200,453,403,493"/>
+<area shape="poly" id="edge75_Node000000_Node000008" title=" " alt="" coords="158,471,200,471,200,476,158,476"/>
+<area shape="rect" id="Node000009" href="$class_novel_r_t_1_1_exceptions_1_1_key_not_found_exception.html" title=" " alt="" coords="211,517,391,557"/>
+<area shape="poly" id="edge76_Node000000_Node000009" title=" " alt="" coords="134,487,230,515,229,520,133,492"/>
+<area shape="rect" id="Node000010" href="$class_novel_r_t_1_1_exceptions_1_1_not_initialised_exception.html" title=" " alt="" coords="211,581,392,621"/>
+<area shape="poly" id="edge77_Node000000_Node000010" title=" " alt="" coords="100,494,141,531,193,567,220,579,218,584,191,572,138,536,96,498"/>
+<area shape="rect" id="Node000011" href="$class_novel_r_t_1_1_exceptions_1_1_not_supported_exception.html" title=" " alt="" coords="210,645,393,685"/>
+<area shape="poly" id="edge78_Node000000_Node000011" title=" " alt="" coords="90,497,130,565,159,601,194,631,215,643,212,648,190,636,155,604,126,568,85,500"/>
+<area shape="rect" id="Node000012" href="$class_novel_r_t_1_1_exceptions_1_1_null_pointer_exception.html" title=" " alt="" coords="218,709,385,749"/>
+<area shape="poly" id="edge79_Node000000_Node000012" title=" " alt="" coords="85,499,98,542,120,595,152,649,171,674,194,695,219,711,217,715,190,699,167,677,147,652,115,597,93,544,80,500"/>
+<area shape="rect" id="Node000013" href="$class_novel_r_t_1_1_exceptions_1_1_out_of_memory_exception.html" title=" " alt="" coords="208,773,395,813"/>
+<area shape="poly" id="edge80_Node000000_Node000013" title=" " alt="" coords="82,500,91,554,111,624,126,661,144,697,167,730,194,759,210,771,207,775,190,763,163,733,140,700,121,663,106,626,86,555,76,501"/>
+<area shape="rect" id="Node000014" href="$class_novel_r_t_1_1_exceptions_1_1_runtime_not_found_exception.html" title=" " alt="" coords="196,837,407,877"/>
+<area shape="poly" id="edge81_Node000000_Node000014" title=" " alt="" coords="79,499,86,565,103,652,117,698,137,744,162,786,194,823,210,835,206,839,190,827,158,789,132,746,112,700,98,653,80,565,74,500"/>
+<area shape="rect" id="Node000015" href="$class_novel_r_t_1_1_exceptions_1_1_timeout_exception.html" title=" " alt="" coords="224,901,379,941"/>
+<area shape="poly" id="edge82_Node000000_Node000015" title=" " alt="" coords="78,500,80,576,95,680,109,736,130,791,158,842,194,887,208,899,225,907,223,912,205,903,190,891,153,845,125,793,104,737,90,681,75,576,73,500"/>
+</map>

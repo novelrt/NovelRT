@@ -1,0 +1,11 @@
+<map id="NovelRT::Windowing::WindowProvider&lt; Glfw::GlfwWindowingBackend &gt;" name="NovelRT::Windowing::WindowProvider&lt; Glfw::GlfwWindowingBackend &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="752,77,953,132"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_graphics_1_1_i_graphics_surface.html" title=" " alt="" coords="358,13,506,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="520,45,752,85,752,90,519,50"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="5,5,188,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="201,30,358,30,358,35,201,35"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="325,77,539,132"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="552,102,752,102,752,107,552,107"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_utilities_1_1_event.html" title=" " alt="" coords="327,156,537,211"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="551,167,727,137,758,129,759,135,729,142,552,172"/>
+</map>

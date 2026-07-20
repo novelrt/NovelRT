@@ -1,0 +1,7 @@
+<map id="NovelRT::Graphics::GraphicsPipelineSignature&lt; Vulkan::VulkanGraphicsBackend &gt;" name="NovelRT::Graphics::GraphicsPipelineSignature&lt; Vulkan::VulkanGraphicsBackend &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="679,5,937,60"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_graphics_1_1_graphics_device_object.html" title=" " alt="" coords="372,5,631,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="644,30,678,30,678,35,644,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,324,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,30,372,30,372,35,338,35"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::ComponentView::PushComponentUpdateInstruction" name="NovelRT::Ecs::ComponentView::PushComponentUpdateInstruction">
+<area shape="rect" id="Node000001" title="Pushes a new Component state as an update instruction into the ComponentBuffer with the current threa..." alt="" coords="5,5,257,45"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a1d37e7e1e1f4396902ffbcf52dd760ff" title="Pushes in an update instruction for the given entity, component and thread pool ID." alt="" coords="305,5,557,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,23,292,23,292,28,257,28"/>
+</map>

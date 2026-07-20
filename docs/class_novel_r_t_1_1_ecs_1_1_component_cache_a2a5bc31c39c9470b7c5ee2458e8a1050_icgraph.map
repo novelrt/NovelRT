@@ -1,0 +1,9 @@
+<map id="NovelRT::Ecs::ComponentCache::GetComponentBuffer" name="NovelRT::Ecs::ComponentCache::GetComponentBuffer">
+<area shape="rect" id="Node000001" title="Get the ComponentBuffer instance that manages the specified component type." alt="" coords="487,37,715,77"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_catalogue.html#a2bc9aa3bb40b9155e7e435cdf817d1c9" title="Gets a view into the ComponentCache for the specified component type based on the context of the Cata..." alt="" coords="260,5,439,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="473,44,438,39,439,34,473,38"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_catalogue.html#ab2271e450967126dabcae23189a24992" title="Gets a variadic tuple of views into the ComponentCache for the specified component types based on the..." alt="" coords="260,69,439,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="473,76,439,81,438,75,473,71"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_ecs_1_1_graphics_1_1_render_orchestrator_system.html#af9a9dd5cab4ac45ecee78ef875492be5" title="The system method." alt="" coords="5,62,212,117"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="246,92,212,92,212,87,246,87"/>
+</map>

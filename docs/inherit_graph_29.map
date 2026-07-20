@@ -1,0 +1,25 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$class_novel_r_t_1_1_ecs_1_1_i_ecs_system.html" title="An interface declaration allowing for systems to be defined as C++ types." alt="" coords="5,299,193,325"/>
+<area shape="rect" id="Node000001" href="$class_novel_r_t_1_1_ecs_1_1_audio_1_1_audio_system.html" title=" " alt="" coords="251,5,497,45"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="105,285,121,236,148,173,187,109,212,80,240,55,259,43,262,48,243,59,216,84,192,113,153,176,126,238,110,287"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_graphics_1_1_render_orchestrator_system.html" title=" " alt="" coords="271,70,477,125"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="112,286,132,252,161,211,197,169,240,134,269,118,272,123,243,138,201,173,165,214,137,255,116,289"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_graphics_1_1_sprite_renderer_system.html" title=" " alt="" coords="286,149,462,203"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="125,289,177,251,240,214,285,196,287,201,243,218,180,255,128,293"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_decision_tree_loading_system.html" title=" " alt="" coords="267,228,481,268"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="168,293,287,265,288,271,169,299"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_decision_tree_step_system.html" title=" " alt="" coords="279,292,469,332"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="207,309,278,309,278,315,207,315"/>
+<area shape="rect" id="Node000008" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_graphics_1_1_pose_to_sprite_translation_system.html" title=" " alt="" coords="249,357,499,411"/>
+<area shape="poly" id="edge8_Node000000_Node000008" title=" " alt="" coords="162,326,270,354,269,359,161,331"/>
+<area shape="rect" id="Node000009" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_u_i_1_1_branch_translation_system.html" title=" " alt="" coords="265,436,483,476"/>
+<area shape="poly" id="edge9_Node000000_Node000009" title=" " alt="" coords="124,332,176,378,208,402,243,422,272,434,270,438,240,426,205,406,172,382,121,336"/>
+<area shape="rect" id="Node000010" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_u_i_1_1_spoken_line_translation_system.html" title=" " alt="" coords="251,500,497,540"/>
+<area shape="poly" id="edge10_Node000000_Node000010" title=" " alt="" coords="116,336,136,370,165,411,201,452,243,486,266,498,263,502,240,490,197,456,161,414,132,373,111,339"/>
+<area shape="rect" id="Node000011" href="$class_novel_r_t_1_1_ecs_1_1_u_i_1_1_u_i_system.html" title=" " alt="" coords="241,565,507,619"/>
+<area shape="poly" id="edge11_Node000000_Node000011" title=" " alt="" coords="111,337,129,383,156,441,194,500,217,526,243,550,262,562,259,567,240,554,213,530,190,503,152,443,124,385,106,339"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_branch_step_system.html" title=" " alt="" coords="561,260,731,300"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="483,297,560,287,561,293,483,302"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_ecs_1_1_scripting_1_1_spoken_line_step_system.html" title=" " alt="" coords="555,324,737,364"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="484,322,555,331,554,336,483,327"/>
+</map>

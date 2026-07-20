@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::ComponentBuffer::begin" name="NovelRT::Ecs::ComponentBuffer::begin">
+<area shape="rect" id="Node000001" title="Gets the beginning forward const iterator state for the immutable data in this ComponentBuffer." alt="" coords="273,5,500,45"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a7bfa086df2b715b59185efa95d8a764b" title="Gets the beginning forward const iterator state for the immutable data from the underlying ComponentB..." alt="" coords="5,5,225,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,28,226,28,226,23,259,23"/>
+</map>

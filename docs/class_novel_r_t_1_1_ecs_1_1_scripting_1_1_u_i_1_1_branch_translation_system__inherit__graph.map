@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::Scripting::UI::BranchTranslationSystem" name="NovelRT::Ecs::Scripting::UI::BranchTranslationSystem">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,223,119"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_i_ecs_system.html" title="An interface declaration allowing for systems to be defined as C++ types." alt="" coords="20,5,208,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,44,117,79,111,79,111,44"/>
+</map>

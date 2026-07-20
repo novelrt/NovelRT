@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::ComponentView::end" name="NovelRT::Ecs::ComponentView::end">
+<area shape="rect" id="Node000001" title="Gets the end forward const iterator state for the immutable data from the underlying ComponentBuffer." alt="" coords="5,5,256,31"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a8986aa90011e56af35f97742e4400f18" title="Gets the end forward const iterator state for the immutable data in this ComponentBuffer." alt="" coords="304,5,563,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,15,290,15,290,21,256,21"/>
+</map>

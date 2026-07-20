@@ -1,0 +1,11 @@
+<map id="NovelRT::Ecs::ComponentBuffer::HasComponent" name="NovelRT::Ecs::ComponentBuffer::HasComponent">
+<area shape="rect" id="Node000001" title="Verifies if a given entity has a component." alt="" coords="548,69,775,109"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#ab2a2c9edae3be4cc3a24d5efc24d3a3c" title="Verifies if a given entity has a component." alt="" coords="277,5,497,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="561,69,472,48,474,43,562,64"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#ad1ac5926fab49a4378f791825072e953" title="Attempts to get the component instance attached to this entity." alt="" coords="273,69,500,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="534,92,500,92,500,87,534,87"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a0230d7f5e387c84c77d58260280f3051" title="Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless ope..." alt="" coords="277,133,497,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="562,115,474,136,472,131,561,110"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a22627c2a1a8600924bd2af1142811018" title="Attempts to get the component instance attached to this entity." alt="" coords="5,69,225,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="259,92,226,92,226,87,259,87"/>
+</map>

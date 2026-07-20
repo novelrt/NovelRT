@@ -1,0 +1,7 @@
+<map id="NovelRT::Maths::Utilities::Log2" name="NovelRT::Maths::Utilities::Log2">
+<area shape="rect" id="Node000001" title="Determines the exponent to which 2 should be raised with in order to get to the given value,..." alt="" coords="467,5,649,45"/>
+<area shape="rect" id="Node000002" href="$namespace_novel_r_t_1_1_maths_1_1_utilities.html#af17d36a318499b14c6523111c297ed5f" title="Computes the amount of leading zeros for the given 32&#45;bit integer." alt="" coords="236,5,419,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="453,28,419,28,419,23,453,23"/>
+<area shape="rect" id="Node000003" href="$namespace_novel_r_t_1_1_maths_1_1_utilities.html#a6d11166dc85b04ef14a46efdf99cc5b7" title="Computes the amount of leading zeros for the given 64&#45;bit integer." alt="" coords="5,5,188,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="223,28,188,28,188,23,223,23"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="NovelRT::Maths::QuadTree::TryInsert" name="NovelRT::Maths::QuadTree::TryInsert">
+<area shape="rect" id="Node000001" title="Attempts to store the given point within this QuadTree&#39;s hierarchy." alt="" coords="5,165,197,205"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac3d65f7bf62e520e36de3b2c0d2040ba" title="Returns the child QuadTree node for the bottom left area." alt="" coords="245,5,437,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,163,171,110,206,81,244,55,256,49,259,53,247,60,209,85,175,114,122,167"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#aa705bdcdf91e91895000f2f147026b97" title="Returns the child QuadTree node for the bottom right area." alt="" coords="245,69,437,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,163,244,119,264,112,266,117,246,124,146,168"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac8b506602d31301d9058d0e93cd2b246" title="Returns the bounds this QuadTree covers." alt="" coords="245,133,437,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="197,170,232,165,232,171,198,175"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#a38ef70ac34e8975f62a49beb14fabb6b" title="Returns the amount of points stored in this QuadTree instance." alt="" coords="245,197,437,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="198,195,232,200,232,205,197,201"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#aa2c3c2c7f02d2b67362f671e73d7d384" title="Returns the child QuadTree node for the top left area." alt="" coords="245,261,437,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="146,203,246,247,266,254,264,259,244,252,144,208"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_maths_1_1_quad_tree.html#ac3827c3d58b62d74a6353a497e293b70" title="Returns the child QuadTree node for the top right area." alt="" coords="245,325,437,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="122,204,175,257,209,286,247,311,259,317,256,322,244,316,206,290,171,261,118,207"/>
+</map>

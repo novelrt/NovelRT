@@ -1,0 +1,11 @@
+<map id="NovelRT::Graphics::GraphicsResource&lt; Vulkan::VulkanGraphicsBackend &gt;" name="NovelRT::Graphics::GraphicsResource&lt; Vulkan::VulkanGraphicsBackend &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="679,45,879,100"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_graphics_1_1_graphics_buffer_3_01_vulkan_1_1_vulkan_graphics_backend_01_4.html" title=" " alt="" coords="927,5,1127,60"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="892,52,926,46,927,51,893,57"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_graphics_1_1_graphics_texture_3_01_vulkan_1_1_vulkan_graphics_backend_01_4.html" title=" " alt="" coords="927,84,1127,139"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="893,88,927,93,926,98,892,93"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_graphics_1_1_graphics_device_object.html" title=" " alt="" coords="372,45,631,100"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="644,70,679,70,679,75,644,75"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,45,324,100"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,70,372,70,372,75,338,75"/>
+</map>

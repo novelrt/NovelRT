@@ -1,0 +1,7 @@
+<map id="NovelRT::Ecs::Graphics::RenderOrchestratorSystem::Update" name="NovelRT::Ecs::Graphics::RenderOrchestratorSystem::Update">
+<area shape="rect" id="Node000001" title="The system method." alt="" coords="5,5,212,60"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_catalogue.html#ab2271e450967126dabcae23189a24992" title="Gets a variadic tuple of views into the ComponentCache for the specified component types based on the..." alt="" coords="260,13,439,53"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,30,246,30,246,35,212,35"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_component_cache.html#a2a5bc31c39c9470b7c5ee2458e8a1050" title="Get the ComponentBuffer instance that manages the specified component type." alt="" coords="487,13,715,53"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="439,30,473,30,473,35,439,35"/>
+</map>

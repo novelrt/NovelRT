@@ -1,0 +1,7 @@
+<map id="NovelRT::Ecs::ComponentView::RemoveComponent" name="NovelRT::Ecs::ComponentView::RemoveComponent">
+<area shape="rect" id="Node000001" title="Removes the specified component type from a given entity." alt="" coords="273,37,493,77"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#ae7e24767070d1bd3cd69ab8658209817" title="Removes all components of the given type from the ECS simulation." alt="" coords="5,5,225,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,45,225,41,226,36,260,40"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a0230d7f5e387c84c77d58260280f3051" title="Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless ope..." alt="" coords="5,69,225,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="260,75,226,79,225,74,260,69"/>
+</map>

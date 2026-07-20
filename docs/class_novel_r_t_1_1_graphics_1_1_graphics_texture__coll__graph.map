@@ -1,0 +1,9 @@
+<map id="NovelRT::Graphics::GraphicsTexture&lt; TBackend &gt;" name="NovelRT::Graphics::GraphicsTexture&lt; TBackend &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="11,299,231,339"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_graphics_1_1_graphics_resource.html" title=" " alt="" coords="5,211,237,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,265,124,298,119,298,119,265"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_graphics_1_1_graphics_device_object.html" title=" " alt="" coords="38,108,205,163"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,176,124,211,119,211,119,176"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="17,5,225,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="124,74,124,108,119,108,119,74"/>
+</map>

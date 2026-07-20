@@ -1,0 +1,7 @@
+<map id="NovelRT::Ecs::ComponentBuffer::TryGetComponent" name="NovelRT::Ecs::ComponentBuffer::TryGetComponent">
+<area shape="rect" id="Node000001" title="Attempts to get the component instance attached to this entity." alt="" coords="5,37,232,77"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#aaf1b64c5514d251039336b71c71cd8f6" title="Gets a copy of the component instance attached to this entity." alt="" coords="280,5,507,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,41,266,37,267,43,233,47"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#a5e0afee7bdd935cab3669c46ee65ea1a" title="Verifies if a given entity has a component." alt="" coords="280,69,507,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,68,267,72,266,77,232,73"/>
+</map>

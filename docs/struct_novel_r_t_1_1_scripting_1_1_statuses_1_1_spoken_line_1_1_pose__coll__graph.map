@@ -1,0 +1,5 @@
+<map id="NovelRT::Scripting::Statuses::SpokenLine::Pose" name="NovelRT::Scripting::Statuses::SpokenLine::Pose">
+<area shape="rect" id="Node000001" title=" " alt="" coords="9,108,216,148"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html" title="Represents a vector with two components." alt="" coords="5,5,220,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,45,115,108,110,108,110,45"/>
+</map>

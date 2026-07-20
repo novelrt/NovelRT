@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::Catalogue::GetComponentViews" name="NovelRT::Ecs::Catalogue::GetComponentViews">
+<area shape="rect" id="Node000001" title="Gets a variadic tuple of views into the ComponentCache for the specified component types based on the..." alt="" coords="260,13,439,53"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_graphics_1_1_render_orchestrator_system.html#af9a9dd5cab4ac45ecee78ef875492be5" title="The system method." alt="" coords="5,5,212,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,35,212,35,212,30,246,30"/>
+</map>

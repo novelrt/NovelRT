@@ -1,0 +1,9 @@
+<map id="NovelRT::Ecs::ComponentBuffer::GetComponentUnsafe" name="NovelRT::Ecs::ComponentBuffer::GetComponentUnsafe">
+<area shape="rect" id="Node000001" title="Gets a copy of the component instance attached to this entity." alt="" coords="548,37,775,77"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a02faba45ddb1608481305cfcf6b3a8d6" title="Gets a copy of the component instance attached to this entity." alt="" coords="277,5,497,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="534,45,497,41,497,35,535,40"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_ecs_1_1_component_buffer.html#ad1ac5926fab49a4378f791825072e953" title="Attempts to get the component instance attached to this entity." alt="" coords="273,69,500,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="535,75,501,79,500,73,534,69"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_ecs_1_1_component_view.html#a22627c2a1a8600924bd2af1142811018" title="Attempts to get the component instance attached to this entity." alt="" coords="5,69,225,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="259,92,226,92,226,87,259,87"/>
+</map>

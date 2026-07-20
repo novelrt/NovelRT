@@ -1,0 +1,23 @@
+<map id="NovelRT::Maths::GeoMatrix4x4F::GeoMatrix4x4F" name="NovelRT::Maths::GeoMatrix4x4F::GeoMatrix4x4F">
+<area shape="rect" id="Node000001" title="Constructs a 4x4 Matrix with all components being set to zero." alt="" coords="276,293,499,333"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a36a2471b9fb0c54636d54b87f45d38f5" title="Creates a matrix for observing a point in space from a given location." alt="" coords="5,5,228,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="372,282,352,232,321,172,279,111,254,84,226,59,207,48,210,43,230,55,258,80,283,108,325,169,357,230,377,280"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a7255d4250ec77a577b445b4ba4f4e76f" title="Creates a matrix with the given scale components." alt="" coords="5,69,228,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="366,283,342,246,310,203,271,160,227,124,204,112,207,107,229,119,275,156,314,199,347,243,370,280"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#abf954afe18cd8cb537eb884df416ea5f" title="Creates a matrix for projecting a three&#45;dimensional space onto a plane." alt="" coords="5,133,228,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="355,285,298,235,263,210,227,188,199,176,202,171,229,183,266,205,301,231,358,281"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a497d8311b049369a34367bdc7cc96306" title="Get an identity matrix, with it´s descending diagonals set to 1." alt="" coords="5,197,228,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="327,290,227,252,190,240,192,235,229,247,328,286"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#ae9d1ee0a6dddd1120d0acfbf06612a13" title="Calculates the product of this GeoMatrix4x4F and the provided scalar." alt="" coords="5,261,228,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="262,301,228,297,228,292,263,296"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a5a7c3583aa943a0f82c82626c0a1bd73" title="Calculates the product of this GeoMatrix4x4F and another GeoMatrix4x4F." alt="" coords="5,325,228,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="263,331,228,335,228,330,262,325"/>
+<area shape="rect" id="Node000008" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#ad0149f9060f6f9f7e321bf0247d6db7a" title="Calculates the entrywise sum of this GeoMatrix4x4F and the provided scalar." alt="" coords="5,389,228,429"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="328,341,229,380,192,392,190,387,227,375,327,336"/>
+<area shape="rect" id="Node000009" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#aa1e11b920228cd0908d19ee7fd58d2b3" title="Calculates the entrywise sum of this GeoMatrix4x4F and another GeoMatrix4x4F." alt="" coords="5,453,228,493"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="358,345,301,395,266,421,229,444,202,456,199,451,227,439,263,417,298,391,355,341"/>
+<area shape="rect" id="Node000010" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#ad38031544532e4ec5c44512c3f755e98" title="Calculates the entrywise difference of this GeoMatrix4x4F and the provided scalar." alt="" coords="5,517,228,557"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="370,347,347,384,314,427,275,471,229,508,207,520,204,515,227,503,271,467,310,424,342,381,366,344"/>
+<area shape="rect" id="Node000011" href="$class_novel_r_t_1_1_maths_1_1_geo_matrix4x4_f.html#a624bdede73f32d83326fec7806ef1099" title="Calculates the entrywise difference of this GeoMatrix4x4F and another GeoMatrix4x4F." alt="" coords="5,581,228,621"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="377,347,357,397,325,457,283,519,258,547,230,571,210,583,207,579,226,567,254,543,279,516,321,455,352,395,372,345"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="NovelRT::Ecs::ExecutionContext" name="NovelRT::Ecs::ExecutionContext">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,232,119"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_ecs_1_1_system_scheduler.html" title="Handles all thread and system scheduling related tasks." alt="" coords="5,5,232,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,45,121,93,116,93,116,45"/>
+</map>

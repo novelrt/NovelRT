@@ -1,0 +1,27 @@
+<map id="NovelRT::Maths::GeoVector4F::GeoVector4F" name="NovelRT::Maths::GeoVector4F::GeoVector4F">
+<area shape="rect" id="Node000001" title="Creates a GeoVector4F with all components set to zero." alt="" coords="515,293,721,333"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a1aa65add871919a0797485012fa9e8b2" title="Constructs a unit GeoVector4F with a magnitude of one by normalising this vector." alt="" coords="260,5,467,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="604,281,584,232,555,172,515,111,492,84,465,59,446,48,449,43,468,55,495,80,520,108,560,169,589,230,609,279"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a033b8806689bf5a21398051029536804" title="Calculates the Hadamard product of this GeoVector4F and another GeoVector4F." alt="" coords="260,69,467,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="597,282,575,246,545,203,508,160,465,124,444,112,447,107,468,119,512,156,549,199,580,243,602,280"/>
+<area shape="rect" id="Node000004" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a634195969d792730f657285891ba590d" title="Calculates the Hadamard product of this GeoVector4F and the provided scalar." alt="" coords="260,133,467,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="587,285,533,235,500,210,465,188,440,176,442,171,468,183,503,205,537,231,590,281"/>
+<area shape="rect" id="Node000005" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a0f1effcf7ea4a42d3b0d2874ed8fc2cb" title="Calculates the entrywise sum of this GeoVector4F and another GeoVector4F." alt="" coords="260,197,467,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="559,290,466,252,431,240,433,235,468,247,561,285"/>
+<area shape="rect" id="Node000006" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#aefc6aa77259af72464f221258cef3e0f" title="Calculates the entrywise sum of this GeoVector4F and the provided scalar." alt="" coords="260,261,467,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="501,301,467,297,467,292,502,296"/>
+<area shape="rect" id="Node000007" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a3820671ebb16e68c5c23ec39fc8c14e8" title="Calculates the entrywise difference of this GeoVector4F and another GeoVector4F." alt="" coords="260,325,467,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="502,331,467,335,467,330,501,325"/>
+<area shape="rect" id="Node000008" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#adac10bc89e7d62d850122cac8d09b282" title="Calculates the entrywise difference of this GeoVector4F and the provided scalar." alt="" coords="260,389,467,429"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="561,341,468,380,433,392,431,387,466,375,559,337"/>
+<area shape="rect" id="Node000009" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a40a6f3d2b08b7bb1fac478ff81952f63" title="Calculates the quotients of a Hadamard division using this GeoVector4F and another GeoVector4F." alt="" coords="260,453,467,493"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="590,345,537,395,503,421,468,444,442,456,440,451,465,439,500,417,533,391,587,341"/>
+<area shape="rect" id="Node000010" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a4625fafc1d4815f2e82fdf7a6734de65" title="Calculates the quotients of a Hadamard division using this GeoVector4F and the provided scalar." alt="" coords="260,517,467,557"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="602,347,580,384,549,427,512,470,468,508,447,520,444,515,465,503,508,467,545,424,575,381,597,344"/>
+<area shape="rect" id="Node000011" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a3da958dc2cb11eadca47c5576d25c2bb" title="Creates a new uniform GeoVector4F based on the specified value." alt="" coords="260,581,467,621"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="609,348,589,397,560,457,520,519,495,547,468,571,449,584,446,579,465,567,492,543,515,515,555,455,584,395,604,346"/>
+<area shape="rect" id="Node000012" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a43c1c56c95ad3011c554ef4201d5b463" title="Creates a new GeoVector4F instance with a uniform value of one." alt="" coords="5,549,212,589"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="246,589,212,585,213,580,247,584"/>
+<area shape="rect" id="Node000013" href="$class_novel_r_t_1_1_maths_1_1_geo_vector4_f.html#a2085519e4f362f9fe7e6e63ac95b1196" title="Creates a new GeoVector4F instance with a uniform value of zero." alt="" coords="5,613,212,653"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="247,619,213,623,212,618,246,613"/>
+</map>

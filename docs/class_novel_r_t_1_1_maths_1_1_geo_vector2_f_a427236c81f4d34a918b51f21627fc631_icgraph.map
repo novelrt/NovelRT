@@ -1,0 +1,7 @@
+<map id="NovelRT::Maths::GeoVector2F::Uniform" name="NovelRT::Maths::GeoVector2F::Uniform">
+<area shape="rect" id="Node000001" title="Creates a new uniform GeoVector2F based on the specified value." alt="" coords="260,37,467,77"/>
+<area shape="rect" id="Node000002" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#abf898074f7af706bc34ed1fa6094cf56" title="Creates a new GeoVector2F instance with a uniform value of one." alt="" coords="5,5,212,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,45,212,41,213,36,247,40"/>
+<area shape="rect" id="Node000003" href="$class_novel_r_t_1_1_maths_1_1_geo_vector2_f.html#a5540d825c67846782b34f1be08c98385" title="Creates a new GeoVector2F instance with a uniform value of zero." alt="" coords="5,69,212,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,75,213,79,212,74,246,69"/>
+</map>
