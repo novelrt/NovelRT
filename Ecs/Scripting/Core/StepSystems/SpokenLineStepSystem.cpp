@@ -37,6 +37,7 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
                     entityId, Components::SpokenLine{new std::string(spokenLine->GetSpeaker()),
                                                      new std::string(spokenLine->GetText())});
 
+                /*
                 auto pose = spokenLine->GetPose();
                 if (pose.has_value())
                 {
@@ -46,6 +47,7 @@ NovelRT::Ecs::Scripting::SpokenLineStepSystem::SpokenLineStepSystem(DecisionTree
                                                    pose->Position,
                                                    pose->Scale});
                 }
+                */
 
                 return true;
             }

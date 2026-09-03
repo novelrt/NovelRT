@@ -235,12 +235,18 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[      endif()]] "\n"
                              [[    endforeach()]] "\n"
                              [[  endif()]] "\n"
-                             [[  cmake_policy(POP)]])
+                             [[  file(TOUCH "$<TARGET_FILE_DIR:]] "${cmakeSafeName}" [[>/NovelRT_CopyResources.stamp")]] "\n"
+                             [[cmake_policy(POP)]])
   file(GENERATE OUTPUT "NovelRT_CopyResources.cmake" CONTENT "${resourcesStr}")
 
-  add_custom_command(TARGET ${cmakeSafeName} POST_BUILD
+  add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_CopyResources.stamp"
     COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_CopyResources.cmake"
-    COMMAND_EXPAND_LISTS)
+    COMMAND_EXPAND_LISTS
+    DEPENDS "$<GENEX_EVAL:$<TARGET_PROPERTY:${cmakeSafeName},NOVELRT_RESOURCES>>"
+    COMMENT "Copying resources for module ${moduleName}")
+
+  target_sources(${cmakeSafeName} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_CopyResources.stamp")
 
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)

@@ -10,6 +10,16 @@ speaker "character" {
   }
 }
 
+local shock = cue.sfx { sound = "shock.ogg" }
+local awe = cue.sfx { sound = "awe.ogg" }
+local shockAndAwe = cue.compound { shock, awe }
+
+local makeSad = cue.compound{
+  shockAndAwe,
+  -- TODO: this doesn't actually validate anything yet. It probably should...
+  cue.pose { character = "character", pose = "sad" }
+}
+
 while true do
   narrator
     "This is the first dialog piece."
@@ -17,15 +27,16 @@ while true do
 
   local chosen = choice "This is a choice" { "Option 1", "Option 2" }
   if chosen == 1 then
+    awe()
     narrator "You chose the first option."
   else
+    shock()
     narrator "You chose the second option."
     break
   end
 end
 
 character "Wowee!"
-character:pose "sad"
+makeSad()
 character "I'm sad now."
-character:pose "angry"
 character "Why would you make me angry?!"

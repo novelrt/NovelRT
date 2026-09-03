@@ -27,27 +27,6 @@ struct SpeakerInfo
     std::unordered_map<std::string, PoseInfo> poses;
 };
 
-int FieldTypeError(lua_State* L, int arg, const char* field, const char* tname)
-{
-    // This logic is the same as luaL_typeerror
-    const char* typearg;
-    if (luaL_getmetafield(L, arg, "__name") == LUA_TSTRING)
-    {
-        typearg = lua_tostring(L, -1);
-    }
-    else if (lua_type(L, arg) == LUA_TLIGHTUSERDATA)
-    {
-        typearg = "light userdata";
-    }
-    else
-    {
-        typearg = luaL_typename(L, arg);
-    }
-
-    const char* msg = lua_pushfstring(L, "bad field %q (%s expected, got %s)", field, tname, typearg);
-    return luaL_argerror(L, arg, msg);
-}
-
 PoseInfo ReadPoseInfo(lua_State* L, int arg, int idx, const char* name)
 {
     idx = lua_absindex(L, idx);
@@ -62,41 +41,56 @@ PoseInfo ReadPoseInfo(lua_State* L, int arg, int idx, const char* name)
     }
     else if (!lua_isnoneornil(L, -1))
     {
-        FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.sprite", name), lua_typename(L, LUA_TSTRING));
+        int spriteIdx = lua_absindex(L, -1);
+        NovelRT::FieldTypeError(L, arg, spriteIdx, lua_pushfstring(L, "poses.%s.sprite", name), lua_typename(L, LUA_TSTRING));
     }
 
     if (lua_getfield(L, idx, "position") == LUA_TTABLE)
     {
         if (lua_rawgeti(L, -1, 1) != LUA_TNUMBER)
-            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.position[1]", name), lua_typename(L, LUA_TNUMBER));
+        {
+            int positionIdx = lua_absindex(L, -1);
+            NovelRT::FieldTypeError(L, arg, positionIdx, lua_pushfstring(L, "poses.%s.position[1]", name), lua_typename(L, LUA_TNUMBER));
+        }
         result.xPos = lua_tonumber(L, -1);
         lua_pop(L, 1);
 
         if (lua_rawgeti(L, -1, 2) != LUA_TNUMBER)
-            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.position[2]", name), lua_typename(L, LUA_TNUMBER));
+        {
+            int positionIdx = lua_absindex(L, -1);
+            NovelRT::FieldTypeError(L, arg, positionIdx, lua_pushfstring(L, "poses.%s.position[2]", name), lua_typename(L, LUA_TNUMBER));
+        }
         result.yPos = lua_tonumber(L, -1);
         lua_pop(L, 2);
     }
     else if (!lua_isnoneornil(L, -1))
     {
-        FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.position", name), lua_typename(L, LUA_TNUMBER));
+        int positionIdx = lua_absindex(L, -1);
+        NovelRT::FieldTypeError(L, arg, positionIdx, lua_pushfstring(L, "poses.%s.position", name), lua_typename(L, LUA_TNUMBER));
     }
 
     if (lua_getfield(L, idx, "scale") == LUA_TTABLE)
     {
         if (lua_rawgeti(L, -1, 1) != LUA_TNUMBER)
-            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.scale[1]", name), lua_typename(L, LUA_TNUMBER));
+        {
+            int scaleIdx = lua_absindex(L, -1);
+            NovelRT::FieldTypeError(L, arg, scaleIdx, lua_pushfstring(L, "poses.%s.scale[1]", name), lua_typename(L, LUA_TNUMBER));
+        }
         result.xScale = lua_tonumber(L, -1);
         lua_pop(L, 1);
 
         if (lua_rawgeti(L, -1, 2) != LUA_TNUMBER)
-            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.scale[2]", name), lua_typename(L, LUA_TNUMBER));
+        {
+            int scaleIdx = lua_absindex(L, -1);
+            NovelRT::FieldTypeError(L, arg, scaleIdx, lua_pushfstring(L, "poses.%s.scale[2]", name), lua_typename(L, LUA_TNUMBER));
+        }
         result.yScale = lua_tonumber(L, -1);
         lua_pop(L, 2);
     }
     else if (!lua_isnoneornil(L, -1))
     {
-        FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s.scale", name), lua_typename(L, LUA_TNUMBER));
+        int scaleIdx = lua_absindex(L, -1);
+        NovelRT::FieldTypeError(L, arg, scaleIdx, lua_pushfstring(L, "poses.%s.scale", name), lua_typename(L, LUA_TNUMBER));
     }
 
     return result;
@@ -116,8 +110,16 @@ std::unordered_map<std::string, PoseInfo> ReadPoses(lua_State* L, int arg, int i
 
         if (lua_type(L, -2) != LUA_TSTRING)
         {
-            FieldTypeError(L, arg, lua_pushfstring(L, "poses.%s", luaL_tolstring(L, -2, nullptr)),
-                           lua_typename(L, LUA_TTABLE));
+            int keyIdx = lua_absindex(L, -2);
+            NovelRT::FieldTypeError(L, arg, keyIdx, lua_pushfstring(L, "poses.%s", luaL_tolstring(L, -2, nullptr)),
+                                    lua_typename(L, LUA_TSTRING));
+        }
+
+        if (lua_type(L, -1) != LUA_TTABLE)
+        {
+            int valueIdx = lua_absindex(L, -1);
+            NovelRT::FieldTypeError(L, arg, valueIdx, lua_pushfstring(L, "poses.%s", luaL_tolstring(L, -2, nullptr)),
+                                    lua_typename(L, LUA_TTABLE));
         }
 
         std::size_t length;
@@ -145,7 +147,7 @@ int SetSpeakerAdditionalProps(lua_State* L)
     }
     else if (!lua_isnoneornil(L, -1))
     {
-        return FieldTypeError(L, 1, "poses", lua_typename(L, LUA_TTABLE));
+        return NovelRT::FieldTypeError(L, 1, -1, "poses", lua_typename(L, LUA_TTABLE));
     }
 
     if (lua_getfield(L, 1, "pose") == LUA_TSTRING)
@@ -156,7 +158,7 @@ int SetSpeakerAdditionalProps(lua_State* L)
 
         if (auto search = it->poses.find(pose); search == it->poses.end())
         {
-            const char* msg = lua_pushfstring(L, "bad field %q (unknown pose %q)", "default_pose", p);
+            const char* msg = lua_pushfstring(L, "bad field %s (unknown pose %s)", "pose", p);
             return luaL_argerror(L, 1, msg);
         }
 
@@ -164,7 +166,7 @@ int SetSpeakerAdditionalProps(lua_State* L)
     }
     else if (!lua_isnoneornil(L, -1))
     {
-        return FieldTypeError(L, 1, "pose", lua_typename(L, LUA_TSTRING));
+        return NovelRT::FieldTypeError(L, 1, -1, "pose", lua_typename(L, LUA_TSTRING));
     }
 
     lua_pushvalue(L, lua_upvalueindex(1));
@@ -213,59 +215,12 @@ int ProduceSpeakerLine(lua_State* L)
     lua_rawget(L, LUA_REGISTRYINDEX);
     auto* manager = static_cast<NovelRT::Scripting::ScriptManager*>(lua_touserdata(L, -1));
 
-    std::optional<NovelRT::Scripting::Statuses::SpokenLine::Pose> pose = std::nullopt;
-    if (it->activePose.has_value())
-    {
-        auto info = it->poses.at(it->activePose.value());
-        pose = NovelRT::Scripting::Statuses::SpokenLine::Pose{
-            .Name = it->activePose.value(),
-            .Sprite = info.sprite,
-            .Position = NovelRT::Maths::GeoVector2F{static_cast<float>(info.xPos), static_cast<float>(info.yPos)},
-            .Scale = NovelRT::Maths::GeoVector2F{static_cast<float>(info.xScale), static_cast<float>(info.yScale)}};
-    }
-
-    auto* data = new NovelRT::Scripting::Statuses::SpokenLine(it->name, pose, text, L, manager->shared_from_this());
+    auto* data = new NovelRT::Scripting::Statuses::SpokenLine(it->name, text, L, manager->shared_from_this());
     lua_pushlightuserdata(L, data);
     return lua_yieldk(L, 1, 0, ProduceSpeakerLine_Cont);
 }
 
-int SetSpeakerPose(lua_State* L)
-{
-    SpeakerInfo* it = static_cast<SpeakerInfo*>(luaL_checkudata(L, 1, "Speaker"));
-
-    std::size_t pLength;
-    const char* p = luaL_checklstring(L, 2, &pLength);
-    std::string pose(p, pLength);
-
-    if (auto search = it->poses.find(pose); search == it->poses.end())
-    {
-        const char* msg = lua_pushfstring(L, "unknown pose %q", p);
-        return luaL_argerror(L, 2, msg);
-    }
-
-    it->activePose = pose;
-    return 0;
-}
-
-int IndexSpeaker(lua_State* L)
-{
-    luaL_checkudata(L, 1, "Speaker");
-
-    std::size_t idxLength;
-    const char* idx = luaL_checklstring(L, 2, &idxLength);
-    std::string index(idx, idxLength);
-
-    if (index == "pose")
-    {
-        lua_pushcfunction(L, SetSpeakerPose);
-        return 1;
-    }
-
-    return 0;
-}
-
 luaL_Reg SpeakerFuncs[]{
-    {"__index", IndexSpeaker},
     {"__call", ProduceSpeakerLine},
     {"__gc", CleanupSpeaker},
     {nullptr, nullptr},
