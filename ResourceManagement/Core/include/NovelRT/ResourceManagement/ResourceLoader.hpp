@@ -92,6 +92,10 @@ namespace NovelRT::ResourceManagement
 
         [[nodiscard]] virtual TextureMetadata LoadTexture(uuids::uuid assetId) = 0;
 
+
+        [[nodiscard]] virtual std::vector<TextureMetadata> LoadTextures(const std::span< const uuids::uuid> assetIds) = 0;
+
+
         /**
          * @brief Loads shader from a file on a given path.
          *

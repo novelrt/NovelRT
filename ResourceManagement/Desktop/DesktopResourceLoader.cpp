@@ -14,6 +14,12 @@
 #include <png.h>
 #include <samplerate.h>
 #include <sndfile.h>
+#include <optional>
+#include <span>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
 
 namespace NovelRT::ResourceManagement::Desktop
 {
@@ -245,6 +251,18 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         return LoadTexture(GetGuidsToFilePathsMap().at(assetId));
     }
+
+    std::vector<TextureMetadata> DesktopResourceLoader::LoadTextures(const std::span<const uuids::uuid> assetIds)
+    {
+        std::vector<TextureMetadata> textures = {};
+        for(auto assetId : assetIds) {
+            auto texture = LoadTexture(GetGuidsToFilePathsMap().at(assetId));
+            textures.push_back(texture);
+        }
+        
+        return textures;
+    }
+
 
     ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
     {
