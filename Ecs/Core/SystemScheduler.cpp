@@ -148,7 +148,8 @@ namespace NovelRT::Ecs
           _systemJobs(),
           _jobCancellations(),
           _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
-          _hasExecutedAtLeastOnce(false)
+          _hasExecutedAtLeastOnce(false),
+          _frameCounter(0ULL)
     {
         _workerThreadCount = static_cast<uint32_t>(_ecsArena->max_concurrency());
         _entityCache = EntityCache(_workerThreadCount);
@@ -170,7 +171,8 @@ namespace NovelRT::Ecs
           _systemJobs(std::move(other._systemJobs)),
           _jobCancellations(std::move(other._jobCancellations)),
           _currentDelta(other._currentDelta),
-          _hasExecutedAtLeastOnce(other._hasExecutedAtLeastOnce)
+          _hasExecutedAtLeastOnce(other._hasExecutedAtLeastOnce),
+          _frameCounter(other._frameCounter)
     {
     }
 
@@ -191,6 +193,7 @@ namespace NovelRT::Ecs
         _jobCancellations = std::move(other._jobCancellations);
         _currentDelta = other._currentDelta;
         _hasExecutedAtLeastOnce = other._hasExecutedAtLeastOnce;
+        _frameCounter = other._frameCounter;
 
         return *this;
     }
@@ -270,6 +273,7 @@ namespace NovelRT::Ecs
 
     void SystemScheduler::ScheduleUpdateWork()
     {
+        _frameCounter++;
         _ecsArena->execute(
             [&]()
             {
@@ -285,7 +289,7 @@ namespace NovelRT::Ecs
                         _ecsTasks->run(
                             [completion = std::move(completion), this]()
                             {
-                                size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
+                                auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
                                 completion(_currentDelta, Catalogue(poolId, *this));
                             });
                     }
@@ -300,15 +304,28 @@ namespace NovelRT::Ecs
                         _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
                     }
 
+                    SystemId cancellationId = 0ULL;
+
+                    while (_jobCancellations.try_pop(cancellationId))
+                    {
+                        _systemJobs.unsafe_erase(cancellationId);
+                    }
+
                     for (auto& [_, systemJob] : _systemJobs)
                     {
                         unused(_);
+
+                        if (systemJob.lastExecutedFrame == _frameCounter)
+                        {
+                            continue;
+                        }
 
                         _ecsTasks->run(
                             [&systemJob, this]()
                             {
                                 auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
                                 systemJob.isDone = systemJob.jobFnPtr(_currentDelta, Catalogue(poolId, *this));
+                                systemJob.lastExecutedFrame = _frameCounter;
                             });
                     }
 
@@ -328,13 +345,6 @@ namespace NovelRT::Ecs
                         {
                             it++;
                         }
-                    }
-
-                    SystemId cancellationId = 0ULL;
-
-                    while (_jobCancellations.try_pop(cancellationId))
-                    {
-                        _systemJobs.unsafe_erase(cancellationId);
                     }
 
                     if (hadTombstones)
