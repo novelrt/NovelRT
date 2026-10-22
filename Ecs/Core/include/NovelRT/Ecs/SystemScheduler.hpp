@@ -42,6 +42,7 @@ namespace NovelRT::Ecs
         struct SystemJobInfo
         {
             std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr;
+            size_t lastExecutedFrame = 0ULL;
             bool isDone = false;
 
             explicit SystemJobInfo(std::function<bool(Timing::Timestamp, Catalogue)> job) noexcept
@@ -76,6 +77,8 @@ namespace NovelRT::Ecs
         Timing::Timestamp _currentDelta;
 
         bool _hasExecutedAtLeastOnce;
+
+        size_t _frameCounter;
 
         void ScheduleUpdateWork();
 
