@@ -11,8 +11,9 @@
  * @brief Contains stateless policies that control the rate of progress through an animation.
  *
  * @details Each policy accepts normalised elapsed time \f$t \in [0, 1]\f$ and returns adjusted progress.
- * The built-in curves map zero to zero and one to one, and remain within this interval. They do not clamp
- * their arguments. Interpolation converts the adjusted progress into a component member value separately.
+ * A policy's output may lie outside this interval to produce intentional overshoot or undershoot.
+ * The current built-in curves map zero to zero and one to one, and remain within this interval. They do not
+ * clamp their arguments. Interpolation converts the adjusted progress into a component member value separately.
  * In policies start slowly, Out policies finish slowly, and InOut policies do both.
  */
 namespace NovelRT::Ecs::Animation::Easing

@@ -71,6 +71,8 @@ public:
     EntityId entity = 0;
     int payload = 123;
     int invocationCount = 0;
+    // Keep absolute time distinct from the per-frame delta.
+    Timestamp now{1h};
 
 protected:
     void SetUp() override
@@ -85,7 +87,7 @@ protected:
         systemScheduler.GetEntityCache().ProcessEntityRegistrationRequestsFromThreads();
 
         // Jobs execute at scheduling-layer boundaries.
-        static_cast<void>(systemScheduler.RegisterSystem([](Timestamp, Catalogue) {}));
+        static_cast<void>(systemScheduler.RegisterSystem([](Timestamp, GameClock::duration, Catalogue) {}));
     }
 
     void CommitComponents()
@@ -106,9 +108,15 @@ protected:
         CommitComponents();
     }
 
+    void RunFrame(GameClock::duration delta)
+    {
+        now += delta;
+        systemScheduler.ExecuteIteration(now, delta);
+    }
+
     float Advance(GameClock::duration delta)
     {
-        systemScheduler.ExecuteIteration(Timestamp{delta});
+        RunFrame(delta);
         return GetComponent().value;
     }
 
@@ -242,7 +250,7 @@ TEST_P(TweenTest, MissingComponentOnFirstExecutionEndsJobWithoutRecreatingIt)
     view.RemoveComponent(entity);
     CommitComponents();
 
-    systemScheduler.ExecuteIteration(Timestamp{100ms});
+    RunFrame(100ms);
     EXPECT_FALSE(view.HasComponent(entity));
     EXPECT_EQ(invocationCount, 0);
 
@@ -260,7 +268,7 @@ TEST_P(TweenTest, ComponentRemovalDuringAnimationEndsJob)
     view.RemoveComponent(entity);
     CommitComponents();
 
-    systemScheduler.ExecuteIteration(Timestamp{100ms});
+    RunFrame(100ms);
     EXPECT_FALSE(view.HasComponent(entity));
 
     view.AddComponent(entity, TweenTestComponent{70.0f, 7.0f, &payload});
@@ -392,7 +400,7 @@ TEST_P(TweenTest, ZeroedFactoryChangesVectorPositionWithoutChangingScaleOrRotati
         static_cast<void>(PositionTween::ToTarget(catalogue, entity, {100.0f, 200.0f}, 1s));
     }
 
-    systemScheduler.ExecuteIteration(Timestamp{1500ms});
+    RunFrame(1500ms);
     const auto transform = view.GetComponent(entity);
 
     EXPECT_FLOAT_EQ(transform.position.x, GetParam() ? 160.0f : 100.0f);

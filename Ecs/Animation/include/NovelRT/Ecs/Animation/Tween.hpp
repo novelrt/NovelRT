@@ -136,23 +136,23 @@ namespace NovelRT::Ecs::Animation
     };
 
     /**
-     * @brief Adapts the clamped maths lerp function to the tween interpolation policy interface.
+     * @brief Adapts the unclamped maths lerp function to the tween interpolation policy interface.
      * @tparam TValue A value type satisfying Maths::Utilities::LinearlyInterpolatable.
      */
     template<typename TValue>
     struct DefaultTweenInterpolator
     {
         /**
-         * @brief Interpolates between the supplied endpoints using clamped progress.
+         * @brief Interpolates between the supplied endpoints without clamping progress.
          * @param start The starting value for this pass.
          * @param target The destination value for this pass.
-         * @param progress The eased progress, clamped to [0, 1] by Maths::Utilities::Lerp.
-         * @return The interpolated value, or the exact corresponding endpoint outside the interpolation interval.
-         * @note Easing values outside [0, 1] do not produce overshoot with this default interpolator.
+         * @param progress The eased progress, which may lie outside [0, 1].
+         * @return The interpolated value, extrapolated beyond the endpoints when progress lies outside [0, 1].
+         * @note Easing values outside [0, 1] can produce overshoot or undershoot with this default interpolator.
          */
         [[nodiscard]] TValue operator()(const TValue& start, const TValue& target, float progress) const
         {
-            return Maths::Utilities::Lerp(start, target, progress);
+            return Maths::Utilities::LerpUnclamped(start, target, progress);
         }
     };
 
@@ -191,7 +191,7 @@ namespace NovelRT::Ecs::Animation
      * component instruction that preserves unrelated members under its merge rules. A factory instance can be supplied
      * when scheduling; otherwise it is default-constructed. Defaults to ZeroedInstructionFactory.
      * @tparam TInterpolator A default-constructible, copy-constructible policy callable on a const instance with the
-     * start value, target value and eased float progress, returning a ValueType-compatible value. Defaults to clamped
+     * start value, target value and eased float progress, returning a ValueType-compatible value. Defaults to unclamped
      * linear interpolation through DefaultTweenInterpolator.
      */
     template<auto Member,
@@ -299,7 +299,7 @@ namespace NovelRT::Ecs::Animation
                 return interpolator(from, to, easing(progress));
             }
 
-            bool operator()(Timing::Timestamp delta, Catalogue context)
+            bool operator()(Timing::Timestamp /*now*/, Timing::GameClock::duration delta, Catalogue context)
             {
                 auto view = context.GetComponentView<ComponentType>();
 
@@ -320,7 +320,7 @@ namespace NovelRT::Ecs::Animation
                     }
                 }
 
-                const TickCount crossedLegs = AdvanceTime(delta.time_since_epoch());
+                const TickCount crossedLegs = AdvanceTime(delta);
 
                 const bool finished = !forever && crossedLegs >= remainingLegs;
 
