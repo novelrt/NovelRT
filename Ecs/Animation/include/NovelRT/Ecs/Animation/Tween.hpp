@@ -299,7 +299,7 @@ namespace NovelRT::Ecs::Animation
                 return interpolator(from, to, easing(progress));
             }
 
-            bool operator()(Timing::Timestamp /*now*/, Timing::GameClock::duration delta, Catalogue context)
+            bool operator()(Timing::Timestamp /*now*/, Timing::GameClock::duration delta, Catalogue& context)
             {
                 auto view = context.GetComponentView<ComponentType>();
 
