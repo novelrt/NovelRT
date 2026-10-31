@@ -174,8 +174,8 @@ namespace NovelRT::Ecs::Animation
      * responsibility. Values use the selected member's coordinate space without parent or world-space conversion.
      *
      * The job finishes if the component is absent when an invocation reads the committed state. The returned SystemId
-     * can be passed to Catalogue::CancelSystemJob to stop future invocations. Cancellation does not retract instructions
-     * that have already been submitted, reset the value, or force the final endpoint.
+     * can be passed to Catalogue::CancelSystemJob to stop future invocations. Cancellation does not retract
+     * instructions that have already been submitted, reset the value, or force the final endpoint.
      *
      * @code{.cpp}
      * using PositionTween = Tween<&Components::TransformComponent::position, Easing::InOutCubic>;
@@ -379,12 +379,7 @@ namespace NovelRT::Ecs::Animation
             // A ping-pong cycle contains two legs.
             const uint64_t remainingLegs = cycles ? uint64_t{cycles->count} * (pingPong ? 2u : 1u) : 0;
 
-            std::optional<ValueType> offset;
-
-            if (byOffset)
-            {
-                offset.emplace(target);
-            }
+            std::optional<ValueType> offset = byOffset ? std::optional(target) : std::nullopt;
 
             return catalogue.ScheduleSystemJob(TweenJob{.entity = entity,
                                                         .target = std::move(target),
