@@ -280,7 +280,7 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void ProcessComponents(Timing::Timestamp delta, Catalogue& catalogue)
+        void ProcessComponents(Timing::Timestamp::duration delta, Catalogue& catalogue)
         {
             // 1. Start frame unanimously - this is for debug/metric windows
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
@@ -392,7 +392,7 @@ namespace NovelRT::Ecs::UI
         {
         }
 
-        void Update(Timing::Timestamp delta, Catalogue catalogue) override
+        void Update(Timing::Timestamp /* now */, Timing::Timestamp::duration delta, Catalogue catalogue) override
         {
             // if the renderpass' Id is not assigned, don't perform any updates.
             if (_renderPassId == 0ULL)

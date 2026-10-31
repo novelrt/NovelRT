@@ -23,9 +23,9 @@ public:
     std::atomic_bool sysOneBool = true;
     std::atomic_bool sysTwoBool = true;
     std::atomic_bool sysThreeBool = true;
-    std::function<void(Timestamp, Catalogue)> sysOne;
-    std::function<void(Timestamp, Catalogue)> sysTwo;
-    std::function<void(Timestamp, Catalogue)> sysThree;
+    std::function<void(Timestamp, Timestamp::duration, Catalogue)> sysOne;
+    std::function<void(Timestamp, Timestamp::duration, Catalogue)> sysTwo;
+    std::function<void(Timestamp, Timestamp::duration, Catalogue)> sysThree;
     inline static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
 
 protected:
@@ -41,9 +41,9 @@ protected:
         {
             scheduler = new SystemScheduler(ThreadsToSpin());
 
-            sysOne = [&](Timestamp, Catalogue) { sysOneBool = false; };
-            sysTwo = [&](Timestamp, Catalogue) { sysTwoBool = false; };
-            sysThree = [&](Timestamp, Catalogue) { sysThreeBool = false; };
+            sysOne = [&](Timestamp, Timestamp::duration, Catalogue) { sysOneBool = false; };
+            sysTwo = [&](Timestamp, Timestamp::duration, Catalogue) { sysTwoBool = false; };
+            sysThree = [&](Timestamp, Timestamp::duration, Catalogue) { sysThreeBool = false; };
 
             unused(scheduler->RegisterSystem(sysOne));
             unused(scheduler->RegisterSystem(sysTwo));
@@ -63,12 +63,12 @@ protected:
 
 TEST_F(SystemSchedulerTest, IndependentSystemsCanRun)
 {
-    EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp()));
+    EXPECT_NO_THROW(scheduler->ExecuteIteration(Timestamp(), Timestamp::duration()));
 }
 
 TEST_F(SystemSchedulerTest, IndependentSystemsCanModifyValues)
 {
-    scheduler->ExecuteIteration(Timestamp());
+    scheduler->ExecuteIteration(Timestamp(), Timestamp::duration());
 
     EXPECT_FALSE(sysOneBool);
     EXPECT_FALSE(sysTwoBool);
@@ -82,7 +82,7 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     EntityId entity = entityIdFactory.GetNext();
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
-    unused(scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
+    unused(scheduler->RegisterSystem([&](Timestamp, Timestamp::duration, Catalogue catalogue) {
         auto intSystem = catalogue.GetComponentView<int32_t>();
         for (auto [entity, component] : intSystem)
         {
@@ -98,11 +98,11 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
     std::vector<EntityId> deletedEntities;
     scheduler->GetComponentCache().PrepAllBuffersForNextFrame(deletedEntities);
 
-    scheduler->ExecuteIteration(Timestamp());
+    scheduler->ExecuteIteration(Timestamp(), Timestamp::duration());
     ASSERT_TRUE(isEqual);
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 20);
 
-    scheduler->ExecuteIteration(Timestamp());
+    scheduler->ExecuteIteration(Timestamp(), Timestamp::duration());
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 30);
 }
 
@@ -125,7 +125,7 @@ TEST_P(SystemSchedulerThreadsTest, HandlesLargeAmountOfSystemsOnVariousAmountsOf
 
     for (int i = 0; i < 253; ++i) // 256 total systems
     {
-        unused(scheduler->RegisterSystem([&](Timestamp, Catalogue catalogue) {
+        unused(scheduler->RegisterSystem([&](Timestamp, Timestamp::duration, Catalogue catalogue) {
             auto intSystem = catalogue.GetComponentView<int32_t>();
             for (auto [entity, component] : intSystem)
             {
@@ -134,7 +134,7 @@ TEST_P(SystemSchedulerThreadsTest, HandlesLargeAmountOfSystemsOnVariousAmountsOf
         }));
     }
 
-    scheduler->ExecuteIteration(Timestamp());
+    scheduler->ExecuteIteration(Timestamp(), Timestamp::duration());
     EXPECT_EQ(scheduler->GetComponentCache().GetComponentBuffer<int32_t>().GetComponent(entity), 253 + 10);
 }
 

@@ -17,6 +17,6 @@ namespace NovelRT::Ecs::Scripting
         SpokenLineStepSystem(DecisionTreeStateManager&, SystemScheduler&);
         ~SpokenLineStepSystem() override = default;
 
-        void Update(Timing::Timestamp delta, Catalogue catalogue) override;
+        void Update(Timing::Timestamp, Timing::Timestamp::duration, Catalogue catalogue) override;
     };
 }

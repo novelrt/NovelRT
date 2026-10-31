@@ -17,6 +17,6 @@ namespace NovelRT::Ecs::Scripting
         BranchStepSystem(DecisionTreeStateManager&, SystemScheduler&);
         ~BranchStepSystem() override = default;
 
-        void Update(Timing::Timestamp delta, Catalogue catalogue) override;
+        void Update(Timing::Timestamp, Timing::Timestamp::duration, Catalogue catalogue) override;
     };
 }

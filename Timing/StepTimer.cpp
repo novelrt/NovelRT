@@ -13,27 +13,13 @@ namespace NovelRT::Timing
           _targetFrequency(TimeFromFrequency<double>((targetFrameRate != 0) ? targetFrameRate : 60)
                                .time_since_epoch()), // 60fps, if nothing else specified
           _lastCounter(GameClock::now()),
-          _secondCounter(0),
           _remainingTicks(0),
-          _elapsedTicks(0),
           _totalTicks(0),
-          _frameCount(0),
-          _framesPerSecond(0),
-          _framesThisSecond(0),
           _isFixedTimeStep(targetFrameRate != 0)
     {
     }
 
-    void StepTimer::resetElapsedTime() noexcept
-    {
-        _lastCounter = GameClock::now();
-        _secondCounter = 0;
-        _remainingTicks = 0;
-        _framesPerSecond = 0;
-        _framesThisSecond = 0;
-    }
-
-    void StepTimer::Tick(const Utilities::Event<Timestamp::duration>& update)
+    void StepTimer::Tick(const Utilities::Event<Timestamp, Timestamp::duration>& update)
     {
         auto currentCounter = GameClock::now();
         auto counterDelta = currentCounter - _lastCounter;
@@ -46,9 +32,6 @@ namespace NovelRT::Timing
             return;
 
         _lastCounter = currentCounter;
-        _secondCounter += counterDelta.count();
-
-        auto lastFrameCount = _frameCount;
 
         if (_isFixedTimeStep)
         {
@@ -75,37 +58,21 @@ namespace NovelRT::Timing
 
             while (_remainingTicks >= _targetFrequency.count())
             {
-                _elapsedTicks = _targetFrequency.count();
                 _totalTicks += _targetFrequency.count();
                 _remainingTicks -= _targetFrequency.count();
-                _frameCount++;
 
-                update(ticksDelta);
+                auto now = TimeFromTicks(_totalTicks);
+                update(now, ticksDelta);
             }
         }
         else
         {
             // variable timestep update logic
-
-            _elapsedTicks = ticksDelta.count();
             _totalTicks += ticksDelta.count();
             _remainingTicks = 0;
-            _frameCount++;
 
-            update(ticksDelta);
-        }
-
-        // Track the current framerate
-        if (_frameCount != lastFrameCount)
-        {
-            _framesThisSecond++;
-        }
-
-        if (_secondCounter >= _targetFrequency.count())
-        {
-            _framesPerSecond = _framesThisSecond;
-            _framesThisSecond = 0;
-            _secondCounter %= _targetFrequency.count();
+            auto now = TimeFromTicks(_totalTicks);
+            update(now, ticksDelta);
         }
     }
 } // namespace NovelRT::Timing

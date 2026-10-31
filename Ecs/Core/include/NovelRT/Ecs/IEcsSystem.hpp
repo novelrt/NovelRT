@@ -20,10 +20,11 @@ namespace NovelRT::Ecs
     public:
         /**
          * @brief The system method. Your system's logic and behaviour goes in here.
-         * @param delta The delta time between the previous iteration and the current iteration, as a TimeStamp.
+         * @param now The current time (as of the start of the ECS update)
+         * @param delta The delta time between the previous iteration and the current iteration.
          * @param catalogue The ECS catalogue object to provide thread-aware ComponentView<TComponent> instances.
          */
-        virtual void Update(Timing::Timestamp delta, Catalogue catalogue) = 0;
+        virtual void Update(Timing::Timestamp now, Timing::Timestamp::duration delta, Catalogue catalogue) = 0;
         virtual ~IEcsSystem() = default;
     };
 }

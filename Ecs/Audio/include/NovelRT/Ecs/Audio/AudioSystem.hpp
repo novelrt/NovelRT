@@ -39,7 +39,6 @@ namespace NovelRT::Ecs::Audio
         std::map<uint32_t, NovelRT::ResourceManagement::AudioMetadata> _soundCache;
         std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>> _fadeCache;
         std::shared_ptr<NovelRT::Audio::AudioMixer<TAudioBackend>> _mixer;
-        NovelRT::Timing::Timestamp _systemTime;
         std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader> _resourceLoader;
 
         void ChangeAudioVolume(AudioEmitterComponent emitter, float desiredVolume)
@@ -54,7 +53,6 @@ namespace NovelRT::Ecs::Audio
             _soundCache(std::map<uint32_t, NovelRT::ResourceManagement::AudioMetadata>()),
             _fadeCache(std::map<EntityId, std::tuple<NovelRT::Timing::Timestamp, float>>()),
             _mixer(std::make_shared<NovelRT::Audio::AudioMixer<TAudioBackend>>(provider)),
-            _systemTime{},
             _resourceLoader(std::move(resourceLoader))
         {
         }
@@ -64,9 +62,8 @@ namespace NovelRT::Ecs::Audio
             unused(_soundCache.empty());
         }
 
-        void Update(Timing::Timestamp delta, Ecs::Catalogue catalogue) final
+        void Update(Timing::Timestamp now, Timing::Timestamp::duration delta, Ecs::Catalogue catalogue) final
         {
-            _systemTime += delta.time_since_epoch();
             auto [emitters, states] = catalogue.GetComponentViews<AudioEmitterComponent, AudioEmitterStateComponent>();
 
             for (auto [entity, emitterState] : states)
@@ -118,7 +115,7 @@ namespace NovelRT::Ecs::Audio
                         }
 
                         float slope = -(emitter.volume / emitterState.fadeDuration);
-                        Timing::Timestamp endTime = _systemTime + Timing::TimeFromSeconds(emitterState.fadeDuration).time_since_epoch();
+                        Timing::Timestamp endTime = now + Timing::TimeFromSeconds(emitterState.fadeDuration).time_since_epoch();
                         _fadeCache.insert({entity, std::make_tuple(endTime, slope)});
 
                         states.PushComponentUpdateInstruction(
@@ -130,9 +127,9 @@ namespace NovelRT::Ecs::Audio
                     case AudioEmitterState::FadingOut:
                     {
                         Timing::Timestamp endTime = std::get<0>(_fadeCache.at(entity));
-                        float remainingDuration = Timing::GetSeconds<float>(endTime - _systemTime);
+                        float remainingDuration = Timing::GetSeconds<float>(endTime - now);
 
-                        if (_systemTime < endTime)
+                        if (now < endTime)
                         {
                             float slope = std::get<1>(_fadeCache.at(entity));
                             float newVolume = emitter.volume + (slope * Timing::GetSeconds<float>(delta));
@@ -146,7 +143,7 @@ namespace NovelRT::Ecs::Audio
                                 AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, newVolume});
                             _logger.logDebug("Entity ID {} - EmitterState FadingOut at volume {}, slope: {}, currentTime: "
                                             "{}, remaining: {}",
-                                            entity, newVolume, slope, Timing::GetSeconds<float>(_systemTime), remainingDuration);
+                                            entity, newVolume, slope, Timing::GetSeconds<float>(now), remainingDuration);
                             break;
                         }
                         else
@@ -181,7 +178,7 @@ namespace NovelRT::Ecs::Audio
                         }
 
                         float slope = (emitterState.fadeExpectedVolume / emitterState.fadeDuration);
-                        Timing::Timestamp endTime = _systemTime + Timing::TimeFromSeconds(emitterState.fadeDuration).time_since_epoch();
+                        Timing::Timestamp endTime = now + Timing::TimeFromSeconds(emitterState.fadeDuration).time_since_epoch();
                         _fadeCache.insert({entity, std::make_tuple(endTime, slope)});
 
                         states.PushComponentUpdateInstruction(
@@ -195,9 +192,9 @@ namespace NovelRT::Ecs::Audio
                     case AudioEmitterState::FadingIn:
                     {
                         Timing::Timestamp endTime = std::get<0>(_fadeCache.at(entity));
-                        float remainingDuration = Timing::GetSeconds<float>(endTime - _systemTime);
+                        float remainingDuration = Timing::GetSeconds<float>(endTime - now);
 
-                        if (_systemTime < endTime)
+                        if (now < endTime)
                         {
                             float slope = std::get<1>(_fadeCache.at(entity));
                             float newVolume = emitter.volume + (slope * Timing::GetSeconds<float>(delta));
@@ -210,7 +207,7 @@ namespace NovelRT::Ecs::Audio
                                 AudioEmitterComponent{emitter.handle, emitter.isMusic, emitter.numberOfLoops, newVolume});
                             _logger.logDebug("Entity ID {} - EmitterState FadingIn at volume {}, slope: {}, currentTime: "
                                             "{}, remaining: {}",
-                                            entity, newVolume, slope, Timing::GetSeconds<float>(_systemTime), remainingDuration);
+                                            entity, newVolume, slope, Timing::GetSeconds<float>(now), remainingDuration);
                             break;
                         }
                         else

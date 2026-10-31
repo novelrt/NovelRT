@@ -17,5 +17,5 @@ namespace NovelRT::Ecs::Detail
 {
     template<typename TWork, typename TCompletion>
     concept ValidScheduleWithCompletion =
-        std::invocable<TWork> && std::invocable<TCompletion, Timing::Timestamp, Catalogue, std::invoke_result_t<TWork>>;
+        std::invocable<TWork> && std::invocable<TCompletion, Timing::Timestamp, Timing::Timestamp::duration, Catalogue, std::invoke_result_t<TWork>>;
 }

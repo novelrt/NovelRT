@@ -447,10 +447,10 @@ int main()
     NovelRT::Timing::StepTimer timer(144, 1.0f / 144.0f);
 
     // Custom Event Setup
-    NovelRT::Utilities::Event<NovelRT::Timing::Timestamp::duration> UpdateEvent;
+    NovelRT::Utilities::Event<NovelRT::Timing::Timestamp, NovelRT::Timing::Timestamp::duration> UpdateEvent;
     bool clicked = false;
 
-    UpdateEvent += [&](auto delta)
+    UpdateEvent += [&](auto /* now */, auto delta)
     {
         // On Invocation...
 

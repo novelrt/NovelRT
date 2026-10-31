@@ -41,11 +41,11 @@ namespace NovelRT::Ecs
     private:
         struct SystemJobInfo
         {
-            std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr;
+            std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr;
             size_t lastExecutedFrame = 0ULL;
             bool isDone = false;
 
-            explicit SystemJobInfo(std::function<bool(Timing::Timestamp, Catalogue)> job) noexcept
+            explicit SystemJobInfo(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> job) noexcept
                 : jobFnPtr(std::move(job))
             {
             }
@@ -56,7 +56,7 @@ namespace NovelRT::Ecs
         static constexpr uint32_t DefaultBlindThreadLimit = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
-        std::unordered_map<SystemId, std::function<void(Timing::Timestamp, Catalogue)>> _systems;
+        std::unordered_map<SystemId, std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)>> _systems;
         std::unordered_map<SystemId, std::vector<SystemId>> _systemDependencies;
         std::vector<std::vector<SystemId>> _schedulingLayers;
         std::unordered_set<SystemId> _terminalSystemIds;
@@ -70,11 +70,12 @@ namespace NovelRT::Ecs
         std::unique_ptr<tbb::task_arena> _asyncArena;
         std::unique_ptr<tbb::task_group> _ecsTasks;
         std::unique_ptr<tbb::task_group> _asyncTasks;
-        tbb::concurrent_queue<std::function<void(Timing::Timestamp, Catalogue)>> _pendingCompletions;
+        tbb::concurrent_queue<std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)>> _pendingCompletions;
         tbb::concurrent_unordered_map<SystemId, SystemJobInfo> _systemJobs;
         tbb::concurrent_queue<SystemId> _jobCancellations;
 
-        Timing::Timestamp _currentDelta;
+        Timing::Timestamp _currentTimestamp;
+        Timing::Timestamp::duration _currentDelta;
 
         bool _hasExecutedAtLeastOnce;
 
@@ -87,13 +88,13 @@ namespace NovelRT::Ecs
             TWork&& work,
             TCompletion&& completion) noexcept;
 
-        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr);
+        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
         void CancelSystemJob(SystemId jobId);
 
         void RebuildSystemDependencyTreeLayers();
 
         [[nodiscard]] SystemId RegisterSystemInternalNoTreeRebuild(
-            std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr,
+            std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
             std::span<const SystemId> dependencies);
 
     public:
@@ -139,7 +140,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
          * executed.
          */
-        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr,
+        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
                                               std::span<const SystemId> dependencies);
 
         /**
@@ -155,7 +156,7 @@ namespace NovelRT::Ecs
          * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
          * executed.
          */
-        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr);
+        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr);
 
         /**
          * @brief Registers an IEcsSystem instance to the SystemScheduler instance.
@@ -200,7 +201,7 @@ namespace NovelRT::Ecs
          * executed.
          */
         [[nodiscard]] SystemId RegisterSystemDependsOnAll(
-            std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr);
+            std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr);
 
         /**
          * @brief Registers an IEcsSystem instance to the SystemScheduler instance as a terminal system. A terminal
@@ -318,11 +319,12 @@ namespace NovelRT::Ecs
         /**
          * @brief Executes an iteration of the ECS.
          *
+         * @param now the current monotonic timestamp to supply to systems.
          * @param delta the current delta time to supply to systems.
          *
          * @exception Any and all exceptions that might possibly propagate from any given system.
          */
-        void ExecuteIteration(Timing::Timestamp delta);
+        void ExecuteIteration(Timing::Timestamp now, Timing::Timestamp::duration delta);
 
         /**
          * @brief Destroys the SystemScheduler.
