@@ -80,7 +80,7 @@ public:
     {
     }
 
-    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         if (_spriteEntity.has_value() && _cameraViewportEntity.has_value())
         {
@@ -88,7 +88,7 @@ public:
         }
 
         unused(catalogue.ScheduleSystemJob(
-            [](auto, auto)
+            [](auto, auto, auto)
             {
                 std::cout << "HELLO FROM JOB!\n";
                 return true;
@@ -185,9 +185,9 @@ int main()
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
-    Event<Timestamp::duration> TimerCallback{};
+    Event<Timestamp, Timestamp::duration> TimerCallback{};
 
-    TimerCallback += [&timer, &scheduler](auto /* delta */) { scheduler.ExecuteIteration(timer.getTotalTime()); };
+    TimerCallback += [&scheduler](auto now, auto delta) { scheduler.ExecuteIteration(now, delta); };
 
     while (!wndProvider->ShouldClose())
     {

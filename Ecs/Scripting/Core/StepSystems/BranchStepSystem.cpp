@@ -51,7 +51,7 @@ NovelRT::Ecs::Scripting::BranchStepSystem::BranchStepSystem(DecisionTreeStateMan
         });
 }
 
-void NovelRT::Ecs::Scripting::BranchStepSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::BranchStepSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
 {
     // TODO: it would be nice to express this query as "has all of these"
     auto [decisionTrees, branchComponents, continueComponents, branchChoiceComponents] =

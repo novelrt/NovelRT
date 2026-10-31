@@ -54,7 +54,7 @@ namespace NovelRT::Ecs
         return UnsafeComponentView(_poolId, _componentCache.GetComponentBufferById(componentTypeId));
     }
 
-    SystemId Catalogue::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr)
+    SystemId Catalogue::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr)
     {
         return _scheduler.ScheduleSystemJob(std::move(jobFnPtr));
     }

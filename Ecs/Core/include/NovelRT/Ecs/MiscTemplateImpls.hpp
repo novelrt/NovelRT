@@ -31,8 +31,8 @@ namespace NovelRT::Ecs
                     {
                         auto result = (*work)();
                         _pendingCompletions.push(
-                            [completion, result = std::move(result)](Timing::Timestamp delta, Catalogue cat) mutable
-                            { (*completion)(delta, cat, std::move(result)); });
+                            [completion, result = std::move(result)](Timing::Timestamp now, Timing::Timestamp::duration delta, Catalogue cat) mutable
+                            { (*completion)(now, delta, cat, std::move(result)); });
                     });
             });
     }

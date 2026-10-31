@@ -164,7 +164,7 @@ namespace NovelRT::Ecs::Graphics
 
                 catalogue.ScheduleWithCompletion(
                     [this, assetId = sprite.assetId]() { return _resourceLoader->LoadTexture(assetId); },
-                    [this, assetId = sprite.assetId](Timing::Timestamp /*delta*/, Catalogue completionCatalogue,
+                    [this, assetId = sprite.assetId](Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue completionCatalogue,
                                                      ResourceManagement::TextureMetadata textureMetadata)
                     {
 
@@ -504,7 +504,7 @@ namespace NovelRT::Ecs::Graphics
             _graphicsDevice->WaitForIdle();
         }
 
-        void Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
+        void Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
         {
             HandleNewSpriteTextures(catalogue);
             SubmitToOrchestrator(catalogue);

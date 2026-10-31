@@ -47,7 +47,7 @@ NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::DecisionTreeLoadingSystem(
 {
 }
 
-void NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
 {
     auto loadRequests = catalogue.GetComponentView<Components::DecisionTreeLoadRequest>();
     if (loadRequests.begin() == loadRequests.end())
@@ -72,7 +72,7 @@ void NovelRT::Ecs::Scripting::DecisionTreeLoadingSystem::Update(Timing::Timestam
 
             return results;
         },
-        [](Timing::Timestamp /* delta */, Catalogue catalogue, std::vector<LoadResult> results)
+        [](Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue, std::vector<LoadResult> results)
         {
             auto loadedTrees = catalogue.GetComponentView<Components::LoadedDecisionTree>();
             std::for_each(results.begin(), results.end(),

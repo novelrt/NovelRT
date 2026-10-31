@@ -99,7 +99,7 @@ public:
     {
     }
 
-    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         if (_spriteEntity.has_value() && _cameraViewportEntity.has_value())
         {
@@ -173,7 +173,7 @@ public:
     {
     }
 
-    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         if (!_firstPass)
         {
@@ -247,7 +247,7 @@ public:
     {
     }
 
-    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         if (!_firstPass)
         {
@@ -279,7 +279,7 @@ private:
     std::vector<std::string> _story{"Hello!", "I'm going to get milk, now...", "...", "...", "*30 years later*", "..."};
 
 public:
-    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         auto [elementView, clickEvents, textView, buttonView, spriteView] =
             catalogue.GetComponentViews<UIElement, UIClickEvent, UIText, UIButton, Sprite>();
@@ -380,7 +380,7 @@ public:
         };
     }
 
-    void Update(NovelRT::Timing::Timestamp /*delta*/, Catalogue catalogue) final
+    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         if (!_changedSize)
         {
@@ -476,9 +476,9 @@ int main()
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};
-    Event<Timestamp::duration> TimerCallback{};
+    Event<Timestamp, Timestamp::duration> TimerCallback{};
 
-    TimerCallback += [&scheduler](auto delta) { scheduler.ExecuteIteration(Timestamp{delta}); };
+    TimerCallback += [&scheduler](auto now, auto delta) { scheduler.ExecuteIteration(now, delta); };
 
     while (!wndProvider->ShouldClose())
     {

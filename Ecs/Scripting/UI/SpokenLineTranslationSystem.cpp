@@ -148,7 +148,7 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
 NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::SpokenLineTranslationSystem()
 { }
 
-void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
 {
     CleanupInactiveTrees(catalogue);
     IdentifyNewTrees(catalogue);

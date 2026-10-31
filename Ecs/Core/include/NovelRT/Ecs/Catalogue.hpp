@@ -148,7 +148,7 @@ namespace NovelRT::Ecs
          *
          * @return The SystemId that represents this system-based job.
          */
-        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr);
+        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
 
         /**
          * @brief Cancels a currently running system-based job based on the given ID.
