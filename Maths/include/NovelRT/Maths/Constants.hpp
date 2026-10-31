@@ -6,6 +6,27 @@
 namespace NovelRT::Maths
 {
     /**
+     * @brief Retrieves a constant for a half rotation expressed in radians.
+     *
+     * @details
+     * A half rotation is expressed as: \f[
+     *      \pi = 3.14159265358979323846...
+     * \f]
+     * In this implementation it is expressed as \f(3.141592654f\f), or as \f(3.14159265358979323846\f).
+     *
+     * @tparam T A floating point type that is expressed as either float or double.
+     * @return A half rotation expressed in radians.
+     */
+    template<typename T>
+    constexpr inline T Pi;
+
+    template<>
+    constexpr inline float Pi<float> = 3.141592654f;
+
+    template<>
+    constexpr inline double Pi<double> = 3.14159265358979323846;
+
+    /**
      * @brief Retrieves a constant for a full rotation expressed in radians.
      *
      * @details

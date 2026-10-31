@@ -14,6 +14,7 @@
 // See there for additional information.
 
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
 
@@ -225,5 +226,36 @@ namespace NovelRT::Maths::Utilities
     [[nodiscard]] inline float RadiansToDegrees(float radians) noexcept
     {
         return glm::degrees(radians);
+    }
+
+    // TODO: Is this concept overkill? I feel like I'm repeating myself but I am trying to enforce these operators
+    // existing. - Matt J.
+    template<typename T>
+    concept LinearlyInterpolatable =
+        std::copy_constructible<T> && requires(const T& start, const T& end, float progress)
+    {
+        {start + (end - start) * progress}->std::convertible_to<T>;
+    };
+
+    template<LinearlyInterpolatable TValue>
+    [[nodiscard]] constexpr TValue LerpUnclamped(const TValue& start, const TValue& end, float progress)
+    {
+        return start + (end - start) * progress;
+    }
+
+    template<LinearlyInterpolatable TValue>
+    [[nodiscard]] constexpr TValue Lerp(const TValue& start, const TValue& end, float progress)
+    {
+        if (progress <= 0.0f)
+        {
+            return start;
+        }
+
+        if (progress >= 1.0f)
+        {
+            return end;
+        }
+
+        return LerpUnclamped(start, end, progress);
     }
 }

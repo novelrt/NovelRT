@@ -11,6 +11,8 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Tests
     NovelRT::Ecs
 
   SOURCES
+    Ecs/Animation/EasingTest.cpp
+    Ecs/Animation/TweenTest.cpp
     Ecs/CatalogueTest.cpp
     Ecs/ComponentBufferMemoryContainerTest.cpp
     Ecs/ComponentBufferTest.cpp
