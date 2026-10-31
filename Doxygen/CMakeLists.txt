@@ -80,6 +80,7 @@ doxygen_add_docs(Doxygen
         ${DOXYGEN_OUTPUT_DIRECTORY}/LICENCE-DIST.md
         ${PROJECT_SOURCE_DIR}/Audio/Core/include
         ${PROJECT_SOURCE_DIR}/Audio/OpenAL/include
+        ${PROJECT_SOURCE_DIR}/Ecs/Animation/include
         ${PROJECT_SOURCE_DIR}/Ecs/Audio/include
         ${PROJECT_SOURCE_DIR}/Ecs/Core/include
         ${PROJECT_SOURCE_DIR}/Ecs/Graphics/include
