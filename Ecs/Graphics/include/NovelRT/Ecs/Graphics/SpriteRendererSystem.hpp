@@ -248,6 +248,7 @@ namespace NovelRT::Ecs::Graphics
                     Components::TrackedSemaphore<TGraphicsBackend>, Components::Camera, Components::Viewport>();
 
             const Maths::GeoVector2F surfaceSize = _surfaceContext->GetSurface()->GetSize();
+
             if (surfaceSize.x <= 0.0f || surfaceSize.y <= 0.0f)
             {
                 return;
