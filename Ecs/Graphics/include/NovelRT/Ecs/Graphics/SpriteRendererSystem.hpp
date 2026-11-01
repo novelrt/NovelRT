@@ -39,6 +39,7 @@
 
 #include <NovelRT/Utilities/Memory.hpp>
 
+#include <cmath>
 #include <optional>
 #include <span>
 #include <unordered_map>
@@ -164,10 +165,10 @@ namespace NovelRT::Ecs::Graphics
 
                 catalogue.ScheduleWithCompletion(
                     [this, assetId = sprite.assetId]() { return _resourceLoader->LoadTexture(assetId); },
-                    [this, assetId = sprite.assetId](Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue completionCatalogue,
-                                                     ResourceManagement::TextureMetadata textureMetadata)
+                    [this, assetId = sprite.assetId](
+                        Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */,
+                        Catalogue completionCatalogue, ResourceManagement::TextureMetadata textureMetadata)
                     {
-
                         auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
                                                                                              textureMetadata.height);
 
@@ -246,6 +247,13 @@ namespace NovelRT::Ecs::Graphics
                     Components::Sprite, NovelRT::Ecs::Components::TransformComponent,
                     Components::TrackedSemaphore<TGraphicsBackend>, Components::Camera, Components::Viewport>();
 
+            const Maths::GeoVector2F surfaceSize = _surfaceContext->GetSurface()->GetSize();
+
+            if (surfaceSize.x <= 0.0f || surfaceSize.y <= 0.0f)
+            {
+                return;
+            }
+
             std::vector<CameraData> worldSpaceCameras{};
 
             for (auto [cameraEntityId, camera] : cameraView)
@@ -256,6 +264,24 @@ namespace NovelRT::Ecs::Graphics
                 }
 
                 Components::Viewport viewport = viewportView.GetComponent(cameraEntityId);
+
+                // This is an implementation detail - we convert the relative viewport position and size into pixels
+                // based on the current surface size. This keeps each viewport in its intended region as the surface
+                // resizes, without changing the stored component or the camera's projection.
+                const float left = std::round(viewport.x * surfaceSize.x);
+                const float top = std::round(viewport.y * surfaceSize.y);
+                const float right = std::round((viewport.x + viewport.width) * surfaceSize.x);
+                const float bottom = std::round((viewport.y + viewport.height) * surfaceSize.y);
+
+                viewport.x = left;
+                viewport.y = top;
+                viewport.width = right - left;
+                viewport.height = bottom - top;
+
+                if (viewport.width <= 0.0f || viewport.height <= 0.0f)
+                {
+                    continue;
+                }
 
                 NovelRT::Ecs::Components::TransformComponent cameraTransform =
                     transformView.GetComponent(cameraEntityId);
