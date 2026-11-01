@@ -80,6 +80,7 @@ namespace NovelRT::Ecs::Graphics
         {
             uint64_t uploadIndex;
             std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> stagingBuffer;
+            std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>> stagingBufferRegion;
             std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> uploadContext;
             std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>> uploadCmdList;
         };
@@ -139,6 +140,7 @@ namespace NovelRT::Ecs::Graphics
         uint64_t _frameCounter{0};
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _orchestratorSubmissionSemaphore;
         std::optional<EntityId> _orchestratorSubmissionSemaphoreEntity;
+        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> _lists;
 
         std::unordered_map<EntityId, BufferRegion> _cameraConstantBuffers;
 
@@ -149,7 +151,7 @@ namespace NovelRT::Ecs::Graphics
             {
                 lastCompletedUpload -= 1;
             }
-
+            _lists.clear();
             _pendingStagingBuffers.erase(std::remove_if(_pendingStagingBuffers.begin(), _pendingStagingBuffers.end(),
                                                         [lastCompletedUpload](const auto& pending)
                                                         { return pending.uploadIndex <= lastCompletedUpload; }),
@@ -190,25 +192,21 @@ namespace NovelRT::Ecs::Graphics
                             auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(texture.width,
                                                                                              texture.height);
 
-                            
-                            
                             totalSize += texture2D->GetSize();
                             
-                            TextureCache thing = TextureCache{.textureMetadata = texture, .textureRegion = texture2D};
-                            newTextures.push_back(thing);
+                            TextureCache textureCache = TextureCache{.textureMetadata = texture, .textureRegion = texture2D};
+                            newTextures.push_back(textureCache);
                         }
-
-
 
                         NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
                             .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
                             .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
                             .size = totalSize};
 
-
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-
+                        
                         for(auto [texture, texture2D] : newTextures) {
+                            
                             auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
                             auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
 
@@ -220,32 +218,17 @@ namespace NovelRT::Ecs::Graphics
 
                             auto gfxContext = _graphicsDevice->CreateGraphicsContext();
                             auto uploadCmdList = gfxContext->CreateCmdList();
+                            
                             uploadCmdList->Begin();
                             uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
                             uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
                             uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
                             uploadCmdList->End();
-                                                    std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{
-                            uploadCmdList};
 
-                            std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
-                                                uint64_t>>
-                                signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
-
-                            _graphicsDevice->QueueSubmit(lists, signalSemaphores);
-
-                            Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
-                                .semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
-                                    _uploadSemaphore),
-                                .signalValue = _submittedUploads};
-
-                            auto id = completionCatalogue.CreateEntity();
-
-                            completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
-                                .AddComponent(id, newUploadTracker);
+                            _lists.emplace_back(uploadCmdList);
 
                             _pendingStagingBuffers.push_back(
-                                {_submittedUploads, textureStagingBuffer, gfxContext, uploadCmdList});
+                                {_submittedUploads, textureStagingBuffer,textureStagingBufferRegion, gfxContext, uploadCmdList});
                             _textureCache.emplace(
                                 texture.databaseHandle, TextureCacheItem{texture2DRegion,
                                                         Maths::GeoVector2F(static_cast<float>(texture.width),
@@ -253,7 +236,21 @@ namespace NovelRT::Ecs::Graphics
 
                             _pendingLoads.erase(texture.databaseHandle);
                         }
+                                                std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
+                                            uint64_t>>
+                            signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
 
+                        _graphicsDevice->QueueSubmit(_lists, signalSemaphores);
+
+                        Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
+                            .semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
+                                _uploadSemaphore),
+                            .signalValue = _submittedUploads};
+
+                        auto id = completionCatalogue.CreateEntity();
+
+                        completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
+                            .AddComponent(id, newUploadTracker);
                     });
             }
         }
