@@ -140,7 +140,7 @@ namespace NovelRT::Ecs::Graphics
         uint64_t _frameCounter{0};
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _orchestratorSubmissionSemaphore;
         std::optional<EntityId> _orchestratorSubmissionSemaphoreEntity;
-        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> _lists;
+        
 
         std::unordered_map<EntityId, BufferRegion> _cameraConstantBuffers;
 
@@ -151,7 +151,7 @@ namespace NovelRT::Ecs::Graphics
             {
                 lastCompletedUpload -= 1;
             }
-            _lists.clear();
+            
             _pendingStagingBuffers.erase(std::remove_if(_pendingStagingBuffers.begin(), _pendingStagingBuffers.end(),
                                                         [lastCompletedUpload](const auto& pending)
                                                         { return pending.uploadIndex <= lastCompletedUpload; }),
@@ -204,6 +204,10 @@ namespace NovelRT::Ecs::Graphics
                             .size = totalSize};
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+                        auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+
+                        auto uploadCmdList = gfxContext->CreateCmdList();
+                        uploadCmdList->Begin();
                         
                         for(auto [texture, texture2D] : newTextures) {
                             
@@ -216,17 +220,10 @@ namespace NovelRT::Ecs::Graphics
 
                             textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
-                            auto gfxContext = _graphicsDevice->CreateGraphicsContext();
-                            auto uploadCmdList = gfxContext->CreateCmdList();
-                            
-                            uploadCmdList->Begin();
                             uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
                             uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
                             uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
-                            uploadCmdList->End();
-
-                            _lists.emplace_back(uploadCmdList);
-
+                            
                             _pendingStagingBuffers.push_back(
                                 {_submittedUploads, textureStagingBuffer,textureStagingBufferRegion, gfxContext, uploadCmdList});
                             _textureCache.emplace(
@@ -239,8 +236,11 @@ namespace NovelRT::Ecs::Graphics
                                                 std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
                                             uint64_t>>
                             signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
+                        
+                        uploadCmdList->End();
 
-                        _graphicsDevice->QueueSubmit(_lists, signalSemaphores);
+                        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> list{uploadCmdList};
+                        _graphicsDevice->QueueSubmit(list, signalSemaphores);
 
                         Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
                             .semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
