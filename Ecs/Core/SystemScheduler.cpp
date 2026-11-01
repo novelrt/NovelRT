@@ -18,7 +18,7 @@
 
 namespace NovelRT::Ecs
 {
-    SystemId SystemScheduler::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Catalogue)> jobFnPtr)
+    SystemId SystemScheduler::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr)
     {
         static AtomFactory& systemIdFactory = AtomFactoryDatabase::GetFactory("SystemId");
         SystemId id = systemIdFactory.GetNext();
@@ -113,7 +113,7 @@ namespace NovelRT::Ecs
     }
 
     SystemId SystemScheduler::RegisterSystemInternalNoTreeRebuild(
-        std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr,
+        std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
         std::span<const SystemId> dependencies)
     {
         for (SystemId dep : dependencies)
@@ -147,8 +147,10 @@ namespace NovelRT::Ecs
           _pendingCompletions(),
           _systemJobs(),
           _jobCancellations(),
-          _currentDelta(NovelRT::Timing::TimeFromSeconds(0)),
-          _hasExecutedAtLeastOnce(false)
+          _currentTimestamp(NovelRT::Timing::TimeFromSeconds(0)),
+          _currentDelta(),
+          _hasExecutedAtLeastOnce(false),
+          _frameCounter(0ULL)
     {
         _workerThreadCount = static_cast<uint32_t>(_ecsArena->max_concurrency());
         _entityCache = EntityCache(_workerThreadCount);
@@ -169,8 +171,10 @@ namespace NovelRT::Ecs
           _pendingCompletions(std::move(other._pendingCompletions)),
           _systemJobs(std::move(other._systemJobs)),
           _jobCancellations(std::move(other._jobCancellations)),
+          _currentTimestamp(other._currentTimestamp),
           _currentDelta(other._currentDelta),
-          _hasExecutedAtLeastOnce(other._hasExecutedAtLeastOnce)
+          _hasExecutedAtLeastOnce(other._hasExecutedAtLeastOnce),
+          _frameCounter(other._frameCounter)
     {
     }
 
@@ -189,13 +193,15 @@ namespace NovelRT::Ecs
         _pendingCompletions = std::move(other._pendingCompletions);
         _systemJobs = std::move(other._systemJobs);
         _jobCancellations = std::move(other._jobCancellations);
+        _currentTimestamp = other._currentTimestamp;
         _currentDelta = other._currentDelta;
         _hasExecutedAtLeastOnce = other._hasExecutedAtLeastOnce;
+        _frameCounter = other._frameCounter;
 
         return *this;
     }
 
-    SystemId SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr,
+    SystemId SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
                                              std::span<const SystemId> dependencies)
     {
         if (_hasExecutedAtLeastOnce)
@@ -211,7 +217,7 @@ namespace NovelRT::Ecs
         return id;
     }
 
-    SystemId SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr)
+    SystemId SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr)
     {
         return RegisterSystem(systemUpdatePtr, {});
     }
@@ -227,7 +233,7 @@ namespace NovelRT::Ecs
 
         _typedSystemCache.emplace_back(targetSystem);
 
-        return RegisterSystem([targetSystem](auto delta, auto catalogue) { targetSystem->Update(delta, catalogue); },
+        return RegisterSystem([targetSystem](auto timestamp, auto delta, auto catalogue) { targetSystem->Update(timestamp, delta, catalogue); },
                               dependencies);
     }
 
@@ -237,7 +243,7 @@ namespace NovelRT::Ecs
     }
 
     SystemId SystemScheduler::RegisterSystemDependsOnAll(
-        std::function<void(Timing::Timestamp, Catalogue)> systemUpdatePtr)
+        std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr)
     {
         if (_hasExecutedAtLeastOnce)
         {
@@ -264,18 +270,19 @@ namespace NovelRT::Ecs
 
         _typedSystemCache.emplace_back(targetSystem);
 
-        return RegisterSystemDependsOnAll([targetSystem](auto delta, auto catalogue)
-                                          { targetSystem->Update(delta, catalogue); });
+        return RegisterSystemDependsOnAll([targetSystem](auto timestamp, auto delta, auto catalogue)
+                                          { targetSystem->Update(timestamp, delta, catalogue); });
     }
 
     void SystemScheduler::ScheduleUpdateWork()
     {
+        _frameCounter++;
         _ecsArena->execute(
             [&]()
             {
                 for (auto& layer : _schedulingLayers)
                 {
-                    std::function<void(Timing::Timestamp, Catalogue)> completion{};
+                    std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> completion{};
 
                     bool hadCompletions = false;
 
@@ -285,8 +292,8 @@ namespace NovelRT::Ecs
                         _ecsTasks->run(
                             [completion = std::move(completion), this]()
                             {
-                                size_t poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
-                                completion(_currentDelta, Catalogue(poolId, *this));
+                                auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
+                                completion(_currentTimestamp, _currentDelta, Catalogue(poolId, *this));
                             });
                     }
 
@@ -300,15 +307,28 @@ namespace NovelRT::Ecs
                         _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
                     }
 
+                    SystemId cancellationId = 0ULL;
+
+                    while (_jobCancellations.try_pop(cancellationId))
+                    {
+                        _systemJobs.unsafe_erase(cancellationId);
+                    }
+
                     for (auto& [_, systemJob] : _systemJobs)
                     {
                         unused(_);
+
+                        if (systemJob.lastExecutedFrame == _frameCounter)
+                        {
+                            continue;
+                        }
 
                         _ecsTasks->run(
                             [&systemJob, this]()
                             {
                                 auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
-                                systemJob.isDone = systemJob.jobFnPtr(_currentDelta, Catalogue(poolId, *this));
+                                systemJob.isDone = systemJob.jobFnPtr(_currentTimestamp, _currentDelta, Catalogue(poolId, *this));
+                                systemJob.lastExecutedFrame = _frameCounter;
                             });
                     }
 
@@ -330,13 +350,6 @@ namespace NovelRT::Ecs
                         }
                     }
 
-                    SystemId cancellationId = 0ULL;
-
-                    while (_jobCancellations.try_pop(cancellationId))
-                    {
-                        _systemJobs.unsafe_erase(cancellationId);
-                    }
-
                     if (hadTombstones)
                     {
                         _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
@@ -351,7 +364,7 @@ namespace NovelRT::Ecs
                             [&, systemId]()
                             {
                                 auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
-                                _systems[systemId](_currentDelta, Catalogue(poolId, *this));
+                                _systems[systemId](_currentTimestamp, _currentDelta, Catalogue(poolId, *this));
                             });
                     }
 
@@ -365,9 +378,10 @@ namespace NovelRT::Ecs
             });
     }
 
-    void SystemScheduler::ExecuteIteration(Timing::Timestamp delta)
+    void SystemScheduler::ExecuteIteration(Timing::Timestamp now, Timing::Timestamp::duration delta)
     {
         _hasExecutedAtLeastOnce = true;
+        _currentTimestamp = now;
         _currentDelta = delta;
         ScheduleUpdateWork();
     }

@@ -1,10 +1,24 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Maths/Constants.hpp>
+#include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Maths/GeoVector3F.hpp>
+#include <NovelRT/Maths/GeoVector4F.hpp>
 #include <NovelRT/Maths/Utilities.hpp>
 #include <gtest/gtest.h>
 
+#include <limits>
+#include <numbers>
+
 using namespace NovelRT::Maths;
+
+static_assert(Pi<float> == std::numbers::pi_v<float>);
+static_assert(Pi<double> == std::numbers::pi_v<double>);
+static_assert(Pi<float> * 2.0f == Tau<float>);
+static_assert(Pi<double> * 2.0 == Tau<double>);
+static_assert(Utilities::Lerp(10.0f, 20.0f, 0.25f) == 12.5f);
+static_assert(Utilities::LerpUnclamped(10.0f, 20.0f, 2.0f) == 30.0f);
 
 class LeadingZeroCount64Test : public testing::Test
 {
@@ -1005,4 +1019,75 @@ TEST_F(LeadingZeroCount64Test, LeadingZeroCount64ReturnsCorrectCountWhenRandomBi
     testValue = 0b1010010001010101101010101010101010101010101010101010101010101010;
     auto resultOfPattern = Utilities::LeadingZeroCount64(testValue);
     EXPECT_EQ(resultOfPattern, 0);
+}
+
+TEST(LerpTest, InterpolatesIncreasingAndDecreasingScalarValues)
+{
+    EXPECT_FLOAT_EQ(Utilities::Lerp(10.0f, 20.0f, 0.25f), 12.5f);
+    EXPECT_FLOAT_EQ(Utilities::Lerp(20.0f, 10.0f, 0.25f), 17.5f);
+    EXPECT_DOUBLE_EQ(Utilities::Lerp(-10.0, 30.0, 0.5f), 10.0);
+}
+
+TEST(LerpTest, ClampsProgressOutsideUnitInterval)
+{
+    EXPECT_FLOAT_EQ(Utilities::Lerp(10.0f, 20.0f, -1.0f), 10.0f);
+    EXPECT_FLOAT_EQ(Utilities::Lerp(10.0f, 20.0f, 2.0f), 20.0f);
+    EXPECT_FLOAT_EQ(Utilities::Lerp(20.0f, 10.0f, -1.0f), 20.0f);
+    EXPECT_FLOAT_EQ(Utilities::Lerp(20.0f, 10.0f, 2.0f), 10.0f);
+}
+
+TEST(LerpTest, ReturnsExactEndpointsWithoutOverflowingIntermediateArithmetic)
+{
+    const float start = std::numeric_limits<float>::max();
+    const float end = -std::numeric_limits<float>::max();
+
+    EXPECT_EQ(Utilities::Lerp(start, end, 0.0f), start);
+    EXPECT_EQ(Utilities::Lerp(start, end, 1.0f), end);
+}
+
+TEST(LerpTest, InterpolatesEqualEndpoints)
+{
+    EXPECT_FLOAT_EQ(Utilities::Lerp(12.0f, 12.0f, 0.25f), 12.0f);
+    EXPECT_FLOAT_EQ(Utilities::LerpUnclamped(12.0f, 12.0f, 2.0f), 12.0f);
+}
+
+TEST(LerpTest, InterpolatesVectorComponents)
+{
+    const auto result = Utilities::Lerp(GeoVector2F(-10.0f, 20.0f), GeoVector2F(30.0f, -20.0f), 0.25f);
+
+    EXPECT_FLOAT_EQ(result.x, 0.0f);
+    EXPECT_FLOAT_EQ(result.y, 10.0f);
+
+    const auto result3D = Utilities::Lerp(GeoVector3F(0.0f, 10.0f, 20.0f), GeoVector3F(40.0f, 30.0f, -20.0f), 0.25f);
+
+    EXPECT_FLOAT_EQ(result3D.x, 10.0f);
+    EXPECT_FLOAT_EQ(result3D.y, 15.0f);
+    EXPECT_FLOAT_EQ(result3D.z, 10.0f);
+}
+
+TEST(LerpTest, ClampsVectorProgressToOriginalEndpoints)
+{
+    const GeoVector2F start(-10.0f, 20.0f);
+    const GeoVector2F end(30.0f, -20.0f);
+
+    EXPECT_EQ(Utilities::Lerp(start, end, -1.0f), start);
+    EXPECT_EQ(Utilities::Lerp(start, end, 2.0f), end);
+}
+
+TEST(LerpUnclampedTest, ExtrapolatesBeforeStartAndBeyondEnd)
+{
+    EXPECT_FLOAT_EQ(Utilities::LerpUnclamped(10.0f, 20.0f, -1.0f), 0.0f);
+    EXPECT_FLOAT_EQ(Utilities::LerpUnclamped(10.0f, 20.0f, 2.0f), 30.0f);
+    EXPECT_FLOAT_EQ(Utilities::LerpUnclamped(20.0f, 10.0f, 2.0f), 0.0f);
+}
+
+TEST(LerpUnclampedTest, ExtrapolatesVectorComponents)
+{
+    const auto result =
+        Utilities::LerpUnclamped(GeoVector4F(0.0f, 1.0f, 2.0f, 3.0f), GeoVector4F(2.0f, 3.0f, 4.0f, 5.0f), 1.5f);
+
+    EXPECT_FLOAT_EQ(result.x, 3.0f);
+    EXPECT_FLOAT_EQ(result.y, 4.0f);
+    EXPECT_FLOAT_EQ(result.z, 5.0f);
+    EXPECT_FLOAT_EQ(result.w, 6.0f);
 }

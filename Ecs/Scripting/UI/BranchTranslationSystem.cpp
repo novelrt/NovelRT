@@ -209,7 +209,7 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
 NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::BranchTranslationSystem()
 { }
 
-void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
 {
     CleanupInactiveTrees(catalogue);
     IdentifyNewTrees(catalogue);

@@ -18,66 +18,25 @@ namespace NovelRT::Timing
         const GameClock::duration _targetFrequency;
 
         Timestamp _lastCounter;
-        uint64_t _secondCounter;
         uint64_t _remainingTicks;
 
-        uint64_t _elapsedTicks;
         uint64_t _totalTicks;
-
-        uint32_t _frameCount;
-        uint32_t _framesPerSecond;
-        uint32_t _framesThisSecond;
 
         bool _isFixedTimeStep;
 
     public:
         StepTimer(uint32_t targetFrameRate = 0, double maxSecondDelta = 0.1) noexcept;
 
-        inline uint64_t getElapsedTicks() const noexcept
-        {
-            return _elapsedTicks;
-        }
-        inline uint64_t getTotalTicks() const noexcept
-        {
-            return _totalTicks;
-        }
-
-        inline Timestamp getElapsedTime() const noexcept
-        {
-            auto elapsedTicks = getElapsedTicks();
-            return TimeFromTicks(elapsedTicks);
-        }
-        inline Timestamp getTotalTime() const noexcept
-        {
-            auto totalTicks = getTotalTicks();
-            return TimeFromTicks(totalTicks);
-        }
-
-        inline Timestamp::duration GetTargetElapsedTime() const noexcept
+        Timestamp::duration GetTargetFrequency() const noexcept
         {
             return _targetFrequency;
         }
 
-        inline uint32_t getFrameCount() const noexcept
-        {
-            return _frameCount;
-        }
-        inline uint32_t getFramesPerSecond() const noexcept
-        {
-            return _framesPerSecond;
-        }
-
-        inline const bool& isFixedTimeStep() const noexcept
+        bool IsFixedTimeStep() const noexcept
         {
             return _isFixedTimeStep;
         }
 
-        inline bool& isFixedTimeStep() noexcept
-        {
-            return _isFixedTimeStep;
-        }
-
-        void resetElapsedTime() noexcept;
-        void Tick(const Utilities::Event<Timestamp::duration>& update);
+        void Tick(const Utilities::Event<Timestamp, Timestamp::duration>& update);
     };
 }

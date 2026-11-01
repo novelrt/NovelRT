@@ -34,6 +34,6 @@ namespace NovelRT::Ecs::Scripting::UI
     public:
         SpokenLineTranslationSystem();
 
-        void Update(Timing::Timestamp, Catalogue);
+        void Update(Timing::Timestamp, Timing::Timestamp::duration, Catalogue);
     };
 }

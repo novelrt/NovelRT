@@ -182,7 +182,7 @@ namespace NovelRT::Ecs::Graphics
                     [this, assetIds]() { 
                         const std::span<const uuids::uuid> assetSpan(assetIds);
                         return _resourceLoader->LoadTextures(assetSpan); },
-                    [this](Timing::Timestamp /*delta*/, Catalogue completionCatalogue,
+                    [this](Timing::Timestamp /* now */, Timing::Timestamp::duration /*delta*/, Catalogue completionCatalogue,
                                                      std::vector<ResourceManagement::TextureMetadata> textureMetadata)
                     {
                         std::vector<TextureCache> newTextures;
@@ -251,7 +251,7 @@ namespace NovelRT::Ecs::Graphics
 
                         completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
                             .AddComponent(id, newUploadTracker);
-                    });
+                });
             }
         }
 
@@ -534,7 +534,7 @@ namespace NovelRT::Ecs::Graphics
             _graphicsDevice->WaitForIdle();
         }
 
-        void Update(Timing::Timestamp /*delta*/, Catalogue catalogue)
+        void Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
         {
             HandleNewSpriteTextures(catalogue);
             SubmitToOrchestrator(catalogue);

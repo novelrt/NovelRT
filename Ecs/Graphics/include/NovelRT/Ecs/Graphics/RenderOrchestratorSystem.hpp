@@ -104,7 +104,7 @@ namespace NovelRT::Ecs::Graphics
             _backgroundColour = colour;
         }
 
-        void Update(Timing::Timestamp /* delta */, Catalogue catalogue) override
+        void Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue) override
         {
             // 1. Clean up any resources that are no longer valid.
             auto lastRenderedFrame = _deletionSemaphore->GetValue();

@@ -136,7 +136,7 @@ NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::PoseToSpriteTr
 {
 }
 
-void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::Update(Timing::Timestamp /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
 {
     CleanupInactiveTrees(catalogue);
     IdentifyNewTrees(catalogue);

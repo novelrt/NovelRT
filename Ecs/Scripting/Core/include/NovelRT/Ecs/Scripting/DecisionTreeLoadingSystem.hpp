@@ -35,6 +35,6 @@ namespace NovelRT::Ecs::Scripting
         DecisionTreeLoadingSystem(const std::shared_ptr<NovelRT::Scripting::ScriptManager>& manager,
                                   const std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& resourceLoader);
 
-        void Update(Timing::Timestamp, Catalogue);
+        void Update(Timing::Timestamp, Timing::Timestamp::duration, Catalogue);
     };
 }
