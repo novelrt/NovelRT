@@ -108,6 +108,24 @@ public:
         sprite.assetId = assetId;
         spriteView.AddComponent(spriteEntity, sprite);
 
+        auto spriteEntity2 = catalogue.CreateEntity();
+        
+
+        auto assetId2 = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/milk-carton-hi.png").value();
+        
+        NovelRT::Ecs::Graphics::Components::Sprite sprite2{};
+        sprite2.assetId = assetId2;
+        spriteView.AddComponent(spriteEntity2, sprite2);
+
+        NovelRT::Ecs::Components::TransformComponent transform2{};
+        transform2.position = NovelRT::Maths::GeoVector2F(0.5f, 0.5f);
+        transform2.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
+        transform2.rotationInRadians = 0.0f;
+        transformView.AddComponent(spriteEntity2, transform2);
+
+
+
+
         NovelRT::Ecs::Components::TransformComponent transform{};
         transform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
         transform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
@@ -118,6 +136,7 @@ public:
         graphComp.parent = std::numeric_limits<EntityId>::max();
         graphComp.childrenStartNode = std::numeric_limits<EntityId>::max();
         graphView.AddComponent(spriteEntity, graphComp);
+        graphView.AddComponent(spriteEntity2, graphComp);
 
         auto cameraViewportEntity = catalogue.CreateEntity();
         _cameraViewportEntity = cameraViewportEntity;

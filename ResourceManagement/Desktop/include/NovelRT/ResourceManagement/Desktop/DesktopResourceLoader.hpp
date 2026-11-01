@@ -27,6 +27,7 @@ namespace NovelRT::ResourceManagement::Desktop
         void InitAssetDatabase() final;
         [[nodiscard]] TextureMetadata LoadTexture(std::filesystem::path filePath) final;
         [[nodiscard]] TextureMetadata LoadTexture(uuids::uuid assetId) final;
+        [[nodiscard]] std::vector<TextureMetadata> LoadTextures(const std::span<const uuids::uuid> assetIds) final;
         [[nodiscard]] ShaderMetadata LoadShaderSource(std::filesystem::path filePath) final;
         [[nodiscard]] ShaderMetadata LoadShaderSource(uuids::uuid assetId) final;
         [[nodiscard]] ScriptMetadata LoadScript(std::filesystem::path filePath) final;

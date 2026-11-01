@@ -80,6 +80,7 @@ namespace NovelRT::Ecs::Graphics
         {
             uint64_t uploadIndex;
             std::shared_ptr<NovelRT::Graphics::GraphicsBuffer<TGraphicsBackend>> stagingBuffer;
+            std::shared_ptr<NovelRT::Graphics::GraphicsResourceMemoryRegion<NovelRT::Graphics::GraphicsBuffer, TGraphicsBackend>> stagingBufferRegion;
             std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> uploadContext;
             std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>> uploadCmdList;
         };
@@ -110,6 +111,11 @@ namespace NovelRT::Ecs::Graphics
             Maths::GeoVector2F textureSize;
         };
 
+        struct TextureCache {
+            NovelRT::ResourceManagement::TextureMetadata textureMetadata;
+            std::shared_ptr<NovelRT::Graphics::GraphicsTexture<TGraphicsBackend>> textureRegion;
+        };
+
         std::shared_ptr<ResourceManagement::Desktop::DesktopResourceLoader> _resourceLoader;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
         std::shared_ptr<NovelRT::Graphics::GraphicsMemoryAllocator<TGraphicsBackend>> _memoryAllocator;
@@ -134,6 +140,7 @@ namespace NovelRT::Ecs::Graphics
         uint64_t _frameCounter{0};
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _orchestratorSubmissionSemaphore;
         std::optional<EntityId> _orchestratorSubmissionSemaphoreEntity;
+        
 
         std::unordered_map<EntityId, BufferRegion> _cameraConstantBuffers;
 
@@ -144,13 +151,16 @@ namespace NovelRT::Ecs::Graphics
             {
                 lastCompletedUpload -= 1;
             }
-
+            
             _pendingStagingBuffers.erase(std::remove_if(_pendingStagingBuffers.begin(), _pendingStagingBuffers.end(),
                                                         [lastCompletedUpload](const auto& pending)
                                                         { return pending.uploadIndex <= lastCompletedUpload; }),
                                          _pendingStagingBuffers.end());
 
             auto spriteView = catalogue.GetComponentView<Components::Sprite>();
+
+            std::vector<uuids::uuid> assetIds = {};
+            
 
             for (auto [entityId, sprite] : spriteView)
             {
@@ -162,47 +172,75 @@ namespace NovelRT::Ecs::Graphics
 
                 _pendingLoads.insert(sprite.assetId);
 
-                catalogue.ScheduleWithCompletion(
-                    [this, assetId = sprite.assetId]() { return _resourceLoader->LoadTexture(assetId); },
-                    [this, assetId = sprite.assetId](Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue completionCatalogue,
-                                                     ResourceManagement::TextureMetadata textureMetadata)
-                    {
+                assetIds.push_back(sprite.assetId);
+                
+            }
+            
 
-                        auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
-                                                                                             textureMetadata.height);
+            if(assetIds.size() != 0) {
+                catalogue.ScheduleWithCompletion(
+                    [this, assetIds]() { 
+                        const std::span<const uuids::uuid> assetSpan(assetIds);
+                        return _resourceLoader->LoadTextures(assetSpan); },
+                    [this](Timing::Timestamp /* now */, Timing::Timestamp::duration /*delta*/, Catalogue completionCatalogue,
+                                                     std::vector<ResourceManagement::TextureMetadata> textureMetadata)
+                    {
+                        std::vector<TextureCache> newTextures;
+                        size_t totalSize = 0;
+                        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsTexture<NovelRT::Graphics::Vulkan::VulkanGraphicsBackend>>> texture2DVector = {};
+                        for(auto texture : textureMetadata) {
+                            auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(texture.width,
+                                                                                             texture.height);
+
+                            totalSize += texture2D->GetSize();
+                            
+                            TextureCache textureCache = TextureCache{.textureMetadata = texture, .textureRegion = texture2D};
+                            newTextures.push_back(textureCache);
+                        }
 
                         NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
                             .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,
                             .gpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Read,
-                            .size = texture2D->GetSize()};
+                            .size = totalSize};
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-
-                        auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
-                        auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
-
-                        auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
-
-                        NovelRT::Utilities::Memory::Copy(std::span<const uint8_t>(textureMetadata.data), pTextureData);
-
-                        textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
-
                         auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+
                         auto uploadCmdList = gfxContext->CreateCmdList();
                         uploadCmdList->Begin();
-                        uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
-                        uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-                        uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+                        
+                        for(auto [texture, texture2D] : newTextures) {
+                            
+                            auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
+                            auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
+
+                            auto pTextureData = textureStagingBuffer->template Map<uint8_t>(textureStagingBufferRegion);
+
+                            NovelRT::Utilities::Memory::Copy(std::span<const uint8_t>(texture.data), pTextureData);
+
+                            textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
+
+                            uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+                            uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
+                            uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+                            
+                            _pendingStagingBuffers.push_back(
+                                {_submittedUploads, textureStagingBuffer,textureStagingBufferRegion, gfxContext, uploadCmdList});
+                            _textureCache.emplace(
+                                texture.databaseHandle, TextureCacheItem{texture2DRegion,
+                                                        Maths::GeoVector2F(static_cast<float>(texture.width),
+                                                                            static_cast<float>(texture.height))});
+
+                            _pendingLoads.erase(texture.databaseHandle);
+                        }
+                                                std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
+                                            uint64_t>>
+                            signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
+                        
                         uploadCmdList->End();
 
-                        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{
-                            uploadCmdList};
-
-                        std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>,
-                                              uint64_t>>
-                            signalSemaphores{std::make_pair(_uploadSemaphore, ++_submittedUploads)};
-
-                        _graphicsDevice->QueueSubmit(lists, signalSemaphores);
+                        std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> list{uploadCmdList};
+                        _graphicsDevice->QueueSubmit(list, signalSemaphores);
 
                         Components::TrackedSemaphore<TGraphicsBackend> newUploadTracker{
                             .semaphore = new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(
@@ -213,15 +251,7 @@ namespace NovelRT::Ecs::Graphics
 
                         completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
                             .AddComponent(id, newUploadTracker);
-
-                        _pendingStagingBuffers.push_back(
-                            {_submittedUploads, textureStagingBuffer, gfxContext, uploadCmdList});
-                        _textureCache.emplace(
-                            assetId, TextureCacheItem{texture2DRegion,
-                                                      Maths::GeoVector2F(static_cast<float>(textureMetadata.width),
-                                                                         static_cast<float>(textureMetadata.height))});
-                        _pendingLoads.erase(assetId);
-                    });
+                });
             }
         }
 
