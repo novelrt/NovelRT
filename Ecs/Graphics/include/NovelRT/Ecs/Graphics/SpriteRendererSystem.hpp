@@ -268,15 +268,10 @@ namespace NovelRT::Ecs::Graphics
                 // This is an implementation detail - we convert the relative viewport position and size into pixels
                 // based on the current surface size. This keeps each viewport in its intended region as the surface
                 // resizes, without changing the stored component or the camera's projection.
-                const float left = std::round(viewport.x * surfaceSize.x);
-                const float top = std::round(viewport.y * surfaceSize.y);
-                const float right = std::round((viewport.x + viewport.width) * surfaceSize.x);
-                const float bottom = std::round((viewport.y + viewport.height) * surfaceSize.y);
-
-                viewport.x = left;
-                viewport.y = top;
-                viewport.width = right - left;
-                viewport.height = bottom - top;
+                viewport.x *= surfaceSize.x;
+                viewport.y *= surfaceSize.y;
+                viewport.width *= surfaceSize.x;
+                viewport.height *= surfaceSize.y;
 
                 if (viewport.width <= 0.0f || viewport.height <= 0.0f)
                 {
