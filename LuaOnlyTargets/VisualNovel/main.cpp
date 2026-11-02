@@ -205,14 +205,8 @@ class InitialisationSystem : public IEcsSystem
 {
 private:
     bool _initialized = false;
-    NovelRT::Maths::GeoVector2F _dimensions;
 
 public:
-    explicit InitialisationSystem(NovelRT::Maths::GeoVector2F initialDimensions) noexcept
-        : _dimensions(initialDimensions)
-    {
-    }
-
     void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
     {
         if (_initialized)
@@ -257,9 +251,9 @@ public:
                                                                            .isScreenSpace = true});
 
         viewports.PushComponentUpdateInstruction(
-            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _dimensions.x, .height = _dimensions.y});
+            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{});
         viewports.PushComponentUpdateInstruction(
-            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _dimensions.x, .height = _dimensions.y});
+            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{});
     }
 };
 
@@ -287,48 +281,6 @@ public:
             unused(loadRequests.TryRemoveComponent(entity));
 
             Continue(catalogue, entity, (*tree.decisionTree)->Begin());
-        }
-    }
-};
-
-class ViewportUpdateSystem : public IEcsSystem
-{
-private:
-    NovelRT::Maths::GeoVector2F _size{};
-    bool _changedSize = false;
-
-public:
-    ViewportUpdateSystem(std::shared_ptr<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>> provider)
-    {
-        provider->SizeChanged += [this](auto eventArgs)
-        {
-            // it doesn't actually matter what the viewport sizes are if we are minimising.
-            // This is a Windows 11 specific fix. - Matt J.
-            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
-            {
-                return;
-            }
-
-            _size = eventArgs;
-            _changedSize = true;
-        };
-    }
-
-    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
-    {
-        if (!_changedSize)
-        {
-            return;
-        }
-
-        _changedSize = false;
-
-        auto [viewports] = catalogue.GetComponentViews<NovelRT::Ecs::Graphics::Components::Viewport>();
-
-        for (auto [entity, _] : viewports)
-        {
-            viewports.PushComponentUpdateInstruction(
-                entity, NovelRT::Ecs::Graphics::Components::Viewport{.width = _size.x, .height = _size.y});
         }
     }
 };
@@ -394,10 +346,9 @@ int main()
     gfx.WithDefaultOrchestrator();
 
     builder.Configure(
-        [&wndProvider, &resourceLoader, finalSize = finalSize](SystemScheduler& scheduler)
+        [&wndProvider, &resourceLoader](SystemScheduler& scheduler)
         {
-            unused(scheduler.RegisterSystem(std::make_shared<ViewportUpdateSystem>(wndProvider)));
-            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>(finalSize)));
+            unused(scheduler.RegisterSystem(std::make_shared<InitialisationSystem>()));
             unused(scheduler.RegisterSystem(std::make_shared<PoseToSpriteTranslationSystem>(resourceLoader)));
             unused(scheduler.RegisterSystem(std::make_shared<BranchTranslationSystem>()));
             unused(scheduler.RegisterSystem(std::make_shared<SpokenLineTranslationSystem>()));
