@@ -7,6 +7,7 @@
 #include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Utilities/Memory.hpp>
 
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -20,12 +21,13 @@ namespace NovelRT::Ecs
     private:
         SparseSetMemoryContainer _rootSet;
         std::vector<SparseSetMemoryContainer> _updateSets;
+        std::vector<std::vector<std::uint8_t>> _assignmentFlags;
         std::vector<std::byte> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
-        std::function<bool(const void*, const void*)> _componentComparatorLogic;
-        std::string _serialisedTypeName;
         std::optional<std::function<void(void*, const void*, size_t)>> _componentUpdateLogic;
         std::optional<std::function<void(void*, const void*, size_t)>> _componentAssignmentLogic;
+        std::function<bool(const void*, const void*)> _componentComparatorLogic;
+        std::string _serialisedTypeName;
 
     public:
         class ImmutableDataView

@@ -2,13 +2,14 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
-#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Exceptions/DuplicateKeyException.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 #include <NovelRT/Maths/GeoVector3F.hpp>
 #include <atomic>
 #include <gtest/gtest.h>
+#include <limits>
 
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
@@ -16,50 +17,76 @@ using namespace NovelRT::Ecs;
 TEST(SparseSetTest, InsertDoesNotThrowWhenAddingValidItemToCollection)
 {
     SparseSet<Atom, int32_t> testSet;
+
     EXPECT_NO_THROW(testSet.Insert(Atom(0), 1));
 }
 
 TEST(SparseSetTest, InsertThrowsWhenDuplicateKeyIsAddedToCollection)
 {
     SparseSet<Atom, int32_t> testSet;
+
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
+
     EXPECT_THROW(testSet.Insert(Atom(0), 1), std::exception);
+}
+
+TEST(SparseSetTest, TryInsertReturnsDetailedResults)
+{
+    SparseSet<Atom, int32_t> testSet;
+
+    static_assert(noexcept(testSet.TryInsert(0, 10)));
+
+    EXPECT_EQ(testSet.TryInsert(0, 10), SparseSetInsertResult::Inserted);
+    EXPECT_EQ(testSet.TryInsert(0, 20), SparseSetInsertResult::AlreadyExists);
+    EXPECT_EQ(testSet.TryInsert(std::numeric_limits<Atom>::max(), 30), SparseSetInsertResult::UnknownFailure);
+
+    EXPECT_EQ(testSet.Length(), 1);
+    EXPECT_EQ(testSet[0], 10);
 }
 
 TEST(SparseSetTest, RemoveDoesNotThrowWhenRemovingValidItemFromCollection)
 {
     SparseSet<Atom, int32_t> testSet;
+
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
+
     EXPECT_NO_THROW(testSet.Remove(Atom(0)));
 }
 
 TEST(SparseSetTest, RemoveDoesThrowWhenRemovingNonexistentKeyFromCollection)
 {
     SparseSet<Atom, int32_t> testSet;
+
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
     ASSERT_NO_THROW(testSet.Remove(Atom(0)));
+
     EXPECT_THROW(testSet.Remove(Atom(0)), std::exception);
 }
 
 TEST(SparseSetTest, InsertInsertsValidItemCorrectly)
 {
     SparseSet<Atom, int32_t> testSet;
+
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
+
     EXPECT_EQ(testSet[Atom(0)], 1);
 }
 
 TEST(SparseSetTest, RemoveUpdatesSetCorrectlyAfterRemovingElement)
 {
     SparseSet<Atom, int32_t> testSet;
+
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
     ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
     ASSERT_NO_THROW(testSet.Remove(Atom(0)));
+
     EXPECT_EQ(testSet[Atom(1)], 1);
 }
 
 TEST(SparseSetTest, CanIterateAndModifyDenseData)
 {
     SparseSet<Atom, int32_t> testSet;
+
     ASSERT_NO_THROW(testSet.Insert(Atom(0), 1));
     ASSERT_NO_THROW(testSet.Insert(Atom(1), 1));
     ASSERT_NO_THROW(testSet.Insert(Atom(2), 1));
@@ -87,7 +114,9 @@ TEST(SparseSetTest, CanUseStruct)
     };
 
     SparseSet<EntityId, MyAwesomeStruct> testSet{};
+
     testSet.Insert(0, MyAwesomeStruct{});
+
     EXPECT_EQ(testSet[0].fieldOne, 1);
     EXPECT_EQ(testSet[0].fieldFour, Maths::GeoVector3F::One());
 

@@ -78,10 +78,10 @@ namespace NovelRT::Ecs
             // clang-format on
 
             _innerContainer = std::make_shared<ComponentBufferMemoryContainer>(
-                poolSize, reinterpret_cast<const std::byte*>(&deleteInstructionState), sizeof(T), updateLogic,
-                assignmentLogic, [](const void* left, const void* right)
+                poolSize, reinterpret_cast<const std::byte*>(&deleteInstructionState), sizeof(T),
+                [](const void* left, const void* right)
                 { return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right); },
-                serialisedTypeName);
+                updateLogic, assignmentLogic, serialisedTypeName);
         }
 
         /**

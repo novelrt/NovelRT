@@ -13,6 +13,15 @@
 
 namespace NovelRT::Ecs
 {
+    enum class SparseSetInsertResult
+    {
+        Inserted,
+        AlreadyExists,
+        AllocationFailed,
+        CopyValidationFailed,
+        UnknownFailure
+    };
+
     class SparseSetMemoryContainer
     {
     private:
@@ -225,7 +234,10 @@ namespace NovelRT::Ecs
 
         void Insert(size_t key, const void* value);
 
-        bool TryInsert(size_t key, const void* value) noexcept;
+        // CopyValidationFailed indicates rejection by Memory::Copy.
+        // UnknownFailure includes capacity limits and other errors without a dedicated result.
+        // An unsuccessful insertion preserves the existing state.
+        [[nodiscard]] SparseSetInsertResult TryInsert(size_t key, const void* value) noexcept;
 
         void Remove(size_t key);
 
@@ -239,6 +251,12 @@ namespace NovelRT::Ecs
         }
 
         [[nodiscard]] bool ContainsKey(size_t key) const noexcept;
+
+        // The caller must guarantee that the key exists.
+        [[nodiscard]] inline size_t GetDenseIndexUnsafe(size_t key) const noexcept
+        {
+            return _sparse[key];
+        }
 
         [[nodiscard]] size_t CopyKeyBasedOnDenseIndex(size_t denseIndex) const;
 

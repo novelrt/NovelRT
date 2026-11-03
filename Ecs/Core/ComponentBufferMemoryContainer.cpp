@@ -1,11 +1,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/Exceptions/InvalidOperationException.hpp"
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 
+#include <NovelRT/Utilities/Macros.hpp>
 #include <NovelRT/Utilities/Memory.hpp>
 
 #include <stdexcept>
@@ -23,12 +24,13 @@ namespace NovelRT::Ecs
         std::string serialisedTypeName)
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
           _updateSets{},
+          _assignmentFlags(poolSize),
           _deleteInstructionState(sizeOfDataTypeInBytes),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
-          _componentComparatorLogic(std::move(componentComparatorLogic)),
-          _serialisedTypeName(std::move(serialisedTypeName)),
           _componentUpdateLogic(std::move(componentUpdateLogic)),
-          _componentAssignmentLogic(std::move(componentAssignmentLogic))
+          _componentAssignmentLogic(std::move(componentAssignmentLogic)),
+          _componentComparatorLogic(std::move(componentComparatorLogic)),
+          _serialisedTypeName(std::move(serialisedTypeName))
     {
         if (!_componentUpdateLogic.has_value() && !_componentAssignmentLogic.has_value())
         {
@@ -48,10 +50,15 @@ namespace NovelRT::Ecs
 
     void ComponentBufferMemoryContainer::PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept
     {
-        for (auto&& updateSet : _updateSets)
+        for (size_t poolId = 0; poolId < _updateSets.size(); ++poolId)
         {
+            auto& updateSet = _updateSets[poolId];
+            auto& flags = _assignmentFlags[poolId];
+            size_t denseIndex = 0;
+
             for (auto [entity, component] : updateSet)
             {
+                const bool isAssignment = flags[denseIndex++] != 0;
                 if (_componentComparatorLogic(component.GetDataHandle(), _deleteInstructionState.data()))
                 {
                     _rootSet.TryRemove(entity);
@@ -62,24 +69,26 @@ namespace NovelRT::Ecs
                 }
                 else
                 {
-                    if (_componentUpdateLogic.has_value())
-                    {
-                        _componentUpdateLogic.value()(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
-                                                      _sizeOfDataTypeInBytes);
-                    }
-                    else
+                    if (isAssignment)
                     {
                         _componentAssignmentLogic.value()(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
                                                           _sizeOfDataTypeInBytes);
                     }
+                    else
+                    {
+                        _componentUpdateLogic.value()(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
+                                                      _sizeOfDataTypeInBytes);
+                    }
                 }
             }
+
             updateSet.Clear();
+            flags.clear();
         }
 
-        for (EntityId i : destroyedEntities)
+        for (EntityId entity : destroyedEntities)
         {
-            _rootSet.TryRemove(i);
+            unused(_rootSet.TryRemove(entity));
         }
     }
 
@@ -101,9 +110,23 @@ namespace NovelRT::Ecs
         }
 
         auto& set = _updateSets.at(poolId);
-        if (!set.TryInsert(entity, componentData))
+        auto& flags = _assignmentFlags.at(poolId);
+        if (set.ContainsKey(entity))
         {
             _componentUpdateLogic.value()(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
+            // A merge into a pending assignment remains an assignment at frame resolution.
+            return;
+        }
+
+        flags.push_back(0);
+        try
+        {
+            set.Insert(entity, componentData);
+        }
+        catch (...)
+        {
+            flags.pop_back();
+            throw;
         }
     }
 
@@ -114,13 +137,27 @@ namespace NovelRT::Ecs
         if (!_componentAssignmentLogic.has_value())
         {
             throw Exceptions::InvalidOperationException(
-                "Attempted to apply an update merge instruction when no logic was supplied.");
+                "Attempted to apply an assignment instruction when no logic was supplied.");
         }
 
         auto& set = _updateSets.at(poolId);
-        if (!set.TryInsert(entity, componentData))
+        auto& flags = _assignmentFlags.at(poolId);
+        if (set.ContainsKey(entity))
         {
             _componentAssignmentLogic.value()(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
+            flags[set.GetDenseIndexUnsafe(entity)] = 1;
+            return;
+        }
+
+        flags.push_back(1);
+        try
+        {
+            set.Insert(entity, componentData);
+        }
+        catch (...)
+        {
+            flags.pop_back();
+            throw;
         }
     }
 

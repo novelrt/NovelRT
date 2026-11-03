@@ -3,11 +3,15 @@
 
 #include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Exceptions/DuplicateKeyException.hpp>
+#include <NovelRT/Exceptions/InvalidOperationException.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 #include <NovelRT/Utilities/Memory.hpp>
 
+#include <algorithm>
 #include <cstddef>
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 namespace NovelRT::Ecs
@@ -29,21 +33,70 @@ namespace NovelRT::Ecs
 
     void SparseSetMemoryContainer::InsertInternal(size_t key, const void* value)
     {
+        const size_t originalSparseSize = _sparse.size();
+        const size_t originalDenseSize = _dense.size();
+        const size_t originalDataSize = _data.size();
+
+        if (key >= _sparse.max_size() || originalDenseSize == _dense.max_size() ||
+            (_sizeOfDataTypeInBytes != 0 && originalDenseSize + 1 > _data.max_size() / _sizeOfDataTypeInBytes))
+        {
+            throw std::length_error("The sparse set insertion exceeds storage capacity.");
+        }
+
+        const auto ensureCapacity = [](auto& storage, size_t requiredCapacity)
+        {
+            if (requiredCapacity > storage.capacity())
+            {
+                const size_t grownCapacity =
+                    storage.capacity() > storage.max_size() / 2 ? storage.max_size() : storage.capacity() * 2;
+                storage.reserve(std::max(requiredCapacity, grownCapacity));
+            }
+        };
+
+        const size_t requiredDataSize = GetStartingByteIndexForDenseIndex(originalDenseSize + 1);
+
+        ensureCapacity(_sparse, key + 1);
+        ensureCapacity(_dense, originalDenseSize + 1);
+        ensureCapacity(_data, requiredDataSize);
+
         if (_sparse.size() <= key)
         {
             _sparse.resize(key + 1);
         }
 
         _dense.push_back(key);
-        _sparse[key] = _dense.size() - 1;
-        _data.resize(GetStartingByteIndexForDenseIndex(_dense.size()));
-        auto dataPtr = GetDataObjectStartAtIndex(_dense.size() - 1);
+        _data.resize(requiredDataSize);
 
-        // Cursed: We can't make a span<void> so we cast to std::byte* which is compatible
-        // Memory::Copy then casts this back to void* internally to allow memcpy to work
-        NovelRT::Utilities::Memory::Copy(
-            NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(value), _sizeOfDataTypeInBytes},
-            NovelRT::Utilities::Span<std::byte>{static_cast<std::byte*>(dataPtr), _sizeOfDataTypeInBytes});
+        if (_sizeOfDataTypeInBytes != 0)
+        {
+            const auto restoreInsertionState = [&]() noexcept
+            {
+                _data.resize(originalDataSize);
+                _dense.resize(originalDenseSize);
+                _sparse.resize(originalSparseSize);
+            };
+
+            try
+            {
+                NovelRT::Utilities::Memory::Copy(
+                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(value),
+                                                              _sizeOfDataTypeInBytes},
+                    NovelRT::Utilities::Span<std::byte>{GetDataObjectStartAtIndex(originalDenseSize),
+                                                        _sizeOfDataTypeInBytes});
+            }
+            catch (const Exceptions::InvalidOperationException&)
+            {
+                restoreInsertionState();
+                throw;
+            }
+            catch (const std::bad_alloc&)
+            {
+                restoreInsertionState();
+                throw;
+            }
+        }
+
+        _sparse[key] = originalDenseSize;
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)
@@ -56,21 +109,29 @@ namespace NovelRT::Ecs
         InsertInternal(key, value);
     }
 
-    bool SparseSetMemoryContainer::TryInsert(size_t key, const void* value) noexcept
+    SparseSetInsertResult SparseSetMemoryContainer::TryInsert(size_t key, const void* value) noexcept
     {
         if (ContainsKey(key))
         {
-            return false;
+            return SparseSetInsertResult::AlreadyExists;
         }
 
         try
         {
             InsertInternal(key, value);
-            return true;
+            return SparseSetInsertResult::Inserted;
         }
-        catch (std::exception&)
+        catch (const std::bad_alloc&)
         {
-            return false;
+            return SparseSetInsertResult::AllocationFailed;
+        }
+        catch (const Exceptions::InvalidOperationException&)
+        {
+            return SparseSetInsertResult::CopyValidationFailed;
+        }
+        catch (...)
+        {
+            return SparseSetInsertResult::UnknownFailure;
         }
     }
 
@@ -97,6 +158,7 @@ namespace NovelRT::Ecs
             std::optional<std::vector<size_t>::iterator> targetStart{};
             size_t currentValue = 0;
             size_t finalDenseSize = _dense.size();
+
             for (auto it = _sparse.rbegin(); it != _sparse.rend(); it++)
             {
                 currentValue = *it;
