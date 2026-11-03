@@ -9,6 +9,7 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -21,9 +22,10 @@ namespace NovelRT::Ecs
         std::vector<SparseSetMemoryContainer> _updateSets;
         std::vector<std::byte> _deleteInstructionState;
         size_t _sizeOfDataTypeInBytes;
-        std::function<void(void*, const void*, size_t)> _componentUpdateLogic;
         std::function<bool(const void*, const void*)> _componentComparatorLogic;
         std::string _serialisedTypeName;
+        std::optional<std::function<void(void*, const void*, size_t)>> _componentUpdateLogic;
+        std::optional<std::function<void(void*, const void*, size_t)>> _componentAssignmentLogic;
 
     public:
         class ImmutableDataView
@@ -51,18 +53,22 @@ namespace NovelRT::Ecs
             }
         };
 
-        ComponentBufferMemoryContainer(size_t poolSize,
-                                       const std::byte* deleteInstructionState,
-                                       size_t sizeOfDataTypeInBytes,
-                                       std::function<void(void*, const void*, size_t)> componentUpdateLogic,
-                                       std::function<bool(const void*, const void*)> componentComparatorLogic,
-                                       const std::string& serialisedTypeName) noexcept;
+        ComponentBufferMemoryContainer(
+            size_t poolSize,
+            const std::byte* deleteInstructionState,
+            size_t sizeOfDataTypeInBytes,
+            std::function<bool(const void*, const void*)> componentComparatorLogic,
+            std::optional<std::function<void(void*, const void*, size_t)>> componentUpdateLogic,
+            std::optional<std::function<void(void*, const void*, size_t)>> componentAssignmentLogic,
+            std::string serialisedTypeName);
 
         void PrepContainerForFrame(const std::vector<EntityId>& destroyedEntities) noexcept;
 
         [[nodiscard]] ImmutableDataView GetDeleteInstructionState() const noexcept;
 
         void PushComponentUpdateInstruction(size_t poolId, EntityId entity, const void* componentData);
+
+        void PushComponentAssignmentInstruction(size_t poolId, EntityId entity, const void* componentData);
 
         [[nodiscard]] ImmutableDataView GetComponent(EntityId entity) const;
         [[nodiscard]] ImmutableDataView GetComponentUnsafe(EntityId entity) const noexcept;

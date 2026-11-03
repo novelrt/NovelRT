@@ -1,12 +1,14 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "NovelRT/Exceptions/InvalidOperationException.hpp"
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 
 #include <NovelRT/Utilities/Memory.hpp>
 
+#include <stdexcept>
 #include <utility>
 
 namespace NovelRT::Ecs
@@ -15,17 +17,25 @@ namespace NovelRT::Ecs
         size_t poolSize,
         const std::byte* deleteInstructionState,
         size_t sizeOfDataTypeInBytes,
-        std::function<void(void*, const void*, size_t)> componentUpdateLogic,
         std::function<bool(const void*, const void*)> componentComparatorLogic,
-        const std::string& serialisedTypeName) noexcept
+        std::optional<std::function<void(void*, const void*, size_t)>> componentUpdateLogic,
+        std::optional<std::function<void(void*, const void*, size_t)>> componentAssignmentLogic,
+        std::string serialisedTypeName)
         : _rootSet(SparseSetMemoryContainer(sizeOfDataTypeInBytes)),
-          _updateSets(std::vector<SparseSetMemoryContainer>{}),
+          _updateSets{},
           _deleteInstructionState(sizeOfDataTypeInBytes),
           _sizeOfDataTypeInBytes(sizeOfDataTypeInBytes),
-          _componentUpdateLogic(std::move(componentUpdateLogic)),
           _componentComparatorLogic(std::move(componentComparatorLogic)),
-          _serialisedTypeName(serialisedTypeName)
+          _serialisedTypeName(std::move(serialisedTypeName)),
+          _componentUpdateLogic(std::move(componentUpdateLogic)),
+          _componentAssignmentLogic(std::move(componentAssignmentLogic))
     {
+        if (!_componentUpdateLogic.has_value() && !_componentAssignmentLogic.has_value())
+        {
+            throw std::invalid_argument(
+                "A component buffer must have at least one method for updating component data.");
+        }
+
         NovelRT::Utilities::Memory::Copy(
             NovelRT::Utilities::Span<const std::byte>{deleteInstructionState, _sizeOfDataTypeInBytes},
             NovelRT::Utilities::Span<std::byte>{_deleteInstructionState.data(), _sizeOfDataTypeInBytes});
@@ -52,8 +62,16 @@ namespace NovelRT::Ecs
                 }
                 else
                 {
-                    _componentUpdateLogic(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
-                                          _sizeOfDataTypeInBytes);
+                    if (_componentUpdateLogic.has_value())
+                    {
+                        _componentUpdateLogic.value()(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
+                                                      _sizeOfDataTypeInBytes);
+                    }
+                    else
+                    {
+                        _componentAssignmentLogic.value()(_rootSet[entity].GetDataHandle(), component.GetDataHandle(),
+                                                          _sizeOfDataTypeInBytes);
+                    }
                 }
             }
             updateSet.Clear();
@@ -76,10 +94,33 @@ namespace NovelRT::Ecs
                                                                         EntityId entity,
                                                                         const void* componentData)
     {
+        if (!_componentUpdateLogic.has_value())
+        {
+            throw Exceptions::InvalidOperationException(
+                "Attempted to apply an update merge instruction when no logic was supplied.");
+        }
+
         auto& set = _updateSets.at(poolId);
         if (!set.TryInsert(entity, componentData))
         {
-            _componentUpdateLogic(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
+            _componentUpdateLogic.value()(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
+        }
+    }
+
+    void ComponentBufferMemoryContainer::PushComponentAssignmentInstruction(size_t poolId,
+                                                                            EntityId entity,
+                                                                            const void* componentData)
+    {
+        if (!_componentAssignmentLogic.has_value())
+        {
+            throw Exceptions::InvalidOperationException(
+                "Attempted to apply an update merge instruction when no logic was supplied.");
+        }
+
+        auto& set = _updateSets.at(poolId);
+        if (!set.TryInsert(entity, componentData))
+        {
+            _componentAssignmentLogic.value()(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
         }
     }
 
