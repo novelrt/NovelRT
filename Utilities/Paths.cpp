@@ -39,20 +39,25 @@ namespace NovelRT::Utilities
         if ((pathLength < 0) || (pathLength == PATH_MAX))
         {
 #ifdef __APPLE__
-            std::filesystem::path path = std::filesystem::current_path();
-            if (path.string().find("Contents") == std::string::npos)
+            CFBundleRef mainBundle = CFBundleGetMainBundle();
+            if (mainBundle != nullptr)
             {
-                // We've run via bundling
-                CFBundleRef mainBundle = CFBundleGetMainBundle();
                 CFURLRef bundleUrl = CFBundleCopyExecutableURL(mainBundle);
-                CFStringRef macPath = CFURLCopyFileSystemPath(bundleUrl, kCFURLPOSIXPathStyle);
-                path = CFStringToStdString(macPath);
-                return path.parent_path();
+                if (bundleUrl != nullptr)
+                {
+                    CFStringRef macPath = CFURLCopyFileSystemPath(bundleUrl, kCFURLPOSIXPathStyle);
+                    if(macPath != nullptr)
+                    {
+                        //We've dunked into a bundle
+                        std::filesystem::path path = CFStringToStdString(macPath);
+                        CFRelease(macPath);
+                        CFRelease(bundleUrl);
+                        return path;
+                    }
+                    CFRelease(bundleUrl);
+                }
             }
-            else
-            {
-                return std::filesystem::current_path();
-            }
+            //if we get here, we fall back to assuming we ran via cmdline.
 #endif
             // TODO: Get command line from /proc/self/cmdline
             return std::filesystem::current_path();
