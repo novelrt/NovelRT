@@ -18,9 +18,9 @@
 #include <NovelRT/Ecs/SparseSet.hpp>
 
 #include <NovelRT/Ecs/Graphics/Components/BuiltCommandList.hpp>
+#include <NovelRT/Ecs/Graphics/Components/Camera.hpp>
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
-#include <NovelRT/Ecs/Graphics/Components/Camera.hpp>
 
 #include <NovelRT/Ecs/UI/Components/UIElement.hpp>
 #include <NovelRT/Ecs/UI/UIComponentType.hpp>
@@ -42,6 +42,8 @@ namespace NovelRT::Ecs::UI
             _uiProvider;
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _gfxDevice;
         NovelRT::Ecs::Graphics::Components::RenderPassId _renderPassId;
+        std::optional<EntityId> _uploadSemaphoreEntity;
+        std::optional<EntityId> _drawEntity;
         std::optional<EntityId> _drawSemaphoreEntity;
         bool _firstSpin = true;
         std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>> _uploadSemaphore;
@@ -62,7 +64,11 @@ namespace NovelRT::Ecs::UI
             return GetRoot(view, catalogue, it.GetRawComponentData().parent);
         }
 
-        void ParseElementCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement& element, float scaleX, float scaleY)
+        void ParseElementCommands(Catalogue& catalogue,
+                                  EntityId entity,
+                                  Ecs::UI::Components::UIElement& element,
+                                  float scaleX,
+                                  float scaleY)
         {
             auto [containers, buttons, textView, transforms, clickEvents] =
                 catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer, Ecs::UI::Components::UIButton,
@@ -89,7 +95,8 @@ namespace NovelRT::Ecs::UI
                 default:
                 {
                     std::stringstream exceptionValue;
-                    exceptionValue << "The UI Component type is undefined for the current element at entity " << entity << ".";
+                    exceptionValue << "The UI Component type is undefined for the current element at entity " << entity
+                                   << ".";
                     throw NovelRT::Exceptions::InvalidOperationException(exceptionValue.str());
                 }
             }
@@ -112,63 +119,64 @@ namespace NovelRT::Ecs::UI
             }
         }
 
-        void GenerateContainerCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement&, float scaleX, float scaleY)
+        void GenerateContainerCommands(Catalogue& catalogue,
+                                       EntityId entity,
+                                       Ecs::UI::Components::UIElement&,
+                                       float scaleX,
+                                       float scaleY)
         {
             auto [containers, transforms] =
-                catalogue.GetComponentViews<Ecs::UI::Components::UIWidgetContainer,Ecs::Components::TransformComponent>();
+                catalogue
+                    .GetComponentViews<Ecs::UI::Components::UIWidgetContainer, Ecs::Components::TransformComponent>();
 
             Ecs::Components::TransformComponent transform{};
             Ecs::UI::Components::UIWidgetContainer container{};
 
-            if (containers.TryGetComponent(entity, container) &&
-                transforms.TryGetComponent(entity, transform))
+            if (containers.TryGetComponent(entity, container) && transforms.TryGetComponent(entity, transform))
             {
-                ImGui::SetNextWindowSize(
-                    ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
-                ImGui::SetNextWindowPos(
-                    ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
+                ImGui::SetNextWindowSize(ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY));
+                ImGui::SetNextWindowPos(ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
                 ImGui::Begin(container.title->c_str(), NULL,
-                                ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+                             ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
             }
         }
 
-        void GenerateButtonCommands(Catalogue& catalogue, EntityId entity, Ecs::UI::Components::UIElement&, float scaleX, float scaleY)
+        void GenerateButtonCommands(Catalogue& catalogue,
+                                    EntityId entity,
+                                    Ecs::UI::Components::UIElement&,
+                                    float scaleX,
+                                    float scaleY)
         {
             auto [buttons, transforms, clickEvents] =
-                catalogue.GetComponentViews<Ecs::UI::Components::UIButton,
-                                            Ecs::Components::TransformComponent,
+                catalogue.GetComponentViews<Ecs::UI::Components::UIButton, Ecs::Components::TransformComponent,
                                             Ecs::UI::Components::UIClickEvent>();
 
             Ecs::UI::Components::UIButton button{};
             Ecs::Components::TransformComponent transform{};
 
-            if (buttons.TryGetComponent(entity, button) &&
-                transforms.TryGetComponent(entity, transform))
+            if (buttons.TryGetComponent(entity, button) && transforms.TryGetComponent(entity, transform))
             {
                 // Gotta push styling first, then call button
                 ImGui::PushStyleColor(ImGuiCol_Button,
-                                        ImVec4(button.bgColour.getRScalar(), button.bgColour.getGScalar(),
-                                                button.bgColour.getBScalar(), button.bgColour.getAScalar()));
+                                      ImVec4(button.bgColour.getRScalar(), button.bgColour.getGScalar(),
+                                             button.bgColour.getBScalar(), button.bgColour.getAScalar()));
 
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(button.hoveredColour.getRScalar(),
-                                                                        button.hoveredColour.getGScalar(),
-                                                                        button.hoveredColour.getBScalar(),
-                                                                        button.hoveredColour.getAScalar()));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
+                                      ImVec4(button.hoveredColour.getRScalar(), button.hoveredColour.getGScalar(),
+                                             button.hoveredColour.getBScalar(), button.hoveredColour.getAScalar()));
 
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive,
-                                        ImVec4(button.activeColour.getRScalar(), button.activeColour.getGScalar(),
-                                                button.activeColour.getBScalar(),
-                                                button.activeColour.getAScalar()));
+                                      ImVec4(button.activeColour.getRScalar(), button.activeColour.getGScalar(),
+                                             button.activeColour.getBScalar(), button.activeColour.getAScalar()));
 
                 ImGui::PushStyleColor(ImGuiCol_Text,
-                                        ImVec4(button.textColour.getRScalar(), button.textColour.getGScalar(),
-                                                button.textColour.getBScalar(), button.textColour.getAScalar()));
+                                      ImVec4(button.textColour.getRScalar(), button.textColour.getGScalar(),
+                                             button.textColour.getBScalar(), button.textColour.getAScalar()));
 
-                ImGui::SetCursorPos(
-                    ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
+                ImGui::SetCursorPos(ImVec2(transform.position.x * scaleX, transform.position.y * scaleY));
 
                 if (ImGui::Button(button.label->c_str(),
-                                    ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY)))
+                                  ImVec2(transform.scale.x * scaleX, transform.scale.y * scaleY)))
                 {
                     Ecs::UI::Components::UIClickEvent clickEvent{};
                     clickEvent.eventId = button.eventId;
@@ -189,16 +197,14 @@ namespace NovelRT::Ecs::UI
             if (textView.TryGetComponent(entity, text))
             {
                 // same pattern - push style, write, pop style;
-                ImGui::PushStyleColor(ImGuiCol_Text,
-                                        ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
-                                                text.colour.getBScalar(), text.colour.getAScalar()));
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
+                                                            text.colour.getBScalar(), text.colour.getAScalar()));
 
                 ImGui::Text("%s", text.textValue->c_str());
 
                 ImGui::PopStyleColor();
             }
         }
-
 
         void Render(Catalogue& catalogue)
         {
@@ -230,17 +236,21 @@ namespace NovelRT::Ecs::UI
                         new std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>(_uploadSemaphore),
                     .signalValue = _submittedUploads};
 
-                // Create unique id for tracking upload
-                auto uploadId = catalogue.CreateEntity();
+                // Reuse bookkeeping entities; the orchestrator consumes their components each frame.
+                if (!_uploadSemaphoreEntity.has_value())
+                {
+                    _uploadSemaphoreEntity = catalogue.CreateEntity();
+                }
+                auto uploadId = _uploadSemaphoreEntity.value();
 
-                // add upload semaphore to tracked catalogue
                 trackedSemaphores.AddComponent(uploadId, newUploadTracker);
 
-                // create entity id for drawing
-                auto entityId = catalogue.CreateEntity();
+                if (!_drawEntity.has_value())
+                {
+                    _drawEntity = catalogue.CreateEntity();
+                }
+                auto entityId = _drawEntity.value();
 
-                // check if draw semaphore has value
-                // if not, create one
                 if (!_drawSemaphoreEntity.has_value())
                 {
                     _drawSemaphoreEntity = catalogue.CreateEntity();
@@ -286,7 +296,8 @@ namespace NovelRT::Ecs::UI
             _uiProvider->BeginFrame(NovelRT::Timing::GetSeconds<float>(delta));
 
             auto [graph, elementView, camView] =
-                catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent, Ecs::UI::Components::UIElement, Graphics::Components::Camera>();
+                catalogue.GetComponentViews<Ecs::Components::EntityGraphComponent, Ecs::UI::Components::UIElement,
+                                            Graphics::Components::Camera>();
 
             // 2. Determine the order in which we should enumerate the entities based on... something?
             std::map<EntityId, Ecs::UI::Components::UIElement> elements{};
@@ -329,7 +340,7 @@ namespace NovelRT::Ecs::UI
             float refWidth = io.DisplaySize.x;
             float refHeight = io.DisplaySize.y;
 
-            for (auto [entity, camera]: camView)
+            for (auto [entity, camera] : camView)
             {
                 if (camera.isScreenSpace)
                 {
@@ -341,8 +352,8 @@ namespace NovelRT::Ecs::UI
 
             float scaleX = io.DisplaySize.x / refWidth;
             float scaleY = io.DisplaySize.y / refHeight;
-            //float avgScale = (scaleX + scaleY) * 0.5f;
-            //io.FontGlobalScale *= avgScale;  // font scaling
+            // float avgScale = (scaleX + scaleY) * 0.5f;
+            // io.FontGlobalScale *= avgScale;  // font scaling
 
             // 4b. write Imgui commands
             std::vector<std::pair<EntityId, int32_t>> containers{};

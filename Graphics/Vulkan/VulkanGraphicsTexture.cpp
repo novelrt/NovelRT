@@ -166,7 +166,7 @@ namespace NovelRT::Graphics
 
         if (_vulkanSampler.HasValue())
         {
-            vkDestroyImageView(vulkanDevice, _vulkanImageView.Get(), nullptr);
+            vkDestroySampler(vulkanDevice, _vulkanSampler.Get(), nullptr);
             _vulkanSampler.Reset();
         }
 
