@@ -3,9 +3,12 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
 
+#include <functional>
 #include <memory>
+#include <optional>
 #include <type_traits>
 #include <vector>
 
@@ -48,19 +51,37 @@ namespace NovelRT::Ecs
          * resolution.
          */
         ComponentBuffer(size_t poolSize, T deleteInstructionState, const std::string& serialisedTypeName) noexcept
-            : _innerContainer(std::make_shared<ComponentBufferMemoryContainer>(
-                  poolSize,
-                  reinterpret_cast<const std::byte*>(&deleteInstructionState),
-                  sizeof(T),
-                  [](auto rootComponent, auto updateComponent, auto)
-                  { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); },
-                  [](const void* left, const void* right)
-                  { return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right); },
-                  serialisedTypeName))
+            : _innerContainer(nullptr)
         {
             static_assert(std::is_trivially_copyable<T>::value,
                           "Value type must be trivially copyable for use with a ComponentBuffer. See the documentation "
                           "for more information.");
+
+            std::optional<std::function<void(void*, const void*, size_t)>> updateLogic{};
+            std::optional<std::function<void(void*, const void*, size_t)>> assignmentLogic{};
+
+            // for some reason clang is still completely imploding on the code surrounded by the switches
+            // below, so I am just leaving it like that. - Matt J.
+
+            // clang-format off
+            if constexpr (requires(T& target, const T& update) { target += update; })
+            {
+                updateLogic = [](void* target, const void* update, size_t)
+                { *static_cast<T*>(target) += *static_cast<const T*>(update); };
+            }
+
+            if constexpr (requires(T& target, const T& update) { target = update; })
+            {
+                assignmentLogic = [](void* target, const void* update, size_t)
+                { *static_cast<T*>(target) = *static_cast<const T*>(update); };
+            }
+            // clang-format on
+
+            _innerContainer = std::make_shared<ComponentBufferMemoryContainer>(
+                poolSize, reinterpret_cast<const std::byte*>(&deleteInstructionState), sizeof(T),
+                [](const void* left, const void* right)
+                { return *reinterpret_cast<const T*>(left) == *reinterpret_cast<const T*>(right); },
+                updateLogic, assignmentLogic, serialisedTypeName);
         }
 
         /**

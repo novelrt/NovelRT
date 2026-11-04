@@ -20,27 +20,30 @@ namespace NovelRT::Ecs
     std::shared_ptr<ComponentBufferMemoryContainer> ComponentCache::CreateContainer(
         size_t sizeOfDataType,
         const std::byte* deleteInstructionState,
-        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
         const std::function<bool(const void*, const void*)>& componentComparisonLogic,
+        const std::optional<std::function<void(void*, const void*, size_t)>>& componentUpdateLogic,
+        const std::optional<std::function<void(void*, const void*, size_t)>>& componentAssignmentLogic,
         const std::string& serialisedTypeName) const
     {
         return std::make_shared<ComponentBufferMemoryContainer>(_poolSize, deleteInstructionState, sizeOfDataType,
-                                                                componentUpdateLogic, componentComparisonLogic,
-                                                                serialisedTypeName);
+                                                                componentComparisonLogic, componentUpdateLogic,
+                                                                componentAssignmentLogic, serialisedTypeName);
     }
 
     ComponentTypeId ComponentCache::RegisterComponentTypeUnsafe(
         size_t sizeOfDataType,
         const std::byte* deleteInstructionState,
-        const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
         const std::function<bool(const void*, const void*)>& componentComparisonLogic,
+        const std::optional<std::function<void(void*, const void*, size_t)>>& componentUpdateLogic,
+        const std::optional<std::function<void(void*, const void*, size_t)>>& componentAssignmentLogic,
         const std::string& serialisedTypeName)
     {
         static AtomFactory& _componentTypeIdFactory = AtomFactoryDatabase::GetFactory("ComponentTypeId");
 
         ComponentTypeId returnId = _componentTypeIdFactory.GetNext();
-        std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(
-            sizeOfDataType, deleteInstructionState, componentUpdateLogic, componentComparisonLogic, serialisedTypeName);
+        std::shared_ptr<ComponentBufferMemoryContainer> ptr =
+            CreateContainer(sizeOfDataType, deleteInstructionState, componentComparisonLogic, componentUpdateLogic,
+                            componentAssignmentLogic, serialisedTypeName);
         _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
         _componentMap.emplace(returnId, ptr);
         return returnId;
