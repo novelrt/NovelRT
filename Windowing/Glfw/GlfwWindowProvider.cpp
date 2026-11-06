@@ -202,4 +202,24 @@ namespace NovelRT::Windowing
         glfwGetWindowContentScale(_window, &x, &y);
         return NovelRT::Maths::GeoVector2F(x, y);
     }
+
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize() const noexcept
+    {
+        float x = 0;
+        float y = 0;
+        glfwGetWindowSize(_window, &x, &y);
+        return NovelRT::Maths::GeoVector2F(x, y);
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale() const noexcept
+    {
+        NovelRT::Maths::GeoVector2F windowSize = GetWindowSize();
+        NovelRT::Maths::GeoVector2F frameSize = GetSize();
+        if (windowSize.x <= 0 || windowSize.y <= 0)
+        {
+            return NovelRT::Maths::GeoVector2F::Uniform(1.0f);
+        }
+    
+        return NovelRT::Maths::GeoVector2F(frameSize.x / windowSize.x, frameSize.y / windowSize.y);
+    }
 }

@@ -75,7 +75,9 @@ namespace NovelRT::Windowing
         [[nodiscard]] Graphics::GraphicsSurfaceKind GetKind() const noexcept final;
         [[nodiscard]] const char* GetClipboardText() const;
         void SetClipboardText(const std::string& text) const;
-        [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetWindowScale() const noexcept;
         void Close();
+        [[nodiscard]] Maths::GeoVector2F GetWindowSize() const noexcept final;
+        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale() const noexcept final;
     };
 }

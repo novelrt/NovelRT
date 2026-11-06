@@ -30,7 +30,9 @@ namespace NovelRT::Windowing
         [[nodiscard]] bool ShouldClose() const noexcept;
         [[nodiscard]] std::string GetWindowTitle() const noexcept;
         [[nodiscard]] const char* GetClipboardText() const;
-        [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetWindowScale() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetWindowSize() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale() const noexcept;
         void SetClipboardText(const std::string& text) const;
         void SetWindowTitle(const std::string& newTitle);
         void Close();
