@@ -281,7 +281,7 @@ namespace NovelRT::UI::ImGui
             float scaleX = windowSize.x / _initialWindowSize.x;
             float scaleY = windowSize.y / _initialWindowSize.y;
 
-            double size  = (scaleX + scaleY) * 0.5;
+            double size = (scaleX + scaleY) * 0.5;
             double density = (windowScale.x + windowScale.y) * 0.5f;
 
             io.FontGlobalScale = static_cast<float>(size / density);
@@ -495,9 +495,8 @@ namespace NovelRT::UI::ImGui
             currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
                                              NovelRT::Utilities::SpanCast<uint8_t>(translateSpan));
 
-            currentCmdList->CmdSetScissor(
-                NovelRT::Maths::GeoVector2F::Zero(),
-                NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
 
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
@@ -579,9 +578,8 @@ namespace NovelRT::UI::ImGui
             }
 
             // Reset clipping rect as per imgui
-            currentCmdList->CmdSetScissor(
-                NovelRT::Maths::GeoVector2F::Zero(),
-                NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
         }
 
         std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> GetDedicatedRenderPass()

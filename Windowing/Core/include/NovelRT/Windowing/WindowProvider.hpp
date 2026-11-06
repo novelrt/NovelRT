@@ -5,9 +5,9 @@
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 #include <NovelRT/Windowing/VideoModeData.hpp>
 #include <NovelRT/Windowing/WindowMode.hpp>
-#include <NovelRT/Utilities/Event.hpp>
 
 #include <string>
 #include <vector>

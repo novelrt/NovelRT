@@ -88,15 +88,16 @@ namespace NovelRT::Windowing
                 thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
                 thisPtr->SizeChanged(thisPtr->_currentSize);
             });
-        
-        glfwSetWindowSizeCallback(
-            window,
-            [](auto window, auto, auto){
-                auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
-                thisPtr->_currentWindowSize = thisPtr->GetWindowSize(true);
-                thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
-                thisPtr->WindowSizeChanged(thisPtr->_currentWindowSize);
-            });
+
+        glfwSetWindowSizeCallback(window,
+                                  [](auto window, auto, auto)
+                                  {
+                                      auto thisPtr =
+                                          reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                                      thisPtr->_currentWindowSize = thisPtr->GetWindowSize(true);
+                                      thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
+                                      thisPtr->WindowSizeChanged(thisPtr->_currentWindowSize);
+                                  });
 
         glfwSetKeyCallback(window,
                            [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/)
@@ -236,12 +237,11 @@ namespace NovelRT::Windowing
 
         NovelRT::Maths::GeoVector2F windowSize = GetWindowSize(true);
         NovelRT::Maths::GeoVector2F frameSize = GetSize();
-        if (windowSize.x <= 0 || windowSize.y <= 0
-            || frameSize.x <= 0 || frameSize.y <= 0)
+        if (windowSize.x <= 0 || windowSize.y <= 0 || frameSize.x <= 0 || frameSize.y <= 0)
         {
             return NovelRT::Maths::GeoVector2F::Uniform(1.0f);
         }
-    
+
         return NovelRT::Maths::GeoVector2F(frameSize.x / windowSize.x, frameSize.y / windowSize.y);
     }
 }
