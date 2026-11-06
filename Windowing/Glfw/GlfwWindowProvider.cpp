@@ -84,6 +84,8 @@ namespace NovelRT::Windowing
             {
                 auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
                 thisPtr->_currentSize = Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+                thisPtr->_currentWindowSize = thisPtr->GetWindowSize(true);
+                thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
                 thisPtr->SizeChanged(thisPtr->_currentSize);
             });
 
@@ -203,16 +205,26 @@ namespace NovelRT::Windowing
         return NovelRT::Maths::GeoVector2F(x, y);
     }
 
-    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize() const noexcept
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize(bool forceRefresh = false) const noexcept
     {
+        if (!forceRefresh && (_currentWindowSize.x > 0 || _currentWindowSize.y > 0))
+        {
+            return _currentWindowSize;
+        }
+
         float x = 0;
         float y = 0;
         glfwGetWindowSize(_window, &x, &y);
         return NovelRT::Maths::GeoVector2F(x, y);
     }
 
-    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale() const noexcept
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale(bool forceRefresh = false) const noexcept
     {
+        if (!forceRefresh && (_currentFramebufferScale.x > 0 || _currentFramebufferScale.y > 0))
+        {
+            return _currentFramebufferScale;
+        }
+
         NovelRT::Maths::GeoVector2F windowSize = GetWindowSize();
         NovelRT::Maths::GeoVector2F frameSize = GetSize();
         if (windowSize.x <= 0 || windowSize.y <= 0)

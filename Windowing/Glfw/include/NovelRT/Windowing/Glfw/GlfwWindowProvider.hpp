@@ -48,6 +48,8 @@ namespace NovelRT::Windowing
         GLFWwindow* _window;
         std::string _currentTitle;
         Maths::GeoVector2F _currentSize;
+        Maths::GeoVector2F _currentWindowSize;
+        Maths::GeoVector2F _currentFramebufferScale;
 
     public:
         WindowProvider();
@@ -77,7 +79,7 @@ namespace NovelRT::Windowing
         void SetClipboardText(const std::string& text) const;
         [[nodiscard]] Maths::GeoVector2F GetWindowScale() const noexcept;
         void Close();
-        [[nodiscard]] Maths::GeoVector2F GetWindowSize() const noexcept final;
-        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale() const noexcept final;
+        [[nodiscard]] Maths::GeoVector2F GetWindowSize(bool forceRefresh = false) const noexcept final;
+        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale(bool forceRefresh = false) const noexcept final;
     };
 }
