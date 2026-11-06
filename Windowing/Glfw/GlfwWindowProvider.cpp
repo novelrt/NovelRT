@@ -164,7 +164,7 @@ namespace NovelRT::Windowing
 
     Maths::GeoVector2F GlfwWindowProvider::GetSize() const noexcept
     {
-        if (_currentSize.x > 0 || _currentSize.y > 0)
+        if (_currentSize.x > 0 && _currentSize.y > 0)
         {
             return _currentSize;
         }
@@ -216,7 +216,7 @@ namespace NovelRT::Windowing
 
     NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize(bool forceRefresh) const noexcept
     {
-        if (!forceRefresh && (_currentWindowSize.x > 0 || _currentWindowSize.y > 0))
+        if (!forceRefresh && (_currentWindowSize.x > 0 && _currentWindowSize.y > 0))
         {
             return _currentWindowSize;
         }
@@ -229,14 +229,15 @@ namespace NovelRT::Windowing
 
     NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale(bool forceRefresh) const noexcept
     {
-        if (!forceRefresh && (_currentFramebufferScale.x > 0 || _currentFramebufferScale.y > 0))
+        if (!forceRefresh && (_currentFramebufferScale.x > 0 && _currentFramebufferScale.y > 0))
         {
             return _currentFramebufferScale;
         }
 
         NovelRT::Maths::GeoVector2F windowSize = GetWindowSize(true);
         NovelRT::Maths::GeoVector2F frameSize = GetSize();
-        if (windowSize.x <= 0 || windowSize.y <= 0)
+        if (windowSize.x <= 0 || windowSize.y <= 0
+            || frameSize.x <= 0 || frameSize.y <= 0)
         {
             return NovelRT::Maths::GeoVector2F::Uniform(1.0f);
         }

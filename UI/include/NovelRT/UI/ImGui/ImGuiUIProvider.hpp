@@ -25,6 +25,7 @@
 #include <NovelRT/Windowing/WindowProvider.hpp>
 
 #include <array>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <map>
