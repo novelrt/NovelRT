@@ -205,7 +205,7 @@ namespace NovelRT::Windowing
         return NovelRT::Maths::GeoVector2F(x, y);
     }
 
-    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize(bool forceRefresh = false) const noexcept
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize(bool forceRefresh) const noexcept
     {
         if (!forceRefresh && (_currentWindowSize.x > 0 || _currentWindowSize.y > 0))
         {
@@ -218,7 +218,7 @@ namespace NovelRT::Windowing
         return NovelRT::Maths::GeoVector2F(static_cast<float>(x), static_cast<float>(y));
     }
 
-    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale(bool forceRefresh = false) const noexcept
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale(bool forceRefresh) const noexcept
     {
         if (!forceRefresh && (_currentFramebufferScale.x > 0 || _currentFramebufferScale.y > 0))
         {
