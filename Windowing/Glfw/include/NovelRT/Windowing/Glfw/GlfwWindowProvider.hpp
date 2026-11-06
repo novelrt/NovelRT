@@ -79,7 +79,7 @@ namespace NovelRT::Windowing
         void SetClipboardText(const std::string& text) const;
         [[nodiscard]] Maths::GeoVector2F GetWindowScale() const noexcept;
         void Close();
-        [[nodiscard]] Maths::GeoVector2F GetWindowSize(bool forceRefresh = false) const noexcept final;
-        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale(bool forceRefresh = false) const noexcept final;
+        [[nodiscard]] Maths::GeoVector2F GetWindowSize(bool forceRefresh) const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale(bool forceRefresh) const noexcept;
     };
 }

@@ -212,10 +212,10 @@ namespace NovelRT::Windowing
             return _currentWindowSize;
         }
 
-        float x = 0;
-        float y = 0;
+        int32_t x = 0;
+        int32_t y = 0;
         glfwGetWindowSize(_window, &x, &y);
-        return NovelRT::Maths::GeoVector2F(x, y);
+        return NovelRT::Maths::GeoVector2F(static_cast<float>(x), static_cast<float>(y));
     }
 
     NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale(bool forceRefresh = false) const noexcept
