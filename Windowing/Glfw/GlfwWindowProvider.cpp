@@ -88,6 +88,15 @@ namespace NovelRT::Windowing
                 thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
                 thisPtr->SizeChanged(thisPtr->_currentSize);
             });
+        
+        glfwSetWindowSizeCallback(
+            window,
+            [](auto window, auto, auto){
+                auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                thisPtr->_currentWindowSize = thisPtr->GetWindowSize(true);
+                thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
+                thisPtr->WindowSizeChanged(thisPtr->_currentWindowSize);
+            });
 
         glfwSetKeyCallback(window,
                            [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/)
@@ -225,7 +234,7 @@ namespace NovelRT::Windowing
             return _currentFramebufferScale;
         }
 
-        NovelRT::Maths::GeoVector2F windowSize = GetWindowSize();
+        NovelRT::Maths::GeoVector2F windowSize = GetWindowSize(true);
         NovelRT::Maths::GeoVector2F frameSize = GetSize();
         if (windowSize.x <= 0 || windowSize.y <= 0)
         {

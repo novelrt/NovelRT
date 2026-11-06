@@ -7,6 +7,7 @@
 #include <NovelRT/Maths/GeoVector2F.hpp>
 #include <NovelRT/Windowing/VideoModeData.hpp>
 #include <NovelRT/Windowing/WindowMode.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 
 #include <string>
 #include <vector>

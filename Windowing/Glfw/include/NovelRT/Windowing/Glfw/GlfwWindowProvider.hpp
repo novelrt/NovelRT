@@ -43,6 +43,7 @@ namespace NovelRT::Windowing
         Utilities::Event<CursorPositionEventArgs> CursorMoved;
         Utilities::Event<ButtonChangeEventArgs> MouseButtonClicked;
         Utilities::Event<ButtonChangeEventArgs> KeyboardButtonChanged;
+        Utilities::Event<Maths::GeoVector2F> WindowSizeChanged;
 
     private:
         GLFWwindow* _window;
