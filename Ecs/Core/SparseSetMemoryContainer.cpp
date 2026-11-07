@@ -35,11 +35,6 @@ namespace NovelRT::Ecs
 
     void SparseSetMemoryContainer::InsertInternal(size_t key, const void* value)
     {
-        if (key == 0) // use id in the reset loop
-        {
-            throw std::invalid_argument("Zero is a reserved ID.");
-        }
-
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
@@ -52,11 +47,8 @@ namespace NovelRT::Ecs
         {
             newPageCreated = true;
 
-            const size_t pageIndex = (key - 1ULL) / SparsePage::size;
-
-            // This has the +1 because we have to maintain 0 being the sentinel value. I think? - Matt J.
-
-            const size_t minValue = (SparsePage::size * pageIndex) + 1;
+            const size_t pageIndex = key / SparsePage::size;
+            const size_t minValue = SparsePage::size * pageIndex;
             const size_t maxValue =
                 minValue + std::min(SparsePage::size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
 
@@ -252,12 +244,6 @@ namespace NovelRT::Ecs
 
     bool SparseSetMemoryContainer::ContainsKey(size_t key) const noexcept
     {
-        // Sentinel value. Just bail.
-        if (key == 0ULL)
-        {
-            return false;
-        }
-
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target. Not sure if there's a way to do that? - Matt J.
         auto it = std::ranges::find_if(
@@ -285,12 +271,6 @@ namespace NovelRT::Ecs
 
     size_t SparseSetMemoryContainer::GetDenseIndex(size_t key) const
     {
-        // Sentinel value. Just bail.
-        if (key == 0ULL)
-        {
-            throw Exceptions::KeyNotFoundException();
-        }
-
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
@@ -381,12 +361,6 @@ namespace NovelRT::Ecs
 
         for (size_t id : ids)
         {
-            if (id == 0ULL)
-            {
-                throw Exceptions::InvalidOperationException(
-                    "Entity ID data contains a sentinel value. This is not allowed.");
-            }
-
             // TODO: This would be faster if we early aborted once we realise the minimum value on the page
             // is above the target.
             auto it = std::ranges::find_if(
@@ -395,10 +369,8 @@ namespace NovelRT::Ecs
 
             if (it == _sparse.end())
             {
-                const size_t pageIndex = (id - 1ULL) / SparsePage::size;
-
-                // This has the +1 because we have to maintain 0 being the sentinel value. I think? - Matt J.
-                const size_t minValue = (SparsePage::size * pageIndex) + 1;
+                const size_t pageIndex = id / SparsePage::size;
+                const size_t minValue = SparsePage::size * pageIndex;
 
                 // This is how I learned that Linux size_t is UL, not ULL. Welp. Nice bug, bro. :) - Matt J.
                 const size_t maxValue =
@@ -429,8 +401,6 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept
     {
-        assert_message(key != 0ULL, "Sentinel value was provided for indexing. This is not allowed.");
-
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
@@ -442,8 +412,6 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept
     {
-        assert_message(key != 0ULL, "Sentinel value was provided for indexing. This is not allowed.");
-
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
