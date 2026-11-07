@@ -68,6 +68,32 @@ namespace NovelRT::Ecs
         const size_t originalDenseSize = _dense.size();
         const size_t originalDataSize = _data.size();
 
+        const size_t requiredDataSize = GetStartingByteIndexForDenseIndex(originalDenseSize + 1);
+
+        const auto ensureCapacity = [](auto& storage, size_t requiredCapacity)
+        {
+            if (requiredCapacity > storage.capacity())
+            {
+                const size_t grownCapacity =
+                    storage.capacity() > storage.max_size() / 2 ? storage.max_size() : storage.capacity() * 2;
+                storage.reserve(std::max(requiredCapacity, grownCapacity));
+            }
+        };
+
+        ensureCapacity((*it)->data, key + 1ULL);
+        ensureCapacity(_dense, originalDenseSize + 1ULL);
+        ensureCapacity(_data, requiredDataSize);
+
+        std::vector<size_t>& pageData = (*it)->data;
+
+        if (pageData.size() <= key)
+        {
+            pageData.resize(key + 1);
+        }
+
+        _dense.push_back(key);
+        _data.resize(requiredDataSize);
+
         // TODO: Is this ever actually == 0? I feel like I should move this check. Assert maybe? - Matt J.
 
         if (_sizeOfDataTypeInBytes != 0)
@@ -103,7 +129,13 @@ namespace NovelRT::Ecs
             }
         }
 
-        (*it)->data[key] = originalDenseSize;
+        // we now add 1 here because 0 is a sentinel value. We account for this elsewhere.
+        // Yes I know it's brittle but I literally could not think of another way to do this
+        // right now that I didn't completely despise. - Matt J.
+        (*it)->data[key] = originalDenseSize + 1;
+
+        std::ranges::sort(_sparse, [](const auto& lhs, const auto& rhs)
+                          { return lhs->maximumPageValue < rhs->minimumPageValue; });
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)
@@ -148,6 +180,45 @@ namespace NovelRT::Ecs
         {
             throw Exceptions::KeyNotFoundException();
         }
+
+        // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+        // is above the target. THIS SHOULD ALWAYS BE VALID HERE because of the ContainsKey call.
+        auto it = std::ranges::find_if(
+            _sparse.begin(), _sparse.end(), [key](const std::unique_ptr<SparsePage>& it)
+            { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
+
+        std::vector<size_t>& pageData = (*it)->data;
+        const size_t denseIndex = pageData[key] - 1ULL;
+
+        auto byteIndex = GetStartingByteIndexForDenseIndex(denseIndex);
+
+        pageData[key] = 0ULL;
+
+        if (std::ranges::all_of(pageData, [](size_t x) { return x == 0; }))
+        {
+            _sparse.erase(it);
+        }
+
+        // reworked the insane data aligning/ordering logic from the first implementation of this to be easier to
+        // maintain now we have pages. I was definitely a bit stupid when I wrote this the first time. - Matt J.
+
+        _dense.erase(_dense.begin() + static_cast<std::vector<size_t>::difference_type>(denseIndex));
+
+        _data.erase(_data.begin() + std::vector<std::byte>::difference_type(byteIndex),
+                    _data.begin() + std::vector<std::byte>::difference_type(byteIndex + _sizeOfDataTypeInBytes));
+
+        const size_t removedStoredIndex = denseIndex + 1;
+
+        for (std::unique_ptr<SparsePage>& page : _sparse)
+        {
+            for (size_t& storedIndex : page->data)
+            {
+                if (storedIndex > removedStoredIndex)
+                {
+                    --storedIndex;
+                }
+            }
+        }
     }
 
     bool SparseSetMemoryContainer::TryRemove(size_t key) noexcept
@@ -177,8 +248,14 @@ namespace NovelRT::Ecs
 
     bool SparseSetMemoryContainer::ContainsKey(size_t key) const noexcept
     {
+        // Sentinel value. Just bail.
+        if (key == 0ULL)
+        {
+            return false;
+        }
+
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
-        // is above the target.
+        // is above the target. Not sure if there's a way to do that? - Matt J.
         auto it = std::ranges::find_if(
             _sparse.begin(), _sparse.end(), [key](const std::unique_ptr<SparsePage>& it)
             { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
@@ -188,11 +265,27 @@ namespace NovelRT::Ecs
             return false;
         }
 
-        return _dense[(*it)->data[key]] == key;
+        const std::vector<size_t>& pageData = (*it)->data;
+
+        // Would need to elminate the variable below to inline this as part of the return value. Cursed. - Matt J.
+        if (key >= pageData.size() || pageData[key] == 0)
+        {
+            return false;
+        }
+
+        const size_t denseIndex = pageData[key] - 1;
+
+        return denseIndex < _dense.size() && _dense[denseIndex] == key;
     }
 
     size_t SparseSetMemoryContainer::GetDenseIndex(size_t key) const
     {
+        // Sentinel value. Just bail.
+        if (key == 0ULL)
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
@@ -204,7 +297,7 @@ namespace NovelRT::Ecs
             throw Exceptions::KeyNotFoundException();
         }
 
-        return (*it)->data.at(key);
+        return (*it)->data.at(key) - 1ULL;
     }
 
     size_t SparseSetMemoryContainer::CopyKeyBasedOnDenseIndex(size_t denseIndex) const
@@ -297,7 +390,9 @@ namespace NovelRT::Ecs
             }
 
             _dense.push_back(id);
-            (*it)->data[id] = _dense.size() - 1ULL;
+
+            // Accounting for the sentinel value with the removal of the -1. - Matt J.
+            (*it)->data[id] = _dense.size();
         }
 
         _data.resize(data.size());
@@ -311,24 +406,28 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept
     {
+        assert_message(key != 0ULL, "Sentinel value was provided for indexing. This is not allowed.");
+
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
             _sparse, [key](const std::unique_ptr<SparsePage>& it)
             { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
 
-        return GetByteIteratorViewBasedOnDenseIndexUnsafe((*it)->data[key]);
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe((*it)->data[key] - 1ULL);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept
     {
+        assert_message(key != 0ULL, "Sentinel value was provided for indexing. This is not allowed.");
+
         // TODO: This would be faster if we early aborted once we realise the minimum value on the page
         // is above the target.
         auto it = std::ranges::find_if(
             _sparse, [key](const std::unique_ptr<SparsePage>& it)
             { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
 
-        return GetByteIteratorViewBasedOnDenseIndexUnsafe((*it)->data[key]);
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe((*it)->data[key] - 1ULL);
     }
 
     SparseSetMemoryContainer::Iterator SparseSetMemoryContainer::begin() noexcept
