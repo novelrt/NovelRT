@@ -10,7 +10,8 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <optional>
+#include <iterator>
+#include <memory>
 #include <stdexcept>
 #include <vector>
 
@@ -33,39 +34,41 @@ namespace NovelRT::Ecs
 
     void SparseSetMemoryContainer::InsertInternal(size_t key, const void* value)
     {
-        const size_t originalSparseSize = _sparse.size();
+        // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+        // is above the target.
+        auto it = std::ranges::find_if(
+            _sparse.begin(), _sparse.end(), [key](const std::unique_ptr<SparsePage>& it)
+            { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
+
+        bool newPageCreated = false;
+
+        if (it == _sparse.end())
+        {
+            newPageCreated = true;
+
+            const size_t pageIndex = key / SparsePage::size;
+
+            // This has the +1 because we have to maintain 0 being the sentinel value. I think? - Matt J.
+            const size_t minValue = (SparsePage::size * pageIndex) + 1ULL;
+            const size_t maxValue = SparsePage::size * (pageIndex + 1ULL);
+
+            _sparse.emplace_back(std::make_unique<SparsePage>(
+                SparsePage{.data = {}, .minimumPageValue = minValue, .maximumPageValue = maxValue}));
+
+            it = std::prev(_sparse.end());
+
+            auto& pageData = (*it)->data;
+
+            if (pageData.size() <= key)
+            {
+                pageData.resize(key + 1ULL);
+            }
+        }
+
         const size_t originalDenseSize = _dense.size();
         const size_t originalDataSize = _data.size();
 
-        if (key >= _sparse.max_size() || originalDenseSize == _dense.max_size() ||
-            (_sizeOfDataTypeInBytes != 0 && originalDenseSize + 1 > _data.max_size() / _sizeOfDataTypeInBytes))
-        {
-            throw std::length_error("The sparse set insertion exceeds storage capacity.");
-        }
-
-        const auto ensureCapacity = [](auto& storage, size_t requiredCapacity)
-        {
-            if (requiredCapacity > storage.capacity())
-            {
-                const size_t grownCapacity =
-                    storage.capacity() > storage.max_size() / 2 ? storage.max_size() : storage.capacity() * 2;
-                storage.reserve(std::max(requiredCapacity, grownCapacity));
-            }
-        };
-
-        const size_t requiredDataSize = GetStartingByteIndexForDenseIndex(originalDenseSize + 1);
-
-        ensureCapacity(_sparse, key + 1);
-        ensureCapacity(_dense, originalDenseSize + 1);
-        ensureCapacity(_data, requiredDataSize);
-
-        if (_sparse.size() <= key)
-        {
-            _sparse.resize(key + 1);
-        }
-
-        _dense.push_back(key);
-        _data.resize(requiredDataSize);
+        // TODO: Is this ever actually == 0? I feel like I should move this check. Assert maybe? - Matt J.
 
         if (_sizeOfDataTypeInBytes != 0)
         {
@@ -73,7 +76,11 @@ namespace NovelRT::Ecs
             {
                 _data.resize(originalDataSize);
                 _dense.resize(originalDenseSize);
-                _sparse.resize(originalSparseSize);
+
+                if (newPageCreated)
+                {
+                    _sparse.erase(it);
+                }
             };
 
             try
@@ -96,7 +103,7 @@ namespace NovelRT::Ecs
             }
         }
 
-        _sparse[key] = originalDenseSize;
+        (*it)->data[key] = originalDenseSize;
     }
 
     void SparseSetMemoryContainer::Insert(size_t key, const void* value)
@@ -141,53 +148,6 @@ namespace NovelRT::Ecs
         {
             throw Exceptions::KeyNotFoundException();
         }
-
-        size_t indexCutoff = _sparse[key];
-        auto byteIndex = GetStartingByteIndexForDenseIndex(indexCutoff);
-
-        _data.erase(_data.begin() + std::vector<std::byte>::difference_type(byteIndex),
-                    _data.begin() + std::vector<std::byte>::difference_type(byteIndex + _sizeOfDataTypeInBytes));
-
-        // the rest should be exception-free. :D
-        _dense.erase(_dense.begin() + std::vector<size_t>::difference_type(indexCutoff));
-
-        _sparse[key] = 0;
-
-        if (!_dense.empty())
-        {
-            std::optional<std::vector<size_t>::iterator> targetStart{};
-            size_t currentValue = 0;
-            size_t finalDenseSize = _dense.size();
-
-            for (auto it = _sparse.rbegin(); it != _sparse.rend(); it++)
-            {
-                currentValue = *it;
-                if (currentValue < finalDenseSize && _dense[currentValue] == currentValue)
-                {
-                    targetStart = it.base();
-                    break;
-                }
-            }
-
-            if (targetStart.has_value() && targetStart.value() != _sparse.end())
-            {
-                _sparse.erase(targetStart.value(), _sparse.end());
-            }
-        }
-        else
-        {
-            _sparse.clear();
-        }
-
-        for (auto&& index : _sparse)
-        {
-            if (index < indexCutoff || index == 0)
-            {
-                continue;
-            }
-
-            index -= 1;
-        }
     }
 
     bool SparseSetMemoryContainer::TryRemove(size_t key) noexcept
@@ -217,12 +177,34 @@ namespace NovelRT::Ecs
 
     bool SparseSetMemoryContainer::ContainsKey(size_t key) const noexcept
     {
-        if (key >= _sparse.size())
+        // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+        // is above the target.
+        auto it = std::ranges::find_if(
+            _sparse.begin(), _sparse.end(), [key](const std::unique_ptr<SparsePage>& it)
+            { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
+
+        if (it == _sparse.end())
         {
             return false;
         }
 
-        return _dense[_sparse[key]] == key;
+        return _dense[(*it)->data[key]] == key;
+    }
+
+    size_t SparseSetMemoryContainer::GetDenseIndex(size_t key) const
+    {
+        // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+        // is above the target.
+        auto it = std::ranges::find_if(
+            _sparse.begin(), _sparse.end(), [key](const std::unique_ptr<SparsePage>& it)
+            { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
+
+        if (it == _sparse.end())
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        return (*it)->data.at(key);
     }
 
     size_t SparseSetMemoryContainer::CopyKeyBasedOnDenseIndex(size_t denseIndex) const
@@ -281,24 +263,45 @@ namespace NovelRT::Ecs
                                                           NovelRT::Utilities::Span<const std::byte> data)
     {
         _dense.clear();
-        _dense.resize(ids.size());
+        _dense.reserve(ids.size());
         _sparse.clear();
         _data.clear();
-        _data.resize(data.size());
 
-        NovelRT::Utilities::Memory::Copy(ids, {_dense});
-        NovelRT::Utilities::Memory::Copy(data, {_data});
-
-        for (size_t denseIndex = 0; denseIndex < _dense.size(); denseIndex++)
+        for (size_t id : ids)
         {
-            size_t id = _dense[denseIndex];
-            if (_sparse.size() <= id)
+            // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+            // is above the target.
+            auto it = std::ranges::find_if(
+                _sparse, [id](const std::unique_ptr<SparsePage>& it)
+                { return it != nullptr && id >= it->minimumPageValue && id <= it->maximumPageValue; });
+
+            if (it == _sparse.end())
             {
-                _sparse.resize(id + 1);
+                const size_t pageIndex = id / SparsePage::size;
+
+                // This has the +1 because we have to maintain 0 being the sentinel value. I think? - Matt J.
+                const size_t minValue = (SparsePage::size * pageIndex) + 1ULL;
+                const size_t maxValue = SparsePage::size * (pageIndex + 1ULL);
+
+                _sparse.emplace_back(std::make_unique<SparsePage>(
+                    SparsePage{.data = {}, .minimumPageValue = minValue, .maximumPageValue = maxValue}));
+
+                it = std::prev(_sparse.end());
+
+                auto& pageData = (*it)->data;
+
+                if (pageData.size() <= id)
+                {
+                    pageData.resize(id + 1ULL);
+                }
             }
 
-            _sparse[id] = denseIndex;
+            _dense.push_back(id);
+            (*it)->data[id] = _dense.size() - 1ULL;
         }
+
+        _data.resize(data.size());
+        NovelRT::Utilities::Memory::Copy(data, {_data});
     }
 
     void SparseSetMemoryContainer::ResetAndWriteDenseData(const size_t* ids, size_t length, const std::byte* data)
@@ -308,12 +311,24 @@ namespace NovelRT::Ecs
 
     SparseSetMemoryContainer::ByteIteratorView SparseSetMemoryContainer::operator[](size_t key) noexcept
     {
-        return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
+        // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+        // is above the target.
+        auto it = std::ranges::find_if(
+            _sparse, [key](const std::unique_ptr<SparsePage>& it)
+            { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
+
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe((*it)->data[key]);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept
     {
-        return GetByteIteratorViewBasedOnDenseIndexUnsafe(_sparse[key]);
+        // TODO: This would be faster if we early aborted once we realise the minimum value on the page
+        // is above the target.
+        auto it = std::ranges::find_if(
+            _sparse, [key](const std::unique_ptr<SparsePage>& it)
+            { return it != nullptr && key >= it->minimumPageValue && key <= it->maximumPageValue; });
+
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe((*it)->data[key]);
     }
 
     SparseSetMemoryContainer::Iterator SparseSetMemoryContainer::begin() noexcept
