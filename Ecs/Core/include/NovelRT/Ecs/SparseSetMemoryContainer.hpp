@@ -7,7 +7,7 @@
 #include <NovelRT/Utilities/Span.hpp>
 
 #include <cstddef>
-#include <cstdint>
+#include <memory>
 #include <tuple>
 #include <vector>
 
@@ -25,8 +25,18 @@ namespace NovelRT::Ecs
     class SparseSetMemoryContainer
     {
     private:
+        struct SparsePage
+        {
+            static constexpr size_t size = 1024ULL;
+            std::vector<size_t> data;
+
+            // Both of these values are INCLUSIVE
+            size_t minimumPageValue;
+            size_t maximumPageValue;
+        };
+
         std::vector<size_t> _dense;
-        std::vector<size_t> _sparse;
+        std::vector<std::unique_ptr<SparsePage>> _sparse;
         std::vector<std::byte> _data;
         size_t _sizeOfDataTypeInBytes;
 
@@ -249,10 +259,7 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] bool ContainsKey(size_t key) const noexcept;
 
-        [[nodiscard]] inline size_t GetDenseIndexUnsafe(size_t key) const noexcept
-        {
-            return _sparse[key];
-        }
+        [[nodiscard]] size_t GetDenseIndex(size_t key) const;
 
         [[nodiscard]] size_t CopyKeyBasedOnDenseIndex(size_t denseIndex) const;
 

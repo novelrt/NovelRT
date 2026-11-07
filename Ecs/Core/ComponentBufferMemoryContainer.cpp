@@ -145,7 +145,7 @@ namespace NovelRT::Ecs
         if (set.ContainsKey(entity))
         {
             _componentAssignmentLogic.value()(set[entity].GetDataHandle(), componentData, _sizeOfDataTypeInBytes);
-            flags[set.GetDenseIndexUnsafe(entity)] = 1;
+            flags[set.GetDenseIndex(entity)] = 1;
             return;
         }
 
