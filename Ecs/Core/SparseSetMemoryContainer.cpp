@@ -392,6 +392,9 @@ namespace NovelRT::Ecs
 
         _data.resize(data.size());
         NovelRT::Utilities::Memory::Copy(data, {_data});
+
+        std::ranges::sort(_sparse, [](const auto& lhs, const auto& rhs)
+                          { return lhs->maximumPageValue < rhs->minimumPageValue; });
     }
 
     void SparseSetMemoryContainer::ResetAndWriteDenseData(const size_t* ids, size_t length, const std::byte* data)
