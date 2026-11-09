@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <memory>
 #include <tuple>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 namespace NovelRT::Ecs
@@ -30,11 +30,14 @@ namespace NovelRT::Ecs
     private:
         struct SparsePage
         {
-            static constexpr int32_t bitCount = 20;
-            static constexpr size_t entityIndexMask = ~0ULL << SparsePage::bitCount;
-            static constexpr int32_t pageBits = 1 << bitCount;
-            static constexpr size_t size = pageBits / sizeof(size_t);
+            // This equates to a sparse page of about 1MB
+            static constexpr int32_t bitCount = 17;
+            static constexpr size_t entityIndexMask = ~(~0ULL << SparsePage::bitCount);
+            static constexpr int32_t size = 1 << bitCount;
+
             std::array<size_t, size> data;
+
+            static_assert(sizeof(data) <= (1 << 20), "Sparse set pages should be about 1MB");
 
             // Both of these values are INCLUSIVE
             size_t minimumPageValue;
@@ -42,7 +45,7 @@ namespace NovelRT::Ecs
         };
 
         std::vector<size_t> _dense;
-        std::unordered_map<size_t, std::unique_ptr<SparsePage>> _sparse;
+        std::map<size_t, std::unique_ptr<SparsePage>> _sparse;
         std::vector<std::byte> _data;
         size_t _sizeOfDataTypeInBytes;
         SparsePage* _lastAccessedPagePtr;

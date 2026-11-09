@@ -40,12 +40,12 @@ namespace NovelRT::Ecs
 
     constexpr size_t SparseSetMemoryContainer::GetPageIndex(size_t key)
     {
-        return key / SparsePage::size;
+        return key >> SparsePage::bitCount;
     }
 
     constexpr size_t SparseSetMemoryContainer::GetIndexInSparsePage(size_t key)
     {
-        return key % SparsePage::size;
+        return key & SparsePage::entityIndexMask;
     }
 
     SparseSetMemoryContainer::SparsePage* SparseSetMemoryContainer::GetLastPageAccessedIfValid(
