@@ -9,9 +9,9 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <map>
 #include <memory>
 #include <tuple>
-#include <map>
 #include <vector>
 
 namespace NovelRT::Ecs
@@ -256,6 +256,12 @@ namespace NovelRT::Ecs
         };
 
         explicit SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept;
+
+        SparseSetMemoryContainer(const SparseSetMemoryContainer&) = delete;
+        SparseSetMemoryContainer& operator=(const SparseSetMemoryContainer&) = delete;
+
+        SparseSetMemoryContainer(SparseSetMemoryContainer&&) = default;
+        SparseSetMemoryContainer& operator=(SparseSetMemoryContainer&&) = default;
 
         void Insert(size_t key, const void* value);
 
