@@ -31,25 +31,25 @@ namespace NovelRT::Ecs
         struct SparsePage
         {
             // This equates to a sparse page of about 1MB
-            static constexpr int32_t bitCount = 17;
-            static constexpr size_t entityIndexMask = ~(~0ULL << SparsePage::bitCount);
-            static constexpr int32_t size = 1 << bitCount;
+            static constexpr int32_t BitCount = 17;
+            static constexpr size_t EntityIndexMask = ~(~0ULL << SparsePage::BitCount);
+            static constexpr int32_t Size = 1 << BitCount;
 
-            std::array<size_t, size> data;
+            std::array<size_t, Size> Data;
 
-            static_assert(sizeof(data) <= (1 << 20), "Sparse set pages should be about 1MB");
+            static_assert(sizeof(Data) <= (1 << 20), "Sparse set pages should be about 1MB");
 
             // Both of these values are INCLUSIVE
-            size_t minimumPageValue;
-            size_t maximumPageValue;
+            size_t MinimumPageValue;
+            size_t MaximumPageValue;
         };
 
         std::vector<size_t> _dense;
         std::map<size_t, std::unique_ptr<SparsePage>> _sparse;
         std::vector<std::byte> _data;
         size_t _sizeOfDataTypeInBytes;
-        SparsePage* _lastAccessedPagePtr;
-        size_t _lastAccessedPageIndex;
+        mutable SparsePage* _lastAccessedPagePtr;
+        mutable size_t _lastAccessedPageIndex;
 
         [[nodiscard]] size_t GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept;
         [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;

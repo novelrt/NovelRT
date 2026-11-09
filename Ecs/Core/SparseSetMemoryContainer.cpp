@@ -26,6 +26,7 @@ namespace NovelRT::Ecs
           _lastAccessedPagePtr(nullptr),
           _lastAccessedPageIndex(0ULL)
     {
+        assert_message(_sizeOfDataTypeInBytes > 0ULL, "Size of data data type cannot be zero.");
     }
 
     size_t SparseSetMemoryContainer::GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept
@@ -40,12 +41,12 @@ namespace NovelRT::Ecs
 
     constexpr size_t SparseSetMemoryContainer::GetPageIndex(size_t key)
     {
-        return key >> SparsePage::bitCount;
+        return key >> SparsePage::BitCount;
     }
 
     constexpr size_t SparseSetMemoryContainer::GetIndexInSparsePage(size_t key)
     {
-        return key & SparsePage::entityIndexMask;
+        return key & SparsePage::EntityIndexMask;
     }
 
     SparseSetMemoryContainer::SparsePage* SparseSetMemoryContainer::GetLastPageAccessedIfValid(
@@ -86,13 +87,13 @@ namespace NovelRT::Ecs
 
         if (pagePtr == nullptr)
         {
-            const size_t minValue = SparsePage::size * pageIndex;
+            const size_t minValue = SparsePage::Size * pageIndex;
             const size_t maxValue =
-                minValue + std::min(SparsePage::size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
+                minValue + std::min(SparsePage::Size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
 
             auto [localIt, didInsert] = _sparse.try_emplace(
                 pageIndex, std::make_unique<SparsePage>(
-                               SparsePage{.data = {}, .minimumPageValue = minValue, .maximumPageValue = maxValue}));
+                               SparsePage{.Data = {}, .MinimumPageValue = minValue, .MaximumPageValue = maxValue}));
 
             it = localIt;
             newPageCreated = didInsert;
@@ -126,46 +127,40 @@ namespace NovelRT::Ecs
         _dense.push_back(key);
         _data.resize(requiredDataSize);
 
-        // TODO: Is this ever actually == 0? I feel like I should move this check. Assert maybe? - Matt J.
-
-        if (_sizeOfDataTypeInBytes != 0)
+        const auto restoreInsertionState = [&]() noexcept
         {
-            const auto restoreInsertionState = [&]() noexcept
-            {
-                _data.resize(originalDataSize);
-                _dense.resize(originalDenseSize);
+            _data.resize(originalDataSize);
+            _dense.resize(originalDenseSize);
 
-                if (newPageCreated)
-                {
-                    _sparse.erase(it);
-                }
-            };
+            if (newPageCreated)
+            {
+                _sparse.erase(it);
+            }
+        };
 
-            try
-            {
-                NovelRT::Utilities::Memory::Copy(
-                    NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(value),
-                                                              _sizeOfDataTypeInBytes},
-                    NovelRT::Utilities::Span<std::byte>{GetDataObjectStartAtIndex(originalDenseSize),
-                                                        _sizeOfDataTypeInBytes});
-            }
-            catch (const Exceptions::InvalidOperationException&)
-            {
-                restoreInsertionState();
-                throw;
-            }
-            catch (const std::bad_alloc&)
-            {
-                restoreInsertionState();
-                throw;
-            }
+        try
+        {
+            NovelRT::Utilities::Memory::Copy(
+                NovelRT::Utilities::Span<const std::byte>{static_cast<const std::byte*>(value), _sizeOfDataTypeInBytes},
+                NovelRT::Utilities::Span<std::byte>{GetDataObjectStartAtIndex(originalDenseSize),
+                                                    _sizeOfDataTypeInBytes});
+        }
+        catch (const Exceptions::InvalidOperationException&)
+        {
+            restoreInsertionState();
+            throw;
+        }
+        catch (const std::bad_alloc&)
+        {
+            restoreInsertionState();
+            throw;
         }
 
         // we now add 1 here because 0 is a sentinel value. We account for this elsewhere.
         // Yes I know it's brittle but I literally could not think of another way to do this
         // right now that I didn't completely despise. - Matt J.
 
-        pagePtr->data[GetIndexInSparsePage(key)] = originalDenseSize + 1;
+        pagePtr->Data[GetIndexInSparsePage(key)] = originalDenseSize + 1;
 
         _lastAccessedPageIndex = pageIndex;
         _lastAccessedPagePtr = pagePtr;
@@ -216,8 +211,8 @@ namespace NovelRT::Ecs
             throw Exceptions::KeyNotFoundException();
         }
 
-        std::array<size_t, SparsePage::size>& pageData = pagePtr->data;
-        const size_t pageOffset = key - pagePtr->minimumPageValue;
+        std::array<size_t, SparsePage::Size>& pageData = pagePtr->Data;
+        const size_t pageOffset = key - pagePtr->MinimumPageValue;
         const size_t denseIndex = pageData[pageOffset] - 1ULL;
 
         auto byteIndex = GetStartingByteIndexForDenseIndex(denseIndex);
@@ -243,7 +238,7 @@ namespace NovelRT::Ecs
 
         for (auto& [_, page] : _sparse)
         {
-            for (size_t& storedIndex : page->data)
+            for (size_t& storedIndex : page->Data)
             {
                 if (storedIndex > removedStoredIndex)
                 {
@@ -287,7 +282,15 @@ namespace NovelRT::Ecs
 
         const auto it = _sparse.find(pageIndex);
 
-        return it != _sparse.end() && it->second->data[keyIndex] != 0ULL;
+        const bool isNotAtEnd = it != _sparse.end();
+
+        if (isNotAtEnd)
+        {
+            _lastAccessedPageIndex = pageIndex;
+            _lastAccessedPagePtr = it->second.get();
+        }
+
+        return isNotAtEnd && it->second->Data[keyIndex] != 0ULL;
     }
 
     size_t SparseSetMemoryContainer::GetDenseIndex(size_t key) const
@@ -304,7 +307,7 @@ namespace NovelRT::Ecs
             pagePtr = _sparse.at(GetPageIndex(key)).get();
         }
 
-        const auto& pageData = pagePtr->data;
+        const auto& pageData = pagePtr->Data;
 
         return pageData[GetIndexInSparsePage(key)] - 1ULL;
     }
@@ -383,13 +386,13 @@ namespace NovelRT::Ecs
             if (pagePtr == nullptr)
             {
                 const size_t pageIndex = GetPageIndex(key);
-                const size_t minValue = SparsePage::size * pageIndex;
+                const size_t minValue = SparsePage::Size * pageIndex;
                 const size_t maxValue =
-                    minValue + std::min(SparsePage::size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
+                    minValue + std::min(SparsePage::Size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
 
                 auto [it, _] = _sparse.emplace(
                     pageIndex, std::make_unique<SparsePage>(
-                                   SparsePage{.data = {}, .minimumPageValue = minValue, .maximumPageValue = maxValue}));
+                                   SparsePage{.Data = {}, .MinimumPageValue = minValue, .MaximumPageValue = maxValue}));
 
                 pagePtr = it->second.get();
             }
@@ -397,7 +400,7 @@ namespace NovelRT::Ecs
             _dense.push_back(key);
 
             // Accounting for the sentinel value with the removal of the -1. - Matt J.
-            pagePtr->data[GetIndexInSparsePage(key)] = _dense.size();
+            pagePtr->Data[GetIndexInSparsePage(key)] = _dense.size();
         }
 
         _data.resize(data.size());
@@ -413,14 +416,14 @@ namespace NovelRT::Ecs
     {
         SparsePage* pagePtr = GetPageForKeyIfExists(key);
 
-        return GetByteIteratorViewBasedOnDenseIndexUnsafe(pagePtr->data[key - pagePtr->minimumPageValue] - 1ULL);
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe(pagePtr->Data[key - pagePtr->MinimumPageValue] - 1ULL);
     }
 
     SparseSetMemoryContainer::ConstByteIteratorView SparseSetMemoryContainer::operator[](size_t key) const noexcept
     {
         SparsePage* pagePtr = GetPageForKeyIfExists(key);
 
-        return GetByteIteratorViewBasedOnDenseIndexUnsafe(pagePtr->data[key - pagePtr->minimumPageValue] - 1ULL);
+        return GetByteIteratorViewBasedOnDenseIndexUnsafe(pagePtr->Data[key - pagePtr->MinimumPageValue] - 1ULL);
     }
 
     SparseSetMemoryContainer::Iterator SparseSetMemoryContainer::begin() noexcept
