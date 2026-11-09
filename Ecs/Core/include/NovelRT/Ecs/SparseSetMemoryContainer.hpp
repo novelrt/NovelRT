@@ -6,14 +6,17 @@
 #include <NovelRT/Utilities/Memory.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
+#include <map>
+#include <memory>
 #include <tuple>
 #include <vector>
 
 namespace NovelRT::Ecs
 {
-    enum class SparseSetInsertResult
+    enum class SparseSetInsertResult : uint8_t
     {
         Inserted,
         AlreadyExists,
@@ -25,13 +28,35 @@ namespace NovelRT::Ecs
     class SparseSetMemoryContainer
     {
     private:
+        struct SparsePage
+        {
+            // This equates to a sparse page of about 1MB
+            static constexpr int32_t BitCount = 17;
+            static constexpr size_t EntityIndexMask = ~(~0ULL << SparsePage::BitCount);
+            static constexpr int32_t Size = 1 << BitCount;
+
+            std::array<size_t, Size> Data;
+
+            static_assert(sizeof(Data) <= (1 << 20), "Sparse set pages should be about 1MB");
+
+            // Both of these values are INCLUSIVE
+            size_t MinimumPageValue;
+            size_t MaximumPageValue;
+        };
+
         std::vector<size_t> _dense;
-        std::vector<size_t> _sparse;
+        std::map<size_t, std::unique_ptr<SparsePage>> _sparse;
         std::vector<std::byte> _data;
         size_t _sizeOfDataTypeInBytes;
+        mutable SparsePage* _lastAccessedPagePtr;
+        mutable size_t _lastAccessedPageIndex;
 
         [[nodiscard]] size_t GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept;
         [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
+        [[nodiscard]] static constexpr size_t GetPageIndex(size_t key);
+        [[nodiscard]] static constexpr size_t GetIndexInSparsePage(size_t key);
+        [[nodiscard]] SparsePage* GetLastPageAccessedIfValid(size_t key) const noexcept;
+        [[nodiscard]] SparsePage* GetPageForKeyIfExists(size_t key) const noexcept;
         void InsertInternal(size_t key, const void* value);
 
     public:
@@ -232,6 +257,12 @@ namespace NovelRT::Ecs
 
         explicit SparseSetMemoryContainer(size_t sizeOfDataTypeInBytes) noexcept;
 
+        SparseSetMemoryContainer(const SparseSetMemoryContainer&) = delete;
+        SparseSetMemoryContainer& operator=(const SparseSetMemoryContainer&) = delete;
+
+        SparseSetMemoryContainer(SparseSetMemoryContainer&&) = default;
+        SparseSetMemoryContainer& operator=(SparseSetMemoryContainer&&) = default;
+
         void Insert(size_t key, const void* value);
 
         [[nodiscard]] SparseSetInsertResult TryInsert(size_t key, const void* value) noexcept;
@@ -249,10 +280,7 @@ namespace NovelRT::Ecs
 
         [[nodiscard]] bool ContainsKey(size_t key) const noexcept;
 
-        [[nodiscard]] inline size_t GetDenseIndexUnsafe(size_t key) const noexcept
-        {
-            return _sparse[key];
-        }
+        [[nodiscard]] size_t GetDenseIndex(size_t key) const;
 
         [[nodiscard]] size_t CopyKeyBasedOnDenseIndex(size_t denseIndex) const;
 

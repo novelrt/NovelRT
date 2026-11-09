@@ -51,6 +51,37 @@ TEST(SparseSetMemoryContainerTest, InsertCopiesBytesProperlyMultipleTimes)
     EXPECT_EQ(resultThree, testValueThree);
 }
 
+TEST(SparseSetMemoryContainerTest, InsertAndLookupWithThousandsOfEntitiesReadAndWriteCorrectly)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    constexpr size_t entryCount = 700000;
+
+    for (size_t key = 0; key < entryCount; ++key)
+    {
+        auto value = static_cast<int32_t>(key);
+        container.Insert(key, &value);
+    }
+
+    ASSERT_EQ(container.Length(), entryCount);
+
+    const SparseSetMemoryContainer& constContainer = container;
+
+    for (size_t key = 0; key < entryCount; ++key)
+    {
+        ASSERT_TRUE(container.ContainsKey(key)) << "Key: " << key;
+        ASSERT_EQ(container.GetDenseIndex(key), key) << "Key: " << key;
+
+        int32_t mutableResult = -1;
+        int32_t constResult = -1;
+
+        container[key].CopyFromLocation(&mutableResult);
+        constContainer[key].CopyFromLocation(&constResult);
+
+        ASSERT_EQ(mutableResult, static_cast<int32_t>(key)) << "Key: " << key;
+        ASSERT_EQ(constResult, static_cast<int32_t>(key)) << "Key: " << key;
+    }
+}
+
 TEST(SparseSetMemoryContainerTest, InsertThrowsWhenDuplicateKeyEntered)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
@@ -116,24 +147,78 @@ TEST(SparseSetMemoryContainerTest, TryInsertReturnsAlreadyExistsWhenDuplicateKey
     EXPECT_EQ(*static_cast<const int32_t*>(container[0].GetDataHandle()), 10);
 }
 
-TEST(SparseSetMemoryContainerTest, TryInsertReportsCapacityFailureAndPreservesExistingEntries)
+TEST(SparseSetMemoryContainerTest, TryInsertSupportsMaximumKeyAndPreservesExistingEntries)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
     int32_t value = 10;
 
     ASSERT_EQ(container.TryInsert(0, &value), SparseSetInsertResult::Inserted);
 
-    constexpr size_t invalidKey = std::numeric_limits<size_t>::max();
-    static_assert(noexcept(container.TryInsert(invalidKey, &value)));
+    constexpr size_t maximumKey = std::numeric_limits<size_t>::max();
+    static_assert(noexcept(container.TryInsert(maximumKey, &value)));
 
-    EXPECT_EQ(container.TryInsert(invalidKey, &value), SparseSetInsertResult::UnknownFailure);
+    EXPECT_EQ(container.TryInsert(maximumKey, &value), SparseSetInsertResult::Inserted);
 
-    ASSERT_EQ(container.Length(), 1);
+    ASSERT_EQ(container.Length(), 2);
     ASSERT_TRUE(container.ContainsKey(0));
-    EXPECT_FALSE(container.ContainsKey(invalidKey));
+    ASSERT_TRUE(container.ContainsKey(maximumKey));
     EXPECT_EQ(*static_cast<const int32_t*>(container[0].GetDataHandle()), 10);
+    EXPECT_EQ(*static_cast<const int32_t*>(container[maximumKey].GetDataHandle()), 10);
 
     EXPECT_EQ(container.TryInsert(1, &value), SparseSetInsertResult::Inserted);
+}
+
+TEST(SparseSetMemoryContainerTest, ResetAndRemovePreserveMappingsAcrossPageBoundaries)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    const size_t ids[] = {0, 1, 1023, 1024, 1025, std::numeric_limits<size_t>::max()};
+    const int32_t values[] = {10, 20, 30, 40, 50, 60};
+    int32_t oldValue = -1;
+
+    container.Insert(2048, &oldValue);
+    container.ResetAndWriteDenseData(ids, 6, reinterpret_cast<const std::byte*>(values));
+
+    ASSERT_EQ(container.Length(), 6);
+    EXPECT_FALSE(container.ContainsKey(2048));
+    EXPECT_FALSE(container.ContainsKey(2));
+
+    for (size_t i = 0; i < 6; ++i)
+    {
+        ASSERT_TRUE(container.ContainsKey(ids[i]));
+        EXPECT_EQ(container.GetDenseIndex(ids[i]), i);
+        EXPECT_EQ(*static_cast<const int32_t*>(container[ids[i]].GetDataHandle()), values[i]);
+    }
+
+    container.Remove(0);
+    container.Remove(1024);
+    container.Remove(std::numeric_limits<size_t>::max());
+
+    const size_t remainingIds[] = {1, 1023, 1025};
+    const int32_t remainingValues[] = {20, 30, 50};
+
+    ASSERT_EQ(container.Length(), 3);
+    EXPECT_FALSE(container.ContainsKey(0));
+    EXPECT_FALSE(container.ContainsKey(1024));
+    EXPECT_FALSE(container.ContainsKey(std::numeric_limits<size_t>::max()));
+
+    size_t denseIndex = 0;
+
+    for (auto [id, dataView] : container)
+    {
+        ASSERT_LT(denseIndex, size_t{3});
+        EXPECT_EQ(id, remainingIds[denseIndex]);
+        EXPECT_EQ(container.GetDenseIndex(id), denseIndex);
+        EXPECT_EQ(*static_cast<const int32_t*>(dataView.GetDataHandle()), remainingValues[denseIndex]);
+        ++denseIndex;
+    }
+
+    EXPECT_EQ(denseIndex, 3);
+
+    container.Insert(0, &values[0]);
+    container.Insert(std::numeric_limits<size_t>::max(), &values[5]);
+
+    EXPECT_EQ(*static_cast<const int32_t*>(container[0].GetDataHandle()), 10);
+    EXPECT_EQ(*static_cast<const int32_t*>(container[std::numeric_limits<size_t>::max()].GetDataHandle()), 60);
 }
 
 TEST(SparseSetMemoryContainerTest, TryInsertRejectsOversizedPayloadWithoutAddingEntry)
@@ -161,8 +246,7 @@ TEST(SparseSetMemoryContainerTest, CopyValidationFailurePreservesEntriesForBothI
             container.Insert(key, &value);
         }
 
-        // Geometric growth leaves room for a fourth payload without relocating this source.
-        // Its bytes overlap the destination once the data vector is extended.
+        // Deliberately anger our memcopy failsafes. We don't support overlapped memory copies. It's crazy.
         const auto* overlappingSource = static_cast<const std::byte*>(container[2].GetDataHandle()) + 1;
 
         if (useTryInsert)
@@ -216,7 +300,6 @@ TEST(SparseSetMemoryContainerTest, RemoveRemovesTheKeyCorrectlyWhenMultipleValue
         ASSERT_TRUE(id == 0 || id == 2);
 
         int32_t value = 0;
-
         dataView.CopyFromLocation(&value);
 
         EXPECT_EQ(value, testValue);
@@ -242,7 +325,6 @@ TEST(SparseSetMemoryContainerTest, TryRemoveRemovesTheKeyCorrectly)
     container.Insert(0, &testValue);
 
     ASSERT_TRUE(container.TryRemove(0));
-
     EXPECT_FALSE(container.ContainsKey(0));
 }
 
@@ -265,7 +347,6 @@ TEST(SparseSetMemoryContainerTest, TryRemoveRemovesTheKeyCorrectlyWhenMultipleVa
         ASSERT_TRUE(id == 0 || id == 2);
 
         int32_t value = 0;
-
         dataView.CopyFromLocation(&value);
 
         EXPECT_EQ(value, testValue);
@@ -280,7 +361,6 @@ TEST(SparseSetMemoryContainerTest, TryRemoveReturnsFalseWhenDuplicateKeyRemoved)
     container.Insert(0, &testValue);
 
     ASSERT_TRUE(container.TryRemove(0));
-
     EXPECT_FALSE(container.TryRemove(0));
 }
 
@@ -388,7 +468,6 @@ TEST(SparseSetMemoryContainerTest, IteratingTheMutableCollectionReturnsCorrectVa
     for (auto [id, dataView] : container)
     {
         int32_t value = 0;
-
         dataView.CopyFromLocation(&value);
 
         EXPECT_EQ(10, value);
@@ -407,11 +486,9 @@ TEST(SparseSetMemoryContainerTest, IteratingTheConstCollectionReturnsCorrectValu
     container.Insert(1, &testValueTwo);
     container.Insert(2, &testValueThree);
 
-    for (auto it = container.cbegin(); it != container.cend(); it++)
+    for (auto [id, dataView] : container)
     {
-        auto [id, dataView] = *it;
         int32_t value = 0;
-
         dataView.CopyFromLocation(&value);
 
         EXPECT_EQ(10, value);
@@ -420,7 +497,6 @@ TEST(SparseSetMemoryContainerTest, IteratingTheConstCollectionReturnsCorrectValu
     for (auto [id, dataView] : static_cast<const SparseSetMemoryContainer&>(container))
     {
         int32_t value = 0;
-
         dataView.CopyFromLocation(&value);
 
         EXPECT_EQ(10, value);
