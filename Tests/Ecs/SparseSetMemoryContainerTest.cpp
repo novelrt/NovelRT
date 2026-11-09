@@ -51,7 +51,7 @@ TEST(SparseSetMemoryContainerTest, InsertCopiesBytesProperlyMultipleTimes)
     EXPECT_EQ(resultThree, testValueThree);
 }
 
-TEST(SparseSetMemoryContainerTest, InsertAndLookupPreserveValuesAcrossPageBoundaries)
+TEST(SparseSetMemoryContainerTest, InsertAndLookupWithThousandsOfEntitiesReadAndWriteCorrectly)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
     constexpr size_t entryCount = 700000;
