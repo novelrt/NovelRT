@@ -6,14 +6,17 @@
 #include <NovelRT/Utilities/Memory.hpp>
 #include <NovelRT/Utilities/Span.hpp>
 
+#include <array>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <tuple>
+#include <unordered_map>
 #include <vector>
 
 namespace NovelRT::Ecs
 {
-    enum class SparseSetInsertResult
+    enum class SparseSetInsertResult : uint8_t
     {
         Inserted,
         AlreadyExists,
@@ -27,8 +30,11 @@ namespace NovelRT::Ecs
     private:
         struct SparsePage
         {
-            static constexpr size_t size = 1024ULL;
-            std::vector<size_t> data;
+            static constexpr int32_t bitCount = 20;
+            static constexpr size_t entityIndexMask = ~0ULL << SparsePage::bitCount;
+            static constexpr int32_t pageBits = 1 << bitCount;
+            static constexpr size_t size = pageBits / sizeof(size_t);
+            std::array<size_t, size> data;
 
             // Both of these values are INCLUSIVE
             size_t minimumPageValue;
@@ -36,12 +42,18 @@ namespace NovelRT::Ecs
         };
 
         std::vector<size_t> _dense;
-        std::vector<std::unique_ptr<SparsePage>> _sparse;
+        std::unordered_map<size_t, std::unique_ptr<SparsePage>> _sparse;
         std::vector<std::byte> _data;
         size_t _sizeOfDataTypeInBytes;
+        SparsePage* _lastAccessedPagePtr;
+        size_t _lastAccessedPageIndex;
 
         [[nodiscard]] size_t GetStartingByteIndexForDenseIndex(size_t denseIndex) const noexcept;
         [[nodiscard]] std::byte* GetDataObjectStartAtIndex(size_t location) noexcept;
+        [[nodiscard]] static constexpr size_t GetPageIndex(size_t key);
+        [[nodiscard]] static constexpr size_t GetIndexInSparsePage(size_t key);
+        [[nodiscard]] SparsePage* GetLastPageAccessedIfValid(size_t key) const noexcept;
+        [[nodiscard]] SparsePage* GetPageForKeyIfExists(size_t key) const noexcept;
         void InsertInternal(size_t key, const void* value);
 
     public:

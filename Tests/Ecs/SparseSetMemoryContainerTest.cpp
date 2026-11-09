@@ -51,6 +51,37 @@ TEST(SparseSetMemoryContainerTest, InsertCopiesBytesProperlyMultipleTimes)
     EXPECT_EQ(resultThree, testValueThree);
 }
 
+TEST(SparseSetMemoryContainerTest, InsertAndLookupPreserveValuesAcrossPageBoundaries)
+{
+    SparseSetMemoryContainer container(sizeof(int32_t));
+    constexpr size_t entryCount = 700000;
+
+    for (size_t key = 0; key < entryCount; ++key)
+    {
+        auto value = static_cast<int32_t>(key);
+        container.Insert(key, &value);
+    }
+
+    ASSERT_EQ(container.Length(), entryCount);
+
+    const SparseSetMemoryContainer& constContainer = container;
+
+    for (size_t key = 0; key < entryCount; ++key)
+    {
+        ASSERT_TRUE(container.ContainsKey(key)) << "Key: " << key;
+        ASSERT_EQ(container.GetDenseIndex(key), key) << "Key: " << key;
+
+        int32_t mutableResult = -1;
+        int32_t constResult = -1;
+
+        container[key].CopyFromLocation(&mutableResult);
+        constContainer[key].CopyFromLocation(&constResult);
+
+        ASSERT_EQ(mutableResult, static_cast<int32_t>(key)) << "Key: " << key;
+        ASSERT_EQ(constResult, static_cast<int32_t>(key)) << "Key: " << key;
+    }
+}
+
 TEST(SparseSetMemoryContainerTest, InsertThrowsWhenDuplicateKeyEntered)
 {
     SparseSetMemoryContainer container(sizeof(int32_t));
@@ -455,9 +486,8 @@ TEST(SparseSetMemoryContainerTest, IteratingTheConstCollectionReturnsCorrectValu
     container.Insert(1, &testValueTwo);
     container.Insert(2, &testValueThree);
 
-    for (auto it = container.cbegin(); it != container.cend(); it++)
+    for (auto [id, dataView] : container)
     {
-        auto [id, dataView] = *it;
         int32_t value = 0;
         dataView.CopyFromLocation(&value);
 
