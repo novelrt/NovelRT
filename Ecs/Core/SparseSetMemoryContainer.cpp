@@ -241,7 +241,7 @@ namespace NovelRT::Ecs
 
         const size_t removedStoredIndex = denseIndex + 1;
 
-        for (auto& [key, page] : _sparse)
+        for (auto& [_, page] : _sparse)
         {
             for (size_t& storedIndex : page->data)
             {
