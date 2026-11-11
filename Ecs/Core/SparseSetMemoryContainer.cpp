@@ -90,10 +90,13 @@ namespace NovelRT::Ecs
             const size_t minValue = SparsePage::Size * pageIndex;
             const size_t maxValue =
                 minValue + std::min(SparsePage::Size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
+            
+            auto newPage = std::make_unique<SparsePage>();
+            newPage->MinimumPageValue = minValue;
+            newPage->MaximumPageValue = maxValue;
 
             auto [localIt, didInsert] = _sparse.try_emplace(
-                pageIndex, std::make_unique<SparsePage>(
-                               SparsePage{.Data = {}, .MinimumPageValue = minValue, .MaximumPageValue = maxValue}));
+                pageIndex, std::move(newPage));
 
             it = localIt;
             newPageCreated = didInsert;
@@ -390,9 +393,12 @@ namespace NovelRT::Ecs
                 const size_t maxValue =
                     minValue + std::min(SparsePage::Size - size_t(1), std::numeric_limits<size_t>::max() - minValue);
 
+                auto newPage = std::make_unique<SparsePage>();
+                newPage->MinimumPageValue = minValue;
+                newPage->MaximumPageValue = maxValue;
+
                 auto [it, _] = _sparse.emplace(
-                    pageIndex, std::make_unique<SparsePage>(
-                                   SparsePage{.Data = {}, .MinimumPageValue = minValue, .MaximumPageValue = maxValue}));
+                    pageIndex, std::move(newPage));
 
                 pagePtr = it->second.get();
             }
