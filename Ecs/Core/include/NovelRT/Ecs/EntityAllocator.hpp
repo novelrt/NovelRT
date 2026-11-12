@@ -16,10 +16,17 @@ namespace NovelRT::Ecs
     class EntityAllocator
     {
     private:
-        std::map<EntityId, size_t> _generationState;
+        struct GenerationAllocationState
+        {
+            size_t Generation;
+            bool IsCurrentlyAllocated;
+        };
+
+        std::map<EntityId, GenerationAllocationState> _generationStates;
         std::vector<EntityId> _freedEntities;
 
-        [[nodiscard]] std::optional<size_t> GetGenerationIfTracked(EntityId entity) const noexcept;
+        [[nodiscard]] const GenerationAllocationState* GetGenerationIfTracked(EntityId entity) const noexcept;
+        [[nodiscard]] GenerationAllocationState* GetGenerationIfTracked(EntityId entity) noexcept;
 
     public:
         [[nodiscard]] EntityHandle Allocate();
