@@ -3,11 +3,12 @@
 
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/EntityAllocator.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <NovelRT/Ecs/UnsafeComponentView.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 
-#include <algorithm>
 #include <utility>
 
 namespace NovelRT::Ecs
@@ -17,33 +18,28 @@ namespace NovelRT::Ecs
           _componentCache(scheduler.GetComponentCache()),
           _entityCache(scheduler.GetEntityCache()),
           _scheduler(scheduler),
-          _createdEntitiesThisFrame(std::vector<EntityId>{})
+          _entityAllocator(scheduler.GetEntityAllocator())
     {
     }
 
-    EntityId Catalogue::CreateEntity() noexcept
+    EntityHandle Catalogue::CreateEntity()
     {
-        static AtomFactory& _entityIdFactory = AtomFactoryDatabase::GetFactory("EntityId");
-        auto& knownEntities = _entityCache.GetRegisteredEntities();
+        EntityHandle newHandle = _entityAllocator.Allocate();
+        _entityCache.AddEntity(_poolId, newHandle);
 
-        EntityId returnId = _entityIdFactory.GetNext();
-
-        while (std::find(knownEntities.begin(), knownEntities.end(), returnId) != knownEntities.end())
-        {
-            returnId = _entityIdFactory.GetNext();
-        }
-
-        _entityCache.AddEntity(_poolId, returnId);
-        _createdEntitiesThisFrame.push_back(returnId);
-        return returnId;
+        return newHandle;
     }
 
-    void Catalogue::DeleteEntity(EntityId entity) noexcept
+    void Catalogue::DeleteEntity(EntityId entity)
     {
-        if (std::find(_createdEntitiesThisFrame.begin(), _createdEntitiesThisFrame.end(), entity) !=
-            _createdEntitiesThisFrame.end())
+        DeleteEntity(_entityAllocator.CreateHandleForAllocated(entity));
+    }
+
+    void Catalogue::DeleteEntity(const EntityHandle& entity)
+    {
+        if (!_entityAllocator.IsValid(entity))
         {
-            return;
+            throw Exceptions::KeyNotFoundException();
         }
 
         _entityCache.RemoveEntity(_poolId, entity);
@@ -51,10 +47,11 @@ namespace NovelRT::Ecs
 
     UnsafeComponentView Catalogue::GetComponentViewById(ComponentTypeId componentTypeId)
     {
-        return UnsafeComponentView(_poolId, _componentCache.GetComponentBufferById(componentTypeId));
+        return {_poolId, _componentCache.GetComponentBufferById(componentTypeId)};
     }
 
-    SystemId Catalogue::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr)
+    SystemId Catalogue::ScheduleSystemJob(
+        std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr)
     {
         return _scheduler.ScheduleSystemJob(std::move(jobFnPtr));
     }

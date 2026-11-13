@@ -1,18 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <NovelRT/Ecs/Catalogue.hpp>
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
+#include <NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/EntityGraphView.hpp>
-#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
-#include <NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp>
-#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <gtest/gtest.h>
 
 using namespace NovelRT::Ecs;
@@ -32,13 +32,11 @@ public:
 protected:
     void SetUp() override
     {
-        static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
-
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false}, "THROW_AWAY");
         componentCache.RegisterComponentType(EntityGraphComponent{false}, "THROW_AWAY_AGAIN");
-        parentId = _entityIdFactory.GetNext();
-        childId = _entityIdFactory.GetNext();
+        parentId = systemScheduler.GetEntityAllocator().Allocate().Id;
+        childId = systemScheduler.GetEntityAllocator().Allocate().Id;
         entityCache = EntityCache(1);
         componentCache.GetComponentBuffer<EntityGraphComponent>().PushComponentUpdateInstruction(
             0, parentId, EntityGraphComponent{true, max, childId});
@@ -66,7 +64,8 @@ TEST_F(EntityGraphViewTest, CanCreateEntityGraphView)
 
 TEST_F(EntityGraphViewTest, CanAddNewEntityAsChild)
 {
-    EntityId newChild = catalogue->CreateEntity();
+    EntityId newChild = catalogue->CreateEntity().Id;
+
     {
         EntityGraphView view(*catalogue, parentId,
                              catalogue->GetComponentView<EntityGraphComponent>().GetComponentUnsafe(parentId));
@@ -109,7 +108,8 @@ TEST_F(EntityGraphViewTest, CanRemoveExistingChild)
 
 TEST_F(EntityGraphViewTest, CanAddAndRemoveChildren)
 {
-    EntityId newChild = catalogue->CreateEntity();
+    EntityId newChild = catalogue->CreateEntity().Id;
+
     {
         EntityGraphView view(*catalogue, parentId,
                              catalogue->GetComponentView<EntityGraphComponent>().GetComponentUnsafe(parentId));
@@ -132,7 +132,8 @@ TEST_F(EntityGraphViewTest, CanAddAndRemoveChildren)
 
 TEST_F(EntityGraphViewTest, CanRemoveAndAddChildren)
 {
-    EntityId newChild = catalogue->CreateEntity();
+    EntityId newChild = catalogue->CreateEntity().Id;
+
     {
         EntityGraphView view(*catalogue, parentId,
                              catalogue->GetComponentView<EntityGraphComponent>().GetComponentUnsafe(parentId));

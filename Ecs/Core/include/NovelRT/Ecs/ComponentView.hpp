@@ -4,6 +4,8 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/EntityAllocator.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 
 #include <cstddef>
 #include <utility>
@@ -26,6 +28,7 @@ namespace NovelRT::Ecs
     private:
         size_t _poolId;
         ComponentBuffer<TComponent> _componentBuffer;
+        const EntityAllocator* _entityAllocator;
 
     public:
         /**
@@ -33,9 +36,12 @@ namespace NovelRT::Ecs
          *
          * @param poolId The thread's pool ID.
          * @param targetBuffer The buffer this view wraps.
+         * @param entityAllocator The allocator used to validate entity handles.
          */
-        ComponentView(size_t poolId, ComponentBuffer<TComponent> targetBuffer) noexcept
-            : _poolId(poolId), _componentBuffer(std::move(targetBuffer))
+        ComponentView(size_t poolId,
+                      ComponentBuffer<TComponent> targetBuffer,
+                      const EntityAllocator& entityAllocator) noexcept
+            : _poolId(poolId), _componentBuffer(std::move(targetBuffer)), _entityAllocator(&entityAllocator)
         {
         }
 
@@ -46,16 +52,31 @@ namespace NovelRT::Ecs
          * @param entity The EntityId to apply the component update instruction to.
          * @param instructionState The component as an instruction.
          *
-         * @exception Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
-         * @exception std::out_of_range if the setup of the ComponentView is invalid. See
-         * ComponentBuffer::PushComponentUpdateInstruction for more information.
-         * @exception std::bad_alloc if there is no more memory available to NovelRT. See
-         * SparseSet::Insert for more information.
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
          */
         void PushComponentUpdateInstruction(EntityId entity, TComponent instructionState)
         {
-            _componentBuffer.PushComponentUpdateInstruction(_poolId, entity, instructionState);
+            PushComponentUpdateInstruction(_entityAllocator->CreateHandleForAllocated(entity), instructionState);
+        }
+
+        /**
+         * @brief Validates an entity handle and queues a component update for ECS synchronisation.
+         *
+         * @param entity The handle identifying the entity to update.
+         * @param instructionState The component update instruction.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
+         */
+        void PushComponentUpdateInstruction(const EntityHandle& entity, TComponent instructionState)
+        {
+            if (!_entityAllocator->IsValid(entity))
+            {
+                throw Exceptions::KeyNotFoundException();
+            }
+
+            _componentBuffer.PushComponentUpdateInstruction(_poolId, entity.Id, instructionState);
         }
 
         /**
@@ -68,10 +89,28 @@ namespace NovelRT::Ecs
          * @param entity The EntityId to add the component to.
          * @param initialValue The optional component state to be applied.
          *
-         * @exception Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
          */
         void AddComponent(EntityId entity, TComponent initialValue = TComponent{})
+        {
+            AddComponent(_entityAllocator->CreateHandleForAllocated(entity), initialValue);
+        }
+
+        /**
+         * @brief A small helper method for adding a component instance in its default state to the given entity.
+         *
+         * This is exactly the same as ComponentView::PushComponentUpdateInstruction, however it takes the component
+         * state as an optional parameter. This allows for an implicit default state to be added to the entity in
+         * question.
+         *
+         * @param entity The EntityHandle& to add the component to.
+         * @param initialValue The optional component state to be applied.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
+         */
+        void AddComponent(const EntityHandle& entity, TComponent initialValue = TComponent{})
         {
             PushComponentUpdateInstruction(entity, initialValue);
         }
@@ -84,21 +123,32 @@ namespace NovelRT::Ecs
          *
          * @param entity The EntityId to remove the component from.
          *
-         * @exception Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
          */
         void RemoveComponent(EntityId entity)
+        {
+            RemoveComponent(_entityAllocator->CreateHandleForAllocated(entity));
+        }
+
+        /**
+         * @brief Removes the specified component type from a given entity.
+         *
+         * This is exactly the same as ComponentView::PushComponentUpdateInstruction if it is provided with the
+         * component deletion state.
+         *
+         * @param entity The Entityhandle& to remove the component from.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
+         */
+        void RemoveComponent(const EntityHandle& entity)
         {
             PushComponentUpdateInstruction(entity, _componentBuffer.GetDeleteInstructionState());
         }
 
         /**
          * @brief Removes all components of the given type from the ECS simulation.
-         *
-         * @param entity The EntityId to remove the component from.
-         *
-         * @exception Exceptions::DuplicateKeyException when multiple update instructions are pushed to this buffer on
-         * the same thread.
          */
         void RemoveAllComponents()
         {
@@ -122,21 +172,45 @@ namespace NovelRT::Ecs
         }
 
         /**
-         * @brief Attempts to add a new component of the given type to the entity with safety checks to ensure it is an
-         * exceptionless operation.
-         *
-         * This assumes that you have not previously pushed an update instruction to the ComponentBuffer on this thread
-         * this frame. If an update instruction was pushed on this thread previously, this will segfault.
+         * @brief Attempts to queue a component addition for the entity currently allocated with the given ID.
          *
          * @param entity The EntityId to attach the component to.
-         * @param initialValue The intitial state of the component. If none is provided, it implicitly defaults to the
+         * @param initialValue The initial state of the component. If none is provided, it implicitly defaults to the
          * default state of the component.
+         *
          * @return true when the component is successfully added.
-         * @return false when ComponentBuffer::HasComponent returns true.
+         * @return false when ComponentBuffer::HasComponent returns true or if the entity does not exist.
          */
         bool TryAddComponent(EntityId entity, TComponent initialValue = TComponent{}) noexcept
         {
-            if (_componentBuffer.HasComponent(entity))
+            // TODO: Wow this sucks. - Matt J.
+            EntityHandle handle{};
+
+            try
+            {
+                handle = _entityAllocator->CreateHandleForAllocated(entity);
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            return TryAddComponent(handle, initialValue);
+        }
+
+        /**
+         * @brief Attempts to queue a component addition for the entity currently allocated with the given ID.
+         *
+         * @param entity The EntityHandle& to attach the component to.
+         * @param initialValue The initial state of the component. If none is provided, it implicitly defaults to the
+         * default state of the component.
+         *
+         * @return true when the component is successfully added.
+         * @return false when ComponentBuffer::HasComponent returns true or if the entity does not exist.
+         */
+        bool TryAddComponent(const EntityHandle& entity, TComponent initialValue = TComponent{}) noexcept
+        {
+            if (!_entityAllocator->IsValid(entity) || _componentBuffer.HasComponent(entity.Id))
             {
                 return false;
             }
@@ -146,19 +220,41 @@ namespace NovelRT::Ecs
         }
 
         /**
-         * @brief Attempts to remove a component from an entity with safety checks to ensure it is an exceptionless
-         * operation.
+         * @brief Attempts to queue component removal for the entity currently allocated with the given ID.
          *
-         * This assumes that you have not previously pushed an update instruction to the ComponentBuffer on this thread
-         * this frame. If an update instruction was pushed on this thread previously, this will segfault.
+         * @param entity The EntityId to remove the component from.
          *
-         * @param entity The EntityId
          * @return true if the component was successfully removed.
          * @return false otherwise.
          */
-        bool TryRemoveComponent(EntityId entity)
+        bool TryRemoveComponent(EntityId entity) noexcept
         {
-            if (!_componentBuffer.HasComponent(entity))
+            // TODO: Wow this sucks. - Matt J.
+            EntityHandle handle{};
+
+            try
+            {
+                handle = _entityAllocator->CreateHandleForAllocated(entity);
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            return TryRemoveComponent(handle);
+        }
+
+        /**
+         * @brief Attempts to queue component removal for the entity currently allocated with the given ID.
+         *
+         * @param entity The EntityHandle& to remove the component from.
+         *
+         * @return true if the component was successfully removed.
+         * @return false otherwise.
+         */
+        bool TryRemoveComponent(const EntityHandle& entity) noexcept
+        {
+            if (!_entityAllocator->IsValid(entity) || !_componentBuffer.HasComponent(entity.Id))
             {
                 return false;
             }
@@ -173,14 +269,39 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @param entity The EntityId of retrieve the component from.
+         * @param entity The EntityId to retrieve the component from.
+         *
          * @return A copy of the current state of the component of type TComponent attached to the given entity.
-         * @exception Exceptions::KeyNotFoundException if the given EntityId is not present within the immutable buffer
-         * data for this update cycle.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
          */
         [[nodiscard]] TComponent GetComponent(EntityId entity) const
         {
-            return _componentBuffer.GetComponent(entity);
+            return GetComponent(_entityAllocator->CreateHandleForAllocated(entity));
+        }
+
+        /**
+         * @brief Gets a copy of the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The EntityHandle& to retrieve the component from.
+         *
+         * @return A copy of the current state of the component of type TComponent attached to the given entity.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
+         */
+        [[nodiscard]] TComponent GetComponent(const EntityHandle& entity) const
+        {
+            if (!_entityAllocator->IsValid(entity))
+            {
+                throw Exceptions::KeyNotFoundException();
+            }
+
+            return _componentBuffer.GetComponent(entity.Id);
         }
 
         /**
@@ -195,7 +316,63 @@ namespace NovelRT::Ecs
          */
         [[nodiscard]] bool HasComponent(EntityId entity) const noexcept
         {
-            return _componentBuffer.HasComponent(entity);
+            // TODO: This sucks. - Matt J.
+            EntityHandle handle{};
+
+            try
+            {
+                handle = _entityAllocator->CreateHandleForAllocated(entity);
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            return HasComponent(handle);
+        }
+
+        /**
+         * @brief Verifies if a given entity has a component.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The target entity to check for an attached component on.
+         * @return true if the immutable data contains the given EntityHandle&.
+         * @return false if there is no entry for the given EntityHandle&.
+         */
+        [[nodiscard]] bool HasComponent(const EntityHandle& entity) const noexcept
+        {
+            return _entityAllocator->IsValid(entity) && _componentBuffer.HasComponent(entity.Id);
+        }
+
+        /**
+         * @brief Attempts to get the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @param entity The entity to use for fetching the component.
+         * @param outComponent The output result for the fetched component, if there is one.
+         *
+         * @return true if a component was found and returned in outComponent.
+         * @return false if no component exists.
+         */
+        [[nodiscard]] bool TryGetComponent(EntityId entity, TComponent& outComponent) const noexcept
+        {
+            // TODO: This sucks. - Matt J.
+            EntityHandle handle{};
+
+            try
+            {
+                handle = _entityAllocator->CreateHandleForAllocated(entity);
+            }
+            catch (...)
+            {
+                return false;
+            }
+
+            return TryGetComponent(handle, outComponent);
         }
 
         /**
@@ -208,10 +385,11 @@ namespace NovelRT::Ecs
          * @param outComponent The output result for the fetched component, if there is one.
          * @return true if a component was found and returned in outComponent.
          * @return false if no component exists.
+         *
          */
-        [[nodiscard]] bool TryGetComponent(EntityId entity, TComponent& outComponent) const noexcept
+        [[nodiscard]] bool TryGetComponent(const EntityHandle& entity, TComponent& outComponent) const noexcept
         {
-            return _componentBuffer.TryGetComponent(entity, outComponent);
+            return _entityAllocator->IsValid(entity) && _componentBuffer.TryGetComponent(entity.Id, outComponent);
         }
 
         /**
@@ -223,11 +401,40 @@ namespace NovelRT::Ecs
          * ComponentView::HasComponent for more information.
          *
          * @param entity The EntityId to retrieve the component from.
+         *
          * @return A copy of the current state of the component of type TComponent attached to the given entity.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
          */
-        [[nodiscard]] TComponent GetComponentUnsafe(EntityId entity) const noexcept
+        [[nodiscard]] TComponent GetComponentUnsafe(EntityId entity) const
         {
-            return _componentBuffer.GetComponentUnsafe(entity);
+            return GetComponentUnsafe(_entityAllocator->CreateHandleForAllocated(entity));
+        }
+
+        /**
+         * @brief Gets a copy of the component instance attached to this entity.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method. This is considered an unsafe operation. Before calling this, you must guarantee that the
+         * provided entity exists in the read-only portion of the underlying buffer. Please see
+         * ComponentView::HasComponent for more information.
+         *
+         * @param entity The EntityHandle& to retrieve the component from.
+         *
+         * @return A copy of the current state of the component of type TComponent attached to the given entity.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory fails to be allocated as part of this operation.
+         */
+        [[nodiscard]] TComponent GetComponentUnsafe(const EntityHandle& entity) const
+        {
+            if (!_entityAllocator->IsValid(entity))
+            {
+                throw Exceptions::KeyNotFoundException();
+            }
+
+            return _componentBuffer.GetComponentUnsafe(entity.Id);
         }
 
         /**

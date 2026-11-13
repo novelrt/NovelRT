@@ -239,7 +239,7 @@ namespace NovelRT::Ecs::UI
                 // Reuse bookkeeping entities; the orchestrator consumes their components each frame.
                 if (!_uploadSemaphoreEntity.has_value())
                 {
-                    _uploadSemaphoreEntity = catalogue.CreateEntity();
+                    _uploadSemaphoreEntity = catalogue.CreateEntity().Id;
                 }
                 auto uploadId = _uploadSemaphoreEntity.value();
 
@@ -247,13 +247,13 @@ namespace NovelRT::Ecs::UI
 
                 if (!_drawEntity.has_value())
                 {
-                    _drawEntity = catalogue.CreateEntity();
+                    _drawEntity = catalogue.CreateEntity().Id;
                 }
                 auto entityId = _drawEntity.value();
 
                 if (!_drawSemaphoreEntity.has_value())
                 {
-                    _drawSemaphoreEntity = catalogue.CreateEntity();
+                    _drawSemaphoreEntity = catalogue.CreateEntity().Id;
                 }
 
                 // create the tracked (signal) semaphore component for the draw semaphore

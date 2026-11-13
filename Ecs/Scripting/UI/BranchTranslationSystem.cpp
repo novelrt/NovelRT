@@ -47,7 +47,10 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::CleanupInactiveTrees(
 
 void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::IdentifyNewTrees(Catalogue& catalogue)
 {
-    auto [trees, transforms, uiButtons] = catalogue.GetComponentViews<NovelRT::Ecs::Scripting::Components::ActiveDecisionTree, NovelRT::Ecs::Components::TransformComponent, NovelRT::Ecs::UI::Components::UIButton>();
+    auto [trees, transforms, uiButtons] =
+        catalogue
+            .GetComponentViews<NovelRT::Ecs::Scripting::Components::ActiveDecisionTree,
+                               NovelRT::Ecs::Components::TransformComponent, NovelRT::Ecs::UI::Components::UIButton>();
 
     for (auto [entity, _] : trees)
     {
@@ -57,27 +60,25 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::IdentifyNewTrees(Cata
             continue;
         }
 
-        it = _activeTrees.emplace_hint(it, entity, TreeInfo{
-            .messageContainer = catalogue.CreateEntity(),
-            .message = catalogue.CreateEntity(),
-            .choiceContainer = catalogue.CreateEntity(),
-            .choices = {}
-        });
+        it = _activeTrees.emplace_hint(it, entity,
+                                       TreeInfo{.messageContainer = catalogue.CreateEntity().Id,
+                                                .message = catalogue.CreateEntity().Id,
+                                                .choiceContainer = catalogue.CreateEntity().Id,
+                                                .choices = {}});
 
         // TODO: this should be set elsewhere
-        transforms.PushComponentUpdateInstruction(it->second.messageContainer, NovelRT::Ecs::Components::TransformComponent{
-            .position = {320.0f, 860.0f},
-            .scale = {1280.0f, 200.0f},
-            .rotationInRadians = 0.0f
-        });
+        transforms.PushComponentUpdateInstruction(
+            it->second.messageContainer, NovelRT::Ecs::Components::TransformComponent{.position = {320.0f, 860.0f},
+                                                                                      .scale = {1280.0f, 200.0f},
+                                                                                      .rotationInRadians = 0.0f});
 
-        transforms.PushComponentUpdateInstruction(it->second.choiceContainer, NovelRT::Ecs::Components::TransformComponent{
-            .position = {320.0f, 20.0f},
-            .scale = {1280.0f, 820.0f},
-            .rotationInRadians = 0.0f
-        });
+        transforms.PushComponentUpdateInstruction(
+            it->second.choiceContainer, NovelRT::Ecs::Components::TransformComponent{.position = {320.0f, 20.0f},
+                                                                                     .scale = {1280.0f, 820.0f},
+                                                                                     .rotationInRadians = 0.0f});
 
-        NovelRT::Ecs::EntityGraphView messageRelations{catalogue, it->second.messageContainer, NovelRT::Ecs::Components::EntityGraphComponent{}};
+        NovelRT::Ecs::EntityGraphView messageRelations{catalogue, it->second.messageContainer,
+                                                       NovelRT::Ecs::Components::EntityGraphComponent{}};
         messageRelations.AddInsertChildInstruction(it->second.message);
         messageRelations.Commit();
     }
@@ -85,7 +86,14 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::IdentifyNewTrees(Cata
 
 void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Catalogue& catalogue)
 {
-    auto [branches, branchChoices, continues, graphComponents, transforms, uiButtons, uiClickEvents, uiElements, uiTexts, uiWidgetContainers] = catalogue.GetComponentViews<Components::Branch, Components::BranchChoice, Components::ContinueDecisionTree, NovelRT::Ecs::Components::EntityGraphComponent, NovelRT::Ecs::Components::TransformComponent, NovelRT::Ecs::UI::Components::UIButton, NovelRT::Ecs::UI::Components::UIClickEvent, NovelRT::Ecs::UI::Components::UIElement, NovelRT::Ecs::UI::Components::UIText, NovelRT::Ecs::UI::Components::UIWidgetContainer>();
+    auto [branches, branchChoices, continues, graphComponents, transforms, uiButtons, uiClickEvents, uiElements,
+          uiTexts, uiWidgetContainers] =
+        catalogue
+            .GetComponentViews<Components::Branch, Components::BranchChoice, Components::ContinueDecisionTree,
+                               NovelRT::Ecs::Components::EntityGraphComponent,
+                               NovelRT::Ecs::Components::TransformComponent, NovelRT::Ecs::UI::Components::UIButton,
+                               NovelRT::Ecs::UI::Components::UIClickEvent, NovelRT::Ecs::UI::Components::UIElement,
+                               NovelRT::Ecs::UI::Components::UIText, NovelRT::Ecs::UI::Components::UIWidgetContainer>();
 
     for (auto& [entity, info] : _activeTrees)
     {
@@ -93,31 +101,29 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
         {
             auto branch = branches.GetComponent(entity);
 
-            uiElements.PushComponentUpdateInstruction(info.messageContainer, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Container
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.messageContainer,
+                NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Container});
 
-            uiElements.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Text
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.message, NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Text});
 
-            uiElements.PushComponentUpdateInstruction(info.choiceContainer, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Container
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.choiceContainer,
+                NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Container});
 
-            uiWidgetContainers.PushComponentUpdateInstruction(info.choiceContainer, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string("Choices")
-            });
+            uiWidgetContainers.PushComponentUpdateInstruction(
+                info.choiceContainer,
+                NovelRT::Ecs::UI::Components::UIWidgetContainer{.title = new std::string("Choices")});
 
-            uiWidgetContainers.PushComponentUpdateInstruction(info.messageContainer, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string("Prompt")
-            });
+            uiWidgetContainers.PushComponentUpdateInstruction(
+                info.messageContainer,
+                NovelRT::Ecs::UI::Components::UIWidgetContainer{.title = new std::string("Prompt")});
 
             std::string prompt = *branch.prompt;
-            uiTexts.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIText {
-                .textValue = new std::string(prompt),
-                .colour = {255, 255, 255, 255}
-            });
+            uiTexts.PushComponentUpdateInstruction(
+                info.message, NovelRT::Ecs::UI::Components::UIText{.textValue = new std::string(prompt),
+                                                                   .colour = {255, 255, 255, 255}});
 
             if (info.choices.size() > branch.choices->size())
             {
@@ -129,54 +135,55 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
                 info.choices.resize(branch.choices->size());
             }
 
-
-            NovelRT::Ecs::EntityGraphView choiceRelations = graphComponents.HasComponent(info.choiceContainer)
-                ? NovelRT::Ecs::EntityGraphView{catalogue, info.choiceContainer, graphComponents.GetComponent(info.choiceContainer)}
-                : NovelRT::Ecs::EntityGraphView{catalogue, info.choiceContainer, NovelRT::Ecs::Components::EntityGraphComponent{}};
+            NovelRT::Ecs::EntityGraphView choiceRelations =
+                graphComponents.HasComponent(info.choiceContainer)
+                    ? NovelRT::Ecs::EntityGraphView{catalogue, info.choiceContainer,
+                                                    graphComponents.GetComponent(info.choiceContainer)}
+                    : NovelRT::Ecs::EntityGraphView{catalogue, info.choiceContainer,
+                                                    NovelRT::Ecs::Components::EntityGraphComponent{}};
             for (size_t i = 0; i < info.choices.size(); i++)
             {
-                uiElements.PushComponentUpdateInstruction(info.choices[i], NovelRT::Ecs::UI::Components::UIElement {
-                    .Type = NovelRT::Ecs::UI::UIComponentType::Button
-                });
+                uiElements.PushComponentUpdateInstruction(
+                    info.choices[i],
+                    NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Button});
 
-                uiButtons.PushComponentUpdateInstruction(info.choices[i], NovelRT::Ecs::UI::Components::UIButton {
-                    .label = new std::string(branch.choices->at(i)),
-                    .eventId = i,
-                    .bgColour = {0, 102, 204, 255},
-                    .activeColour = {0, 82, 163, 255},
-                    .hoveredColour = {0, 119, 255, 255},
-                    .textColour = {255, 255, 255, 255},
-                });
+                uiButtons.PushComponentUpdateInstruction(info.choices[i],
+                                                         NovelRT::Ecs::UI::Components::UIButton{
+                                                             .label = new std::string(branch.choices->at(i)),
+                                                             .eventId = i,
+                                                             .bgColour = {0, 102, 204, 255},
+                                                             .activeColour = {0, 82, 163, 255},
+                                                             .hoveredColour = {0, 119, 255, 255},
+                                                             .textColour = {255, 255, 255, 255},
+                                                         });
 
-                //choiceRelations.AddInsertChildInstruction(info.choices[i]);
+                // choiceRelations.AddInsertChildInstruction(info.choices[i]);
             }
 
             for (size_t i = info.choices.size(); i < branch.choices->size(); i++)
             {
                 auto button = catalogue.CreateEntity();
-                info.choices.push_back(button);
+                info.choices.push_back(button.Id);
 
-                uiElements.PushComponentUpdateInstruction(button, NovelRT::Ecs::UI::Components::UIElement {
-                    .Type = NovelRT::Ecs::UI::UIComponentType::Button
-                });
+                uiElements.PushComponentUpdateInstruction(
+                    button, NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Button});
 
                 std::string text = branch.choices->at(i);
-                uiButtons.PushComponentUpdateInstruction(button, NovelRT::Ecs::UI::Components::UIButton {
-                    .label = new std::string(text),
-                    .eventId = i,
-                    .bgColour = {0, 102, 204, 255},
-                    .activeColour = {0, 82, 163, 255},
-                    .hoveredColour = {0, 119, 255, 255},
-                    .textColour = {255, 255, 255, 255},
-                });
+                uiButtons.PushComponentUpdateInstruction(button.Id, NovelRT::Ecs::UI::Components::UIButton{
+                                                                        .label = new std::string(text),
+                                                                        .eventId = i,
+                                                                        .bgColour = {0, 102, 204, 255},
+                                                                        .activeColour = {0, 82, 163, 255},
+                                                                        .hoveredColour = {0, 119, 255, 255},
+                                                                        .textColour = {255, 255, 255, 255},
+                                                                    });
 
-                transforms.PushComponentUpdateInstruction(button, NovelRT::Ecs::Components::TransformComponent{
-                    .position = {20.0f, 20.0f + 35.0f * i},
-                    .scale = {1240.0f, 30.0f},
-                    .rotationInRadians = 0.0f
-                });
+                transforms.PushComponentUpdateInstruction(
+                    button, NovelRT::Ecs::Components::TransformComponent{.position = {20.0f, 20.0f + 35.0f * i},
+                                                                         .scale = {1240.0f, 30.0f},
+                                                                         .rotationInRadians = 0.0f});
 
-                choiceRelations.AddInsertChildInstruction(button);
+                choiceRelations.AddInsertChildInstruction(button.Id);
             }
 
             choiceRelations.Commit();
@@ -198,7 +205,7 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
             {
                 uiClickEvents.RemoveComponent(info.choices[i]);
 
-                branchChoices.PushComponentUpdateInstruction(entity, Components::BranchChoice{ .choiceIndex = i });
+                branchChoices.PushComponentUpdateInstruction(entity, Components::BranchChoice{.choiceIndex = i});
                 continues.PushComponentUpdateInstruction(entity, Components::ContinueDecisionTree{});
                 break;
             }
@@ -207,9 +214,12 @@ void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::UpdateContainers(Cata
 }
 
 NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::BranchTranslationSystem()
-{ }
+{
+}
 
-void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::UI::BranchTranslationSystem::Update(Timing::Timestamp /* now */,
+                                                                  Timing::Timestamp::duration /* delta */,
+                                                                  Catalogue catalogue)
 {
     CleanupInactiveTrees(catalogue);
     IdentifyNewTrees(catalogue);

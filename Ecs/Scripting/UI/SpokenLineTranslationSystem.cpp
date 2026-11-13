@@ -43,7 +43,9 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::CleanupInactiveTr
 
 void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(Catalogue& catalogue)
 {
-    auto [trees, transforms, graphComponents, uiButtons] = catalogue.GetComponentViews<NovelRT::Ecs::Scripting::Components::ActiveDecisionTree, NovelRT::Ecs::Components::TransformComponent, NovelRT::Ecs::Components::EntityGraphComponent, NovelRT::Ecs::UI::Components::UIButton>();
+    auto [trees, transforms, graphComponents, uiButtons] = catalogue.GetComponentViews<
+        NovelRT::Ecs::Scripting::Components::ActiveDecisionTree, NovelRT::Ecs::Components::TransformComponent,
+        NovelRT::Ecs::Components::EntityGraphComponent, NovelRT::Ecs::UI::Components::UIButton>();
 
     for (auto [entity, _] : trees)
     {
@@ -53,35 +55,32 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(
             continue;
         }
 
-        it = _activeTrees.emplace_hint(it, entity, TreeInfo{
-            .container = catalogue.CreateEntity(),
-            .speaker = catalogue.CreateEntity(),
-            .message = catalogue.CreateEntity(),
-            .next = catalogue.CreateEntity()
-        });
+        it = _activeTrees.emplace_hint(it, entity,
+                                       TreeInfo{.container = catalogue.CreateEntity().Id,
+                                                .speaker = catalogue.CreateEntity().Id,
+                                                .message = catalogue.CreateEntity().Id,
+                                                .next = catalogue.CreateEntity().Id});
 
         uiButtons.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::UI::Components::UIButton{
-            .label = new std::string("Next"),
-            .eventId = 0,
-            .bgColour = {0, 102, 204, 255},
-            .activeColour = {0, 82, 163, 255},
-            .hoveredColour = {0, 119, 255, 255},
-            .textColour = {255, 255, 255, 255},
-        });
+                                                                      .label = new std::string("Next"),
+                                                                      .eventId = 0,
+                                                                      .bgColour = {0, 102, 204, 255},
+                                                                      .activeColour = {0, 82, 163, 255},
+                                                                      .hoveredColour = {0, 119, 255, 255},
+                                                                      .textColour = {255, 255, 255, 255},
+                                                                  });
 
         // TODO: this should be set elsewhere
-        transforms.PushComponentUpdateInstruction(it->second.container, NovelRT::Ecs::Components::TransformComponent{
-            .position = {320.0f, 860.0f},
-            .scale = {1280.0f, 200.0f},
-            .rotationInRadians = 0.0f
-        });
-        transforms.PushComponentUpdateInstruction(it->second.next, NovelRT::Ecs::Components::TransformComponent{
-            .position = {1180.0f, 150.0f},
-            .scale = {80.0f, 30.0f},
-            .rotationInRadians = 0.0f
-        });
+        transforms.PushComponentUpdateInstruction(
+            it->second.container, NovelRT::Ecs::Components::TransformComponent{.position = {320.0f, 860.0f},
+                                                                               .scale = {1280.0f, 200.0f},
+                                                                               .rotationInRadians = 0.0f});
+        transforms.PushComponentUpdateInstruction(
+            it->second.next, NovelRT::Ecs::Components::TransformComponent{
+                                 .position = {1180.0f, 150.0f}, .scale = {80.0f, 30.0f}, .rotationInRadians = 0.0f});
 
-        NovelRT::Ecs::EntityGraphView relations{catalogue, it->second.container, NovelRT::Ecs::Components::EntityGraphComponent{}};
+        NovelRT::Ecs::EntityGraphView relations{catalogue, it->second.container,
+                                                NovelRT::Ecs::Components::EntityGraphComponent{}};
         relations.AddInsertChildInstruction(it->second.speaker);
         relations.AddInsertChildInstruction(it->second.message);
         relations.AddInsertChildInstruction(it->second.next);
@@ -91,43 +90,41 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::IdentifyNewTrees(
 
 void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(Catalogue& catalogue)
 {
-    auto [spokenLines, continues, uiClickEvents, uiElements, uiTexts, uiWidgetContainers] = catalogue.GetComponentViews<Components::SpokenLine, Components::ContinueDecisionTree, NovelRT::Ecs::UI::Components::UIClickEvent, NovelRT::Ecs::UI::Components::UIElement, NovelRT::Ecs::UI::Components::UIText, NovelRT::Ecs::UI::Components::UIWidgetContainer>();
+    auto [spokenLines, continues, uiClickEvents, uiElements, uiTexts, uiWidgetContainers] =
+        catalogue
+            .GetComponentViews<Components::SpokenLine, Components::ContinueDecisionTree,
+                               NovelRT::Ecs::UI::Components::UIClickEvent, NovelRT::Ecs::UI::Components::UIElement,
+                               NovelRT::Ecs::UI::Components::UIText, NovelRT::Ecs::UI::Components::UIWidgetContainer>();
 
     for (auto& [entity, info] : _activeTrees)
     {
         if (spokenLines.HasComponent(entity))
         {
-            uiElements.PushComponentUpdateInstruction(info.container, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Container
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.container,
+                NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Container});
 
-            uiElements.PushComponentUpdateInstruction(info.speaker, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Text
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.speaker, NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Text});
 
-            uiElements.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Text
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.message, NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Text});
 
-            uiElements.PushComponentUpdateInstruction(info.next, NovelRT::Ecs::UI::Components::UIElement {
-                .Type = NovelRT::Ecs::UI::UIComponentType::Button
-            });
+            uiElements.PushComponentUpdateInstruction(
+                info.next, NovelRT::Ecs::UI::Components::UIElement{.Type = NovelRT::Ecs::UI::UIComponentType::Button});
 
             std::string speaker = *spokenLines.GetComponent(entity).speaker;
-            uiTexts.PushComponentUpdateInstruction(info.speaker, NovelRT::Ecs::UI::Components::UIText {
-                .textValue = new std::string(speaker),
-                .colour = {255, 255, 255, 255}
-            });
+            uiTexts.PushComponentUpdateInstruction(
+                info.speaker, NovelRT::Ecs::UI::Components::UIText{.textValue = new std::string(speaker),
+                                                                   .colour = {255, 255, 255, 255}});
 
             std::string message = *spokenLines.GetComponent(entity).message;
-            uiTexts.PushComponentUpdateInstruction(info.message, NovelRT::Ecs::UI::Components::UIText {
-                .textValue = new std::string(message),
-                .colour = {255, 255, 255, 255}
-            });
+            uiTexts.PushComponentUpdateInstruction(
+                info.message, NovelRT::Ecs::UI::Components::UIText{.textValue = new std::string(message),
+                                                                   .colour = {255, 255, 255, 255}});
 
-            uiWidgetContainers.PushComponentUpdateInstruction(info.container, NovelRT::Ecs::UI::Components::UIWidgetContainer {
-                .title = new std::string("Message")
-            });
+            uiWidgetContainers.PushComponentUpdateInstruction(
+                info.container, NovelRT::Ecs::UI::Components::UIWidgetContainer{.title = new std::string("Message")});
         }
         else
         {
@@ -146,9 +143,12 @@ void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::UpdateContainers(
 }
 
 NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::SpokenLineTranslationSystem()
-{ }
+{
+}
 
-void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::UI::SpokenLineTranslationSystem::Update(Timing::Timestamp /* now */,
+                                                                      Timing::Timestamp::duration /* delta */,
+                                                                      Catalogue catalogue)
 {
     CleanupInactiveTrees(catalogue);
     IdentifyNewTrees(catalogue);

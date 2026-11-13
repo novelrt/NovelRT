@@ -12,6 +12,7 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
     ComponentCache.cpp
     EcsDefaultsBuilder.cpp
     EcsUtils.cpp
+    EntityAllocator.cpp
     EntityCache.cpp
     EntityGraphView.cpp
     LinkedEntityListView.cpp
@@ -30,6 +31,8 @@ NovelRTBuildSystem_DeclareModule(LIBRARY NovelRT::Ecs::Core
     include/NovelRT/Ecs/ComponentView.hpp
     include/NovelRT/Ecs/EcsDefaultsBuilder.hpp
     include/NovelRT/Ecs/EcsUtils.hpp
+    include/NovelRT/Ecs/EntityAllocator.hpp
+    include/NovelRT/Ecs/EntityHandle.hpp
     include/NovelRT/Ecs/EntityCache.hpp
     include/NovelRT/Ecs/EntityGraphView.hpp
     include/NovelRT/Ecs/ExecutionContext.hpp
