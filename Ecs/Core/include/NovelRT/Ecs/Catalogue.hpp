@@ -10,7 +10,6 @@
 
 #include <cstddef>
 #include <tuple>
-#include <vector>
 
 namespace NovelRT::Ecs
 {
@@ -60,7 +59,8 @@ namespace NovelRT::Ecs
         template<typename TComponent>
         [[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
-            return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
+            return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>(),
+                                             _entityAllocator);
         }
 
         /**
@@ -78,8 +78,8 @@ namespace NovelRT::Ecs
         template<typename... TComponents>
         [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() noexcept
         {
-            return std::make_tuple(
-                ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
+            return std::make_tuple(ComponentView<TComponents>(
+                _poolId, _componentCache.GetComponentBuffer<TComponents>(), _entityAllocator)...);
         }
 
         /**
@@ -93,7 +93,7 @@ namespace NovelRT::Ecs
          * @return A typeless component view into the ComponentBuffer's inner memory container, represented as an
          * UnsafeComponentView.
          *
-         * @exceptions std::out_of_range if the supplied ID is not present within the container.
+         * @exception std::out_of_range if the supplied ID is not present within the container.
          */
         [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
 
@@ -103,9 +103,9 @@ namespace NovelRT::Ecs
          * @warning If you discard the returned EntityHandle without deleting it, it remains in the ECS.
          * Do not forget to request deletion when appropriate.
          *
-         * @exceptions std::bad_alloc if the entity fails to be allocated.
-         *
          * @return A handle containing the newly allocated entity's ID and generation.
+         *
+         * @exception std::bad_alloc if the entity fails to be allocated.
          */
         [[nodiscard]] EntityHandle CreateEntity();
 
@@ -114,7 +114,8 @@ namespace NovelRT::Ecs
          *
          * @param entity The numerical ID of the entity to delete.
          *
-         * @exception Exceptions::KeyNotFoundException if the EntityId is not currently valid for this ECS instance.
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory allocation fails while reporting an invalid entity.
          */
         void DeleteEntity(EntityId entity);
 
@@ -123,7 +124,8 @@ namespace NovelRT::Ecs
          *
          * @param entity The handle identifying the entity to delete.
          *
-         * @exception Exceptions::KeyNotFoundException if the handle is not currently valid for this ECS instance.
+         * @exception Exceptions::KeyNotFoundException if the handle is not allocated by this ECS instance.
+         * @exception std::bad_alloc if memory allocation fails while reporting an invalid entity.
          */
         void DeleteEntity(const EntityHandle& entity);
 
