@@ -111,7 +111,7 @@ public:
             NovelRT::Ecs::Graphics::Components::Viewport>();
 
         auto spriteEntity = catalogue.CreateEntity();
-        _spriteEntity = spriteEntity;
+        _spriteEntity = spriteEntity.Id;
 
         auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/milk-carton-hi.png").value();
 
@@ -131,7 +131,7 @@ public:
         graphView.AddComponent(spriteEntity, graphComp);
 
         auto cameraViewportEntity = catalogue.CreateEntity();
-        _cameraViewportEntity = cameraViewportEntity;
+        _cameraViewportEntity = cameraViewportEntity.Id;
 
         NovelRT::Ecs::Components::TransformComponent viewportTransform{};
         viewportTransform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
@@ -197,15 +197,15 @@ public:
                                    TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
 
-        EntityGraphView rootView{catalogue, rootId, EntityGraphComponent{}};
+        EntityGraphView rootView{catalogue, rootId.Id, EntityGraphComponent{}};
 
         // Now the text
         auto textId = catalogue.CreateEntity();
 
         elementView.AddComponent(textId, UIElement{UIComponentType::Text});
         textView.AddComponent(textId, UIText{new std::string(""), RGBAColour(255, 255, 255, 255)});
-        graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
-        rootView.AddInsertChildInstruction(textId);
+        graphView.AddComponent(textId, EntityGraphComponent{true, rootId.Id});
+        rootView.AddInsertChildInstruction(textId.Id);
 
         // Now the button - ordering is important!
         auto buttonId = catalogue.CreateEntity();
@@ -222,8 +222,8 @@ public:
                                           });
         transformView.AddComponent(buttonId,
                                    TransformComponent{GeoVector2F(500.0f, 150.0f), GeoVector2F(80.0f, 30.0f), 0.0f});
-        graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId});
-        rootView.AddInsertChildInstruction(buttonId);
+        graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId.Id});
+        rootView.AddInsertChildInstruction(buttonId.Id);
     }
 };
 
