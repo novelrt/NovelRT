@@ -213,7 +213,7 @@ namespace NovelRT::Ecs::Graphics
                         auto id = completionCatalogue.CreateEntity();
 
                         completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
-                            .AddComponent(id, newUploadTracker);
+                            .AddComponent(id.Id, newUploadTracker);
 
                         _pendingStagingBuffers.push_back(
                             {_submittedUploads, textureStagingBuffer, gfxContext, uploadCmdList});
@@ -306,7 +306,7 @@ namespace NovelRT::Ecs::Graphics
 
             if (!_orchestratorSubmissionSemaphoreEntity.has_value())
             {
-                _orchestratorSubmissionSemaphoreEntity = catalogue.CreateEntity();
+                _orchestratorSubmissionSemaphoreEntity = catalogue.CreateEntity().Id;
             }
 
             Components::TrackedSemaphore<TGraphicsBackend> signalSemaComponent{};

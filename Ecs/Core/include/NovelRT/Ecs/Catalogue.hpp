@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/EntityHandle.hpp>
 #include <NovelRT/Ecs/ImplDetail.hpp>
 
 #include <cstddef>
@@ -18,6 +19,7 @@ namespace NovelRT::Ecs
     class EntityCache;
     class SystemScheduler;
     class UnsafeComponentView;
+    class EntityAllocator;
 
     /**
      * @brief A thread-aware context into the current state of the ECS instance that created an instance of this object.
@@ -33,7 +35,7 @@ namespace NovelRT::Ecs
         ComponentCache& _componentCache;
         EntityCache& _entityCache;
         SystemScheduler& _scheduler;
-        std::vector<EntityId> _createdEntitiesThisFrame;
+        EntityAllocator& _entityAllocator;
 
     public:
         /**
@@ -96,13 +98,15 @@ namespace NovelRT::Ecs
         [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
 
         /**
-         * @brief Creates a new EntityId for use within the ECS.
+         * @brief Creates a new EntityHandle for use within the ECS.
          *
-         * If you discard the returned EntityId, the entity will simply be lost to the ECS and will have no effect.
+         * If you discard the returned EntityHandle, the entity will be freed during ECS synchronisation.
+         *
+         * @exceptions std::bad_alloc if the entity fails to be allocated.
          *
          * @return The newly created entity.
          */
-        [[nodiscard]] EntityId CreateEntity() noexcept;
+        [[nodiscard]] EntityHandle CreateEntity();
 
         /**
          * @brief Marks an entity for deletion when the current update cycle is resolved. In the next immutable ECS
@@ -110,7 +114,7 @@ namespace NovelRT::Ecs
          *
          * @param entity The entity to delete.
          */
-        void DeleteEntity(EntityId entity) noexcept;
+        void DeleteEntity(EntityId entity);
 
         /**
          * @brief Schedules a unit of work to be executed outside of the ECS context, with a completion
@@ -148,7 +152,8 @@ namespace NovelRT::Ecs
          *
          * @return The SystemId that represents this system-based job.
          */
-        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
+        SystemId ScheduleSystemJob(
+            std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
 
         /**
          * @brief Cancels a currently running system-based job based on the given ID.

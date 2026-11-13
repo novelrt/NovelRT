@@ -162,16 +162,16 @@ public:
         {
             auto entity = catalogue.CreateEntity();
 
-            transformsView.AddComponent(entity);
+            transformsView.AddComponent(entity.Id);
 
             spritesView.AddComponent(
-                entity, NovelRT::Ecs::Graphics::Components::Sprite{.assetId = _sceneData.at(0).backgroundImage});
+                entity.Id, NovelRT::Ecs::Graphics::Components::Sprite{.assetId = _sceneData.at(0).backgroundImage});
 
             decisionTreeLoadRequestView.AddComponent(
-                entity,
+                entity.Id,
                 NovelRT::Ecs::Scripting::Components::DecisionTreeLoadRequest{.assetId = _sceneData.at(0).scriptPath});
 
-            _backgroundSprite = entity;
+            _backgroundSprite = entity.Id;
         }
 
         if (decisionTreeLoadRequestView.HasComponent(_backgroundSprite.value()) ||
@@ -250,10 +250,8 @@ public:
                                                                            .referenceResolutionHeight = 1080,
                                                                            .isScreenSpace = true});
 
-        viewports.PushComponentUpdateInstruction(
-            worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{});
-        viewports.PushComponentUpdateInstruction(
-            screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{});
+        viewports.PushComponentUpdateInstruction(worldCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{});
+        viewports.PushComponentUpdateInstruction(screenCameraEntity, NovelRT::Ecs::Graphics::Components::Viewport{});
     }
 };
 

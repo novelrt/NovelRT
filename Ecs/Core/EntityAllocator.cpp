@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <mutex>
 #include <utility>
 
 #include <NovelRT/Ecs/EntityAllocator.hpp>
@@ -21,6 +22,11 @@ namespace NovelRT::Ecs
         return nullptr;
     }
 
+    EntityAllocator::EntityAllocator()
+        : _generationStates{}, _freedEntities{}, _accessMutex(std::make_unique<tbb::mutex>())
+    {
+    }
+
     EntityAllocator::GenerationAllocationState* EntityAllocator::GetGenerationIfTracked(EntityId entity) noexcept
     {
         // TODO: Find a better way to do this than just duplicating code because of the const constraint. - Matt J.
@@ -36,6 +42,8 @@ namespace NovelRT::Ecs
 
     EntityHandle EntityAllocator::Allocate()
     {
+        std::scoped_lock lock(*_accessMutex);
+
         static auto& factory = AtomFactoryDatabase::GetFactory("EntityId");
 
         if (!_freedEntities.empty())
@@ -62,6 +70,8 @@ namespace NovelRT::Ecs
 
     void EntityAllocator::Free(const EntityHandle& handle)
     {
+        std::scoped_lock lock(*_accessMutex);
+
         auto* generation = GetGenerationIfTracked(handle.Id);
 
         if (generation == nullptr || !generation->IsCurrentlyAllocated || generation->Generation != handle.Generation)
@@ -76,6 +86,8 @@ namespace NovelRT::Ecs
 
     EntityHandle EntityAllocator::CreateHandleForAllocated(EntityId entity) const
     {
+        std::scoped_lock lock(*_accessMutex);
+
         const auto* generation = GetGenerationIfTracked(entity);
 
         if (generation == nullptr || !generation->IsCurrentlyAllocated)
@@ -88,6 +100,8 @@ namespace NovelRT::Ecs
 
     bool EntityAllocator::IsValid(const EntityHandle& handle) const noexcept
     {
+        std::scoped_lock lock(*_accessMutex);
+
         const auto* generation = GetGenerationIfTracked(handle.Id);
 
         return generation != nullptr && generation->IsCurrentlyAllocated && generation->Generation == handle.Generation;

@@ -3,10 +3,10 @@
 
 #include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/EntityHandle.hpp>
 #include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 
 #include <memory>
-#include <utility>
 
 namespace NovelRT::Ecs
 {

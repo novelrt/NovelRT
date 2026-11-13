@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/EntityAllocator.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/ImplDetail.hpp>
 #include <NovelRT/Exceptions/KeyNotFoundException.hpp>
@@ -45,7 +46,8 @@ namespace NovelRT::Ecs
             size_t lastExecutedFrame = 0ULL;
             bool isDone = false;
 
-            explicit SystemJobInfo(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> job) noexcept
+            explicit SystemJobInfo(
+                std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> job) noexcept
                 : jobFnPtr(std::move(job))
             {
             }
@@ -56,13 +58,15 @@ namespace NovelRT::Ecs
         static constexpr uint32_t DefaultBlindThreadLimit = 8;
 
         std::vector<std::shared_ptr<IEcsSystem>> _typedSystemCache;
-        std::unordered_map<SystemId, std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)>> _systems;
+        std::unordered_map<SystemId, std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)>>
+            _systems;
         std::unordered_map<SystemId, std::vector<SystemId>> _systemDependencies;
         std::vector<std::vector<SystemId>> _schedulingLayers;
         std::unordered_set<SystemId> _terminalSystemIds;
 
         EntityCache _entityCache;
         ComponentCache _componentCache;
+        EntityAllocator _entityAllocator;
 
         uint32_t _workerThreadCount;
 
@@ -70,7 +74,8 @@ namespace NovelRT::Ecs
         std::unique_ptr<tbb::task_arena> _asyncArena;
         std::unique_ptr<tbb::task_group> _ecsTasks;
         std::unique_ptr<tbb::task_group> _asyncTasks;
-        tbb::concurrent_queue<std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)>> _pendingCompletions;
+        tbb::concurrent_queue<std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)>>
+            _pendingCompletions;
         tbb::concurrent_unordered_map<SystemId, SystemJobInfo> _systemJobs;
         tbb::concurrent_queue<SystemId> _jobCancellations;
 
@@ -88,7 +93,8 @@ namespace NovelRT::Ecs
             TWork&& work,
             TCompletion&& completion) noexcept;
 
-        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
+        SystemId ScheduleSystemJob(
+            std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
         void CancelSystemJob(SystemId jobId);
 
         void RebuildSystemDependencyTreeLayers();
@@ -140,8 +146,9 @@ namespace NovelRT::Ecs
          * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
          * executed.
          */
-        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
-                                              std::span<const SystemId> dependencies);
+        [[nodiscard]] SystemId RegisterSystem(
+            std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
+            std::span<const SystemId> dependencies);
 
         /**
          * @brief Registers a function to the SystemScheduler instance with no dependencies.
@@ -156,7 +163,8 @@ namespace NovelRT::Ecs
          * @exception Exceptions::InvalidOperationException if this method is called after the first iteration has been
          * executed.
          */
-        [[nodiscard]] SystemId RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr);
+        [[nodiscard]] SystemId RegisterSystem(
+            std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr);
 
         /**
          * @brief Registers an IEcsSystem instance to the SystemScheduler instance.
@@ -224,10 +232,7 @@ namespace NovelRT::Ecs
          *
          * @return The total count of worker threads.
          */
-        [[nodiscard]] inline uint32_t GetWorkerThreadCount() const noexcept
-        {
-            return _workerThreadCount;
-        }
+        [[nodiscard]] uint32_t GetWorkerThreadCount() const noexcept;
 
         /**
          * @brief Gets a mutable reference to the EntityCache instance associated with this SystemScheduler.
@@ -237,10 +242,7 @@ namespace NovelRT::Ecs
          *
          * @return A mutable reference to the EntityCache instance associated with this SystemScheduler.
          */
-        [[nodiscard]] inline EntityCache& GetEntityCache() noexcept
-        {
-            return _entityCache;
-        }
+        [[nodiscard]] EntityCache& GetEntityCache() noexcept;
 
         /**
          * @brief Gets a const reference to the EntityCache instance associated with this SystemScheduler.
@@ -251,10 +253,7 @@ namespace NovelRT::Ecs
          * @return A const reference to the EntityCache instance associated with this
          * SystemScheduler.
          */
-        [[nodiscard]] inline const EntityCache& GetEntityCache() const noexcept
-        {
-            return _entityCache;
-        }
+        [[nodiscard]] const EntityCache& GetEntityCache() const noexcept;
 
         /**
          * @brief Gets a mutable reference to the ComponentCache instance associated with this SystemScheduler.
@@ -265,10 +264,7 @@ namespace NovelRT::Ecs
          * @return A mutable reference to the ComponentCache instance associated with this
          * SystemScheduler.
          */
-        [[nodiscard]] inline ComponentCache& GetComponentCache() noexcept
-        {
-            return _componentCache;
-        }
+        [[nodiscard]] ComponentCache& GetComponentCache() noexcept;
 
         /**
          * @brief Gets a const reference to the ComponentCache instance associated with this SystemScheduler.
@@ -279,10 +275,29 @@ namespace NovelRT::Ecs
          * @return A const reference to the ComponentCache instance associated with this
          * SystemScheduler.
          */
-        [[nodiscard]] inline const ComponentCache& GetComponentCache() const noexcept
-        {
-            return _componentCache;
-        }
+        [[nodiscard]] const ComponentCache& GetComponentCache() const noexcept;
+
+        /**
+         * @brief Gets a mutable reference to the EntityAllocator instance associated with this SystemScheduler.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return A mutable reference to the EntityAllocator instance associated with this
+         * SystemScheduler.
+         */
+        [[nodiscard]] EntityAllocator& GetEntityAllocator() noexcept;
+
+        /**
+         * @brief Gets a mutable reference to the EntityAllocator instance associated with this SystemScheduler.
+         *
+         * This is a pure method. Calling this without using the result has no effect and introduces overhead for
+         * calling a method.
+         *
+         * @return A const reference to the EntityAllocator instance associated with this
+         * SystemScheduler.
+         */
+        [[nodiscard]] const EntityAllocator& GetEntityAllocator() const noexcept;
 
         /**
          * @brief Searches for a registered instance of a system of the specified type. Only works with IEcsSystem
