@@ -42,9 +42,7 @@ namespace NovelRT::Ecs
          * @brief Constructs a new Catalogue object with context of the ECS instance and thread state.
          *
          * @param poolId The pool ID being used by the thread creating this catalogue instance.
-         * @param componentCache The storage object for all the components in this particular ECS instance.
-         * @param entityCache The storage object for all modifications being made directly to entities themselves (such
-         * as a delete instruction).
+         * @param scheduler The scheduler that owns the ECS instance and its entity and component storage.
          */
         Catalogue(size_t poolId, SystemScheduler& scheduler) noexcept;
 
@@ -90,31 +88,44 @@ namespace NovelRT::Ecs
          * The returned type, UnsafeComponentView, is considered an unsafe type by nature. Only call this in contexts
          * where interop is required.
          *
-         * @param componentTypeId The component ID to search for
+         * @param componentTypeId The component ID to search for.
+         *
          * @return A typeless component view into the ComponentBuffer's inner memory container, represented as an
          * UnsafeComponentView.
+         *
          * @exceptions std::out_of_range if the supplied ID is not present within the container.
          */
         [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
 
         /**
-         * @brief Creates a new EntityHandle for use within the ECS.
+         * @brief Allocates a new entity and queues its registration with the ECS.
          *
-         * If you discard the returned EntityHandle, the entity will be freed during ECS synchronisation.
+         * @warning If you discard the returned EntityHandle without deleting it, it remains in the ECS.
+         * Do not forget to request deletion when appropriate.
          *
          * @exceptions std::bad_alloc if the entity fails to be allocated.
          *
-         * @return The newly created entity.
+         * @return A handle containing the newly allocated entity's ID and generation.
          */
         [[nodiscard]] EntityHandle CreateEntity();
 
         /**
-         * @brief Marks an entity for deletion when the current update cycle is resolved. In the next immutable ECS
-         * state, this entity will not exist.
+         * @brief Queues the entity currently allocated with the given ID for deletion during ECS synchronisation.
          *
-         * @param entity The entity to delete.
+         * @param entity The numerical ID of the entity to delete.
+         *
+         * @exception Exceptions::KeyNotFoundException if the EntityId is not currently valid for this ECS instance.
          */
         void DeleteEntity(EntityId entity);
+
+        /**
+         * @brief Queues the entity identified by the given handle for deletion during ECS synchronisation.
+         *
+         * @param entity The handle identifying the entity to delete.
+         *
+         * @exception Exceptions::KeyNotFoundException if the handle is not currently valid for this ECS instance.
+         */
+        void DeleteEntity(const EntityHandle& entity);
 
         /**
          * @brief Schedules a unit of work to be executed outside of the ECS context, with a completion

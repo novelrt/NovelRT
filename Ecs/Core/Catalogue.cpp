@@ -7,6 +7,7 @@
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <NovelRT/Ecs/UnsafeComponentView.hpp>
+#include <NovelRT/Exceptions/KeyNotFoundException.hpp>
 
 #include <utility>
 
@@ -31,9 +32,17 @@ namespace NovelRT::Ecs
 
     void Catalogue::DeleteEntity(EntityId entity)
     {
-        const EntityHandle handle = _entityAllocator.CreateHandleForAllocated(entity);
+        DeleteEntity(_entityAllocator.CreateHandleForAllocated(entity));
+    }
 
-        _entityCache.RemoveEntity(_poolId, handle);
+    void Catalogue::DeleteEntity(const EntityHandle& entity)
+    {
+        if (!_entityAllocator.IsValid(entity))
+        {
+            throw Exceptions::KeyNotFoundException();
+        }
+
+        _entityCache.RemoveEntity(_poolId, entity);
     }
 
     UnsafeComponentView Catalogue::GetComponentViewById(ComponentTypeId componentTypeId)
