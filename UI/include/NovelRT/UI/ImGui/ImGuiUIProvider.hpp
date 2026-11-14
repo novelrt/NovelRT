@@ -25,7 +25,6 @@
 #include <NovelRT/Windowing/WindowProvider.hpp>
 
 #include <array>
-#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -46,7 +45,7 @@ namespace NovelRT::UI::ImGui
         : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
     {
     private:
-        inline void LoadFontFile(const std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
+        inline void LoadFontFile(const std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize, float rasterizerDensity)
         {
             auto metadata = _resourceLoader->LoadFont(relativeFontTarget);
 
@@ -55,6 +54,7 @@ namespace NovelRT::UI::ImGui
             config.FontData = metadata.fontData.data();
             config.FontDataSize = static_cast<int>(metadata.fontDataSize);
             config.SizePixels = static_cast<float>(pixelSize);
+            config.RasterizerDensity = rasterizerDensity;
             name.copy(config.Name, std::string::npos, 0);
 
             ImGuiIO& io = ::ImGui::GetIO();
@@ -265,8 +265,11 @@ namespace NovelRT::UI::ImGui
         {
             Maths::GeoVector2F scale = _windowProvider->GetFramebufferScale();
             float density = (scale.x + scale.y) * 0.5f;
-            float finalPixelSize = static_cast<float>(_defaultFontPixelSize) * density;
-            LoadFontFile(name, filePath, static_cast<int32_t>(std::lround(finalPixelSize)));
+            if(density <= 0.0f)
+            {
+                density = 1.0f;
+            }
+            LoadFontFile(name, filePath, _defaultFontPixelSize, density);
         }
 
         void BeginFrame(float deltaTime)
@@ -281,10 +284,7 @@ namespace NovelRT::UI::ImGui
             float scaleX = windowSize.x / _initialWindowSize.x;
             float scaleY = windowSize.y / _initialWindowSize.y;
 
-            double size = (scaleX + scaleY) * 0.5;
-            double density = (windowScale.x + windowScale.y) * 0.5f;
-
-            io.FontGlobalScale = static_cast<float>(size / density);
+            io.FontGlobalScale = (scaleX + scaleY) * 0.5f;
 
             auto mousePos = _inputProvider->GetRawMousePosition();
             io.AddMousePosEvent(mousePos.x, mousePos.y);
