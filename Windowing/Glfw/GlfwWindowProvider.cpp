@@ -84,8 +84,20 @@ namespace NovelRT::Windowing
             {
                 auto thisPtr = reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
                 thisPtr->_currentSize = Maths::GeoVector2F(static_cast<float>(width), static_cast<float>(height));
+                thisPtr->_currentWindowSize = thisPtr->GetWindowSize(true);
+                thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
                 thisPtr->SizeChanged(thisPtr->_currentSize);
             });
+
+        glfwSetWindowSizeCallback(window,
+                                  [](auto window, auto, auto)
+                                  {
+                                      auto thisPtr =
+                                          reinterpret_cast<GlfwWindowProvider*>(glfwGetWindowUserPointer(window));
+                                      thisPtr->_currentWindowSize = thisPtr->GetWindowSize(true);
+                                      thisPtr->_currentFramebufferScale = thisPtr->GetFramebufferScale(true);
+                                      thisPtr->WindowSizeChanged(thisPtr->_currentWindowSize);
+                                  });
 
         glfwSetKeyCallback(window,
                            [](auto window, auto key, auto /*scancode*/, auto action, auto /*mods*/)
@@ -153,7 +165,7 @@ namespace NovelRT::Windowing
 
     Maths::GeoVector2F GlfwWindowProvider::GetSize() const noexcept
     {
-        if (_currentSize.x > 0 || _currentSize.y > 0)
+        if (_currentSize.x > 0 && _currentSize.y > 0)
         {
             return _currentSize;
         }
@@ -201,5 +213,35 @@ namespace NovelRT::Windowing
         float y = 1;
         glfwGetWindowContentScale(_window, &x, &y);
         return NovelRT::Maths::GeoVector2F(x, y);
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetWindowSize(bool forceRefresh) const noexcept
+    {
+        if (!forceRefresh && (_currentWindowSize.x > 0 && _currentWindowSize.y > 0))
+        {
+            return _currentWindowSize;
+        }
+
+        int32_t x = 0;
+        int32_t y = 0;
+        glfwGetWindowSize(_window, &x, &y);
+        return NovelRT::Maths::GeoVector2F(static_cast<float>(x), static_cast<float>(y));
+    }
+
+    NovelRT::Maths::GeoVector2F GlfwWindowProvider::GetFramebufferScale(bool forceRefresh) const noexcept
+    {
+        if (!forceRefresh && (_currentFramebufferScale.x > 0 && _currentFramebufferScale.y > 0))
+        {
+            return _currentFramebufferScale;
+        }
+
+        NovelRT::Maths::GeoVector2F windowSize = GetWindowSize(true);
+        NovelRT::Maths::GeoVector2F frameSize = GetSize();
+        if (windowSize.x <= 0 || windowSize.y <= 0 || frameSize.x <= 0 || frameSize.y <= 0)
+        {
+            return NovelRT::Maths::GeoVector2F::Uniform(1.0f);
+        }
+
+        return NovelRT::Maths::GeoVector2F(frameSize.x / windowSize.x, frameSize.y / windowSize.y);
     }
 }

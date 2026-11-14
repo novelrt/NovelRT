@@ -5,6 +5,7 @@
 #include <NovelRT/Graphics/GraphicsProvider.hpp>
 #include <NovelRT/Graphics/IGraphicsSurface.hpp>
 #include <NovelRT/Maths/GeoVector2F.hpp>
+#include <NovelRT/Utilities/Event.hpp>
 #include <NovelRT/Windowing/VideoModeData.hpp>
 #include <NovelRT/Windowing/WindowMode.hpp>
 
@@ -30,7 +31,9 @@ namespace NovelRT::Windowing
         [[nodiscard]] bool ShouldClose() const noexcept;
         [[nodiscard]] std::string GetWindowTitle() const noexcept;
         [[nodiscard]] const char* GetClipboardText() const;
-        [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetWindowScale() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetWindowSize(bool forceRefresh) const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale(bool forceRefresh) const noexcept;
         void SetClipboardText(const std::string& text) const;
         void SetWindowTitle(const std::string& newTitle);
         void Close();

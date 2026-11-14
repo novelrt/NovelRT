@@ -45,7 +45,10 @@ namespace NovelRT::UI::ImGui
         : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
     {
     private:
-        inline void LoadFontFile(const std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize)
+        inline void LoadFontFile(const std::string& name,
+                                 std::filesystem::path relativeFontTarget,
+                                 int32_t pixelSize,
+                                 float rasterizerDensity)
         {
             auto metadata = _resourceLoader->LoadFont(relativeFontTarget);
 
@@ -54,6 +57,7 @@ namespace NovelRT::UI::ImGui
             config.FontData = metadata.fontData.data();
             config.FontDataSize = static_cast<int>(metadata.fontDataSize);
             config.SizePixels = static_cast<float>(pixelSize);
+            config.RasterizerDensity = rasterizerDensity;
             name.copy(config.Name, std::string::npos, 0);
 
             ImGuiIO& io = ::ImGui::GetIO();
@@ -216,11 +220,10 @@ namespace NovelRT::UI::ImGui
             io.BackendRendererName = "NovelRT";
 
             ::ImGui::GetMainViewport()->PlatformHandleRaw = (void*)_windowProvider->GetHandle();
-            auto windowSize = _windowProvider->GetSize();
-            _initialWindowSize = windowSize;
-            io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
+            _initialWindowSize = _windowProvider->GetWindowSize();
+            io.DisplaySize = ImVec2(_initialWindowSize.x, _initialWindowSize.y);
 
-            NovelRT::Maths::GeoVector2F scale = _windowProvider->GetWindowScale();
+            NovelRT::Maths::GeoVector2F scale = _windowProvider->GetFramebufferScale();
             io.DisplayFramebufferScale = ImVec2(scale.x, scale.y);
 
             if (renderPass != nullptr)
@@ -263,14 +266,20 @@ namespace NovelRT::UI::ImGui
 
         void AddFontToUpload(const std::string& name, const std::string& filePath)
         {
-            LoadFontFile(name, filePath, _defaultFontPixelSize);
+            Maths::GeoVector2F scale = _windowProvider->GetFramebufferScale();
+            float density = (scale.x + scale.y) * 0.5f;
+            if (density <= 0.0f)
+            {
+                density = 1.0f;
+            }
+            LoadFontFile(name, filePath, _defaultFontPixelSize, density);
         }
 
         void BeginFrame(float deltaTime)
         {
             auto& io = ::ImGui::GetIO();
-            auto windowSize = _windowProvider->GetSize();
-            auto windowScale = _windowProvider->GetWindowScale();
+            auto windowSize = _windowProvider->GetWindowSize();
+            auto windowScale = _windowProvider->GetFramebufferScale();
             io.DisplaySize = ImVec2(windowSize.x, windowSize.y);
             io.DisplayFramebufferScale = ImVec2(windowScale.x, windowScale.y);
             io.DeltaTime = deltaTime;
@@ -278,7 +287,7 @@ namespace NovelRT::UI::ImGui
             float scaleX = windowSize.x / _initialWindowSize.x;
             float scaleY = windowSize.y / _initialWindowSize.y;
 
-            io.FontGlobalScale = (scaleX + scaleY) / 2.0f;
+            io.FontGlobalScale = (scaleX + scaleY) * 0.5f;
 
             auto mousePos = _inputProvider->GetRawMousePosition();
             io.AddMousePosEvent(mousePos.x, mousePos.y);
@@ -452,7 +461,7 @@ namespace NovelRT::UI::ImGui
             int32_t globalIndexOffset = 0;
 
             ImVec2 clippingOffset = drawData->DisplayPos;
-            // ImVec2 clippingScale = drawData->FramebufferScale;
+            ImVec2 clippingScale = drawData->FramebufferScale;
 
             // Bind the Vertex Buffers and the index buffer region
             std::array<std::reference_wrapper<const std::shared_ptr<GraphicsBuffer<TGraphicsBackend>>>, 1> buffers{
@@ -489,9 +498,8 @@ namespace NovelRT::UI::ImGui
             currentCmdList->CmdPushConstants(_pipelineSignature, ShaderProgramVisibility::Vertex, sizeof(float) * 2,
                                              NovelRT::Utilities::SpanCast<uint8_t>(translateSpan));
 
-            currentCmdList->CmdSetScissor(
-                NovelRT::Maths::GeoVector2F::Zero(),
-                NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
 
             for (int n = 0; n < drawData->CmdListsCount; n++)
             {
@@ -507,10 +515,10 @@ namespace NovelRT::UI::ImGui
                     {
 
                         // Project scissor/clipping rectangles into framebuffer space
-                        ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * 1,  //* clippingScale.x,
-                                           (drawCommand->ClipRect.y - clippingOffset.y) * 1); //* clippingScale.y);
-                        ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * 1,  //* clippingScale.x,
-                                           (drawCommand->ClipRect.w - clippingOffset.y) * 1); //* clippingScale.y);
+                        ImVec2 clippingMin((drawCommand->ClipRect.x - clippingOffset.x) * clippingScale.x,
+                                           (drawCommand->ClipRect.y - clippingOffset.y) * clippingScale.y);
+                        ImVec2 clippingMax((drawCommand->ClipRect.z - clippingOffset.x) * clippingScale.x,
+                                           (drawCommand->ClipRect.w - clippingOffset.y) * clippingScale.y);
 
                         // Clamp to viewport as vkCmdSetScissor() won't accept values that are off bounds
                         if (clippingMin.x < 0.0f)
@@ -573,9 +581,8 @@ namespace NovelRT::UI::ImGui
             }
 
             // Reset clipping rect as per imgui
-            currentCmdList->CmdSetScissor(
-                NovelRT::Maths::GeoVector2F::Zero(),
-                NovelRT::Maths::GeoVector2F(drawData->DisplaySize.x, drawData->DisplaySize.y));
+            currentCmdList->CmdSetScissor(NovelRT::Maths::GeoVector2F::Zero(),
+                                          NovelRT::Maths::GeoVector2F(surfaceWidth, surfaceHeight));
         }
 
         std::shared_ptr<Graphics::GraphicsRenderPass<TGraphicsBackend>> GetDedicatedRenderPass()

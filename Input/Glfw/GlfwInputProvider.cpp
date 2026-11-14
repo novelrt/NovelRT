@@ -22,7 +22,7 @@ namespace NovelRT::Input
           _keyStates(DefaultBufferCount),
           _mousePos(NovelRT::Maths::GeoVector2F::Zero()),
           _rawMousePos(NovelRT::Maths::GeoVector2F::Zero()),
-          _windowDimensions(_windowProvider->GetWidth(), _windowProvider->GetHeight()),
+          _windowDimensions(_windowProvider->GetWindowSize()),
           _previousBufferIndex(0),
           _currentBufferIndex(1),
           _logger(NovelRT::Logging::CONSOLE_LOG_INPUT)
@@ -44,11 +44,7 @@ namespace NovelRT::Input
                 NovelRT::Maths::GeoVector2F(static_cast<float>(eventArgs.x), static_cast<float>(eventArgs.y));
             ProcessCursorMovement(nativePos);
         };
-        _windowProvider->SizeChanged += [this](auto eventArgs)
-        {
-            _windowDimensions = eventArgs;
-        };
-
+        _windowProvider->WindowSizeChanged += [this](auto windowSize) { _windowDimensions = windowSize; };
 
         MapAllGlfwKeysToNovelKeys();
 
