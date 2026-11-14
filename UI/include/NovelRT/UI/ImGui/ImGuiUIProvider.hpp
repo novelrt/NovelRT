@@ -45,7 +45,10 @@ namespace NovelRT::UI::ImGui
         : public std::enable_shared_from_this<ImGuiUIProvider<TGraphicsBackend, TInputBackend, TWindowingBackend>>
     {
     private:
-        inline void LoadFontFile(const std::string& name, std::filesystem::path relativeFontTarget, int32_t pixelSize, float rasterizerDensity)
+        inline void LoadFontFile(const std::string& name,
+                                 std::filesystem::path relativeFontTarget,
+                                 int32_t pixelSize,
+                                 float rasterizerDensity)
         {
             auto metadata = _resourceLoader->LoadFont(relativeFontTarget);
 
@@ -265,7 +268,7 @@ namespace NovelRT::UI::ImGui
         {
             Maths::GeoVector2F scale = _windowProvider->GetFramebufferScale();
             float density = (scale.x + scale.y) * 0.5f;
-            if(density <= 0.0f)
+            if (density <= 0.0f)
             {
                 density = 1.0f;
             }
