@@ -43,11 +43,14 @@ namespace NovelRT::Windowing
         Utilities::Event<CursorPositionEventArgs> CursorMoved;
         Utilities::Event<ButtonChangeEventArgs> MouseButtonClicked;
         Utilities::Event<ButtonChangeEventArgs> KeyboardButtonChanged;
+        Utilities::Event<Maths::GeoVector2F> WindowSizeChanged;
 
     private:
         GLFWwindow* _window;
         std::string _currentTitle;
         Maths::GeoVector2F _currentSize;
+        Maths::GeoVector2F _currentWindowSize;
+        Maths::GeoVector2F _currentFramebufferScale;
 
     public:
         WindowProvider();
@@ -75,7 +78,9 @@ namespace NovelRT::Windowing
         [[nodiscard]] Graphics::GraphicsSurfaceKind GetKind() const noexcept final;
         [[nodiscard]] const char* GetClipboardText() const;
         void SetClipboardText(const std::string& text) const;
-        [[nodiscard]] NovelRT::Maths::GeoVector2F GetWindowScale() const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetWindowScale() const noexcept;
         void Close();
+        [[nodiscard]] Maths::GeoVector2F GetWindowSize(bool forceRefresh = false) const noexcept;
+        [[nodiscard]] Maths::GeoVector2F GetFramebufferScale(bool forceRefresh = false) const noexcept;
     };
 }
