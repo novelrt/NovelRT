@@ -99,7 +99,7 @@ public:
             NovelRT::Ecs::Graphics::Components::Viewport>();
 
         auto spriteEntity = catalogue.CreateEntity();
-        _spriteEntity = spriteEntity;
+        _spriteEntity = spriteEntity.Id;
 
         auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/novel-chan.png").value();
 
@@ -119,7 +119,7 @@ public:
         graphView.AddComponent(spriteEntity, graphComp);
 
         auto cameraViewportEntity = catalogue.CreateEntity();
-        _cameraViewportEntity = cameraViewportEntity;
+        _cameraViewportEntity = cameraViewportEntity.Id;
 
         NovelRT::Ecs::Components::TransformComponent viewportTransform{};
         viewportTransform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);

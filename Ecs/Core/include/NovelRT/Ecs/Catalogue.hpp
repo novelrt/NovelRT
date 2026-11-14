@@ -5,11 +5,11 @@
 
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/EntityHandle.hpp>
 #include <NovelRT/Ecs/ImplDetail.hpp>
 
 #include <cstddef>
 #include <tuple>
-#include <vector>
 
 namespace NovelRT::Ecs
 {
@@ -18,6 +18,7 @@ namespace NovelRT::Ecs
     class EntityCache;
     class SystemScheduler;
     class UnsafeComponentView;
+    class EntityAllocator;
 
     /**
      * @brief A thread-aware context into the current state of the ECS instance that created an instance of this object.
@@ -33,16 +34,14 @@ namespace NovelRT::Ecs
         ComponentCache& _componentCache;
         EntityCache& _entityCache;
         SystemScheduler& _scheduler;
-        std::vector<EntityId> _createdEntitiesThisFrame;
+        EntityAllocator& _entityAllocator;
 
     public:
         /**
          * @brief Constructs a new Catalogue object with context of the ECS instance and thread state.
          *
          * @param poolId The pool ID being used by the thread creating this catalogue instance.
-         * @param componentCache The storage object for all the components in this particular ECS instance.
-         * @param entityCache The storage object for all modifications being made directly to entities themselves (such
-         * as a delete instruction).
+         * @param scheduler The scheduler that owns the ECS instance and its entity and component storage.
          */
         Catalogue(size_t poolId, SystemScheduler& scheduler) noexcept;
 
@@ -60,7 +59,8 @@ namespace NovelRT::Ecs
         template<typename TComponent>
         [[nodiscard]] ComponentView<TComponent> GetComponentView() noexcept
         {
-            return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>());
+            return ComponentView<TComponent>(_poolId, _componentCache.GetComponentBuffer<TComponent>(),
+                                             _entityAllocator);
         }
 
         /**
@@ -78,8 +78,8 @@ namespace NovelRT::Ecs
         template<typename... TComponents>
         [[nodiscard]] std::tuple<ComponentView<TComponents>...> GetComponentViews() noexcept
         {
-            return std::make_tuple(
-                ComponentView<TComponents>(_poolId, _componentCache.GetComponentBuffer<TComponents>())...);
+            return std::make_tuple(ComponentView<TComponents>(
+                _poolId, _componentCache.GetComponentBuffer<TComponents>(), _entityAllocator)...);
         }
 
         /**
@@ -88,29 +88,46 @@ namespace NovelRT::Ecs
          * The returned type, UnsafeComponentView, is considered an unsafe type by nature. Only call this in contexts
          * where interop is required.
          *
-         * @param componentTypeId The component ID to search for
+         * @param componentTypeId The component ID to search for.
+         *
          * @return A typeless component view into the ComponentBuffer's inner memory container, represented as an
          * UnsafeComponentView.
-         * @exceptions std::out_of_range if the supplied ID is not present within the container.
+         *
+         * @exception std::out_of_range if the supplied ID is not present within the container.
          */
         [[nodiscard]] UnsafeComponentView GetComponentViewById(ComponentTypeId componentTypeId);
 
         /**
-         * @brief Creates a new EntityId for use within the ECS.
+         * @brief Allocates a new entity and queues its registration with the ECS.
          *
-         * If you discard the returned EntityId, the entity will simply be lost to the ECS and will have no effect.
+         * @warning If you discard the returned EntityHandle without deleting it, it remains in the ECS.
+         * Do not forget to request deletion when appropriate.
          *
-         * @return The newly created entity.
+         * @return A handle containing the newly allocated entity's ID and generation.
+         *
+         * @exception std::bad_alloc if the entity fails to be allocated.
          */
-        [[nodiscard]] EntityId CreateEntity() noexcept;
+        [[nodiscard]] EntityHandle CreateEntity();
 
         /**
-         * @brief Marks an entity for deletion when the current update cycle is resolved. In the next immutable ECS
-         * state, this entity will not exist.
+         * @brief Queues the entity currently allocated with the given ID for deletion during ECS synchronisation.
          *
-         * @param entity The entity to delete.
+         * @param entity The numerical ID of the entity to delete.
+         *
+         * @exception Exceptions::KeyNotFoundException if the ID is not currently allocated by this ECS instance.
+         * @exception std::bad_alloc if memory allocation fails while reporting an invalid entity.
          */
-        void DeleteEntity(EntityId entity) noexcept;
+        void DeleteEntity(EntityId entity);
+
+        /**
+         * @brief Queues the entity identified by the given handle for deletion during ECS synchronisation.
+         *
+         * @param entity The handle identifying the entity to delete.
+         *
+         * @exception Exceptions::KeyNotFoundException if the handle is not allocated by this ECS instance.
+         * @exception std::bad_alloc if memory allocation fails while reporting an invalid entity.
+         */
+        void DeleteEntity(const EntityHandle& entity);
 
         /**
          * @brief Schedules a unit of work to be executed outside of the ECS context, with a completion
@@ -148,7 +165,8 @@ namespace NovelRT::Ecs
          *
          * @return The SystemId that represents this system-based job.
          */
-        SystemId ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
+        SystemId ScheduleSystemJob(
+            std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr);
 
         /**
          * @brief Cancels a currently running system-based job based on the given ID.

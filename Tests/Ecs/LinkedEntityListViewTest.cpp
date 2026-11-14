@@ -1,18 +1,18 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <NovelRT/Ecs/Catalogue.hpp>
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentCache.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
+#include <NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp>
 #include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/EntityGraphView.hpp>
-#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
-#include <NovelRT/Ecs/Components/LinkedEntityListNodeComponent.hpp>
-#include <NovelRT/Ecs/Components/EntityGraphComponent.hpp>
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <gtest/gtest.h>
 
 using namespace NovelRT::Ecs;
@@ -31,11 +31,9 @@ public:
 protected:
     void SetUp() override
     {
-        static NovelRT::AtomFactory& _entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
-
         componentCache = ComponentCache(1);
         componentCache.RegisterComponentType(LinkedEntityListNodeComponent{false}, "THROW_AWAY");
-        rootListId = _entityIdFactory.GetNext();
+        rootListId = systemScheduler.GetEntityAllocator().Allocate().Id;
         componentCache.GetComponentBuffer<LinkedEntityListNodeComponent>().PushComponentUpdateInstruction(
             0, rootListId, LinkedEntityListNodeComponent());
         entityCache = EntityCache(1);
@@ -58,7 +56,8 @@ TEST_F(LinkedEntityListViewTest, CanCreateInstance)
 
 TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertAtBackInstruction)
 {
-    EntityId nextId = catalogue->CreateEntity();
+    EntityId nextId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -80,7 +79,7 @@ TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertAtBackInstruction)
 
 TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertAtFrontInstruction)
 {
-    EntityId newPreviousId = catalogue->CreateEntity();
+    EntityId newPreviousId = catalogue->CreateEntity().Id;
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -102,7 +101,7 @@ TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertAtFrontInstruction)
 
 TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertBeforeIndexInstruction)
 {
-    EntityId newPreviousId = catalogue->CreateEntity();
+    EntityId newPreviousId = catalogue->CreateEntity().Id;
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -124,7 +123,7 @@ TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertBeforeIndexInstruction)
 
 TEST_F(LinkedEntityListViewTest, CanAddNodeUsingAddInsertAfterIndexInstruction)
 {
-    EntityId nextId = catalogue->CreateEntity();
+    EntityId nextId = catalogue->CreateEntity().Id;
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -163,7 +162,8 @@ TEST_F(LinkedEntityListViewTest, CanRemoveNodeUsingNodeId)
 
 TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertBeforeIndex)
 {
-    EntityId previousId = catalogue->CreateEntity();
+    EntityId previousId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -184,7 +184,8 @@ TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertBeforeInd
 
 TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertBeforeIndex)
 {
-    EntityId previousId = catalogue->CreateEntity();
+    EntityId previousId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -205,7 +206,8 @@ TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertBeforeInd
 
 TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAfterIndex)
 {
-    EntityId nextId = catalogue->CreateEntity();
+    EntityId nextId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -226,7 +228,8 @@ TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAfterInde
 
 TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAfterIndex)
 {
-    EntityId nextId = catalogue->CreateEntity();
+    EntityId nextId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -247,7 +250,8 @@ TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAfterInde
 
 TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAtBack)
 {
-    EntityId nextId = catalogue->CreateEntity();
+    EntityId nextId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -268,7 +272,8 @@ TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAtBack)
 
 TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAtBack)
 {
-    EntityId nextId = catalogue->CreateEntity();
+    EntityId nextId = catalogue->CreateEntity().Id;
+
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -289,7 +294,7 @@ TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAtBack)
 
 TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAtFront)
 {
-    EntityId previousId = catalogue->CreateEntity();
+    EntityId previousId = catalogue->CreateEntity().Id;
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -310,7 +315,7 @@ TEST_F(LinkedEntityListViewTest, CanAddAndRemoveInSameCommitUsingInsertAtFront)
 
 TEST_F(LinkedEntityListViewTest, CanRemoveAndAddInSameCommitUsingInsertAtFront)
 {
-    EntityId previousId = catalogue->CreateEntity();
+    EntityId previousId = catalogue->CreateEntity().Id;
     // scope for auto commit/delete.
     {
         LinkedEntityListView view(rootListId, *catalogue);
@@ -339,7 +344,7 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtTheBack)
 
         for (size_t i = 0; i < 10; i++)
         {
-            EntityId id = catalogue->CreateEntity();
+            EntityId id = catalogue->CreateEntity().Id;
             ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
             committedEntities.emplace_back(id);
         }
@@ -380,7 +385,7 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtTheFront)
 
         for (size_t i = 0; i < 10; i++)
         {
-            EntityId id = catalogue->CreateEntity();
+            EntityId id = catalogue->CreateEntity().Id;
             ASSERT_NO_THROW(view.AddInsertAtFrontInstruction(id));
             committedEntities.emplace_back(id);
         }
@@ -423,7 +428,7 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtFrontAndRemoveEntities)
 
         for (size_t i = 0; i < 10; i++)
         {
-            EntityId id = catalogue->CreateEntity();
+            EntityId id = catalogue->CreateEntity().Id;
             ASSERT_NO_THROW(view.AddInsertAtFrontInstruction(id));
             committedEntities.emplace_back(id);
         }
@@ -470,7 +475,7 @@ TEST_F(LinkedEntityListViewTest, CanAddMultipleItemsAtBackAndRemoveEntities)
 
         for (size_t i = 0; i < 10; i++)
         {
-            EntityId id = catalogue->CreateEntity();
+            EntityId id = catalogue->CreateEntity().Id;
             ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
             committedEntities.emplace_back(id);
         }
@@ -529,7 +534,7 @@ TEST_F(LinkedEntityListViewTest, CanClearAllNodesInListUsingClearAndAddRemoveNod
 
         for (size_t i = 0; i < 10; i++)
         {
-            EntityId id = catalogue->CreateEntity();
+            EntityId id = catalogue->CreateEntity().Id;
             ASSERT_NO_THROW(view.AddInsertAtBackInstruction(id));
         }
 

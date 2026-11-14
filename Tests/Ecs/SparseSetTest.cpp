@@ -38,10 +38,11 @@ TEST(SparseSetTest, TryInsertReturnsDetailedResults)
 
     EXPECT_EQ(testSet.TryInsert(0, 10), SparseSetInsertResult::Inserted);
     EXPECT_EQ(testSet.TryInsert(0, 20), SparseSetInsertResult::AlreadyExists);
-    EXPECT_EQ(testSet.TryInsert(std::numeric_limits<Atom>::max(), 30), SparseSetInsertResult::UnknownFailure);
+    EXPECT_EQ(testSet.TryInsert(std::numeric_limits<Atom>::max(), 30), SparseSetInsertResult::Inserted);
 
-    EXPECT_EQ(testSet.Length(), 1);
+    EXPECT_EQ(testSet.Length(), 2);
     EXPECT_EQ(testSet[0], 10);
+    EXPECT_EQ(testSet[std::numeric_limits<Atom>::max()], 30);
 }
 
 TEST(SparseSetTest, RemoveDoesNotThrowWhenRemovingValidItemFromCollection)

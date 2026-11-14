@@ -2,13 +2,13 @@
 // for more information.
 
 #include "gtest/gtest.h"
-#include <NovelRT/Utilities/Macros.hpp>
-#include <NovelRT/Ecs/SystemScheduler.hpp>
-#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
+#include <NovelRT/Ecs/ComponentBufferMemoryContainer.hpp>
 #include <NovelRT/Ecs/ComponentView.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
+#include <NovelRT/Ecs/SystemScheduler.hpp>
 #include <NovelRT/Timing/Timestamp.hpp>
+#include <NovelRT/Utilities/Macros.hpp>
 #include <atomic>
 #include <gtest/gtest.h>
 
@@ -26,10 +26,12 @@ public:
     std::function<void(Timestamp, Timestamp::duration, Catalogue)> sysOne;
     std::function<void(Timestamp, Timestamp::duration, Catalogue)> sysTwo;
     std::function<void(Timestamp, Timestamp::duration, Catalogue)> sysThree;
-    inline static NovelRT::AtomFactory& entityIdFactory = NovelRT::AtomFactoryDatabase::GetFactory("EntityId");
 
 protected:
-    virtual uint32_t ThreadsToSpin() const { return 0; }
+    virtual uint32_t ThreadsToSpin() const
+    {
+        return 0;
+    }
 
     void SetUp() override
     {
@@ -79,19 +81,21 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 {
     bool isEqual = false;
 
-    EntityId entity = entityIdFactory.GetNext();
+    EntityId entity = scheduler->GetEntityAllocator().Allocate().Id;
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
-    unused(scheduler->RegisterSystem([&](Timestamp, Timestamp::duration, Catalogue catalogue) {
-        auto intSystem = catalogue.GetComponentView<int32_t>();
-        for (auto [entity, component] : intSystem)
+    unused(scheduler->RegisterSystem(
+        [&](Timestamp, Timestamp::duration, Catalogue catalogue)
         {
-            std::cout << "omg! " << entity << " " << component;
+            auto intSystem = catalogue.GetComponentView<int32_t>();
+            for (auto [entity, component] : intSystem)
+            {
+                std::cout << "omg! " << entity << " " << component;
 
-            isEqual = component == 10;
-            intSystem.PushComponentUpdateInstruction(entity, 10);
-        }
-    }));
+                isEqual = component == 10;
+                intSystem.PushComponentUpdateInstruction(entity, 10);
+            }
+        }));
 
     // We need to submit our initial component update (PushComponentUpdateInstruction).
     // Otherwise, systems will run without recognizing the [entity, component] pair.
@@ -107,31 +111,36 @@ TEST_F(SystemSchedulerTest, IndependentSystemsObtainValidCatalogue)
 }
 
 // Parameterized with the amount of threads to spin
-class SystemSchedulerThreadsTest : public SystemSchedulerTest, public testing::WithParamInterface<uint32_t> {
-    protected:
-        uint32_t ThreadsToSpin() const override { return GetParam(); }
+class SystemSchedulerThreadsTest : public SystemSchedulerTest, public testing::WithParamInterface<uint32_t>
+{
+protected:
+    uint32_t ThreadsToSpin() const override
+    {
+        return GetParam();
+    }
 };
+
 TEST_P(SystemSchedulerThreadsTest, HandlesLargeAmountOfSystemsOnVariousAmountsOfThreads)
 {
-    EntityId entity = entityIdFactory.GetNext();
+    EntityId entity = scheduler->GetEntityAllocator().Allocate().Id;
 
     scheduler->GetComponentCache().RegisterComponentType<int32_t>(-1, "THROW_AWAY");
     scheduler->GetComponentCache().GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, entity, 10);
 
-    // We need to submit our initial component update (PushComponentUpdateInstruction).
-    // Otherwise, systems will run without recognizing the [entity, component] pair.
-    std::vector<EntityId> deletedEntities;
+    std::vector<EntityId> deletedEntities{};
     scheduler->GetComponentCache().PrepAllBuffersForNextFrame(deletedEntities);
 
     for (int i = 0; i < 253; ++i) // 256 total systems
     {
-        unused(scheduler->RegisterSystem([&](Timestamp, Timestamp::duration, Catalogue catalogue) {
-            auto intSystem = catalogue.GetComponentView<int32_t>();
-            for (auto [entity, component] : intSystem)
+        unused(scheduler->RegisterSystem(
+            [&](Timestamp, Timestamp::duration, Catalogue catalogue)
             {
-                intSystem.PushComponentUpdateInstruction(entity, 1);
-            }
-        }));
+                auto intSystem = catalogue.GetComponentView<int32_t>();
+                for (auto [entity, component] : intSystem)
+                {
+                    intSystem.PushComponentUpdateInstruction(entity, 1);
+                }
+            }));
     }
 
     scheduler->ExecuteIteration(Timestamp(), Timestamp::duration());

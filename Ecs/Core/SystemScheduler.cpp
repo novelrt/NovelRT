@@ -10,15 +10,17 @@
 #include <NovelRT/Maths/Utilities.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 
-#include <atomic>
+#include <algorithm>
 #include <cassert>
 #include <functional>
+#include <ranges>
 #include <unordered_map>
 #include <utility>
 
 namespace NovelRT::Ecs
 {
-    SystemId SystemScheduler::ScheduleSystemJob(std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr)
+    SystemId SystemScheduler::ScheduleSystemJob(
+        std::function<bool(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> jobFnPtr)
     {
         static AtomFactory& systemIdFactory = AtomFactoryDatabase::GetFactory("SystemId");
         SystemId id = systemIdFactory.GetNext();
@@ -118,7 +120,7 @@ namespace NovelRT::Ecs
     {
         for (SystemId dep : dependencies)
         {
-            if (std::find(_systemIds.begin(), _systemIds.end(), dep) == _systemIds.end())
+            if (std::ranges::find(_systemIds, dep) == _systemIds.end())
             {
                 throw std::invalid_argument("A provided dependency ID does not match any registered system. "
                                             "Ensure all dependency systems are registered before being referenced.");
@@ -163,6 +165,7 @@ namespace NovelRT::Ecs
           _systems(std::move(other._systems)),
           _entityCache(std::move(other._entityCache)),
           _componentCache(std::move(other._componentCache)),
+          _entityAllocator(std::move(other._entityAllocator)),
           _workerThreadCount(other._workerThreadCount),
           _ecsArena(std::move(other._ecsArena)),
           _asyncArena(std::move(other._asyncArena)),
@@ -185,6 +188,7 @@ namespace NovelRT::Ecs
         _systems = std::move(other._systems);
         _entityCache = std::move(other._entityCache);
         _componentCache = std::move(other._componentCache);
+        _entityAllocator = std::move(other._entityAllocator);
         _workerThreadCount = other._workerThreadCount;
         _ecsArena = std::move(other._ecsArena);
         _asyncArena = std::move(other._asyncArena);
@@ -201,8 +205,9 @@ namespace NovelRT::Ecs
         return *this;
     }
 
-    SystemId SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
-                                             std::span<const SystemId> dependencies)
+    SystemId SystemScheduler::RegisterSystem(
+        std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr,
+        std::span<const SystemId> dependencies)
     {
         if (_hasExecutedAtLeastOnce)
         {
@@ -217,7 +222,8 @@ namespace NovelRT::Ecs
         return id;
     }
 
-    SystemId SystemScheduler::RegisterSystem(std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr)
+    SystemId SystemScheduler::RegisterSystem(
+        std::function<void(Timing::Timestamp, Timing::Timestamp::duration, Catalogue)> systemUpdatePtr)
     {
         return RegisterSystem(systemUpdatePtr, {});
     }
@@ -233,8 +239,8 @@ namespace NovelRT::Ecs
 
         _typedSystemCache.emplace_back(targetSystem);
 
-        return RegisterSystem([targetSystem](auto timestamp, auto delta, auto catalogue) { targetSystem->Update(timestamp, delta, catalogue); },
-                              dependencies);
+        return RegisterSystem([targetSystem](auto timestamp, auto delta, auto catalogue)
+                              { targetSystem->Update(timestamp, delta, catalogue); }, dependencies);
     }
 
     SystemId SystemScheduler::RegisterSystem(std::shared_ptr<IEcsSystem> targetSystem)
@@ -262,7 +268,7 @@ namespace NovelRT::Ecs
 
     SystemId SystemScheduler::RegisterSystemDependsOnAll(std::shared_ptr<IEcsSystem> targetSystem)
     {
-        if (std::find(_typedSystemCache.begin(), _typedSystemCache.end(), targetSystem) != _typedSystemCache.end())
+        if (std::ranges::find(_typedSystemCache, targetSystem) != _typedSystemCache.end())
         {
             throw std::invalid_argument(
                 "The provided system pointer has already been registered. Each system may only be registered once.");
@@ -274,9 +280,45 @@ namespace NovelRT::Ecs
                                           { targetSystem->Update(timestamp, delta, catalogue); });
     }
 
+    [[nodiscard]] uint32_t SystemScheduler::GetWorkerThreadCount() const noexcept
+    {
+        return _workerThreadCount;
+    }
+
+    [[nodiscard]] EntityCache& SystemScheduler::GetEntityCache() noexcept
+    {
+        return _entityCache;
+    }
+
+    [[nodiscard]] const EntityCache& SystemScheduler::GetEntityCache() const noexcept
+    {
+        return _entityCache;
+    }
+
+    [[nodiscard]] ComponentCache& SystemScheduler::GetComponentCache() noexcept
+    {
+        return _componentCache;
+    }
+
+    [[nodiscard]] const ComponentCache& SystemScheduler::GetComponentCache() const noexcept
+    {
+        return _componentCache;
+    }
+
+    [[nodiscard]] EntityAllocator& SystemScheduler::GetEntityAllocator() noexcept
+    {
+        return _entityAllocator;
+    }
+
+    [[nodiscard]] const EntityAllocator& SystemScheduler::GetEntityAllocator() const noexcept
+    {
+        return _entityAllocator;
+    }
+
     void SystemScheduler::ScheduleUpdateWork()
     {
         _frameCounter++;
+
         _ecsArena->execute(
             [&]()
             {
@@ -301,7 +343,17 @@ namespace NovelRT::Ecs
 
                     if (hadCompletions)
                     {
-                        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
+                        const auto& handles = _entityCache.GetEntitiesToRemoveThisFrame();
+
+                        std::vector<EntityId> idsToDelete{};
+                        idsToDelete.reserve(handles.size());
+
+                        auto validHandles = handles | std::views::filter([this](const EntityHandle& handle)
+                                                                         { return _entityAllocator.IsValid(handle); });
+
+                        std::ranges::transform(validHandles, std::back_inserter(idsToDelete), &EntityHandle::Id);
+
+                        _componentCache.PrepAllBuffersForNextFrame(idsToDelete);
                         _entityCache.ProcessEntityRegistrationRequestsFromThreads();
                         _entityCache.ProcessEntityDeletionRequestsFromThreads();
                         _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
@@ -327,7 +379,8 @@ namespace NovelRT::Ecs
                             [&systemJob, this]()
                             {
                                 auto poolId = static_cast<size_t>(tbb::this_task_arena::current_thread_index());
-                                systemJob.isDone = systemJob.jobFnPtr(_currentTimestamp, _currentDelta, Catalogue(poolId, *this));
+                                systemJob.isDone =
+                                    systemJob.jobFnPtr(_currentTimestamp, _currentDelta, Catalogue(poolId, *this));
                                 systemJob.lastExecutedFrame = _frameCounter;
                             });
                     }
@@ -352,7 +405,17 @@ namespace NovelRT::Ecs
 
                     if (hadTombstones)
                     {
-                        _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
+                        const auto& handles = _entityCache.GetEntitiesToRemoveThisFrame();
+
+                        std::vector<EntityId> idsToDelete{};
+                        idsToDelete.reserve(handles.size());
+
+                        auto validHandles = handles | std::views::filter([this](const EntityHandle& handle)
+                                                                         { return _entityAllocator.IsValid(handle); });
+
+                        std::ranges::transform(validHandles, std::back_inserter(idsToDelete), &EntityHandle::Id);
+
+                        _componentCache.PrepAllBuffersForNextFrame(idsToDelete);
                         _entityCache.ProcessEntityRegistrationRequestsFromThreads();
                         _entityCache.ProcessEntityDeletionRequestsFromThreads();
                         _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
@@ -370,7 +433,17 @@ namespace NovelRT::Ecs
 
                     _ecsTasks->wait();
 
-                    _componentCache.PrepAllBuffersForNextFrame(_entityCache.GetEntitiesToRemoveThisFrame());
+                    const auto& handles = _entityCache.GetEntitiesToRemoveThisFrame();
+
+                    std::vector<EntityId> idsToDelete{};
+                    idsToDelete.reserve(handles.size());
+
+                    auto validHandles = handles | std::views::filter([this](const EntityHandle& handle)
+                                                                     { return _entityAllocator.IsValid(handle); });
+
+                    std::ranges::transform(validHandles, std::back_inserter(idsToDelete), &EntityHandle::Id);
+
+                    _componentCache.PrepAllBuffersForNextFrame(idsToDelete);
                     _entityCache.ProcessEntityRegistrationRequestsFromThreads();
                     _entityCache.ProcessEntityDeletionRequestsFromThreads();
                     _entityCache.ApplyEntityDeletionRequestsToRegisteredEntities();
