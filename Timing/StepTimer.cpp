@@ -29,7 +29,9 @@ namespace NovelRT::Timing
         auto ticksDelta = std::min(counterDelta, _maxCounterDelta);
 
         if (ticksDelta.count() == 0)
+        {
             return;
+        }
 
         _lastCounter = currentCounter;
 
@@ -43,18 +45,19 @@ namespace NovelRT::Timing
             // small deviations down to zero to leave things running smoothly.
 
             using QuarterMillisecond = std::ratio_multiply<std::milli, std::ratio<1, 4>>;
-            constexpr auto OneQuarterMillisecond = std::chrono::duration<int64_t, QuarterMillisecond>{1};
+            constexpr auto oneQuarterMillisecond = std::chrono::duration<int64_t, QuarterMillisecond>{1};
 
             using SignedDuration = std::chrono::duration<int64_t, GameClock::period>;
             auto delta = std::chrono::duration_cast<Timestamp::duration>(
                 std::chrono::abs(std::chrono::duration_cast<SignedDuration>(ticksDelta) -
                                  std::chrono::duration_cast<SignedDuration>(_targetFrequency)));
-            if (delta < OneQuarterMillisecond)
+
+            if (delta < oneQuarterMillisecond)
             {
                 ticksDelta = _targetFrequency;
             }
 
-            _remainingTicks += delta.count();
+            _remainingTicks += ticksDelta.count();
 
             while (_remainingTicks >= _targetFrequency.count())
             {
@@ -62,7 +65,7 @@ namespace NovelRT::Timing
                 _remainingTicks -= _targetFrequency.count();
 
                 auto now = TimeFromTicks(_totalTicks);
-                update(now, ticksDelta);
+                update(now, _targetFrequency);
             }
         }
         else
