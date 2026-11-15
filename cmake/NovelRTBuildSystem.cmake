@@ -245,7 +245,8 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
   if(NOVELRT_INSTALL)
     if(APPLE AND declareModule_MACOSX_BUNDLE)
       set(fixupStr "include(BundleUtilities)\n")
-      string(APPEND fixupStr [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" dynamicLibPaths)]] "\n"
+      string(APPEND fixupStr [[  get_item_rpaths("$<TARGET_FILE:]] "${cmakeSafeName}" [[>" novelrtBundleRpaths)]] "\n"
+                             [[  file(READ "]] "${CMAKE_CURRENT_BINARY_DIR}/NovelRT_DynamicLibraries.paths.txt" [[" dynamicLibPaths)]] "\n"
                              [[  set(dynamicLibs)]] "\n"
                              [[  foreach(dynamicLibPath IN LISTS dynamicLibPaths)]] "\n"
                              [[    if(EXISTS "${dynamicLibPath}")]] "\n"
@@ -263,7 +264,11 @@ function(NovelRTBuildSystem_DeclareModule moduleKind moduleName)
                              [[    get_filename_component(dynamicLibName "${dynamicLibPath}" NAME)]] "\n"
                              [[    list(APPEND installedDynamicLibs "$<TARGET_BUNDLE_CONTENT_DIR:]] "${cmakeSafeName}" [[>/Frameworks/${dynamicLibName}")]] "\n"
                              [[  endforeach()]] "\n"
-                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]])
+                             [[  fixup_bundle("$<TARGET_BUNDLE_DIR:]] "${cmakeSafeName}" [[>" "${installedDynamicLibs}" "$<INSTALL_PREFIX>/lib;$<INSTALL_PREFIX>/bin")]] "\n"
+                             [[  find_program(novelrtInstallNameTool install_name_tool REQUIRED)]] "\n"
+                             [[  foreach(novelrtBundleRpath IN LISTS novelrtBundleRpaths)]] "\n"
+                             [[    execute_process(COMMAND "${novelrtInstallNameTool}" -add_rpath "${novelrtBundleRpath}" "$<TARGET_FILE:]] "${cmakeSafeName}" [[>")]] "\n"
+                             [[  endforeach()]])
       install(CODE "${fixupStr}")
 
       set(resourcesStr "cmake_policy(PUSH)\n")
