@@ -38,6 +38,8 @@ namespace NovelRT::Graphics
 
         VkSurfaceKHR _surface;
 
+        std::vector<std::string> _finalEnabledExtensionList;
+
         NovelRT::Utilities::Lazy<VkDevice> _device;
 
         VkQueue _graphicsQueue;
@@ -124,6 +126,8 @@ namespace NovelRT::Graphics
         [[nodiscard]] VkQueue GetVulkanPresentQueue() const noexcept;
         [[nodiscard]] VkQueue GetVulkanGraphicsQueue() const noexcept;
         [[nodiscard]] VkDevice GetVulkanDevice() const;
+
+        [[nodiscard]] std::span<const std::string> GetEnabledExtensions();
 
         [[nodiscard]] const Vulkan::QueueFamilyIndices& GetIndicesData() const noexcept;
 

@@ -183,9 +183,9 @@ namespace NovelRT::Graphics
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
-        auto physicalDeviceExtensions =
+        _finalEnabledExtensionList =
             GetFinalPhysicalDeviceExtensionSet(requiredDeviceExtensions, optionalDeviceExtensions);
-        auto physicalDeviceExtensionPtrs = NovelRT::Utilities::GetStringSpanAsCharPtrVector(physicalDeviceExtensions);
+        auto physicalDeviceExtensionPtrs = NovelRT::Utilities::GetStringSpanAsCharPtrVector(_finalEnabledExtensionList);
 
         VkPhysicalDeviceFeatures deviceFeatures{};
         VkPhysicalDeviceTimelineSemaphoreFeaturesKHR timelineSemaphore{};
@@ -204,14 +204,15 @@ namespace NovelRT::Graphics
         createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDeviceExtensionPtrs.size());
         createInfo.ppEnabledExtensionNames = physicalDeviceExtensionPtrs.data();
 
-        if (std::find(physicalDeviceExtensions.begin(), physicalDeviceExtensions.end(),
-                      VK_KHR_MAINTENANCE_7_EXTENSION_NAME) != physicalDeviceExtensions.end())
+        if (std::ranges::find(_finalEnabledExtensionList, VK_KHR_MAINTENANCE_7_EXTENSION_NAME) !=
+            _finalEnabledExtensionList.end())
         {
             timelineSemaphore.pNext = &maintenance7;
             maintenance7.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
             maintenance7.maintenance7 = true;
         }
-        else
+        else if (std::ranges::find(_finalEnabledExtensionList, VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME) !=
+                 _finalEnabledExtensionList.end())
         {
             timelineSemaphore.pNext = &nestedCommandBuffer;
             nestedCommandBuffer.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_NESTED_COMMAND_BUFFER_FEATURES_EXT;
@@ -257,6 +258,7 @@ namespace NovelRT::Graphics
           _surfaceContext(std::move(surfaceContext)),
           _logger(NovelRT::Logging::CONSOLE_LOG_GFX),
           _surface(_surfaceContext->GetSurfaceContextHandle()),
+          _finalEnabledExtensionList{},
           _device([this, requiredDeviceExtensions, optionalDeviceExtensions]()
                   { return CreateLogicalDevice(requiredDeviceExtensions, optionalDeviceExtensions); }),
           _graphicsQueue(VK_NULL_HANDLE),
@@ -469,6 +471,12 @@ namespace NovelRT::Graphics
     VkDevice VulkanGraphicsDevice::GetVulkanDevice() const
     {
         return _device.Get();
+    }
+
+    std::span<const std::string> VulkanGraphicsDevice::GetEnabledExtensions()
+    {
+        unused(GetVulkanDevice());
+        return _finalEnabledExtensionList;
     }
 
     const Vulkan::QueueFamilyIndices& VulkanGraphicsDevice::GetIndicesData() const noexcept

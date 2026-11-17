@@ -30,6 +30,8 @@ namespace NovelRT::Graphics
         VkCommandBuffer _commandBuffer;
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> _owningContext;
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> _secondaryContextData;
+        std::vector<std::function<void(VkCommandBuffer)>> _replayData;
+        bool _supportsMixedRecording;
 
     public:
         GraphicsCmdList(
@@ -54,10 +56,7 @@ namespace NovelRT::Graphics
 
         void CmdEndRenderPass();
 
-        
-        void CmdBindDescriptorSet(
-                const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>&
-                set);
+        void CmdBindDescriptorSet(const std::shared_ptr<GraphicsDescriptorSet<Vulkan::VulkanGraphicsBackend>>& set);
 
         void CmdBindDescriptorSets(
             NovelRT::Utilities::Span<

@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "NovelRT/Exceptions/NotSupportedException.hpp"
 #include <NovelRT/Exceptions/InvalidOperationException.hpp>
 
 #include <NovelRT/Graphics/Vulkan/Utilities/ImageLayout.hpp>
@@ -23,6 +24,7 @@
 #include <vulkan/vulkan.h>
 #include <vulkan/vulkan_core.h>
 
+#include <algorithm>
 #include <functional>
 
 namespace NovelRT::Graphics
@@ -87,10 +89,24 @@ namespace NovelRT::Graphics
           _owningContext(std::move(owningContext)),
           _secondaryContextData(std::move(secondaryContextData))
     {
+        std::span<const std::string> extensions = _device->GetEnabledExtensions();
+
+        _supportsMixedRecording =
+            std::ranges::any_of(extensions,
+                                [](const std::string& extension)
+                                {
+                                    return extension == VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME ||
+                                           extension == VK_KHR_MAINTENANCE_7_EXTENSION_NAME;
+                                });
     }
 
     VulkanGraphicsCmdList::~GraphicsCmdList()
     {
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            return;
+        }
+
         vkFreeCommandBuffers(_device->GetVulkanDevice(), _owningContext->GetVulkanCommandPool(), 1, &_commandBuffer);
     }
 
@@ -106,6 +122,12 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsCmdList::Begin()
     {
+        if (GetVkCommandBuffer() == VK_NULL_HANDLE)
+        {
+            _replayData.clear();
+            return;
+        }
+
         VkCommandBufferBeginInfo commandBufferBeginInfo{};
         commandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -136,6 +158,11 @@ namespace NovelRT::Graphics
 
     void VulkanGraphicsCmdList::End()
     {
+        if (GetVkCommandBuffer() == VK_NULL_HANDLE)
+        {
+            return;
+        }
+
         const VkResult result = vkEndCommandBuffer(_commandBuffer);
 
         if (result != VK_SUCCESS)
@@ -148,6 +175,12 @@ namespace NovelRT::Graphics
                                                    const std::shared_ptr<VulkanGraphicsRenderTarget>& renderTarget,
                                                    Utilities::Span<const ClearValue> clearValues)
     {
+        if (_secondaryContextData.has_value())
+        {
+            throw Exceptions::InvalidOperationException(
+                "Unable to begin a render pass in a secondary VkBuffer. This is not allowed.");
+        }
+
         auto surface = _device->GetSurface();
 
         VkExtent2D extent2D{};
@@ -161,22 +194,24 @@ namespace NovelRT::Graphics
 
         std::vector<VkClearValue> clearValuesActual(clearValues.size());
 
-        std::transform(clearValues.begin(), clearValues.end(), clearValuesActual.begin(),
-                       [](const ClearValue& data)
-                       {
-                           VkClearValue returnStruct{};
-                           auto colour = data.colour;
+        std::ranges::transform(clearValues, clearValuesActual.begin(),
+                               [](const ClearValue& data)
+                               {
+                                   VkClearValue returnStruct{};
+                                   auto colour = data.colour;
 
-                           returnStruct.color.float32[0] = colour.getRScalar();
-                           returnStruct.color.float32[1] = colour.getGScalar();
-                           returnStruct.color.float32[2] = colour.getBScalar();
-                           returnStruct.color.float32[3] = colour.getAScalar();
+                                   returnStruct.color.float32[0] = colour.getRScalar();
+                                   returnStruct.color.float32[1] = colour.getGScalar();
+                                   returnStruct.color.float32[2] = colour.getBScalar();
+                                   returnStruct.color.float32[3] = colour.getAScalar();
 
-                           returnStruct.depthStencil.depth = data.depth;
-                           returnStruct.depthStencil.stencil = data.stencil;
+                                   // the color and depthStencil members are actually a C union. Removing these for now,
+                                   // but leaving these here so we don't forget. - Matt J.
+                                   // returnStruct.depthStencil.depth = data.depth;
+                                   // returnStruct.depthStencil.stencil = data.stencil;
 
-                           return returnStruct;
-                       });
+                                   return returnStruct;
+                               });
 
         renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassBeginInfo.renderPass = targetPass->GetVulkanRenderPass();
@@ -186,20 +221,24 @@ namespace NovelRT::Graphics
         renderPassBeginInfo.pClearValues = clearValuesActual.data();
 
         vkCmdBeginRenderPass(_commandBuffer, &renderPassBeginInfo,
-                             VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR);
+                             _supportsMixedRecording ? VK_SUBPASS_CONTENTS_INLINE_AND_SECONDARY_COMMAND_BUFFERS_KHR
+                                                     : VK_SUBPASS_CONTENTS_INLINE);
     }
 
     void VulkanGraphicsCmdList::CmdEndRenderPass()
     {
+        if (_secondaryContextData.has_value())
+        {
+            throw Exceptions::InvalidOperationException(
+                "Unable to end a render pass in a secondary VkBuffer. This is not allowed.");
+        }
+
         vkCmdEndRenderPass(_commandBuffer);
     }
 
-    void VulkanGraphicsCmdList::CmdBindDescriptorSet(
-        const std::shared_ptr<VulkanGraphicsDescriptorSet>& set)
+    void VulkanGraphicsCmdList::CmdBindDescriptorSet(const std::shared_ptr<VulkanGraphicsDescriptorSet>& set)
     {
-        std::array<std::reference_wrapper<
-                    const std::shared_ptr<NovelRT::Graphics::VulkanGraphicsDescriptorSet>>,
-                1>
+        std::array<std::reference_wrapper<const std::shared_ptr<NovelRT::Graphics::VulkanGraphicsDescriptorSet>>, 1>
             descriptorData{std::cref(set)};
 
         CmdBindDescriptorSets(descriptorData);
@@ -208,13 +247,26 @@ namespace NovelRT::Graphics
     void VulkanGraphicsCmdList::CmdBindDescriptorSets(
         NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<VulkanGraphicsDescriptorSet>>> sets)
     {
-        for (const std::shared_ptr<VulkanGraphicsDescriptorSet>& set : sets)
+        for (const auto& wrappedSet : sets)
         {
-            VkDescriptorSet handle = set->GetVulkanDescriptorSet();
-            auto pipeline = set->GetPipeline();
-            auto signature = pipeline->GetSignature();
-            vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    signature->GetVulkanPipelineLayout(), 0, 1, &handle, 0, nullptr);
+            auto commandFrame = [set = wrappedSet.get()](VkCommandBuffer cmdBuffer)
+            {
+                VkDescriptorSet handle = set->GetVulkanDescriptorSet();
+                auto pipeline = set->GetPipeline();
+                auto signature = pipeline->GetSignature();
+
+                vkCmdBindDescriptorSets(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                        signature->GetVulkanPipelineLayout(), 0, 1, &handle, 0, nullptr);
+            };
+
+            if (_commandBuffer == VK_NULL_HANDLE)
+            {
+                _replayData.emplace_back(std::move(commandFrame));
+            }
+            else
+            {
+                commandFrame(_commandBuffer);
+            }
         }
     }
 
@@ -227,12 +279,21 @@ namespace NovelRT::Graphics
         std::vector<VkBuffer> bufferArgs(buffers.size());
         std::vector<VkDeviceSize> offsetArgs(offsets.size());
 
-        std::transform(buffers.begin(), buffers.end(), bufferArgs.begin(),
-                       [](const auto& x) { return x.get()->GetVulkanBuffer(); });
-        std::transform(offsets.begin(), offsets.end(), offsetArgs.begin(),
-                       [](auto x) { return static_cast<VkDeviceSize>(x); });
+        std::ranges::transform(buffers, bufferArgs.begin(), [](const auto& x) { return x.get()->GetVulkanBuffer(); });
+        std::ranges::transform(offsets, offsetArgs.begin(), [](auto x) { return static_cast<VkDeviceSize>(x); });
 
-        vkCmdBindVertexBuffers(_commandBuffer, firstBinding, bindingCount, bufferArgs.data(), offsetArgs.data());
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [bufferArgs, offsetArgs, firstBinding, bindingCount](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdBindVertexBuffers(cmdBuffer, firstBinding, bindingCount, bufferArgs.data(), offsetArgs.data());
+                });
+        }
+        else
+        {
+            vkCmdBindVertexBuffers(_commandBuffer, firstBinding, bindingCount, bufferArgs.data(), offsetArgs.data());
+        }
     }
 
     void VulkanGraphicsCmdList::CmdBindIndexBuffer(
@@ -257,7 +318,17 @@ namespace NovelRT::Graphics
         }
 
         auto bufferResource = buffer->GetOwningResource();
-        vkCmdBindIndexBuffer(_commandBuffer, bufferResource->GetVulkanBuffer(), buffer->GetOffset(), type);
+
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [bufferResource, buffer, type](VkCommandBuffer cmdBuffer)
+                { vkCmdBindIndexBuffer(cmdBuffer, bufferResource->GetVulkanBuffer(), buffer->GetOffset(), type); });
+        }
+        else
+        {
+            vkCmdBindIndexBuffer(_commandBuffer, bufferResource->GetVulkanBuffer(), buffer->GetOffset(), type);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdCopy(
@@ -271,8 +342,21 @@ namespace NovelRT::Graphics
 
         auto sourceResource = source->GetOwningResource();
         auto destinationResource = destination->GetOwningResource();
-        vkCmdCopyBuffer(_commandBuffer, sourceResource->GetVulkanBuffer(), destinationResource->GetVulkanBuffer(), 1,
-                        &vulkanBufferCopy);
+
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [sourceResource, destinationResource, vulkanBufferCopy](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdCopyBuffer(cmdBuffer, sourceResource->GetVulkanBuffer(),
+                                    destinationResource->GetVulkanBuffer(), 1, &vulkanBufferCopy);
+                });
+        }
+        else
+        {
+            vkCmdCopyBuffer(_commandBuffer, sourceResource->GetVulkanBuffer(), destinationResource->GetVulkanBuffer(),
+                            1, &vulkanBufferCopy);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdCopy(
@@ -301,8 +385,20 @@ namespace NovelRT::Graphics
         vulkanBufferImageCopy.imageExtent = imageExtent;
         vulkanBufferImageCopy.bufferOffset = source->GetOffset();
 
-        vkCmdCopyBufferToImage(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), vulkanImage,
-                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [source, vulkanImage, vulkanBufferImageCopy](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdCopyBufferToImage(cmdBuffer, source->GetOwningResource()->GetVulkanBuffer(), vulkanImage,
+                                           VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
+                });
+        }
+        else
+        {
+            vkCmdCopyBufferToImage(_commandBuffer, source->GetOwningResource()->GetVulkanBuffer(), vulkanImage,
+                                   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vulkanBufferImageCopy);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdDrawIndexed(uint32_t indexCount,
@@ -311,8 +407,20 @@ namespace NovelRT::Graphics
                                                size_t vertexOffset,
                                                uint32_t firstInstance)
     {
-        vkCmdDrawIndexed(_commandBuffer, indexCount, instanceCount, firstIndex, static_cast<int32_t>(vertexOffset),
-                         firstInstance);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [indexCount, instanceCount, firstIndex, vertexOffset, firstInstance](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdDrawIndexed(cmdBuffer, indexCount, instanceCount, firstIndex,
+                                     static_cast<int32_t>(vertexOffset), firstInstance);
+                });
+        }
+        else
+        {
+            vkCmdDrawIndexed(_commandBuffer, indexCount, instanceCount, firstIndex, static_cast<int32_t>(vertexOffset),
+                             firstInstance);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdDraw(uint32_t vertexCount,
@@ -320,7 +428,15 @@ namespace NovelRT::Graphics
                                         uint32_t firstVertex,
                                         uint32_t firstInstance)
     {
-        vkCmdDraw(_commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back([vertexCount, instanceCount, firstVertex, firstInstance](VkCommandBuffer cmdBuffer)
+                                     { vkCmdDraw(cmdBuffer, vertexCount, instanceCount, firstVertex, firstInstance); });
+        }
+        else
+        {
+            vkCmdDraw(_commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdSetScissor(Maths::GeoVector2F offset, Maths::GeoVector2F extent)
@@ -337,7 +453,15 @@ namespace NovelRT::Graphics
         newScissor.extent = extent2D;
         newScissor.offset = offset2D;
 
-        vkCmdSetScissor(_commandBuffer, 0, 1, &newScissor);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back([newScissor](VkCommandBuffer cmdBuffer)
+                                     { vkCmdSetScissor(cmdBuffer, 0, 1, &newScissor); });
+        }
+        else
+        {
+            vkCmdSetScissor(_commandBuffer, 0, 1, &newScissor);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdSetViewport(ViewportInfo viewportInfo)
@@ -350,7 +474,15 @@ namespace NovelRT::Graphics
         viewport.minDepth = viewport.minDepth;
         viewport.maxDepth = viewport.maxDepth;
 
-        vkCmdSetViewport(_commandBuffer, 0, 1, &viewport);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back([viewport](VkCommandBuffer cmdBuffer)
+                                     { vkCmdSetViewport(cmdBuffer, 0, 1, &viewport); });
+        }
+        else
+        {
+            vkCmdSetViewport(_commandBuffer, 0, 1, &viewport);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdBeginTexturePipelineBarrierLegacyVersion(
@@ -369,8 +501,20 @@ namespace NovelRT::Graphics
         vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
         vulkanImageMemoryBarrier.image = texture->GetVulkanImage();
 
-        vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr,
-                             0, nullptr, 1, &vulkanImageMemoryBarrier);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [vulkanImageMemoryBarrier](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
+                                         nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
+                });
+        }
+        else
+        {
+            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
+                                 nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdEndTexturePipelineBarrierLegacyVersion(
@@ -390,8 +534,21 @@ namespace NovelRT::Graphics
         vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
         vulkanImageMemoryBarrier.image = texture->GetVulkanImage();
 
-        vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
-                             0, nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [vulkanImageMemoryBarrier](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                         VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
+                                         &vulkanImageMemoryBarrier);
+                });
+        }
+        else
+        {
+            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+                                 0, 0, nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
+        }
     }
 
     void GraphicsCmdList<Vulkan::VulkanGraphicsBackend>::CmdInitialSwapchainImageBarrierLegacyVersion(
@@ -413,13 +570,34 @@ namespace NovelRT::Graphics
         barrier.image = swapchainImage->GetVulkanImage();
         barrier.subresourceRange = subresourceRange;
 
-        vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0,
-                             0, nullptr, 0, nullptr, 1, &barrier);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [barrier](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+                });
+        }
+        else
+        {
+            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdBindPipeline(const std::shared_ptr<VulkanGraphicsPipeline>& pipeline)
     {
-        vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetVulkanPipeline());
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [vulkanPipeline = pipeline->GetVulkanPipeline()](VkCommandBuffer cmdBuffer)
+                { vkCmdBindPipeline(cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanPipeline); });
+        }
+        else
+        {
+            vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->GetVulkanPipeline());
+        }
     }
 
     void VulkanGraphicsCmdList::CmdPushConstants(
@@ -428,9 +606,27 @@ namespace NovelRT::Graphics
         size_t offset,
         NovelRT::Utilities::Span<uint8_t> values)
     {
-        vkCmdPushConstants(_commandBuffer, pipelineSignature->GetVulkanPipelineLayout(),
-                           Vulkan::Utilities::GetVulkanShaderStageFlags(visibility), static_cast<uint32_t>(offset),
-                           static_cast<uint32_t>(values.size()), values.data());
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            std::vector<uint8_t> localValuesCopy(values.begin(), values.end());
+
+            _replayData.emplace_back(
+                [localValuesCopy, visibility, offset,
+                 vulkanPipelineLayout = pipelineSignature->GetVulkanPipelineLayout()](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPushConstants(cmdBuffer, vulkanPipelineLayout,
+                                       Vulkan::Utilities::GetVulkanShaderStageFlags(visibility),
+                                       static_cast<uint32_t>(offset), static_cast<uint32_t>(localValuesCopy.size()),
+                                       localValuesCopy.data());
+                });
+        }
+        else
+        {
+
+            vkCmdPushConstants(_commandBuffer, pipelineSignature->GetVulkanPipelineLayout(),
+                               Vulkan::Utilities::GetVulkanShaderStageFlags(visibility), static_cast<uint32_t>(offset),
+                               static_cast<uint32_t>(values.size()), values.data());
+        }
     }
 
     void VulkanGraphicsCmdList::CmdPipelineBufferBarrier(const std::shared_ptr<VulkanGraphicsBuffer>& buffer,
@@ -439,26 +635,61 @@ namespace NovelRT::Graphics
                                                          GraphicsPipelineVisibility sourceStageFlag,
                                                          GraphicsPipelineVisibility destinationStageFlag)
     {
-        VkBufferMemoryBarrier barrierInfo = {VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
-                                             nullptr,
-                                             Vulkan::Utilities::GetVulkanAccessFlags(sourceAccessFlag),
-                                             Vulkan::Utilities::GetVulkanAccessFlags(destinationAccessFlag),
-                                             VK_QUEUE_FAMILY_IGNORED,
-                                             VK_QUEUE_FAMILY_IGNORED,
-                                             buffer->GetVulkanBuffer(),
-                                             0,
-                                             VK_WHOLE_SIZE};
+        VkBufferMemoryBarrier barrierInfo{.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+                                          .pNext = nullptr,
+                                          .srcAccessMask = Vulkan::Utilities::GetVulkanAccessFlags(sourceAccessFlag),
+                                          .dstAccessMask =
+                                              Vulkan::Utilities::GetVulkanAccessFlags(destinationAccessFlag),
+                                          .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                                          .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                                          .buffer = buffer->GetVulkanBuffer(),
+                                          .offset = 0,
+                                          .size = VK_WHOLE_SIZE};
 
-        vkCmdPipelineBarrier(_commandBuffer, Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag),
-                             Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, 0, 1,
-                             &barrierInfo, 0, 0);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [sourceStageFlag, destinationStageFlag, barrierInfo](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPipelineBarrier(cmdBuffer, Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag),
+                                         Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0,
+                                         nullptr, 1, &barrierInfo, 0, nullptr);
+                });
+        }
+        else
+        {
+            vkCmdPipelineBarrier(_commandBuffer, Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag),
+                                 Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, nullptr, 1,
+                                 &barrierInfo, 0, nullptr);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdExecuteCommands(
         const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList)
     {
-        auto vkCmdList = cmdList->GetVkCommandBuffer();
-        vkCmdExecuteCommands(_commandBuffer, 1, &vkCmdList);
+        if (_secondaryContextData.has_value())
+        {
+            throw Exceptions::NotSupportedException(
+                "Attempted to invoke CmdExecuteCommands on a secondary VkCommandBuffer. This is not allowed by "
+                "default, and requires the nestedCommandBufferRendering extension, which NovelRT currently does not "
+                "support.");
+        }
+
+        VkCommandBuffer childBuffer = cmdList->GetVkCommandBuffer();
+
+        if (childBuffer == VK_NULL_HANDLE)
+        {
+            // NOTE: Not sure we want to rely on same-time-friend behaviour (I don't know what the official name is) for
+            // this. It compiles though. Leaving it for the code review. - Matt J.
+            for (const auto& commandFrame : cmdList->_replayData)
+            {
+                commandFrame(_commandBuffer);
+            }
+
+            return;
+        }
+
+        vkCmdExecuteCommands(_commandBuffer, 1, &childBuffer);
     }
 
     void VulkanGraphicsCmdList::CmdTransitionSwapchainImageTo(
@@ -488,7 +719,18 @@ namespace NovelRT::Graphics
         barrier.image = swapchainImage->GetVulkanImage();
         barrier.subresourceRange = subresourceRange;
 
-        vkCmdPipelineBarrier(_commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [srcStageMask, dstStageMask, barrier](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPipelineBarrier(cmdBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+                });
+        }
+        else
+        {
+            vkCmdPipelineBarrier(_commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        }
     }
 
     void VulkanGraphicsCmdList::CmdClearColourSwapchainImage(
@@ -512,7 +754,20 @@ namespace NovelRT::Graphics
         subresourceColourRange.levelCount = 1;
         subresourceColourRange.layerCount = 1;
 
-        vkCmdClearColorImage(_commandBuffer, swapchainImage->GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                             &colourValue, 1, &subresourceColourRange);
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [colourValue, subresourceColourRange,
+                 vulkanImage = swapchainImage->GetVulkanImage()](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdClearColorImage(cmdBuffer, vulkanImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &colourValue, 1,
+                                         &subresourceColourRange);
+                });
+        }
+        else
+        {
+            vkCmdClearColorImage(_commandBuffer, swapchainImage->GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                 &colourValue, 1, &subresourceColourRange);
+        }
     }
 }
