@@ -22,11 +22,14 @@
 #include <NovelRT/Ecs/Graphics/Components/RenderPass.hpp>
 #include <NovelRT/Ecs/Graphics/Components/TrackedSemaphore.hpp>
 
+#include <NovelRT/Ecs/UI/Components/UIButton.hpp>
+#include <NovelRT/Ecs/UI/Components/UIClickEvent.hpp>
 #include <NovelRT/Ecs/UI/Components/UIElement.hpp>
+#include <NovelRT/Ecs/UI/Components/UIText.hpp>
+#include <NovelRT/Ecs/UI/Components/UIWidgetContainer.hpp>
 #include <NovelRT/Ecs/UI/UIComponentType.hpp>
 
 #include <algorithm>
-#include <deque>
 #include <map>
 #include <set>
 #include <utility>
@@ -200,7 +203,7 @@ namespace NovelRT::Ecs::UI
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(text.colour.getRScalar(), text.colour.getGScalar(),
                                                             text.colour.getBScalar(), text.colour.getAScalar()));
 
-                ImGui::Text("%s", text.textValue->c_str());
+                ImGui::TextWrapped("%s", text.textValue->c_str());
 
                 ImGui::PopStyleColor();
             }
