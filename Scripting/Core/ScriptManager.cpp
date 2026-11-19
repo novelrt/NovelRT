@@ -38,10 +38,13 @@ namespace NovelRT::Scripting
             _state.get(),
             [](lua_State*, void* data, size_t* size) -> const char*
             {
-                std::span<uint8_t>* bytes = static_cast<std::span<uint8_t>*>(data);
+                auto* bytes = static_cast<std::span<uint8_t>*>(data);
 
                 if (bytes->empty())
+                {
                     return nullptr;
+                }
+
                 *size = bytes->size_bytes();
                 const char* result = reinterpret_cast<const char*>(bytes->data());
                 *bytes = bytes->last(0);
@@ -50,8 +53,12 @@ namespace NovelRT::Scripting
             static_cast<void*>(&byteData), "decision_tree", nullptr);
 
         if (status != LUA_OK)
+        {
+            std::string errorString = lua_tostring(_state.get(), -1);
+
             throw NovelRT::Exceptions::InvalidOperationException(
-                std::format("Failed to load decision tree, status={0}", status));
+                std::format("Failed to load decision tree, status={0}, error={1}", status, errorString));
+        }
 
         // function is now at the top of the stack
         return std::make_unique<DecisionTree>(shared_from_this());
