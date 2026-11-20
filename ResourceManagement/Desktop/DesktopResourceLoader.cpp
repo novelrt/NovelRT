@@ -14,6 +14,12 @@
 #include <png.h>
 #include <samplerate.h>
 #include <sndfile.h>
+#include <optional>
+#include <span>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
 
 namespace NovelRT::ResourceManagement::Desktop
 {
