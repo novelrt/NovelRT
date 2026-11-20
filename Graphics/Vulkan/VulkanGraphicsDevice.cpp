@@ -170,7 +170,8 @@ namespace NovelRT::Graphics
         _indicesData = Vulkan::Utilities::FindQueueFamilies(_adapter->GetPhysicalDevice(), _surface);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
-        std::set<uint32_t> uniqueQueueFamilies{_indicesData.graphicsFamily.value(), _indicesData.presentFamily.value()};
+        std::set<uint32_t> uniqueQueueFamilies{_indicesData.graphicsFamily.value(), _indicesData.presentFamily.value(),
+                                               _indicesData.transferFamily.value()};
 
         float queuePriority = 1.0f;
         for (uint32_t queueFamily : uniqueQueueFamilies)

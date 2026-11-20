@@ -202,7 +202,7 @@ namespace NovelRT::Ecs::Graphics
                         uploadCmdList->Begin();
                         uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
                         uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-                        uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+                        uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D, true);
                         uploadCmdList->End();
 
                         std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{

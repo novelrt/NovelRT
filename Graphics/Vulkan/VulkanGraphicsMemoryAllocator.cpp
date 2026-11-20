@@ -150,6 +150,16 @@ namespace NovelRT::Graphics
         allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
         // allocationCreateInfo.priority = 1; //TODO: do I need this?
 
+        const auto& indices = _device->GetIndicesData();
+        std::array<uint32_t, 2> queueFamilies = {indices.graphicsFamily.value(), indices.transferFamily.value()};
+
+        if (queueFamilies[0] != queueFamilies[1])
+        {
+            imageCreateInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
+            imageCreateInfo.queueFamilyIndexCount = queueFamilies.size();
+            imageCreateInfo.pQueueFamilyIndices = queueFamilies.data();
+        }
+
         VkResult result = vmaCreateImage(GetVmaAllocator(), &imageCreateInfo, &allocationCreateInfo, &vulkanImage,
                                          &outAllocation, &outAllocationInfo);
 
