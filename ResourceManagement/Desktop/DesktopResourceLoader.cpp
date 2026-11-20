@@ -252,18 +252,6 @@ namespace NovelRT::ResourceManagement::Desktop
         return LoadTexture(GetGuidsToFilePathsMap().at(assetId));
     }
 
-    std::vector<TextureMetadata> DesktopResourceLoader::LoadTextures(const std::span<const uuids::uuid> assetIds)
-    {
-        std::vector<TextureMetadata> textures = {};
-        for(auto assetId : assetIds) {
-            auto texture = LoadTexture(GetGuidsToFilePathsMap().at(assetId));
-            textures.push_back(texture);
-        }
-        
-        return textures;
-    }
-
-
     ShaderMetadata DesktopResourceLoader::LoadShaderSource(std::filesystem::path filePath)
     {
         if (filePath.is_relative())
