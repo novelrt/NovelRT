@@ -8,17 +8,27 @@
 namespace NovelRT::Ecs
 {
     EntityCache::EntityCache(size_t poolSize) noexcept
-        : _removalUpdateVectors(std::vector<std::vector<EntityId>>(poolSize)),
-          _registrationUpdateVectors(std::vector<std::vector<EntityId>>(poolSize))
+        : _removalUpdateVectors(std::vector<std::vector<EntityHandle>>(poolSize)),
+          _registrationUpdateVectors(std::vector<std::vector<EntityHandle>>(poolSize))
     {
     }
 
-    void EntityCache::AddEntity(size_t poolId, EntityId newEntity) noexcept
+    [[nodiscard]] std::vector<EntityHandle>& EntityCache::GetEntitiesToRemoveThisFrame() noexcept
+    {
+        return _entitiesToRemoveThisFrame;
+    }
+
+    [[nodiscard]] const std::vector<EntityHandle>& EntityCache::GetRegisteredEntities() const noexcept
+    {
+        return _registeredEntities;
+    }
+
+    void EntityCache::AddEntity(size_t poolId, EntityHandle newEntity) noexcept
     {
         _registrationUpdateVectors[poolId].push_back(newEntity);
     }
 
-    void EntityCache::RemoveEntity(size_t poolId, EntityId entityToRemove) noexcept
+    void EntityCache::RemoveEntity(size_t poolId, EntityHandle entityToRemove) noexcept
     {
         _removalUpdateVectors[poolId].push_back(entityToRemove);
         auto it = std::remove(_registrationUpdateVectors[poolId].begin(), _registrationUpdateVectors[poolId].end(),
@@ -44,7 +54,7 @@ namespace NovelRT::Ecs
             _entitiesToRemoveThisFrame.resize(currentSize);
             auto rootIt = _entitiesToRemoveThisFrame.begin();
             std::advance(rootIt, oldSize);
-            std::copy(vector.begin(), vector.end(), rootIt);
+            std::ranges::copy(vector, rootIt);
             vector.clear();
         }
     }
@@ -65,11 +75,12 @@ namespace NovelRT::Ecs
             _registeredEntities.resize(currentSize);
             auto rootIt = _registeredEntities.begin();
             std::advance(rootIt, oldSize);
-            std::copy_if(vector.begin(), vector.end(), rootIt,
-                         [&](auto entity) -> bool {
-                             return std::find(_registeredEntities.begin(), _registeredEntities.end(), entity) ==
-                                    _registeredEntities.end();
-                         });
+            std::ranges::copy_if(vector, rootIt,
+                                 [&](auto entity) -> bool
+                                 {
+                                     return std::find(_registeredEntities.begin(), _registeredEntities.end(), entity) ==
+                                            _registeredEntities.end();
+                                 });
             vector.clear();
         }
     }
@@ -78,8 +89,7 @@ namespace NovelRT::Ecs
     {
         for (auto&& entity : _entitiesToRemoveThisFrame)
         {
-            _registeredEntities.erase(std::remove(_registeredEntities.begin(), _registeredEntities.end(), entity),
-                                      _registeredEntities.end());
+            std::erase(_registeredEntities, entity);
         }
     }
 } // namespace NovelRT::Ecs

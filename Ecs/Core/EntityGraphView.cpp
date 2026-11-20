@@ -22,12 +22,11 @@ namespace NovelRT::Ecs
 
         if (_component.childrenStartNode == std::numeric_limits<EntityId>::max())
         {
-            _component.childrenStartNode = _catalogue.CreateEntity();
+            _component.childrenStartNode = _catalogue.CreateEntity().Id;
             Components::EntityGraphComponent newComponent{};
             newComponent.parent = _owningEntity;
-            _externalChanges.emplace(
-                _component.childrenStartNode,
-                EntityGraphView(_catalogue, _component.childrenStartNode, newComponent));
+            _externalChanges.emplace(_component.childrenStartNode,
+                                     EntityGraphView(_catalogue, _component.childrenStartNode, newComponent));
         }
 
         return _childrenChanges.emplace(_component.childrenStartNode, _catalogue);

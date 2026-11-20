@@ -80,7 +80,7 @@ protected:
         componentCache.RegisterComponentType(TweenTestComponent{std::numeric_limits<float>::lowest(), 0.0f, nullptr},
                                              "TWEEN_TEST_COMPONENT");
 
-        entity = catalogue.CreateEntity();
+        entity = catalogue.CreateEntity().Id;
         catalogue.GetComponentView<TweenTestComponent>().AddComponent(entity,
                                                                       TweenTestComponent{10.0f, 7.0f, &payload});
         CommitComponents();
@@ -347,7 +347,7 @@ TEST_P(TweenTest, JobsForDifferentEntitiesKeepIndependentTimingAndEndpoints)
 {
     using TweenType = Tween<&TweenTestComponent::value, Easing::Linear, TweenTestInstructionFactory>;
 
-    const EntityId otherEntity = catalogue.CreateEntity();
+    const EntityId otherEntity = catalogue.CreateEntity().Id;
     auto view = catalogue.GetComponentView<TweenTestComponent>();
     view.AddComponent(otherEntity, TweenTestComponent{100.0f, 9.0f, &payload});
     CommitComponents();

@@ -2,8 +2,16 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Maths/GeoVector2F.hpp>
+
 namespace NovelRT::Ecs::Graphics::Components
 {
+    /**
+     * @brief A rectangle expressed as fractions of the rendering surface's dimensions.
+     * x and y locate its top-left corner, measured from the surface's top-left corner.
+     * X increases rightwards; Y increases downwards. {0, 0, 1, 1} fills the surface.
+     * The renderer converts these values to pixels for the GPU viewport and scissor.
+     */
     struct Viewport
     {
         float x = 0.0f;

@@ -18,6 +18,7 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::Tests
     Ecs/ComponentBufferTest.cpp
     Ecs/ComponentCacheTest.cpp
     Ecs/ComponentViewTest.cpp
+    Ecs/EntityAllocatorTest.cpp
     Ecs/EntityCacheTest.cpp
     Ecs/EntityGraphViewTest.cpp
     Ecs/LinkedEntityListViewTest.cpp

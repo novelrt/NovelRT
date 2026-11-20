@@ -5,6 +5,7 @@
 
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/SystemScheduler.hpp>
+#include <exception>
 
 namespace NovelRT::Ecs
 {
@@ -29,10 +30,21 @@ namespace NovelRT::Ecs
                      completion = std::make_shared<std::decay_t<TCompletion>>(std::forward<TCompletion>(completion)),
                      this]()
                     {
-                        auto result = (*work)();
-                        _pendingCompletions.push(
-                            [completion, result = std::move(result)](Timing::Timestamp now, Timing::Timestamp::duration delta, Catalogue cat) mutable
-                            { (*completion)(now, delta, cat, std::move(result)); });
+                        try
+                        {
+                            auto result = (*work)();
+
+                            _pendingCompletions.push(
+                                [completion, result = std::move(result)](
+                                    Timing::Timestamp now, Timing::Timestamp::duration delta, Catalogue cat) mutable
+                                { (*completion)(now, delta, cat, std::move(result)); });
+                        }
+                        catch (...)
+                        {
+                            _pendingCompletions.push(
+                                [error = std::current_exception()](Timing::Timestamp, Timing::Timestamp::duration,
+                                                                   Catalogue) { std::rethrow_exception(error); });
+                        }
                     });
             });
     }

@@ -72,11 +72,10 @@ private:
     std::optional<EntityId> _spriteEntity;
     std::optional<EntityId> _cameraViewportEntity;
     std::shared_ptr<DesktopResourceLoader> _resourceLoader;
-    GeoVector2F _viewportSize;
 
 public:
-    explicit SpriteSetupSystem(std::shared_ptr<DesktopResourceLoader> resourceLoader, GeoVector2F viewportSize)
-        : _resourceLoader(std::move(resourceLoader)), _viewportSize(viewportSize)
+    explicit SpriteSetupSystem(std::shared_ptr<DesktopResourceLoader> resourceLoader)
+        : _resourceLoader(std::move(resourceLoader))
     {
     }
 
@@ -100,7 +99,7 @@ public:
             NovelRT::Ecs::Graphics::Components::Viewport>();
 
         auto spriteEntity = catalogue.CreateEntity();
-        _spriteEntity = spriteEntity;
+        _spriteEntity = spriteEntity.Id;
 
         auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/novel-chan.png").value();
 
@@ -139,15 +138,13 @@ public:
         graphView.AddComponent(spriteEntity2, graphComp);
 
         auto cameraViewportEntity = catalogue.CreateEntity();
-        _cameraViewportEntity = cameraViewportEntity;
+        _cameraViewportEntity = cameraViewportEntity.Id;
 
         NovelRT::Ecs::Components::TransformComponent viewportTransform{};
         viewportTransform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
         viewportTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
         viewportTransform.rotationInRadians = 0.0f;
         transformView.AddComponent(cameraViewportEntity, viewportTransform);
-
-        auto size = _viewportSize;
 
         NovelRT::Ecs::Graphics::Components::Camera camera{};
         camera.left = -1.0f;
@@ -162,8 +159,6 @@ public:
         cameraView.AddComponent(cameraViewportEntity, camera);
 
         NovelRT::Ecs::Graphics::Components::Viewport viewport{};
-        viewport.width = size.x;
-        viewport.height = size.y;
 
         viewportView.AddComponent(cameraViewportEntity, viewport);
     }
@@ -198,7 +193,7 @@ int main()
         .WithDefaultSpriteRendering()
         .WithDefaultOrchestrator();
 
-    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader, GeoVector2F(1920.0f, 1080.0f) / 2.0f);
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(resourceLoader);
 
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
 

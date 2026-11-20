@@ -39,6 +39,7 @@
 
 #include <NovelRT/Utilities/Memory.hpp>
 
+#include <cmath>
 #include <optional>
 #include <span>
 #include <unordered_map>
@@ -250,7 +251,7 @@ namespace NovelRT::Ecs::Graphics
                         auto id = completionCatalogue.CreateEntity();
 
                         completionCatalogue.GetComponentView<Components::TrackedSemaphore<TGraphicsBackend>>()
-                            .AddComponent(id, newUploadTracker);
+                            .AddComponent(id.Id, newUploadTracker);
                 });
             }
         }
@@ -276,6 +277,13 @@ namespace NovelRT::Ecs::Graphics
                     Components::Sprite, NovelRT::Ecs::Components::TransformComponent,
                     Components::TrackedSemaphore<TGraphicsBackend>, Components::Camera, Components::Viewport>();
 
+            const Maths::GeoVector2F surfaceSize = _surfaceContext->GetSurface()->GetSize();
+
+            if (surfaceSize.x <= 0.0f || surfaceSize.y <= 0.0f)
+            {
+                return;
+            }
+
             std::vector<CameraData> worldSpaceCameras{};
 
             for (auto [cameraEntityId, camera] : cameraView)
@@ -286,6 +294,19 @@ namespace NovelRT::Ecs::Graphics
                 }
 
                 Components::Viewport viewport = viewportView.GetComponent(cameraEntityId);
+
+                // This is an implementation detail - we convert the relative viewport position and size into pixels
+                // based on the current surface size. This keeps each viewport in its intended region as the surface
+                // resizes, without changing the stored component or the camera's projection.
+                viewport.x *= surfaceSize.x;
+                viewport.y *= surfaceSize.y;
+                viewport.width *= surfaceSize.x;
+                viewport.height *= surfaceSize.y;
+
+                if (viewport.width <= 0.0f || viewport.height <= 0.0f)
+                {
+                    continue;
+                }
 
                 NovelRT::Ecs::Components::TransformComponent cameraTransform =
                     transformView.GetComponent(cameraEntityId);
@@ -315,7 +336,7 @@ namespace NovelRT::Ecs::Graphics
 
             if (!_orchestratorSubmissionSemaphoreEntity.has_value())
             {
-                _orchestratorSubmissionSemaphoreEntity = catalogue.CreateEntity();
+                _orchestratorSubmissionSemaphoreEntity = catalogue.CreateEntity().Id;
             }
 
             Components::TrackedSemaphore<TGraphicsBackend> signalSemaComponent{};

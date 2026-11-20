@@ -1,17 +1,17 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT License (MIT). See LICENCE.md in the repository root
 // for more information.
 
-#include "NovelRT/Ecs/ComponentCache.hpp"
-#include "NovelRT/Ecs/EntityCache.hpp"
-#include "NovelRT/Timing/Timestamp.hpp"
 #include <NovelRT/Ecs/Catalogue.hpp>
 #include <NovelRT/Ecs/ComponentBuffer.hpp>
+#include <NovelRT/Ecs/ComponentCache.hpp>
+#include <NovelRT/Ecs/ComponentView.hpp>
+#include <NovelRT/Ecs/EntityAllocator.hpp>
+#include <NovelRT/Ecs/EntityCache.hpp>
 #include <NovelRT/Ecs/SparseSet.hpp>
 #include <NovelRT/Ecs/SystemScheduler.hpp>
-#include <NovelRT/Ecs/ComponentView.hpp>
-#include <atomic>
 #include <gtest/gtest.h>
 #include <limits>
+#include <ranges>
 
 using namespace NovelRT;
 using namespace NovelRT::Ecs;
@@ -22,7 +22,9 @@ public:
     SystemScheduler systemScheduler;
     EntityCache& entityCache = systemScheduler.GetEntityCache();
     ComponentCache& componentCache = systemScheduler.GetComponentCache();
+    EntityAllocator& entityAllocator = systemScheduler.GetEntityAllocator();
     Catalogue* catalogue = nullptr;
+    EntityId createdEntity = 0ULL;
 
 protected:
     void SetUp() override
@@ -31,9 +33,11 @@ protected:
         componentCache.RegisterComponentType<size_t>(std::numeric_limits<size_t>::max(), "THROW_AWAY_AGAIN");
         componentCache.RegisterComponentType<char>('e', "THROW_AWAY_AGAIN_AGAIN");
 
-        componentCache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, 0, 10);
-        componentCache.GetComponentBuffer<size_t>().PushComponentUpdateInstruction(0, 0, 100);
-        componentCache.GetComponentBuffer<char>().PushComponentUpdateInstruction(0, 0, 'a');
+        createdEntity = systemScheduler.GetEntityAllocator().Allocate().Id;
+
+        componentCache.GetComponentBuffer<int32_t>().PushComponentUpdateInstruction(0, createdEntity, 10);
+        componentCache.GetComponentBuffer<size_t>().PushComponentUpdateInstruction(0, createdEntity, 100);
+        componentCache.GetComponentBuffer<char>().PushComponentUpdateInstruction(0, createdEntity, 'a');
 
         componentCache.PrepAllBuffersForNextFrame(std::vector<EntityId>{});
         catalogue = new Catalogue(0, systemScheduler);
@@ -91,9 +95,21 @@ TEST_F(CatalogueTest, CanRemoveComponentFromEntityBasedOnView)
 
 TEST_F(CatalogueTest, CanHandleEntityDeletionBetweenFrames)
 {
-    catalogue->DeleteEntity(0);
+    catalogue->DeleteEntity(createdEntity);
     entityCache.ProcessEntityDeletionRequestsFromThreads();
-    componentCache.PrepAllBuffersForNextFrame(entityCache.GetEntitiesToRemoveThisFrame());
+
+    const auto& handles = entityCache.GetEntitiesToRemoveThisFrame();
+
+    std::vector<EntityId> idsToDelete{};
+    idsToDelete.reserve(handles.size());
+
+    auto validHandles =
+        handles | std::views::filter([&](const EntityHandle& handle) { return entityAllocator.IsValid(handle); });
+
+    std::ranges::transform(validHandles, std::back_inserter(idsToDelete), &EntityHandle::Id);
+
+    componentCache.PrepAllBuffersForNextFrame(idsToDelete);
+
     EXPECT_EQ(catalogue->GetComponentView<int32_t>().GetImmutableDataLength(), 0);
     EXPECT_EQ(catalogue->GetComponentView<char>().GetImmutableDataLength(), 0);
     EXPECT_EQ(catalogue->GetComponentView<size_t>().GetImmutableDataLength(), 0);
@@ -101,10 +117,21 @@ TEST_F(CatalogueTest, CanHandleEntityDeletionBetweenFrames)
 
 TEST_F(CatalogueTest, CanHandleEntityDeletionInSameFrame)
 {
-    EntityId id = catalogue->CreateEntity();
+    EntityId id = catalogue->CreateEntity().Id;
     catalogue->DeleteEntity(id);
     entityCache.ProcessEntityDeletionRequestsFromThreads();
-    componentCache.PrepAllBuffersForNextFrame(entityCache.GetEntitiesToRemoveThisFrame());
+
+    const auto& handles = entityCache.GetEntitiesToRemoveThisFrame();
+
+    std::vector<EntityId> idsToDelete{};
+    idsToDelete.reserve(handles.size());
+
+    auto validHandles =
+        handles | std::views::filter([&](const EntityHandle& handle) { return entityAllocator.IsValid(handle); });
+
+    std::ranges::transform(validHandles, std::back_inserter(idsToDelete), &EntityHandle::Id);
+
+    componentCache.PrepAllBuffersForNextFrame(idsToDelete);
     EXPECT_EQ(catalogue->GetComponentView<int32_t>().GetImmutableDataLength(), 1);
     EXPECT_EQ(catalogue->GetComponentView<char>().GetImmutableDataLength(), 1);
     EXPECT_EQ(catalogue->GetComponentView<size_t>().GetImmutableDataLength(), 1);

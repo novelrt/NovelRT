@@ -4,6 +4,7 @@
 // for more information.
 
 #include <NovelRT/Ecs/EcsUtils.hpp>
+#include <NovelRT/Ecs/EntityHandle.hpp>
 
 #include <cstddef>
 #include <vector>
@@ -18,10 +19,10 @@ namespace NovelRT::Ecs
     class EntityCache
     {
     private:
-        std::vector<std::vector<EntityId>> _removalUpdateVectors;
-        std::vector<EntityId> _entitiesToRemoveThisFrame;
-        std::vector<std::vector<EntityId>> _registrationUpdateVectors;
-        std::vector<EntityId> _registeredEntities;
+        std::vector<std::vector<EntityHandle>> _removalUpdateVectors;
+        std::vector<EntityHandle> _entitiesToRemoveThisFrame;
+        std::vector<std::vector<EntityHandle>> _registrationUpdateVectors;
+        std::vector<EntityHandle> _registeredEntities;
 
     public:
         /**
@@ -38,12 +39,9 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return The collection of EntityId instances to delete, by reference.
+         * @return The collection of EntityHandle instances to delete, by reference.
          */
-        [[nodiscard]] inline std::vector<EntityId>& GetEntitiesToRemoveThisFrame() noexcept
-        {
-            return _entitiesToRemoveThisFrame;
-        }
+        [[nodiscard]] std::vector<EntityHandle>& GetEntitiesToRemoveThisFrame() noexcept;
 
         /**
          * @brief Returns all registered entities in this instance of EntityCache. This data is based off of the root,
@@ -52,12 +50,9 @@ namespace NovelRT::Ecs
          * This is a pure method. Calling this without using the result has no effect and introduces overhead for
          * calling a method.
          *
-         * @return a std::vector<EntityId>& containing all entities currently registered to this cache.
+         * @return a std::vector<EntityHandle>& containing all entities currently registered to this cache.
          */
-        [[nodiscard]] inline const std::vector<EntityId>& GetRegisteredEntities() const noexcept
-        {
-            return _registeredEntities;
-        }
+        [[nodiscard]] const std::vector<EntityHandle>& GetRegisteredEntities() const noexcept;
 
         /**
          * @brief Registers a new entity to this particular instance of EntityCache.
@@ -66,15 +61,15 @@ namespace NovelRT::Ecs
          * @param poolId The current worker thread's pool ID the registration instruction is coming from.
          * @param newEntity The new entity to register.
          */
-        void AddEntity(size_t poolId, EntityId newEntity) noexcept;
+        void AddEntity(size_t poolId, EntityHandle newEntity) noexcept;
 
         /**
          * @brief Queues an entity for removal in the next frame.
          *
          * @param poolId The current worker thread's pool ID the removal instruction is coming from.
-         * @param entityToRemove The EntityId to delete.
+         * @param entityToRemove The EntityHandle to delete.
          */
-        void RemoveEntity(size_t poolId, EntityId entityToRemove) noexcept;
+        void RemoveEntity(size_t poolId, EntityHandle entityToRemove) noexcept;
 
         /**
          * @brief Propagates deletion requests from worker threads to the main thread. Once this is called, the data can

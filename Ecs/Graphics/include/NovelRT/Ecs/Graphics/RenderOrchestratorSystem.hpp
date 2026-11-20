@@ -162,35 +162,10 @@ namespace NovelRT::Ecs::Graphics
 
             cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
                                                    NovelRT::Graphics::ImageLayout::Present);
-            if (passes.empty())
+            if (!passes.empty())
             {
-                cmdList->End();
-                context->EndFrame();
-
-                std::vector<
-                    std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
-                    signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.frameNumber)};
-                signalSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
-                frameResources.commandLists.emplace_back(cmdList);
-
-                std::vector<
-                    std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
-                    waitSemaphores{}; // TODO: I don't remember if we had an API to handle not having any of these,
-                                      //  but we shouldn't have any, because we aren't rendering anything. :) - Matt J.
-
-                std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> lists{cmdList};
-
-                image->QueueSubmit(waitSemaphores, lists, signalSemaphores);
-
-                frameResources.commandLists.emplace_back(cmdList);
-
-                // TODO: should this be in ECS?
-                _graphicsDevice->EndFrame();
-
-                return;
+                cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
             }
-
-            cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
 
             for (auto& root : roots)
             {

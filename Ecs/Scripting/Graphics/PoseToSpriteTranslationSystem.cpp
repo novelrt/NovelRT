@@ -49,7 +49,7 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::IdentifyN
             continue;
         }
 
-        _activeTrees.emplace_hint(it, entity, TreeInfo{ });
+        _activeTrees.emplace_hint(it, entity, TreeInfo{});
     }
 }
 
@@ -69,7 +69,7 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::UpdateCha
         auto characterIt = info.knownCharacters.find(*spokenLine.speaker);
         if (characterIt == info.knownCharacters.end())
         {
-            CharacterInfo characterInfo{ .knownPoses = {}, .activePose = {}, .sprite = catalogue.CreateEntity() };
+            CharacterInfo characterInfo{.knownPoses = {}, .activePose = {}, .sprite = catalogue.CreateEntity().Id};
 
             auto sprite = _resourceLoader->TryGetAssetIdBasedOnFilePath(*pose.sprite);
             if (sprite.has_value())
@@ -101,30 +101,30 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::UpdateCha
 
 void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::ApplySpriteUpdates(Catalogue& catalogue)
 {
-    auto [sprites, transforms] = catalogue.GetComponentViews<NovelRT::Ecs::Graphics::Components::Sprite, NovelRT::Ecs::Components::TransformComponent>();
+    auto [sprites, transforms] = catalogue.GetComponentViews<NovelRT::Ecs::Graphics::Components::Sprite,
+                                                             NovelRT::Ecs::Components::TransformComponent>();
 
     for (const auto& [entity, info] : _activeTrees)
     {
         for (const auto& [_, character] : info.knownCharacters)
         {
-            sprites.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Graphics::Components::Sprite{
-                .assetId = character.activePose
-            });
+            sprites.PushComponentUpdateInstruction(
+                character.sprite, NovelRT::Ecs::Graphics::Components::Sprite{.assetId = character.activePose});
 
             if (transforms.HasComponent(character.sprite))
             {
-                transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent::negate(transforms.GetComponent(character.sprite)));
-                transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent{
-                    .position = character.position,
-                    .scale = character.scale
-                });
+                transforms.PushComponentUpdateInstruction(
+                    character.sprite,
+                    NovelRT::Ecs::Components::TransformComponent::negate(transforms.GetComponent(character.sprite)));
+                transforms.PushComponentUpdateInstruction(
+                    character.sprite, NovelRT::Ecs::Components::TransformComponent{.position = character.position,
+                                                                                   .scale = character.scale});
             }
             else
             {
-                transforms.PushComponentUpdateInstruction(character.sprite, NovelRT::Ecs::Components::TransformComponent{
-                    .position = character.position,
-                    .scale = character.scale
-                });
+                transforms.PushComponentUpdateInstruction(
+                    character.sprite, NovelRT::Ecs::Components::TransformComponent{.position = character.position,
+                                                                                   .scale = character.scale});
             }
         }
     }
@@ -132,15 +132,16 @@ void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::ApplySpri
 
 NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::PoseToSpriteTranslationSystem(
     const std::shared_ptr<NovelRT::ResourceManagement::ResourceLoader>& resourceLoader)
-: _resourceLoader{resourceLoader}
+    : _resourceLoader{resourceLoader}
 {
 }
 
-void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::Update(Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */, Catalogue catalogue)
+void NovelRT::Ecs::Scripting::Graphics::PoseToSpriteTranslationSystem::Update(Timing::Timestamp /* now */,
+                                                                              Timing::Timestamp::duration /* delta */,
+                                                                              Catalogue catalogue)
 {
     CleanupInactiveTrees(catalogue);
     IdentifyNewTrees(catalogue);
     UpdateCharacterInformation(catalogue);
     ApplySpriteUpdates(catalogue);
 }
-

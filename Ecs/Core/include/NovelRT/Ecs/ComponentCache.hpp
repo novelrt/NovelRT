@@ -33,8 +33,9 @@ namespace NovelRT::Ecs
         std::shared_ptr<ComponentBufferMemoryContainer> CreateContainer(
             size_t sizeOfDataType,
             const std::byte* deleteInstructionState,
-            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
             const std::function<bool(const void*, const void*)>& componentComparatorLogic,
+            const std::optional<std::function<void(void*, const void*, size_t)>>& componentUpdateLogic,
+            const std::optional<std::function<void(void*, const void*, size_t)>>& componentAssignmentLogic,
             const std::string& serialisedTypeName) const;
 
     public:
@@ -68,8 +69,9 @@ namespace NovelRT::Ecs
         [[nodiscard]] ComponentTypeId RegisterComponentTypeUnsafe(
             size_t sizeOfDataType,
             const std::byte* deleteInstructionState,
-            const std::function<void(void*, const void*, size_t)>& componentUpdateLogic,
             const std::function<bool(const void*, const void*)>& componentComparatorLogic,
+            const std::optional<std::function<void(void*, const void*, size_t)>>& componentUpdateLogic,
+            const std::optional<std::function<void(void*, const void*, size_t)>>& componentAssignmentLogic,
             const std::string& serialisedTypeName);
 
         /**
@@ -89,12 +91,30 @@ namespace NovelRT::Ecs
         template<typename T>
         void RegisterComponentType(T deleteInstructionState, const std::string& serialisedTypeName)
         {
+            std::optional<std::function<void(void*, const void*, size_t)>> updateLogic{};
+            std::optional<std::function<void(void*, const void*, size_t)>> assignmentLogic{};
+
+            // for some reason clang is still completely imploding on the code surrounded by the switches
+            // below, so I am just leaving it like that. - Matt J.
+
+            // clang-format off
+            if constexpr (requires(T& target, const T& update) { target += update; })
+            {
+                updateLogic = [](void* target, const void* update, size_t)
+                { *static_cast<T*>(target) += *static_cast<const T*>(update); };
+            }
+
+            if constexpr (requires(T& target, const T& update) { target = update; })
+            {
+                assignmentLogic = [](void* target, const void* update, size_t)
+                { *static_cast<T*>(target) = *static_cast<const T*>(update); };
+            }
+            // clang-format on
+
             std::shared_ptr<ComponentBufferMemoryContainer> ptr = CreateContainer(
-                sizeof(T), reinterpret_cast<std::byte*>(&deleteInstructionState),
-                [](auto rootComponent, auto updateComponent, auto)
-                { *reinterpret_cast<T*>(rootComponent) += *reinterpret_cast<const T*>(updateComponent); },
-                [](const void* lhs, const void* rhs)
-                { return *reinterpret_cast<const T*>(lhs) == *reinterpret_cast<const T*>(rhs); }, serialisedTypeName);
+                sizeof(T), reinterpret_cast<std::byte*>(&deleteInstructionState), [](const void* lhs, const void* rhs)
+                { return *reinterpret_cast<const T*>(lhs) == *reinterpret_cast<const T*>(rhs); }, updateLogic,
+                assignmentLogic, serialisedTypeName);
             _bufferPrepEvent += [ptr](auto vec) { ptr->PrepContainerForFrame(vec); };
             _componentMap.emplace(GetComponentTypeId<T>(), ptr);
         }

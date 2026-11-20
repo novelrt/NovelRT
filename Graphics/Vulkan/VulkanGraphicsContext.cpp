@@ -12,6 +12,10 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsRenderPass.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 
+#include <vulkan/vulkan.h>
+
+#include <algorithm>
+
 namespace NovelRT::Graphics
 {
     using VulkanGraphicsCmdList = GraphicsCmdList<Vulkan::VulkanGraphicsBackend>;
@@ -26,11 +30,11 @@ namespace NovelRT::Graphics
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    VkCommandPool CreateVulkanCommandPool(VulkanGraphicsContext* context)
+    VkCommandPool VulkanGraphicsContext::CreateVulkanCommandPool() const
     {
         VkCommandPool vulkanCommandPool = VK_NULL_HANDLE;
 
-        auto device = context->GetDevice();
+        auto device = GetDevice();
 
         VkCommandPoolCreateInfo commandPoolCreateInfo{};
         commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -49,17 +53,33 @@ namespace NovelRT::Graphics
         return vulkanCommandPool;
     }
 
-    VkCommandBuffer CreateVulkanCommandBuffer(VulkanGraphicsContext* context, bool primary)
+    VkCommandBuffer VulkanGraphicsContext::CreateVulkanCommandBuffer(bool primary) const
     {
         VkCommandBuffer vulkanCommandBuffer = VK_NULL_HANDLE;
 
+        std::span<const std::string> extensions = _device->GetEnabledExtensions();
+
+        const bool supportsMixedRecording =
+            std::ranges::any_of(extensions,
+                                [](const std::string& extension)
+                                {
+                                    return extension == VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME ||
+                                           extension == VK_KHR_MAINTENANCE_7_EXTENSION_NAME;
+                                });
+
+        if (!supportsMixedRecording && !primary)
+        {
+            // should be VK_NULL_HANDLE here. - Matt J.
+            return vulkanCommandBuffer;
+        }
+
         VkCommandBufferAllocateInfo commandBufferAllocateInfo{};
         commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        commandBufferAllocateInfo.commandPool = context->GetVulkanCommandPool();
+        commandBufferAllocateInfo.commandPool = GetVulkanCommandPool();
         commandBufferAllocateInfo.level = primary ? VK_COMMAND_BUFFER_LEVEL_PRIMARY : VK_COMMAND_BUFFER_LEVEL_SECONDARY;
         commandBufferAllocateInfo.commandBufferCount = 1;
 
-        auto device = context->GetDevice();
+        auto device = GetDevice();
 
         VkResult result =
             vkAllocateCommandBuffers(device->GetVulkanDevice(), &commandBufferAllocateInfo, &vulkanCommandBuffer);
@@ -78,6 +98,7 @@ namespace NovelRT::Graphics
     {
         return std::static_pointer_cast<VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
+
     // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
     std::shared_ptr<const VulkanGraphicsContext> VulkanGraphicsContext::shared_from_this() const
     {
@@ -86,7 +107,7 @@ namespace NovelRT::Graphics
 
     VulkanGraphicsContext::GraphicsContext(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept
-        : _device(std::move(device)), _vulkanCommandPool([this]() { return CreateVulkanCommandPool(this); })
+        : _device(std::move(device)), _vulkanCommandPool([this]() { return CreateVulkanCommandPool(); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
     }
@@ -115,9 +136,9 @@ namespace NovelRT::Graphics
     std::shared_ptr<VulkanGraphicsCmdList> VulkanGraphicsContext::CreateCmdList(
         std::optional<SecondaryCmdListInfo<Vulkan::VulkanGraphicsBackend>> secondaryContextData)
     {
-        VkCommandBuffer commandBuffer = CreateVulkanCommandBuffer(this, !secondaryContextData.has_value());
-        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(), commandBuffer, shared_from_this(),
-                                                       secondaryContextData);
+        return std::make_shared<VulkanGraphicsCmdList>(this->GetDevice(),
+                                                       CreateVulkanCommandBuffer(!secondaryContextData.has_value()),
+                                                       shared_from_this(), secondaryContextData);
     }
 
     void VulkanGraphicsContext::EndFrame() // TODO: WTF?

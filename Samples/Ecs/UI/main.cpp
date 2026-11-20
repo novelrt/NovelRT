@@ -83,11 +83,10 @@ private:
     std::optional<EntityId> _spriteEntity;
     std::optional<EntityId> _cameraViewportEntity;
     std::shared_ptr<DesktopResourceLoader> _resourceLoader;
-    NovelRT::Maths::GeoVector2F _viewportSize;
 
 public:
-    explicit SpriteSetupSystem(std::shared_ptr<DesktopResourceLoader> resourceLoader, GeoVector2F viewportSize)
-        : _resourceLoader(std::move(resourceLoader)), _viewportSize(viewportSize)
+    explicit SpriteSetupSystem(std::shared_ptr<DesktopResourceLoader> resourceLoader)
+        : _resourceLoader(std::move(resourceLoader))
     {
     }
 
@@ -104,7 +103,7 @@ public:
             NovelRT::Ecs::Graphics::Components::Viewport>();
 
         auto spriteEntity = catalogue.CreateEntity();
-        _spriteEntity = spriteEntity;
+        _spriteEntity = spriteEntity.Id;
 
         auto assetId = _resourceLoader->TryGetAssetIdBasedOnFilePath("Images/milk-carton-hi.png").value();
 
@@ -124,15 +123,13 @@ public:
         graphView.AddComponent(spriteEntity, graphComp);
 
         auto cameraViewportEntity = catalogue.CreateEntity();
-        _cameraViewportEntity = cameraViewportEntity;
+        _cameraViewportEntity = cameraViewportEntity.Id;
 
         NovelRT::Ecs::Components::TransformComponent viewportTransform{};
         viewportTransform.position = NovelRT::Maths::GeoVector2F(0.0f, 0.0f);
         viewportTransform.scale = NovelRT::Maths::GeoVector2F(1.0f, 1.0f);
         viewportTransform.rotationInRadians = 0.0f;
         transformView.AddComponent(cameraViewportEntity, viewportTransform);
-
-        auto size = _viewportSize;
 
         NovelRT::Ecs::Graphics::Components::Camera camera{};
         camera.left = -1.0f;
@@ -147,8 +144,6 @@ public:
         cameraView.AddComponent(cameraViewportEntity, camera);
 
         NovelRT::Ecs::Graphics::Components::Viewport viewport{};
-        viewport.width = size.x;
-        viewport.height = size.y;
 
         viewportView.AddComponent(cameraViewportEntity, viewport);
     }
@@ -194,15 +189,15 @@ public:
                                    TransformComponent{GeoVector2F(350.0f, 500.0f), GeoVector2F(612.0f, 200.0f), 0.0f});
         graphView.AddComponent(rootId, EntityGraphComponent{});
 
-        EntityGraphView rootView{catalogue, rootId, EntityGraphComponent{}};
+        EntityGraphView rootView{catalogue, rootId.Id, EntityGraphComponent{}};
 
         // Now the text
         auto textId = catalogue.CreateEntity();
 
         elementView.AddComponent(textId, UIElement{UIComponentType::Text});
         textView.AddComponent(textId, UIText{new std::string(""), RGBAColour(255, 255, 255, 255)});
-        graphView.AddComponent(textId, EntityGraphComponent{true, rootId});
-        rootView.AddInsertChildInstruction(textId);
+        graphView.AddComponent(textId, EntityGraphComponent{true, rootId.Id});
+        rootView.AddInsertChildInstruction(textId.Id);
 
         // Now the button - ordering is important!
         auto buttonId = catalogue.CreateEntity();
@@ -219,8 +214,8 @@ public:
                                           });
         transformView.AddComponent(buttonId,
                                    TransformComponent{GeoVector2F(500.0f, 150.0f), GeoVector2F(80.0f, 30.0f), 0.0f});
-        graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId});
-        rootView.AddInsertChildInstruction(buttonId);
+        graphView.AddComponent(buttonId, EntityGraphComponent{true, rootId.Id});
+        rootView.AddInsertChildInstruction(buttonId.Id);
     }
 };
 
@@ -313,51 +308,6 @@ public:
     }
 };
 
-class ViewportUpdateSystem : public IEcsSystem
-{
-private:
-    NovelRT::Maths::GeoVector2F _size{};
-    bool _changedSize = false;
-
-public:
-    ViewportUpdateSystem(std::shared_ptr<WindowProvider<NovelRT::Windowing::Glfw::GlfwWindowingBackend>> provider)
-    {
-        provider->SizeChanged += [this](auto eventArgs)
-        {
-            // it doesn't actually matter what the viewport sizes are if we are minimising.
-            // This is a Windows 11 specific fix. - Matt J.
-            if (eventArgs == NovelRT::Maths::GeoVector2F::Zero())
-            {
-                return;
-            }
-
-            _size = eventArgs;
-            _changedSize = true;
-        };
-    }
-
-    void Update(Timestamp /* now */, Timestamp::duration /* delta */, Catalogue catalogue) final
-    {
-        if (!_changedSize)
-        {
-            return;
-        }
-
-        _changedSize = false;
-
-        auto [viewports] = catalogue.GetComponentViews<Viewport>();
-
-        for (auto [entity, viewport] : viewports)
-        {
-            unused(viewport);
-            NovelRT::Ecs::Graphics::Components::Viewport newViewport{};
-            newViewport.width = _size.x;
-            newViewport.height = _size.y;
-            viewports.PushComponentUpdateInstruction(entity, newViewport);
-        }
-    }
-};
-
 int main()
 {
     // Setup your providers, etc.
@@ -380,7 +330,6 @@ int main()
 
     SystemSchedulerBuilder builder{};
     SpriteRendererSystem<VulkanGraphicsBackend>::SpritePass passData{};
-    std::shared_ptr<ViewportUpdateSystem> viewportUpdater = std::make_shared<ViewportUpdateSystem>(wndProvider);
 
     // Build your default systems
     AddDefaults(builder);
@@ -407,15 +356,13 @@ int main()
     gfxBuilder.WithDefaultOrchestrator();
 
     // Add your systems and configure them
-    auto setupSystem = std::make_shared<SpriteSetupSystem>(desktopResourceLoader, windowSize);
+    auto setupSystem = std::make_shared<SpriteSetupSystem>(desktopResourceLoader);
     auto uiSetupSystem = std::make_shared<UISetupSystem>(windowSize);
     auto clickSystem = std::make_shared<UIInteractionSystem>();
 
     builder.Configure([setupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(setupSystem)); });
     builder.Configure([uiSetupSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(uiSetupSystem)); });
     builder.Configure([clickSystem](SystemScheduler& scheduler) { unused(scheduler.RegisterSystem(clickSystem)); });
-    builder.Configure([viewportUpdater](SystemScheduler& scheduler)
-                      { unused(scheduler.RegisterSystem(viewportUpdater)); });
 
     SystemScheduler scheduler = builder.Build();
     StepTimer timer{};

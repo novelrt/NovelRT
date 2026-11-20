@@ -3,6 +3,8 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include <NovelRT/Ecs/SparseSetMemoryContainer.hpp>
+
 #include <iterator>
 #include <utility>
 
@@ -169,10 +171,11 @@ namespace NovelRT::Ecs
          * @param key The new key to insert.
          * @param value The initial value to associate with the key.
          *
-         * @return true when the pair is successfully inserted.
-         * @return false when the pair could not be inserted as dictated by SparseSet::ContainsKey.
+         * @return Inserted on success, AlreadyExists for duplicate keys, AllocationFailed on allocation failure,
+         * CopyValidationFailed when Memory::Copy rejects the payload, or UnknownFailure for unclassified errors.
+         * Unsuccessful insertions preserves the existing state.
          */
-        bool TryInsert(TKey key, TValue value) noexcept
+        [[nodiscard]] SparseSetInsertResult TryInsert(TKey key, TValue value) noexcept
         {
             return _innerContainer.TryInsert(key, &value);
         }
