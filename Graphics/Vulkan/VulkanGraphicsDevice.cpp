@@ -347,9 +347,9 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
-    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContext()
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContext(bool useTransferQueue)
     {
-        return std::make_shared<VulkanGraphicsContext>(shared_from_this());
+        return std::make_shared<VulkanGraphicsContext>(shared_from_this(), useTransferQueue);
     }
 
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDevice::BeginFrame()

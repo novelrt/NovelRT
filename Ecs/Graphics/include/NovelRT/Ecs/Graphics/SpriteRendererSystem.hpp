@@ -39,7 +39,9 @@
 
 #include <NovelRT/Utilities/Memory.hpp>
 
-#include <cmath>
+#include <mutex>
+#include <tbb/mutex.h>
+
 #include <optional>
 #include <span>
 #include <unordered_map>
@@ -138,6 +140,8 @@ namespace NovelRT::Ecs::Graphics
 
         std::unordered_map<EntityId, BufferRegion> _cameraConstantBuffers;
 
+        std::unique_ptr<tbb::mutex> _textureUploadRegistrationMutex;
+
         void HandleNewSpriteTextures(Catalogue catalogue)
         {
             auto lastCompletedUpload = _uploadSemaphore->GetValue();
@@ -169,6 +173,11 @@ namespace NovelRT::Ecs::Graphics
                         Timing::Timestamp /* now */, Timing::Timestamp::duration /* delta */,
                         Catalogue completionCatalogue, ResourceManagement::TextureMetadata textureMetadata)
                     {
+                        // TODO: This is going to get handled far better once Karl's batching code is in. Need this
+                        // for mitigating possible bugs with a race condition involving the timeline semaphore.
+                        // Honestly, I can't believe I didn't realise this sooner. - Matt J.
+                        std::lock_guard lock(*_textureUploadRegistrationMutex);
+
                         auto texture2D = _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureMetadata.width,
                                                                                              textureMetadata.height);
 
@@ -188,7 +197,7 @@ namespace NovelRT::Ecs::Graphics
 
                         textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
-                        auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+                        auto gfxContext = _graphicsDevice->CreateGraphicsContext(true);
                         auto uploadCmdList = gfxContext->CreateCmdList();
                         uploadCmdList->Begin();
                         uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
@@ -437,7 +446,8 @@ namespace NovelRT::Ecs::Graphics
               _renderPass(std::move(renderPass)),
               _surfaceContext(std::move(surfaceContext)),
               _uploadSemaphore(_graphicsDevice->CreateSemaphore(0)),
-              _orchestratorSubmissionSemaphore(_graphicsDevice->CreateSemaphore(0))
+              _orchestratorSubmissionSemaphore(_graphicsDevice->CreateSemaphore(0)),
+              _textureUploadRegistrationMutex(std::make_unique<tbb::mutex>())
         {
             NovelRT::Graphics::GraphicsBufferCreateInfo bufferCreateInfo{
                 .cpuAccessKind = NovelRT::Graphics::GraphicsResourceAccess::Write,

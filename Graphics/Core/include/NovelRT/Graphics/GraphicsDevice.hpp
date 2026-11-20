@@ -79,7 +79,7 @@ namespace NovelRT::Graphics
             ShaderProgramKind kind,
             NovelRT::Utilities::Span<uint8_t> byteData);
 
-        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> CreateGraphicsContext();
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> CreateGraphicsContext(bool useTransferQueue = false);
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
         void EndFrame();
