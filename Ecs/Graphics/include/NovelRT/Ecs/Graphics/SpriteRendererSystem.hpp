@@ -230,14 +230,9 @@ namespace NovelRT::Ecs::Graphics
         {
             auto lastSubmittedFrame = _orchestratorSubmissionSemaphore->GetValue();
 
-            if (lastSubmittedFrame > 0)
-            {
-                lastSubmittedFrame -= 1;
-            }
-
             _pendingContexts.erase(std::remove_if(_pendingContexts.begin(), _pendingContexts.end(),
                                                   [lastSubmittedFrame](const auto& pending)
-                                                  { return pending.frameIndex <= lastSubmittedFrame; }),
+                                                  { return pending.frameIndex < lastSubmittedFrame; }),
                                    _pendingContexts.end());
 
             auto [renderPassView, cmdListView, spriteView, transformView, trackedSemaphoresView, cameraView,
