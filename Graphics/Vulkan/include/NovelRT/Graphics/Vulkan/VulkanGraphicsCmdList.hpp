@@ -98,7 +98,8 @@ namespace NovelRT::Graphics
         void CmdBeginTexturePipelineBarrierLegacyVersion(
             const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture);
         void CmdEndTexturePipelineBarrierLegacyVersion(
-            const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture);
+            const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture,
+            bool useTransferQueue = false);
 
         void CmdInitialSwapchainImageBarrierLegacyVersion(
             const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage);

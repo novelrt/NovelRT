@@ -170,7 +170,8 @@ namespace NovelRT::Graphics
         _indicesData = Vulkan::Utilities::FindQueueFamilies(_adapter->GetPhysicalDevice(), _surface);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
-        std::set<uint32_t> uniqueQueueFamilies{_indicesData.graphicsFamily.value(), _indicesData.presentFamily.value()};
+        std::set<uint32_t> uniqueQueueFamilies{_indicesData.graphicsFamily.value(), _indicesData.presentFamily.value(),
+                                               _indicesData.transferFamily.value()};
 
         float queuePriority = 1.0f;
         for (uint32_t queueFamily : uniqueQueueFamilies)
@@ -347,9 +348,9 @@ namespace NovelRT::Graphics
                                                                  inputs, resources, pushConstantRanges);
     }
 
-    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContext()
+    std::shared_ptr<VulkanGraphicsContext> VulkanGraphicsDevice::CreateGraphicsContext(bool useTransferQueue)
     {
-        return std::make_shared<VulkanGraphicsContext>(shared_from_this());
+        return std::make_shared<VulkanGraphicsContext>(shared_from_this(), useTransferQueue);
     }
 
     std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> VulkanGraphicsDevice::BeginFrame()

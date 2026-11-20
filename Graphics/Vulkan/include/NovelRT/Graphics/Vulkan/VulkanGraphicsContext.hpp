@@ -30,6 +30,8 @@ namespace NovelRT::Graphics
 
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
 
+        bool _useTransferQueue;
+
         Threading::VolatileState _state;
 
         VkCommandPool CreateVulkanCommandPool() const;
@@ -41,7 +43,8 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept;
+        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                        bool useTransferQueue) noexcept;
         ~GraphicsContext() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;

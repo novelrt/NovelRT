@@ -120,7 +120,8 @@ namespace NovelRT::Graphics
         void CmdSetViewport(ViewportInfo viewportInfo);
 
         void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
-        void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
+        void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture,
+                                                       bool useTransferQueue = false);
 
         void CmdInitialSwapchainImageBarrierLegacyVersion(
             const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage);

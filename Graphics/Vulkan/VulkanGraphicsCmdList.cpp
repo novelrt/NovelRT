@@ -500,6 +500,8 @@ namespace NovelRT::Graphics
         vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
         vulkanImageMemoryBarrier.image = texture->GetVulkanImage();
+        vulkanImageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        vulkanImageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
         if (_commandBuffer == VK_NULL_HANDLE)
         {
@@ -518,7 +520,8 @@ namespace NovelRT::Graphics
     }
 
     void VulkanGraphicsCmdList::CmdEndTexturePipelineBarrierLegacyVersion(
-        const std::shared_ptr<VulkanGraphicsTexture>& texture)
+        const std::shared_ptr<VulkanGraphicsTexture>& texture,
+        bool useTransferQueue)
     {
         VkImageSubresourceRange subresourceRange{};
         subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -528,26 +531,30 @@ namespace NovelRT::Graphics
         VkImageMemoryBarrier vulkanImageMemoryBarrier{};
         vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
         vulkanImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        vulkanImageMemoryBarrier.dstAccessMask = useTransferQueue ? 0 : VK_ACCESS_SHADER_READ_BIT;
         vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
         vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
         vulkanImageMemoryBarrier.image = texture->GetVulkanImage();
+        vulkanImageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        vulkanImageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+
+        const VkPipelineStageFlags dstStage =
+            useTransferQueue ? VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT : VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 
         if (_commandBuffer == VK_NULL_HANDLE)
         {
             _replayData.emplace_back(
-                [vulkanImageMemoryBarrier](VkCommandBuffer cmdBuffer)
+                [vulkanImageMemoryBarrier, dstStage](VkCommandBuffer cmdBuffer)
                 {
-                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                         VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
-                                         &vulkanImageMemoryBarrier);
+                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, dstStage, 0, 0, nullptr, 0, nullptr,
+                                         1, &vulkanImageMemoryBarrier);
                 });
         }
         else
         {
-            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-                                 0, 0, nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
+            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, dstStage, 0, 0, nullptr, 0, nullptr, 1,
+                                 &vulkanImageMemoryBarrier);
         }
     }
 
