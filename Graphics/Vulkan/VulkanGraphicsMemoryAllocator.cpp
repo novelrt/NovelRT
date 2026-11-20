@@ -156,7 +156,7 @@ namespace NovelRT::Graphics
         if (queueFamilies[0] != queueFamilies[1])
         {
             imageCreateInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
-            imageCreateInfo.queueFamilyIndexCount = queueFamilies.size();
+            imageCreateInfo.queueFamilyIndexCount = static_cast<uint32_t>(queueFamilies.size());
             imageCreateInfo.pQueueFamilyIndices = queueFamilies.data();
         }
 
