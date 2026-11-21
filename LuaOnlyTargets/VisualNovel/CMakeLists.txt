@@ -26,3 +26,74 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::LuaOnlyTargets::VisualNovel
     Resources/VNConfig.json
     Resources/Images/SampleBG.png
 )
+
+if(APPLE AND NOVELRT_INSTALL)
+  if(NOT DEFINED NOVELRT_CODESIGN_IDENTITY)
+    # this will cause ad-hoc signing... NOT distributable :/
+    # example of valid identity: "Developer ID Application: <Name> (<Team ID>)"
+    set(NOVELRT_CODESIGN_IDENTITY "-" CACHE STRING "")
+  endif()
+  install(CODE "set(novelrtCodesignIdentity [[${NOVELRT_CODESIGN_IDENTITY}]])")
+  install(CODE [[
+    set(novelrtBundle "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/apps/VisualNovel.app")
+
+    if(novelrtCodesignIdentity STREQUAL "")
+      message(FATAL_ERROR "NOVELRT_CODESIGN_IDENTITY is empty - cannot sign")
+    endif()
+    if(NOT EXISTS "${novelrtBundle}")
+      message(FATAL_ERROR "No bundle at '${novelrtBundle}'")
+    endif()
+
+    find_program(novelrtCodesign codesign REQUIRED)
+
+    set(novelrtCodesignArgs --force --sign "${novelrtCodesignIdentity}")
+    if(novelrtCodesignIdentity MATCHES "^Developer ID Application")
+      # we have the right identity to enable hardended runtime and timestamping
+      # the sig for notarization purposes.
+      list(APPEND novelrtCodesignArgs --options runtime --timestamp) 
+    endif()
+
+    file(GLOB_RECURSE novelrtFrameworkItems LIST_DIRECTORIES false
+      "${novelrtBundle}/Contents/Frameworks/*")
+    foreach(novelrtItem IN LISTS novelrtFrameworkItems)
+      if(IS_SYMLINK "${novelrtItem}")
+        continue()
+      endif()
+      execute_process(
+        COMMAND file -b "${novelrtItem}"
+        OUTPUT_VARIABLE novelrtFileType
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+      if(NOT novelrtFileType MATCHES "Mach-O")
+        continue()
+      endif()
+      execute_process(
+        COMMAND "${novelrtCodesign}" ${novelrtCodesignArgs} "${novelrtItem}"
+        RESULT_VARIABLE codesignResult
+        OUTPUT_VARIABLE codesignOutput
+        ERROR_VARIABLE codesignOutput)
+      if(NOT codesignResult EQUAL 0)
+        message(WARNING "Signing failed - ${codesignOutput}")
+      endif()
+    endforeach()
+
+    execute_process(
+      COMMAND "${novelrtCodesign}" ${novelrtCodesignArgs} "${novelrtBundle}"
+      RESULT_VARIABLE codesignResult
+      OUTPUT_VARIABLE codesignOutput
+      ERROR_VARIABLE codesignOutput)
+    if(NOT codesignResult EQUAL 0)
+      message(WARNING "Signing failed - ${codesignOutput}")
+    endif()
+
+    execute_process(
+      COMMAND "${novelrtCodesign}" --verify --deep --strict "${novelrtBundle}"
+      RESULT_VARIABLE codesignResult
+      OUTPUT_VARIABLE codesignOutput
+      ERROR_VARIABLE codesignOutput)
+    if(NOT codesignResult EQUAL 0)
+      message(WARNING "Signature verification failed - ${codesignOutput}")
+    endif()
+
+    message(STATUS "Signed '${novelrtBundle}' with '${novelrtCodesignIdentity}' successfully!")
+  ]])
+endif()
