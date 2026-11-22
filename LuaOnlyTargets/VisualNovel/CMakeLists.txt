@@ -28,6 +28,10 @@ NovelRTBuildSystem_DeclareModule(EXECUTABLE NovelRT::LuaOnlyTargets::VisualNovel
 )
 
 if(APPLE AND NOVELRT_INSTALL)
+  if(DEFINED ENV{CODESIGN_IDENTITY} AND NOT "$ENV{CODESIGN_IDENTITY}" STREQUAL "")
+    set(NOVELRT_CODESIGN_IDENTITY "$ENV{CODESIGN_IDENTITY}" CACHE STRING "" FORCE)
+  endif()
+
   if(NOT DEFINED NOVELRT_CODESIGN_IDENTITY)
     # this will cause ad-hoc signing... NOT distributable :/
     # example of valid identity: "Developer ID Application: <Name> (<Team ID>)"

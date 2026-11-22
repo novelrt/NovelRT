@@ -8,6 +8,14 @@ jobs:
   Build:
     name: ${{ matrix.os }} - Vulkan ${{ matrix.vulkan }}
     runs-on: ${{ matrix.os }}
+    env:
+      CODESIGN_IDENTITY: ${{ vars.CODESIGN_IDENTITY }}
+      CERT_P12: ${{ secrets.CERT_P12 }}
+      CERT_PASSWORD: ${{ secrets.CERT_PASSWORD }}
+      KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      TEAM_ID: ${{ secrets.TEAM_ID }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
 
     strategy:
       fail-fast: false
@@ -66,13 +74,40 @@ jobs:
         with:
           version: ${{ matrix.vulkan }}
 
+      - name: Import signing certificate
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/novelrt-signing.keychain-db"
+          P12="$RUNNER_TEMP/novelrt-signing.p12"
+          echo "$CERT_P12" | base64 --decode > "$P12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$P12" -k "$KEYCHAIN" -P "$CERT_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          security find-identity -v -p codesigning "$KEYCHAIN"
+
       - name: Generate build system
         run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
 
       - name: Build NovelRT
         run: cmake --build build --config RelWithDebInfo --parallel
+        
       - name: Install NovelRT
         run: cmake --install build --config RelWithDebInfo --prefix artefacts
+
+      - name: Notarize and staple VisualNovel.app
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          APP="artefacts/apps/VisualNovel.app"
+          xcrun notarytool submit "$APP" \
+            --apple-id "APPLE_ID" \
+            --team-id "TEAM_ID" \
+            --password "APP_PASSWORD" \
+            --wait
+          xcrun stapler staple "$APP"
+          xcrun stapler validate "$APP"
 
       - name: Publish build artefacts
         shell: pwsh
@@ -81,3 +116,9 @@ jobs:
           gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name }} - ${{ matrix.title }}" --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Remove signing keychain
+        if: ${{ runner.os == 'macOS' && always() }}
+        run: |
+          security delete-keychain "$RUNNER_TEMP/novelrt-signing.keychain-db" || true
+          rm -f "$RUNNER_TEMP/novelrt-signing.p12"
