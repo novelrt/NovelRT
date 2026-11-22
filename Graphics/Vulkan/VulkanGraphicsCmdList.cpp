@@ -551,41 +551,6 @@ namespace NovelRT::Graphics
         }
     }
 
-    void GraphicsCmdList<Vulkan::VulkanGraphicsBackend>::CmdInitialSwapchainImageBarrierLegacyVersion(
-        const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage)
-    {
-        VkImageSubresourceRange subresourceRange{};
-        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresourceRange.levelCount = 1;
-        subresourceRange.layerCount = 1;
-
-        VkImageMemoryBarrier barrier{};
-        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        barrier.srcAccessMask = 0;
-        barrier.dstAccessMask = 0;
-        barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.image = swapchainImage->GetVulkanImage();
-        barrier.subresourceRange = subresourceRange;
-
-        if (_commandBuffer == VK_NULL_HANDLE)
-        {
-            _replayData.emplace_back(
-                [barrier](VkCommandBuffer cmdBuffer)
-                {
-                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                                         VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
-                });
-        }
-        else
-        {
-            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
-        }
-    }
-
     void VulkanGraphicsCmdList::CmdBindPipeline(const std::shared_ptr<VulkanGraphicsPipeline>& pipeline)
     {
         if (_commandBuffer == VK_NULL_HANDLE)

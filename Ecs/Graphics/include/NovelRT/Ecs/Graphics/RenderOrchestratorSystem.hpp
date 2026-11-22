@@ -39,14 +39,14 @@ namespace NovelRT::Ecs::Graphics
     private:
         struct PerFrameResources
         {
-            uint64_t frameNumber;
+            uint64_t FrameNumber;
 
-            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> frameImage;
-            std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> localContext;
+            std::shared_ptr<NovelRT::Graphics::GraphicsSwapchainImage<TGraphicsBackend>> FrameImage;
+            std::shared_ptr<NovelRT::Graphics::GraphicsContext<TGraphicsBackend>> LocalContext;
 
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> renderTargets{};
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>> descriptorSets{};
-            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> commandLists{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>> RenderTargets{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsDescriptorSet<TGraphicsBackend>>> DescriptorSets{};
+            std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TGraphicsBackend>>> CommandLists{};
         };
 
         std::shared_ptr<NovelRT::Graphics::GraphicsDevice<TGraphicsBackend>> _graphicsDevice;
@@ -77,10 +77,14 @@ namespace NovelRT::Ecs::Graphics
                                std::vector<EntityId>& inOrder)
         {
             if (view.HasComponent(graph.GetRawEntityId()))
+            {
                 inOrder.push_back(graph.GetRawEntityId());
+            }
 
             if (!graph.HasChildren())
+            {
                 return;
+            }
 
             for (const auto& child : graph.GetOriginalChildren())
             {
@@ -108,12 +112,15 @@ namespace NovelRT::Ecs::Graphics
         {
             // 1. Clean up any resources that are no longer valid.
             auto lastRenderedFrame = _deletionSemaphore->GetValue();
+
             if (lastRenderedFrame > 0)
+            {
                 lastRenderedFrame -= 1; // this is important to avoid underflow
+            }
 
             _frameResources.erase(std::remove_if(_frameResources.begin(), _frameResources.end(),
                                                  [lastRenderedFrame](auto& it)
-                                                 { return it.frameNumber < lastRenderedFrame; }),
+                                                 { return it.FrameNumber < lastRenderedFrame; }),
                                   _frameResources.end());
 
             // 2. Determine the order in which we should enumerate the entities based on their render pass
@@ -134,8 +141,11 @@ namespace NovelRT::Ecs::Graphics
                 {
                     auto root = GetRoot(graph, catalogue, entity);
                     auto [it, insertedTwo] = rootEntities.insert(root.GetRawEntityId());
+
                     if (insertedTwo)
+                    {
                         roots.emplace_back(std::move(root));
+                    }
                 }
             }
 
@@ -169,8 +179,8 @@ namespace NovelRT::Ecs::Graphics
 
             auto sorter = [&ordered](EntityId left, EntityId right)
             {
-                auto leftPos = std::distance(ordered.begin(), std::find(ordered.begin(), ordered.end(), left));
-                auto rightPos = std::distance(ordered.begin(), std::find(ordered.begin(), ordered.end(), right));
+                auto leftPos = std::distance(ordered.begin(), std::ranges::find(ordered, left));
+                auto rightPos = std::distance(ordered.begin(), std::ranges::find(ordered, right));
                 return leftPos < rightPos;
             };
 
@@ -182,7 +192,7 @@ namespace NovelRT::Ecs::Graphics
 
                 // 6. Prepare the render pass
                 auto pass = _renderPassManager.GetRenderPass(passId);
-                auto target = frameResources.renderTargets.emplace_back(
+                auto target = frameResources.RenderTargets.emplace_back(
                     std::make_shared<NovelRT::Graphics::GraphicsRenderTarget<TGraphicsBackend>>(
                         _graphicsDevice, imageViewData, pass, static_cast<uint32_t>(surface->GetWidth()),
                         static_cast<uint32_t>(surface->GetHeight())));
@@ -192,16 +202,18 @@ namespace NovelRT::Ecs::Graphics
                 for (const auto entity : entities)
                 {
                     if (!commandLists.HasComponent(entity))
+                    {
                         continue;
+                    }
 
                     auto* subCmdListPtr = commandLists.GetComponent(entity).commandList;
-                    auto subCmdList = frameResources.commandLists.emplace_back(*subCmdListPtr);
+                    auto subCmdList = frameResources.CommandLists.emplace_back(*subCmdListPtr);
                     auto renderPassComponent = renderPasses.GetComponent(entity);
                     auto* descriptorSetsPtr = renderPassComponent.descriptorSets;
 
                     for (size_t i = 0; i < renderPassComponent.descriptorSetCount; i++)
                     {
-                        frameResources.descriptorSets.emplace_back(descriptorSetsPtr[i]);
+                        frameResources.DescriptorSets.emplace_back(descriptorSetsPtr[i]);
                     }
 
                     delete subCmdListPtr;
@@ -221,7 +233,7 @@ namespace NovelRT::Ecs::Graphics
             waitSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
 
             std::vector<std::pair<std::shared_ptr<NovelRT::Graphics::GraphicsSemaphore<TGraphicsBackend>>, uint64_t>>
-                signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.frameNumber)};
+                signalSemaphores{std::make_pair(_deletionSemaphore, frameResources.FrameNumber)};
             signalSemaphores.reserve(trackedSemaphores.GetImmutableDataLength());
 
             for (auto&& [entity, trackedSemaLocal] : trackedSemaphores)
@@ -246,7 +258,7 @@ namespace NovelRT::Ecs::Graphics
             commandLists.RemoveAllComponents();
             trackedSemaphores.RemoveAllComponents();
 
-            frameResources.commandLists.emplace_back(cmdList);
+            frameResources.CommandLists.emplace_back(cmdList);
 
             // TODO: should this be in ECS?
             _graphicsDevice->EndFrame();

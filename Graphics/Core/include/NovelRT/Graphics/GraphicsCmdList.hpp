@@ -84,9 +84,7 @@ namespace NovelRT::Graphics
 
         void CmdEndRenderPass();
 
-        void CmdBindDescriptorSet(
-            const std::shared_ptr<GraphicsDescriptorSet<TBackend>>&
-                set);
+        void CmdBindDescriptorSet(const std::shared_ptr<GraphicsDescriptorSet<TBackend>>& set);
 
         void CmdBindDescriptorSets(
             NovelRT::Utilities::Span<std::reference_wrapper<const std::shared_ptr<GraphicsDescriptorSet<TBackend>>>>
@@ -121,9 +119,6 @@ namespace NovelRT::Graphics
 
         void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
         void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
-
-        void CmdInitialSwapchainImageBarrierLegacyVersion(
-            const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage);
 
         void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<TBackend>>& pipeline);
 
