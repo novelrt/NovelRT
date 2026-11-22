@@ -88,10 +88,9 @@ namespace NovelRT::Graphics
     {
         return CreateDevice(
             surfaceContext,
-            std::vector<FeatureProviderExtensionGroup>{
-                {.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}},
-                {.extensionNames = {VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME, VK_KHR_MAINTENANCE_7_EXTENSION_NAME}}},
-            std::vector<FeatureProviderExtensionGroup>{});
+            std::vector<FeatureProviderExtensionGroup>{{.extensionNames = {VK_KHR_SWAPCHAIN_EXTENSION_NAME}}},
+            std::vector<FeatureProviderExtensionGroup>{{.extensionNames = {VK_EXT_NESTED_COMMAND_BUFFER_EXTENSION_NAME,
+                                                                           VK_KHR_MAINTENANCE_7_EXTENSION_NAME}}});
     }
 
     std::shared_ptr<VulkanGraphicsDevice> VulkanGraphicsAdapter::CreateDevice(

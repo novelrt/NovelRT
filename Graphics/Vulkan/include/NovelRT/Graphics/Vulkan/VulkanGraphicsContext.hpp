@@ -32,6 +32,9 @@ namespace NovelRT::Graphics
 
         Threading::VolatileState _state;
 
+        VkCommandPool CreateVulkanCommandPool() const;
+        VkCommandBuffer CreateVulkanCommandBuffer(bool primary) const;
+
     public:
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this();
