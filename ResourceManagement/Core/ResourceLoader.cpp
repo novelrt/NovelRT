@@ -8,7 +8,7 @@ namespace NovelRT::ResourceManagement
     uuids::uuid ResourceLoader::RegisterAsset(const std::filesystem::path& filePath)
     {
         auto returnValue = RegisterAssetNoFileWrite(filePath);
-        WriteAssetDatabaseFile();
+        //WriteAssetDatabaseFile();
         return returnValue;
     }
 
@@ -24,7 +24,7 @@ namespace NovelRT::ResourceManagement
         if (!_hasLoadedAssetDatabase)
         {
             _hasLoadedAssetDatabase = true;
-            LoadAssetDatabaseFile();
+            //LoadAssetDatabaseFile();
         }
 
         auto& pathGuidMap = GetFilePathsToGuidsMap();
