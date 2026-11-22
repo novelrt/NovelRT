@@ -162,11 +162,6 @@ namespace NovelRT::Ecs::Graphics
 
             cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
                                                    NovelRT::Graphics::ImageLayout::Present);
-            if (!passes.empty())
-            {
-                cmdList->CmdInitialSwapchainImageBarrierLegacyVersion(image);
-            }
-
             for (auto& root : roots)
             {
                 EnumerateChildren(root, renderPasses, ordered);
