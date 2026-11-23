@@ -639,9 +639,9 @@ namespace NovelRT::UI::ImGui
 
             // Send the data to GPU
             cmdList->Begin();
-            cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer);
             cmdList->CmdCopy(texture2D, stagingBufferRegion);
-            cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+            cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal);
             cmdList->End();
 
             // End Frame

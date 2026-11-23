@@ -165,13 +165,13 @@ namespace NovelRT::Ecs::Graphics
             colourDataStruct.depth = 0;
             colourDataStruct.stencil = 0;
 
-            cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::Undefined,
-                                                   NovelRT::Graphics::ImageLayout::DstTransfer);
+            cmdList->CmdTransitionTextureTo(image, NovelRT::Graphics::ImageLayout::Undefined,
+                                            NovelRT::Graphics::ImageLayout::DstTransfer);
 
             cmdList->CmdClearColourSwapchainImage(image, colourDataStruct);
 
-            cmdList->CmdTransitionSwapchainImageTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
-                                                   NovelRT::Graphics::ImageLayout::Present);
+            cmdList->CmdTransitionTextureTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
+                                            NovelRT::Graphics::ImageLayout::Present);
             for (auto& root : roots)
             {
                 EnumerateChildren(root, renderPasses, ordered);

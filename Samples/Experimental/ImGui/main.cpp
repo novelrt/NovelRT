@@ -184,9 +184,14 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
 
     auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
 
-    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+    pVertexBuffer[0] =
+        TexturedVertex{.Position = NovelRT::Maths::GeoVector3F(0, 1, 0), .UV = NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+
+    pVertexBuffer[1] = TexturedVertex{.Position = NovelRT::Maths::GeoVector3F(1, -1, 0),
+                                      .UV = NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+
+    pVertexBuffer[2] = TexturedVertex{.Position = NovelRT::Maths::GeoVector3F(-1, -1, 0),
+                                      .UV = NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
 
@@ -219,9 +224,9 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->Begin();
         cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer);
         cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal);
         cmdList->End();
 
         gfxContext->EndFrame();

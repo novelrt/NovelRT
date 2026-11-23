@@ -39,7 +39,6 @@
 
 #include <NovelRT/Utilities/Memory.hpp>
 
-#include <cmath>
 #include <optional>
 #include <span>
 #include <unordered_map>
@@ -230,9 +229,12 @@ namespace NovelRT::Ecs::Graphics
 
                             textureStagingBuffer->UnmapAndWrite(textureStagingBufferRegion);
 
-                            uploadCmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+                            uploadCmdList->CmdTransitionTextureTo(texture2D, NovelRT::Graphics::ImageLayout::Undefined,
+                                                                  NovelRT::Graphics::ImageLayout::DstTransfer);
                             uploadCmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-                            uploadCmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+                            uploadCmdList->CmdTransitionTextureTo(
+                                texture2D, NovelRT::Graphics::ImageLayout::DstTransfer,
+                                NovelRT::Graphics::ImageLayout::ShaderReadOnlyOptimal);
 
                             _pendingStagingBuffers.push_back({_submittedUploads, textureStagingBuffer,
                                                               textureStagingBufferRegion, gfxContext, uploadCmdList});

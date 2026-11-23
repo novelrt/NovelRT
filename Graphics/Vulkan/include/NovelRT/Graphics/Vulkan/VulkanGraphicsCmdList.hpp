@@ -95,11 +95,6 @@ namespace NovelRT::Graphics
 
         void CmdSetViewport(ViewportInfo viewportInfo);
 
-        void CmdBeginTexturePipelineBarrierLegacyVersion(
-            const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture);
-        void CmdEndTexturePipelineBarrierLegacyVersion(
-            const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture);
-
         void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<Vulkan::VulkanGraphicsBackend>>& pipeline);
 
         void CmdPushConstants(
@@ -116,10 +111,14 @@ namespace NovelRT::Graphics
 
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<Vulkan::VulkanGraphicsBackend>>& cmdList);
 
-        void CmdTransitionSwapchainImageTo(
+        void CmdTransitionTextureTo(
             const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
             ImageLayout oldLayout,
             ImageLayout newLayout);
+
+        void CmdTransitionTextureTo(const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture,
+                                    ImageLayout oldLayout,
+                                    ImageLayout newLayout);
 
         void CmdClearColourSwapchainImage(
             const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,

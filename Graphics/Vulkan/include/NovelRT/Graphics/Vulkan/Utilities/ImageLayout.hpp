@@ -5,6 +5,7 @@
 
 #include <NovelRT/Graphics/GraphicsRenderPassDescription.hpp>
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics::Vulkan
 {
@@ -17,7 +18,7 @@ namespace NovelRT::Graphics::Vulkan
             case ImageLayout::Undefined:
                 returnLayout = VK_IMAGE_LAYOUT_UNDEFINED;
                 break;
-            case ImageLayout::Optimal:
+            case ImageLayout::General:
                 returnLayout = VK_IMAGE_LAYOUT_GENERAL;
                 break;
             case ImageLayout::Present:
@@ -28,6 +29,9 @@ namespace NovelRT::Graphics::Vulkan
                 break;
             case ImageLayout::DstTransfer:
                 returnLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+                break;
+            case ImageLayout::ShaderReadOnlyOptimal:
+                returnLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 break;
         }
 

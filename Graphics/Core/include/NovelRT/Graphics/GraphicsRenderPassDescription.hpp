@@ -24,10 +24,11 @@ namespace NovelRT::Graphics
     enum class ImageLayout : uint32_t
     {
         Undefined,
-        Optimal,
+        General,
         Present,
         SrcTransfer,
         DstTransfer,
+        ShaderReadOnlyOptimal,
     };
 
     struct GraphicsAttachmentDescription
