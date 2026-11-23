@@ -9,7 +9,7 @@ jobs:
     name: ${{ matrix.os }} - Vulkan ${{ matrix.vulkan }}
     runs-on: ${{ matrix.os }}
     env:
-      CODESIGN_IDENTITY: ${{ vars.CODESIGN_IDENTITY }}
+      CODESIGN_IDENTITY: ${{ secrets.CODESIGN_IDENTITY }}
       CERT_P12: ${{ secrets.CERT_P12 }}
       CERT_PASSWORD: ${{ secrets.CERT_PASSWORD }}
       KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
@@ -89,7 +89,7 @@ jobs:
           security find-identity -v -p codesigning "$KEYCHAIN"
 
       - name: Generate build system
-        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts"
+        run: cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --install-prefix "$(pwd)/artefacts" -UINC_INSTALL_DIR -ULIB_INSTALL_DIR -UBIN_INSTALL_DIR -UPKGCONFIG_INSTALL_DIR -DNOVELRT_CODESIGN_IDENTITY="${{ env.CODESIGN_IDENTITY }}"
 
       - name: Build NovelRT
         run: cmake --build build --config RelWithDebInfo --parallel
@@ -108,11 +108,23 @@ jobs:
             --wait
           xcrun stapler staple "$APP"
           xcrun stapler validate "$APP"
+          test -f "$APP/Contents/CodeResources"
+
+      - name: Create macOS release archive
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+          ditto -c -k --keepParent artefacts/apps/VisualNovel.app \
+            "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip"
+
+      - name: Create release archive
+        if: ${{ runner.os != 'macOS' }}
+        shell: pwsh
+        run: |
+          Compress-Archive -Path $(Get-ChildItem artefacts/*) -DestinationPath "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip"
 
       - name: Publish build artefacts
         shell: pwsh
         run: |
-          Compress-Archive -Path $(Get-ChildItem artefacts/*) -DestinationPath "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip"
           gh release upload ${{ github.event.release.tag_name }} "novelrt-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip#${{ github.event.release.name }} - ${{ matrix.title }}" --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
