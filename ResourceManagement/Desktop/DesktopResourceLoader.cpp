@@ -89,7 +89,7 @@ namespace NovelRT::ResourceManagement::Desktop
     {
         auto filePath = _resourcesRootDirectory;
 
-        LoadAssetDatabaseFile();
+        //LoadAssetDatabaseFile();
 
         std::vector<uuids::uuid> filesToUnregister{};
 
@@ -117,7 +117,7 @@ namespace NovelRT::ResourceManagement::Desktop
             RegisterAsset(std::filesystem::relative(directoryEntry.path(), filePath));
         }
 
-        WriteAssetDatabaseFile();
+        //WriteAssetDatabaseFile();
 
         _isAssetDBInitialised = true;
     }

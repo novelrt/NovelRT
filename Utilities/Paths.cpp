@@ -48,11 +48,11 @@ namespace NovelRT::Utilities
                     CFStringRef macPath = CFURLCopyFileSystemPath(bundleUrl, kCFURLPOSIXPathStyle);
                     if(macPath != nullptr)
                     {
-                        //We've dunked into a bundle
+                        //We've dunked into a bundle's "MacOS" folder
                         std::filesystem::path path = CFStringToStdString(macPath);
                         CFRelease(macPath);
                         CFRelease(bundleUrl);
-                        return path;
+                        return path.parent_path();
                     }
                     CFRelease(bundleUrl);
                 }
