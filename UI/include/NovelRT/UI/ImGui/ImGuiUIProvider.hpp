@@ -427,14 +427,6 @@ namespace NovelRT::UI::ImGui
             currentCmdList->CmdCopy(vertexBufferRegion, vertexStageBufferRegion);
             currentCmdList->CmdCopy(indexBufferRegion, indexStageBufferRegion);
 
-            // Sync the commands so that we can prevent data issues
-            currentCmdList->CmdPipelineBufferBarrier(
-                vertexBuffer, GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::VertexAttributeRead,
-                GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
-            currentCmdList->CmdPipelineBufferBarrier(
-                indexBuffer, GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::IndexRead,
-                GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::VertexInput);
-
             _currentIndexBufferRegion = indexBufferRegion;
             _currentVertexBuffer = vertexBuffer;
             _currentVertexBufferRegion = vertexBufferRegion;
@@ -639,9 +631,15 @@ namespace NovelRT::UI::ImGui
 
             // Send the data to GPU
             cmdList->Begin();
-            cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer);
+            cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer,
+                                            GraphicsMemoryAccessMode::None, GraphicsMemoryAccessMode::TransferWrite,
+                                            GraphicsPipelineVisibility::TopOfPipe,
+                                            GraphicsPipelineVisibility::Transfer);
             cmdList->CmdCopy(texture2D, stagingBufferRegion);
-            cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal);
+            cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal,
+                                            GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::None,
+                                            GraphicsPipelineVisibility::Transfer,
+                                            GraphicsPipelineVisibility::BottomOfPipe);
             cmdList->End();
 
             // End Frame

@@ -165,13 +165,18 @@ namespace NovelRT::Ecs::Graphics
             colourDataStruct.depth = 0;
             colourDataStruct.stencil = 0;
 
-            cmdList->CmdTransitionTextureTo(image, NovelRT::Graphics::ImageLayout::Undefined,
-                                            NovelRT::Graphics::ImageLayout::DstTransfer);
+            using Access = NovelRT::Graphics::GraphicsMemoryAccessMode;
+            using Stage = NovelRT::Graphics::GraphicsPipelineVisibility;
+            using Layout = NovelRT::Graphics::ImageLayout;
+
+            cmdList->CmdTransitionTextureTo(image, Layout::Undefined, Layout::DstTransfer, Access::None,
+                                            Access::TransferWrite, Stage::Transfer, Stage::Transfer);
 
             cmdList->CmdClearColourSwapchainImage(image, colourDataStruct);
 
-            cmdList->CmdTransitionTextureTo(image, NovelRT::Graphics::ImageLayout::DstTransfer,
-                                            NovelRT::Graphics::ImageLayout::Present);
+            cmdList->CmdTransitionTextureTo(image, Layout::DstTransfer, Layout::Present, Access::TransferWrite,
+                                            Access::ColorAttachmentRead | Access::ColorAttachmentWrite, Stage::Transfer,
+                                            Stage::ColorAttachmentOutput);
             for (auto& root : roots)
             {
                 EnumerateChildren(root, renderPasses, ordered);

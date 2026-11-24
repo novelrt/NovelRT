@@ -201,9 +201,13 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
         cmdList->Begin();
         cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer,
+                                        GraphicsMemoryAccessMode::None, GraphicsMemoryAccessMode::TransferWrite,
+                                        GraphicsPipelineVisibility::TopOfPipe, GraphicsPipelineVisibility::Transfer);
         cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal,
+                                        GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::None,
+                                        GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::BottomOfPipe);
         cmdList->End();
 
         transferContext->EndFrame();

@@ -212,6 +212,12 @@ namespace NovelRT::Ecs::Graphics
                             .size = totalSize};
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
+
+                        // this was getting unreadable. - Matt J.
+                        using Access = NovelRT::Graphics::GraphicsMemoryAccessMode;
+                        using Stage = NovelRT::Graphics::GraphicsPipelineVisibility;
+                        using Layout = NovelRT::Graphics::ImageLayout;
+
                         auto gfxContext = _graphicsDevice->CreateTransferContext();
                         auto uploadCmdList = gfxContext->CreateCmdList();
 

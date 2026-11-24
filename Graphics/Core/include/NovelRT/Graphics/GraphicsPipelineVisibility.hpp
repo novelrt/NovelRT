@@ -11,6 +11,12 @@ namespace NovelRT::Graphics
 {
     enum class GraphicsPipelineVisibility : uint32_t
     {
+        // IMPLEMENTATION DETAIL:
+        // All of these values match the Vulkan implementation,
+        // or at least, they should. The vulkan module has
+        // static asserts due to some trickery we're doing to
+        // take advantage of this. - Matt J.
+
         None = 0,
         TopOfPipe = 1 << 0,
         DrawIndirect = 1 << 1,
@@ -27,10 +33,8 @@ namespace NovelRT::Graphics
         Transfer = 1 << 12,
         BottomOfPipe = 1 << 13,
         Host = 1 << 14,
-        AllGraphics = DrawIndirect | VertexInput | VertexShader | TesselationControlShader |
-                      TesselationEvaluationShader | GeometryShader | FragmentShader | EarlyFragmentTests |
-                      LateFragmentTests | ColorAttachmentOutput,
-        AllCommands = AllGraphics | TopOfPipe | Transfer | BottomOfPipe | Host,
+        AllGraphics = 1u << 15,
+        AllCommands = 1u << 16,
         All = AllCommands
     };
 }

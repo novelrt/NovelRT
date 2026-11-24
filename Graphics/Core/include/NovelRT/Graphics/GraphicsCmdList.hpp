@@ -134,11 +134,19 @@ namespace NovelRT::Graphics
 
         void CmdTransitionTextureTo(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
                                     ImageLayout oldLayout,
-                                    ImageLayout newLayout);
+                                    ImageLayout newLayout,
+                                    GraphicsMemoryAccessMode sourceAccess,
+                                    GraphicsMemoryAccessMode destinationAccess,
+                                    GraphicsPipelineVisibility sourceStage,
+                                    GraphicsPipelineVisibility destinationStage);
 
         void CmdTransitionTextureTo(const std::shared_ptr<GraphicsTexture<TBackend>>& texture,
                                     ImageLayout oldLayout,
-                                    ImageLayout newLayout);
+                                    ImageLayout newLayout,
+                                    GraphicsMemoryAccessMode sourceAccess,
+                                    GraphicsMemoryAccessMode destinationAccess,
+                                    GraphicsPipelineVisibility sourceStage,
+                                    GraphicsPipelineVisibility destinationStage);
 
         void CmdClearColourSwapchainImage(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
                                           ClearValue clearData);
