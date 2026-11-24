@@ -217,8 +217,8 @@ namespace NovelRT::Ecs::UI
                                             Graphics::Components::TrackedSemaphore<TGraphicsBackend>>();
 
             // create upload command list
-            auto uiContext = _gfxDevice->CreateGraphicsContext();
-            auto uploadCmdList = uiContext->CreateCmdList();
+            auto uploadContext = _gfxDevice->CreateTransferContext();
+            auto uploadCmdList = uploadContext->CreateCmdList();
 
             // upload data to gpu
             if (_uiProvider->UploadToGPU(uploadCmdList))
@@ -270,6 +270,7 @@ namespace NovelRT::Ecs::UI
                 trackedSemaphores.AddComponent(_drawSemaphoreEntity.value(), signalSemaComponent);
 
                 // create the draw cmdList
+                auto uiContext = _gfxDevice->CreateGraphicsContext();
                 auto drawCmdList =
                     uiContext->CreateCmdList(std::optional<NovelRT::Graphics::SecondaryCmdListInfo<TGraphicsBackend>>(
                         {_uiProvider->GetDedicatedRenderPass(), 0}));

@@ -39,7 +39,7 @@ namespace NovelRT::Graphics
         VkCommandPoolCreateInfo commandPoolCreateInfo{};
         commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-        commandPoolCreateInfo.queueFamilyIndex = device->GetIndicesData().graphicsFamily.value();
+        commandPoolCreateInfo.queueFamilyIndex = _queueFamilyIndex;
 
         const VkResult result =
             vkCreateCommandPool(device->GetVulkanDevice(), &commandPoolCreateInfo, nullptr, &vulkanCommandPool);
@@ -105,9 +105,11 @@ namespace NovelRT::Graphics
         return std::static_pointer_cast<const VulkanGraphicsContext>(GraphicsDeviceObject::shared_from_this());
     }
 
-    VulkanGraphicsContext::GraphicsContext(
-        std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept
-        : _device(std::move(device)), _vulkanCommandPool([this]() { return CreateVulkanCommandPool(); })
+    VulkanGraphicsContext::GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                                           uint32_t queueFamilyIndex) noexcept
+        : _device(std::move(device)),
+          _queueFamilyIndex(queueFamilyIndex),
+          _vulkanCommandPool([this]() { return CreateVulkanCommandPool(); })
     {
         unused(_state.Transition(Threading::VolatileState::Initialised));
     }

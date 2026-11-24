@@ -212,9 +212,9 @@ namespace NovelRT::Ecs::Graphics
                             .size = totalSize};
 
                         auto textureStagingBuffer = _memoryAllocator->CreateBuffer(bufferCreateInfo);
-                        auto gfxContext = _graphicsDevice->CreateGraphicsContext();
-
+                        auto gfxContext = _graphicsDevice->CreateTransferContext();
                         auto uploadCmdList = gfxContext->CreateCmdList();
+
                         uploadCmdList->Begin();
 
                         for (auto [texture, texture2D] : newTextures)
@@ -556,7 +556,7 @@ namespace NovelRT::Ecs::Graphics
             _pipeline =
                 _graphicsDevice->CreatePipeline(signature, vertShaderProg, pixelShaderProg, _renderPass.RenderPass);
 
-            auto gfxContext = _graphicsDevice->CreateGraphicsContext();
+            auto gfxContext = _graphicsDevice->CreateTransferContext();
             auto cmdList = gfxContext->CreateCmdList();
             cmdList->Begin();
             cmdList->CmdCopy(_vertexBufferRegion, stagingRegion);

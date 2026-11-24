@@ -80,6 +80,7 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<uint8_t> byteData);
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> CreateGraphicsContext();
+        [[nodiscard]] std::shared_ptr<GraphicsContext<TBackend>> CreateTransferContext();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<TBackend>> BeginFrame();
         void EndFrame();
