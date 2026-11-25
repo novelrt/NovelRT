@@ -11,6 +11,7 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 #include <NovelRT/Utilities/Macros.hpp>
 #include <NovelRT/Utilities/Span.hpp>
+#include <vulkan/vulkan_core.h>
 
 namespace NovelRT::Graphics
 {
@@ -85,7 +86,6 @@ namespace NovelRT::Graphics
         samplerCreateInfo.minFilter = VK_FILTER_LINEAR;
         samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
         samplerCreateInfo.maxLod = 1.0f;
-        samplerCreateInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_WHITE;
 
         VkSamplerAddressMode vkAddressMode = Vulkan::Utilities::GetVulkanAddressMode(addressMode);
         samplerCreateInfo.addressModeU = vkAddressMode;

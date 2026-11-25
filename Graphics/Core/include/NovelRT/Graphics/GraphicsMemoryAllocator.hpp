@@ -52,13 +52,19 @@ namespace NovelRT::Graphics
         [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture(
             const GraphicsTextureCreateInfo& createInfo);
 
-        [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture2DRepeatGpuWriteOnly(uint32_t width,
-                                                                                                   uint32_t height = 1)
+        [[nodiscard]] std::shared_ptr<GraphicsTexture<TBackend>> CreateTexture2DClampToEdgeGpuWriteOnly(
+            uint32_t width,
+            uint32_t height = 1)
         {
-            return CreateTexture(
-                GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
-                                          GraphicsResourceAccess::None, GraphicsResourceAccess::Write, width, height, 1,
-                                          GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});
+            return CreateTexture(GraphicsTextureCreateInfo{.addressMode = GraphicsTextureAddressMode::ClampToEdge,
+                                                           .textureKind = GraphicsTextureKind::TwoDimensional,
+                                                           .cpuAccessKind = GraphicsResourceAccess::None,
+                                                           .gpuAccessKind = GraphicsResourceAccess::Write,
+                                                           .width = width,
+                                                           .height = height,
+                                                           .depth = 1,
+                                                           .allocationFlags = GraphicsMemoryRegionAllocationFlags::None,
+                                                           .texelFormat = TexelFormat::R8G8B8A8_UNORM});
         }
     };
 }

@@ -193,7 +193,7 @@ namespace NovelRT::Ecs::Graphics
                         for (auto texture : textureMetadata)
                         {
                             auto texture2D =
-                                _memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(texture.width, texture.height);
+                                _memoryAllocator->CreateTexture2DClampToEdgeGpuWriteOnly(texture.width, texture.height);
 
                             totalSize += texture2D->GetSize();
 
