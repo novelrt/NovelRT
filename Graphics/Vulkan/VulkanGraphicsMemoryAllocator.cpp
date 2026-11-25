@@ -14,6 +14,8 @@
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsResource.hpp>
 #include <NovelRT/Graphics/Vulkan/VulkanGraphicsTexture.hpp>
 
+#include <array>
+
 namespace NovelRT::Graphics
 {
     using VulkanGraphicsBuffer = GraphicsBuffer<Vulkan::VulkanGraphicsBackend>;
@@ -55,7 +57,7 @@ namespace NovelRT::Graphics
 
         if (result != VK_SUCCESS)
         {
-            Exceptions::InitialisationFailureException("Failed to create the VulkanMemoryAllocator.", result);
+            throw Exceptions::InitialisationFailureException("Failed to create the VulkanMemoryAllocator.", result);
         }
     }
 
@@ -77,6 +79,16 @@ namespace NovelRT::Graphics
         bufferCreateInfo.size = createInfo.size;
         bufferCreateInfo.usage =
             Vulkan::Utilities::GetVulkanBufferUsageKind(createInfo.bufferKind, createInfo.gpuAccessKind);
+
+        const auto& indices = _device->GetIndicesData();
+        const std::array<uint32_t, 2> queueFamilies{indices.graphicsFamily.value(), indices.transferFamily.value()};
+
+        if (queueFamilies[0] != queueFamilies[1])
+        {
+            bufferCreateInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
+            bufferCreateInfo.queueFamilyIndexCount = 2;
+            bufferCreateInfo.pQueueFamilyIndices = queueFamilies.data();
+        }
 
         VmaAllocationCreateInfo allocationCreateInfo{};
         allocationCreateInfo.flags = Vulkan::Utilities::GetVmaAllocationKind(createInfo.cpuAccessKind);
@@ -139,6 +151,16 @@ namespace NovelRT::Graphics
         imageCreateInfo.usage =
             Vulkan::Utilities::GetVulkanImageUsageKind(createInfo.textureKind, createInfo.gpuAccessKind);
 
+        const auto& indices = _device->GetIndicesData();
+        const std::array<uint32_t, 2> queueFamilies{indices.graphicsFamily.value(), indices.transferFamily.value()};
+
+        if (queueFamilies[0] != queueFamilies[1])
+        {
+            imageCreateInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
+            imageCreateInfo.queueFamilyIndexCount = 2;
+            imageCreateInfo.pQueueFamilyIndices = queueFamilies.data();
+        }
+
         VkImage vulkanImage = VK_NULL_HANDLE;
         VmaAllocation outAllocation = VK_NULL_HANDLE;
         VmaAllocationInfo outAllocationInfo{}; // TODO: I haven't figured out what I am doing with this yet, but I'm
@@ -167,10 +189,15 @@ namespace NovelRT::Graphics
     [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::
         CreateTexture2DRepeatGpuWriteOnly(uint32_t width, uint32_t height)
     {
-        return CreateTexture(
-            GraphicsTextureCreateInfo{GraphicsTextureAddressMode::Repeat, GraphicsTextureKind::TwoDimensional,
-                                      GraphicsResourceAccess::None, GraphicsResourceAccess::Write, width, height, 1,
-                                      GraphicsMemoryRegionAllocationFlags::None, TexelFormat::R8G8B8A8_UNORM});
+        return CreateTexture(GraphicsTextureCreateInfo{.addressMode = GraphicsTextureAddressMode::Repeat,
+                                                       .textureKind = GraphicsTextureKind::TwoDimensional,
+                                                       .cpuAccessKind = GraphicsResourceAccess::None,
+                                                       .gpuAccessKind = GraphicsResourceAccess::Write,
+                                                       .width = width,
+                                                       .height = height,
+                                                       .depth = 1,
+                                                       .allocationFlags = GraphicsMemoryRegionAllocationFlags::None,
+                                                       .texelFormat = TexelFormat::R8G8B8A8_UNORM});
     }
 
     VmaAllocator VulkanGraphicsMemoryAllocator::GetVmaAllocator() const noexcept

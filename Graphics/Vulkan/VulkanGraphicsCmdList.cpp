@@ -42,43 +42,6 @@ namespace NovelRT::Graphics
     using VulkanGraphicsResourceMemoryRegion = GraphicsResourceMemoryRegion<TResource, Vulkan::VulkanGraphicsBackend>;
     using VulkanGraphicsTexture = GraphicsTexture<Vulkan::VulkanGraphicsBackend>;
 
-    [[nodiscard]] std::pair<VkAccessFlags, VkPipelineStageFlags> GetAccessAndStageMasksForLayout(VkImageLayout layout,
-                                                                                                 bool isSource)
-    {
-        VkAccessFlags accessMask = 0;
-        VkPipelineStageFlags stageMask = 0;
-
-        switch (layout)
-        {
-            case VK_IMAGE_LAYOUT_UNDEFINED:
-                accessMask = 0;
-                stageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-                break;
-            case VK_IMAGE_LAYOUT_GENERAL:
-                accessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-                stageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-                break;
-            case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
-                accessMask = isSource ? VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT : 0;
-                stageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-                break;
-            case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
-                accessMask = VK_ACCESS_TRANSFER_READ_BIT;
-                stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT;
-                break;
-            case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
-                accessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-                stageMask = VK_PIPELINE_STAGE_TRANSFER_BIT;
-                break;
-            default:
-                accessMask = 0;
-                stageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-                break;
-        }
-
-        return {accessMask, stageMask};
-    }
-
     VulkanGraphicsCmdList::GraphicsCmdList(
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
         VkCommandBuffer commandBuffer,
@@ -485,72 +448,6 @@ namespace NovelRT::Graphics
         }
     }
 
-    void VulkanGraphicsCmdList::CmdBeginTexturePipelineBarrierLegacyVersion(
-        const std::shared_ptr<VulkanGraphicsTexture>& texture)
-    {
-        VkImageSubresourceRange subresourceRange{};
-        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresourceRange.levelCount = 1;
-        subresourceRange.layerCount = 1;
-
-        VkImageMemoryBarrier vulkanImageMemoryBarrier{};
-        vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
-        vulkanImageMemoryBarrier.image = texture->GetVulkanImage();
-
-        if (_commandBuffer == VK_NULL_HANDLE)
-        {
-            _replayData.emplace_back(
-                [vulkanImageMemoryBarrier](VkCommandBuffer cmdBuffer)
-                {
-                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
-                                         nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
-                });
-        }
-        else
-        {
-            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0,
-                                 nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
-        }
-    }
-
-    void VulkanGraphicsCmdList::CmdEndTexturePipelineBarrierLegacyVersion(
-        const std::shared_ptr<VulkanGraphicsTexture>& texture)
-    {
-        VkImageSubresourceRange subresourceRange{};
-        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresourceRange.levelCount = 1;
-        subresourceRange.layerCount = 1;
-
-        VkImageMemoryBarrier vulkanImageMemoryBarrier{};
-        vulkanImageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        vulkanImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vulkanImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-        vulkanImageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        vulkanImageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        vulkanImageMemoryBarrier.subresourceRange = subresourceRange;
-        vulkanImageMemoryBarrier.image = texture->GetVulkanImage();
-
-        if (_commandBuffer == VK_NULL_HANDLE)
-        {
-            _replayData.emplace_back(
-                [vulkanImageMemoryBarrier](VkCommandBuffer cmdBuffer)
-                {
-                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                         VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1,
-                                         &vulkanImageMemoryBarrier);
-                });
-        }
-        else
-        {
-            vkCmdPipelineBarrier(_commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
-                                 0, 0, nullptr, 0, nullptr, 1, &vulkanImageMemoryBarrier);
-        }
-    }
-
     void VulkanGraphicsCmdList::CmdBindPipeline(const std::shared_ptr<VulkanGraphicsPipeline>& pipeline)
     {
         if (_commandBuffer == VK_NULL_HANDLE)
@@ -600,6 +497,9 @@ namespace NovelRT::Graphics
                                                          GraphicsPipelineVisibility sourceStageFlag,
                                                          GraphicsPipelineVisibility destinationStageFlag)
     {
+        const auto srcStageMask = Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag);
+        const auto dstStageMask = Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag);
+
         VkBufferMemoryBarrier barrierInfo{.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
                                           .pNext = nullptr,
                                           .srcAccessMask = Vulkan::Utilities::GetVulkanAccessFlags(sourceAccessFlag),
@@ -614,18 +514,16 @@ namespace NovelRT::Graphics
         if (_commandBuffer == VK_NULL_HANDLE)
         {
             _replayData.emplace_back(
-                [sourceStageFlag, destinationStageFlag, barrierInfo](VkCommandBuffer cmdBuffer)
+                [srcStageMask, dstStageMask, barrierInfo](VkCommandBuffer cmdBuffer)
                 {
-                    vkCmdPipelineBarrier(cmdBuffer, Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag),
-                                         Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0,
-                                         nullptr, 1, &barrierInfo, 0, nullptr);
+                    vkCmdPipelineBarrier(cmdBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 1, &barrierInfo, 0,
+                                         nullptr);
                 });
         }
         else
         {
-            vkCmdPipelineBarrier(_commandBuffer, Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStageFlag),
-                                 Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStageFlag), 0, 0, nullptr, 1,
-                                 &barrierInfo, 0, nullptr);
+            vkCmdPipelineBarrier(_commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 1, &barrierInfo, 0,
+                                 nullptr);
         }
     }
 
@@ -644,7 +542,7 @@ namespace NovelRT::Graphics
 
         if (childBuffer == VK_NULL_HANDLE)
         {
-            // NOTE: Not sure we want to rely on same-time-friend behaviour (I don't know what the official name is) for
+            // NOTE: Not sure we want to rely on same-type-friend behaviour (I don't know what the official name is) for
             // this. It compiles though. Leaving it for the code review. - Matt J.
             for (const auto& commandFrame : cmdList->_replayData)
             {
@@ -657,10 +555,14 @@ namespace NovelRT::Graphics
         vkCmdExecuteCommands(_commandBuffer, 1, &childBuffer);
     }
 
-    void VulkanGraphicsCmdList::CmdTransitionSwapchainImageTo(
+    void VulkanGraphicsCmdList::CmdTransitionTextureTo(
         const std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>>& swapchainImage,
         ImageLayout oldLayout,
-        ImageLayout newLayout)
+        ImageLayout newLayout,
+        GraphicsMemoryAccessMode sourceAccess,
+        GraphicsMemoryAccessMode destinationAccess,
+        GraphicsPipelineVisibility sourceStage,
+        GraphicsPipelineVisibility destinationStage)
     {
         VkImageLayout vkOldLayout = Vulkan::GetVulkanImageLayout(oldLayout);
         VkImageLayout vkNewLayout = Vulkan::GetVulkanImageLayout(newLayout);
@@ -670,18 +572,63 @@ namespace NovelRT::Graphics
         subresourceRange.levelCount = 1;
         subresourceRange.layerCount = 1;
 
-        const auto [srcAccessMask, srcStageMask] = GetAccessAndStageMasksForLayout(vkOldLayout, true);
-        const auto [dstAccessMask, dstStageMask] = GetAccessAndStageMasksForLayout(vkNewLayout, false);
+        const auto srcStageMask = Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStage);
+        const auto dstStageMask = Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStage);
 
         VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        barrier.srcAccessMask = srcAccessMask;
-        barrier.dstAccessMask = dstAccessMask;
+        barrier.srcAccessMask = Vulkan::Utilities::GetVulkanAccessFlags(sourceAccess);
+        barrier.dstAccessMask = Vulkan::Utilities::GetVulkanAccessFlags(destinationAccess);
         barrier.oldLayout = vkOldLayout;
         barrier.newLayout = vkNewLayout;
         barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.image = swapchainImage->GetVulkanImage();
+        barrier.subresourceRange = subresourceRange;
+
+        if (_commandBuffer == VK_NULL_HANDLE)
+        {
+            _replayData.emplace_back(
+                [srcStageMask, dstStageMask, barrier](VkCommandBuffer cmdBuffer)
+                {
+                    vkCmdPipelineBarrier(cmdBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+                });
+        }
+        else
+        {
+            vkCmdPipelineBarrier(_commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+        }
+    }
+
+    void VulkanGraphicsCmdList::CmdTransitionTextureTo(
+        const std::shared_ptr<GraphicsTexture<Vulkan::VulkanGraphicsBackend>>& texture,
+        ImageLayout oldLayout,
+        ImageLayout newLayout,
+        GraphicsMemoryAccessMode sourceAccess,
+        GraphicsMemoryAccessMode destinationAccess,
+        GraphicsPipelineVisibility sourceStage,
+        GraphicsPipelineVisibility destinationStage)
+    {
+        VkImageLayout vkOldLayout = Vulkan::GetVulkanImageLayout(oldLayout);
+        VkImageLayout vkNewLayout = Vulkan::GetVulkanImageLayout(newLayout);
+
+        VkImageSubresourceRange subresourceRange{};
+        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresourceRange.levelCount = 1;
+        subresourceRange.layerCount = 1;
+
+        const auto srcStageMask = Vulkan::Utilities::GetVulkanPipelineStageFlags(sourceStage);
+        const auto dstStageMask = Vulkan::Utilities::GetVulkanPipelineStageFlags(destinationStage);
+
+        VkImageMemoryBarrier barrier{};
+        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        barrier.srcAccessMask = Vulkan::Utilities::GetVulkanAccessFlags(sourceAccess);
+        barrier.dstAccessMask = Vulkan::Utilities::GetVulkanAccessFlags(destinationAccess);
+        barrier.oldLayout = vkOldLayout;
+        barrier.newLayout = vkNewLayout;
+        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.image = texture->GetVulkanImage();
         barrier.subresourceRange = subresourceRange;
 
         if (_commandBuffer == VK_NULL_HANDLE)

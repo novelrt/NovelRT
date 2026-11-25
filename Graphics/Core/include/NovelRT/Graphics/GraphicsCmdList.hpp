@@ -117,9 +117,6 @@ namespace NovelRT::Graphics
 
         void CmdSetViewport(ViewportInfo viewportInfo);
 
-        void CmdBeginTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
-        void CmdEndTexturePipelineBarrierLegacyVersion(const std::shared_ptr<GraphicsTexture<TBackend>>& texture);
-
         void CmdBindPipeline(const std::shared_ptr<GraphicsPipeline<TBackend>>& pipeline);
 
         void CmdPushConstants(const std::shared_ptr<GraphicsPipelineSignature<TBackend>>& pipelineSignature,
@@ -135,9 +132,21 @@ namespace NovelRT::Graphics
 
         void CmdExecuteCommands(const std::shared_ptr<GraphicsCmdList<TBackend>>& cmdList);
 
-        void CmdTransitionSwapchainImageTo(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
-                                           ImageLayout oldLayout,
-                                           ImageLayout newLayout);
+        void CmdTransitionTextureTo(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
+                                    ImageLayout oldLayout,
+                                    ImageLayout newLayout,
+                                    GraphicsMemoryAccessMode sourceAccess,
+                                    GraphicsMemoryAccessMode destinationAccess,
+                                    GraphicsPipelineVisibility sourceStage,
+                                    GraphicsPipelineVisibility destinationStage);
+
+        void CmdTransitionTextureTo(const std::shared_ptr<GraphicsTexture<TBackend>>& texture,
+                                    ImageLayout oldLayout,
+                                    ImageLayout newLayout,
+                                    GraphicsMemoryAccessMode sourceAccess,
+                                    GraphicsMemoryAccessMode destinationAccess,
+                                    GraphicsPipelineVisibility sourceStage,
+                                    GraphicsPipelineVisibility destinationStage);
 
         void CmdClearColourSwapchainImage(const std::shared_ptr<GraphicsSwapchainImage<TBackend>>& swapchainImage,
                                           ClearValue clearData);

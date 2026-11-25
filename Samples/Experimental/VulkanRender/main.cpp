@@ -194,18 +194,23 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     {
         // TODO: This is technically legacy but I can't be bothered cleaning it up even though
         // we are doing extra work for transfer queue usage, for no reason. - Matt J.
-        gfxContext->BeginFrame();
-        auto cmdList = gfxContext->CreateCmdList();
+        auto transferContext = gfxDevice->CreateTransferContext();
+        transferContext->BeginFrame();
+        auto cmdList = transferContext->CreateCmdList();
 
         cmdList->Begin();
         cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer,
+                                        GraphicsMemoryAccessMode::None, GraphicsMemoryAccessMode::TransferWrite,
+                                        GraphicsPipelineVisibility::TopOfPipe, GraphicsPipelineVisibility::Transfer);
         cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal,
+                                        GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::None,
+                                        GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::BottomOfPipe);
         cmdList->End();
 
-        gfxContext->EndFrame();
+        transferContext->EndFrame();
         std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
         gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();

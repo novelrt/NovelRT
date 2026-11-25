@@ -184,9 +184,14 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
 
     auto pVertexBuffer = vertexStagingBuffer->template Map<TexturedVertex>(vertexBufferRegion);
 
-    pVertexBuffer[0] = TexturedVertex{NovelRT::Maths::GeoVector3F(0, 1, 0), NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
-    pVertexBuffer[1] = TexturedVertex{NovelRT::Maths::GeoVector3F(1, -1, 0), NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
-    pVertexBuffer[2] = TexturedVertex{NovelRT::Maths::GeoVector3F(-1, -1, 0), NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
+    pVertexBuffer[0] =
+        TexturedVertex{.Position = NovelRT::Maths::GeoVector3F(0, 1, 0), .UV = NovelRT::Maths::GeoVector2F(0.5f, 0.0f)};
+
+    pVertexBuffer[1] = TexturedVertex{.Position = NovelRT::Maths::GeoVector3F(1, -1, 0),
+                                      .UV = NovelRT::Maths::GeoVector2F(1.0f, 1.0f)};
+
+    pVertexBuffer[2] = TexturedVertex{.Position = NovelRT::Maths::GeoVector3F(-1, -1, 0),
+                                      .UV = NovelRT::Maths::GeoVector2F(0.0f, 1.0f)};
 
     vertexStagingBuffer->UnmapAndWrite(vertexBufferRegion);
 
@@ -213,18 +218,23 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     {
         // TODO: This is technically legacy but I can't be bothered cleaning it up even though
         // we are doing extra work for transfer queue usage, for no reason. - Matt J.
-        gfxContext->BeginFrame();
-        auto cmdList = gfxContext->CreateCmdList();
+        auto transferContext = gfxDevice->CreateTransferContext();
+        transferContext->BeginFrame();
+        auto cmdList = transferContext->CreateCmdList();
 
         cmdList->Begin();
         cmdList->CmdCopy(vertexBufferRegion, stagingBufferRegion);
 
-        cmdList->CmdBeginTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::Undefined, ImageLayout::DstTransfer,
+                                        GraphicsMemoryAccessMode::None, GraphicsMemoryAccessMode::TransferWrite,
+                                        GraphicsPipelineVisibility::TopOfPipe, GraphicsPipelineVisibility::Transfer);
         cmdList->CmdCopy(texture2D, textureStagingBufferRegion);
-        cmdList->CmdEndTexturePipelineBarrierLegacyVersion(texture2D);
+        cmdList->CmdTransitionTextureTo(texture2D, ImageLayout::DstTransfer, ImageLayout::ShaderReadOnlyOptimal,
+                                        GraphicsMemoryAccessMode::TransferWrite, GraphicsMemoryAccessMode::None,
+                                        GraphicsPipelineVisibility::Transfer, GraphicsPipelineVisibility::BottomOfPipe);
         cmdList->End();
 
-        gfxContext->EndFrame();
+        transferContext->EndFrame();
         std::vector<std::shared_ptr<NovelRT::Graphics::GraphicsCmdList<TBackend>>> lists{cmdList};
         gfxDevice->QueueSubmit(lists);
         gfxDevice->WaitForIdle();
@@ -272,7 +282,8 @@ void Render(RenderingData<TBackend>& renderingData,
         context->BeginFrame();
 
         // Setup + begin command list
-        auto currentCmdList = context->CreateCmdList();
+        auto transferContext = gfxDevice->CreateTransferContext();
+        auto currentCmdList = transferContext->CreateCmdList();
         // currentCmdList->Begin();
 
         // Track new frame rendering
@@ -475,7 +486,7 @@ int main()
     };
 
     // Upload Fonts
-    auto gfxContext = gfxDevice->CreateGraphicsContext();
+    auto gfxContext = gfxDevice->CreateTransferContext();
     auto cmdList = gfxContext->CreateCmdList();
     uiProvider->UploadFontData(cmdList);
 

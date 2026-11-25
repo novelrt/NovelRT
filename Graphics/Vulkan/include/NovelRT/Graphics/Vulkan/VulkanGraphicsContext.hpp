@@ -8,6 +8,7 @@
 #include <NovelRT/Threading/VolatileState.hpp>
 #include <NovelRT/Utilities/Lazy.hpp>
 
+#include <cstdint>
 #include <memory>
 #include <vector>
 
@@ -27,6 +28,7 @@ namespace NovelRT::Graphics
     {
     private:
         std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> _device;
+        uint32_t _queueFamilyIndex;
 
         mutable NovelRT::Utilities::Lazy<VkCommandPool> _vulkanCommandPool;
 
@@ -41,7 +43,8 @@ namespace NovelRT::Graphics
         // NOLINTNEXTLINE(readability-identifier-naming) - stdlib compatibility
         std::shared_ptr<const GraphicsContext<Vulkan::VulkanGraphicsBackend>> shared_from_this() const;
 
-        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device) noexcept;
+        GraphicsContext(std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> device,
+                        uint32_t queueFamilyIndex) noexcept;
         ~GraphicsContext() final;
 
         [[nodiscard]] std::shared_ptr<GraphicsDevice<Vulkan::VulkanGraphicsBackend>> GetDevice() const;

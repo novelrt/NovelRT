@@ -4,40 +4,44 @@
 // for more information.
 
 #include <NovelRT/Graphics/GraphicsMemoryAccessMode.hpp>
-#include <NovelRT/Utilities/Operators.hpp>
 
+#include <algorithm>
+#include <array>
+#include <utility>
 #include <vulkan/vulkan.h>
 
 namespace NovelRT::Graphics::Vulkan::Utilities
 {
     [[nodiscard]] inline VkAccessFlags GetVulkanAccessFlags(Graphics::GraphicsMemoryAccessMode accessFlag) noexcept
     {
-        VkAccessFlags accessFlags = VK_ACCESS_NONE;
+        using Access = Graphics::GraphicsMemoryAccessMode;
 
-        if ((accessFlag & Graphics::GraphicsMemoryAccessMode::IndexRead) ==
-            Graphics::GraphicsMemoryAccessMode::IndexRead)
-        {
-            accessFlags |= VK_ACCESS_INDEX_READ_BIT;
-        }
+        static constexpr auto accessFlags = std::to_array<std::pair<Access, VkAccessFlags>>({
+            {Access::None, 0},
+            {Access::IndirectCommandRead, VK_ACCESS_INDIRECT_COMMAND_READ_BIT},
+            {Access::IndexRead, VK_ACCESS_INDEX_READ_BIT},
+            {Access::VertexAttributeRead, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT},
+            {Access::UniformRead, VK_ACCESS_UNIFORM_READ_BIT},
+            {Access::InputAttachmentRead, VK_ACCESS_INPUT_ATTACHMENT_READ_BIT},
+            {Access::ShaderRead, VK_ACCESS_SHADER_READ_BIT},
+            {Access::ShaderWrite, VK_ACCESS_SHADER_WRITE_BIT},
+            {Access::ColorAttachmentRead, VK_ACCESS_COLOR_ATTACHMENT_READ_BIT},
+            {Access::ColorAttachmentWrite, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT},
+            {Access::DepthStencilAttachmentRead, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT},
+            {Access::DepthStencilAttachmentWrite, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT},
+            {Access::TransferRead, VK_ACCESS_TRANSFER_READ_BIT},
+            {Access::TransferWrite, VK_ACCESS_TRANSFER_WRITE_BIT},
+            {Access::HostRead, VK_ACCESS_HOST_READ_BIT},
+            {Access::HostWrite, VK_ACCESS_HOST_WRITE_BIT},
+            {Access::MemoryRead, VK_ACCESS_MEMORY_READ_BIT},
+            {Access::MemoryWrite, VK_ACCESS_MEMORY_WRITE_BIT},
+        });
 
-        if ((accessFlag & Graphics::GraphicsMemoryAccessMode::VertexAttributeRead) ==
-            Graphics::GraphicsMemoryAccessMode::VertexAttributeRead)
-        {
-            accessFlags |= VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
-        }
+        static_assert(std::ranges::all_of(accessFlags,
+                                          [](const auto& flag)
+                                          { return static_cast<VkAccessFlags>(flag.first) == flag.second; }),
+                      "Graphics memory access modes must match Vulkan access flags.");
 
-        if ((accessFlag & Graphics::GraphicsMemoryAccessMode::TransferRead) ==
-            Graphics::GraphicsMemoryAccessMode::TransferRead)
-        {
-            accessFlags |= VK_ACCESS_TRANSFER_READ_BIT;
-        }
-
-        if ((accessFlag & Graphics::GraphicsMemoryAccessMode::TransferWrite) ==
-            Graphics::GraphicsMemoryAccessMode::TransferWrite)
-        {
-            accessFlags |= VK_ACCESS_TRANSFER_WRITE_BIT;
-        }
-
-        return accessFlags;
+        return static_cast<VkAccessFlags>(accessFlag);
     }
 }

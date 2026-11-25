@@ -133,7 +133,7 @@ namespace NovelRT::Ecs::UI
         {
             // By default, we will upload the font data when creating the default UI system.
             // This is the user's responsibility if using a non-default UI system.
-            auto gfxContext = _gfxDevice->CreateGraphicsContext();
+            auto gfxContext = _gfxDevice->CreateTransferContext();
             auto cmdList = gfxContext->CreateCmdList();
             _uiProvider->UploadFontData(cmdList);
 

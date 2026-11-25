@@ -46,6 +46,7 @@
 #include <NovelRT/Ecs/UI/UISystem.hpp>
 
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
+#include <NovelRT/Exceptions/NotSupportedException.hpp>
 
 #include <NovelRT/Graphics/GraphicsPipeline.hpp>
 #include <NovelRT/Graphics/GraphicsPipelineInput.hpp>
@@ -304,6 +305,13 @@ int main()
 
     VulkanGraphicsAdapterSelector selector{};
     auto gfxAdapter = selector.GetDefaultRecommendedAdapter(gfxProvider, gfxSurfaceContext);
+
+    if (gfxAdapter == nullptr)
+    {
+        throw NovelRT::Exceptions::NotSupportedException(
+            "The current computer does not meet the minimum requirements to run the NovelRT engine.");
+    }
+
     auto gfxDevice = gfxAdapter->CreateDevice(gfxSurfaceContext);
     auto memoryAllocator = std::make_shared<GraphicsMemoryAllocator<VulkanGraphicsBackend>>(gfxDevice, gfxProvider);
 

@@ -5,7 +5,6 @@
 
 #include <NovelRT/Graphics/Vulkan/QueueFamilyIndices.hpp>
 #include <NovelRT/Graphics/Vulkan/SwapChainSupportDetails.hpp>
-#include <NovelRT/Maths/Utilities.hpp>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -32,14 +31,10 @@ namespace NovelRT::Graphics::Vulkan::Utilities
                 returnObject.graphicsFamily = familyIndex;
             }
 
-            if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT)
+            if (!returnObject.transferFamily.has_value() && (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT) &&
+                !(queueFamily.queueFlags & (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT)))
             {
-                if (!returnObject.transferFamily.has_value() ||
-                    (Maths::Utilities::PopCount(queueFamily.queueFlags) <=
-                     Maths::Utilities::PopCount(returnObject.transferFamily.value())))
-                {
-                    returnObject.transferFamily = familyIndex;
-                }
+                returnObject.transferFamily = familyIndex;
             }
 
             vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, familyIndex, surface, &presentSupport);
@@ -48,12 +43,12 @@ namespace NovelRT::Graphics::Vulkan::Utilities
                 returnObject.presentFamily = familyIndex;
             }
 
-            if (returnObject.IsComplete())
-            {
-                break;
-            }
-
             ++familyIndex;
+        }
+
+        if (!returnObject.transferFamily.has_value())
+        {
+            returnObject.transferFamily = returnObject.graphicsFamily;
         }
 
         return returnObject;

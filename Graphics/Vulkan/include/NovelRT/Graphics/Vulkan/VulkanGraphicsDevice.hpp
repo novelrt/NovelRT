@@ -102,6 +102,7 @@ namespace NovelRT::Graphics
             NovelRT::Utilities::Span<uint8_t> byteData);
 
         [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateGraphicsContext();
+        [[nodiscard]] std::shared_ptr<GraphicsContext<Vulkan::VulkanGraphicsBackend>> CreateTransferContext();
 
         [[nodiscard]] std::shared_ptr<GraphicsSwapchainImage<Vulkan::VulkanGraphicsBackend>> BeginFrame();
         void EndFrame();
