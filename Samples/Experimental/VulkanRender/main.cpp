@@ -177,7 +177,7 @@ RenderingData<TBackend> SetupTriangleSample(std::shared_ptr<GraphicsDevice<TBack
     uint32_t cellWidth = textureWidth / 8;
     uint32_t cellHeight = textureHeight / 8;
 
-    auto texture2D = memoryAllocator->CreateTexture2DRepeatGpuWriteOnly(textureWidth, textureHeight);
+    auto texture2D = memoryAllocator->CreateTexture2DClampToEdgeGpuWriteOnly(textureWidth, textureHeight);
     auto texture2DRegion = texture2D->Allocate(texture2D->GetSize(), 4);
     auto textureStagingBufferRegion = textureStagingBuffer->Allocate(texture2D->GetSize(), 4);
     auto pTextureData = textureStagingBuffer->template Map<uint32_t>(textureStagingBufferRegion);

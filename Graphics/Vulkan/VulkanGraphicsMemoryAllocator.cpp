@@ -1,6 +1,7 @@
 // Copyright © Matt Jones and Contributors. Licensed under the MIT Licence (MIT). See LICENCE.md in the repository root
 // for more information.
 
+#include "NovelRT/Graphics/Vulkan/Utilities/TextureAddressMode.hpp"
 #include <NovelRT/Exceptions/InitialisationFailureException.hpp>
 #include <NovelRT/Exceptions/NotSupportedException.hpp>
 
@@ -187,9 +188,9 @@ namespace NovelRT::Graphics
     }
 
     [[nodiscard]] std::shared_ptr<VulkanGraphicsTexture> VulkanGraphicsMemoryAllocator::
-        CreateTexture2DRepeatGpuWriteOnly(uint32_t width, uint32_t height)
+        CreateTexture2DClampToEdgeGpuWriteOnly(uint32_t width, uint32_t height)
     {
-        return CreateTexture(GraphicsTextureCreateInfo{.addressMode = GraphicsTextureAddressMode::Repeat,
+        return CreateTexture(GraphicsTextureCreateInfo{.addressMode = GraphicsTextureAddressMode::ClampToEdge,
                                                        .textureKind = GraphicsTextureKind::TwoDimensional,
                                                        .cpuAccessKind = GraphicsResourceAccess::None,
                                                        .gpuAccessKind = GraphicsResourceAccess::Write,
